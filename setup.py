@@ -4,7 +4,7 @@ import re
 import sys
 from setuptools import setup
 
-execfile('webrelease.py')
+execfile('addons/web/common/release.py')
 
 version_dash_incompatible = False
 if 'bdist_rpm' in sys.argv:
@@ -49,7 +49,7 @@ setup(
         "simplejson >= 2.0.9",
         "python-dateutil >= 1.4.1",
         "pytz",
-        "werkzeug = 0.7",
+        "werkzeug == 0.7",
     ],
     tests_require=[
         'unittest2',

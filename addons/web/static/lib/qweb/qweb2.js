@@ -259,6 +259,9 @@ QWeb2.Engine = (function() {
                 if (req) {
                     // TODO: third parameter is async : https://developer.mozilla.org/en/XMLHttpRequest#open()
                     // do an on_ready in QWeb2{} that could be passed to add_template
+                    if (this.debug) {
+                        s += '?debug=' + (new Date()).getTime(); // TODO fme: do it properly in case there's already url parameters
+                    }
                     req.open('GET', s, false);
                     req.send(null);
                     if (req.responseXML) {
@@ -325,13 +328,13 @@ QWeb2.Engine = (function() {
         render : function(template, dict) {
             var ndict = QWeb2.tools.extend({}, this.default_dict);
             QWeb2.tools.extend(ndict, dict);
-            if (this.debug && window['console'] !== undefined) {
+            /*if (this.debug && window['console'] !== undefined) {
                 console.time("QWeb render template " + template);
-            }
+            }*/
             var r = this._render(template, ndict);
-            if (this.debug && window['console'] !== undefined) {
+            /*if (this.debug && window['console'] !== undefined) {
                 console.timeEnd("QWeb render template " + template);
-            }
+            }*/
             return r;
         },
         _render : function(template, dict) {

@@ -12,17 +12,18 @@ import textwrap
 import xmlrpclib
 import time
 import zlib
-import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
+
+from babel.messages.pofile import read_po
 
 import web.common.dispatch as openerpweb
 import web.common.ast
 import web.common.nonliterals
+import web.common.release
 openerpweb.ast = web.common.ast
 openerpweb.nonliterals = web.common.nonliterals
 
-from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -195,7 +196,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": webrelease.version
+            "version": web.common.release.version
         }
 
 class Database(openerpweb.Controller):
@@ -451,8 +452,6 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
 
 def clean_action(req, action):
     action.setdefault('flags', {})
-    if action['type'] != 'ir.actions.act_window':
-        return action
 
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
@@ -464,7 +463,9 @@ def clean_action(req, action):
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
 
-    return fix_view_modes(action)
+    if action['type'] == 'ir.actions.act_window':
+        return fix_view_modes(action)
+    return action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -762,6 +763,8 @@ class View(openerpweb.Controller):
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(req.session, fvg, context, transform)
+        if toolbar and transform:
+            self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
     def process_view(self, session, fvg, context, transform):
@@ -792,6 +795,22 @@ class View(openerpweb.Controller):
                 field["domain"] = self.parse_domain(field["domain"], session)
             if field.get('context'):
                 field["context"] = self.parse_context(field["context"], session)
+
+    def process_toolbar(self, req, toolbar):
+        """
+        The toolbar is a mapping of section_key: [action_descriptor]
+
+        We need to clean all those actions in order to ensure correct
+        round-tripping
+        """
+        for actions in toolbar.itervalues():
+            for action in actions:
+                if 'context' in action:
+                    action['context'] = self.parse_context(
+                        action['context'], req.session)
+                if 'domain' in action:
+                    action['domain'] = self.parse_domain(
+                        action['domain'], req.session)
 
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
@@ -1060,8 +1079,11 @@ class Action(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False,
-                                                                    context)
+            ctx = {}
+            if action_type[0]['type'] == 'ir.actions.report.xml':
+                ctx.update({'bin_size': True})
+            ctx.update(context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0])
         return {'result': value}
@@ -1341,13 +1363,22 @@ class Reports(View):
         context = req.session.eval_context(
             openerpweb.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
+
+        report_data = {}
+        report_ids = context["active_ids"]
+        if 'report_type' in action:
+            report_data['report_type'] = action['report_type']
+        if 'datas' in action:
+            if 'form' in action['datas']:
+                report_data['form'] = action['datas']['form']
+            if 'ids' in action['datas']:
+                report_ids = action['datas']['ids']
+        
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
-            action["report_name"], context["active_ids"],
-            {"id": context["active_id"],
-             "model": context["active_model"],
-             "report_type": action["report_type"]},
-            context)
+            action["report_name"], report_ids,
+            report_data, context)
+
         report_struct = None
         while True:
             report_struct = report_srv.report_get(
@@ -1363,7 +1394,7 @@ class Reports(View):
             report_struct['format'], 'octet-stream')
         return req.make_response(report,
              headers=[
-                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], action['report_type'])),
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})

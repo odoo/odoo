@@ -40,7 +40,7 @@
     <tr>
         <td valign="top" id="oe_secondary_menu" class="secondary_menu">
         </td>
-        <td valign="top">
+        <td valign="top" class="oe-application-container">
             <div id="oe_app" class="oe-application">
             </div>
         </td>
@@ -420,8 +420,6 @@
     <table class="view-manager-main-table">
     <tr>
         <td class="view-manager-main-content">
-            <a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-               href="javascript: void(0)"> </a>
             <div class="oe_vm_switch">
                 <t t-if="views.length != 1" t-foreach="views" t-as="view">
                     <button type="button" t-att-data-view-type="view.view_type">
@@ -442,6 +440,14 @@
     </tr>
     </table>
 </t>
+
+<t t-extend="ViewManager" t-name="ViewManagerAction">
+    <t t-jquery=".view-manager-main-content" t-operation="prepend">
+    	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+    	href="javascript: void(0)"> </a>
+    </t>
+</t>
+
 <t t-name="Sidebar">
     <a class="toggle-sidebar"></a>
     <div class="sidebar-content">
@@ -566,7 +572,7 @@
                 </table>
             </th>
         </tr>
-        <tr t-if="options.header">
+        <tr t-if="options.header" class="oe-listview-header-columns">
             <t t-foreach="columns" t-as="column">
                 <th t-if="column.meta">
                     <t t-esc="column.string"/>
@@ -799,10 +805,8 @@
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
         style="width: 100%">
-            <t t-foreach="widget.field_index" t-as="options">
-                <option t-att-value="options.ikey">
-                    <t t-esc="options.label"/>
-                </option>
+            <t t-foreach="widget.values" t-as="option">
+                <option><t t-esc="option[1]"/></option>
             </t>
     </select>
 </t>
@@ -1113,7 +1117,8 @@
     <div t-att-id="element_id">
         <select class="searchview_extended_prop_field">
             <t t-foreach="attrs.fields" t-as="field">
-                <option t-att="{'selected': field === attrs.selected ? 'selected' : null}"
+                <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
+                        t-att="{'selected': field === attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
                     <t t-esc="field.string"/>
                 </option>
@@ -1387,5 +1392,18 @@
             Depending on your needs, OpenERP is available through a web or application client.
         </p>
     </div>
+</t>
+<t t-name="FieldStatus">
+    <div t-att-id="widget.element_id"></div>
+</t>
+<t t-name="FieldStatus.content">
+    <ul class="oe-arrow-list">
+        <t t-set="size" t-value="widget.to_show.length"/>
+        <t t-foreach="_.range(size)" t-as="i">
+            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
+                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
+            </li>
+        </t>
+    </ul>
 </t>
 </templates>

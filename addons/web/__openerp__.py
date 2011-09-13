@@ -1,6 +1,5 @@
 {
     "name" : "web",
-    "version" : "2.0",
     "depends" : [],
     'active': True,
     'js' : [
@@ -46,4 +45,5 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
     ],
+    'wsgi' : 'app',
 }

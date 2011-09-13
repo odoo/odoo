@@ -12,7 +12,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     searchable: false,
     template: "FormView",
     /**
-     * @constructs
+     * @constructs openerp.web.FormView
+     * @extends openerp.web.View
+     * 
      * @param {openerp.web.Session} session the current openerp session
      * @param {String} element_id this view's root element id
      * @param {openerp.web.DataSet} dataset the dataset this view will work with
@@ -382,9 +384,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_saved: function(r, success) {
         if (!r.result) {
-            this.notification.warn("Record not saved", "Problem while saving record.");
+            // should not happen in the server, but may happen for internal purpose
         } else {
-            this.notification.notify("Record saved", "The record #" + this.datarecord.id + " has been saved.");
+            console.debug(_.sprintf("The record #%s has been saved.", this.datarecord.id));
             if (success) {
                 success(r);
             }
@@ -406,7 +408,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
-            this.notification.warn("Record not created", "Problem while creating record.");
+            // should not happen in the server, but may happen for internal purpose
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
@@ -420,7 +422,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
+            console.debug("The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(_.extend(r, {created: true}));
             }
@@ -428,13 +430,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     do_search: function (domains, contexts, groupbys) {
-        this.notification.notify("Searching form");
+        console.debug("Searching form");
     },
     on_action: function (action) {
-        this.notification.notify('Executing action ' + action);
+        console.debug('Executing action', action);
     },
     do_cancel: function () {
-        this.notification.notify("Cancelling form");
+        console.debug("Cancelling form");
     },
     reload: function() {
         if (this.dataset.index == null || this.dataset.index < 0) {
@@ -454,6 +456,34 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     get_selected_ids: function() {
         var id = this.dataset.ids[this.dataset.index];
         return id ? [id] : [];
+    }
+});
+openerp.web.FormDialog = openerp.web.Dialog.extend({
+    init: function(parent, options, view_id, dataset) {
+        this._super(parent, options);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        return this;
+    },
+    start: function() {
+        this._super();
+        this.form = new openerp.web.FormView(this, this.element_id, this.dataset, this.view_id, {
+            sidebar: false,
+            pager: false
+        });
+        this.form.start();
+        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on_saved.add_last(this.on_form_dialog_saved);
+        return this;
+    },
+    load_id: function(id) {
+        var self = this;
+        return this.dataset.read_ids([id], _.keys(this.form.fields_view.fields), function(records) {
+            self.form.on_record_loaded(records[0]);
+        });
+    },
+    on_form_dialog_saved: function(r) {
+        this.close();
     }
 });
 
@@ -571,8 +601,15 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend({
+openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
+    /**
+     * @constructs openerp.web.form.Widget
+     * @extends openerp.web.Widget
+     *
+     * @param view
+     * @param node
+     */
     init: function(view, node) {
         this.view = view;
         this.node = node;
@@ -849,7 +886,14 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     }
 });
 
-openerp.web.form.Field = openerp.web.form.Widget.extend({
+openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
+    /**
+     * @constructs openerp.web.form.Field
+     * @extends openerp.web.form.Widget
+     *
+     * @param view
+     * @param node
+     */
     init: function(view, node) {
         this.name = node.attrs.name;
         this.value = undefined;
@@ -1223,11 +1267,16 @@ openerp.web.form.FieldTextXml = openerp.web.form.Field.extend({
 
 openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
     init: function(view, node) {
+        var self = this;
         this._super(view, node);
         this.template = "FieldSelection";
-        this.field_index = _.map(this.field.selection, function(x, index) {
-            return {"ikey": "" + index, "ekey": x[0], "label": x[1]};
+        this.values = this.field.selection;
+        _.each(this.values, function(v, i) {
+            if (v[0] === false && v[1] === '') {
+                self.values.splice(i, 1);
+            }
         });
+        this.values.unshift([false, '']);
     },
     start: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -1257,13 +1306,14 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         value = value === null ? false : value;
         value = value instanceof Array ? value[0] : value;
         this._super(value);
-        var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
-        this.$element.find('select').val(option === undefined ? '' : option.ikey);
+        var index = 0;
+        for (var i = 0, ii = this.values.length; i < ii; i++) {
+            if (this.values[i][0] === value) index = i;
+        }
+        this.$element.find('select')[0].selectedIndex = index;
     },
     set_value_from_ui: function() {
-        var ikey = this.$element.find('select').val();
-        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.value = option === undefined ? false : option.ekey;
+        this.value = this.values[this.$element.find('select')[0].selectedIndex][0];
         this._super();
     },
     update_dom: function() {
@@ -1271,9 +1321,8 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         this.$element.find('select').attr('disabled', this.readonly);
     },
     validate: function() {
-        var ikey = this.$element.find('select').val();
-        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.invalid = this.required && (option === undefined || option.ekey === false);
+        var value = this.values[this.$element.find('select')[0].selectedIndex];
+        this.invalid = !(value && !(this.required && value[0] === false));
     },
     focus: function() {
         this.$element.find('select').focus();
@@ -1819,7 +1868,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.viewmanager.views[this.viewmanager.active_view].controller) {
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
-                var res = view.do_save();
+                var res = $.when(view.do_save());
                 if (res === false) {
                     // ignore
                 } else if (res.isRejected()) {
@@ -1971,7 +2020,11 @@ openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
     }
 });
 
-openerp.web.form.Many2ManyListView = openerp.web.ListView.extend({
+/**
+ * @class
+ * @extends openerp.web.ListView
+ */
+openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends openerp.web.form.Many2ManyListView# */{
     do_add_record: function () {
         var pop = new openerp.web.form.SelectCreatePopup(this);
         pop.select_element(this.model, {},
@@ -1998,7 +2051,11 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend({
     }
 });
 
-openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend({
+/**
+ * @class
+ * @extends openerp.web.OldWidget
+ */
+openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
     identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
@@ -2167,7 +2224,11 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
     }
 });
 
-openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend({
+/**
+ * @class
+ * @extends openerp.web.OldWidget
+ */
+openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
     identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**
@@ -2351,7 +2412,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager
-            this.log("Error while uploading file : ", name);
+            console.warn("Error while uploading file : ", name);
         } else {
             this.on_file_uploaded_and_valid.apply(this, arguments);
             this.on_ui_change();
@@ -2445,6 +2506,50 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     }
 });
 
+openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
+    template: "FieldStatus",
+    start: function() {
+        this._super();
+        this.selected_value = null;
+        
+        this.render_list();
+    },
+    set_value: function(value) {
+        this._super(value);
+        this.selected_value = value;
+        
+        this.render_list();
+    },
+    render_list: function() {
+        var self = this;
+        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+            function(x) { return x.trim(); });
+            
+        if (shown.length == 0) {
+            this.to_show = this.field.selection;
+        } else {
+            this.to_show = _.select(this.field.selection, function(x) {
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+            });
+        }
+        
+        var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
+        this.$element.html(content);
+        
+        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
+        var color = colors[this.selected_value];
+        if (color) {
+            var elem = this.$element.find("li.oe-arrow-list-selected span");
+            elem.css("border-color", color);
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
+            elem.css("border-left-color", "rgba(0,0,0,0)");
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
+            elem.css("border-color", "rgba(0,0,0,0)");
+            elem.css("border-left-color", color);
+        }
+    }
+});
+
 /**
  * Registry of form widgets, called by :js:`openerp.web.FormView`
  */
@@ -2474,7 +2579,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'float_time': 'openerp.web.form.FieldFloat',
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
-    'binary': 'openerp.web.form.FieldBinaryFile'
+    'binary': 'openerp.web.form.FieldBinaryFile',
+    'statusbar': 'openerp.web.form.FieldStatus'
 });
 
 };

@@ -29,7 +29,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * :js:func:`~openerp.web.DataGroup.list`, which is used to read the
      * content of the current grouping level.
      *
-     * @constructs
+     * @constructs openerp.web.DataGroup
      * @extends openerp.web.Widget
      *
      * @param {openerp.web.Session} session Current OpenERP session
@@ -60,7 +60,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
 openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.ContainerDataGroup# */ {
     /**
      *
-     * @constructs
+     * @constructs openerp.web.ContainerDataGroup
      * @extends openerp.web.DataGroup
      *
      * @param session
@@ -197,7 +197,7 @@ openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends opener
 openerp.web.GrouplessDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.GrouplessDataGroup# */ {
     /**
      *
-     * @constructs
+     * @constructs openerp.web.GrouplessDataGroup
      * @extends openerp.web.DataGroup
      *
      * @param session
@@ -220,7 +220,7 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
      * A specialization of groupless data groups, relying on a single static
      * dataset as its records provider.
      *
-     * @constructs
+     * @constructs openerp.web.StaticDataGroup
      * @extends openerp.web.GrouplessDataGroup
      * @param {openep.web.DataSetStatic} dataset a static dataset backing the groups
      */
@@ -237,7 +237,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
-     * @constructs
+     * @constructs openerp.web.DataSet
      * @extends openerp.web.Widget
      *
      * @param {String} model the OpenERP model this dataset will manage
@@ -505,9 +505,10 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-openerp.web.DataSetSearch =  openerp.web.DataSet.extend({
+openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
     /**
-     * @constructs
+     * @constructs openerp.web.DataSetSearch
+     * @extends openerp.web.DataSet
      *
      * @param {Object} parent
      * @param {String} model
@@ -612,11 +613,12 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
         this.to_create.push(cached);
         this.cache.push(cached);
+        this.on_change();
         var to_return =  $.Deferred().then(callback);
         to_return.resolve({result: cached.id});
         return to_return.promise();
     },
-    write: function (id, data, callback) {
+    write: function (id, data, options, callback) {
         var self = this;
         var record = _.detect(this.to_create, function(x) {return x.id === id;});
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
@@ -721,7 +723,7 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
         return to_return.promise();
     },
     on_create: function(data) {},
-    write: function (id, data, callback) {
+    write: function (id, data, options, callback) {
         this.on_write(id, data);
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);

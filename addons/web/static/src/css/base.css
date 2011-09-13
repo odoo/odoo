@@ -294,6 +294,9 @@ label.error {
     
     color: #fff;
 }
+.openerp .oe-application-container {
+    height: 100%;
+}
 /* Secondary Menu */
 .openerp .secondary_menu {
     width: 200px;
@@ -1275,4 +1278,40 @@ label.error {
 .oe-shortcuts li:first-child {
     border-left: none;
     padding-left: 0;
+}
+
+ul.oe-arrow-list {
+    padding-left: 0.5em;
+    margin: 0;
+}
+ul.oe-arrow-list li {
+    display: inline-block;
+    margin-left: -0.5em;
+}
+ul.oe-arrow-list li span {
+    vertical-align: top;
+    display: inline-block;
+    border-width:1em;
+    border-style:solid;
+    border-color: white;
+    line-height:0em;
+}
+ul.oe-arrow-list .oe-arrow-list-before {
+    border-left-color: rgba(0,0,0,0);
+    border-right-width:0;
+}
+ul.oe-arrow-list .oe-arrow-list-after {
+    border-color: rgba(0,0,0,0);
+    border-left-color: white;
+    border-right-width:0;
+}
+ul.oe-arrow-list li.oe-arrow-list-selected span {
+    border-color: #CFCCCC;
+}
+ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-before {
+    border-left-color: rgba(0,0,0,0);
+}
+ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
+    border-color: rgba(0,0,0,0);
+    border-left-color: #CFCCCC;
 }
