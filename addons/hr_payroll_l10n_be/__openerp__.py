@@ -22,7 +22,7 @@
     'name': 'hr_payroll_l10n_be',
     'category': 'payroll',
     'init_xml':[],
-    'author': 'AOS',
+    'author': 'OpenERP',
     'depends': ['hr_payroll','hr_contract'],
     'version': '1.0',
     'description': """
