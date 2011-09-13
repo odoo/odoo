@@ -215,7 +215,7 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     logger = logging.getLogger('server')
     logger.info("Initiating shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to force the sutdown.")
+    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
 
     # manually join() all threads before calling sys.exit() to allow a second signal
@@ -239,6 +239,8 @@ if __name__ == "__main__":
     report_configuration()
 
     config = openerp.tools.config
+
+    setup_signal_handlers()
 
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])
@@ -277,7 +279,6 @@ if __name__ == "__main__":
 
 
     setup_pid_file()
-    setup_signal_handlers()
     logger = logging.getLogger('server')
     logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()

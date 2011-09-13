@@ -294,6 +294,9 @@ class Cursor(object):
         del self._obj
         self.__closed = True
 
+        # Clean the underlying connection.
+        self._cnx.rollback()
+
         if leak:
             self._cnx.leaked = True
         else:
@@ -430,6 +433,7 @@ class ConnectionPool(object):
                     self._debug('Put connection to %r in pool', cnx.dsn)
                 else:
                     self._debug('Forgot connection to %r', cnx.dsn)
+                    cnx.close()
                 break
         else:
             raise PoolError('This connection does not below to the pool')
