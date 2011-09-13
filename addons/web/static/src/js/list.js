@@ -61,6 +61,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         if (this.dataset instanceof openerp.web.DataSetStatic) {
             this.groups.datagroup = new openerp.web.StaticDataGroup(this.dataset);
+        } else {
+            this.groups.datagroup = new openerp.web.DataGroup(
+                this, this.model,
+                dataset.get_domain(),
+                dataset.get_context(),
+                {});
+            this.groups.datagroup.sort = this.dataset._sort;
         }
 
         this.page = 0;

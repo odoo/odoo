@@ -302,12 +302,9 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
 	init: function(parent, action) {
         this.session = parent.session;
         this.action = action;
-        var dataset;
-        if (!action.res_id) {
-            dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-        } else {
-            this.action.flags.search_view = false;
-            dataset = new openerp.web.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
+        var dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
             dataset.index = 0;
         }
         this._super(parent, dataset, action.views);
