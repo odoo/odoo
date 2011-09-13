@@ -487,9 +487,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             return true;
         }).then(success_callback);
     },
-    session_logout: function() {
-        this.uid = false;
-    },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
@@ -513,12 +510,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.set_cookie('session_id', this.session_id);
     },
     logout: function() {
-        delete this.session_id;
-        delete this.uid;
-        delete this.user_context;
-        delete this.db;
         this.set_cookie('session_id', '');
-        this.on_session_invalid(function() {});
+        this.reload_client();
+    },
+    reload_client: function() {
+        window.location.reload();
     },
     /**
      * Fetches a cookie stored by an openerp session
