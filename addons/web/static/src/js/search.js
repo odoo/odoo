@@ -28,7 +28,6 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.ready = $.Deferred();
     },
     start: function() {
-        //this.log('Starting SearchView '+this.model+this.view_id)
         this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
         return this.ready.promise();
     },
@@ -1049,7 +1048,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
                 throw e;
             }
             type = "char";
-            this.log('Unknow field type ' + e.key);
+            console.log('Unknow field type ' + e.key);
         }
         this.value = new (openerp.web.search.custom_filters.get_object(type))
                           (this);

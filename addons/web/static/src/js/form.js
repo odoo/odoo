@@ -45,7 +45,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
-        //this.log('Starting FormView '+this.model+this.view_id)
         if (this.embedded_view) {
             var def = $.Deferred().then(this.on_loaded);
             var self = this;
@@ -262,7 +261,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     self.on_processed_onchange(response, processed);
                 });
             } else {
-                this.log("Wrong on_change format", on_change);
+                console.log("Wrong on_change format", on_change);
             }
         }
     },
@@ -347,7 +346,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.on_invalid();
             return false;
         } else if (form_dirty) {
-            this.log("About to save", values);
+            console.log("About to save", values);
             if (!this.datarecord.id) {
                 return this.dataset.create(values, function(r) {
                     self.on_created(r, success, prepend_on_create);
@@ -595,7 +594,7 @@ openerp.web.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field_value));
                 break;
             default:
-                this.log("Unsupported operator in modifiers :", op);
+                console.log("Unsupported operator in modifiers :", op);
         }
     }
     return _.all(stack, _.identity);
@@ -880,7 +879,7 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         var self = this;
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
-            self.log(widget.element_id , widget);
+            console.log(widget.element_id , widget);
             window.w = widget;
         });
     }

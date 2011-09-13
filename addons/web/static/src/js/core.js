@@ -742,13 +742,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
      */
     rpc: function(url, data, success, error) {
         return this.session.rpc(url, data, success, error);
-    },
-    log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        this.on_log.apply(this,args);
-    },
-    on_log: function() {
-        console.log.apply(console, arguments);
     }
 });
 

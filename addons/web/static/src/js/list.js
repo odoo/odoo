@@ -159,7 +159,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     on_loaded: function(data, grouped) {
         var self = this;
         this.fields_view = data;
-        //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
         this.setup_columns(this.fields_view.fields, grouped);

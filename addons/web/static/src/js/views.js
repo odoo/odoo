@@ -76,7 +76,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            this.log("Action manager can't handle action of type " + action.type, action);
+            console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
         this[type](action, on_close);
@@ -760,10 +760,10 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
         }
     },
     on_sidebar_edit_workflow: function() {
-        this.log('Todo');
+        console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        this.log('Todo');
+        console.log('Todo');
     },
     on_sidebar_import: function() {
     },
