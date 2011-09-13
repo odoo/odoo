@@ -345,11 +345,12 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
 
         var main_view_loaded = this._super();
 
-        // schedule auto_search
+        var manager_ready = $.when(searchview_loaded, main_view_loaded);
         if (searchview_loaded && this.action['auto_search']) {
-            $.when(searchview_loaded, main_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            manager_ready.then(this.searchview.do_search);
         }
+        return manager_ready;
     },
     on_mode_switch: function (view_type) {
         return $.when(
