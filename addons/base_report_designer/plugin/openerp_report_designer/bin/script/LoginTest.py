@@ -51,5 +51,5 @@ if __name__<>"package":
 class LoginTest:
     def __init__(self):
         if not loginstatus:
-            ServerParameter(None)
+            Change(None)
 

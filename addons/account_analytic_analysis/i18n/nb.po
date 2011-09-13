@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-08-02 21:56+0000\n"
-"Last-Translator: Mantavya Gajjar (Open ERP) <Unknown>\n"
+"PO-Revision-Date: 2011-08-23 11:12+0000\n"
+"Last-Translator: Rolv Råen (adEgo) <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -23,28 +23,29 @@ msgid ""
 "Number of hours that can be invoiced plus those that already have been "
 "invoiced."
 msgstr ""
+"Antall timer som kan faktureres pluss de som allerede har blitt fakturert"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr ""
+msgstr "Beregnet med formelen: Maks. fakturapris - fakturert beløp"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr ""
+msgstr "Beregnet med formelen: Maks. antall - totalt antall timer"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
-msgstr ""
+msgstr "AccessError"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
-msgstr ""
+msgstr "Dato for siste faktura for denne analytiske konto"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,description:account_analytic_analysis.module_meta_information
@@ -57,26 +58,34 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"Denne moduen benyttes til å endre analytisk kontovisning for å vise\n"
+"viktige data for prosjektleder for serviceselskap.\n"
+"Modulen legger til en meny for å vise relevant informasjon for hver "
+"prosjektleder..\n"
+"\n"
+"Du kan også se rapporten for en analytisk konto\n"
+"pr. bruker eller pr. måned.\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "Forrige fakturadato"
+msgstr "Siste fakturadato"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr ""
+msgstr "Beregnet med formelen: Teoretisk inntekt - totalkostnad"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr ""
+msgstr "Virkelig margin (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "Teoretisk omsetning"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -84,21 +93,23 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
+"Hvis faktura fra kostnader, er dette datoen for siste arbeid eller kostnad "
+"som har blitt fakturert"
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr ""
+msgstr "Fakturering"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr ""
+msgstr "Dato for siste kostnad/arbeid"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Totalkostnader"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -106,16 +117,18 @@ msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
 msgstr ""
+"Antall timer du har brukt på analytisk konto (fra timeark).Beregnet av alle "
+"journaler av type \"generell\""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
-msgstr "Gjenværende timer"
+msgstr "Gjenstående timer"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "Teoretisk margin"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -124,6 +137,9 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
+"Basert på kostnadene du hadde på prosjektet, hva ville inntekten ha blitt om "
+"alle disse kostnadene hadde blitt fakturert med normal salgspris hentet fra "
+"prislisten."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -134,12 +150,12 @@ msgstr "Bruker"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr ""
+msgstr "Ufakturert beløp"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
+msgstr "Beregnet med formelen: Fakturert beløp - totalkostnader"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -149,66 +165,66 @@ msgstr "Ufakturerte timer"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr ""
+msgstr "Dato for siste reg. på denne kontoen"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
-msgstr ""
+msgstr "report_account_analytic"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Sum timer pr. bruker"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Fakturert beløp"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
-msgstr ""
+msgstr "Du forsøker å omgå en tilgangsregel (Dokumenttype: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "Dato for siste fakturerte kostnad"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Hours"
-msgstr ""
+msgstr "Fakturerte timer"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr ""
+msgstr "Virkelig margin"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Feil! Valutaen må være lik valuaten til det valgte firmaet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "Totalt beløp fakturert kunde for denne kontoen"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "Sum timer pr. måned"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
+msgstr "Beregnet etter formelen: (Virkelig margin / Totale kostnader) * 100"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -216,16 +232,18 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
+"Antall timer (fra journal av typen \"generell\") som kan faktureres dersom "
+"du fakturerer basert på analytisk konto"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic accounts"
-msgstr ""
+msgstr "Analytiske konti"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr ""
+msgstr "Gjenstående inntekt"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -233,57 +251,59 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
+"Hvis faktura fra analytisk konto, gjenstående beløp du kan fakturere kunden "
+"basert på totalkostnadene"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr ""
+msgstr "Beregnet med formelen: Fakturert beløp / totaltimer"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Hours (real)"
-msgstr ""
+msgstr "Inntekt pr. time (virkelig)"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr ""
+msgstr "Totaltid"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
-msgstr ""
+msgstr "Måned"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytisk konto"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
 msgid "Overpassed Accounts"
-msgstr ""
+msgstr "Overskr. konti"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr ""
+msgstr "Alle ufakturerte oppføringer"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Hours Tot"
-msgstr ""
+msgstr "Timer totalt"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursive analytiske kontoer."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -291,22 +311,51 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-
-#~ msgid "My Current Accounts"
-#~ msgstr "Mine nåværende konti"
+"Totalkostnad for denne kontoen.Dette inkl. virkelige kostnader (fra faktura) "
+"og indirekte kostnader, som timer brukt på timeark"
 
 #~ msgid "Hours summary by user"
 #~ msgstr "Timer, summert pr. bruker"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ugyldig XML for visningsarkitektur!"
-
 #~ msgid "Invoicing"
 #~ msgstr "Fakturering"
 
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Alle analytiske konti"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "Mine gjeldende konti"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ugyldig XML for visning av arkitektur!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ugyldig modellnavn i handlingsdefinisjonen"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektets navn må starte med x_ og ikke inneholde spesialkarakterer!"
+#~ msgstr "Objektnavnet må starte med x_ og ikke inneholde noen spesialtegn!"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Ny analytisk konto"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Gjeldende analytiske konti"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Mine ikke avsluttede konti"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Mine ikke-fakturerte posteringer"
 
 #~ msgid "My Accounts"
-#~ msgstr "Mine kontoer"
+#~ msgstr "Mine konti"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Analytiske konti"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Financial Project Management"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Pending Analytic Accounts"

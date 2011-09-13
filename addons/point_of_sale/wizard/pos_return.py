@@ -124,7 +124,7 @@ class pos_return(osv.osv_memory):
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
-                stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
+                source_stock_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
                             (order_id.shop_id.warehouse_id.id,))
@@ -152,9 +152,9 @@ class pos_return(osv.osv_memory):
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                                 'picking_id': new_picking,
                                 'product_uom': line.product_id.uom_id.id,
-                                'location_id': location_id,
+                                'location_id': source_stock_id,
                                 'product_id': line.product_id.id,
-                                'location_dest_id': stock_dest_id,
+                                'location_dest_id': location_id,
                                 'name': '%s (return)' %order_id.name,
                                 'date': date_cur
                             })

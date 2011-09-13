@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-29 04:56+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -30,7 +30,7 @@ msgstr "Konta Nosaukums"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Nosaka kādu daudzumu uzskaitīt."
+msgstr "Norāda uzskaitāmo daudzumu."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -38,13 +38,13 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
-"Analītiskās uzskaites objektu definēšanas modulis.\n"
+"Analītiskās uzskaites modulis objektu definēšanai.\n"
 "    "
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "State"
-msgstr "Statuss"
+msgstr "Stāvoklis"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
@@ -84,13 +84,19 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"Izveidojot kontu, tas pēc noklusējuma ir statusā \"Neapstiprināts\".\n"
-"Pievienojot partneri, tam var norādīt statusu \"Atvērts\"\n"
-"Ja nav noslēgta bilance, tad konta statuss var būt \"Gaida\"\n"
-"Projekta skatījumā kontam ir papildus statusi \"Veidne\" un \"Palaists\".\n"
-"Projektus iespējams veidot izmantojot projektu \"Veidnes\". Standarta "
-"projekti ir statusā \"Palaists\".\n"
-"Slēdzot Projektu vai analītisko kontu, tā statuss ir \"Pabeigts\"."
+"* Izveidojot kontu, tas pēc noklusējuma ir statusā 'Neapstiprināts'.         "
+"                         \n"
+"* Pievienojot partneri, tam var norādīt statusu 'Atvērts'.                   "
+"               \n"
+"* Ja nav noslēgta bilance, tad konta statuss var būt 'Gaida'.                "
+"                  \n"
+"* Pēc visu transakciju pabeigšanas, statuss var būt 'Pabeigts'.              "
+"                    \n"
+"* Projekta skatījumā kontam ir papildus statusi 'Veidne' un 'Palaists'.\n"
+" Projektus iespējams veidot izmantojot projektu veidnes. Parasti projekti ir "
+"statusā 'Palaists'.                                  \n"
+" Ja to ir jāpārskata, tad statuss ir 'Gaida'.\n"
+" Projektu vai analītisko kontu slēdzot, tā statuss ir 'Pabeigts'."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -132,7 +138,7 @@ msgstr "Uzņēmums"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Quantity"
-msgstr "Maksimālais daudzums"
+msgstr "Maksimālais Daudzums"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -166,13 +172,13 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
-"Tiek aprēķināts reizinot skaitu un cenu, kas ir Produkta pašizmaksas cena. "
-"Tā tiek attēlota uzņēmuma galvenajā valūtā."
+"Aprēķina produkta pašizmaksas cenu reizinot ar daudzumu. Vienmēr izsaka "
+"uzņēmuma galvenajā valūtā."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of quantity of hours."
-msgstr "Stundu skaita augšējā robeža."
+msgstr "Nosaka maksimālo stundu skaita ierobežojumu."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -182,7 +188,7 @@ msgstr "Kredīts"
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
-msgstr "Daudzums"
+msgstr "Summa"
 
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
@@ -217,8 +223,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
-"Ņemiet vērā! Izvēloties tipu \"Skatījums\" tiks bloķēta iespēja veidot "
-"ierakstus attiecīgajā analītiskajā kontā."
+"Izvēloties tipu \"Skatījums\", jums tiks bloķēta iespēja veidot ierakstus "
+"attiecīgajā analītiskajā kontā."
 
 #. module: analytic
 #: field:account.analytic.account,date:0

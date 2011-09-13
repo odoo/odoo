@@ -44,6 +44,45 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="crm_send_new_mass_mail_view">
+            <field name="name">crm.new.send.mass.mail.form</field>
+            <field name="model">crm.send.mail</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Send Mail" col="4">
+                    <group colspan="4" col="2">
+                    <field name="email_from"/>
+                    <field name="reply_to"/>
+                    <field name="email_cc"/>
+                    <field name="subject" />
+                    <field name="html"/>
+                    </group>
+                    <notebook colspan="6">
+                        <page string="Message">
+                            <field name="body" nolabel="1" colspan="4" default_focus="1"/>
+                        </page>
+                        <page string="Attachments">
+                            <field name="attachment_ids" colspan="4" nolabel="1">
+                                <form string="Attachment">
+                                    <field name="binary" filename="name" />
+                                    <field name="name" />
+                                </form>
+                                <tree string="Attachments">
+                                    <field name="name" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <separator string="" colspan="6"/>
+                    <group colspan="6" col="4" >
+                        <field name="state" />
+                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
+                        <button name="action_mass_send" type="object" string="_Send to All" icon="gtk-go-forward" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
 <!-- Send New Mail action -->
 
         <record model="ir.actions.act_window" id="action_crm_send_mail">
@@ -55,6 +94,14 @@
             <field name="target">new</field>
         </record>
 
+
+        <act_window id="action_crm_send_mass_mail"
+            multi="True"
+            key2="client_action_multi" name="Send emails"
+            res_model="crm.send.mail" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form"
+            context="{'mass_mail' : True}"
+            view_id="crm_send_new_mass_mail_view"/>
 
     <!-- Reply to Mail view -->
 
@@ -88,6 +135,9 @@
                 </form>
             </field>
         </record>
+
+
+
 
 <!-- Reply to Mail action -->
 

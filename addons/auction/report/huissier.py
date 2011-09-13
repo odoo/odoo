@@ -20,7 +20,6 @@
 ##############################################################################
 
 import pooler
-from osv.osv import osv, orm
 from report.interface import report_rml
 #FIXME: use the one from tools and delete the one from report
 from report.int_to_text import int_to_text

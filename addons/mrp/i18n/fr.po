@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-18 14:07+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"PO-Revision-Date: 2011-05-24 16:08+0000\n"
+"Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-12 05:00+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:59+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: mrp
 #: field:mrp.bom,product_uos:0
@@ -776,7 +776,7 @@ msgid "Per month"
 msgstr "Par mois"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -789,7 +789,7 @@ msgid "Product Name"
 msgstr "Nom du Produit"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Action non valide !"
@@ -1395,7 +1395,7 @@ msgid "Month -1"
 msgstr "Mois -1"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr "Ordre de production '%s' est planifié pour le  %s."
@@ -1406,7 +1406,7 @@ msgid "Production Order N° :"
 msgstr "Ordre de Production N° :"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "L'ordre de production '%s' est pret a être produit."
@@ -1649,7 +1649,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Ordres de fabrication à lancer"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr "Impossible de supprimer l'ordre de production à l'état %s !"
@@ -1728,7 +1728,7 @@ msgid "Production Analysis"
 msgstr "Analyse de la production"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr "Copier"
@@ -2256,7 +2256,7 @@ msgid "Product type is Stockable or Consumable."
 msgstr "Le type produit est stockable ou consommable."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -2283,6 +2283,9 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
 msgstr ""
+"Une gamme présente tous les postes de charge utilisés, en temps et/ou en "
+"cycles. Si une gamme est initialisée, la table des ordres de fabrication "
+"(postes de charge) sera automatiquement pré-remplie."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
@@ -3270,18 +3273,6 @@ msgstr "Année"
 #~ "Si le stock d'un produit est négatif, il est considéré comme un point de "
 #~ "commande"
 
-#~ msgid "Procurement Request"
-#~ msgstr "Demande d'approvisionnement"
-
-#~ msgid "Scheduled End"
-#~ msgstr "Planification terminée"
-
-#~ msgid "Workcenters load"
-#~ msgstr "Charge des centres de travail"
-
-#~ msgid "Workcenter Loads"
-#~ msgstr "Charges du Centre de Travail"
-
 #~ msgid ""
 #~ "Description of the workcenter. Explain here what's a cycle according to this "
 #~ "workcenter."
@@ -3299,50 +3290,8 @@ msgstr "Année"
 #~ msgid "MRP & Logistic Scheduler"
 #~ msgstr "Planificateur MRP & logistique"
 
-#~ msgid "Number of operations this workcenter can do."
-#~ msgstr "Nombre d'opérations simultanées du poste de charge"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the bills of "
-#~ "material without removing it."
-#~ msgstr ""
-#~ "Si la coche Active est validée, la nomenclature n'est pas visible sans pour "
-#~ "autant la supprimer"
-
-#, python-format
-#~ msgid "Component suppliers"
-#~ msgstr "Fournisseurs de composant"
-
 #~ msgid "Workcenter Usage"
 #~ msgstr "Utilisation du poste de charge"
-
-#, python-format
-#~ msgid "Component"
-#~ msgstr "Composant"
-
-#~ msgid ""
-#~ "Number of operations this workcenter can do in parallel. If this workcenter "
-#~ "represents a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "Nombre d'opérations que ce poste de charge peut réaliser en parallèle. Si ce "
-#~ "poste de charge représente une équipe de 5 personnes, la capacité par cycle "
-#~ "est de 5."
-
-#~ msgid "Specify Cost of Workcenter per hour."
-#~ msgstr "Précisez le coût horaire du centre de charge"
-
-#~ msgid ""
-#~ "Specify quantity of products to produce or buy. Report of Cost structure "
-#~ "will be displayed base on this qunatity."
-#~ msgstr ""
-#~ "Précisez la quantité de produits à fabriquer ou acheter. Le rapport de la "
-#~ "structure de coût sera affiché en fonction de cette quantité"
-
-#~ msgid "Specify Cost of Workcenter per cycle."
-#~ msgstr "Précisez le coût par cycle du poste de charge"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -3350,65 +3299,11 @@ msgstr "Année"
 #~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
 #~ "spécial!"
 
-#~ msgid ""
-#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
-#~ "the bill of materials and the procurement rules, but you can also create "
-#~ "manufacturing orders manually. OpenERP will handle the consumation of the "
-#~ "raw materials (stock decrease) and the production of the finished products "
-#~ "(stock increase) when the order is processed."
-#~ msgstr ""
-#~ "Les ordres de fabrication sont généralement proposés automatiquemet par "
-#~ "OpenERP selon les nomenclatures et les règles de traitement des besoins, "
-#~ "mais il est également possible d'enregistrer des ordres de fabrication "
-#~ "manuellement.\r\n"
-#~ "OpenERP se chargera de la consommation des matières premières (sortie de "
-#~ "stock) et de la production des produits finis (entrée de stock) quand "
-#~ "l'ordre sera traité."
-
 #~ msgid "A cycle is defined in the workcenter definition."
 #~ msgstr "Un cycle est défini dans la définition du Centre de Production."
 
 #~ msgid "Production Orders To Start"
 #~ msgstr "Ordres de Production pour démarrer"
-
-#~ msgid "Work Centers load"
-#~ msgstr "Occupation des postes de charge"
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan future loads on workcenters based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "La liste des opérations (liste des postes de charge) pour fabriquer le "
-#~ "produit fini. La gamme est principalement utilisée pour calculer les coûts "
-#~ "des postes de charges pendant les opérations et pour prévoir l'occupation "
-#~ "des postes de charge en fonction de la planification de la production."
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan future loads on workcenters based on production "
-#~ "planning."
-#~ msgstr ""
-#~ "La liste des opérations (liste des postes de charge) pour fabriquer le "
-#~ "produit fini. La gamme est principalement utilisée pour calculer les coûts "
-#~ "des postes de charges pendant les opérations et pour prévoir l'occupation "
-#~ "des postes de charge en fonction de la planification de la production."
-
-#~ msgid "Workcenter Load"
-#~ msgstr "Occupation du poste"
-
-#~ msgid ""
-#~ "Gives the sequence order when displaying a list of routing workcenters."
-#~ msgstr "Détermine l'ordre d'affichage des postes de charge d'une gamme."
-
-#~ msgid ""
-#~ "Define specific property groups that can be assigned to the properties of "
-#~ "your bills of materials."
-#~ msgstr ""
-#~ "Défini des groupes de propriétés spécifiques pouvant être assignées aux "
-#~ "propriété de vos nomenclatures."
 
 #~ msgid ""
 #~ "Description of the work center. Explain here what's a cycle according to "

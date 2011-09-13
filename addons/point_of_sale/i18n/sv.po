@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-15 15:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-08-03 22:56+0000\n"
+"Last-Translator: Stefan Lind <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:05+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: point_of_sale
 #: field:pos.discount,discount_notes:0
@@ -40,7 +40,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Set to draft"
-msgstr "Sätt till utkast"
+msgstr "Sätt till preliminär"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -155,7 +155,7 @@ msgstr "Skatt"
 #. module: point_of_sale
 #: view:report.transaction.pos:0
 msgid "Total Transaction"
-msgstr ""
+msgstr "Total transaktion"
 
 #. module: point_of_sale
 #: help:account.journal,special_journal:0
@@ -166,7 +166,7 @@ msgstr "Detta lägger ordrarna i väntande status tills de blir accepterade"
 #: report:account.statement:0
 #: field:report.pos.order,partner_id:0
 msgid "Partner"
-msgstr "Företag"
+msgstr "Partner"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -183,7 +183,7 @@ msgstr "Snittpris"
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Disc. (%)"
-msgstr "Rab. (%)"
+msgstr "Rabatt (%)"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -597,7 +597,7 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Qty of product"
-msgstr ""
+msgstr "Antal produkter"
 
 #. module: point_of_sale
 #: field:pos.order,contract_number:0
@@ -699,7 +699,7 @@ msgstr "Betaldatum"
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr "Orderrad"
+msgstr "Kundorderrader"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -801,7 +801,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
-msgid "Product for expenses"
+msgid "Product for Output"
 msgstr ""
 
 #. module: point_of_sale
@@ -882,7 +882,7 @@ msgstr "Företag"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
 msgid "transaction for the pos"
-msgstr ""
+msgstr "Transaktioner för pos"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_get_sale.py:54
@@ -1097,7 +1097,7 @@ msgstr "Ingen prislista !"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_get_sale
 #: view:pos.get.sale:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Välj en öppen säljorder"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1134,7 +1134,7 @@ msgstr "Försäljningsorder"
 #: report:pos.invoice:0
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
-msgstr "Skatter"
+msgstr "Moms"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
@@ -1228,7 +1228,7 @@ msgstr "Plocklista"
 #: field:report.sales.by.margin.pos,qty:0
 #: field:report.sales.by.margin.pos.month,qty:0
 msgid "Qty"
-msgstr ""
+msgstr "Ant"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -1752,7 +1752,7 @@ msgstr "Plockning"
 #: field:pos.order,shop_id:0
 #: field:report.pos.order,shop_id:0
 msgid "Shop"
-msgstr ""
+msgstr "Affär"
 
 #. module: point_of_sale
 #: field:pos.order,picking_id:0
@@ -1810,7 +1810,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 msgid "Sales Order"
-msgstr "Försäljningsorder"
+msgstr "Kundorder"
 
 #. module: point_of_sale
 #: field:pos.order,journal_entry:0
@@ -1962,7 +1962,7 @@ msgstr "Meddelande"
 #: model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "Point of Sale"
-msgstr ""
+msgstr "Försäljningsställe"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -2364,14 +2364,33 @@ msgstr "År"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Felaktigt namn för modellen i händelsedefinitionen."
 
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Certifikat ID för modulen måste vara unikt!"
-
 #~ msgid "Document"
 #~ msgstr "Dokument"
 
-#~ msgid "Visa Journal"
-#~ msgstr "Visa journal"
+#~ msgid "Discount :"
+#~ msgstr "Rabatt"
+
+#~ msgid "Scan Product"
+#~ msgstr "Skanna produkt"
+
+#~ msgid "Orders of the day"
+#~ msgstr "Dagens ordrar"
+
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Kan inte skapa faktura utan partner."
 
 #~ msgid "Partner Ref."
-#~ msgstr "Företagsreference"
+#~ msgstr "Partnerref."
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "VAT(%)"
+#~ msgstr "Moms(%)"
+
+#~ msgid "Date :"
+#~ msgstr "Datum :"
+
+#~ msgid "User :"
+#~ msgstr "Användare:"

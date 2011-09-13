@@ -1,0 +1,176 @@
+# Galician translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-05-09 16:49+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Galician <gl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: sale_journal
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
+msgstr "O tipo de diario utilizado para as vendas e albarás."
+
+#. module: sale_journal
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "A referencia do pedido debe ser única!"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Facturando"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Vendas e Compras"
+
+#. module: sale_journal
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
+"Se se desmarca o campo activo, permite ocultar o tipo de factura sen "
+"eliminalo."
+
+#. module: sale_journal
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "Notas"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Method"
+msgstr "Método de facturación"
+
+#. module: sale_journal
+#: model:ir.module.module,description:sale_journal.module_meta_information
+msgid ""
+"\n"
+"    The sales journal modules allows you to categorise your\n"
+"    sales and deliveries (picking lists) between different journals.\n"
+"    This module is very helpful for bigger companies that\n"
+"    works by departments.\n"
+"\n"
+"    You can use journal for different purposes, some examples:\n"
+"    * isolate sales of different departments\n"
+"    * journals for deliveries by truck or by UPS\n"
+"\n"
+"    Journals have a responsible and evolves between different status:\n"
+"    * draft, open, cancel, done.\n"
+"\n"
+"    Batch operations can be processed on the different journals to\n"
+"    confirm all sales at once, to validate or invoice packing, ...\n"
+"\n"
+"    It also supports batch invoicing methods that can be configured by\n"
+"    partners and sales orders, examples:\n"
+"    * daily invoicing,\n"
+"    * monthly invoicing, ...\n"
+"\n"
+"    Some statistics by journals are provided.\n"
+"    "
+msgstr ""
+"\n"
+"    O módulo de diario de vendas permítelle clasificar as súas vendas e "
+"entregas (albarás) en diferentes diarios. Este módulo é moi útil para as "
+"compañías grandes que traballan por departamentos. Pode usar os diarios para "
+"diferentes propósitos, por exemplo:* illar as vendas dos diferentes "
+"departamentos* diarios para entregas segundo camión ou compañía de envío. Os "
+"diarios teñen un responsable e evolucionan entre diferentes estados:* "
+"borrador, aberto, anulado, feito. Pódense procesar operacións en lote nos "
+"diferentes diarios para confirmar tódalas vendas á vez, para validar ou "
+"facturar albarás, ...Tamén soporta métodos de facturación en lote que se "
+"poden configurar segundo a empresa ou o pedido de venda, exemplos:* "
+"facturación diaria,* facturación mensual, ... Proporciónanse algunhas "
+"estatísticas por diario.\n"
+"    "
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Non agrupado"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupado"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Erro! Non pode crear membros asociados recorrentes."
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used for partners, sales orders and delivery orders. You "
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr ""
+"Os tipos de facturas utilízanse para as empresas, pedidos de venda e "
+"albarás. Pode crear un diario de facturación específico para agrupar a súa "
+"facturación en función das necesidades dos seus clientes: diaria, cada "
+"mércores, mensual, etc."
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Método de facturación"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Orde de venda"
+
+#. module: sale_journal
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo de factura"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Activo"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_res_partner
+msgid "Partner"
+msgstr "Socio"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Tipos de factura"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Albará"
+
+#. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Xestionar vendas e entregas por diario"

@@ -5,7 +5,7 @@
         <field name="name">Brut Total</field>
         <field name="code">BRUT</field>
     </record>
-    <record id="hr_payroll_head_company_part" model="hr.salary.rule.category">
+    <record id="hr_payroll.COMP" model="hr.salary.rule.category">
         <field name="name">Company Part</field>
         <field name="code">COMP. PART</field>
     </record>
@@ -191,7 +191,7 @@
         <field name="amount_python_compute">result = -contract.company_car_wkr</field>
     </record>
     <record id="hr_payroll_rules_company_car_emp" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_company_part"/>
+        <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="name">Company car, Company part</field>
         <field name="parent_rule_id" ref="hr_payroll_rules_company_car_parent"/>
         <field name="code">CAR 3</field>
@@ -212,7 +212,7 @@
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_ch_value" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll_head_company_part"/>
+        <field name="category_id" ref="hr_payroll.COMP"/>
         <field name="parent_rule_id" ref="hr_payroll_rules_parent_ch"/>
         <field name="name">Check Value Meal, Company Part</field>
         <field name="code">Ch.M.</field>

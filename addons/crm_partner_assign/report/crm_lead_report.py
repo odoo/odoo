@@ -37,7 +37,7 @@ class crm_lead_report_assign(osv.osv):
     _auto = False
     _description = "CRM Lead Report"
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'year': fields.char('Year', size=64, required=False, readonly=True),
         'partner_assigned_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -51,7 +51,7 @@ class crm_lead_report_assign(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'partner_date': fields.date('Partner Date', readonly=True),
+        'date_assign': fields.date('Partner Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -63,7 +63,7 @@ class crm_lead_report_assign(osv.osv):
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id)]" , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="('type', '=', 'lead')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Customer' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
@@ -87,13 +87,14 @@ class crm_lead_report_assign(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
                     c.id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date_assign, 'YYYY') as year,
+                    to_char(c.date_assign, 'MM') as month,
+                    to_char(c.date_assign, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state,
+                    c.date_assign,
                     c.user_id,
                     c.probability,
                     c.probability as probability_max,

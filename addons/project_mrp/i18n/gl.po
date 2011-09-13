@@ -1,0 +1,148 @@
+# Galician translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-05-10 15:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Galician <gl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:27+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "Para cada produto, sobre tipo servizo e sobre orde"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Tarefa abastecemento"
+
+#. module: project_mrp
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Procurement and Project Management integration"
+msgstr "Integración de abastecementos e xestión de proxectos"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "\"Tipo de produto\" é servizo, a continuación créase a tarefa."
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "se \"tipo de produto\" é 'servizo', entón créase a tarefa."
+
+#. module: project_mrp
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Erro! Non pode crear tarefas recorrentes."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Produto"
+
+#. module: project_mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Erro: Código EAN non válido"
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "Proxecto"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "Adquisición"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Tarefa"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "Créase unha tarefa para prover o servizo."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Tarefa orde"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Tarefa pedido de venda"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Crear tarefa"
+
+#. module: project_mrp
+#: model:ir.module.module,description:project_mrp.module_meta_information
+msgid ""
+"\n"
+"This module creates a link between procurement orders\n"
+"containing \"service\" lines and project management tasks.\n"
+"\n"
+"When installed, this module will automatically create a new task\n"
+"for each procurement order line, when the corresponding product\n"
+"meets the following characteristics:\n"
+"  * Type = Service\n"
+"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+"  * Supply/Procurement method = Produce\n"
+"\n"
+"The new task is created outside of any existing project, but\n"
+"can be added to a project manually.\n"
+"\n"
+"When the project task is completed or cancelled, the workflow of the "
+"corresponding\n"
+"procurement line is updated accordingly.\n"
+"\n"
+"This module is useful to be able to invoice services based on tasks\n"
+"automatically created via sale orders.\n"
+"\n"
+msgstr ""
+"\n"
+"Este módulo crea un enlace entre ordes de abastecemento con liñas de "
+"\"servizo\" e tarefas de xestión de proxectos. Cando se instala, este módulo "
+"creará unha nova tarefa por cada liña de orde de abastecemento, cando o "
+"produto correspondente cumpra as seguintes características:* Tipo = Servizo* "
+"Método abastecemento (cubrir o pedido) = OBP (obter baixo pedido)* Método "
+"subministración/abastecemento = Producir. A nova tarefa créase fóra dos "
+"proxectos existentes, pero pódese engadir a un proxecto manualmente.Cando a "
+"tarefa de proxecto se completa ou anula, actualizarase consecuentemente o "
+"fluxo de traballo da correspondente liña de abastecemento.Este módulo é útil "
+"para poder facturar servizos baseados en tarefas creadasautomaticamente a "
+"través de pedidos de venda.\n"
+"\n"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr ""
+"Se método abastecemento é Obter baixo pedido e método subministración é "
+"Producir"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sale order"
+msgstr "En caso que venda servizos sobre pedido de venda"

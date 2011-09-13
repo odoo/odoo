@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: l10n_be
 #: field:partner.vat,test_xml:0
@@ -31,19 +31,19 @@ msgstr "Nombre del cliente"
 #. module: l10n_be
 #: view:partner.vat.list:0
 msgid "XML File has been Created."
-msgstr "El archivo XML ha sido Creado."
+msgstr "El archivo XML ha sido creado."
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:122
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr "Ninguna empresa tiene un número fiscal asociado."
+msgstr "Ninguna empresa tiene un número fiscal (CIF) asociado."
 
 #. module: l10n_be
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
+msgstr "Se produjo un error! No pueden crearse empresas en forma recursiva."
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
@@ -51,7 +51,7 @@ msgstr "¡Error! No puede crear compañías recursivas."
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:88
 #, python-format
 msgid "No VAT Number Associated with Main Company!"
-msgstr "No hay Número de IVA asociado conla empresa principal!"
+msgstr "¡No hay número de CIF asociado a la compañía principal!"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:64
@@ -93,7 +93,7 @@ msgstr "Guardar"
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_vat_listing_clients
 msgid "vat.listing.clients"
-msgstr "vat.listing.clients"
+msgstr "vat.listado.clientes"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
@@ -117,7 +117,7 @@ msgstr "El código del periodo que ha introducido no es válido."
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,ask_resitution:0
 msgid "It indicates whether a resitution is to made or not?"
-msgstr "Indica si hay que realizar la resticutción o no"
+msgstr "Indica si hay que realizar la restitución o no"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
@@ -128,7 +128,7 @@ msgstr "Declaración de IVA"
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
-msgstr "Socio sin CIF/NIF"
+msgstr "Empresa sin CIF/NIF"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -144,7 +144,7 @@ msgstr "partner.vat.list"
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_vat_listing
 msgid "Annual Listing Of VAT-Subjected Customers"
-msgstr "Listado anual de Clientes sujetos a IVA"
+msgstr "Listado anual de clientes sujetos a IVA"
 
 #. module: l10n_be
 #: model:ir.module.module,shortdesc:l10n_be.module_meta_information
@@ -165,13 +165,13 @@ msgstr "Pedir restitución"
 #: model:ir.model,name:l10n_be.model_partner_vat_intra
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_intra
 msgid "Partner VAT Intra"
-msgstr "Socio de IVA Intra"
+msgstr "Empresa de IVA Intra"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_declaration
 #: view:l1on_be.vat.declaration:0
 msgid "Periodical VAT Declaration"
-msgstr "Periodo de delcaración de IVA"
+msgstr "Periodo de declaración de IVA"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -198,12 +198,12 @@ msgstr "Periodos"
 #: help:partner.vat,test_xml:0
 #: help:partner.vat.intra,test_xml:0
 msgid "Sets the XML output as test file"
-msgstr "Establece la salida XML como archivo de pruebas"
+msgstr "Establece la salida XML como archivo de pruebas."
 
 #. module: l10n_be
 #: field:partner.vat,limit_amount:0
 msgid "Limit Amount"
-msgstr "Cantidad límite"
+msgstr "Importe límite"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -217,19 +217,19 @@ msgid ""
 "amounts per partner."
 msgstr ""
 "Este asistente creará un archivo XML para la información relativa al IVA y "
-"el total de los importes facturados por socio."
+"el total de los importes facturados por empresa."
 
 #. module: l10n_be
 #: help:partner.vat.intra,no_vat:0
 msgid ""
 "The Partner whose VAT number is not defined they doesn't include in XML File."
 msgstr ""
-"El socio cuyo CIF/NIF no esté definido no se incluye en el fichero XML."
+"La empresa cuyo CIF/NIF no esté definido no se incluye en el fichero XML."
 
 #. module: l10n_be
 #: field:vat.listing.clients,vat:0
 msgid "VAT"
-msgstr "IVA"
+msgstr "CIF/NIF"
 
 #. module: l10n_be
 #: field:vat.listing.clients,country:0
@@ -253,20 +253,20 @@ msgid ""
 "Tick this case only if it concerns only the last statement on the civil or "
 "cessation of activity"
 msgstr ""
-"Marcar esta opción sólo si incumbe a la última declaración civil o de cese "
-"de actividad"
+"Marque esta opción sólo si incumbe a la última declaración civil o de cese "
+"de actividad."
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_ids:0
 msgid ""
 "Select here the period(s) you want to include in your intracom declaration"
 msgstr ""
-"Elija los periodos que desea incluir en su declaración intracomunitaria"
+"Seleccione los periodos que desea incluir en su declaración intracomunitaria."
 
 #. module: l10n_be
 #: field:vat.listing.clients,amount:0
 msgid "Amount"
-msgstr "Cantidad"
+msgstr "Importe"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -276,7 +276,7 @@ msgstr "Es la última declaración"
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat
 msgid "partner.vat"
-msgstr "partner.vat"
+msgstr "empresa.vat"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,client_nihil:0
@@ -314,7 +314,7 @@ msgstr "Volumen de negocio"
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Declare Periodical VAT"
-msgstr "Declarar IVA Periódico"
+msgstr "Declarar IVA periódico"
 
 #. module: l10n_be
 #: help:partner.vat,mand_id:0
@@ -394,7 +394,7 @@ msgstr "Declaración de IVA"
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,country_ids:0
 msgid "European Countries"
-msgstr "Paises Europeos"
+msgstr "Países europeos"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
@@ -412,7 +412,7 @@ msgstr "Información General"
 msgid ""
 "You can remove clients/partners which you do not want to show in xml file"
 msgstr ""
-"Puede eliminar clientes/empresas que no quiere mostrar en el archivo xml"
+"Puede eliminar clientes/empresas que no quiere mostrar en el archivo xml."
 
 #. module: l10n_be
 #: view:partner.vat.list:0
@@ -434,7 +434,7 @@ msgstr "Código del periodo"
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
 msgid "Ask Payment"
-msgstr "Solicitar Pago"
+msgstr "Solicitar pago"
 
 #. module: l10n_be
 #: view:partner.vat:0
@@ -533,7 +533,7 @@ msgstr ""
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
-msgstr "Socio dentro del IVA"
+msgstr "Empresa IVA intra"
 
 #. module: l10n_be
 #: field:partner.vat.intra,period_ids:0

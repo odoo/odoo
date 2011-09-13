@@ -20,7 +20,7 @@
 ##############################################################################
 
 from base_calendar import base_calendar
-from crm import crm_case
+from crm import crm_base, crm_case
 from osv import fields, osv
 from tools.translate import _
 import logging
@@ -36,13 +36,13 @@ class crm_phonecall(crm_case, osv.osv):
 crm_phonecall()
 
 
-class crm_meeting(crm_case, osv.osv):
+class crm_meeting(crm_base, osv.osv):
     """ CRM Meeting Cases """
 
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ['mailgate.thread',"calendar.event"]
+    _inherit = "calendar.event"
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}), 
@@ -125,7 +125,7 @@ class calendar_attendee(osv.osv):
        return result
 
     _columns = {
-        'categ_id': fields.function(_compute_data, method=True, \
+        'categ_id': fields.function(_compute_data, \
                         string='Event Type', type="many2one", \
                         relation="crm.case.categ", multi='categ_id'),
     }
@@ -138,16 +138,19 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
-            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                        'user_id': user_id}, context=context)
-        except:
-            # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-            
+        
+        # add shortcut unless 'noshortcut' is True in context
+        if not(context and context.get('noshortcut', False)):
+            data_obj = self.pool.get('ir.model.data')
+            try:
+                data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
+                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                            'user_id': user_id}, context=context)
+            except:
+                # Tolerate a missing shortcut. See product/product.py for similar code.
+                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+        
         return user_id
 
 res_users()

@@ -20,10 +20,8 @@
 ##############################################################################
 
 
-import pooler
 import time
 from report import report_sxw
-from osv import osv
 
 class buyer_form_report(report_sxw.rml_parse):
     count=0
@@ -51,7 +49,6 @@ class buyer_form_report(report_sxw.rml_parse):
     def buyer_info(self):
         objects = [object for object in self.localcontext.get('objects')]
         ret_dict = {}
-        ret_list = []
         for object in objects:
             partner = ret_dict.get(object.ach_uid.id,False)
             if not partner:

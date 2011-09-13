@@ -46,7 +46,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Category of ideas">
-                    <field name="name"/>
+                    <field name="complete_name"/>
                     <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
@@ -234,11 +234,11 @@
                         <field name="count_votes" />
                     </group>
                     <field name="stat_vote_ids" colspan="4" mode="graph,tree" nolabel="1">
-                        <graph string="Vots Statistics" type="bar">
+                        <graph string="Votes Statistics" type="bar">
                             <field name="score"/>
                             <field name="nbr"/>
                         </graph>
-                        <tree string="Vots Statistics">
+                        <tree string="Votes Statistics">
                             <field name="score"/>
                             <field name="nbr"/>
                         </tree>
@@ -263,7 +263,7 @@
         <field name="model">idea.idea</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-        <tree colors="blue:state in ('draft');black:state in ('open','close');gray:state in('cancel')" string="Ideas">
+        <tree colors="blue:state == 'draft';black:state in ('open','close');gray:state == 'cancel'" string="Ideas">
             <field name="name"/>
             <field name="category_id"/>
             <field name="user_id"/>

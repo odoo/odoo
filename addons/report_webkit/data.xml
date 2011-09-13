@@ -9,6 +9,7 @@
         <record id="ir_header_webkit_basesample0" model="ir.header_webkit">
             <field name="footer_html"><![CDATA[<html>
     <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <script>
             function subst() {
             var vars={};
@@ -34,6 +35,7 @@
             <field eval="&quot;&quot;&quot;A4&quot;&quot;&quot;" name="format"/>
             <field name="html"><![CDATA[<html>
     <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <script>
             function subst() {
             var vars={};
@@ -53,7 +55,7 @@
     <body style="border:0; margin: 0;" onload="subst()">
         <table class="header" style="border-bottom: 0px solid black; width: 100%">
             <tr>
-                <td>${helper.embed_logo_by_name('camptocamp_logo')}</td>
+                <td>${helper.embed_logo_by_name('camptocamp_logo')|n}</td>
                 <td style="text-align:right"> </td>
             </tr>
             <tr>
@@ -75,7 +77,7 @@
             <tr>
                 <td>Mail: ${company.partner_id.address and company.partner_id.address[0].email or ''|entity}<br/></td>
             </tr>
-        </table> ${_debug or ''} </body>
+        </table> ${_debug or ''|n} </body>
 </html>]]>
 </field>
             <field eval="55.0" name="margin_top"/>

@@ -24,6 +24,7 @@
     'name': 'Partner Geo-Localization',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "normal",
     'description': """
 This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.
 ======================================================================================================
@@ -43,6 +44,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'wizard/crm_forward_to_partner_view.xml',
         'crm_lead_view.xml',
         'report/crm_lead_report_view.xml',
+        'report/crm_partner_report_view.xml',
     ],
     'test': ['test/test_crm_partner_assign.yml'],
     'installable': True,

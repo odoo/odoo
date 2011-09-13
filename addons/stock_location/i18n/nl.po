@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:46+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Goederen verzenden"
 
 #. module: stock_location
 #: view:product.product:0
@@ -30,7 +30,7 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Mutatie"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
@@ -45,10 +45,9 @@ msgstr "Automatisch"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "Parameters"
 
 #. module: stock_location
-#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "Bronlocatie"
@@ -67,7 +66,7 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Het is verplicht een productie batch toe te wijzen aan dit product"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -78,7 +77,7 @@ msgstr ""
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Intern"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -91,13 +90,13 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Locatie"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Factuurstatus"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
@@ -130,7 +129,7 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Voorwaarden"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
@@ -150,7 +149,7 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Kopen"
 
 #. module: stock_location
 #: view:product.product:0
@@ -176,7 +175,7 @@ msgstr ""
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: stock_location
 #: view:product.product:0
@@ -196,23 +195,23 @@ msgstr ""
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Op order maken"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Maak op voorraad"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Relatie Adres"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Te factureren"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -310,7 +309,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Verwervingswijze"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -320,7 +319,7 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Naam"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -338,18 +337,18 @@ msgstr "Handmatige verwerking"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Product"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Verwervingsmethode"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Verzendwijze"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -423,7 +422,6 @@ msgid "Procurement"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "Bestemming"
@@ -469,6 +467,8 @@ msgid "Operation"
 msgstr "Bewerking"
 
 #. module: stock_location
+#: view:product.product:0
+#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
 msgstr "Locatiepaden"
@@ -491,19 +491,19 @@ msgstr ""
 msgid "Invoiced"
 msgstr ""
 
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor overzicht"
+
 #~ msgid "Stock Location Paths"
 #~ msgstr "Voorraad locatiepaden"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
 
 #~ msgid "stock.location.path"
 #~ msgstr "stock.location.path"
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "Leveringen & voorraadlocaties"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten!"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"

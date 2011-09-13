@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-08-03 03:23+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"PO-Revision-Date: 2011-04-10 18:32+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:42+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:36+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
+msgstr "问题列表"
 
 #. module: crm_profiling
 #: model:ir.module.module,description:crm_profiling.module_meta_information
@@ -41,6 +41,15 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"    这模块允许用户去细分业务伙伴。\n"
+"它使用先前和修改好的细分模块的客户概括标准，以问卷调查的方式，你能组合新的问卷调查给业务伙伴。\n"
+"\n"
+"它已经合并到客户关系管理中\n"
+"菜单在客户关系管理\\设置\\细分\n"
+"\n"
+"* 备注：这模块不兼容细分模块因为它们是同名的。\n"
+"    "
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -49,7 +58,7 @@ msgid ""
 "in the sales cycle by helping them to ask the right questions. The "
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
-msgstr ""
+msgstr "你能创建特定主题的问卷调查去指导你的团队在销售周期向客户询问合适的问题。这细分工具能根据不同问题的答案自动划分业务伙伴到不同的类型。"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -61,12 +70,12 @@ msgstr "问题"
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,init,open:0
 msgid "Open Questionnaire"
-msgstr "待处理调查问卷"
+msgstr "开启的问卷调查"
 
 #. module: crm_profiling
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "错误！您不能创建递归的商会会员。"
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
@@ -82,17 +91,17 @@ msgstr "答案"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "业务伙伴细分"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
-msgstr "配置中"
+msgstr "特征"
 
 #. module: crm_profiling
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
 msgid "Crm Profiling management - To Perform Segmentation within Partners"
-msgstr ""
+msgstr "客户关系管理 客户特征管理 - 进行业务伙伴的细分"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -115,19 +124,19 @@ msgstr "答案"
 #. module: crm_profiling
 #: wizard_field:open_questionnaire,init,questionnaire_name:0
 msgid "Questionnaire name"
-msgstr "调查问卷名称"
+msgstr "问卷调查名称"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Use a questionnaire"
-msgstr "使用的调查问卷"
+msgstr "使用一问卷调查"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
 msgid "Questionnaires"
-msgstr "调查问卷"
+msgstr "问卷调查"
 
 #. module: crm_profiling
 #: help:crm.segmentation,profiling_active:0
@@ -135,17 +144,17 @@ msgid ""
 "Check                             this box if you want to use this tab as "
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
-msgstr ""
+msgstr "选中这选项，如果你想使用这标签作为细分规则的一部分。如果不选中，这规则将被忽略"
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
 msgid "Error ! You can not create recursive profiles."
-msgstr "错误! 你不能创建递归的配置"
+msgstr "错误! 你不能创建递归的特征。"
 
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
-msgstr "使用这配置规则"
+msgstr "使用这客户特征的规则"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -156,12 +165,12 @@ msgstr "可用答案"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr "包括答案"
+msgstr "包括的答案"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr "子配置"
+msgstr "子客户特征"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -174,7 +183,7 @@ msgstr "问题"
 #. module: crm_profiling
 #: field:crm.segmentation,parent_id:0
 msgid "Parent Profile"
-msgstr "上级配置"
+msgstr "上级客户特征"
 
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,init,end:0
@@ -185,7 +194,7 @@ msgstr "取消"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/crm_profiling.py:178
@@ -194,12 +203,12 @@ msgstr ""
 #: wizard_view:open_questionnaire,init:0
 #, python-format
 msgid "Questionnaire"
-msgstr "调查问卷"
+msgstr "问卷调查"
 
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
 msgid "Using a questionnaire"
-msgstr "使用一调查问卷"
+msgstr "使用一问卷调查"
 
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,open,compute:0

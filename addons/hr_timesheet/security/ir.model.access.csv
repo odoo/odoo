@@ -1,7 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_hr_analytic_timesheet","hr.analytic.timesheet","model_hr_analytic_timesheet","base.group_hr_user",1,1,1,1
+"access_hr_analytic_timesheet_employee","hr.analytic.timesheet","model_hr_analytic_timesheet","base.group_user",1,1,1,0
 "access_hr_account_analytic_line","account.account.analytic.line","account.model_account_analytic_line","base.group_hr_user",1,1,1,1
-"access_hr_account_analytic_line_employee","account.account.analytic.line employee","account.model_account_analytic_line","base.group_user",1,0,0,0
+"access_hr_account_analytic_line_employee","account.account.analytic.line employee","account.model_account_analytic_line","base.group_user",1,1,1,0
 "access_account_analytic_journal","account.account.analytic.journal","account.model_account_analytic_journal","base.group_hr_user",1,1,1,1
 "access_product_product_user","product.product user","product.model_product_product","base.group_hr_user",1,1,1,1
 "access_product_template_hr_timesheet","product.template.hr.timesheet","product.model_product_template","base.group_hr_user",1,1,1,1
@@ -9,3 +10,4 @@
 "access_account_fiscalyear_hr_user","account.account.fiscalyear.user","account.model_account_fiscalyear","base.group_hr_user",1,1,1,1
 "hr.access_account_journal_view_hruser","account.journal.view hruser","account.model_account_journal_view","base.group_hr_user",1,0,0,0
 "hr.access_account_journal_column_hruser","account.journal.column hruser","account.model_account_journal_column","base.group_hr_user",1,0,0,0
+"access_hr_analytic_timesheet_user","hr.analytic.timesheet.user","model_hr_analytic_timesheet","base.group_user",1,0,0,0

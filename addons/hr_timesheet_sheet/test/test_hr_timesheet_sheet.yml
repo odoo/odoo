@@ -25,9 +25,9 @@
     address_home_id: base.res_partner_address_1
     company_id: res_company_openERP
     gender: male
-    marital: hr.hr_employee_marital_status_single
+    marital: single
     name: Mark Johnson
-    user_id: base.user_root
+    user_id: base.user_demo
 
 -
   I create new Timesheet journal for employee.
@@ -62,14 +62,13 @@
 
 -
   I create my current timesheet for "Mark Johnson".
--
+- 
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-    date_current: !eval "'%s-05-26' %(datetime.now().year)"
-    date_from: !eval "'%s-05-01' %(datetime.now().year)"
-    date_to: !eval "'%s-05-31' %(datetime.now().year)"
-    name: !eval "'Week-22(%s)' %(datetime.now().year)"
+    date_current: !eval time.strftime('%Y-%m-%d')
+    date_from: !eval time.strftime('%Y-%m-01')
+    name: !eval time.strftime('%U') 
     state: new
-    user_id: base.user_root
+    user_id: base.user_demo
     employee_id: 'hr_employee_employee0'
 -
   Now , at the time of login, I create Attendances and perform "Sign In" action.
@@ -77,7 +76,7 @@
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_employee0'
-    name: !eval "'%s-05-26 10:08:08' %(datetime.now().year)"
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(max(0,datetime.now().hour-1),max(0,datetime.now().minute-1),max(0,datetime.now().second-1))
 
 -
   At the time of logout, I create attendance and perform "Sign Out".
@@ -85,7 +84,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_employee0'
-    name: !eval "'%s-05-26 15:10:55' %(datetime.now().year)"
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
 
 -
   I create Timesheet Entry for time spend on today work.
@@ -94,7 +93,7 @@
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: !eval "'%s-05-26' %(datetime.now().year)"
+        date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         unit_amount: 3.00
         amount: -90.00
@@ -125,7 +124,7 @@
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: !eval "'%s-05-26' %(datetime.now().year)"
+        date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
         unit_amount: 2.0
         amount: -90.00

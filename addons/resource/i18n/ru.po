@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -23,6 +23,8 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Если пусто, это не рабочий день для всей компании. Если ресурс установлен, "
+"отдых/отпуск только на этот ресурс"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -32,7 +34,7 @@ msgstr "Пятница"
 #. module: resource
 #: field:resource.resource,resource_type:0
 msgid "Resource Type"
-msgstr ""
+msgstr "Тип ресурса"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
@@ -46,6 +48,7 @@ msgid "Resources Leaves"
 msgstr ""
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
@@ -71,28 +74,28 @@ msgstr "Воскресенье"
 #. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
-msgstr ""
+msgstr "Поиск ресурсов"
 
 #. module: resource
 #: view:resource.resource:0
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
 #: view:resource.resource:0
 msgid "Resources"
-msgstr ""
+msgstr "Ресурсы"
 
 #. module: resource
 #: field:resource.calendar,manager:0
 msgid "Workgroup manager"
-msgstr ""
+msgstr "Руководитель группы"
 
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr ""
+msgstr "Рабочее время начнется с"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
@@ -102,7 +105,7 @@ msgstr ""
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Календарь ресурса"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -116,7 +119,7 @@ msgstr "Компания"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr ""
+msgstr "Материал"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -126,22 +129,22 @@ msgstr "День недели"
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr ""
+msgstr "Рабочее время будет заканчиваться в"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: resource
 #: view:resource.calendar:0
 msgid "Search Working Time"
-msgstr ""
+msgstr "Искать рабочее время"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Reason"
-msgstr ""
+msgstr "Причина"
 
 #. module: resource
 #: view:resource.resource:0
@@ -176,7 +179,7 @@ msgstr ""
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
 msgid "Resource"
-msgstr ""
+msgstr "Ресурс"
 
 #. module: resource
 #: view:resource.calendar:0
@@ -185,7 +188,7 @@ msgstr ""
 #: field:resource.calendar.leaves,name:0
 #: field:resource.resource,name:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -206,12 +209,11 @@ msgid "Wednesday"
 msgstr "Среда"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Period"
-msgstr ""
+msgstr "Рабочий период"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -221,7 +223,7 @@ msgstr ""
 #. module: resource
 #: field:resource.resource,active:0
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #. module: resource
 #: help:resource.resource,active:0
@@ -233,27 +235,27 @@ msgstr ""
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Календарь ресурса"
 
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr ""
+msgstr "Пользователь управляющий доступом к ресурсу"
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Определить график ресурса"
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr ""
+msgstr "Работа с"
 
 #. module: resource
 #: field:resource.resource,code:0
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -263,7 +265,7 @@ msgstr "Понедельник"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Работа до"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -282,7 +284,7 @@ msgstr "Вторник"
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
 msgid "Working time"
-msgstr ""
+msgstr "Рабочее время"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -293,7 +295,7 @@ msgstr ""
 #. module: resource
 #: view:resource.resource:0
 msgid "General Information"
-msgstr ""
+msgstr "Общая информация"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -306,23 +308,23 @@ msgstr ""
 #. module: resource
 #: view:resource.resource:0
 msgid "Inactive"
-msgstr ""
+msgstr "Неактивен"
 
 #. module: resource
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr ""
+msgstr "(отпуск)"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
 msgid "Efficiency factor"
-msgstr ""
+msgstr "КПД"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr ""
+msgstr "Человек"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

@@ -13,17 +13,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "计工单服务"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Wed"
 msgstr "周三"
@@ -37,12 +37,12 @@ msgstr "（留空表示当前时间）"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "No employee defined for your user !"
-msgstr "您的用户没有定义雇员信息！"
+msgstr "您的用户没有定义员工信息！"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -52,6 +52,9 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"员工能记录在不同项目所花费的时间。\r\n"
+"一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n"
+"此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -61,7 +64,7 @@ msgstr "今日"
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "辅助核算记录集合"
+msgstr "辅助核算账薄"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -72,18 +75,18 @@ msgstr "停止工作"
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
 msgid "Employee Timesheet"
-msgstr "员工时间表"
+msgstr "员工计工单"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Work done stats"
-msgstr "完成工作的统计"
+msgstr "工作完成统计"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_reporting_timesheet
 msgid "Timesheet"
-msgstr "时间表"
+msgstr "计工单"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -92,8 +95,8 @@ msgid "janvier"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Mon"
 msgstr "周一"
@@ -111,6 +114,9 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"员工能记录在不同项目所花费的时间。\r\n"
+"一个项目是一个辅助核算項，而且该项目所花费的时间为这辅助核算項的成本。\r\n"
+"此功能允许记录其考勤和计工单。"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -120,7 +126,7 @@ msgstr "最低辅助核算金额"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr "月度雇员时间表"
+msgstr "员工月度计工单"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -131,7 +137,7 @@ msgstr "最近完成的工作"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr "错误！您不能选择该雇员担任经理的部门。"
+msgstr "错误！您不用为他选择一部门因为他是总经理(CEO)。"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -143,12 +149,12 @@ msgstr "当前状态"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "员工姓名"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr "打印雇员时间表"
+msgstr "打印员工计工单"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:174
@@ -168,11 +174,11 @@ msgstr "用户错误"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "No cost unit defined for this employee !"
-msgstr ""
+msgstr "这员工没定义成本单位"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Tue"
 msgstr "周二"
@@ -191,24 +197,24 @@ msgstr "警告"
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
 msgid "Human Resources (Timesheet encoding)"
-msgstr "人力资源(时间表编码)"
+msgstr "人力资源(计工单编码)"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out By Project"
-msgstr ""
+msgstr "项目签入/签出"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sat"
 msgstr "周六"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sun"
 msgstr "周日"
@@ -222,7 +228,7 @@ msgstr "打印"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Lines"
-msgstr "时间表明细"
+msgstr "计工单明细"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -233,14 +239,16 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr "月度雇员时间表"
+msgstr "员工月度计工单"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "July"
-msgstr "七月"
+msgstr "7月"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,date:0
@@ -264,7 +272,7 @@ msgstr ""
 msgid ""
 "Through Working Hours you can register your working hours by project every "
 "day."
-msgstr ""
+msgstr "用工时您可以记录您在项目的每天工作时间。"
 
 #. module: hr_timesheet
 #: model:ir.module.module,description:hr_timesheet.module_meta_information
@@ -281,13 +289,21 @@ msgid ""
 "to set up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"该模块实现计工单功能。每个员工能记录和跟踪在不同项目所花费的时间。\n"
+"一个项目是一个辅助核算項，所花费的时间是这个辅助核算项的成本。\n"
+"\n"
+"提供员工工时跟踪报告它完全集成了成本会计模块。它允许您设置个人事务的管理。\n"
+"    "
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "March"
-msgstr "三月"
+msgstr "3月"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -301,21 +317,23 @@ msgid "décembre"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "September"
-msgstr "九月"
+msgstr "9月"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "时间表明细"
+msgstr "计工单明细"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "员工"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -327,7 +345,7 @@ msgstr "按月份统计"
 #: field:hr.analytical.timesheet.employee,month:0
 #: field:hr.analytical.timesheet.users,month:0
 msgid "Month"
-msgstr "月"
+msgstr "月份"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,info:0
@@ -342,7 +360,7 @@ msgstr "要开发票"
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
-msgstr "员工时间表"
+msgstr "员工计工单"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
@@ -351,8 +369,8 @@ msgid "Sign in / Sign out by project"
 msgstr "项目的签入/签出"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Fri"
 msgstr "周五"
@@ -369,6 +387,8 @@ msgid ""
 "Analytic journal is not defined for employee %s \n"
 "Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
+"员工  %s 没定义辅助核算账薄。\n"
+"为选定的用户定义员工和辅助核算账薄！"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -378,12 +398,12 @@ msgstr "(留空表示当前时间)"
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Timesheets"
-msgstr "时间表"
+msgstr "计工单"
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
+msgstr "为员工指定的产品其类型必须是“服务”。"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -392,23 +412,27 @@ msgid "août"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "August"
-msgstr "八月"
+msgstr "8月"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "June"
-msgstr "六月"
+msgstr "6月"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Print My Timesheet"
-msgstr "打印我的时间表"
+msgstr "打印我的计工单"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -422,16 +446,18 @@ msgid "Date"
 msgstr "日期"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "November"
-msgstr "十一月"
+msgstr "11月"
 
 #. module: hr_timesheet
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "错误！您不能创建递归的员工等级。"
+msgstr "错误！您不能创建循环的员工等级。"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -439,18 +465,22 @@ msgid "Closing Date"
 msgstr "结束日期"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "October"
-msgstr "十月"
+msgstr "10月"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "January"
-msgstr "一月"
+msgstr "1月"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -458,8 +488,8 @@ msgid "Key dates"
 msgstr "关键日期"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Thu"
 msgstr "周四"
@@ -472,13 +502,13 @@ msgstr "辅助核算统计"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
+msgstr "打印员工计工单 & 打印我的计工单"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "员工ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -488,7 +518,7 @@ msgstr "一般信息"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
 msgid "My Timesheet"
-msgstr "我的时间表"
+msgstr "我的计工单"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -496,11 +526,13 @@ msgid "Analysis summary"
 msgstr "辅助核算摘要"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "December"
-msgstr "十二月"
+msgstr "12月"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -516,7 +548,7 @@ msgstr "取消"
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr "员工时间表"
+msgstr "员工计工单"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -533,7 +565,7 @@ msgstr "信息"
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr "雇员"
+msgstr "员工"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -550,12 +582,12 @@ msgstr "当前日期"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
-msgstr ""
+msgstr "辅助核算项"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "该向导将打印月度计工单"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -569,11 +601,13 @@ msgid "Invoicing"
 msgstr "开发票"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "May"
-msgstr "五月"
+msgstr "5月"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -595,19 +629,21 @@ msgstr "（服务器上的时间）"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Working Hours"
-msgstr "工作小时"
+msgstr "工时"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "项目签入"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "February"
-msgstr "二月"
+msgstr "2月"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
@@ -617,12 +653,12 @@ msgstr "辅助核算明细"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "项目签出"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
+msgstr "员工"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -631,11 +667,13 @@ msgid "octobre"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "April"
-msgstr "四月"
+msgstr "4月"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:176
@@ -644,6 +682,8 @@ msgid ""
 "No analytic account defined on the project.\n"
 "Please set one or we can not automatically fill the timesheet."
 msgstr ""
+"这项目没定义辅助核算项。\n"
+"请设置一个或我不能自动填充的计工单。"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -671,7 +711,7 @@ msgstr "按用户统计"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:42
 #, python-format
 msgid "No employee defined for this user"
-msgstr ""
+msgstr "这用户没定义员工"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -687,7 +727,7 @@ msgstr "会计"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner Id"
-msgstr ""
+msgstr "业务伙伴ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

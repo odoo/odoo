@@ -1,110 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
 
-    	<menuitem
-	        id="menu_finance_belgian_statement"
-	        name="Belgium Statements"
-	        parent="account.menu_finance_legal_statement"/>
+      <record id="view_partner_vat_listing_13" model="ir.ui.view">
+        <field name="name">Partner VAT Listing</field>
+        <field name="model">partner.vat_13</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Partner VAT Listing">
+            <label string="This wizard will create an XML file for VAT details and total invoiced amounts per partner." colspan="4"/>
+            <newline/>
+            <field name="year"/>
+            <newline/>
+            <field name="limit_amount"/>
+            <separator colspan="4"/>
+            <group colspan="4">
+              <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+              <button colspan="1" name="get_partner" string="View Customers" type="object" icon="terp-partner"/>
+            </group>
+          </form>
+        </field>
+      </record>
 
-    	<record id="view_partner_vat_listing" model="ir.ui.view">
-            <field name="name">Partner VAT Listing</field>
-            <field name="model">partner.vat</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-			<form string="Partner VAT Listing">
-			    <label string="This wizard will create an XML file for Vat details and total invoiced amounts per partner." colspan="4"/>
-				    <newline/>
-				    <field name="fyear" default_focus="1" widget="selection"/>
-				    <newline/>
-				    <field name="mand_id"/>
-				    <newline/>
-				    <field name="limit_amount"/>
-				    <newline/>
-				    <field name="test_xml"/>
-	           	 	<separator colspan="4"/>
-	               	<group colspan="4" >
-	               		<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-						<button colspan="1" name="get_partner" string="View Client" type="object"  icon="terp-partner"/>
-				    </group>
-			</form>
-            </field>
-		</record>
+      <record id="action_partner_vat_listing_13" model="ir.actions.act_window">
+        <field name="name">Partner VAT Listing</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">partner.vat_13</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_partner_vat_listing_13"/>
+        <field name="target">new</field>
+      </record>
 
-		<record id="action_partner_vat_listing" model="ir.actions.act_window">
-            <field name="name">Partner VAT Listing</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">partner.vat</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_partner_vat_listing"/>
-            <field name="target">new</field>
-    	</record>
+	    <menuitem name="Annual Listing Of VAT-Subjected Customers" parent="l10n_be.menu_finance_belgian_statement" action="action_partner_vat_listing_13" id="l10n_be.partner_vat_listing"/>
 
-	    <menuitem
-	        name="Annual Listing Of VAT-Subjected Customers"
-	        parent="menu_finance_belgian_statement"
-	        action="action_partner_vat_listing"
-	        id="partner_vat_listing"/>
-
-	    <record id="view_vat_listing" model="ir.ui.view">
-            <field name="name">Vat Listing</field>
-            <field name="model">partner.vat.list</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Select Fiscal Year" >
-                	<label string="You can remove clients/partners which you do not want in exported xml file" colspan="4"/>
-                	<separator string="Clients" colspan="4"/>
-                	<field name="partner_ids" colspan="4" nolabel="1" default_focus="1"/>
-                	<separator colspan="4"/>
-                	<group colspan="4" >
-						<button colspan="1" name="create_xml" string="Create XML" type="object"  icon="gtk-execute"/>
-				    </group>
-					<separator string="XML File has been Created." colspan="4"/>
-					<field name="msg" colspan="4" nolabel="1"/>
-					<field name="name"/>
-					<newline/>
-					<field name="file_save" />
-					<separator colspan="4"/>
-					<button special="cancel" string="Close" icon="gtk-cancel"/>
-                </form>
-            </field>
-        </record>
-
-         <!-- osv_memory for vat listing of clients -->
-	     <record id="view_vat_listing_form" model="ir.ui.view">
-            <field name="name">step.vat.listing</field>
-            <field name="model">vat.listing.clients</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="VAT listing">
-	                <field name="name"/>
-                    <field name="vat"/>
-                    <newline/>
-                    <field name="country"/>
-                    <newline/>
-                    <field name="amount"/>
-                    <field name="turnover"/>
-                </form>
-            </field>
-        </record>
-
-		<record id="view_vat_listing_tree" model="ir.ui.view">
-            <field name="name">step.vat.listing</field>
-            <field name="model">vat.listing.clients</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="VAT listing">
-	                <field name="name"/>
-                    <field name="vat"/>
-                    <newline/>
-                    <field name="country"/>
-                    <newline/>
-                    <field name="amount"/>
-                    <field name="turnover"/>
-                </tree>
-            </field>
-        </record>
-
+      <record id="view_vat_listing_13" model="ir.ui.view">
+        <field name="name">Vat Listing</field>
+        <field name="model">partner.vat.list_13</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Select Fiscal Year">
+            <label string="You can remove customers which you do not want in exported xml file" colspan="4"/>
+            <separator string="Customers" colspan="4"/>
+            <field name="partner_ids" colspan="4" nolabel="1" default_focus="1" height="200" width="500"/>
+            <separator colspan="4"/>
+            <group colspan="4">
+              <button colspan="2" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+              <button colspan="2" name="print_vatlist" string="Print" type="object" icon="gtk-print"/>
+            </group>
+            <separator string="XML File has been Created." colspan="4"/>
+            <field name="msg" colspan="4" nolabel="1"/>
+            <field name="name"/>
+            <newline/>
+            <field name="file_save"/>
+            <separator colspan="4"/>
+            <button special="cancel" string="Close" icon="gtk-cancel"/>
+          </form>
+        </field>
+      </record>
+      
     </data>
 </openerp>

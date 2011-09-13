@@ -35,7 +35,7 @@ def geo_find(addr):
         result = re.search(regex, xml, re.M|re.I)
         if not result:
             return None
-        return float(result.group(1)),float(result.group(2))
+        return float(result.group(2)),float(result.group(1))
     except Exception, e:
         raise osv.except_osv(_('Network error'),
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
@@ -142,21 +142,6 @@ class crm_lead(osv.osv):
                         ('country', '=', part.country_id.id),
                     ], context=context)
 
-                # 3. third way: other countries, small area
-                if not part_ids:
-                    part_ids = self.pool.get('res.partner').search(cr, uid, [
-                        ('partner_weight','>',0),
-                        ('partner_latitude','>',result[0]-2), ('partner_latitude','<',result[0]+2),
-                        ('partner_longitude','>',result[1]-1.5), ('partner_longitude','<',result[1]+1.5)
-                    ], context=context)
-
-                # 4. fourth way: other countries, big area
-                if not part_ids:
-                    part_ids = self.pool.get('res.partner').search(cr, uid, [
-                        ('partner_weight','>',0),
-                        ('partner_latitude','>',result[0]-4), ('partner_latitude','<',result[0]+4),
-                        ('partner_longitude','>',result[1]-3), ('partner_longitude','<',result[1]+3)
-                    ], context=context)
 
                 # 5. fifth way: anywhere in same country
                 if not part_ids:

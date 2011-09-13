@@ -46,33 +46,10 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle', size=64),
         'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id':fields.function(_get_latest_contract, method=True, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
     }
 
 hr_employee()
-
-class hr_passport(osv.osv):
-    """
-    Employee Passport
-    Passport based Contracts for Employees
-    """
-
-    _name = 'hr.passport'
-    _description = 'Passport Detail'
-    _columns = {
-        'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
-        'name': fields.char('Passport No', size=64, required=True, readonly=False),
-        'country_id': fields.many2one('res.country', 'Country of Issue', required=True),
-        'address_id': fields.many2one('res.partner.address', 'Address', required=False),
-        'date_issue': fields.date('Passport Issue Date', required=True),
-        'date_expire': fields.date('Passport Expire Date', required=True),
-        'note': fields.text('Description'),
-        'contracts_ids': fields.one2many('hr.contract', 'passport_id', 'Contracts', required=False, readonly=True),
-    }
-    _sql_constraints = [
-        ('passport_no_uniq', 'unique (employee_id, name)', 'The Passport No must be unique !'),
-    ]
-hr_passport()
 
 class hr_contract_type(osv.osv):
     _name = 'hr.contract.type'
@@ -100,7 +77,6 @@ class hr_contract(osv.osv):
         'advantages': fields.text('Advantages'),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport_id': fields.many2one('hr.passport', 'Passport', required=False),
         'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
     }

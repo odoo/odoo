@@ -13,15 +13,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
-msgstr ""
+msgstr "İşlem Node"
 
 #. module: process
 #: help:process.process,active:0
@@ -29,6 +29,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
 msgstr ""
+"Aktif alan Yanlış olarak ayarlanırsa, bu özellik işlemi kaldırmadan "
+"gizlemenize olanak sağlayacaktır."
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -38,13 +40,13 @@ msgstr "Bağlı Menü"
 #. module: process
 #: field:process.transition,action_ids:0
 msgid "Buttons"
-msgstr ""
+msgstr "Butonlar"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "Şuna göre grupla"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -54,12 +56,12 @@ msgstr "Durum"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "Node Türü"
 
 #. module: process
 #: field:process.node,help_url:0
 msgid "Help URL"
-msgstr ""
+msgstr "Yardım URL'si"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -67,13 +69,13 @@ msgstr ""
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
-msgstr ""
+msgstr "İşlem Nodeleri"
 
 #. module: process
 #: view:process.process:0
 #: field:process.process,node_ids:0
 msgid "Nodes"
-msgstr ""
+msgstr "Nodeler"
 
 #. module: process
 #: view:process.node:0
@@ -85,17 +87,17 @@ msgstr "Koşullar"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Proses Geçişi Ara"
 
 #. module: process
 #: field:process.condition,node_id:0
 msgid "Node"
-msgstr ""
+msgstr "Node"
 
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Workflow Trigger"
-msgstr ""
+msgstr "İş Akışı Tetikleyici"
 
 #. module: process
 #: field:process.transition,note:0
@@ -105,7 +107,7 @@ msgstr "Açıklama"
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
 msgid "Process Transitions Actions"
-msgstr ""
+msgstr "Proses Geçiş İşlemleri"
 
 #. module: process
 #: field:process.condition,model_id:0
@@ -125,18 +127,18 @@ msgstr "Kaynak Node"
 #: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
-msgstr ""
+msgstr "İş Akış Geçişleri"
 
 #. module: process
 #: field:process.transition.action,action:0
 msgid "Action ID"
-msgstr ""
+msgstr "İşlem Kimliği"
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
-msgstr ""
+msgstr "Proses Geçişi"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
@@ -146,13 +148,13 @@ msgstr "Koşul"
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Dummy"
-msgstr ""
+msgstr "Sahte"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr ""
+msgstr "İşlemler"
 
 #. module: process
 #: field:process.condition,name:0
@@ -166,7 +168,7 @@ msgstr "Adı"
 #. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
-msgstr ""
+msgstr "Geçişlerin Başlatılması"
 
 #. module: process
 #: view:process.node:0
@@ -180,18 +182,18 @@ msgstr "Notlar"
 #. module: process
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
-msgstr ""
+msgstr "Geçiş"
 
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
+msgstr "İşlem Arama"
 
 #. module: process
 #: selection:process.node,kind:0
 #: field:process.node,subflow_id:0
 msgid "Subflow"
-msgstr ""
+msgstr "Alt akış"
 
 #. module: process
 #: field:process.process,active:0
@@ -201,7 +203,7 @@ msgstr "Aktif"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
+msgstr "İlgili Gruplar"
 
 #. module: process
 #: field:process.node,model_states:0
@@ -216,7 +218,7 @@ msgstr "İşlem"
 #. module: process
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
-msgstr ""
+msgstr "Akış Başlatma"
 
 #. module: process
 #: model:ir.module.module,description:process.module_meta_information
@@ -231,22 +233,31 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"     Bu modül seçilen modüllerde ve meydana\n"
+"     geldiği dizide kapsanan temel işlemleri\n"
+"     gösterir\n"
+"\n"
+"     Not: Bu, modulename_process_xml içeren modüller için geçerlidir\n"
+"     örn. product/process/product_process_xml\n"
+"\n"
+"    "
 
 #. module: process
 #: field:process.condition,model_states:0
 msgid "Expression"
-msgstr ""
+msgstr "İfade"
 
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Gerekli Gruplar"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Gelen Geçişler"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -256,7 +267,7 @@ msgstr "Tipi"
 #. module: process
 #: field:process.node,transition_out:0
 msgid "Ending Transitions"
-msgstr ""
+msgstr "Sonlanan Geçişler"
 
 #. module: process
 #: model:ir.model,name:process.model_process_process
@@ -268,19 +279,19 @@ msgstr "İşlem"
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "İşlem Node Arama"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Diğer Koşullar"
 
 #. module: process
 #: model:ir.module.module,shortdesc:process.module_meta_information
 #: model:ir.ui.menu,name:process.menu_process
 msgid "Enterprise Process"
-msgstr ""
+msgstr "Kurumsal İşlem"
 
 #. module: process
 #: view:process.transition:0
@@ -291,7 +302,7 @@ msgstr "İşlemler"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Özellikler"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
@@ -307,13 +318,13 @@ msgstr "Hedef Node"
 #. module: process
 #: field:process.node,kind:0
 msgid "Kind of Node"
-msgstr ""
+msgstr "Node Türü"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "Giden Geçişler"
 
 #. module: process
 #: view:process.node:0
@@ -324,7 +335,7 @@ msgstr "Geçişler"
 #. module: process
 #: selection:process.transition.action,state:0
 msgid "Object Method"
-msgstr ""
+msgstr "İtiraz Metodu"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

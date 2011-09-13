@@ -109,6 +109,7 @@ class report_custom(report_rml):
         %s
         </report>
         ''' % '\n'.join(user_xml)
+        xml = tools.ustr(xml).encode('utf8')
         return self.post_process_xml_data(cr, uid, xml, context)
 
 report_custom('report.hr.attendance.allweeks', 'hr.employee', '', 'addons/hr_attendance/report/timesheet.xsl')

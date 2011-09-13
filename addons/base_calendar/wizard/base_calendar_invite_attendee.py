@@ -98,12 +98,12 @@ send an Email to Invited Person')
                     user = user_obj.browse(cr, uid, user_id)
                     res = {
                            'user_id': user_id,
-                           'email': user.address_id.email
+                           'email': user.user_email
                            }
                     res.update(ref)
                     vals.append(res)
-                    if user.address_id.email:
-                        mail_to.append(user.address_id.email)
+                    if user.user_email:
+                        mail_to.append(user.user_email)
 
             elif  type == 'external' and datas.get('email'):
                 res = {'email': datas['email']}
@@ -140,7 +140,7 @@ send an Email to Invited Person')
                 if not mail_to:
                     name =  map(lambda x: x[1], filter(lambda x: type==x[0], \
                                        self._columns['type'].selection))
-                    raise osv.except_osv(_('Error!'), ("%s must have an email  Address to send mail") %(name[0]))
+                    raise osv.except_osv(_('Error!'), _("%s must have an email  address to send mail") %(name[0]))
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from = current_user.user_email or tools.config.get('email_from', False))
 

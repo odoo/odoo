@@ -21,10 +21,10 @@
 
 import time
 
-import netsvc
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
+import netsvc
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -71,7 +71,7 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, method=True, string='Total Amount'),
+        'amount': fields.function(_amount, string='Total Amount'),
         'invoice_id': fields.many2one('account.invoice', "Employee's Invoice"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'department_id':fields.many2one('hr.department','Department'),
@@ -127,7 +127,7 @@ class hr_expense_expense(osv.osv):
     def invoice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False,
         inv_ids = []
         for id in ids:
@@ -216,7 +216,6 @@ class hr_expense_expense(osv.osv):
                     account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
             inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
             invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
-
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
@@ -228,6 +227,16 @@ class product_product(osv.osv):
     _columns = {
         'hr_expense_ok': fields.boolean('Can Constitute an Expense', help="Determines if the product can be visible in the list of product within a selection from an HR expense sheet line."),
     }
+
+    def on_change_hr_expense_ok(self, cr, uid, id, hr_expense_ok):
+
+        if not hr_expense_ok:
+            return {}
+        data_obj = self.pool.get('ir.model.data')
+        cat_id = data_obj._get_id(cr, uid, 'hr_expense', 'cat_expense')
+        categ_id = data_obj.browse(cr, uid, cat_id).res_id
+        res = {'value' : {'type':'service','procure_method':'make_to_stock','supply_method':'buy','purchase_ok':True,'sale_ok' :False,'categ_id':categ_id }}
+        return res
 
 product_product()
 
@@ -246,7 +255,7 @@ class hr_expense_line(osv.osv):
         'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
-        'total_amount': fields.function(_amount, method=True, string='Total', digits_compute=dp.get_precision('Account')),
+        'total_amount': fields.function(_amount, string='Total', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
         'unit_quantity': fields.float('Quantities' ),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),

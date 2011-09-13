@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 12:08+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-05-21 07:42+0000\n"
+"Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:59+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -734,7 +733,7 @@ msgstr "Copie cachée"
 #. module: email_template
 #: selection:email_template.mailbox,mail_type:0
 msgid "Plain Text"
-msgstr "Plein texte"
+msgstr "Texte brut"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -955,7 +954,7 @@ msgstr "Texte, sinon HTML"
 #: code:addons/email_template/email_template.py:319
 #, python-format
 msgid "Copy of template %s"
-msgstr ""
+msgstr "Copie du modèle %s"
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -973,7 +972,7 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Erreur lors de l'envoi du courriel : %s"
@@ -1069,7 +1068,7 @@ msgid "Email Mailbox"
 msgstr "Boite de réception des courriels"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1190,7 +1189,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Courriels"
 
@@ -1367,29 +1368,5 @@ msgid "No Description"
 msgstr "Pas de description"
 
 #, python-format
-#~ msgid "Mako templates not installed"
-#~ msgstr "Modèles Mako non installés"
-
-#, python-format
 #~ msgid "Copy of template "
 #~ msgstr "Copie du modèle "
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de modèle incorrect dans la définition de l'action"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Paramètres incorrects"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML incorrect dans l'architecture de la vue !"
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it based on specific customer "
-#~ "profile fields so that their names or other partner related information can "
-#~ "be automatically inserted in it."
-#~ msgstr ""
-#~ "Un modèle de courriel est un courriel qui sera envoyé lors d'une campagne "
-#~ "marketing. Vous pouvez le personnaliser en fonction de champs propres à "
-#~ "chaque client, de façon à ce que leur noms ou d'autres informations du "
-#~ "partenaire soient insérées automatiquement."

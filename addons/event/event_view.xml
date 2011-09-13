@@ -34,6 +34,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_event_type">
+            <field name="name">Types of Events</field>
             <field name="res_model">event.type</field>
             <field name="view_type">form</field>
         </record>
@@ -448,7 +449,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="date" date_delay="date_closed" string="Event Registration">
+                <calendar color="event_id" date_start="date" date_stop="date_closed" string="Event Registration">
                     <field name="event_id"/>
                     <field name="partner_invoice_id"/>
                 </calendar>

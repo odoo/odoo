@@ -147,7 +147,7 @@
 	                		<field name="workcenter_id" widget="selection"/>
 	                		<field name="production_id" />
 	                		<field name="state" />
-	                		<field name="date_planned" widget="date"/>
+	                		<field name="date_planned"/>
 	                	</group>
                 	<newline/>
                     <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
@@ -350,7 +350,7 @@
                 <graph string="Hours by Work Center" type="bar">
                      <field name="date_start_date"/>
                      <field name="hour" operator="+"/>
-                     <field name="workcenter_id" group="True" operator="+"/>
+                     <field name="workcenter_id" group="True"/>
                 </graph>
             </field>
         </record>

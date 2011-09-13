@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #-*- coding:utf-8 -*-
 ##############################################################################
 #
@@ -42,6 +41,7 @@ Fetch email from POP / IMAP servers.
         "fetchmail_view.xml",
         "fetchmail_data.xml",
         'security/ir.model.access.csv',
+        'fetchmail_installer_view.xml'
     ],
     'demo_xml': [
 

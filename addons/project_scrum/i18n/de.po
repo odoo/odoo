@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-18 08:41+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2011-04-03 09:12+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:42+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:03+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_scrum
 #: help:project.scrum.email,scrum_master_email:0
@@ -273,13 +272,13 @@ msgstr "Scrum Metting für %s"
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
 #, python-format
 msgid "Product Backlog '%s' is converted into Task %d."
-msgstr ""
+msgstr "Produkt Rückstand '%s' ist in Aufgabe %d konvertiert worden."
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:62
 #, python-format
 msgid "Product Backlog '%s' is assigned sprint:%s"
-msgstr ""
+msgstr "Produkt Rückstand '%s' ist Sprint:%s zugewiesen"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
@@ -987,6 +986,9 @@ msgid ""
 " \n"
 "I am sending you Daily Meeting Details of date %s for the Sprint %s\n"
 msgstr ""
+"Hallo %s,\n"
+" \n"
+"Ich sende Ihnen Meeting Details vom Datum %s für den Sprint %s\n"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:325
@@ -1001,6 +1003,14 @@ msgid ""
 "*Blocks encountered:\n"
 "_______________________ %s"
 msgstr ""
+"\n"
+"* Aufgaben seit gestern:\n"
+"_______________________%s\n"
+"* Aufgaben für heute:\n"
+"_______________________ %s\n"
+"\n"
+"* Stopper entdeckt:\n"
+"_______________________ %s"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,active:0
@@ -1485,138 +1495,5 @@ msgstr "Sprint Rückbetrachtung"
 #~ msgid "Delegated To"
 #~ msgstr "Delegiert an"
 
-#~ msgid "Editable"
-#~ msgstr "Bearbeitbar"
-
-#~ msgid "Error! task start-date must be lower then task end-date."
-#~ msgstr "Fehler! Das Anfangsdatum muss kleiner als das Enddatum sein."
-
-#~ msgid "Owners"
-#~ msgstr "Eigentümer"
-
-#~ msgid "Extended Options..."
-#~ msgstr "Erweiterte Optionen.."
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Fehler! Es können keine rekursive Kontenhierarchien erstellt werden."
-
-#~ msgid "Hello"
-#~ msgstr "Hallo"
-
-#~ msgid "Set Open"
-#~ msgstr "Setze auf Offen"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#, python-format
-#~ msgid ""
-#~ "is converted into Task %d.\"%(task_id,))\n"
-#~ "                self.log(cr, uid, backlog.id, message)\n"
-#~ "            if data['state_open'] and backlog.state == \"draft\":\n"
-#~ "                backlog_obj.write(cr, uid, backlog.id, {'state':'open'})\n"
-#~ "            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], "
-#~ "context=context)\n"
-#~ "            message = _('Product Backlog"
-#~ msgstr ""
-#~ "wurde konvertiert in Aufgabe %d.\"%(task_id,))\n"
-#~ "                self.log(cr, uid, backlog.id, message)\n"
-#~ "            if data['state_open'] and backlog.state == \"draft\":\n"
-#~ "                backlog_obj.write(cr, uid, backlog.id, {'state':'open'})\n"
-#~ "            sprint = sprint_obj.browse(cr, uid, data['sprint_id'], "
-#~ "context=context)\n"
-#~ "            message = _('Product Backlog"
-
-#, python-format
-#~ msgid "*Blocks encountered:"
-#~ msgstr "* Hindernisse für Weiterarbeit:"
-
-#, python-format
-#~ msgid "Scrum Meeting of"
-#~ msgstr "Scrum Meeting für"
-
-#, python-format
-#~ msgid "for the Sprint"
-#~ msgstr "für den Sprint"
-
-#, python-format
-#~ msgid "Hello "
-#~ msgstr "Hallo "
-
-#, python-format
-#~ msgid "*Tasks since yesterday:"
-#~ msgstr "*Aufgaben seit gestern:"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
-
-#, python-format
-#~ msgid "No Blocks"
-#~ msgstr "Keine Hindernisse"
-
-#, python-format
-#~ msgid ""
-#~ " Email Not send to the product owner %s!' % "
-#~ "meeting_id.sprint_id.product_owner_id.name))\n"
-#~ "        else:\n"
-#~ "            raise osv.except_osv(_('Error !"
-#~ msgstr ""
-#~ " Email wurde nicht gesendet an den Product Owner  %s!' % "
-#~ "meeting_id.sprint_id.product_owner_id.name))\n"
-#~ "        else:\n"
-#~ "            raise osv.except_osv(_('Error !"
-
-#, python-format
-#~ msgid ""
-#~ " Email Not send to the scrum master %s!' % "
-#~ "meeting_id.sprint_id.scrum_master_id.name))\n"
-#~ "        else:\n"
-#~ "            raise osv.except_osv(_('Error !"
-#~ msgstr ""
-#~ " Email wurde nicht gesendet an den Scrum Master %s!' % "
-#~ "meeting_id.sprint_id.scrum_master_id.name))\n"
-#~ "        else:\n"
-#~ "            raise osv.except_osv(_('Error !"
-
-#, python-format
-#~ msgid "I am sending you Daily Meeting Details of date"
-#~ msgstr "Ich sende Dir das Tagesprotokoll zum Meeting vom"
-
-#, python-format
-#~ msgid "*Task for Today:"
-#~ msgstr "* Heutige Aufgaben:"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "The scrum agile methodology is used in software development projects. In "
-#~ "this methodology, a sprint is a short period of time (one month) on which "
-#~ "the team implement a list of product backlogs. The sprint review is "
-#~ "organized when the team presents his work to the customer and product owner."
-#~ msgstr ""
-#~ "Die Scrum Methodik wird in Softwareentwicklungsprojekten eingesetzt. Bei "
-#~ "dieser Methode repräsentiert ein Sprint einen genau definierten kurzen "
-#~ "Zeitabschnitt (ein Monat) für den ein Projektteam eine vereinbarte Liste an "
-#~ "Produkt Backlogs umsetzt. Der Sprint Review soll dann kurzfristig eine "
-#~ "kritische Rückbetrachtung auf das Projekt bei der Ergebnispräsentation "
-#~ "gegenüber dem Kunden oder dem Produkt Owner ermöglichen."
-
-#~ msgid ""
-#~ "The scrum agile methodology is used in software development projects. The "
-#~ "Product Backlog is the list of features to be implemented. A product backlog "
-#~ "can be planified in a sprint of developement and can be split into several "
-#~ "tasks. The product backlog is managed by the product owner of the project."
-#~ msgstr ""
-#~ "Die Scrum Methodik wird in Softwareentwicklungsprojekten eingesetzt. Das "
-#~ "Produkt Backlog repräsentiert eine Liste an Funktionen die es zu "
-#~ "implementieren gilt. Ein Produkt Backlog kann planerisch in einen Sprint "
-#~ "umgesetzt werden und dabei in eine Liste diverser Aufgaben zerlegt werden. "
-#~ "Das Produkt Backlog wird durch den Produkt Owner für dieses Projekt "
-#~ "verwaltet."
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

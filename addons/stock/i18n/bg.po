@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:39+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:55+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -101,7 +101,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "Избирателен списък"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -151,7 +151,7 @@ msgid "UoM"
 msgstr "Мерни единици"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:90
+#: code:addons/stock/wizard/stock_change_product_qty.py:104
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
@@ -180,14 +180,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1176
-#: code:addons/stock/stock.py:2378
+#: code:addons/stock/stock.py:1170
+#: code:addons/stock/stock.py:2415
 #, python-format
 msgid "Missing partial picking data for move #%s"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_partial_move
+#: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
 msgstr "Доставяне/Получаване на продукти"
 
@@ -243,7 +243,8 @@ msgid "Reference"
 msgstr "Означение"
 
 #. module: stock
-#: code:addons/stock/stock.py:661
+#: code:addons/stock/stock.py:666
+#: code:addons/stock/stock.py:1472
 #, python-format
 msgid "Products to Process"
 msgstr "Продукти за обработка"
@@ -266,15 +267,16 @@ msgid "Split lines"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1127
+#: code:addons/stock/stock.py:1120
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2198
-#: code:addons/stock/stock.py:2237
-#: code:addons/stock/stock.py:2297
+#: code:addons/stock/stock.py:2233
+#: code:addons/stock/stock.py:2274
+#: code:addons/stock/stock.py:2334
+#: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -304,7 +306,7 @@ msgid "Currency in which Unit cost is expressed"
 msgstr "Валута в която е цената за единица"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
+#: code:addons/stock/wizard/stock_return_picking.py:126
 #, python-format
 msgid "No invoicing"
 msgstr ""
@@ -419,7 +421,7 @@ msgid "In Qty"
 msgstr "В Кол."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:115
+#: code:addons/stock/wizard/stock_fill_inventory.py:106
 #, python-format
 msgid "No product in this location."
 msgstr "Няма продукти в това местонахождение"
@@ -496,7 +498,7 @@ msgid "Move History (child moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1984
+#: code:addons/stock/stock.py:2015
 #, python-format
 msgid ""
 "There is no stock output account defined for this product or its category: "
@@ -513,10 +515,10 @@ msgstr "Вътрешни движения"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Местонахождение цел"
 
 #. module: stock
-#: code:addons/stock/stock.py:751
+#: code:addons/stock/stock.py:754
 #, python-format
 msgid "You can not process picking without stock moves"
 msgstr ""
@@ -565,7 +567,7 @@ msgid "Location / Product"
 msgstr "Местонахождение / Продукт"
 
 #. module: stock
-#: code:addons/stock/stock.py:1306
+#: code:addons/stock/stock.py:1303
 #, python-format
 msgid "Reception"
 msgstr ""
@@ -634,7 +636,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Опитвате да свържете партида, която не е от същия продукт"
 
 #. module: stock
 #: view:res.partner:0
@@ -695,7 +697,7 @@ msgid "Process Picking"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:355
+#: code:addons/stock/product.py:358
 #, python-format
 msgid "Future Receptions"
 msgstr ""
@@ -779,7 +781,7 @@ msgid "Merge Inventory"
 msgstr "Обединяване на наличности"
 
 #. module: stock
-#: code:addons/stock/product.py:371
+#: code:addons/stock/product.py:374
 #, python-format
 msgid "Future P&L"
 msgstr ""
@@ -796,7 +798,7 @@ msgstr ""
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Scrap"
-msgstr ""
+msgstr "Брак"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -1007,7 +1009,7 @@ msgid "Author"
 msgstr "Автор"
 
 #. module: stock
-#: code:addons/stock/stock.py:1305
+#: code:addons/stock/stock.py:1302
 #, python-format
 msgid "Delivery Order"
 msgstr "Порчъка за доставка"
@@ -1147,7 +1149,7 @@ msgstr ""
 "генерирани от поръчки"
 
 #. module: stock
-#: code:addons/stock/stock.py:1975
+#: code:addons/stock/stock.py:2006
 #, python-format
 msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
@@ -1155,7 +1157,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1322
+#: code:addons/stock/stock.py:1319
 #, python-format
 msgid "is in draft state."
 msgstr ""
@@ -1178,7 +1180,7 @@ msgid "Chaining Type"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
+#: code:addons/stock/wizard/stock_return_picking.py:126
 #, python-format
 msgid "To be refunded/invoiced"
 msgstr ""
@@ -1200,7 +1202,7 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отказ"
 
 #. module: stock
 #: view:stock.move:0
@@ -1218,7 +1220,7 @@ msgid "Additional Info"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1602
+#: code:addons/stock/stock.py:1619
 #, python-format
 msgid "Operation forbidden"
 msgstr "Забранена операция"
@@ -1229,7 +1231,7 @@ msgid "From"
 msgstr "От"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:79
+#: code:addons/stock/wizard/stock_return_picking.py:77
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -1357,12 +1359,13 @@ msgid "None"
 msgstr "Няма"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action3
 #: view:stock.tracking:0
 msgid "Downstream traceability"
 msgstr "Проследяемост надолу"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:113
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:101
 #, python-format
 msgid "No Invoices were created"
 msgstr ""
@@ -1414,7 +1417,7 @@ msgid "Let this field empty if this location is shared between all companies"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2198
+#: code:addons/stock/stock.py:2233
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
 msgstr ""
@@ -1454,7 +1457,7 @@ msgid "Supplier Location"
 msgstr "Местинахождение на доставчика"
 
 #. module: stock
-#: code:addons/stock/stock.py:2217
+#: code:addons/stock/stock.py:2254
 #, python-format
 msgid "were scrapped"
 msgstr ""
@@ -1566,7 +1569,7 @@ msgid "Stock report by tracking lots"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:367
+#: code:addons/stock/product.py:370
 #, python-format
 msgid "Delivered Qty"
 msgstr "Доставено к-во"
@@ -1624,7 +1627,7 @@ msgstr "Табло"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
-msgstr ""
+msgstr "Проследяване на движенията"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1643,7 +1646,7 @@ msgid "Warehouse Dashboard"
 msgstr "Табло Склад"
 
 #. module: stock
-#: code:addons/stock/stock.py:510
+#: code:addons/stock/stock.py:512
 #, python-format
 msgid "You can not remove a lot line !"
 msgstr "Не може да премахнете ред от партида !"
@@ -1657,7 +1660,7 @@ msgid "Scrap Products"
 msgstr "Продукти за брак"
 
 #. module: stock
-#: code:addons/stock/stock.py:1135
+#: code:addons/stock/stock.py:1128
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
 msgstr ""
@@ -1714,13 +1717,13 @@ msgid "Shipping Address :"
 msgstr "Адрес за доставка :"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:120
+#: code:addons/stock/wizard/stock_return_picking.py:115
 #, python-format
 msgid "Provide the quantities of the returned products."
 msgstr "Предоставя количествата на върнатите продукти"
 
 #. module: stock
-#: code:addons/stock/stock.py:1978
+#: code:addons/stock/stock.py:2009
 #, python-format
 msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
@@ -1799,7 +1802,7 @@ msgid "Quantity per lot"
 msgstr "Количество в партида"
 
 #. module: stock
-#: code:addons/stock/stock.py:1981
+#: code:addons/stock/stock.py:2012
 #, python-format
 msgid ""
 "There is no stock input account defined for this product or its category: "
@@ -1807,7 +1810,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:357
+#: code:addons/stock/product.py:360
 #, python-format
 msgid "Received Qty"
 msgstr "Получено к-во"
@@ -1867,6 +1870,27 @@ msgid ""
 "day)\n"
 "    "
 msgstr ""
+"OpenERP Управление на запасите модул може да управлява няколко складови "
+"помещения, множество и структуриран места състав.\n"
+"Благодарение на двойното управление на влизане, описът на контрол е мощен и "
+"гъвкав:\n"
+"* Премества история и планиране,\n"
+"* Различни методи на инвентаризация (FIFO, LIFO, ...)\n"
+"* оценка на запасите (стандартна или средната цена, ...)\n"
+"* Устойчивост изправени пред разлики инвентаризация\n"
+"* Автоматично пренареждане правила (равнище запаси, СЕР, ...)\n"
+"* бар код подкрепени\n"
+"* за бързо откриване на грешки чрез двустранно система\n"
+"* Възможност за проследяване (нагоре / надолу по веригата, сериен, сериен "
+"номер, ...)\n"
+"* таблото за склад, който включва:\n"
+"     * Продукти за получаване на закъснение (дата <= днес)\n"
+"     * поръчки по изключение\n"
+"     * Графика: Брой Получаване на продукта срещу планираните (бар графиката "
+"на дневна седмица ал)\n"
+"     * Графика: Брой на доставка продукти срещу планираните (бар графиката "
+"на дневна седмица ал)\n"
+"    "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -1932,18 +1956,19 @@ msgstr "Входящ продукт"
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "Създаване"
 
 #. module: stock
 #: field:stock.move.memory.in,cost:0
 #: field:stock.move.memory.out,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Разход"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
+#: field:stock.location,valuation_in_account_id:0
 msgid "Stock Input Account"
 msgstr "Сметка на входящ склад"
 
@@ -1951,7 +1976,7 @@ msgstr "Сметка на входящ склад"
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Управление на складове"
+msgstr "Складово стопанство"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -2001,7 +2026,7 @@ msgid "Inventory loss"
 msgstr "Липси на наличност"
 
 #. module: stock
-#: code:addons/stock/stock.py:1314
+#: code:addons/stock/stock.py:1311
 #, python-format
 msgid "Document"
 msgstr "Документ"
@@ -2091,7 +2116,7 @@ msgid "Warehouse board"
 msgstr "Табло Склад"
 
 #. module: stock
-#: code:addons/stock/product.py:377
+#: code:addons/stock/product.py:380
 #, python-format
 msgid "Future Qty"
 msgstr "Бъдещо количесто"
@@ -2122,13 +2147,13 @@ msgid "Shipping Type"
 msgstr "Вид на транспортиране"
 
 #. module: stock
-#: code:addons/stock/stock.py:2175
+#: code:addons/stock/stock.py:2210
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Може да изтривате само движения в проект"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:74
+#: code:addons/stock/wizard/stock_partial_picking.py:97
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.ui.menu,name:stock.menu_stock_products_menu
 #: view:stock.inventory:0
@@ -2193,7 +2218,7 @@ msgid "Expected date for the picking to be processed"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:373
+#: code:addons/stock/product.py:376
 #, python-format
 msgid "P&L Qty"
 msgstr "К-во загуби и пачалби"
@@ -2271,7 +2296,7 @@ msgid "Source"
 msgstr "Източник"
 
 #. module: stock
-#: code:addons/stock/stock.py:2557
+#: code:addons/stock/stock.py:2589
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
 #: field:stock.inventory.line,inventory_id:0
@@ -2284,7 +2309,7 @@ msgstr "Наличност"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Списък за товарене"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2311,7 +2336,7 @@ msgstr ""
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:135
-#: code:addons/stock/stock.py:751
+#: code:addons/stock/stock.py:754
 #, python-format
 msgid "Error !"
 msgstr "Грешка!"
@@ -2340,7 +2365,7 @@ msgstr "Юли"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr ""
+msgstr "Консумативи"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2377,7 +2402,7 @@ msgid "Maxtor Suppliers"
 msgstr "Доставчици на Макстор"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:66
+#: code:addons/stock/wizard/stock_change_product_qty.py:80
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2488,7 +2513,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2302
+#: code:addons/stock/stock.py:2339
 #, python-format
 msgid "Can not consume a move with negative or zero quantity !"
 msgstr ""
@@ -2546,7 +2571,7 @@ msgid "Quantity (UOS)"
 msgstr "Коливество (мер.ед)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1647
+#: code:addons/stock/stock.py:1664
 #, python-format
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
@@ -2585,7 +2610,7 @@ msgid "Properties"
 msgstr "Характеристики"
 
 #. module: stock
-#: code:addons/stock/stock.py:982
+#: code:addons/stock/stock.py:974
 #, python-format
 msgid "Error, no partner !"
 msgstr "Грешка, няма партньор !"
@@ -2593,6 +2618,7 @@ msgstr "Грешка, няма партньор !"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
 #: model:ir.model,name:stock.model_stock_incoterms
+#: model:ir.ui.menu,name:stock.menu_action_incoterm_open
 #: view:stock.incoterms:0
 msgid "Incoterms"
 msgstr "Международни термини"
@@ -2630,7 +2656,7 @@ msgid "Inventory Reference"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1307
+#: code:addons/stock/stock.py:1304
 #, python-format
 msgid "Internal picking"
 msgstr ""
@@ -2661,7 +2687,7 @@ msgstr "Име на ревизия"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Складове"
+msgstr "Склад"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2716,7 +2742,7 @@ msgid "Date done"
 msgstr "Дата на приключване"
 
 #. module: stock
-#: code:addons/stock/stock.py:983
+#: code:addons/stock/stock.py:975
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -2795,14 +2821,14 @@ msgid "Product"
 msgstr "Продукт"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:135
+#: code:addons/stock/wizard/stock_return_picking.py:126
 #, python-format
 msgid "Invoicing"
 msgstr "Фактуриране"
 
 #. module: stock
-#: code:addons/stock/stock.py:2237
-#: code:addons/stock/stock.py:2297
+#: code:addons/stock/stock.py:2274
+#: code:addons/stock/stock.py:2334
 #, python-format
 msgid "Please provide Proper Quantity !"
 msgstr ""
@@ -2829,7 +2855,7 @@ msgid "Consume Products"
 msgstr "Използвани продукти"
 
 #. module: stock
-#: code:addons/stock/stock.py:1646
+#: code:addons/stock/stock.py:1663
 #, python-format
 msgid "Insufficient Stock in Lot !"
 msgstr "Недостатъчна наличност в партидата!"
@@ -2975,7 +3001,7 @@ msgid "All at once"
 msgstr "Всичко наведнъж"
 
 #. module: stock
-#: code:addons/stock/stock.py:1603
+#: code:addons/stock/stock.py:1620
 #, python-format
 msgid ""
 "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
@@ -2983,7 +3009,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:383
+#: code:addons/stock/product.py:386
 #, python-format
 msgid "Future Productions"
 msgstr "Бъдеща продукция"
@@ -2994,7 +3020,7 @@ msgid "To Invoice"
 msgstr "За фактуриране"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:120
+#: code:addons/stock/wizard/stock_return_picking.py:115
 #, python-format
 msgid "Return lines"
 msgstr "Редове от връщане"
@@ -3069,7 +3095,8 @@ msgid "Icon"
 msgstr "Икона"
 
 #. module: stock
-#: code:addons/stock/stock.py:2174
+#: code:addons/stock/stock.py:2209
+#: code:addons/stock/stock.py:2617
 #, python-format
 msgid "UserError"
 msgstr "Потребителска грешка"
@@ -3096,14 +3123,14 @@ msgstr "Неевропейски клиенти"
 #: code:addons/stock/product.py:100
 #: code:addons/stock/product.py:121
 #: code:addons/stock/product.py:147
-#: code:addons/stock/stock.py:1975
-#: code:addons/stock/stock.py:1978
-#: code:addons/stock/stock.py:1981
-#: code:addons/stock/stock.py:1984
-#: code:addons/stock/stock.py:1987
-#: code:addons/stock/stock.py:1990
-#: code:addons/stock/stock.py:2302
-#: code:addons/stock/wizard/stock_fill_inventory.py:48
+#: code:addons/stock/stock.py:2006
+#: code:addons/stock/stock.py:2009
+#: code:addons/stock/stock.py:2012
+#: code:addons/stock/stock.py:2015
+#: code:addons/stock/stock.py:2018
+#: code:addons/stock/stock.py:2021
+#: code:addons/stock/stock.py:2339
+#: code:addons/stock/wizard/stock_fill_inventory.py:47
 #: code:addons/stock/wizard/stock_splitinto.py:49
 #: code:addons/stock/wizard/stock_splitinto.py:53
 #, python-format
@@ -3111,7 +3138,7 @@ msgid "Error!"
 msgstr "Грешка!"
 
 #. module: stock
-#: code:addons/stock/stock.py:1990
+#: code:addons/stock/stock.py:2021
 #, python-format
 msgid ""
 "There is no inventory variation account defined on the product category: "
@@ -3143,7 +3170,7 @@ msgid "It specifies goods to be delivered all at once or by direct delivery"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:83
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
 #, python-format
 msgid "This picking list does not require invoicing."
 msgstr ""
@@ -3178,8 +3205,8 @@ msgid "Warning"
 msgstr "Предупреждение"
 
 #. module: stock
-#: code:addons/stock/stock.py:1321
-#: code:addons/stock/stock.py:2557
+#: code:addons/stock/stock.py:1318
+#: code:addons/stock/stock.py:2589
 #, python-format
 msgid "is done."
 msgstr ""
@@ -3283,7 +3310,7 @@ msgid "Reporting"
 msgstr "Справки"
 
 #. module: stock
-#: code:addons/stock/stock.py:1316
+#: code:addons/stock/stock.py:1313
 #, python-format
 msgid " for the "
 msgstr ""
@@ -3332,7 +3359,7 @@ msgid "Chaining Journal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:729
+#: code:addons/stock/stock.py:732
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr ""
@@ -3343,7 +3370,7 @@ msgid "Customers"
 msgstr "Клиенти"
 
 #. module: stock
-#: code:addons/stock/stock.py:1320
+#: code:addons/stock/stock.py:1317
 #, python-format
 msgid "is cancelled."
 msgstr ""
@@ -3354,13 +3381,13 @@ msgid "Stock Inventory Lines"
 msgstr "Ред от наличност в склад"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:74
+#: code:addons/stock/wizard/stock_partial_picking.py:97
 #, python-format
 msgid "Process Document"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:365
+#: code:addons/stock/product.py:368
 #, python-format
 msgid "Future Deliveries"
 msgstr ""
@@ -3374,13 +3401,13 @@ msgstr ""
 #: view:stock.move:0
 #: field:stock.move,tracking_id:0
 msgid "Pack"
-msgstr ""
+msgstr "Пакет"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
-msgstr ""
+msgstr "Очакван на дата"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3399,17 +3426,17 @@ msgstr "Автоматична проверка"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Тегло"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Шаблон на продукт"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -3454,7 +3481,7 @@ msgstr "Фактуриран"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Адрес назначение"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -3474,7 +3501,7 @@ msgstr ""
 #. module: stock
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3522,7 +3549,7 @@ msgid "Existing Lot"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:204
+#: code:addons/stock/wizard/stock_return_picking.py:194
 #, python-format
 msgid "Please specify at least one non-zero quantity!"
 msgstr ""
@@ -3535,7 +3562,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1319
+#: code:addons/stock/stock.py:1316
 #, python-format
 msgid "is ready to process."
 msgstr ""
@@ -3551,7 +3578,7 @@ msgid "Set to zero"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:87
 #, python-format
 msgid "None of these picking lists require invoicing."
 msgstr ""
@@ -3559,17 +3586,17 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "November"
-msgstr ""
+msgstr "Ноември"
 
 #. module: stock
 #: code:addons/stock/product.py:101
-#: code:addons/stock/stock.py:1987
+#: code:addons/stock/stock.py:2018
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:379
+#: code:addons/stock/product.py:382
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Непланирано к-во"
@@ -3587,7 +3614,7 @@ msgstr "Проверка за наличност"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "January"
-msgstr ""
+msgstr "Януари"
 
 #. module: stock
 #: help:product.product,track_incoming:0
@@ -3607,16 +3634,16 @@ msgid "Move History (parent moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:361
+#: code:addons/stock/product.py:364
 #, python-format
 msgid "Future Stock"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:510
-#: code:addons/stock/stock.py:1127
-#: code:addons/stock/stock.py:1135
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:113
+#: code:addons/stock/stock.py:512
+#: code:addons/stock/stock.py:1120
+#: code:addons/stock/stock.py:1128
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:101
 #, python-format
 msgid "Error"
 msgstr "Грешка"
@@ -3665,7 +3692,7 @@ msgstr "Проследяемост"
 #. module: stock
 #: view:stock.picking:0
 msgid "To invoice"
-msgstr ""
+msgstr "Към фактура"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3682,7 +3709,7 @@ msgstr "Обща информация"
 #. module: stock
 #: field:stock.production.lot,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Префикс"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3729,7 +3756,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Задавате много за производство на този продукт"
 
 #. module: stock
 #: view:stock.move:0
@@ -3749,7 +3776,7 @@ msgid "Split Move"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:97
+#: code:addons/stock/wizard/stock_return_picking.py:92
 #, python-format
 msgid ""
 "There are no products to return (only lines in Done state and not fully "
@@ -3776,13 +3803,13 @@ msgstr "Описание"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Доставка"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -3793,6 +3820,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action5
 #: view:stock.tracking:0
 msgid "Upstream traceability"
 msgstr "Проследяемост нагоре"
@@ -3804,7 +3832,7 @@ msgid "Location Content"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/product.py:385
+#: code:addons/stock/product.py:388
 #, python-format
 msgid "Produced Qty"
 msgstr "Произведено к-во"
@@ -3813,6 +3841,7 @@ msgstr "Произведено к-во"
 #: field:product.category,property_stock_account_output_categ:0
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
+#: field:stock.location,valuation_out_account_id:0
 msgid "Stock Output Account"
 msgstr "Сметка изход от склад"
 
@@ -3836,7 +3865,7 @@ msgstr "Клиент"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "February"
-msgstr ""
+msgstr "Февруари"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -3847,18 +3876,18 @@ msgstr ""
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr ""
+msgstr "Месстонахождение на брак"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "April"
-msgstr ""
+msgstr "Април"
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:stock.move:0
 msgid "Future"
-msgstr ""
+msgstr "Бъдеще"
 
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
@@ -3866,15 +3895,16 @@ msgid "Invoiced date"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:729
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:83
+#: code:addons/stock/stock.py:732
+#: code:addons/stock/wizard/stock_fill_inventory.py:106
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:85
-#: code:addons/stock/wizard/stock_return_picking.py:79
-#: code:addons/stock/wizard/stock_return_picking.py:97
-#: code:addons/stock/wizard/stock_return_picking.py:204
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:87
+#: code:addons/stock/wizard/stock_return_picking.py:77
+#: code:addons/stock/wizard/stock_return_picking.py:92
+#: code:addons/stock/wizard/stock_return_picking.py:194
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Предупреждение!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
@@ -3934,10 +3964,6 @@ msgstr ""
 #~ msgid "Locations' Values"
 #~ msgstr "Стойности на местонахождение"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Бъдещи стоки"
-
 #~ msgid "LIFO"
 #~ msgstr "LIFO"
 
@@ -3977,16 +4003,8 @@ msgstr ""
 #~ msgid "Products Received"
 #~ msgstr "Получени продукти"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Бъдещи продукции"
-
 #~ msgid "Incoming Products"
 #~ msgstr "Пристигащи продукти"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Бъдещи получавания"
 
 #~ msgid "Force to use a Production Lot during receptions"
 #~ msgstr "Изискване при получване да се използва партида от продукция"
@@ -4119,9 +4137,6 @@ msgstr ""
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Календар на доставките"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Проследяване на входящи партиди"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4160,10 +4175,6 @@ msgstr ""
 
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Бъдещи доставки"
 
 #~ msgid "Tracking Number"
 #~ msgstr "Транспортен номер"
@@ -4269,9 +4280,6 @@ msgstr ""
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
 
-#~ msgid "Qty"
-#~ msgstr "К-во"
-
 #~ msgid "Draft Periodical Inventories"
 #~ msgstr "Проект на периодична наличност"
 
@@ -4301,10 +4309,6 @@ msgstr ""
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Бъдещо к-во"
 
 #~ msgid "Supplier Refund"
 #~ msgstr "Обезщетение на доставчик"
@@ -4511,9 +4515,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Проследяване на изходящи партиди"
-
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
 
@@ -4579,9 +4580,6 @@ msgstr ""
 #~ msgid "STOCK_UNINDENT"
 #~ msgstr "STOCK_UNINDENT"
 
-#~ msgid "Canceled"
-#~ msgstr "Прекратен"
-
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
 
@@ -4623,10 +4621,6 @@ msgstr ""
 
 #~ msgid "Split in Two"
 #~ msgstr "Разделяне на две"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Бъдещи печалби и загуби"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
@@ -4698,9 +4692,6 @@ msgstr ""
 #~ msgid "Move History"
 #~ msgstr "Хронология на движение"
 
-#~ msgid "weight"
-#~ msgstr "тегло"
-
 #~ msgid "Available Packing"
 #~ msgstr "Налична опаковка"
 
@@ -4738,37 +4729,10 @@ msgstr ""
 #~ "Планирана дата за придвижване на продукти, или реална дата, ако "
 #~ "придвижването е извършено."
 
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Модулът за управление на инвентар на OpenERP може да управлява многобройни "
-#~ "складове, многобройни и структурирани местонахождения в склад.\n"
-#~ "Благодарение на управлението с двойно вписване, контролирането на инвентара "
-#~ "е и мощно и гъвкаво:\n"
-#~ "*Хронология и планиране на движения\n"
-#~ "*Различни методи за инвентар (FIFO, LIFO, ...)\n"
-#~ "*Оценяване на склад (стандартни или средни цени, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "*Автоматични правила за предварителни поръчки (складови наличности, JIT, "
-#~ "...)\n"
-#~ "*Поддръжка на баркодове\n"
-#~ "*Светкавично откриване на грешки благодарение на управлението с двойно "
-#~ "вписване\n"
-#~ "*Проследимост (вертикална, производствени партиди, серийни номера, ...)\n"
-#~ "    "
-
 #, python-format
 #~ msgid "Product "
 #~ msgstr "Продукт "
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "количество."

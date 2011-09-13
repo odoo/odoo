@@ -30,7 +30,8 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
+        'uom_id': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='UoM', store=True, readonly=True)
     }
 
     def _getAnalyticJournal(self, cr, uid, context=None):
@@ -65,8 +66,8 @@ class hr_analytic_timesheet(osv.osv):
     _inherits = {'account.analytic.line': 'line_id'}
     _order = "id desc"
     _columns = {
-        'line_id': fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='res.partner', store=True),
+        'line_id': fields.many2one('account.analytic.line', 'Analytic Line', ondelete='cascade', required=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner', relation='res.partner', store=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):

@@ -39,8 +39,9 @@ class crm_lead(crm_case, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
-    _order = "date_action, priority, id desc"
+    _order = "priority,date_action,id desc"
     _inherit = ['mailgate.thread','res.partner.address']
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
@@ -98,59 +99,86 @@ class crm_lead(crm_case, osv.osv):
                 res[lead.id][field] = abs(int(duration))
         return res
 
+    def _history_search(self, cr, uid, obj, name, args, context=None):
+        res = []
+        msg_obj = self.pool.get('mailgate.message')
+        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('name', args[0][1], args[0][2])], context=context)
+        lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
+
+        if lead_ids:
+            return [('id', 'in', lead_ids)]
+        else:
+            return [('id', '=', '0')]
+
+    def _get_email_subject(self, cr, uid, ids, fields, args, context=None):
+        res = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            res[obj.id] = ''
+            for msg in obj.message_ids:
+                if msg.history:
+                    res[obj.id] = msg.name
+                    break
+        return res
+
     _columns = {
         # Overridden from res.partner.address:
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
-        # From crm.case
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name', size=64, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
+        'email_from': fields.char('Email', size=128, help="E-mail address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
+                        select=True, help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
         'write_date': fields.datetime('Update Date' , readonly=True),
 
-        # Lead fields
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
-        'channel_id': fields.many2one('res.partner.canal', 'Channel'),
-
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
+        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel (mail, direct, phone, ...)"),
         'contact_name': fields.char('Contact Name', size=64),
-        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity'),
+        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
-        'type':fields.selection([
-            ('lead','Lead'),
-            ('opportunity','Opportunity'),
-
-        ],'Type', help="Type is used to separate Leads and Opportunities"),
+        'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
         'user_id': fields.many2one('res.users', 'Salesman'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-    }
+        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
+
+        # Only used for type opportunity
+        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', domain="[('partner_id','=',partner_id)]"), 
+        'probability': fields.float('Probability (%)',group_operator="avg"),
+        'planned_revenue': fields.float('Expected Revenue'),
+        'ref': fields.reference('Reference', selection=crm._links_get, size=128),
+        'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
+        'phone': fields.char("Phone", size=64),
+        'date_deadline': fields.date('Expected Closing'),
+        'date_action': fields.date('Next Action Date'),
+        'title_action': fields.char('Next Action', size=64),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+    }
 
     _defaults = {
         'active': lambda *a: 1,
@@ -164,82 +192,120 @@ class crm_lead(crm_case, osv.osv):
         #'stage_id': _get_stage_id,
     }
 
-
-
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param add: Id of Partner's address
-        @email: Partner's email ID
         """
         if not add:
             return {'value': {'email_from': False, 'country_id': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
         return {'value': {'email_from': address.email, 'phone': address.phone, 'country_id': address.country_id.id}}
 
-    def case_open(self, cr, uid, ids, *args):
-        """Overrides cancel for crm_case for setting Open Date
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
+    def on_change_optin(self, cr, uid, ids, optin):
+        return {'value':{'optin':optin,'optout':False}}
+
+    def on_change_optout(self, cr, uid, ids, optout):
+        return {'value':{'optout':optout,'optin':False}}
+
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+        if not stage_id:
+            return {'value':{}}
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+        if not stage.on_change:
+            return {'value':{}}
+        return {'value':{'probability': stage.probability}}
+
+    def stage_find_percent(self, cr, uid, percent, section_id):
+        """ Return the first stage with a probability == percent
         """
-        leads = self.browse(cr, uid, ids)
+        stage_pool = self.pool.get('crm.case.stage')
+        if section_id :
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("section_ids", 'in', [section_id])])
+        else :
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent)])
 
+        if ids:
+            return ids[0]
+        return False
 
+    def stage_find_lost(self, cr, uid, section_id):
+        return self.stage_find_percent(cr, uid, 0.0, section_id)
 
-        for i in xrange(0, len(ids)):
-            if leads[i].state == 'draft':
-                value = {}
-                if not leads[i].stage_id :
-                    stage_id = self._find_first_stage(cr, uid, leads[i].type, leads[i].section_id.id or False)
-                    value.update({'stage_id' : stage_id})
-                value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
-                self.write(cr, uid, [ids[i]], value)
-            self.log_open( cr, uid, leads[i])
+    def stage_find_won(self, cr, uid, section_id):
+        return self.stage_find_percent(cr, uid, 100.0, section_id)
+
+    def case_open(self, cr, uid, ids, *args):
+        for l in self.browse(cr, uid, ids):
+            # When coming from draft override date and stage otherwise just set state
+            if l.state == 'draft':
+                if l.type == 'lead':
+                    message = _("The lead '%s' has been opened.") % l.name
+                elif l.type == 'opportunity':
+                    message = _("The opportunity '%s' has been opened.") % l.name
+                else:
+                    message = _("The case '%s' has been opened.") % l.name
+                self.log(cr, uid, l.id, message)
+                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
+                self.write(cr, uid, [l.id], value)
+                if l.type == 'opportunity' and not l.stage_id:
+                    stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
+                    if stage_id:
+                        self.stage_set(cr, uid, [l.id], stage_id)
         res = super(crm_lead, self).case_open(cr, uid, ids, *args)
         return res
 
-    def log_open(self, cr, uid, case):
-        if case.type == 'lead':
-            message = _("The lead '%s' has been opened.") % case.name
-        elif case.type == 'opportunity':
-            message = _("The opportunity '%s' has been opened.") % case.name
-        else:
-            message = _("The case '%s' has been opened.") % case.name
-        self.log(cr, uid, case.id, message)
-
     def case_close(self, cr, uid, ids, *args):
-        """Overrides close for crm_case for setting close date
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
         res = super(crm_lead, self).case_close(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
         for case in self.browse(cr, uid, ids):
             if case.type == 'lead':
                 message = _("The lead '%s' has been closed.") % case.name
-            elif case.type == 'opportunity':
-                message = _("The opportunity '%s' has been closed.") % case.name
             else:
                 message = _("The case '%s' has been closed.") % case.name
             self.log(cr, uid, case.id, message)
         return res
 
+    def case_cancel(self, cr, uid, ids, *args):
+        """Overrides cancel for crm_case for setting probability
+        """
+        res = super(crm_lead, self).case_cancel(cr, uid, ids, args)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        return res
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Overrides reset as draft in order to set the stage field as empty
+        """
+        res = super(crm_lead, self).case_reset(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
+        return res
+
+    def case_mark_lost(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        """
+        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'probability' : 0.0})
+        for l in self.browse(cr, uid, ids):
+            stage_id = self.stage_find_lost(cr, uid, l.section_id.id or False)
+            if stage_id:
+                self.stage_set(cr, uid, [l.id], stage_id)
+            message = _("The opportunity '%s' has been marked as lost.") % l.name
+            self.log(cr, uid, l.id, message)
+        return res
+
+    def case_mark_won(self, cr, uid, ids, *args):
+        """Mark the case as lost: state = done and probability = 0%
+        """
+        res = super(crm_lead, self).case_close(cr, uid, ids, *args)
+        self.write(cr, uid, ids, {'probability' : 100.0})
+        for l in self.browse(cr, uid, ids):
+            stage_id = self.stage_find_won(cr, uid, l.section_id.id or False)
+            if stage_id:
+                self.stage_set(cr, uid, [l.id], stage_id)
+            message = _("The opportunity '%s' has been been won.") % l.name
+            self.log(cr, uid, l.id, message)
+        return res
+
     def convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of closeday’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: Value of action in dict
         """
         if context is None:
             context = {}
@@ -248,7 +314,6 @@ class crm_lead(crm_case, osv.osv):
         data_obj = self.pool.get('ir.model.data')
         value = {}
 
-        view_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
             context.update({'active_id': case.id})
@@ -270,65 +335,12 @@ class crm_lead(crm_case, osv.osv):
             }
         return value
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if not context:
-            context = {}
-
-        if 'date_closed' in vals:
-            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
-
-        if 'stage_id' in vals and vals['stage_id']:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.history(cr, uid, ids, _("Changed Stage to: %s") % stage_obj.name, details=_("Changed Stage to: %s") % stage_obj.name)
-            message=''
-            for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                self.log(cr, uid, case.id, message)
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
-
-    def stage_historize(self, cr, uid, ids, stage, context=None):
-        stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-        self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-        for case in self.browse(cr, uid, ids, context=context):
-            if case.type == 'lead':
-                message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            elif case.type == 'opportunity':
-                message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-            self.log(cr, uid, case.id, message)
-        return True
-
-    def stage_next(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            if stage_obj.on_change:
-                data = {'probability': stage_obj.probability}
-                self.write(cr, uid, ids, data)
-        return stage
-
-    def stage_previous(self, cr, uid, ids, context=None):
-        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context=context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            if stage_obj.on_change:
-                data = {'probability': stage_obj.probability}
-                self.write(cr, uid, ids, data)
-        return stage
-
     def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
+        """ Automatically calls when new email message arrives
         """
         mailgate_pool = self.pool.get('email.server.tools')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
@@ -364,9 +376,6 @@ class crm_lead(crm_case, osv.osv):
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs
         """
         if isinstance(ids, (str, int, long)):
@@ -400,22 +409,82 @@ class crm_lead(crm_case, osv.osv):
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
-
         """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
+        @param ids: List of email’s IDs
         """
         return True
 
-    def on_change_optin(self, cr, uid, ids, optin):
-        return {'value':{'optin':optin,'optout':False}}
+    def action_makeMeeting(self, cr, uid, ids, context=None):
+        """
+        This opens Meeting's calendar view to schedule meeting on current Opportunity
+        @return : Dictionary value for created Meeting view
+        """
+        value = {}
+        for opp in self.browse(cr, uid, ids, context=context):
+            data_obj = self.pool.get('ir.model.data')
 
-    def on_change_optout(self, cr, uid, ids, optout):
-        return {'value':{'optout':optout,'optin':False}}
+            # Get meeting views
+            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
+            res = data_obj.read(cr, uid, result, ['res_id'])
+            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
+            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
+            if id1:
+                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
+            if id2:
+                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
+            if id3:
+                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+
+            context = {
+                'default_opportunity_id': opp.id,
+                'default_partner_id': opp.partner_id and opp.partner_id.id or False,
+                'default_user_id': uid, 
+                'default_section_id': opp.section_id and opp.section_id.id or False,
+                'default_email_from': opp.email_from,
+                'default_state': 'open',  
+                'default_name': opp.name
+            }
+            value = {
+                'name': _('Meetings'),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'calendar,form,tree',
+                'res_model': 'crm.meeting',
+                'view_id': False,
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': res['res_id'],
+                'nodestroy': True
+            }
+        return value
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if not context:
+            context = {}
+
+        if 'date_closed' in vals:
+            return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
+
+        if 'stage_id' in vals and vals['stage_id']:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            self.history(cr, uid, ids, _("Changed Stage to: %s") % stage_obj.name, details=_("Changed Stage to: %s") % stage_obj.name)
+            message=''
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
+                self.log(cr, uid, case.id, message)
+        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context):
+            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this lead. You should better cancel it.'))
+        return super(crm_lead, self).unlink(cr, uid, ids, context)
+
 
 crm_lead()
 

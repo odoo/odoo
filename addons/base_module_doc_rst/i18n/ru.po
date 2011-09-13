@@ -6,52 +6,111 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:58+0000\n"
-"PO-Revision-Date: 2010-01-26 10:55+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-04-25 14:11+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-24 04:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-04-30 06:07+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
+
+#. module: base_module_doc_rst
+#: view:ir.module.module:0
+msgid "You can save this image as .png file"
+msgstr "Вы можете сохранить это изображение как PNG-файл"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0
 msgid "Technical Guide in rst format"
-msgstr ""
+msgstr "Техническое руководство в формате RST"
 
 #. module: base_module_doc_rst
-#: wizard_field:tech.guide.rst,init,name:0
-msgid "filename"
-msgstr ""
+#: wizard_button:create.relation.graph,init,end:0
+msgid "Ok"
+msgstr "OK"
 
 #. module: base_module_doc_rst
-#: model:ir.actions.wizard,name:base_module_doc_rst.wiz_tech_guide_rst
-msgid "Create RST Technical Guide"
-msgstr ""
+#: wizard_view:create.relation.graph,init:0
+msgid "(Relationship Graphs generated)"
+msgstr "(Графы отношений сгенерированны)"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0
 msgid "Please choose a file where the Technical Guide will be written."
 msgstr ""
+"Пожалуйста, выберите файл, куда будет записано Техническое руководство"
+
+#. module: base_module_doc_rst
+#: model:ir.module.module,description:base_module_doc_rst.module_meta_information
+msgid ""
+"\n"
+"    * This module generates the Technical Guides of selected modules in "
+"Restructured Text format (RST)\n"
+"    * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST\n"
+"    * It creates a tarball (.tgz file suffix) containing an index file and "
+"one file per module\n"
+"    * Generates Relationship Graph\n"
+"    "
+msgstr ""
+"\n"
+"    * Этот модуль генерирует Техническое Руководство для выбранных модулей в "
+"формате Restructured Text format (RST)\n"
+"    * Он использует реализацию RST из Sphinx (http://sphinx.pocoo.org)\n"
+"    * Это создает архив (с расширением .tgz), содержащий файл индекса и один "
+"файл на каждый модуль\n"
+"    * Создает граф отношений\n"
+"    "
+
+#. module: base_module_doc_rst
+#: wizard_field:tech.guide.rst,init,name:0
+msgid "filename"
+msgstr "имя файла"
+
+#. module: base_module_doc_rst
+#: model:ir.actions.wizard,name:base_module_doc_rst.wiz_tech_guide_rst
+msgid "Create RST Technical Guide"
+msgstr "Создать Техническое Руководство в формате RST"
+
+#. module: base_module_doc_rst
+#: model:ir.actions.wizard,name:base_module_doc_rst.wiz_gen_graph
+msgid "Generate Relationship Graph"
+msgstr "Сгенерировать граф отношений"
+
+#. module: base_module_doc_rst
+#: wizard_view:create.relation.graph,init:0
+#: view:ir.module.module:0
+#: field:ir.module.module,file_graph:0
+msgid "Relationship Graph"
+msgstr "Граф отношений"
+
+#. module: base_module_doc_rst
+#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
+msgid "Module"
+msgstr "Модуль"
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,rst_file:0
 msgid "file"
-msgstr ""
+msgstr "файл"
 
 #. module: base_module_doc_rst
 #: wizard_button:tech.guide.rst,init,end:0
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #. module: base_module_doc_rst
 #: model:ir.module.module,shortdesc:base_module_doc_rst.module_meta_information
 msgid "Module Technical Guide in Restructured Text "
-msgstr ""
+msgstr "Техническая документация модуля хранится в формате RST "
+
+#. module: base_module_doc_rst
+#: model:ir.actions.report.xml,name:base_module_doc_rst.report_proximity_graph
+msgid "Proximity graph"
+msgstr "Граф доступности"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0
 msgid "Create Technical Guide in rst format"
-msgstr ""
+msgstr "Создать Техническое Руководство в формате rst"

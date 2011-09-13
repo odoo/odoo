@@ -43,9 +43,9 @@ project_issue_version()
 class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
-    _order = "priority, id desc"
+    _order = "priority, create_date desc"
     _inherit = ['mailgate.thread']
-
+    
     def case_open(self, cr, uid, ids, *args):
         """
         @param self: The object pointer
@@ -56,7 +56,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
 
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'assigned_to' : uid})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
@@ -116,6 +116,18 @@ class project_issue(crm.crm_case, osv.osv):
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                                 datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                elif field in ['days_since_creation']:
+                    if issue.create_date:
+                        days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        res[issue.id][field] = days_since_creation.days
+                    continue
+
+                elif field in ['inactivity_days']:
+                    res[issue.id][field] = 0
+                    if issue.date_action_last:
+                        inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        res[issue.id][field] = inactive_days.days
+                    continue
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -171,52 +183,52 @@ class project_issue(crm.crm_case, osv.osv):
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
+        'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
+                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
-                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'partner_name': fields.char("Employee's Name", size=64),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'partner_phone': fields.char('Phone', size=32),
-        'type_id': fields.many2one ('project.task.type', 'Resolution'),
+        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
-        'assigned_to': fields.related('task_id', 'user_id', string = 'Assigned to', type="many2one", relation="res.users", store=True, help='This is the current user to whom the related task have been assigned'),
+                                multi='compute_day', type="float", store=True),
+        'assigned_to': fields.many2one('res.users', 'Assigned to', required=False, select=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
-                                method=True, multi='working_days_open', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-                                method=True, multi='working_days_close', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
+        'inactivity_days': fields.function(_compute_day, string='Days since last action', \
+                                multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+        'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
             store = {
                 'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
                 'project.task': (_get_issue_task, ['progress'], 10),
@@ -230,17 +242,30 @@ class project_issue(crm.crm_case, osv.osv):
             return user.context_project_id.id
         return False
 
+    def on_change_project(self, cr, uid, ids, project_id, context=None):
+        result = {}
+
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project.user_id:
+                result['value'] = {'user_id' : project.user_id.id}
+
+        return result
+
+
     _defaults = {
         'active': 1,
-        'user_id': crm.crm_case._get_default_user,
+        #'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
         'partner_address_id': crm.crm_case._get_default_partner_address,
-        'email_from': crm.crm_case. _get_default_email,
+        'email_from': crm.crm_case._get_default_email,
         'state': 'draft',
-        'section_id': crm.crm_case. _get_section,
+        'section_id': crm.crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
+        'categ_id' : lambda *a: False,
+        #'assigned_to' : lambda obj, cr, uid, context: uid,
     }
 
     def convert_issue_task(self, cr, uid, ids, context=None):

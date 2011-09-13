@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -66,7 +66,7 @@ class project_issue_report(osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
+        'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
@@ -97,14 +97,15 @@ class project_issue_report(osv.osv):
                     1 as nbr,
                     c.assigned_to,
                     c.partner_id,
-                    c.canal_id,
+                    c.channel_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
-                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.date_closed-c.date_open))/(3600*24) as  delay_close,
                     (SELECT count(id) FROM mailgate_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
+                WHERE c.categ_id IN (select id from crm_case_categ where object_id in (select id from ir_model where model = 'project.issue'))
             )""")
 
 project_issue_report()

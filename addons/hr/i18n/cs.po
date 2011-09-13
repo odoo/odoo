@@ -1,46 +1,47 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* hr
+# * hr
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2009-02-03 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-07-15 02:27+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:41+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:34+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+"X-Poedit-Language: Czech\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
 msgid "Openerp user"
-msgstr ""
+msgstr "Uživatel OpenERP"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Požadavky"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvořit rekurzivní oddělení."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Spojit zaměstnance na informaci"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "Č.zdrav.poj."
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
@@ -49,13 +50,13 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_root
 msgid "Human Resources"
-msgstr ""
+msgstr "Lidské zdroje"
 
 #. module: hr
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -66,6 +67,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Pracovní pozice použité k určení pracovních míst a jejich požadavků. Můžete "
+"udržovat přehled o počtu zaměstnanců, které máte na pracovní pozici a kolik "
+"očekáváte v budoucnu. Můžete také připojit dotazník k pracovní pozici, která "
+"bude použita v náborovém procesu k vyhodnocení uchazečů pro tuto pracovní "
+"pozici."
 
 #. module: hr
 #: view:hr.employee:0
@@ -74,32 +80,32 @@ msgstr ""
 #: field:hr.job,department_id:0
 #: view:res.users:0
 msgid "Department"
-msgstr ""
+msgstr "Oddělení"
 
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Zjednodušuje správu docházky zaměstnance"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Označit jako staré"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Místa"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "V náboru"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "název"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -107,27 +113,27 @@ msgstr ""
 #: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Společnost"
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Očekáván v náboru"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Prázdniny"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
-msgstr ""
+msgstr "Sleduje nepřítomnost zaměstnanců, požadavky přidělení a plánování."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Rodinný stav zaměstnance"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -135,42 +141,44 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Partner, který je vztažený k aktuálnímu zaměstanci. Účetní transakce budou "
+"zapisovány tomuto partnerovi patřícímu zaměstnanci."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Spojit uživatele na zaměstnance"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Kontakty zaměstnance"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Obecný mzdový systém"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Zaměstnanci mého oddělení"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Ženatý/Vdaná"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
+msgstr "Chyba ! Nemůžete vybrat oddělení, kterého je zaměstnance vedoucí."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Pasové informace zaměstnance"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -179,16 +187,18 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Struktura vaší společnosti je použita ke správě všech dokumentů vztažených k "
+"zaměstanncům oddělení: útraty a časová kontrola, propouštění, nábory, aj."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Pozice"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Employee Hierarchy"
-msgstr ""
+msgstr "Hiearchie zaměstnanců"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -196,80 +206,82 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Vtažené uživatelské pole formuláře Zaměstnance umožňující navázání uživatele "
+"OpenERP (a jeho práv) na zaměstnance."
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "V náboru"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Identifikační č."
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "Poč. zaměstnanců"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Žena"
 
 #. module: hr
 #: help:hr.installer,hr_timesheet_sheet:0
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
-msgstr ""
+msgstr "Sleduje a pomáhá kódovat a ověřovat časové rozvrhy a docházku."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Pravidelné vyhodnocování"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Časové rozvrhy"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "Struktura zaměstnanců"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
+msgstr "Sociální ID"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Počet zaměstnanců s tímto zaměstnáním."
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr ""
+msgstr "Pracovní telefón"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Kategorie dětí"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Popis práce"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Umístění kanceláře"
 
 #. module: hr
 #: view:hr.employee:0
@@ -277,61 +289,61 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
-msgstr ""
+msgstr "Zaměstnanec"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Jiné informace"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Pracovní E-mail"
 
 #. module: hr
 #: field:hr.department,complete_name:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
-msgstr ""
+msgstr "Jméno"
 
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Datum narození"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Výkazy"
 
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Nástěnka Lidských zdrojů"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Práce"
 
 #. module: hr
 #: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
-msgstr ""
+msgstr "Členové"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
-msgstr "Konfigurace"
+msgstr "Nastavení"
 
 #. module: hr
 #: view:hr.installer:0
@@ -339,36 +351,38 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Můžete rozšířit základní aplikaci HR instalováním několika funkčností "
+"souvisejících s HR."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Očekávaní zaměstnanci"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Číslo zdravotního pojištění"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
 msgid "Divorced"
-msgstr ""
+msgstr "Rozvedený"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Nadřazená kategorie"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní Kategorie."
 
 #. module: hr
 #: view:hr.department:0
@@ -377,49 +391,49 @@ msgstr ""
 #: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
-msgstr ""
+msgstr "Oddělení"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr ""
+msgstr "Kontakt zaměstnance"
 
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Moje tabule"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
+msgstr "Můž"
 
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Průběh nastavení"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Categories of Employee"
-msgstr ""
+msgstr "Kategorie zaměstnanců"
 
 #. module: hr
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr ""
+msgstr "Kategorie zaměstnanců"
 
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Kontakt zaměstnance"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -427,27 +441,29 @@ msgid ""
 "Lets you create and manage the periodic evaluation and performance review of "
 "employees."
 msgstr ""
+"Umožní vám vytvořit nebo spravovat pravidelné vyhodnocení a přehledy "
+"výkonnosti zaměstnanců."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "hr.department"
 
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "Je spojeno s vedoucím oddělení"
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Průběh náboru"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -467,78 +483,78 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Výplatní bankovní účet zaměstnance"
 
 #. module: hr
 #: field:hr.department,note:0
 msgid "Note"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "VYbraná společnost není v povolených pro tohoto uživatele"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
-msgstr ""
+msgstr "Kontaktní informace"
 
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
-msgstr ""
+msgstr "Pracovní adresa"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Nástěnka správce HR"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
-msgstr ""
+msgstr "STav"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
 msgid "Categories structure"
-msgstr ""
+msgstr "Struktura kategorií"
 
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "neznámé"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Prázdniny / Nepřítomnost"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "Č.soc.poj."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivní"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní Hiearchii zaměstnanců"
 
 #. module: hr
 #: view:hr.department:0
 msgid "Companies"
-msgstr ""
+msgstr "Společnosti"
 
 #. module: hr
 #: model:ir.module.module,description:hr.module_meta_information
@@ -551,6 +567,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Modul pro správu lidských zdrojů. Můžete spravovat:\n"
+"    * Zaměstnance a jejich hiearchie : Můžete definovat vaše zaměstance s "
+"uživatelskou a zobrazovanou hiearchií\n"
+"    * Oddělení HR\n"
+"    * Pracovní místa HR\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -558,32 +581,33 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"Ve formuláři zaměstnance jsou různé druhy informací jako Kontaktní informace."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "Celkový požadovaný počet zaměstnanců pro tuto práci."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Staré"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Popis stavu"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem !"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Stav"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -592,160 +616,160 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.action_hr_marital_status
 #: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
-msgstr ""
+msgstr "Rodinný stav"
 
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "Vým pomůže spravovat a zefektivnit váš náborový proces."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Formulář a struktura zaměstnance"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Fotka"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Mzdové účetnictví"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr ""
+msgstr "Osobní informace"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Číslo pasu"
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Aktuální činnosti"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
 msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
-msgstr ""
+msgstr "Sleduje a spravuje náklady na zaměstnance a může automaticky"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Aktuální"
 
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "Nadřazené oddělení"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "Kategorie zaměstnanců"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
-msgstr ""
+msgstr "Bydliště"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
-msgstr ""
+msgstr "Docházka"
 
 #. module: hr
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
+msgstr "Rozšíří profily zaměstnance k lepší správě jeho kontaktů."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Mzdy"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Svobodný"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Jméno pozice"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "V pozici"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobil"
 
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "oddělení"
 
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "Národnost"
 
 #. module: hr
 #: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Tabule správce HR"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Zdroj"
 
 #. module: hr
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "Nastavení aplikace Lidské zdroje"
 
 #. module: hr
 #: field:hr.employee,gender:0
 msgid "Gender"
-msgstr ""
+msgstr "Pohlaví"
 
 #. module: hr
 #: view:hr.employee:0
@@ -756,73 +780,76 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
-msgstr ""
+msgstr "Zaměstnanci"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankovní účet"
 
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Jméno oddělení"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Číslo sociálního pojištění"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Vytvoření uživatele OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Dětské oddělení"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Pracovní pozice"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Školitel"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Nastavit vaši aplikaci Lidské zdroje"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Útraty"
 
 #. module: hr
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Vedoucí"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Vdovec"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Obecný mzdový systém integorvaný s účetnictvím."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "Podřízení"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neplatné jméno modelu v definici akce."

@@ -48,7 +48,7 @@ class WebKitHelper(object):
         else :
             width = ' '
         if height :
-            height = 'width="%spx"'%(height)
+            height = 'height="%spx"'%(height)
         else :
             height = ' '
         toreturn = '<img %s %s src="data:image/%s;base64,%s" />'%(
