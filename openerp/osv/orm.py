@@ -328,7 +328,7 @@ class browse_record(object):
                 attr = getattr(self._table, name)
                 if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
                     def function_proxy(*args, **kwargs):
-                        if 'context' not in kwargs:
+                        if 'context' not in kwargs and self._context:
                             kwargs.update(context=self._context)
                         return attr(self._cr, self._uid, [self._id], *args, **kwargs)
                     return function_proxy
