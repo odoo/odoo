@@ -264,7 +264,7 @@ class rml_parse(object):
                 d = obj._field.digits[1] or DEFAULT_DIGITS
         return d
 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False):
+    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False, dp=False, currency_obj=False):
         """
             Assuming 'Account' decimal.precision=3:
                 formatLang(value) -> digits=2 (default)
@@ -302,7 +302,9 @@ class rml_parse(object):
                 date = datetime(*value.timetuple()[:6])
             return date.strftime(date_format)
 
-        return self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+        res = self.lang_dict['lang_obj'].format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
+        res = currency_obj and currency_obj.position_on_report and (currency_obj.position_on_report == 'after' and '%s %s'%(res,currency_obj.symbol) or '%s %s'%(currency_obj.symbol, res) ) or res
+        return res
 
     def repeatIn(self, lst, name,nodes_parent=False):
         ret_lst = []

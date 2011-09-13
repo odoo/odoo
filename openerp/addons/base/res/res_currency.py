@@ -62,12 +62,13 @@ class res_currency(osv.osv):
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
-        'base': fields.boolean('Base')
-
+        'base': fields.boolean('Base'),
+        'position_on_report': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol position in reports', help="Determines where the currency symbol is printed within reports, after or before the amount.")
     }
     _defaults = {
         'active': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c),
+        'position_on_report' : 'after',
     }
     _order = "name"
 
