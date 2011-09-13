@@ -301,10 +301,9 @@ class Session(openerpweb.Controller):
         }
     @openerpweb.jsonrequest
     def get_session_info(self, req):
-        ctx = req.session.get_context()
         return {
             "uid": req.session._uid,
-            "context": ctx,
+            "context": req.session.get_context() if req.session._uid else False,
             "db": req.session._db
         }
     @openerpweb.jsonrequest
