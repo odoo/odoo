@@ -28,7 +28,7 @@
                     <group col="2" colspan="2">
                         <separator string="Values for Event Type" colspan="2"/>
                         <label string="client_action_multi, client_action_relate" colspan="2"/>
-                        <label string="tree_but_action, client_print_multi"  colspan="2"/>
+                        <label string="tree_but_open, client_print_multi"  colspan="2"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Value"/>
@@ -1995,5 +1995,76 @@
             <field name="sequence">5</field>
         </record>         
 
+        <!-- ir.mail.server -->
+        <record model="ir.ui.view" id="ir_mail_server_form">
+            <field name="name">ir.mail.server.form</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Outgoing Mail Servers">
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Configuration">
+                            <group col="2" colspan="4">
+                                <separator string="Connection Information" colspan="4"/>
+                                <field name="smtp_host"/>
+                                <field name="smtp_port"/>
+                                <field name="smtp_debug"/>
+                             </group>
+                             <group col="2" colspan="4">
+                                <separator string="Security and Authentication" colspan="2"/>
+                                <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                                <field name="smtp_user"/>
+                                <field name="smtp_pass" password="True"/>
+                                <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ir_mail_server_list">
+            <field name="name">ir.mail.server.list</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Outgoing Mail Servers">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="smtp_host"/>
+                    <field name="smtp_user"/>
+                    <field name="smtp_encryption"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ir_mail_server_search" model="ir.ui.view">
+            <field name="name">ir.mail.server.search</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Outgoing Mail Servers">
+                    <field name="name"/>
+                    <field name="smtp_host"/>
+                    <field name="smtp_user"/>
+                    <field name="smtp_encryption"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ir_mail_server_list">
+            <field name="name">Outgoing Mail Servers</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ir_mail_server_list" />
+            <field name="search_view_id" ref="view_ir_mail_server_search"/>
+        </record>
+        <menuitem id="next_id_15" name="Parameters" parent="base.menu_config" groups="base.group_extended" />
+        <menuitem id="menu_mail_servers" parent="base.next_id_15" action="action_ir_mail_server_list" sequence="15"/>
     </data>
 </openerp>

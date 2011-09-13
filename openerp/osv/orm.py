@@ -326,9 +326,12 @@ class browse_record(object):
                 col = self._table._inherit_fields[name][2]
             elif hasattr(self._table, str(name)):
                 attr = getattr(self._table, name)
-
                 if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
-                    return lambda *args, **argv: attr(self._cr, self._uid, [self._id], *args, **argv)
+                    def function_proxy(*args, **kwargs):
+                        if 'context' not in kwargs and self._context:
+                            kwargs.update(context=self._context)
+                        return attr(self._cr, self._uid, [self._id], *args, **kwargs)
+                    return function_proxy
                 else:
                     return attr
             else:
@@ -475,6 +478,16 @@ class browse_record(object):
 
     __repr__ = __str__
 
+    def refresh(self):
+        """Force refreshing this browse_record's data and all the data of the
+           records that belong to the same cache, by emptying the cache completely,
+           preserving only the record identifiers (for prefetching optimizations).
+        """
+        for model, model_cache in self._cache.iteritems():
+            # only preserve the ids of the records that were in the cache
+            cached_ids = dict([(i, {'id': i}) for i in model_cache.keys()])
+            self._cache[model].clear()
+            self._cache[model].update(cached_ids)
 
 def get_pg_type(f):
     """
@@ -770,7 +783,7 @@ class orm_template(object):
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
@@ -2097,19 +2110,15 @@ class orm_template(object):
         raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
-        """
+        """Returns the preferred display value (text representation) for the records with the
+           given ``ids``. By default this will be the value of the ``name`` column, unless
+           the model implements a custom behavior.
+           Can sometimes be seen as the inverse function of :meth:`~.name_search`, but it is not
+           guaranteed to be.
 
-        :param cr: database cursor
-        :param user: current user id
-        :type user: integer
-        :param ids: list of ids
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :return: tuples with the text representation of requested objects for to-many relationships
-
+           :rtype: list(tuple)
+           :return: list of pairs ``(id,text_repr)`` for all records with the given ``ids``.
         """
-        if not context:
-            context = {}
         if not ids:
             return []
         if isinstance(ids, (int, long)):
@@ -2118,38 +2127,39 @@ class orm_template(object):
             [self._rec_name], context, load='_classic_write')]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        """
-        Search for records and their display names according to a search domain.
+        """Search for records that have a display name matching the given ``name`` pattern if compared
+           with the given ``operator``, while also matching the optional search domain (``args``).
+           This is used for example to provide suggestions based on a partial value for a relational
+           field.
+           Sometimes be seen as the inverse function of :meth:`~.name_get`, but it is not
+           guaranteed to be.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param name: object name to search
-        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
-        :param operator: operator for search criterion
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :param limit: optional max number of records to return
-        :return: list of object names matching the search criteria, used to provide completion for to-many relationships
+           This method is equivalent to calling :meth:`~.search` with a search domain based on ``name``
+           and then :meth:`~.name_get` on the result of the search.
 
-        This method is equivalent of :py:meth:`~osv.osv.osv.search` on **name** + :py:meth:`~osv.osv.osv.name_get` on the result.
-        See :py:meth:`~osv.osv.osv.search` for an explanation of the possible values for the search domain specified in **args**.
-
+           :param list args: optional search domain (see :meth:`~.search` for syntax),
+                             specifying further restrictions
+           :param str operator: domain operator for matching the ``name`` pattern, such as ``'like'``
+                                or ``'='``.
+           :param int limit: optional max number of records to return
+           :rtype: list
+           :return: list of pairs ``(id,text_repr)`` for all matching records. 
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
     def name_create(self, cr, uid, name, context=None):
-        """
-        Creates a new record by calling :py:meth:`~osv.osv.osv.create` with only one
-        value provided: the name of the new record (``_rec_name`` field).
-        The new record will also be initialized with any default values applicable
-        to this model, or provided through the context. The usual behavior of
-        :py:meth:`~osv.osv.osv.create` applies.
-        Similarly, this method may raise an exception if the model has multiple
-        required fields and some do not have default values.
+        """Creates a new record by calling :meth:`~.create` with only one
+           value provided: the name of the new record (``_rec_name`` field).
+           The new record will also be initialized with any default values applicable
+           to this model, or provided through the context. The usual behavior of
+           :meth:`~.create` applies.
+           Similarly, this method may raise an exception if the model has multiple
+           required fields and some do not have default values.
 
-        :param name: name of the record to create
+           :param name: name of the record to create
 
-        :return: the :py:meth:`~osv.osv.osv.name_get` value for the newly-created record.
+           :rtype: tuple
+           :return: the :meth:`~.name_get` pair value for the newly-created record.
         """
         rec_id = self.create(cr, uid, {self._rec_name: name}, context);
         return self.name_get(cr, uid, [rec_id], context)[0]
@@ -2172,7 +2182,19 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
-    def exists(self, cr, uid, id, context=None):
+    def exists(self, cr, uid, ids, context=None):
+        """Checks whether the given id or ids exist in this model,
+           and return the list of ids that do. This is simple to use for
+           a truth test on a browse_record::
+
+               if record.exists():
+                   pass
+
+           :param ids: id or list of ids to check for existence
+           :type ids: int or [int]
+           :return: the list of ids that currently exist, out of
+                    the given `ids`
+        """
         raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
@@ -2258,6 +2280,16 @@ class orm_template(object):
             self._ormcache = {}
         except AttributeError:
             pass
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to ir.rules.
+
+           :param operation: one of ``write``, ``unlink``
+           :raise except_orm: * if current ir.rules do not permit this operation.
+           :return: None if the operation is allowed
+        """
+        raise NotImplementedError(_('The check_access_rule method is not implemented on this object !'))
 
 class orm_memory(orm_template):
 
@@ -2488,8 +2520,16 @@ class orm_memory(orm_template):
         # nothing to check in memory...
         pass
 
-    def exists(self, cr, uid, id, context=None):
-        return id in self.datas
+    def exists(self, cr, uid, ids, context=None):
+        if isinstance(ids, (long,int)):
+            ids = [ids]
+        return [id for id in ids if id in self.datas]
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        # ir.rules do not currently apply for orm.memory instances, 
+        # only the implicit visibility=owner one.
+        for id in ids:
+            self._check_access(uid, id, operation)
 
 class orm(orm_template):
     _sql_constraints = []
@@ -4690,9 +4730,9 @@ class orm(orm_template):
     def exists(self, cr, uid, ids, context=None):
         if type(ids) in (int, long):
             ids = [ids]
-        query = 'SELECT count(1) FROM "%s"' % (self._table)
+        query = 'SELECT id FROM "%s"' % (self._table)
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
-        return cr.fetchone()[0] == len(ids)
+        return [x[0] for x in cr.fetchall()]
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
