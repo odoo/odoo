@@ -307,6 +307,10 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
      */
     init: function(parent, action) {
+        // dataset initialization will take the session from ``this``, so if we
+        // do not have it yet (and we don't, because we've not called our own
+        // ``_super()``) rpc requests will blow up.
+        this.session = parent.session;
         this.action = action;
         var dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
         if (action.res_id) {
@@ -316,7 +320,8 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
         this._super(parent, dataset, action.views);
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            // Not elegant but allows to avoid form chrome (pager, save/new
+            // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
     },
