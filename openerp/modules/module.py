@@ -254,7 +254,8 @@ def load_information_from_description_file(module):
             info['license'] = info.get('license') or 'AGPL-3'
             info.setdefault('installable', True)
             info.setdefault('active', False)
-            info.setdefault('wsgi', None) # WSGI entry point, given as a string
+            # If the following is provided, it is called after the module is --loaded.
+            info.setdefault('post_load', None)
             for kind in ['data', 'demo', 'test',
                 'init_xml', 'update_xml', 'demo_xml']:
                 info.setdefault(kind, [])

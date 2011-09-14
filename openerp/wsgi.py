@@ -25,13 +25,12 @@ This module offers a WSGI interface to OpenERP.
 
 """
 
-from wsgiref.simple_server import make_server
-from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 import httplib
 import urllib
 import xmlrpclib
 import StringIO
 
+import logging
 import os
 import signal
 import sys
@@ -109,11 +108,7 @@ def wsgi_jsonrpc(environ, start_response):
 
 def wsgi_webdav(environ, start_response):
     if environ['REQUEST_METHOD'] == 'OPTIONS' and environ['PATH_INFO'] == '*':
-        return return_options(start_response)
-
-    # Make sure the addons are loaded in the registry, so they have a chance
-    # to register themselves in the 'service' layer.
-    openerp.pooler.get_db_and_pool('xx', update_module=[], pooljobs=False)
+        return return_options(environ, start_response)
 
     http_dir = websrv_lib.find_http_service(environ['PATH_INFO'])
     if http_dir:
@@ -124,15 +119,20 @@ def wsgi_webdav(environ, start_response):
             environ['PATH_INFO'] = '/' + path
         return http_to_wsgi(http_dir)(environ, start_response)
 
-def return_options(start_response):
-    # TODO Microsoft specifi header, see websrv_lib do_OPTIONS 
-    options = [('DAV', '1 2'), ('Allow', 'GET HEAD PROPFIND OPTIONS REPORT')]
+def return_options(environ, start_response):
+    # Microsoft specific header, see
+    # http://www.ibm.com/developerworks/rational/library/2089.html
+    if 'Microsoft' in environ.get('User-Agent', ''):
+        option = [('MS-Author-Via', 'DAV')]
+    else:
+        option = []
+    options += [('DAV', '1 2'), ('Allow', 'GET HEAD PROPFIND OPTIONS REPORT')]
     start_response("200 OK", [('Content-Length', str(0))] + options)
     return []
 
 def http_to_wsgi(http_dir):
     """
-    Turn BaseHTTPRequestHandler into a WSGI entry point.
+    Turn a BaseHTTPRequestHandler into a WSGI entry point.
 
     Actually the argument is not a bare BaseHTTPRequestHandler but is wrapped
     (as a class, so it needs to be instanciated) in a HTTPDir.
@@ -219,7 +219,7 @@ def http_to_wsgi(http_dir):
         # needed.
         if not hasattr(handler, method_name):
             if handler.command == 'OPTIONS':
-                return return_options(start_response)
+                return return_options(environ, start_response)
             start_response("501 Unsupported method (%r)" % handler.command, [])
             return []
 
@@ -257,7 +257,7 @@ def parse_http_response(s):
     response.begin()
     return response
 
-# WSGI handlers provided by modules loaded with the --load command-line option.
+# WSGI handlers registered through the register_wsgi_handler() function below.
 module_handlers = []
 
 def register_wsgi_handler(handler):
@@ -284,17 +284,32 @@ def application(environ, start_response):
             continue
         return result
 
-    # We never returned from the loop. Needs something else than 200 OK.
+    # We never returned from the loop.
     response = 'No handler found.\n'
-    start_response('200 OK', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
+    start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
 
 def serve():
-    """ Serve XMLRPC requests via wsgiref's simple_server.
+    """ Serve XMLRPC requests via werkzeug development server.
 
-    Blocking, should probably be called in its own process.
+    If werkzeug can not be imported, we fall back to wsgiref's simple_server.
+
+    Calling this function is blocking, you might want to call it in its own
+    thread.
     """
-    httpd = make_server('localhost', config['xmlrpc_port'], application)
+
+    # TODO Change the xmlrpc_port option to http_port.
+    try:
+        import werkzeug.serving
+        httpd = werkzeug.serving.make_server('localhost',
+            config['xmlrpc_port'], application, threaded=True)
+    except ImportError, e:
+        import wsgiref.simple_server
+        logging.getLogger('wsgi').warn('Can not import werkzeug, '
+            'falling back to wsgiref.')
+        httpd = wsgiref.simple_server.make_server('localhost',
+            config['xmlrpc_port'], application)
+
     httpd.serve_forever()
 
 # Master process id, can be used for signaling.
@@ -310,21 +325,6 @@ def on_starting(server):
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
-    #test_in_thread()
-
-def test_in_thread():
-    def f():
-        import time
-        time.sleep(2)
-        print ">>>> test thread"
-        cr = openerp.sql_db.db_connect('xx').cursor()
-        module_name = 'document_webdav'
-        fp = openerp.tools.file_open('/home/openerp/repos/addons/trunk-xmlrpc/document_webdav/test/webdav_test1.yml')
-        openerp.tools.convert_yaml_import(cr, module_name, fp, {}, 'update', True)
-        cr.close()
-        print "<<<< test thread"
-    import threading
-    threading.Thread(target=f).start()
 
 # Install our own signal handler on the master process.
 def when_ready(server):

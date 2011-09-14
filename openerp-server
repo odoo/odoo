@@ -145,10 +145,7 @@ def start_services():
     # Export (for RPC) services.
     openerp.service.web_services.start_web_services()
 
-    # Initialize the HTTP stack.
-    http_server.init_servers()
-    http_server.init_xmlrpc()
-    http_server.init_static_http()
+    # Start the NET-RPC server.
     netrpc_server.init_servers()
 
     # Start the main cron thread.
@@ -156,6 +153,9 @@ def start_services():
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
+
+    # Start the WSGI server.
+    threading.Thread(target=openerp.wsgi.serve).start()
 
 # Variable keeping track of the number of calls to the signal handler defined
 # below. This variable is monitored by ``quit_on_signals()``.
@@ -268,15 +268,10 @@ if __name__ == "__main__":
 
     for m in openerp.conf.server_wide_modules:
         __import__(m)
-        # Register a WSGI entry point if any.
+        # Call any post_load hook.
         info = openerp.modules.module.load_information_from_description_file(m)
-        if info['wsgi']:
-            openerp.wsgi.register_wsgi_handler(getattr(sys.modules[m], info['wsgi']))
-
-    #openerp.osv.osv.start_object_proxy()
-    #openerp.service.web_services.start_web_services()
-    #openerp.wsgi.serve()
-
+        if info['post_load']:
+            getattr(sys.modules[m], info['post_load'])()
 
     setup_pid_file()
     logger = logging.getLogger('server')
