@@ -336,12 +336,6 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      */
     start: function() {
         var self = this;
-        this.$element.find('.oe_get_xml_view').click(function () {
-            // TODO: add search view?
-            $('<pre>').text(openerp.web.json_node_to_xml(
-                self.views[self.active_view].controller.fields_view.arch, true))
-                    .dialog({ width: '95%'});
-        });
 
         var searchview_loaded;
         if (this.flags.search_view !== false) {
@@ -366,6 +360,35 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
             // schedule auto_search
             manager_ready.then(this.searchview.do_search);
         }
+
+        this.$element.find('.oe_get_xml_view').click(function () {
+            // TODO: add search view?
+            $('<pre>').text(openerp.web.json_node_to_xml(
+                self.views[self.active_view].controller.fields_view.arch, true))
+                    .dialog({ width: '95%'});
+        });
+        if (this.action.help) {
+            var Users = new openerp.web.DataSet(self, 'res.users'),
+                header = this.$element.find('.oe-view-manager-header');
+            header.delegate(' blockquote button', 'click', function () {
+                var $this = $(this);
+                //noinspection FallthroughInSwitchStatementJS
+                switch($this.attr('name')) {
+                case 'disable':
+                    Users.write(self.session.uid, {menu_tips: false});
+                case 'hide':
+                    $this.closest('blockquote').hide();
+                }
+            });
+            Users.read_ids([this.session.uid], ['menu_tips'], function (users) {
+                var user = users[0];
+                if (!(user && user.id === self.session.uid)) {
+                    return;
+                }
+                header.find('blockquote').toggle(user.menu_tips);
+            });
+        }
+
         return manager_ready;
     },
     on_mode_switch: function (view_type) {
