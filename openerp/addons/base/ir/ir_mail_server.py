@@ -189,7 +189,7 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % e)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
