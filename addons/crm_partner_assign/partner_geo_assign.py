@@ -35,7 +35,7 @@ def geo_find(addr):
         result = re.search(regex, xml, re.M|re.I)
         if not result:
             return None
-        return float(result.group(2)),float(result.group(1))
+        return float(result.group(1)),float(result.group(2))
     except Exception, e:
         raise osv.except_osv(_('Network error'), 
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
@@ -58,8 +58,8 @@ res_partner_grade()
 class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
-        'partner_latitude': fields.float('Geo Latitude'),
-        'partner_longitude': fields.float('Geo Longitude'),
+        'partner_latitude': fields.float('Geo Longitude'),
+        'partner_longitude': fields.float('Geo Latitude'),
         'date_localization': fields.date('Geo Localization Date'),
         'partner_weight': fields.integer('Weight',
             help="Gives the probability to assign a lead to this partner. (0 means no assignation.)"),
