@@ -90,22 +90,22 @@
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                            <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
-                                    <field name="history" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                        icon="terp-mail-replied" type="action" />
+                                    <field name="email_from" invisible="1"/>
+		                            <button
+		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+		                                name="%(mail.action_email_compose_message_wizard)d"
+		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -113,20 +113,18 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                        <field name="history" invisible="1"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
+                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
+		                                        <button colspan="4" string="Reply"
+		                                            name="%(mail.action_email_compose_message_wizard)d"
+		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+		                                            icon="terp-mail-replied" type="action"/>
                                             </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
@@ -141,10 +139,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-                            <button string="Send New Email"
-                               name="%(crm.action_crm_send_mail)d"
-                               context="{'mail':'new', 'model': 'project.issue'}"
-                               icon="terp-mail-message-new" type="action" />
+		                    <button string="Send New Email"
+		                        name="%(mail.action_email_compose_message_wizard)d"
+		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                            <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -199,7 +196,7 @@
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                     <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
@@ -212,19 +209,17 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft','pending'))]" help="New, pending and to do" icon="terp-check"/>
+                        <separator orientation="vertical"/>
+                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="partner_id" groups="base.group_extended"/>
+                        <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="assigned_to">
                             <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
                         <field name="project_id"/>
-                        <field name="version_id" widget="selection"/>
                         <field name="id"/>
                     </group>
                     <newline/>
@@ -293,7 +288,7 @@
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>

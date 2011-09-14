@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:36+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr "负责用户"
+msgstr "负责人"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -36,7 +36,7 @@ msgstr "预算状况"
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr "总预算’%s‘未设定科目！"
+msgstr "总预算“%s”没设定项！"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -51,7 +51,7 @@ msgstr "确认"
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr "确认用户"
+msgstr "审核用户"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
@@ -69,7 +69,7 @@ msgstr "支付日期"
 #: field:account.budget.crossvered.summary.report,date_to:0
 #: field:account.budget.report,date_to:0
 msgid "End of period"
-msgstr "结束会计期间"
+msgstr "期末"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -92,17 +92,17 @@ msgstr "打印预算"
 #. module: account_budget
 #: report:account.budget:0
 msgid "Currency:"
-msgstr "货币:"
+msgstr "币别："
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "预算交叉报表"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr "审核"
+msgstr "已审核"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
@@ -131,6 +131,8 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"预算是针对将来的一个期间内期望的收入和费用的预测。有了预算，公司就能小心地分析在给定期间赚了多少钱，找出最佳的投资策略。跟踪你资金的去向，可以避免超支，而"
+"且最接近你的财务目标。预算的方式是细化每个辅助核算项目的预期收入，并跟踪在那个期间这些收入是否实现了。"
 
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
@@ -152,7 +154,7 @@ msgstr "说明"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr "币种"
+msgstr "币别"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -169,7 +171,7 @@ msgstr "公司"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr "待批准"
+msgstr "待审批"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -219,13 +221,10 @@ msgstr "结束日期"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr "分析科目的科目预算报表"
+msgstr "辅助核算项的的预算报表"
 
 #. module: account_budget
 #: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
-#: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
 msgstr "理论金额"
 
@@ -291,7 +290,7 @@ msgstr "预算"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr "错误！此币种同选定公司的默认币种相同。"
+msgstr "错误！此币别必须是选定公司的默认币别。"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -301,7 +300,7 @@ msgstr "已取消"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr "批准"
+msgstr "审批"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -322,12 +321,12 @@ msgstr "预算状况"
 #: field:account.budget.crossvered.summary.report,date_from:0
 #: field:account.budget.report,date_from:0
 msgid "Start of period"
-msgstr "开始会计期间"
+msgstr "期初"
 
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "预算交叉汇总表"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -379,12 +378,22 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"此模块使得会计可以管理预算。\n"
+"\n"
+"一旦输入了主预算和预算，管理层可以设置每个辅助核算项的计划金额。\n"
+"会计可以看到主预算和预算合计的金额，以避免预算合计超出主预算金额。预算列表可以以图表方式查看。\n"
+"\n"
+"有三个报表：\n"
+"1.第一个报表挂在预算列表上。此报表列出此预算在每个主预算上的辅助核算项金额。\n"
+"2.第二个报表挂在预算列表上，作为第一个报表的汇总。列出此预算上的辅助核算项金额（跨主预算）。\n"
+"3.第三个报表挂在辅助核算项树上。此报表列出此辅助核算项在每个预算上的主预算金额。\n"
+"\n"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "辅助核算项目"
+msgstr "辅助核算项"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -434,7 +443,7 @@ msgstr "预算管理"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "错误! 您不能创建递归的辅助核算科目"
+msgstr "错误! 你不能创建递归的辅助核算项"
 
 #. module: account_budget
 #: report:account.budget:0

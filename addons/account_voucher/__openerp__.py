@@ -25,15 +25,22 @@
     "author" : 'OpenERP SA',
     'complexity': "normal",
     "description": """
-Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
-====================================================================================================================================
+Account Voucher module offers an easy way to deal with all the basic requirements of Voucher Entries
+====================================================================================================
 
-    * Voucher Entry
-    * Voucher Receipt
-    * Cheque Register
+Its increased usabililty allows you to create easily sales/purchases documents but also to encode payments.
+Doing so, you'll be able to see all the open transactions for the selected partner and that will help you
+to reconcile your entry with its invoice.
+
+Account Voucher module multi-currency support
+=============================================
+
+Thanks to the contribution of Camptocamp, the vouchers fully support the multi currency and compute the 
+currency rate difference besides the write off amount. Of course, the accounting entries are also created
+accordingly.
     """,
     "category" : "Finance",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
     "init_xml" : [],
@@ -48,6 +55,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "wizard/account_voucher_unreconcile_view.xml",
         "wizard/account_statement_from_invoice_view.xml",
         "account_voucher_view.xml",
+        "company_view.xml",
         "voucher_payment_receipt_view.xml",
         "voucher_sales_purchase_view.xml",
         "account_voucher_wizard.xml",
@@ -59,7 +67,12 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/account_voucher.yml",
         "test/sales_receipt.yml",
         "test/sales_payment.yml",
-        "test/account_voucher_report.yml"
+        "test/account_voucher_report.yml",
+        "test/case1_usd_usd.yml",
+        "test/case2_usd_eur.yml",
+        "test/case2_suppl_usd_eur.yml",
+        "test/case3_eur_eur.yml",
+        "test/case4_cad_chf.yml",
     ],
     'certificate': '0037580727101',
     "active": False,

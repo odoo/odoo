@@ -11,10 +11,10 @@
               <attribute name="string">Knowledge Application Configuration</attribute>
             </form>
              <separator string="title" position="attributes">
-            	<attribute name="string">Configure Resource Directory</attribute>
+            	<attribute name="string">Virtual Document Folders</attribute>
           	</separator>
           	<xpath expr="//label[@string='description']" position="attributes">
-            <attribute name="string">Choose the following Resouces to auto directory configuration.</attribute>
+            <attribute name="string">OpenERP's Document Management System supports mapping virtual folders with documents. The virtual folder of a document can be used to manage the files attached to the document, or to print and download any document report. A few common virtual folders can be created for you automatically from this screen.</attribute>
           </xpath>
           <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
   				<attribute name="rowspan">12</attribute>
@@ -33,7 +33,7 @@
     </record>
 
     <record id="action_config_auto_directory" model="ir.actions.act_window">
-        <field name="name">Auto Configure Directory</field>
+        <field name="name">Document Management System: Configure Virtual Folders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.configuration</field>
         <field name="view_id" ref="view_auto_config_form"/>

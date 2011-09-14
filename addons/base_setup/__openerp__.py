@@ -29,19 +29,15 @@
 This module helps to configure the system at the installation of a new database.
 ================================================================================
 
-It allows you to choose the type of interface and select from a list of applications to install.
+Shows you a list of applications features to install from.
 
-It also helps to easily configure your company.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': ['base_setup_data.xml'],
-    'update_xml': ['security/ir.model.access.csv',
-                   'wizard/res_company_logo_view.xml',
-                   'base_setup_installer.xml',
-                   ],
-    'demo_xml': ['base_setup_demo.xml'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv', 'base_setup_views.xml' ],
+    'demo_xml': [],
     'installable': True,
     'active': True,
     'certificate': '0086711085869',
