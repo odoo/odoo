@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
+                 <xpath expr="/form/notebook/page/group/field[@name='struct_id']" position="after">
                     <field name="reim_travel"/>
                     <field name="company_car_emp"/>
                     <field name="mis_ex_onss"/>
@@ -28,9 +28,6 @@
                         <field name="ch_worker"/>
                         <field name="company_car_wkr"/>
                     </group>
-                 </xpath>
-                 <xpath expr="/form//group/field[@name='type_id']" position="after">
-                    <field name="struct_id" select="1"/>
                  </xpath>
             </data>
             </field>
