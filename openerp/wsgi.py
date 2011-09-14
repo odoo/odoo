@@ -34,6 +34,7 @@ import logging
 import os
 import signal
 import sys
+import threading
 import time
 
 import openerp
@@ -171,10 +172,10 @@ def http_to_wsgi(http_dir):
         server = Dummy()
         server.server_name = environ['SERVER_NAME']
         server.server_port = int(environ['SERVER_PORT'])
-        con = openerp.service.websrv_lib.noconnection(environ['gunicorn.socket']) # None TODO
 
         # Initialize the underlying handler and associated auth. provider.
-        handler = http_dir.instanciate_handler(openerp.service.websrv_lib.noconnection(con), environ['REMOTE_ADDR'], server)
+        con = openerp.service.websrv_lib.noconnection(environ['wsgi.input'])
+        handler = http_dir.instanciate_handler(con, environ['REMOTE_ADDR'], server)
 
         # Populate the handler as if it is called by a regular HTTP server
         # and the request is already parsed.
@@ -197,7 +198,6 @@ def http_to_wsgi(http_dir):
                 # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
                 # authorisation features of HTTP/1.1 
                 if request_version != 'HTTP/1.1' and ('Darwin/9.' not in handler.headers.get('User-Agent', '')):
-                    print 'self.log_error("Cannot require auth at %s", self.request_version)'
                     start_response("403 Forbidden", [])
                     return []
                 start_response("401 Authorization required", [
@@ -208,7 +208,6 @@ def http_to_wsgi(http_dir):
                     ])
                 return ['Blah'] # self.auth_required_msg
             except websrv_lib.AuthRejectedExc,e:
-                print '("Rejected auth: %s" % e.args[0])'
                 start_response("403 %s" % (e.args[0],), [])
                 return []
 
@@ -289,14 +288,19 @@ def application(environ, start_response):
     start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
 
+# The WSGI server, started by start_server(), stopped by stop_server().
+httpd = None
+
 def serve():
-    """ Serve XMLRPC requests via werkzeug development server.
+    """ Serve HTTP requests via werkzeug development server.
 
     If werkzeug can not be imported, we fall back to wsgiref's simple_server.
 
     Calling this function is blocking, you might want to call it in its own
     thread.
     """
+
+    global httpd
 
     # TODO Change the xmlrpc_port option to http_port.
     try:
@@ -311,6 +315,21 @@ def serve():
             config['xmlrpc_port'], application)
 
     httpd.serve_forever()
+
+def start_server():
+    """ Call serve() in its own thread.
+
+    The WSGI server can be shutdown with stop_server() below.
+    """
+    threading.Thread(target=openerp.wsgi.serve).start()
+
+def stop_server():
+    """ Initiate the shutdown of the WSGI server.
+
+    The server is supposed to have been started by start_server() above.
+    """
+    if httpd:
+        httpd.shutdown()
 
 # Master process id, can be used for signaling.
 arbiter_pid = None

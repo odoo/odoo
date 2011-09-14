@@ -155,7 +155,7 @@ def start_services():
     openerp.netsvc.Server.startAll()
 
     # Start the WSGI server.
-    threading.Thread(target=openerp.wsgi.serve).start()
+    openerp.wsgi.start_server()
 
 # Variable keeping track of the number of calls to the signal handler defined
 # below. This variable is monitored by ``quit_on_signals()``.
@@ -210,6 +210,7 @@ def quit_on_signals():
 
     openerp.netsvc.Agent.quit()
     openerp.netsvc.Server.quitAll()
+    openerp.wsgi.stop_server()
     config = openerp.tools.config
     if config['pidfile']:
         os.unlink(config['pidfile'])
