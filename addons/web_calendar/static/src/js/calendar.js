@@ -344,11 +344,11 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
-        this.form = new openerp.web.FormView(this, this.element_id, this.dataset, this.view_id, {
+        this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false
         });
-        this.form.start();
+        this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
     },

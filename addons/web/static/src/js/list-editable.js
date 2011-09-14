@@ -180,9 +180,8 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.edition_form = _.extend(new openerp.web.FormView(
-                        self, $new_row.attr('id'), self.dataset, false), {
-                    template: 'ListView.row.form',
+                self.edition_form = _.extend(new openerp.web.FormView(self, self.dataset, false), {
+                    form_template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets
                 });
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
