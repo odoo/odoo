@@ -17,7 +17,7 @@
 </t>
 
 <t t-name="Login">
-     <div data-role="header" data-theme="b">
+     <div data-role="header" data-theme="b" data-position="fixed">
         <h1>OpenERP</h1>
     </div>
     <div data-role="content">
@@ -32,9 +32,9 @@
                     </t>
                 </select>
                 <label for="login">Login:</label>
-                <input type="text" id="login" name="login" value=""/><br/>
+                <input type="text" id="login" name="login" value=""/>
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value=""/><br/>
+                <input type="password" id="password" name="password" value=""/>
                 <a id="login_btn" data-theme="c" href="#" data-role="button">Login</a>
                 <div class="login_error_message ui-btn-inner ui-btn-corner-all">
                     <span class="ui-btn-text">Bad username or password</span>
@@ -42,6 +42,10 @@
              </div>
         </fieldset>
     </div>
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <h1>Powered by openerp.com</h1>
+    </div>
+    
 </t>
 
 <t t-name="Header">
@@ -137,222 +141,136 @@
 
 <t t-name="FormView">
     <t t-call="Header" />
-    <div role="main" data-role="content">
+    <div data-role="content">
         <form>
             <t t-foreach="get_fields" t-as="field">
-            <t t-if="fields[field.attrs.name].type == 'boolean'">
-                <fieldset data-role="controlgroup">
-                    <t t-if="values[field.attrs.name]">
-                        <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes"/>
-                       <!--   <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes" class="custom"/><br/> -->
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
-                        <!--  <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom"/><br/> -->
-                    </t>
-                    <label for="checkbox-1"><t t-esc="fields[field.attrs.name].string" /></label>
-                </fieldset>
-             </t>
-            <div data-role="fieldcontain">
-                <t t-if="fields[field.attrs.name].type!='one2many' and fields[field.attrs.name].type!='many2many' and fields[field.attrs.name].type!='boolean'" >
-                <label for="">
-                    <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
-                    <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
-                </label>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'char'">
-                    <t t-if="values[field.attrs.name]">
-                        <input type="text" id="" t-att-value="values[field.attrs.name]"/><br/>
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input type="text" value="" id=""/><br/>
-                     </t>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'text'">
-                    <textarea name="" id=""></textarea><br/>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'float'">
-                    <t t-if="values[field.attrs.name]">
-                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input id="" type="text" value=""/><br/>
-                    </t>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'date'">
-                    <t t-if="values[field.attrs.name]">
-                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input id="" type="text" value=""/><br/>
-                    </t>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'datetime'">
-                    <t t-if="values[field.attrs.name]">
-                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input id="" type="text" value=""/><br/>
-                    </t>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'selection'">
-                    <!--  <div class="ui-select">
-                        <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
-                            <span class="ui-btn-inner ui-btn-corner-all">
-                                <span class="ui-btn-text">
-                                    <t t-if="values[field.attrs.name]">
-                                        <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                            <t t-if="opt[0] == (values[field.attrs.name])">
-                                                <t t-esc="opt[1]"/>
-                                            </t>
-                                        </t>
-                                    </t>
-                                </span>
-                                <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
-                            </span>
-
-                            <select t-att-id="'selection_'+fields[field.attrs.name].string">
-                                <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                    <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
-                                </t>
-                            </select>
-                        </div>
-                    </div>-->
-                    <select id="">
-                        <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                            <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                <div data-role="fieldcontain">
+                    <t t-if="fields[field.attrs.name].type == 'char'">
+                        <label for="">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <t t-if="values[field.attrs.name]">
+                            <input type="text" id="" t-att-value="values[field.attrs.name]"/>
                         </t>
-                    </select>
-                </t>
-                 <t t-if="fields[field.attrs.name].type == 'many2one'">
-                   <!--  <div class="ui-select">
-                        <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
-                            <span class="ui-btn-inner ui-btn-corner-all">
-                                <span class="ui-btn-text">
-                                    <t t-if="values[field.attrs.name]">
-                                        <t t-esc="values[field.attrs.name][1]"/>
+                        <t t-if="!(values[field.attrs.name])">
+                            <input type="text" value="" id=""/>
+                         </t>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'text'">
+                        <label for="">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <textarea name="" id=""></textarea>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'float'">
+                        <label for="">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <t t-if="values[field.attrs.name]">
+                            <input id="" type="text" t-att-value="values[field.attrs.name]"/>
+                        </t>
+                        <t t-if="!(values[field.attrs.name])">
+                            <input id="" type="text" value=""/>
+                        </t>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'date'">
+                        <label for="">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <t t-if="values[field.attrs.name]">
+                            <input id="" type="text" t-att-value="values[field.attrs.name]"/>
+                        </t>
+                        <t t-if="!(values[field.attrs.name])">
+                            <input id="" type="text" value=""/>
+                        </t>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'datetime'">
+                        <label for="">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <t t-if="values[field.attrs.name]">
+                            <input id="" type="text" t-att-value="values[field.attrs.name]"/>
+                        </t>
+                        <t t-if="!(values[field.attrs.name])">
+                            <input id="" type="text" value=""/>
+                        </t>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'boolean'">
+                        <fieldset data-role="controlgroup">
+                            <t t-if="values[field.attrs.name]">
+                                <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes" class="custom"/>
+                            </t>
+                            <t t-if="!(values[field.attrs.name])">
+                                <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                            </t>
+                            <label for="checkbox-1"><t t-esc="fields[field.attrs.name].string" /></label>
+                        </fieldset>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'selection'">
+                        <label for="" class="select">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <select id="" data-native-menu="false">
+                            <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
+                                <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                            </t>
+                        </select>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'many2one'">
+                        <label for="" class="select">
+                            <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                            <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
+                        </label>
+                        <select id="" data-native-menu="false">
+                            <t t-if="fields[field.attrs.name].selection">
+                                <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
+                                    <t t-if="values[field.attrs.name]==opt[0]">
+                                        <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
                                     </t>
-                                 </span>
-                                <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
-                            </span>
-
-                            <select t-att-id="'selection_'+fields[field.attrs.name].string">
-                                <t t-if="fields[field.attrs.name].selection">
-                                    <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                        <t t-if="values[field.attrs.name]==opt[0]">
-                                            <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
-                                        </t>
-                                        <t t-if="values[field.attrs.name]!=opt[0]">
-                                            <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
-                                        </t>
+                                    <t t-if="values[field.attrs.name]!=opt[0]">
+                                        <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
                                     </t>
                                 </t>
-                            </select>
-                        </div>
-                    </div>-->
-                    <select id="">
-                                <t t-if="fields[field.attrs.name].selection">
-                                    <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                        <t t-if="values[field.attrs.name]==opt[0]">
-                                            <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
-                                        </t>
-                                        <t t-if="values[field.attrs.name]!=opt[0]">
-                                            <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
-                                        </t>
-                                    </t>
-                                </t>
-                            </select>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'one2many'">
-                    <ul data-role="listview" data-inset="true" data-theme="d">
-                        <li data-theme="c">
-                            <a href="#">
-                                <t t-esc="til"/>
-                            </a>
-                         </li>
-                     </ul>
-                 </t>
-                 <!--     <ul role="listbox" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-                        <li tabindex="0" data-theme="d" role="option" class="ui-btn ui-btn-icon-right ui-li ui-corner-top ui-corner-bottom ui-btn-up-d">
-                            <div class="ui-btn-inner">
-                                <div class="ui-btn-text">
-                                    <a href="#" class="ui-link-inherit">
-                                        <span><t t-esc="til"/></span>
-                                    </a>
-                                </div>
-                                <span class="ui-icon ui-icon-arrow-r"></span>
-                            </div>
-                        </li>
-                    </ul>-->
-                    <!--  <div class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
-                        <h1 class="ui-collapsible-heading">
-                            <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
-                                <span class="ui-btn-inner ui-corner-all">
-                                    <span class="ui-btn-text">
-                                        <t t-esc="til"></t>
-                                        <span class="ui-collapsible-heading-status"></span>
-                                    </span>
-                                </span>
-                            </a>
-                            <span class="ui-icon ui-icon-arrow-r"></span>
-                            <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">
-                                <div class="detail"></div>
-                            </div>
-                        </h1>
-                    </div>
-                </t>-->
-            </div>
+                            </t>
+                        </select>
+                    </t>
+                    <t t-if="fields[field.attrs.name].type == 'one2many'">
+                        <ul data-role="listview" data-inset="true" data-theme="d">
+                            <li data-theme="c">
+                                <a href="#">
+                                    <t t-esc="til"/>
+                                </a>
+                             </li>
+                         </ul>
+                     </t>
+                </div>
             </t>
-           <!-- <t t-if="notebooks">
-                <t t-foreach="notebooks.children" t-as="page">
-                    <t t-if="page.attrs.invisible">
-                    <div style="display:none;" class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
-                        <h1 class="ui-collapsible-heading">
-                            <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
-                                <span class="ui-btn-inner ui-corner-all">
-                                    <span class="ui-btn-text">
-                                        <t t-esc="page.attrs.string"></t>-->
-                                        <!-- <span class="ui-collapsible-heading-status"></span> -->
-                                 <!--     </span>
-                                    <span data-theme="d" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-d">
-                                        <span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
-                                            <span class="ui-btn-text"></span>
-                                            <span class="ui-icon ui-icon-shadow ui-icon-plus"></span>
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                            <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">
-                                <div class="detail"></div>
+           <t t-if="notebooks">
+                <div data-role="collapsible-set">
+                    <t t-foreach="notebooks.children" t-as="page">
+                        <t t-if="page.attrs.invisible">
+                            <div style="display:none;" data-collapsed="true" data-role="collapsible">
+                                <h3>
+                                        <t t-esc="page.attrs.string"></t>
+                                </h3>
                             </div>
-                        </h1>
-                    </div>
-                    </t>
-                    <t t-if="!page.attrs.invisible">
-                    <div class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
-                        <h1 class="ui-collapsible-heading">
-                            <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
-                                <span class="ui-btn-inner ui-corner-all">
-                                    <span class="ui-btn-text">
-                                        <t t-esc="page.attrs.string"></t>-->
-                                        <!-- <span class="ui-collapsible-heading-status"></span> -->
-                                    <!--  </span>
-                                    <span data-theme="d" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-d">
-                                        <span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
-                                            <span class="ui-btn-text"></span>
-                                            <span class="ui-icon ui-icon-shadow ui-icon-plus"></span>
-                                        </span>
-                                    </span>
-                                </span>
-                            </a>
-                            <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">
-                                <div class="detail"></div>
+                        </t>
+                        <t t-if="!page.attrs.invisible">
+                            <div data-collapsed="true" data-role="collapsible">
+                                <h3>
+                                        <t t-esc="page.attrs.string"></t>
+                                </h3>
                             </div>
-                        </h1>
-                    </div>
+                        </t>
                     </t>
-                </t>
-            </t> -->
+                </div>
+            </t>
         </form>
     </div>
     <t t-call="Footer" />
