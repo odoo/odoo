@@ -53,8 +53,12 @@
 
 <t t-name="Footer">
     <div data-role="footer" data-theme="b" data-position="fixed">
-        <a id="shrotcuts" href="#" title="Favourite" data-theme="b">Favourite</a>
-        <a id="preference" href="#" title="Preference" data-theme="b">Preference</a>
+        <div data-role="navbar">
+            <ul>
+                <li><a id="shrotcuts" href="#" title="Favourite" data-theme="b" data-icon="star" >Favourite</a></li>
+                <li><a id="preference" href="#" title="Preference" data-theme="b" data-icon="gear">Preference</a></li>
+            </ul>
+        </div>
     </div>
 </t>
 
