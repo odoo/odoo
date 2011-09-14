@@ -35,7 +35,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.datarecord = {};
         this.ready = false;
         this.show_invalid = true;
-        this.dirty = false;
+        this.dirty_for_user = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = openerp.web.form.widgets;
@@ -135,7 +135,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.$form_header.find('.oe_form_on_update').show();
             this.$form_header.find('button.oe_form_button_new').show();
         }
-        this.dirty = false;
+        this.dirty_for_user = false;
         this.datarecord = record;
         for (var f in this.fields) {
             var field = this.fields[f];
@@ -145,7 +145,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
         if (!record.id) {
             // New record: Second pass in order to trigger the onchanges
-            this.dirty = true;
             this.show_invalid = false;
             for (var f in record) {
                 var field = this.fields[f];
@@ -270,7 +269,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
-                        field.dirty = true;
+                        field.dirty = this.dirty_for_user = true;
                         if (_.indexOf(processed, field.name) < 0) {
                             this.do_onchange(field, processed);
                         }
@@ -298,10 +297,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this;
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(
-                _.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
-                    def.resolve();
-                    });
+            self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                def.resolve();
+            });
         });
         return def.promise();
     },
@@ -809,7 +807,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     on_click: function(saved) {
         var self = this;
-        if (!this.node.attrs.special && this.view.dirty && saved !== true) {
+        if ((!this.node.attrs.special && this.view.dirty_for_user && saved !== true) || !this.view.recordcount.id) {
             this.view.do_save(function() {
                 self.on_click(true);
             });
@@ -957,7 +955,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         }
     },
     on_ui_change: function() {
-        this.dirty = this.view.dirty = true;
+        this.dirty = this.view.dirty_for_user = true;
         this.validate();
         if (this.is_valid()) {
             this.set_value_from_ui();
