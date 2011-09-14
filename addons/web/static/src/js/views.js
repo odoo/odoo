@@ -20,7 +20,6 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
-        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -44,8 +43,11 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         }
     },
     url_update: function(action) {
+        var url = {};
+        if(action.id)
+            url.action_id = action.id;
         // this.url = {
-        //     "model": action.model,
+        //     "model": action.res_model,
         //     "domain": action.domain,
         // };
         // action.res_model
@@ -56,14 +58,15 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         // action.res_id
         // mode
         // menu
+        this.do_url_set_hash(url);
     },
-    url_stringify: function(action) {
+    do_url_set_hash: function(url) {
     },
-    url_parse: function(action) {
-    },
-    on_url_update: function(url) {
-    },
-    do_url_action: function(url) {
+    on_url_hashchange: function(url) {
+        var self = this;
+        self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
+                self.do_action(result.result);
+            });
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
