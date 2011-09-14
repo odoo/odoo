@@ -1169,7 +1169,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                     target_id = ui.item.prev().data('id');
 
                 list.records.remove(to_move);
-                var to = target_id ? list.records.indexOf(list.records.get(target_id)) : 0;
+                var to = target_id ? list.records.indexOf(list.records.get(target_id)) + 1 : 0;
                 list.records.add(to_move, { at: to });
 
                 // resequencing time!
