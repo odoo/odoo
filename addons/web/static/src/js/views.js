@@ -158,7 +158,10 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         this.registry = openerp.web.views;
     },
     render: function() {
-        return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
+        return QWeb.render(this.template, {
+            self: this,
+            prefix: this.element_id,
+            views: this.views_src});
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -332,6 +335,14 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      * launches an initial search after both views are done rendering.
      */
     start: function() {
+        var self = this;
+        this.$element.find('.oe_get_xml_view').click(function () {
+            // TODO: add search view?
+            $('<pre>').text(openerp.web.json_node_to_xml(
+                self.views[self.active_view].controller.fields_view.arch, true))
+                    .dialog({ width: '95%'});
+        });
+
         var searchview_loaded;
         if (this.flags.search_view !== false) {
             var search_defaults = {};
@@ -358,9 +369,13 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
         return manager_ready;
     },
     on_mode_switch: function (view_type) {
+        var self = this;
         return $.when(
             this._super(view_type),
-            this.shortcut_check(this.views[view_type]));
+            this.shortcut_check(this.views[view_type])).then(function () {
+                var view_id = self.views[self.active_view].controller.fields_view.view_id;
+                self.$element.find('.oe_get_xml_view span').text(view_id);
+        });
     },
     shortcut_check : function(view) {
         var self = this;

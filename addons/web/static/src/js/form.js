@@ -90,12 +90,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
 
-        if (this.session.debug) {
-            this.$form_header.find('button.oe_get_xml_view').click(function() {
-                $('<xmp>' + openerp.web.json_node_to_xml(self.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
-            });
-        }
-
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();

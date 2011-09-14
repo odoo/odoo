@@ -444,7 +444,13 @@
 <t t-extend="ViewManager" t-name="ViewManagerAction">
     <t t-jquery=".view-manager-main-content" t-operation="prepend">
     	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-    	href="javascript: void(0)"> </a>
+    	   href="javascript: void(0)"> </a>
+        <h2 class="oe_view_title">
+            <t t-esc="self.action.name"/>
+            <button t-if="self.session.debug" class="oe_get_xml_view">
+                View#<span></span>
+            </button>
+        </h2>
     </t>
 </t>
 
@@ -502,7 +508,6 @@
     </div>
 </t>
 <t t-name="TreeView">
-    <h2 class="oe_view_title"><t t-esc="title"/></h2>
     <select t-if="toolbar" style="width: 30%">
     </select>
     <table class="oe-treeview-table">
@@ -632,7 +637,6 @@
 </t>
 <t t-name="FormView">
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
-        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button t-if="view.session.debug" class="oe_get_xml_view">View#<t t-esc="view.fields_view.view_id"/></button></h2>
         <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
@@ -974,7 +978,6 @@
     </button>
 </t>
 <t t-name="SearchView">
-    <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons" style="text-align: right;">
