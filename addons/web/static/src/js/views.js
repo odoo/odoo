@@ -327,6 +327,12 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
             // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
+
+        // setup storage for session-wise menu hiding
+        if (this.session.hidden_menutips) {
+            return;
+        }
+        this.session.hidden_menutips = {}
     },
     /**
      * Initializes the ViewManagerAction: sets up the searchview (if the
@@ -370,7 +376,7 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
         if (this.action.help) {
             var Users = new openerp.web.DataSet(self, 'res.users'),
                 header = this.$element.find('.oe-view-manager-header');
-            header.delegate(' blockquote button', 'click', function () {
+            header.delegate('blockquote button', 'click', function () {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
                 switch($this.attr('name')) {
@@ -378,15 +384,18 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
                     Users.write(self.session.uid, {menu_tips: false});
                 case 'hide':
                     $this.closest('blockquote').hide();
+                    self.session.hidden_menutips[self.action.id] = true;
                 }
             });
-            Users.read_ids([this.session.uid], ['menu_tips'], function (users) {
-                var user = users[0];
-                if (!(user && user.id === self.session.uid)) {
-                    return;
-                }
-                header.find('blockquote').toggle(user.menu_tips);
-            });
+            if (!(self.action.id in self.session.hidden_menutips)) {
+                Users.read_ids([this.session.uid], ['menu_tips'], function (users) {
+                    var user = users[0];
+                    if (!(user && user.id === self.session.uid)) {
+                        return;
+                    }
+                    header.find('blockquote').toggle(user.menu_tips);
+                });
+            }
         }
 
         return manager_ready;
