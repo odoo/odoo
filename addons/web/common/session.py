@@ -35,7 +35,6 @@ class OpenERPSession(object):
         self._uid = False
         self._login = False
         self._password = False
-        self.model_factory = model_factory
         self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
