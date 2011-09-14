@@ -132,6 +132,10 @@ class hr_contract(osv.osv):
             ], 'Scheduled Pay', select=True),
     }
 
+    _defaults = {
+        'schedule_pay': 'monthly',
+    }
+
     def get_all_structures(self, cr, uid, contract_ids, context=None):
         """
         @param contract_ids: list of contracts
