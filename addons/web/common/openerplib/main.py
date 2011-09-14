@@ -7,31 +7,32 @@
 # All rights reserved.
 # 
 # Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the
-#       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the <organization> nor the
-#       names of its contributors may be used to endorse or promote products
-#       derived from this software without specific prior written permission.
+# modification, are permitted provided that the following conditions are met: 
+# 
+# 1. Redistributions of source code must retain the above copyright notice, this
+# list of conditions and the following disclaimer. 
+# 2. Redistributions in binary form must reproduce the above copyright notice,
+# this list of conditions and the following disclaimer in the documentation
+# and/or other materials provided with the distribution. 
 # 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 # ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 # WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 # (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 # LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
 # ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
+# 
 ##############################################################################
 
 """
 OpenERP Client Library
+
+Home page: http://pypi.python.org/pypi/openerp-client-lib
+Code repository: https://code.launchpad.net/~niv-openerp/openerp-client-lib/trunk
 """
 
 import xmlrpclib
@@ -40,14 +41,12 @@ import socket
 
 try:
     import cPickle as pickle
-    pickle.__name__
-except:
+except ImportError:
     import pickle
 
 try:
     import cStringIO as StringIO
-    StringIO.__name__
-except:
+except ImportError:
     import StringIO
 
 _logger = logging.getLogger(__name__)
@@ -102,7 +101,7 @@ class NetRPC_Exception(Exception):
         self.faultString = faultString
         self.args = (faultCode, faultString)
 
-class NetRPC:
+class NetRPC(object):
     """
     Low level class for NetRPC protocol.
     """
@@ -191,7 +190,7 @@ class NetRPCConnector(Connector):
         socket.disconnect()
         return result
 
-class Service:
+class Service(object):
     """
     A class to execute RPC calls on a specific service of the remote server.
     """
@@ -215,13 +214,13 @@ class Service:
             """
             self.__logger.debug('args: %r', args)
             result = self.connector.send(self.service_name, method, *args)
-            self.__logger.debug('result: %r' % result)
+            self.__logger.debug('result: %r', result)
             return result
         return proxy
 
 class Connection(object):
     """
-    A class to represent a connection with authentification to an OpenERP Server.
+    A class to represent a connection with authentication to an OpenERP Server.
     It also provides utility methods to interact with the server more easily.
     """
     __logger = _getChildLogger(_logger, 'connection')
@@ -263,8 +262,8 @@ class Connection(object):
         
     def check_login(self, force=True):
         """
-        Checks that the login information is valid. Throws an AuthentificationError if the
-        authentification fails.
+        Checks that the login information is valid. Throws an AuthenticationError if the
+        authentication fails.
 
         :param force: Force to re-check even if this Connection was already validated previously.
         Default to True.
@@ -273,46 +272,46 @@ class Connection(object):
             return
         
         if not self.database or not self.login or self.password is None:
-            raise AuthentificationError("Creditentials not provided")
+            raise AuthenticationError("Creditentials not provided")
         
         self.user_id = self.get_service("common").login(self.database, self.login, self.password)
         if not self.user_id:
-            raise AuthentificationError("Authentification failure")
-        self.__logger.debug("Authentified with user id %s" % self.user_id)
+            raise AuthenticationError("Authentication failure")
+        self.__logger.debug("Authenticated with user id %s", self.user_id)
     
-    """
-    Returns a Model instance to allow easy remote manipulation of an OpenERP model.
-    
-    :param model_name: The name of the model.
-    """
     def get_model(self, model_name):
+        """
+        Returns a Model instance to allow easy remote manipulation of an OpenERP model.
+
+        :param model_name: The name of the model.
+        """
         return Model(self, model_name)
 
-    """
-    Returns a Service instance to allow easy manipulation of one of the services offered by the remote server.
-    Please note this Connection instance does not need to have valid authenfication information since authentification
-    is only necessary for the "object" service that handles models.
-
-    :param service_name: The name of the service.
-    """
     def get_service(self, service_name):
+        """
+        Returns a Service instance to allow easy manipulation of one of the services offered by the remote server.
+        Please note this Connection instance does not need to have valid authentication information since authentication
+        is only necessary for the "object" service that handles models.
+
+        :param service_name: The name of the service.
+        """
         return Service(self.connector, service_name)
 
-class AuthentificationError(Exception):
+class AuthenticationError(Exception):
     """
-    An error thrown when an authentification to an OpenERP server failed.
+    An error thrown when an authentication to an OpenERP server failed.
     """
     pass
 
 class Model(object):
     """
     Useful class to dialog with one of the models provided by an OpenERP server.
-    An instance of this class depends on a Connection instance with valid authenfication information.
+    An instance of this class depends on a Connection instance with valid authentication information.
     """
 
     def __init__(self, connection, model_name):
         """
-        :param connection: A valid Connection instance with correct authentification information.
+        :param connection: A valid Connection instance with correct authentication information.
         :param model_name: The name of the model.
         """
         self.connection = connection
@@ -341,10 +340,10 @@ class Model(object):
             if method == "read":
                 if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
                     index = {}
-                    for i in xrange(len(result)):
-                        index[result[i]["id"]] = result[i]
+                    for r in result:
+                        index[r['id']] = r
                     result = [index[x] for x in args[0]]
-            self.__logger.debug('result: %r' % result)
+            self.__logger.debug('result: %r', result)
             return result
         return proxy
 

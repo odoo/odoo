@@ -167,7 +167,7 @@ class JsonRequest(WebRequest):
                 _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
-        except openerplib.AuthentificationError:
+        except openerplib.AuthenticationError:
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
