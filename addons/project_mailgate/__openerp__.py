@@ -21,20 +21,28 @@
 
 
 {
-    "name": "Project MailGateWay",
+    "name": "Project Tasks - Mail Integration",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
     "category": "Project Management",
     'complexity': "easy",
     "images": ["images/project_mailgate_task.jpeg"],
-    "depends": ["project", "mail_gateway"],
+    "depends": ["project", "mail"],
     "description": """
-This module is an interface that synchronises mails with OpenERP Project Task.
-==============================================================================
+This module can automatically create Project Tasks based on incoming emails
+===========================================================================
 
-It allows creating tasks as soon as a new mail arrives in our configured mail server.
-Moreover, it keeps track of all further communications and task states.
+Allows creating tasks based on new emails arriving at a given mailbox,
+similarly to what the CRM application has for Leads/Opportunities.
+There are two common alternatives to configure the mailbox integration:
+
+ * Install the ``fetchmail`` module and configure a new mailbox, then select
+   ``Project Tasks`` as the target for incoming emails.
+ * Set it up manually on your mail server based on the 'mail gateway' script
+   provided in the ``mail`` module - and connect it to the `project.task` model.
+
+
     """,
     "init_xml": [],
     "update_xml": ["security/ir.model.access.csv",
