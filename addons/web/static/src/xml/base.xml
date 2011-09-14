@@ -445,7 +445,8 @@
 
 <t t-extend="ViewManager" t-name="ViewManagerAction">
     <t t-jquery=".oe-view-manager-header" t-operation="prepend">
-        <blockquote t-if="self.action.help and !(self.action.id in self.session.hidden_menutips)">
+        <blockquote t-if="self.action.help and !self.flags.low_profile
+                         and !(self.action.id in self.session.hidden_menutips)">
             <p><t t-esc="self.action.help"/></p>
             <div>
                 <button type="button" name="hide">Hide this tip</button>
@@ -460,6 +461,9 @@
                 View#<span></span>
             </button>
         </h2>
+    </t>
+    <t t-jquery=".oe-view-manager-header" t-operation="after">
+        <ul class="oe-view-manager-logs"></ul>
     </t>
 </t>
 

@@ -888,6 +888,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
+        console.log('Widget.do_action', action, on_finished);
         if (this.widget_parent) {
             return this.widget_parent.do_action(action, on_finished);
         }

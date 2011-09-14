@@ -300,7 +300,11 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     on_remove: function() {
     },
     on_edit: function() {
-    }
+    },
+    /**
+     * Called by children view after executing an action
+     */
+    on_action_executed: function () {}
 });
 
 openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
@@ -376,22 +380,22 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
                 self.views[self.active_view].controller.fields_view.arch, true))
                     .dialog({ width: '95%'});
         });
-        if (this.action.help) {
+        if (this.action.help && !this.flags.low_profile) {
             var Users = new openerp.web.DataSet(self, 'res.users'),
                 header = this.$element.find('.oe-view-manager-header');
-            header.delegate('blockquote button', 'click', function () {
+            header.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
-                switch($this.attr('name')) {
+                switch ($this.attr('name')) {
                 case 'disable':
-                    Users.write(self.session.uid, {menu_tips: false});
+                    Users.write(self.session.uid, {menu_tips:false});
                 case 'hide':
                     $this.closest('blockquote').hide();
                     self.session.hidden_menutips[self.action.id] = true;
                 }
             });
             if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips'], function (users) {
+                Users.read_ids([this.session.uid], ['menu_tips'], function(users) {
                     var user = users[0];
                     if (!(user && user.id === self.session.uid)) {
                         return;
@@ -449,6 +453,35 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
                     $shortcut_toggle.addClass("oe-shortcut-remove");
                 }
             });
+    },
+    /**
+     * Intercept do_action resolution from children views
+     */
+    on_action_executed: function () {
+        new openerp.web.DataSet(this, 'res.log')
+                .call('get', [], this.do_display_log);
+    },
+    /**
+     * @param {Array<Object>} log_records
+     */
+    do_display_log: function (log_records) {
+        var self = this,
+            $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
+        _(log_records).each(function (record) {
+            $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
+                .appendTo($logs)
+                .delegate('a', 'click', function (e) {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: record.res_model,
+                        res_id: record.res_id,
+                        // TODO: need to have an evaluated context here somehow
+                        //context: record.context,
+                        views: [[false, 'form']]
+                    });
+                    return false;
+                });
+        });
     }
 });
 
@@ -724,8 +757,12 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, record_id, on_closed) {
+    do_execute_action: function (action_data, dataset, record_id, on_closed) {
         var self = this;
+        var result_handler = function () {
+            if (on_closed) { on_closed.apply(null, arguments); }
+            self.widget_parent.on_action_executed.apply(null, arguments);
+        };
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -736,9 +773,9 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
                     active_model: dataset.model
                 });
                 action.context = new openerp.web.CompoundContext(dataset.get_context(), action.context);
-                self.do_action(action, on_closed);
-            } else if (on_closed) {
-                on_closed(action);
+                self.do_action(action, result_handler);
+            } else {
+                result_handler();
             }
         };
 

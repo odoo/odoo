@@ -988,6 +988,12 @@ label.error {
 .openerp .view-manager-main-content {
     width: 100%;
 }
+.openerp .oe-view-manager-header {
+    overflow: auto;
+}
+.openerp .oe-view-manager-header h2 {
+    float: left;
+}
 .openerp .oe-view-manager-header blockquote {
     display: none;
     font-size: 85%;
@@ -1011,6 +1017,22 @@ label.error {
     margin: 0;
     display: inline;
     text-decoration: underline;
+    color: inherit;
+}
+.openerp .oe-view-manager-logs {
+    clear: both;
+    font-size: 85%;
+    margin: 0.25em 0;
+    background: #fff;
+    padding: 0 10px;
+    color: #4C4C4C;
+    list-style: none;
+}
+.openerp .oe-view-manager-logs li:before {
+    content: '→ ';
+}
+.openerp .oe-view-manager-logs a {
+    text-decoration: none;
     color: inherit;
 }
 
