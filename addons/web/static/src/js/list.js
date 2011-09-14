@@ -1162,6 +1162,8 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         }
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
+            axis: 'y',
+            items: '> tr[data-id]',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id');
