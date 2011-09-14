@@ -173,21 +173,23 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     on_pager_action: function(action) {
-        switch (action) {
-            case 'first':
-                this.dataset.index = 0;
-                break;
-            case 'previous':
-                this.dataset.previous();
-                break;
-            case 'next':
-                this.dataset.next();
-                break;
-            case 'last':
-                this.dataset.index = this.dataset.ids.length - 1;
-                break;
+        if (this.can_be_discarded()) {
+            switch (action) {
+                case 'first':
+                    this.dataset.index = 0;
+                    break;
+                case 'previous':
+                    this.dataset.previous();
+                    break;
+                case 'next':
+                    this.dataset.next();
+                    break;
+                case 'last':
+                    this.dataset.index = this.dataset.ids.length - 1;
+                    break;
+            }
+            this.reload();
         }
-        this.reload();
     },
     do_update_pager: function(hide_index) {
         var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager');
@@ -297,11 +299,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this;
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
-                def.resolve();
-            });
+            if (self.can_be_discarded()) {
+                self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                    def.resolve();
+                });
+            }
         });
         return def.promise();
+    },
+    can_be_discarded: function() {
+        return !this.dirty_for_user || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
