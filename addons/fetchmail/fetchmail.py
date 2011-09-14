@@ -120,7 +120,7 @@ class fetchmail_server(osv.osv):
                 server.write({'state':'done'})
             except Exception, e:
                 logger.exception("Failed to connect to %s server %s", server.type, server.name)
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % e)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if connection:
