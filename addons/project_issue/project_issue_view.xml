@@ -214,10 +214,7 @@
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="partner_id" groups="base.group_extended"/>
+                        <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="user_id">
                             <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
