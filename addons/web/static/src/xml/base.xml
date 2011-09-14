@@ -420,12 +420,14 @@
     <table class="view-manager-main-table">
     <tr>
         <td class="view-manager-main-content">
-            <div class="oe_vm_switch">
-                <t t-if="views.length != 1" t-foreach="views" t-as="view">
-                    <button type="button" t-att-data-view-type="view.view_type">
-                        <t t-esc="view.view_type"/>
-                    </button>
-                </t>
+            <div class="oe-view-manager-header">
+                <div class="oe_vm_switch">
+                    <t t-if="views.length != 1" t-foreach="views" t-as="view">
+                        <button type="button" t-att-data-view-type="view.view_type">
+                            <t t-esc="view.view_type"/>
+                        </button>
+                    </t>
+                </div>
             </div>
             <div t-attf-id="#{prefix}_search" t-opentag="true"/>
             <t t-foreach="views" t-as="view">
@@ -442,7 +444,10 @@
 </t>
 
 <t t-extend="ViewManager" t-name="ViewManagerAction">
-    <t t-jquery=".view-manager-main-content" t-operation="prepend">
+    <t t-jquery=".oe-view-manager-header" t-operation="prepend">
+        <blockquote t-if="self.action.help"><p>
+            <t t-esc="self.action.help"/>
+        </p></blockquote>
     	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
     	   href="javascript: void(0)"> </a>
         <h2 class="oe_view_title">
