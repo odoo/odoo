@@ -223,7 +223,8 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             sidebar : false,
             views_switcher : false,
             action_buttons : false,
-            pager: false
+            pager: false,
+            low_profile: true
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);

@@ -377,22 +377,22 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
                 self.views[self.active_view].controller.fields_view.arch, true))
                     .dialog({ width: '95%'});
         });
-        if (this.action.help) {
+        if (this.action.help && !this.flags.low_profile) {
             var Users = new openerp.web.DataSet(self, 'res.users'),
                 header = this.$element.find('.oe-view-manager-header');
-            header.delegate('blockquote button', 'click', function () {
+            header.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
                 //noinspection FallthroughInSwitchStatementJS
-                switch($this.attr('name')) {
+                switch ($this.attr('name')) {
                 case 'disable':
-                    Users.write(self.session.uid, {menu_tips: false});
+                    Users.write(self.session.uid, {menu_tips:false});
                 case 'hide':
                     $this.closest('blockquote').hide();
                     self.session.hidden_menutips[self.action.id] = true;
                 }
             });
             if (!(self.action.id in self.session.hidden_menutips)) {
-                Users.read_ids([this.session.uid], ['menu_tips'], function (users) {
+                Users.read_ids([this.session.uid], ['menu_tips'], function(users) {
                     var user = users[0];
                     if (!(user && user.id === self.session.uid)) {
                         return;
