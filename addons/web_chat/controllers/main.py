@@ -2,7 +2,10 @@
 import time
 
 import simplejson
-import base.common as openerpweb
+import web.common as openerpweb
+import logging
+
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # OpenERP Web ajaxim Controllers
@@ -195,7 +198,7 @@ class PollServer(openerpweb.Controller):
         """
         mq = req.applicationsession.setdefault("web_chat", PollServerMessageQueue())
 
-        print "======== chat status ========",kw
+        _logger.debug("======== chat status ======== %s", kw)
         # mq.write()
         return {"action": ""}
     

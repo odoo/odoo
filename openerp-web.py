@@ -3,6 +3,8 @@ import optparse
 import os
 import sys
 import tempfile
+import logging
+import logging.config
 
 import werkzeug.serving
 
@@ -31,14 +33,24 @@ optparser.add_option('--no-serve-static', dest='serve_static',
 optparser.add_option('--reloader', dest='reloader',
                      default=False, action='store_true',
                      help="Reload application when python files change")
+optparser.add_option("--log-level", dest="log_level",
+                     default='debug', help="Log level", metavar="LOG_LEVEL")
+optparser.add_option("--log-config", dest="log_config",
+                     default='', help="Log config file", metavar="LOG_CONFIG")
 
-import base.common.dispatch
+import web.common.dispatch
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
 
     os.environ["TZ"] = "UTC"
-    app = base.common.dispatch.Root(options)
+
+    if not options.log_config:
+        logging.basicConfig(level=getattr(logging, options.log_level.upper()))
+    else:
+        logging.config.fileConfig(options.log_config)
+
+    app = web.common.dispatch.Root(options)
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
