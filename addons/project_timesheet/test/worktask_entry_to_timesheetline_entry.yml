@@ -134,8 +134,4 @@
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
      - len(timesheet_ids) > 0
--
-  Unlink the task.
--
-  !python {model: project.task}: |
-    self.unlink(cr, uid, [ref("project_task_getalltimesheetrecords0")])     
+
