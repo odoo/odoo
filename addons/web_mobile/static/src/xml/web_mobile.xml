@@ -136,63 +136,67 @@
 </t>
 
 <t t-name="FormView">
+    <t t-call="Header" />
     <div role="main" data-role="content">
         <form>
             <t t-foreach="get_fields" t-as="field">
+            <t t-if="fields[field.attrs.name].type == 'boolean'">
+                <fieldset data-role="controlgroup">
+                    <t t-if="values[field.attrs.name]">
+                        <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes"/>
+                       <!--   <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes" class="custom"/><br/> -->
+                    </t>
+                    <t t-if="!(values[field.attrs.name])">
+                        <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
+                        <!--  <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom"/><br/> -->
+                    </t>
+                    <label for="checkbox-1"><t t-esc="fields[field.attrs.name].string" /></label>
+                </fieldset>
+             </t>
             <div data-role="fieldcontain">
-                <t t-if="fields[field.attrs.name].type!='one2many' and fields[field.attrs.name].type!='many2many'" >
-                <label class="ui-input-text">
-                    <span>
-                        <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
-                        <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>
-                    </span>:
+                <t t-if="fields[field.attrs.name].type!='one2many' and fields[field.attrs.name].type!='many2many' and fields[field.attrs.name].type!='boolean'" >
+                <label for="">
+                    <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                    <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                 </label>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'char'">
                     <t t-if="values[field.attrs.name]">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" t-att-value="values[field.attrs.name]"/><br/>
+                        <input type="text" id="" t-att-value="values[field.attrs.name]"/><br/>
                     </t>
                     <t t-if="!(values[field.attrs.name])">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" value=""/><br/>
-                    </t>
-                </t>
-                <t t-if="fields[field.attrs.name].type == 'boolean'">
-                    <t t-if="values[field.attrs.name]">
-                        <input type="checkbox" checked="yes"/><br/>
-                    </t>
-                    <t t-if="!(values[field.attrs.name])">
-                        <input type="checkbox"/><br/>
-                    </t>
+                        <input type="text" value="" id=""/><br/>
+                     </t>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'text'">
-                    <textarea style="width:100%;" rows="8" name="textarea" id="textarea"></textarea><br/>
+                    <textarea name="" id=""></textarea><br/>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'float'">
                     <t t-if="values[field.attrs.name]">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" t-att-value="values[field.attrs.name]"/><br/>
+                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
                     </t>
                     <t t-if="!(values[field.attrs.name])">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" value=""/><br/>
+                        <input id="" type="text" value=""/><br/>
                     </t>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'date'">
                     <t t-if="values[field.attrs.name]">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" t-att-value="values[field.attrs.name]"/><br/>
+                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
                     </t>
                     <t t-if="!(values[field.attrs.name])">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" value=""/><br/>
+                        <input id="" type="text" value=""/><br/>
                     </t>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'datetime'">
                     <t t-if="values[field.attrs.name]">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" t-att-value="values[field.attrs.name]"/><br/>
+                        <input id="" type="text" t-att-value="values[field.attrs.name]"/><br/>
                     </t>
                     <t t-if="!(values[field.attrs.name])">
-                        <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" value=""/><br/>
+                        <input id="" type="text" value=""/><br/>
                     </t>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'selection'">
-                    <div class="ui-select">
+                    <!--  <div class="ui-select">
                         <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
                             <span class="ui-btn-inner ui-btn-corner-all">
                                 <span class="ui-btn-text">
@@ -213,10 +217,15 @@
                                 </t>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
+                    <select id="">
+                        <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
+                            <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                        </t>
+                    </select>
                 </t>
                  <t t-if="fields[field.attrs.name].type == 'many2one'">
-                    <div class="ui-select">
+                   <!--  <div class="ui-select">
                         <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
                             <span class="ui-btn-inner ui-btn-corner-all">
                                 <span class="ui-btn-text">
@@ -240,10 +249,30 @@
                                 </t>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
+                    <select id="">
+                                <t t-if="fields[field.attrs.name].selection">
+                                    <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
+                                        <t t-if="values[field.attrs.name]==opt[0]">
+                                            <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
+                                        </t>
+                                        <t t-if="values[field.attrs.name]!=opt[0]">
+                                            <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
+                                        </t>
+                                    </t>
+                                </t>
+                            </select>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'one2many'">
-                    <ul role="listbox" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+                    <ul data-role="listview" data-inset="true" data-theme="d">
+                        <li data-theme="c">
+                            <a href="#">
+                                <t t-esc="til"/>
+                            </a>
+                         </li>
+                     </ul>
+                 </t>
+                 <!--     <ul role="listbox" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
                         <li tabindex="0" data-theme="d" role="option" class="ui-btn ui-btn-icon-right ui-li ui-corner-top ui-corner-bottom ui-btn-up-d">
                             <div class="ui-btn-inner">
                                 <div class="ui-btn-text">
@@ -254,7 +283,7 @@
                                 <span class="ui-icon ui-icon-arrow-r"></span>
                             </div>
                         </li>
-                    </ul>
+                    </ul>-->
                     <!--  <div class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
                         <h1 class="ui-collapsible-heading">
                             <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
@@ -270,11 +299,11 @@
                                 <div class="detail"></div>
                             </div>
                         </h1>
-                    </div>-->
-                </t>
+                    </div>
+                </t>-->
             </div>
             </t>
-            <t t-if="notebooks">
+           <!-- <t t-if="notebooks">
                 <t t-foreach="notebooks.children" t-as="page">
                     <t t-if="page.attrs.invisible">
                     <div style="display:none;" class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
@@ -282,9 +311,9 @@
                             <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
                                 <span class="ui-btn-inner ui-corner-all">
                                     <span class="ui-btn-text">
-                                        <t t-esc="page.attrs.string"></t>
+                                        <t t-esc="page.attrs.string"></t>-->
                                         <!-- <span class="ui-collapsible-heading-status"></span> -->
-                                    </span>
+                                 <!--     </span>
                                     <span data-theme="d" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-d">
                                         <span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
                                             <span class="ui-btn-text"></span>
@@ -305,9 +334,9 @@
                             <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
                                 <span class="ui-btn-inner ui-corner-all">
                                     <span class="ui-btn-text">
-                                        <t t-esc="page.attrs.string"></t>
+                                        <t t-esc="page.attrs.string"></t>-->
                                         <!-- <span class="ui-collapsible-heading-status"></span> -->
-                                    </span>
+                                    <!--  </span>
                                     <span data-theme="d" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-d">
                                         <span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
                                             <span class="ui-btn-text"></span>
@@ -323,8 +352,9 @@
                     </div>
                     </t>
                 </t>
-            </t>
+            </t> -->
         </form>
     </div>
+    <t t-call="Footer" />
 </t>
 </templates>
