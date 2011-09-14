@@ -50,6 +50,7 @@ class hr_payroll_structure(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
+        'children_ids':fields.one2many('hr.payroll.structure', 'parent_id', 'Children'),
     }
 
     def _get_parent(self, cr, uid, context=None):
@@ -175,6 +176,7 @@ class hr_salary_rule_category(osv.osv):
         'name':fields.char('Name', size=64, required=True, readonly=False),
         'code':fields.char('Code', size=64, required=True, readonly=False),
         'parent_id':fields.many2one('hr.salary.rule.category', 'Parent', help="Linking a salary category to its parent is used only for the reporting purpose."),
+        'children_ids': fields.one2many('hr.salary.rule.category', 'parent_id', 'Children'),
         'note': fields.text('Description'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
     }
