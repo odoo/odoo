@@ -22,7 +22,7 @@ import ast
 import nonliterals
 import http
 # import backendlocal as backend
-import backendrpc as backend
+import session as backend
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']

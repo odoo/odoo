@@ -11,12 +11,6 @@ import nonliterals
 class OpenERPUnboundException(Exception):
     pass
 
-class OpenERPConnector(object):
-    pass
-
-class OpenERPAuth(object):
-    pass
-
 class OpenERPSession(object):
     """
     An OpenERP RPC session, a given user can own multiple such sessions
