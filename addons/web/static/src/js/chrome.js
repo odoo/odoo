@@ -914,43 +914,42 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.appendTo($("#oe_app"));
         this.action_manager.do_url_set_hash.add_last(this.do_url_set_hash);
 
-        // // if using saved actions, load the action and give it to action manager
-        // var parameters = jQuery.deparam(jQuery.param.querystring());
-        // if (parameters["s_action"] != undefined) {
-        //     var key = parseInt(parameters["s_action"], 10);
-        //     var self = this;
-        //     this.rpc("/web/session/get_session_action", {key:key}, function(action) {
-        //         self.action_manager.do_action(action);
-        //     });
-        // } else if (openerp._modules_loaded) { // TODO: find better option than this
-        //     this.load_url_state()
-        // } else {
-        //     this.session.on_modules_loaded.add({
-        //         callback: $.proxy(this, 'load_url_state'),
-        //         unique: true,
-        //         position: 'last'
-        //     })
-        // }
-
-    // /**
-    //  * Loads state from URL if any, or checks if there is a home action and
-    //  * loads that, assuming we're at the index
-    //  */
-    // load_url_state: function () {
-    //     var self = this;
-    //     // TODO: add actual loading if there is url state to unpack, test on window.location.hash
-    //     // not logged in
-    //     if (!this.session.uid) { return; }
-    //     var ds = new openerp.web.DataSetSearch(this, 'res.users');
-    //     ds.read_ids([this.session.uid], ['action_id'], function (users) {
-    //         var home_action = users[0].action_id;
-    //         if (!home_action) {
-    //             self.default_home();
-    //             return;
-    //         }
-    //         self.execute_home_action(home_action[0], ds);
-    //     })
-    // },
+        // if using saved actions, load the action and give it to action manager
+        var parameters = jQuery.deparam(jQuery.param.querystring());
+        if (parameters["s_action"] != undefined) {
+            var key = parseInt(parameters["s_action"], 10);
+            var self = this;
+            this.rpc("/web/session/get_session_action", {key:key}, function(action) {
+                self.action_manager.do_action(action);
+            });
+        } else if (openerp._modules_loaded) { // TODO: find better option than this
+            this.load_url_state()
+        } else {
+            this.session.on_modules_loaded.add({
+                callback: $.proxy(this, 'load_url_state'),
+                unique: true,
+                position: 'last'
+            })
+        }
+    },
+    /**
+     * Loads state from URL if any, or checks if there is a home action and
+     * loads that, assuming we're at the index
+     */
+    load_url_state: function () {
+        var self = this;
+        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
+        // not logged in
+        if (!this.session.uid) { return; }
+        var ds = new openerp.web.DataSetSearch(this, 'res.users');
+        ds.read_ids([this.session.uid], ['action_id'], function (users) {
+            var home_action = users[0].action_id;
+            if (!home_action) {
+                self.default_home();
+                return;
+            }
+            self.execute_home_action(home_action[0], ds);
+        })
     },
     default_home: function () { 
     },
