@@ -8,8 +8,6 @@ import nonliterals
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
-class OpenERPUnboundException(Exception):
-    pass
 
 class OpenERPSession(object):
     """
@@ -68,8 +66,7 @@ class OpenERPSession(object):
         """
         Ensures this session is valid (logged into the openerp server)
         """
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.build_connection().check_login(False)
 
     def execute(self, model, func, *l, **d):
         self.assert_valid()
