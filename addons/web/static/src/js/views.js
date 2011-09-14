@@ -462,10 +462,22 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      * @param {Array<Object>} log_records
      */
     do_display_log: function (log_records) {
-        var logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
+        var self = this,
+            $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
         _(log_records).each(function (record) {
-            // TODO: fix link: bind action?
-            logs.append(_.sprintf('<li><a href="#">%s</a></li>', record.name));
+            $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
+                .appendTo($logs)
+                .delegate('a', 'click', function (e) {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: record.res_model,
+                        res_id: record.res_id,
+                        // TODO: need to have an evaluated context here somehow
+                        //context: record.context,
+                        views: [[false, 'form']]
+                    });
+                    return false;
+                });
         });
     }
 });
