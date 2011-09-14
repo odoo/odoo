@@ -60,7 +60,7 @@
                         </field>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="1" readonly ="1"/>
+                        <field name="state" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
                         <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
                         <button name="tender_in_progress" states="draft" string="Confirm" type="object" icon="gtk-apply" />
                         <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />

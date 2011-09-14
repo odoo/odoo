@@ -34,7 +34,7 @@
                     <newline/>
                    <separator string="" colspan="4"/>
                     <group colspan="4" col="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                         <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"/>
                         <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel"/>
                     </group>

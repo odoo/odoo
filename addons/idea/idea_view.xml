@@ -247,7 +247,7 @@
                 </page>
             </notebook>
             <group colspan="4" col="6">
-                <field name="state"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
                 <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
                 <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/>
