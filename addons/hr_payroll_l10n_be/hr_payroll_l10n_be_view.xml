@@ -9,17 +9,15 @@
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="/form/notebook/page/group/field[@name='struct_id']" position="after">
+                 <xpath expr="/form/notebook/page[@name='information']/group[@name='right_column']/field[@name='struct_id']" position="after">
                     <field name="reim_travel"/>
                     <field name="company_car_emp"/>
                     <field name="mis_ex_onss"/>
                     <field name="ch_value"/>
                     <field name="advantage"/>
-                    <group colspan="2" col="2">
-                        <separator string="Miscellaneous" colspan="2"/>
-                        <field name="suppl_net"/>
-                        <field name="retained_net"/>
-                    </group>    
+                    <separator string="Miscellaneous" colspan="2"/>
+                    <field name="suppl_net"/>
+                    <field name="retained_net"/>
                  </xpath>
                  <xpath expr="/form/notebook/page/group/field[@name='trial_date_end']" position="after">
                     <group colspan="2" col="2">
@@ -42,17 +40,6 @@
             <field name="arch" type="xml">
                 <field name="marital" position="replace">
                 </field>
-            </field>
-        </record>
-
-        <record id="view_contract_salary_structure" model="ir.ui.view">
-            <field name="name">hr.contract.struc</field>
-            <field name="model">hr.contract</field>
-            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                 <field name="struct_id" position="replace">
-                 </field>
             </field>
         </record>
 
