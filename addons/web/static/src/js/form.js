@@ -10,20 +10,19 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * view should be displayed (if there is one active).
      */
     searchable: false,
-    template: "FormView",
+    template: "EmptyComponent",
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View
      * 
      * @param {openerp.web.Session} session the current openerp session
-     * @param {String} element_id this view's root element id
      * @param {openerp.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
      *
      * @property {openerp.web.Registry} registry=openerp.web.form.widgets widgets registry for this form view instance
      */
-    init: function(parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -45,6 +44,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
+        this._super();
         if (this.embedded_view) {
             var def = $.Deferred().then(this.on_loaded);
             var self = this;
@@ -75,7 +75,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.fields_view = data;
         var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
-        this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
+        this.$element.html(QWeb.render("FormView", { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
             w.start();
         });

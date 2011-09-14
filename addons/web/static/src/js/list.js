@@ -2,6 +2,7 @@ openerp.web.list = function (openerp) {
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
+    template: "EmptyComponent",
     defaults: {
         // records can be selected one by one
         'selectable': true,
@@ -31,7 +32,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @extends openerp.web.View
      *
      * @param parent parent object
-     * @param element_id the id of the DOM elements this view should link itself to
      * @param {openerp.web.DataSet} dataset the dataset the view should work with
      * @param {String} view_id the listview's identifier, if any
      * @param {Object} options A set of options used to configure the view
@@ -42,9 +42,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
      */
-    init: function(parent, element_id, dataset, view_id, options) {
+    init: function(parent, dataset, view_id, options) {
         var self = this;
-        this._super(parent, element_id);
+        this._super(parent);
         this.set_default_options(_.extend({}, this.defaults, options || {}));
         this.dataset = dataset;
         this.model = dataset.model;
@@ -128,6 +128,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @returns {$.Deferred} loading promise
      */
     start: function() {
+        this._super();
         this.$element.addClass('oe-listview');
         return this.reload_view(null, null, true);
     },

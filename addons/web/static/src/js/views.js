@@ -208,8 +208,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
-            var controller = new controllerclass(this, this.element_id + '_view_' + view_type,
-                this.dataset, view.view_id, view.options);
+            var controller = new controllerclass(this, this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
@@ -228,7 +227,8 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
                     unique: true
                 });
             }
-            view_promise = controller.start();
+            var container = $("#" + this.element_id + '_view_' + view_type);
+            view_promise = controller.appendTo(container);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
             });
