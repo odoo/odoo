@@ -60,7 +60,7 @@ def _eval_expr(cr, ident, workitem, action):
 
 def execute_action(cr, ident, workitem, activity):
     obj = pooler.get_pool(cr.dbname).get('ir.actions.server')
-    ctx = {'active_id':ident[2], 'active_ids':[ident[2]]}
+    ctx = {'active_model':ident[1], 'active_id':ident[2], 'active_ids':[ident[2]]}
     result = obj.run(cr, ident[0], [activity['action_id']], ctx)
     return result
 
