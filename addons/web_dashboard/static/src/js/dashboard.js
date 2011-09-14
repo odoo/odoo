@@ -333,7 +333,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                 });
             })
             .delegate('li:not(.oe-done)', 'click', function () {
-                self.widget_parent.widget_parent.widget_parent.execute_action({
+                self.widget_parent.widget_parent.widget_parent.do_execute_action({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,

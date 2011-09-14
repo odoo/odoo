@@ -41,8 +41,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {void|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
-     *
-     * @borrows openerp.web.ActionExecutor#execute_action as #execute_action
      */
     init: function(parent, element_id, dataset, view_id, options) {
         var self = this;
@@ -490,7 +488,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(action, this.dataset, id, callback);
+        this.do_execute_action(action, this.dataset, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)

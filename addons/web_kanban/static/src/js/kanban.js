@@ -224,7 +224,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     on_execute_button_click: function (dataset, button_attrs, record_id) {
         var self = this;
-        this.execute_action(
+        this.do_execute_action(
             button_attrs, dataset,
             record_id, function () {
                 var count = 1;

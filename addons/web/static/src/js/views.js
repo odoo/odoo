@@ -297,7 +297,11 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     on_remove: function() {
     },
     on_edit: function() {
-    }
+    },
+    /**
+     * Called by children view after executing an action
+     */
+    on_action_executed: function () {}
 });
 
 openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
@@ -446,6 +450,23 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
                     $shortcut_toggle.addClass("oe-shortcut-remove");
                 }
             });
+    },
+    /**
+     * Intercept do_action resolution from children views
+     */
+    on_action_executed: function () {
+        new openerp.web.DataSet(this, 'res.log')
+                .call('get', [], this.do_display_log);
+    },
+    /**
+     * @param {Array<Object>} log_records
+     */
+    do_display_log: function (log_records) {
+        var logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
+        _(log_records).each(function (record) {
+            // TODO: fix link: bind action?
+            logs.append(_.sprintf('<li><a href="#">%s</a></li>', record.name));
+        });
     }
 });
 
@@ -721,8 +742,12 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, record_id, on_closed) {
+    do_execute_action: function (action_data, dataset, record_id, on_closed) {
         var self = this;
+        var result_handler = function () {
+            if (on_closed) { on_closed.apply(null, arguments); }
+            self.widget_parent.on_action_executed.apply(null, arguments);
+        };
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -733,9 +758,9 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
                     active_model: dataset.model
                 });
                 action.context = new openerp.web.CompoundContext(dataset.get_context(), action.context);
-                self.do_action(action, on_closed);
-            } else if (on_closed) {
-                on_closed(action);
+                self.do_action(action, result_handler);
+            } else {
+                result_handler();
             }
         };
 

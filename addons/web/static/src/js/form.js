@@ -836,7 +836,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     on_confirmed: function() {
         var self = this;
 
-        this.view.execute_action(
+        this.view.do_execute_action(
             this.node.attrs, this.view.dataset, this.view.datarecord.id, function () {
                 self.view.reload();
             });
