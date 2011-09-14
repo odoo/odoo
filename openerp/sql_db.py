@@ -294,6 +294,9 @@ class Cursor(object):
         del self._obj
         self.__closed = True
 
+        # Clean the underlying connection.
+        self._cnx.rollback()
+
         if leak:
             self._cnx.leaked = True
         else:
@@ -430,6 +433,7 @@ class ConnectionPool(object):
                     self._debug('Put connection to %r in pool', cnx.dsn)
                 else:
                     self._debug('Forgot connection to %r', cnx.dsn)
+                    cnx.close()
                 break
         else:
             raise PoolError('This connection does not below to the pool')
@@ -500,7 +504,6 @@ def db_connect(db_name):
 def close_db(db_name):
     """ You might want to call openerp.netsvc.Agent.cancel(db_name) along this function."""
     _Pool.close_all(dsn(db_name))
-    tools.cache.clean_caches_for_db(db_name)
     ct = currentThread()
     if hasattr(ct, 'dbname'):
         delattr(ct, 'dbname')

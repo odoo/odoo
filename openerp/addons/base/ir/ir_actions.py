@@ -33,6 +33,7 @@ from report.report_sxw import report_sxw, report_rml
 from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
+from socket import gethostname
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -417,7 +418,10 @@ class server_object_lines(osv.osv):
     _columns = {
         'server_id': fields.many2one('ir.actions.server', 'Object Mapping'),
         'col1': fields.many2one('ir.model.fields', 'Destination', required=True),
-        'value': fields.text('Value', required=True),
+        'value': fields.text('Value', required=True, help="Expression containing a value specification. \n"
+                                                          "When Formula type is selected, this field may be a Python expression "
+                                                          " that can use the same values as for the condition field on the server action.\n"
+                                                          "If Value type is selected, the value will be used directly without evaluation."),
         'type': fields.selection([
             ('value','Value'),
             ('equation','Formula')
@@ -468,8 +472,19 @@ class actions_server(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64, help="Easy to Refer action by name e.g. One Sales Order -> Many Invoices", translate=True),
-        'condition' : fields.char('Condition', size=256, required=True, help="Condition that is to be tested before action is executed, e.g. object.list_price > object.cost_price"),
+        'name': fields.char('Action Name', required=True, size=64, translate=True),
+        'condition' : fields.char('Condition', size=256, required=True,
+                                  help="Condition that is tested before the action is executed, "
+                                       "and prevent execution if it is not verified.\n"
+                                       "Example: object.list_price > 5000\n"
+                                       "It is a Python expression that can use the following values:\n"
+                                       " - self: ORM model of the record on which the action is triggered\n"
+                                       " - object or obj: browse_record of the record on which the action is triggered\n"
+                                       " - pool: ORM model pool (i.e. self.pool)\n"
+                                       " - time: Python time module\n"
+                                       " - cr: database cursor\n"
+                                       " - uid: current user id\n"
+                                       " - context: current context"),
         'state': fields.selection([
             ('client_action','Client Action'),
             ('dummy','Dummy'),
@@ -483,16 +498,20 @@ class actions_server(osv.osv):
             ('object_write','Write Object'),
             ('other','Multi Actions'),
         ], 'Action Type', required=True, size=32, help="Type of the Action that is to be executed"),
-        'code':fields.text('Python Code', help="Python code to be executed"),
+        'code':fields.text('Python Code', help="Python code to be executed if condition is met.\n"
+                                               "It is a Python block that can use the same values as for the condition field"),
         'sequence': fields.integer('Sequence', help="Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."),
         'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the object on which the action will work (read, write, create)."),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Action Window, Report, Wizard to be executed."),
         'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be used as the trigger."),
         'wkf_model_id': fields.many2one('ir.model', 'Workflow On', help="Workflow to be executed on this model."),
         'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On', help="Select the object from the model on which the workflow will executed."),
-        'email': fields.char('Email Address', size=512, help="Provides the fields that will be used to fetch the email address, e.g. when you select the invoice, then `object.invoice_address_id.email` is the field which gives the correct address"),
-        'subject': fields.char('Subject', size=1024, translate=True, help="Specify the subject. You can use fields from the object, e.g. `Hello [[ object.partner_id.name ]]`"),
-        'message': fields.text('Message', translate=True, help="Specify the message. You can use the fields from the object. e.g. `Dear [[ object.partner_id.name ]]`"),
+        'email': fields.char('Email Address', size=512, help="Expression that returns the email address to send to. Can be based on the same values as for the condition field.\n"
+                                                             "Example: object.invoice_address_id.email, or 'me@example.com'"),
+        'subject': fields.char('Subject', size=1024, translate=True, help="Email subject, may contain expressions enclosed in double brackets based on the same values as those "
+                                                                          "available in the condition field, e.g. `Hello [[ object.partner_id.name ]]`"),
+        'message': fields.text('Message', translate=True, help="Email contents, may contain expressions enclosed in double brackets based on the same values as those "
+                                                                          "available in the condition field, e.g. `Dear [[ object.partner_id.name ]]`"),
         'mobile': fields.char('Mobile No', size=512, help="Provides fields that be used to fetch the mobile number, e.g. you select the invoice, then `object.invoice_address_id.mobile` is the field which gives the correct mobile number"),
         'sms': fields.char('SMS', size=160, translate=True),
         'child_ids': fields.many2many('ir.actions.server', 'rel_server_actions', 'server_id', 'action_id', 'Other Actions'),
@@ -511,12 +530,14 @@ class actions_server(osv.osv):
         'condition': lambda *a: 'True',
         'type': lambda *a: 'ir.actions.server',
         'sequence': lambda *a: 5,
-        'code': lambda *a: """# You can use the following variables
-#    - object or obj
-#    - time
-#    - cr
-#    - uid
-#    - ids
+        'code': lambda *a: """# You can use the following variables:
+#  - self: ORM model of the record on which the action is triggered
+#  - object or obj: browse_record of the record on which the action is triggered
+#  - pool: ORM model pool (i.e. self.pool)
+#  - time: Python time module
+#  - cr: database cursor
+#  - uid: current user id
+#  - context: current context
 # If you plan to return an action, assign: action = {...}
 """,
     }
@@ -566,6 +587,7 @@ class actions_server(osv.osv):
     def merge_message(self, cr, uid, keystr, action, context=None):
         if context is None:
             context = {}
+
         def merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
@@ -598,16 +620,22 @@ class actions_server(osv.osv):
         logger = logging.getLogger(self._name)
         if context is None:
             context = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
+            obj = None
             obj_pool = self.pool.get(action.model_id.model)
-            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            if context.get('active_model') == action.model_id.model and context.get('active_id'):
+                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
-                'context': dict(context), # copy context to prevent side-effects of eval
+                'self': obj_pool,
                 'object': obj,
-                'time':time,
+                'obj': obj,
+                'pool': self.pool,
+                'time': time,
                 'cr': cr,
-                'pool' : self.pool,
-                'uid' : uid
+                'context': dict(context), # copy context to prevent side-effects of eval
+                'uid': uid,
+                'user': user
             }
             expr = eval(str(action.condition), cxt)
             if not expr:
@@ -620,22 +648,12 @@ class actions_server(osv.osv):
                     .read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                localdict = {
-                    'self': self.pool.get(action.model_id.model),
-                    'context': dict(context), # copy context to prevent side-effects of eval
-                    'time': time,
-                    'ids': ids,
-                    'cr': cr,
-                    'uid': uid,
-                    'object':obj,
-                    'obj': obj,
-                }
-                eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
-                if 'action' in localdict:
-                    return localdict['action']
+                eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                if 'action' in cxt:
+                    return cxt['action']
 
             if action.state == 'email':
-                user = config['email_from']
+                email_from = config['email_from']
                 address = str(action.email)
                 try:
                     address =  eval(str(action.email), cxt)
@@ -643,16 +661,23 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('Partner Email address not Specified!')
+                    logger.info('No partner email address specified, not sending any email.')
                     continue
-                if not user:
-                    logger.info('Email-From address not Specified at server!')
-                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
+
+                if not email_from:
+                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    if user.user_email:
+                        email_from = user.user_email
+                    else:
+                        email_from = "%s@%s" % (user.login, gethostname())
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
-                if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
+                ir_mail_server = self.pool.get('ir.mail_server')
+                msg = ir_mail_server.build_email(email_from, [address], subject, body)
+                res_email = ir_mail_server.send_email(cr, uid, msg)
+                if res_email:
                     logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)
@@ -660,8 +685,7 @@ class actions_server(osv.osv):
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
                 model = action.wkf_model_id.model
-                obj_pool = self.pool.get(action.model_id.model)
-                res_id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.trigger_obj_id.name])
+                res_id = obj_pool.read(cr, uid, [context.get('active_id')], [action.trigger_obj_id.name])
                 id = res_id [0][action.trigger_obj_id.name]
                 wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
 
@@ -678,20 +702,9 @@ class actions_server(osv.osv):
                     result = self.run(cr, uid, [act.id], context)
                     if result:
                         res.append(result)
-
                 return res
 
             if action.state == 'loop':
-                obj_pool = self.pool.get(action.model_id.model)
-                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                cxt = {
-                    'context': dict(context), # copy context to prevent side-effects of eval
-                    'object': obj,
-                    'time': time,
-                    'cr': cr,
-                    'pool' : self.pool,
-                    'uid' : uid
-                }
                 expr = eval(str(action.expression), cxt)
                 context['object'] = obj
                 for i in expr:
@@ -703,13 +716,6 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        obj_pool = self.pool.get(action.model_id.model)
-                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        cxt = {
-                            'context': dict(context), # copy context to prevent side-effects of eval
-                            'object': obj,
-                            'time': time,
-                        }
                         expr = eval(euq, cxt)
                     else:
                         expr = exp.value
@@ -743,14 +749,7 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        obj_pool = self.pool.get(action.model_id.model)
-                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq,
-                                    {
-                                        'context': dict(context), # copy context to prevent side-effects of eval
-                                        'object': obj,
-                                        'time': time,
-                                    })
+                        expr = eval(euq, cxt)
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
@@ -767,20 +766,10 @@ class actions_server(osv.osv):
                 for exp in action.fields_lines:
                     euq = exp.value
                     if exp.type == 'equation':
-                        obj_pool = self.pool.get(action.model_id.model)
-                        obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-                        expr = eval(euq,
-                                    {
-                                        'context': dict(context), # copy context to prevent side-effects of eval
-                                        'object': obj,
-                                        'time': time,
-                                    })
+                        expr = eval(euq, cxt)
                     else:
                         expr = exp.value
                     res[exp.col1.name] = expr
-
-                obj_pool = None
-                res_id = False
 
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
@@ -928,10 +917,9 @@ class act_client(osv.osv):
             for record in self.browse(cr, uid, ids, context=context)
         ])
 
-    def _set_params(self, cr, uid, ids, field_name, field_value, arg, context):
+    def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         assert isinstance(field_value, dict), "params can only be dictionaries"
-        for record in self.browse(cr, uid, ids, context=context):
-            record.write({field_name: repr(field_value)})
+        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,

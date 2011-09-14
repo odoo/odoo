@@ -519,7 +519,7 @@
             <field name="help">Manage the partner categories in order to better classify them for tracking and analysis purposes. A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.</field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book" groups="base.group_extended"/>
 
         <act_window domain="[('partner_id', '=', active_id)]" context="{'default_partner_id':active_id}"
             id="act_res_partner_event" name="Events"
