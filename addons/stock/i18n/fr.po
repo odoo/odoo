@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-16 17:15+0000\n"
+"PO-Revision-Date: 2011-09-13 10:07+0000\n"
 "Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-30 05:59+0000\n"
-"X-Generator: Launchpad (build 13794)\n"
+"X-Launchpad-Export-Date: 2011-09-14 05:01+0000\n"
+"X-Generator: Launchpad (build 13921)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -339,6 +339,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "source, instead of the stock input account from the product."
 msgstr ""
+"Ce compte sera utilisé pour valoriser les mouvements de stock issus de cet "
+"emplacement, à la place du compte produit d'entrée en stock."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -523,6 +525,8 @@ msgstr "Filtre sur les lots de produit"
 msgid ""
 "You can not cancel inventory which has any account move with posted state."
 msgstr ""
+"Vous ne pouvez pas annuler un inventaire qui possède un mouvement comptables "
+"validé."
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2838,6 +2842,7 @@ msgstr "Erreur, pas de partenaire !"
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr ""
+"Vous ne pouvez pas effectuer cette opération sur plus d'un inventaire."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -3743,7 +3748,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr ""
+msgstr "L'inventaire est déjà validé."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -4089,6 +4094,8 @@ msgid ""
 "This account will be used to value stock moves that have this location as "
 "destination, instead of the stock output account from the product."
 msgstr ""
+"Ce compte sera utilisé pour valoriser les mouvements de stock destinés à cet "
+"emplacement, à la place du compte produit de sortie de stock."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
