@@ -821,6 +821,7 @@ label.error {
 }
 .openerp td.oe_form_frame_cell {
     padding: 2px;
+    position: relative;
 }
 .openerp td.oe_form_frame_cell.oe_form_group {
     padding: 0;
@@ -887,12 +888,19 @@ label.error {
     position: relative;
     vertical-align: top;
 }
-.openerp img.ui-datepicker-trigger {
-    margin-left: -20px;
-    vertical-align: middle;
+.openerp .oe_input_icon {
+    position: absolute;
     cursor: pointer;
-    position: relative;
-    top: -1px;
+    right: 5px;
+    top: 5px;
+}
+.openerp .oe_input_icon_disabled {
+    position: absolute;
+    cursor: default;
+    opacity: 0.5;
+    filter:alpha(opacity=50);
+    right: 5px;
+    top: 5px;
 }
 .openerp img.oe_field_translate {
     margin-left: -21px;
