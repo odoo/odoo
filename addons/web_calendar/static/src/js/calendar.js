@@ -344,6 +344,7 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
+        debugger; //TODO niv: check
         this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false

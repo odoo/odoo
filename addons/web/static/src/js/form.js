@@ -1975,7 +1975,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
             self.on_ui_change();
         });
 
-        this.list_view = new openerp.web.form.Many2ManyListView(this, this.list_id, this.dataset, false, {
+        this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': 'Add',
                     'selectable': self.multi_selection
             });
@@ -1984,7 +1984,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
             self.is_started.resolve();
         });
         setTimeout(function () {
-            self.list_view.start();
+            self.list_view.appendTo($("#" + self.list_id));
         }, 0);
     },
     set_value: function(value) {
@@ -2123,11 +2123,11 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 self.stop();
             });
             self.view_list = new openerp.web.form.SelectCreateListView(self,
-                    self.element_id + "_view_list", self.dataset, false,
+                    self.dataset, false,
                     {'deletable': false});
             self.view_list.popup = self;
             self.view_list.do_show();
-            self.view_list.start().then(function() {
+            self.view_list.appendTo($("#" + self.element_id + "_view_list")).then(function() {
                 self.searchview.do_search();
             });
         });
