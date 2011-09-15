@@ -134,7 +134,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="red:date and (date&lt;current_date) and (state in ('open'));blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                <tree colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
@@ -297,7 +297,7 @@
                                 <field name="create_date"/>
                             </group>
                             <separator string="Miscelleanous" colspan="4"/>
-                            <field name="partner_id"/>
+                            <field name="partner_id" />
                             <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                             <group col="4" colspan="2">
                                 <field name="type_id" widget="selection" readonly="1"/>
@@ -309,6 +309,63 @@
                         </page>
                     </notebook>
                 </form>
+            </field>
+        </record>
+
+
+
+        <record id="view_task_kanban" model="ir.ui.view">
+            <field name="name">project.task.kanban</field>
+            <field name="model">project.task</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color">#fff</t>
+                            <t t-if="state.raw_value == 'done'" t-set="color">#dfd</t>
+                            <t t-if="state.raw_value == 'open'" t-set="color">lightcyan</t>
+                            <t t-if="state.raw_value == 'cancel' and total_hours.raw_value gt 0" t-set="color">red</t>
+                            <div t-attf-style="background: #{color}">
+                                <table>
+                                    <tr>
+                                        <td>Title :</td>
+                                        <td><field name="name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Progress :</td>
+                                        <td><field name="progress"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button data-type="action" data-name="%(action_project_task_reevaluate)d">Reevaluate</button><button data-type="edit" >Edit</button></td>
+                                        <td><button data-type="object" data-name="prev_type">Previous phase</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Project name:</td>
+                                        <td colspan="2"><field name="project_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phase</td>
+                                        <td colspan="2"><field name="type_id"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Remain Time :</td>
+                                        <td colspan="2"><field name="remaining_hours"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Spent Time :</td>
+                                        <td colspan="2"><field name="remaining_hours"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Remain Time :</td>
+                                        <td colspan="2"><field name="remaining_hours"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -437,7 +494,7 @@
             <field name="name">Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,gantt,graph</field>
+            <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
             <field name="context">{"search_default_user_id":uid, "search_default_current": 1}</field>
@@ -450,7 +507,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
@@ -461,7 +518,7 @@
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar,graph,gantt</field>
+            <field name="view_mode">tree,form,calendar,graph,gantt,kanban</field>
             <field name="domain">[('project_id', 'child_of', [active_id])]</field>
             <field name="context">{'project_id':active_id, 'active_test':False}</field>
         </record>
