@@ -700,7 +700,7 @@
                                </field>
                             <separator colspan="4"/>
                             <group col="9" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible=" draft, ready, in_production, done" statusbar_colors="{'picking_except':'red','confirmed':'blue'}"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors="{'picking_except':'red','confirmed':'blue'}"/>
                                 <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="action_cancel" type="object" states="confirmed" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>

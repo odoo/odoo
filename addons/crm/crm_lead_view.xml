@@ -120,7 +120,7 @@
                     <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible=" draft, open, done" statusbar_colors="{'pending':'blue'}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors="{'pending':'blue'}"/>
                         <button name="case_cancel" string="Cancel"
                             states="draft,open,pending" type="object"
                             icon="gtk-cancel" />
@@ -516,7 +516,7 @@
 
                     <separator colspan="4"/>
                     <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible=" draft, open, done" statusbar_colors="{'pending':'blue'}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors="{'pending':'blue'}"/>
                         <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
                         <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />

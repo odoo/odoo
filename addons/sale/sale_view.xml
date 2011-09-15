@@ -177,7 +177,7 @@
                                 <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice" type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                             </group>
                             <group col="13" colspan="4">
-                                <field name="state" widget="statusbar" statusbar_visible=" draft, progress, done" statusbar_colors="{'shipping_except':'red','invoice_except':'red','waiting_date':'blue'}"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,progress,done" statusbar_colors="{'shipping_except':'red','invoice_except':'red','waiting_date':'blue'}"/>
                                 <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
                                 <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
