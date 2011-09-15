@@ -832,7 +832,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     on_click: function(saved) {
         var self = this;
-        if ((!this.node.attrs.special && this.view.dirty_for_user && saved !== true) || !this.view.recordcount.id) {
+        if ((!this.node.attrs.special && this.view.dirty_for_user && saved !== true) || !this.view.datarecord.id) {
             this.view.do_save(function() {
                 self.on_click(true);
             });
