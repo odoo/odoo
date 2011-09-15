@@ -7,8 +7,8 @@ QWeb.add_template('/web_gantt/static/src/xml/web_gantt.xml');
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
 
-init: function(parent, element_id, dataset, view_id) {
-        this._super(parent, element_id);
+init: function(parent, dataset, view_id) {
+        this._super(parent);
         this.view_manager = parent || new openerp.web.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;

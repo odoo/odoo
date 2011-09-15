@@ -2144,7 +2144,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.searchview.stop();
         }
         this.searchview = new openerp.web.SearchView(this,
-                this.element_id + "_search", this.dataset, false, {
+                this.dataset, false, {
                     "selectable": !this.options.disable_multiple_selection,
                     "deletable": false
                 });
@@ -2181,7 +2181,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 self.searchview.do_search();
             });
         });
-        this.searchview.start();
+        this.searchview.appendTo($("#" + this.element_id + "_search"));
     },
     create_row: function(data) {
         var self = this;

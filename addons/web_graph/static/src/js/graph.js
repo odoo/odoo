@@ -17,8 +17,8 @@ QWeb.add_template('/web_graph/static/src/xml/web_graph.xml');
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
 
-    init: function(parent, element_id, dataset, view_id) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id) {
+        this._super(parent);
         this.view_manager = parent;
         this.dataset = dataset;
         this.dataset_index = 0;

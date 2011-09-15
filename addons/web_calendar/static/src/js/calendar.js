@@ -8,8 +8,8 @@ QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
 // Dhtmlx scheduler ?
-    init: function(parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;

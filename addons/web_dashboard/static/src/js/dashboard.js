@@ -288,8 +288,8 @@ if (!openerp.web_dashboard) {
 }
 openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     template: 'ConfigOverview',
-    init: function (parent, element_id) {
-        this._super(parent, element_id);
+    init: function (parent) {
+        this._super(parent);
         this.dataset = new openerp.web.DataSetSearch(
                 this, 'ir.actions.todo');
         this.dataset.domain = [['type', '=', 'manual']];

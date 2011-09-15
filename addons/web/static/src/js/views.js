@@ -285,14 +285,14 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             this.searchview.stop();
         }
         this.searchview = new db.web.SearchView(
-                this, this.element_id + "_search", this.dataset,
+                this, this.dataset,
                 view_id, search_defaults);
 
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             var controller = self.views[self.active_view].controller;
             controller.do_search.call(controller, domains, contexts, groupbys);
         });
-        return this.searchview.start();
+        return this.searchview.appendTo($("#" + this.element_id + "_search"));
     },
     /**
      * Called when one of the view want to execute an action
