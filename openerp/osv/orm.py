@@ -1737,6 +1737,19 @@ class orm_template(object):
         :returns: a calendar view
         :rtype: etree._Element
         """
+        def set_first_of(seq, in_, to):
+            """Sets the first value of ``set`` also found in ``in`` to
+            the ``to`` attribute of the view being closed over.
+
+            Returns whether it's found a suitable value (and set it on
+            the attribute) or not
+            """
+            for item in seq:
+                if item in in_:
+                    view.set(key, item)
+                    return True
+            return False
+
         view = etree.Element('calendar', string=self._description)
         etree.SubElement(view, 'field', name=self._rec_name)
 
@@ -1752,21 +1765,13 @@ class orm_template(object):
                 raise except_orm(_('Invalid Object Architecture!'), _("Insufficient fields for Calendar View!"))
         view.set('date_start', self._date_name)
 
-        for color in ["user_id", "partner_id", "x_user_id", "x_partner_id"]:
-            if color in self._columns:
-                view.set('color', color)
-                break
+        set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
+                     self._columns, 'color')
 
-        for dt_stop in ["date_stop", "date_end", "x_date_stop", "x_date_end"]:
-            if dt_stop in self._columns:
-                view.set('date_stop', dt_stop)
-                break
-        if 'date_stop' not in view.attrib:
-            for dt_delay in ["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"]:
-                if dt_delay in self._columns:
-                    view.set('date_delay', dt_delay)
-                    break
-            if 'date_delay' not in view.attrib:
+        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
+                            self._columns, 'date_stop'):
+            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
+                                self._columns, 'date_delay'):
                 raise except_orm(
                     _('Invalid Object Architecture!'),
                     _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
