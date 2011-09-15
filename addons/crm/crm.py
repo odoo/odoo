@@ -29,7 +29,7 @@ from tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
-    ('draft', 'Draft'),
+    ('draft', 'New'),
     ('open', 'Open'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
