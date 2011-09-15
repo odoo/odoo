@@ -554,7 +554,7 @@
         <!-- Salary Rules -->
 
         <record id="hr_salary_rule_tree" model="ir.ui.view">
-            <field name="name">hr.salary.rule.tree</field>
+            <field name="name">hr.salary.rule.list</field>
             <field name="model">hr.salary.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -564,6 +564,22 @@
                     <field name="category_id"/>
                     <field name="sequence" groups="base.group_extended" invisible="1"/>
                     <field name="register_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_salary_rule_tree" model="ir.ui.view">
+            <field name="name">hr.salary.rule.tree</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Salary Rules">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id" invisible="True"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -654,6 +670,24 @@
 
         <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
 
+        <record id="action_hr_salary_rule_tree_view" model="ir.actions.act_window">
+            <field name="name">Salary Rule Hierarchy</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.salary.rule</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_salary_rule_tree"/>
+        </record>
+
+        <ir_set>
+            <field eval="'action'" name="key"/>
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="['hr.salary.rule']" name="models"/>
+            <field name="name">Salary Rule Hierarchy</field>
+            <field eval="'ir.actions.act_window,'+str(action_hr_salary_rule_tree_view)" name="value"/>
+            <field eval="True" name="isobject"/>
+            <field eval="True" name="replace"/>
+        </ir_set>
 
         <!-- payslip runs -->
 
