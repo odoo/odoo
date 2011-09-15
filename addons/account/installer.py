@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import logging
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -33,6 +34,7 @@ import tools
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
+    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -232,9 +234,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_DEBUG,
-            'Installing chart of accounts %s'%chart)
+        self.__logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()
@@ -255,6 +255,8 @@ class account_installer_modules(osv.osv_memory):
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
+        'account_asset': fields.boolean('Assets Management',
+            help="Helps you to manage your assets and their depreciation entries."),
     }
 
 account_installer_modules()

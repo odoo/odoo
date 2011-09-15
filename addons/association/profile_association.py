@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
+from lxml import etree
 from osv import fields, osv
 
 class profile_association_config_install_modules_wizard(osv.osv_memory):
@@ -35,5 +35,19 @@ class profile_association_config_install_modules_wizard(osv.osv_memory):
                  "to keep track of business knowledge and share it with "
                  "and  between your employees."),
     }
+
+    # Will be removed when rd-v61-al-config-depends will be done
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(profile_association_config_install_modules_wizard, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        for module in ['project_gtd','hr_expense']:
+            count = 0
+            for node in doc.xpath("//field[@name='%s']" % (module)):
+                count = count + 1
+                if count > 1:
+                    node.set('invisible', '1')
+        res['arch'] = etree.tostring(doc)
+        return res
+   
 profile_association_config_install_modules_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

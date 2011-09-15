@@ -114,14 +114,14 @@
     type: other
     user_type: account_account_type_income0
 - 
-  I create Purchase Journal.
+  I create Purchase Journal - (test).
 - 
   !record {model: account.journal, id: account_journal_purchasejournal0}:
     code: PUJ
     company_id: base.main_company
     default_credit_account_id: account_account_purchases0
     default_debit_account_id: account_account_purchases0
-    name: Purchase Journal
+    name: Purchase Journal - (test)
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
@@ -129,7 +129,7 @@
   I create Sale Journal.
 - 
   !record {model: account.journal, id: account_journal_salejournal0}:
-    code: SAJ
+    code: SJ
     company_id: base.main_company
     default_credit_account_id: account_account_sales0
     default_debit_account_id: account_account_sales0

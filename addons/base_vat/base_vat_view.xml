@@ -10,7 +10,7 @@
         <field name="property_account_payable" position="after">
             <group colspan="2" col="6">
               <field name="vat" on_change="vat_change(vat)" colspan="4" />
-              <field name="vat_subjected" colspan="1"/>
+              <field groups="base.group_extended" name="vat_subjected" colspan="1"/>
             </group>
         </field>
       </field>

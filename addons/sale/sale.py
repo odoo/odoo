@@ -22,10 +22,9 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-
+import pooler
 from osv import fields, osv
 from tools.translate import _
-import tools
 import decimal_precision as dp
 import netsvc
 
@@ -206,7 +205,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
+            ], 'Order State', readonly=True, help="Givwizard = self.browse(cr, uid, ids)[0]es the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.date('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
@@ -220,16 +219,16 @@ class sale_order(osv.osv):
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
-            ('prepaid', 'Payment Before Delivery'),
-            ('manual', 'Shipping & Manual Invoice'),
-            ('postpaid', 'Invoice On Order After Delivery'),
-            ('picking', 'Invoice From The Picking'),
-        ], 'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
-                    help="""The Shipping Policy is used to synchronise invoice and delivery operations.
-  - The 'Pay Before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
-  - The 'Shipping & Manual Invoice' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice On Order After Delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
-  - The 'Invoice From The Picking' choice is used to create an invoice during the picking process."""),
+            ('prepaid', 'Pay before delivery'),
+            ('manual', 'Deliver & invoice on demand'),
+            ('picking', 'Invoice based on deliveries'),
+            ('postpaid', 'Invoice on order after delivery'),
+        ], 'Invoice Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
+                    help="""The Invoice Policy is used to synchronise invoice and delivery operations.
+  - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
+  - The 'Deliver & Invoice on demand' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice based on the sale order or the sale order lines.
+  - The 'Invoice on order after delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
+  - The 'Invoice based on deliveries' choice is used to create an invoice during the picking process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist for current sales order."),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
@@ -475,21 +474,16 @@ class sale_order(osv.osv):
         # last day of the last month as invoice date
         if date_inv:
             context['date_inv'] = date_inv
-        set_company = tools.get_and_sort_by_field(cr, uid, obj=self, ids=ids, field='company_id', context=context)
-        for company_id, so_ids in set_company.items():
-            ctx = context.copy()
-            ctx.update({'force_company': company_id})
-            print "Boom invoice", company_id, so_ids
-            for o in self.browse(cr, uid, ids, context=ctx):
-                lines = []
-                for line in o.order_line:
-                    if line.invoiced:
-                        continue
-                    elif (line.state in states):
-                        lines.append(line.id)
-                created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines, context=context)
-                if created_lines:
-                    invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
+        for o in self.browse(cr, uid, ids, context=context):
+            lines = []
+            for line in o.order_line:
+                if line.invoiced:
+                    continue
+                elif (line.state in states):
+                    lines.append(line.id)
+            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
+            if created_lines:
+                invoices.setdefault(o.partner_id.id, []).append((o, created_lines))
         if not invoices:
             for o in self.browse(cr, uid, ids, context=context):
                 for i in o.invoice_ids:
@@ -800,7 +794,6 @@ class sale_order(osv.osv):
                 'document': '',
                 'partner_id': part,
                 'date': time.strftime('%Y-%m-%d'),
-                'canal_id': False,
                 'user_id': uid,
                 'partner_type': partnertype,
                 'probability': 1.0,
@@ -845,6 +838,14 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
+    def _get_uom_id(self, cr, uid, *args):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+    
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -884,6 +885,7 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
+        'product_uom' : _get_uom_id,
         'discount': 0.0,
         'delay': 0.0,
         'product_uom_qty': 1,
@@ -920,55 +922,50 @@ class sale_order_line(osv.osv):
 
         create_ids = []
         sales = {}
-        set_company = tools.get_and_sort_by_field(cr, uid, obj=self, ids=ids, field='company_id', context=context)
-        for company_id, sol_ids in set_company.items():
-            ctx = context.copy()
-            ctx.update({'force_company': company_id})
-            print "Boom line", company_id, sol_ids
-            for line in self.browse(cr, uid, sol_ids, context=ctx):
-                if not line.invoiced:
-                    if line.product_id:
-                        a = line.product_id.product_tmpl_id.property_account_income.id
-                        if not a:
-                            a = line.product_id.categ_id.property_account_income_categ.id
-                        if not a:
-                            raise osv.except_osv(_('Error !'),
-                                    _('There is no income account defined ' \
-                                            'for this product: "%s" (id:%d)') % \
-                                            (line.product_id.name, line.product_id.id,))
-                    else:
-                        prop = self.pool.get('ir.property').get(cr, uid,
-                                'property_account_income_categ', 'product.category',
-                                context=context)
-                        a = prop and prop.id or False
-                    uosqty = _get_line_qty(line)
-                    uos_id = _get_line_uom(line)
-                    pu = 0.0
-                    if uosqty:
-                        pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                                self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
-                    fpos = line.order_id.fiscal_position or False
-                    a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
+        for line in self.browse(cr, uid, ids, context=context):
+            if not line.invoiced:
+                if line.product_id:
+                    a = line.product_id.product_tmpl_id.property_account_income.id
+                    if not a:
+                        a = line.product_id.categ_id.property_account_income_categ.id
                     if not a:
                         raise osv.except_osv(_('Error !'),
-                                    _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
-                    inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
-                        'name': line.name,
-                        'origin': line.order_id.name,
-                        'account_id': a,
-                        'price_unit': pu,
-                        'quantity': uosqty,
-                        'discount': line.discount,
-                        'uos_id': uos_id,
-                        'product_id': line.product_id.id or False,
-                        'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                        'note': line.notes,
-                        'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
-                    })
-                    cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
-                    self.write(cr, uid, [line.id], {'invoiced': True})
-                    sales[line.order_id.id] = True
-                    create_ids.append(inv_id)
+                                _('There is no income account defined ' \
+                                        'for this product: "%s" (id:%d)') % \
+                                        (line.product_id.name, line.product_id.id,))
+                else:
+                    prop = self.pool.get('ir.property').get(cr, uid,
+                            'property_account_income_categ', 'product.category',
+                            context=context)
+                    a = prop and prop.id or False
+                uosqty = _get_line_qty(line)
+                uos_id = _get_line_uom(line)
+                pu = 0.0
+                if uosqty:
+                    pu = round(line.price_unit * line.product_uom_qty / uosqty,
+                            self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
+                fpos = line.order_id.fiscal_position or False
+                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
+                if not a:
+                    raise osv.except_osv(_('Error !'),
+                                _('There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !'))
+                inv_id = self.pool.get('account.invoice.line').create(cr, uid, {
+                    'name': line.name,
+                    'origin': line.order_id.name,
+                    'account_id': a,
+                    'price_unit': pu,
+                    'quantity': uosqty,
+                    'discount': line.discount,
+                    'uos_id': uos_id,
+                    'product_id': line.product_id.id or False,
+                    'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
+                    'note': line.notes,
+                    'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+                })
+                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoiced': True})
+                sales[line.order_id.id] = True
+                create_ids.append(inv_id)
         # Trigger workflow events
         wf_service = netsvc.LocalService("workflow")
         for sid in sales.keys():
@@ -1024,7 +1021,9 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        context = context or {}
+        lang = lang or ('lang' in context and context['lang'])
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
@@ -1157,7 +1156,9 @@ class sale_order_line(osv.osv):
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
+            lang=False, update_tax=True, date_order=False, context=None):
+        context = context or {}
+        lang = lang or ('lang' in context and context['lang'])
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
@@ -1182,42 +1183,93 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
-
     _columns = {
         'name': fields.char('Name', size=64),
+        'sale_orders': fields.boolean('Based on Sales Orders',),
+        'deli_orders': fields.boolean('Based on Delivery Orders'),
+        'task_work': fields.boolean('Based on Tasks\' Work'),
+        'timesheet': fields.boolean('Based on Timesheet'),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Invoicing Method', required=True,
-           help="You can generate invoices based on sales orders or based on shippings."),
-        'step': fields.selection([
-            ('one', 'Delivery Order Only'),
-            ('two', 'Picking List & Delivery Order')
-        ], 'Steps To Deliver a Sales Order', required=True,
-           help="By default, OpenERP is able to manage complex routing and paths "\
-           "of products in your warehouse and partner locations. This will configure "\
-           "the most common and simple methods to deliver products to the customer "\
-           "in one or two operations by the worker.")
+        ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
+        'charge_delivery': fields.boolean('Do you charge the delivery'),
+        'time_unit': fields.many2one('product.uom','Main Working Time Unit')
     }
     _defaults = {
         'order_policy': 'manual',
-        'step': 'one'
     }
+
+    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+        res = {}
+        if sale or deli:
+            res.update({'order_policy': 'manual'})
+        elif not sale and not deli:
+            res.update({'order_policy': 'manual'})
+        else:
+            return {}
+        return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
-        ir_model_data_obj = self.pool.get('ir.model.data')
-        stock_location_obj = self.pool.get('stock.location')
-        location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-        location_id = location_id and location_id[1] or False
-        chaining_type = False
-        for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
-                chaining_type = 'transparent'
-            else:
-                chaining_type = 'manual'
-            stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': chaining_type})
+        data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
+        module_obj = self.pool.get('ir.module.module')
+        module_upgrade_obj = self.pool.get('base.module.upgrade')
+        module_name = []
+        group_ids=[]
+        group_name = ['group_sale_salesman','group_sale_manager']
+
+        for name in group_name:
+            data_id = data_obj.name_search(cr, uid, name)
+            group_ids.append(data_obj.browse(cr,uid,data_id[0][0]).res_id)
+
+        wizard = self.browse(cr, uid, ids)[0]
+
+        if wizard.sale_orders:
+            menu_name = 'menu_invoicing_sales_order_lines'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]}) 
+
+        if wizard.deli_orders:
+            menu_name = 'menu_action_picking_list_to_invoice'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]})
+
+        if wizard.task_work:
+            module_name.append('project_timesheet')
+            module_name.append('account_analytic_analysis')
+
+        if wizard.timesheet:
+            module_name.append('account_analytic_analysis')
+
+        if wizard.charge_delivery:
+            module_name.append('delivery')    
+
+        if wizard.time_unit:
+            product_obj = self.pool.get('product.product')
+            product_id = product_obj.name_search(cr, uid, 'Employee')
+            product_obj.write(cr, uid, product_id[0][0], {'uom_id':wizard.time_unit.id})
+
+        if len(module_name):
+            module_ids = []
+            need_install = False
+            module_ids = []
+            for module in module_name:
+                data_id = module_obj.name_search(cr,uid,module)
+                module_ids.append(data_id[0][0])
+
+            for module in module_obj.browse(cr, uid, module_ids):
+                if module.state == 'uninstalled':
+                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
+                    need_install = True
+                    cr.commit()
+            if need_install:
+                pooler.restart_pool(cr.dbname, update_module=True)[1]
+
+        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)  
 
 sale_config_picking_policy()
 
