@@ -1789,12 +1789,11 @@ class orm_template(object):
         form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
-        fields_to_search = set()
         # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
         fields = self.fields_get(cr, uid, context=context)
-        for field in fields:
-            if fields[field].get('select'):
-                fields_to_search.add(field)
+        fields_to_search = set(
+            field for field, descriptor in fields.iteritems()
+            if descriptor.get('select'))
         for view in (form_view, tree_view):
             view_root = etree.fromstring(view['arch'])
             # Only care about select=1 in xpath below, because select=2 is covered
