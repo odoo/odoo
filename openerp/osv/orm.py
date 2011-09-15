@@ -1689,6 +1689,28 @@ class orm_template(object):
                 raise except_orm('View error', msg)
         return arch, fields
 
+    def __get_default_form_view(self, cr, user, context=None):
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
+        res = self.fields_get(cr, user, context=context)
+        xml = '<?xml version="1.0" encoding="utf-8"?> ' \
+              '<form string="%s">' % (self._description,)
+        for x in res:
+            if res[x]['type'] not in ('one2many', 'many2many'):
+                xml += '<field name="%s"/>' % (x,)
+                if res[x]['type'] == 'text':
+                    xml += "<newline/>"
+        xml += "</form>"
+        return xml
+
+    def __get_default_tree_view(self, cr, user, context=None):
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0]
+        xml = '<?xml version="1.0" encoding="utf-8"?>' \
+              '<tree string="%s"><field name="%s"/></tree>' \
+              % (self._description, _rec_name)
+        return xml
+
     def __get_default_calendar_view(self):
         """Generate a default calendar view (For internal use only).
         """
@@ -1965,24 +1987,10 @@ class orm_template(object):
 
             # otherwise, build some kind of default view
             if view_type == 'form':
-                # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-                res = self.fields_get(cr, user, context=context)
-                xml = '<?xml version="1.0" encoding="utf-8"?> ' \
-                     '<form string="%s">' % (self._description,)
-                for x in res:
-                    if res[x]['type'] not in ('one2many', 'many2many'):
-                        xml += '<field name="%s"/>' % (x,)
-                        if res[x]['type'] == 'text':
-                            xml += "<newline/>"
-                xml += "</form>"
+                xml = self.__get_default_form_view(cr, user, context)
 
             elif view_type == 'tree':
-                _rec_name = self._rec_name
-                if _rec_name not in self._columns:
-                    _rec_name = self._columns.keys()[0]
-                xml = '<?xml version="1.0" encoding="utf-8"?>' \
-                       '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, _rec_name)
+                xml = self.__get_default_tree_view(cr, user, context)
 
             elif view_type == 'calendar':
                 xml = self.__get_default_calendar_view()
