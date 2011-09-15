@@ -21,6 +21,12 @@
         product_uom: 1
         price_unit: 150.0
         name: 'basic pc'
+    order_line:
+      - product_id: product.product_product_pc3
+        product_uom_qty: 10.0
+        product_uom: 1
+        price_unit: 200.0
+        name: 'medium pc'
 -
   I Open the sale order
 -
@@ -63,7 +69,7 @@
         "partner_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:purchase.res_partner_test20", "jones white"], 
         "__attachments": [], 
         "__module": "purchase", 
-        "amount_total": 150.0, 
+        "amount_total": 350.0, 
         "company_address": {
                 "phone": "(+32).81.81.37.00", 
                 "street": "Chaussee de Namur 40", 
@@ -73,7 +79,7 @@
                 "country_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:base.be", "Belgium"], 
                 "__id": "5af1272e-dd26-11e0-b65e-701a04e25543:base.main_address", 
         }, 
-        "amount_untaxed": 150.0, 
+        "amount_untaxed": 350.0, 
         "name": "PO00011", 
         "__model": "purchase.order", 
         "__last_update": False, 
@@ -83,4 +89,19 @@
     }
     new_sale_order_id = sale_order_pool.edi_import(cr, uid, edi_document, context=context)
     assert new_sale_order_id,  'Sale order is not imported'
-        
+
+-
+  I Checking the sale order become purchase order or not after import
+-
+  !python {model: purchase.order}: |
+    
+    ids = self.search(cr, uid, [('partner_id','=','OpenERP S.A.')])
+    assert ids, 'Order does not have created of party'
+    order_new = self.browse(cr, uid, ids[0])
+    assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list is not imported"
+    assert order_new.amount_total == 350, "Amount total is not same"
+    assert order_new.amount_untaxed == 350, "untaxed amount is not same"
+    for purchase_line in order_new.order_line:
+        assert purchase_line.name in ['basic pc','medium pc'], "name of product is not in order"
+        assert purchase_line.product_id.name in ['Basic PC','Medium PC'], "name of product is not in order"
+        assert purchase_line.date_planned == '2011-09-13' , "date of planned order is not same"

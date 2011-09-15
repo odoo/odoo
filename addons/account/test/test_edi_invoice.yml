@@ -38,6 +38,14 @@
         price_unit: 10.0
         name: 'basic pc'
         account_id: account.a_pay
+    invoice_line:
+      - product_id: product.product_product_pc3
+        partner_id: res_partner_test20
+        uos_id: 1
+        quantity: 5.0
+        price_unit: 100.0
+        name: 'Medium PC'
+        account_id: account.a_pay
         
     tax_line:
       - name: sale tax
@@ -112,6 +120,16 @@
                 "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
                 "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"], 
                 "quantity": 1.0
+        },
+        {
+                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
+                "name": "Medim PC", 
+                "__last_update": False, 
+                "price_unit": 100.0, 
+                "price_subtotal": 100.0, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
+                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc3", "[PC3] Medium PC"], 
+                "quantity": 5.0
         }]
     }
 
@@ -119,7 +137,7 @@
     invoice_new = invoice_pool.browse(cr, uid, invoice_id, context=context)
     assert invoice_id, 'Invoice is not imported'
 -
-  I Checking the out invoice become in invoice or not after import
+  I Checking the out invoice become in invoice or not after import 
 -
   !python {model: account.invoice}: |
     
@@ -131,9 +149,15 @@
     assert invoice_new.reference == "SAJ/2011/002", "internal number is not stored in reference"
     assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
     assert invoice_new.internal_number == False, "internal number is not reset"
-    assert invoice_new.journal_id.id, "journal id is not selected" 
+    assert invoice_new.journal_id.id, "journal id is not selected"
+    assert invoice_new.type == 'in_invoice', "Imported in voice is not supplier invoice"
+    assert invoice_new.amount_total == 1010.0, "Amount total is not same"
+    assert invoice_new.amount_tax == 1000.0, "Amount tax is not same"
+    assert invoice_new.amount_untaxes == 10.0, "Amount untaxed is not same"
+    product = ['Medium PC','Basic PC']
     for inv_line in invoice_new.invoice_line:
         assert inv_line.account_id.id, "account_id is not taken from product's default"
+        assert inv_line.product_id.name in ['Medium PC','Basic PC'], "product  is not in Invoice line"
     for inv_tax in invoice_new.tax_line:
         assert inv_tax.manual, "for tax line manual is not set to True"
         assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
