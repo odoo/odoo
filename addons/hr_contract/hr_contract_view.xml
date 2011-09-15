@@ -75,8 +75,8 @@
                         <field name="type_id" widget="selection"/>
                     </group>
                     <notebook>
-                    <page string="Information">
-                        <group col="2" colspan="2">
+                    <page string="Information" name="information">
+                        <group col="2" colspan="2" name="left_column">
                             <separator colspan="2" string="Duration"/>
                             <field name="date_start" />
                             <field name="date_end" />
@@ -85,7 +85,7 @@
                             <field name="trial_date_start" />
                             <field name="trial_date_end" />
                         </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" name="right_column">
                             <separator name="advantages" colspan="2" string="Advantages"/>
                             <field name="advantages" nolabel="1" colspan="2"/>
                         </group>
