@@ -1802,14 +1802,12 @@ class orm_template(object):
             fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
 
         tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", attrib={'string': tree_view_root.get("string", "")})
-        field_group = etree.Element("group")
-        search_view.append(field_group)
+        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
 
+        field_group = etree.SubElement(search_view, "group")
         for field_name in fields_to_search:
-            field_group.append(etree.Element("field", attrib={'name': field_name}))
+            etree.SubElement(field_group, "field", name=field_name))
 
-        #TODO tostring can be removed as fromstring is call directly after...
         return search_view
 
     #
