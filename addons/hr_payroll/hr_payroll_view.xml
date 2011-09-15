@@ -553,7 +553,7 @@
 
         <!-- Salary Rules -->
 
-        <record id="hr_salary_rule_tree" model="ir.ui.view">
+        <record id="hr_salary_rule_list" model="ir.ui.view">
             <field name="name">hr.salary.rule.list</field>
             <field name="model">hr.salary.rule</field>
             <field name="type">tree</field>
@@ -568,7 +568,7 @@
             </field>
         </record>
 
-        <record id="view_salary_rule_tree" model="ir.ui.view">
+        <record id="hr_salary_rule_tree" model="ir.ui.view">
             <field name="name">hr.salary.rule.tree</field>
             <field name="model">hr.salary.rule</field>
             <field name="type">tree</field>
@@ -663,7 +663,7 @@
             <field name="name">Salary Rules</field>
             <field name="res_model">hr.salary.rule</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_salary_rule_tree"/>
+            <field name="view_id" ref="hr_salary_rule_list"/>
             <field name="domain">[('parent_rule_id','=',False)]</field>
             <field name="search_view_id" ref="view_hr_rule_filter"/>
         </record>
@@ -676,7 +676,7 @@
             <field name="res_model">hr.salary.rule</field>
             <field name="domain">[('id','in',active_ids)]</field>
             <field name="view_type">tree</field>
-            <field name="view_id" ref="view_salary_rule_tree"/>
+            <field name="view_id" ref="hr_salary_rule_tree"/>
         </record>
 
         <ir_set>
