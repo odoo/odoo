@@ -2176,10 +2176,12 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                     self.dataset, false,
                     {'deletable': false});
             self.view_list.popup = self;
-            self.view_list.do_show();
-            self.view_list.appendTo($("#" + self.element_id + "_view_list")).then(function() {
+            self.view_list.appendTo($("#" + self.element_id + "_view_list")).pipe(function() {
+                self.view_list.do_show();
+            }).pipe(function() {
                 self.searchview.do_search();
             });
+            
         });
         this.searchview.appendTo($("#" + this.element_id + "_search"));
     },
