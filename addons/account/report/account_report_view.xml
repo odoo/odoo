@@ -88,7 +88,7 @@
             <field name="model">report.invoice.created</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in('paid','cancel') " string="Invoices">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state in('paid','cancel') " string="Invoices">
                    	<field name="create_date" select="1"/>
                     <field name="name" select="1"/>
                     <field name="type"/>

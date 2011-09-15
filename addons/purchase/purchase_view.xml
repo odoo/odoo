@@ -14,7 +14,7 @@
 
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
-            parent="menu_purchase_config_purchase" sequence="50"/>
+            parent="menu_purchase_config_purchase" sequence="50"  groups="base.group_extended"/>
 
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
@@ -48,6 +48,14 @@
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
+
+        <menuitem
+            id="menu_purchase_partner_cat" name="Address Book"
+            parent="menu_purchase_config_purchase"/>
+
+        <menuitem
+            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
+            parent="purchase.menu_purchase_partner_cat"/>
 
 
         <!--supplier addresses action-->
@@ -455,7 +463,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Purchase Lines Not Invoiced</field>
+            <field name="name">On Purchase Order Line</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>

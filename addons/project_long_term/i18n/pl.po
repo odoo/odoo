@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:51+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:54+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -55,6 +55,7 @@ msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: view:project.resource.allocation:0
 msgid "Resources Allocation"
 msgstr "Alokacja zasobów"
@@ -97,7 +98,6 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 msgid "Resource Allocations"
 msgstr "Alokacje zasobów"
@@ -108,7 +108,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:133
+#: code:addons/project_long_term/project_long_term.py:128
 #, python-format
 msgid "Day"
 msgstr "Dzień"
@@ -191,7 +191,7 @@ msgid "Compute Phase Scheduling"
 msgstr "Oblicz planowanie fazy"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:195
+#: code:addons/project_long_term/project_long_term.py:190
 #, python-format
 msgid " (copy)"
 msgstr " (kopia)"
@@ -446,6 +446,7 @@ msgid "Responsible"
 msgstr "Odpowiedzialny"
 
 #. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 #: field:project.project,resource_calendar_id:0
 msgid "Working Time"
 msgstr "Czas pracy"
@@ -594,70 +595,3 @@ msgstr "Domyślnie w dniach"
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Czas trwania"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
-
-#~ msgid "Usability"
-#~ msgstr "Użyteczność"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Niewłaściwy XML dla architektury widoku!"
-
-#~ msgid "Error! You can not create recursive analytic accounts."
-#~ msgstr "Błąd! Nie możesz tworzyć rekurencyjnych kont analitycznych"
-
-#, python-format
-#~ msgid "Error"
-#~ msgstr "Błąd"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#~ msgid "Compute"
-#~ msgstr "Oblicz"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-#~ "specjalnych !"
-
-#~ msgid "Other Info"
-#~ msgstr "Inne informacje"
-
-#~ msgid "Starting Date of the phase"
-#~ msgstr "Data rozpoczęcia fazy"
-
-#, python-format
-#~ msgid "No tasks to compute for Project '%s'."
-#~ msgstr "Brak zadań do obliczeń w Projekcie '%s'"
-
-#~ msgid "Ending Date of the phase"
-#~ msgstr "Końcowa data fazy"
-
-#, python-format
-#~ msgid "No responsible person assigned !"
-#~ msgstr "Nie przypisano osoby odpowiedzialnej"
-
-#, python-format
-#~ msgid "Should have Resources Allocation or Project Members!"
-#~ msgstr "Musi być Alokacja zasobów lub Członkowie projektu!"
-
-#, python-format
-#~ msgid "You must assign a responsible person for phase '%s' !"
-#~ msgstr "Musisz podać osobę odpowiedzialną za fazę '%s' !"
-
-#, python-format
-#~ msgid "No tasks to compute for Phase '%s'."
-#~ msgstr "Brak zadań do obliczania dla Fazy '%s'."
-
-#~ msgid ""
-#~ "It's computed by the scheduler according to the start date and the duration."
-#~ msgstr "Końcowa data fazy"
-
-#~ msgid ""
-#~ "It's computed according to the phases order : the start date of the 1st "
-#~ "phase is set by you while the other start dates depend on the end date of "
-#~ "their previous phasesStarting Date of the phase"
-#~ msgstr "Data rozpoczęcia fazy"

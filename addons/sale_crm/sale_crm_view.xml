@@ -33,7 +33,7 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
-                <field name="date_order" position="after">
+                <field name="user_id" position="after">
                     <field name="section_id" widget="selection" string="Sales Team" groups="base.group_extended">
                         <filter icon="terp-personal+"
                                 domain="[('section_id.user_id','=',uid)]"

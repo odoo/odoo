@@ -28,7 +28,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Price Difference Account",
-            method=True,
             view_load=True,
             help="This account will be used to value price difference between purchase price and cost price."),
 
@@ -38,7 +37,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
-            method=True,
             view_load=True,
             help="This account will be used to value outgoing stock for the current product category using sale price"),
         'property_account_expense_categ': fields.property(
@@ -46,7 +44,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            method=True,
             view_load=True,
             help="This account will be used to value outgoing stock for the current product category using cost price"),                
 
@@ -61,7 +58,6 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Price Difference Account",
-            method=True,
             view_load=True,
             help="This account will be used to value price difference between purchase price and cost price."),
             
@@ -71,7 +67,6 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
-            method=True,
             view_load=True,
             help="This account will be used to value outgoing stock for the current product category using sale price"),
         'property_account_expense': fields.property(
@@ -79,7 +74,6 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            method=True,
             view_load=True,
             help="This account will be used to value outgoing stock for the current product category using cost price"),                
 

@@ -56,7 +56,7 @@ class ir_action_report_xml(osv.osv):
         return [('id','in',report_id)]
 
     _columns={
-        'model_id' : fields.function(_model_get, fnct_search=_model_search, method=True, string='Model Id'),
+        'model_id' : fields.function(_model_get, fnct_search=_model_search, string='Model Id'),
     }
 
 ir_action_report_xml()
