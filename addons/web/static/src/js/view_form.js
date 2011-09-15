@@ -45,7 +45,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     start: function() {
         this._super();
-        this.init_view();
+        return this.init_view();
     },
     init_view: function() {
         if (this.embedded_view) {
