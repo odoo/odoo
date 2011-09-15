@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-28 04:40+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:16+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -890,6 +890,7 @@ msgstr "Создать квартальные периоды"
 
 #. module: account
 #: report:account.overdue:0
+#: report:account.aged_trial_balance:0
 msgid "Due"
 msgstr "Срок"
 
@@ -981,6 +982,10 @@ msgstr "Проводки модели"
 #: field:account.journal,code:0
 #: report:account.partner.balance:0
 #: field:account.period,code:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Code"
 msgstr "Код"
 
@@ -1307,6 +1312,7 @@ msgstr "Анализ элементов журнала"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
+#: report:account.aged_trial_balance:0
 msgid "Partners"
 msgstr "Контрагенты"
 
@@ -2195,6 +2201,11 @@ msgstr "Шаблон продукта"
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
 #: model:ir.model,name:account.model_account_fiscalyear
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Fiscal Year"
 msgstr "Учетный год"
 
@@ -2445,7 +2456,7 @@ msgstr "Налог"
 #: field:account.move.line,analytic_account_id:0
 #: field:account.move.line.reconcile.writeoff,analytic_id:0
 msgid "Analytic Account"
-msgstr "Счет аналитического учета"
+msgstr "Счёт аналитики"
 
 #. module: account
 #: view:account.account:0
@@ -4422,7 +4433,7 @@ msgstr "Нет"
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr ""
+msgstr "Налоговая база налоговой декларации"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -4614,7 +4625,7 @@ msgstr "Шаблоны"
 #. module: account
 #: field:account.tax,child_ids:0
 msgid "Child Tax Accounts"
-msgstr ""
+msgstr "Счета субналогов"
 
 #. module: account
 #: code:addons/account/account.py:954
@@ -4660,6 +4671,11 @@ msgstr "Остаток по аналитике"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Target Moves"
 msgstr "Цель операции"
 
@@ -4776,6 +4792,8 @@ msgstr "Результат сверки"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
 msgid "Balance Sheet"
 msgstr "Балансовая ведомость"
 
@@ -5180,6 +5198,8 @@ msgid ""
 "Number of partial amounts that can be combined to find a balance point can "
 "be chosen as the power of the automatic reconciliation"
 msgstr ""
+"Ряд частичных сумм, которые могут быть объединены для нахождения баланса, "
+"могут быть выбраны в процессе автоматической сверки."
 
 #. module: account
 #: help:account.payment.term.line,sequence:0
@@ -5287,6 +5307,8 @@ msgid ""
 "This module will support the Anglo-Saxons accounting methodology by changing "
 "the accounting logic with stock transactions."
 msgstr ""
+"Этот модуль будет поддерживать англо-саксонский метод бухгалтерского учета "
+"путем изменения логики складских операций."
 
 #. module: account
 #: field:report.invoice.created,create_date:0
@@ -5303,7 +5325,7 @@ msgstr "Журналы аналитики"
 #. module: account
 #: field:account.account,child_id:0
 msgid "Child Accounts"
-msgstr "Подчиненный счет"
+msgstr "Субсчета"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -6476,6 +6498,8 @@ msgid ""
 "allowing you to quickly check the balance of each of your accounts in a "
 "single report"
 msgstr ""
+"Этот отчет позволяет печатать или создавать PDF оборотно-сальдовой ведомости "
+"позволяющей быстро проверить баланс каждого из ваших счетов в одном отчете"
 
 #. module: account
 #: help:account.move,to_check:0
@@ -6510,6 +6534,8 @@ msgstr "План налоговых счетов"
 #: report:account.general.journal:0
 #: report:account.invoice:0
 #: report:account.partner.balance:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Total:"
 msgstr "Всего:"
 
@@ -6617,6 +6643,8 @@ msgid ""
 "reports, so that you can see positive figures instead of negative ones in "
 "expenses accounts."
 msgstr ""
+"Позволяет вам изменить знак суммы остатка в отчете, таким образом вы будите "
+"видеть положительные суммы вместо отрицательных на счетах расходов."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
@@ -6662,6 +6690,10 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"Касса позволяет вам управлять записями наличных денег в соответствующих "
+"журналах. Эта функция обеспечивает простой способ учета движения наличных "
+"денег на ежедневной основе. Вы можете ввести купюры находящиеся в кассе и "
+"затем записывать приход и расход денег."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -6755,7 +6787,7 @@ msgstr "Шаблон основного счета"
 #: field:account.move.line,statement_id:0
 #: model:process.process,name:account.process_process_statementprocess0
 msgid "Statement"
-msgstr "Выписка"
+msgstr "Документ"
 
 #. module: account
 #: help:account.journal,default_debit_account_id:0
@@ -6973,6 +7005,9 @@ msgid ""
 "will be added, Loss : Amount will be deducted.), Which is calculated from "
 "Profit & Loss Report"
 msgstr ""
+"Этот счет используется для движения по Прибыли/Убытку (если прибыль: сумма "
+"прибавляется, убыток: сумма вычитается). Который вычисляется из отчета по "
+"прибылям и убыткам."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7080,6 +7115,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
+"Это поле используется для дебетовых и кредитовых записей журнала. Вы можете "
+"определить срок для оплаты этой строки."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1277
@@ -7740,6 +7777,11 @@ msgstr "Валюта организации"
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Chart of Account"
 msgstr "План счетов"
 
@@ -7756,6 +7798,9 @@ msgid ""
 "added, Loss: Amount will be duducted), which is calculated from Profilt & "
 "Loss Report"
 msgstr ""
+"Этот счет используется для движения по Прибыли/Убытку (если прибыль: сумма "
+"прибавляется, убыток: сумма вычитается). Который вычисляется из отчета по "
+"прибылям и убыткам."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -7857,6 +7902,10 @@ msgstr "Журнал возвратов"
 #: report:account.general.journal:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Filter By"
 msgstr "Фильтровать по"
 
@@ -7917,7 +7966,7 @@ msgstr "Подитог"
 #. module: account
 #: view:account.vat.declaration:0
 msgid "Print Tax Statement"
-msgstr ""
+msgstr "Печать налоговой декларации"
 
 #. module: account
 #: view:account.model.line:0
@@ -7963,6 +8012,7 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
+"Остаток по дебету или кредиту записи журнала выражен в валюте организации."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -8004,7 +8054,7 @@ msgstr "Сумма по дебету"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:account.action_treasory_graph
 msgid "Treasury"
-msgstr ""
+msgstr "Казна"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -8206,6 +8256,9 @@ msgid ""
 "will be added, Loss: Amount will be deducted.), Which is calculated from "
 "Profilt & Loss Report"
 msgstr ""
+"Этот счет используется для движения по Прибыли/Убытку (если прибыль: сумма "
+"прибавляется, убыток: сумма вычитается). Который вычисляется из отчета по "
+"прибылям и убыткам."
 
 #. module: account
 #: field:account.invoice,reference_type:0
@@ -8224,6 +8277,8 @@ msgid ""
 "Set if the tax computation is based on the computation of child taxes rather "
 "than on the total amount."
 msgstr ""
+"Устанавливается, если расчет налога основан на вычислении субналогов, а не "
+"от общей суммы."
 
 #. module: account
 #: selection:account.tax,applicable_type:0
@@ -8402,6 +8457,7 @@ msgstr "Не удается найти родительский код для ш
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
+#: report:account.aged_trial_balance:0
 msgid "Analysis Direction"
 msgstr "Направление анализа"
 
@@ -8520,6 +8576,10 @@ msgstr "Оставьте пустым для использования дохо
 #: report:account.third_party_ledger_other:0
 #: field:report.account.receivable,balance:0
 #: field:report.aged.receivable,balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Balance"
 msgstr "Остаток"
 
@@ -8531,6 +8591,10 @@ msgstr "Вручную или автоматически введенные в �
 #. module: account
 #: report:account.account.balance:0
 #: report:account.general.ledger_landscape:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Display Account"
 msgstr "Вывод счета"
 
@@ -8555,6 +8619,8 @@ msgid ""
 "This report is analysis by partner. It is a PDF report containing one line "
 "per partner representing the cumulative credit balance."
 msgstr ""
+"Отчет анализ по контрагентам . Это PDF отчет содержащий одну строку по "
+"контрагенту представляющую совокупный остаток кредита."
 
 #. module: account
 #: selection:account.account,type:0
@@ -8800,6 +8866,8 @@ msgid ""
 "Tax base different !\n"
 "Click on compute to update tax base"
 msgstr ""
+"Налоговая база отличается!\n"
+"Вычислите новую базу налогообложения"
 
 #. module: account
 #: view:account.subscription:0
@@ -8834,6 +8902,7 @@ msgstr "Проводка подписки"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,date_from:0
+#: report:account.aged_trial_balance:0
 msgid "Start Date"
 msgstr "Дата начала"
 
@@ -8931,6 +9000,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
+"Этот счет будет использоваться, вместо счета по умолчанию, как кредитовый "
+"для текущего контрагента"
 
 #. module: account
 #: field:account.period,special:0
@@ -9063,7 +9134,7 @@ msgstr "Курс валюты"
 #. module: account
 #: help:account.payment.term.line,value_amount:0
 msgid "For Value percent enter % ratio between 0-1."
-msgstr ""
+msgstr "В качестве значения процента введите коэффициент от 0 до 1."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9315,6 +9386,7 @@ msgstr "Cостояния"
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
+#: report:account.aged_trial_balance:0
 msgid "Total"
 msgstr "Всего"
 
@@ -9376,6 +9448,8 @@ msgid ""
 "reconciliation process today. The current partner is counted as already "
 "processed."
 msgstr ""
+"Эта цифра показывает общее количество контрагентов которые сегодня прошли "
+"через процесс сверки. Текущий контрагент считается уже обработанным."
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -9390,7 +9464,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
 msgid "Trial Balance Report"
-msgstr "Балансовый отчет"
+msgstr "Оборотно-сальдовая ведомость"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -9566,6 +9640,9 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"Нельзя создать автонумерацию для этой части !\n"
+"Для автонумерации, определите нумерацию в журнале или создайте её для этой "
+"части вручную."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -9620,7 +9697,7 @@ msgstr ""
 #. module: account
 #: field:account.tax,applicable_type:0
 msgid "Applicability"
-msgstr ""
+msgstr "Применимость"
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:165
@@ -9692,7 +9769,7 @@ msgstr "Выполнение настройки"
 #. module: account
 #: view:account.fiscal.position.template:0
 msgid "Accounts Mapping"
-msgstr ""
+msgstr "Отображение счетов"
 
 #. module: account
 #: code:addons/account/invoice.py:345
@@ -9717,7 +9794,7 @@ msgstr "account.installer.modules"
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr ""
+msgstr "Счет доходов или расходов относящийся к ТМЦ."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1123
@@ -9824,6 +9901,7 @@ msgstr "account.addtmpl.wizard"
 #: field:account.partner.ledger,result_selection:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.aged_trial_balance:0
 msgid "Partner's"
 msgstr ""
 
@@ -9913,7 +9991,7 @@ msgstr "Шаблон счета финансового отображения"
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr ""
+msgstr "Счет расходов по шаблону ТМЦ"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -9950,12 +10028,11 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"Остаток по дебету или кредиту записи журнала выражен в своей валюте (может "
+"отличаться от валюты организации)."
 
 #~ msgid "Partner account"
 #~ msgstr "Счет контрагента"
-
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Ошибка! Вы не можете создать счетЮ который ссылается сам на себя."
 
 #~ msgid "Unpaid Supplier Invoices"
 #~ msgstr "Неоплаченные счета поставщика"
@@ -9974,21 +10051,6 @@ msgstr ""
 
 #~ msgid "Account Entry Line"
 #~ msgstr "Проводка по счету"
-
-#~ msgid "Aged Trial Balance"
-#~ msgstr "Возрастной пробный баланс"
-
-#~ msgid "Disc. (%)"
-#~ msgstr "Скидка (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Если ваш платеж был уже проведен, когда данное письмо было отослано, "
-#~ "пожалуйста игнорируйте это сообщение. При необходимости вы можете связаться "
-#~ "с нашей бухгалтерией по телефону +32 81 81 37 00."
 
 #~ msgid "Unpaid Supplier Refunds"
 #~ msgstr "Невыплаченные возвраты средств от поставщика"
@@ -10162,9 +10224,6 @@ msgstr ""
 #~ msgid "Select Period and Journal for Validation"
 #~ msgstr "Выберите период и журнал для проверки"
 
-#~ msgid "Partner ID"
-#~ msgstr "ID партнера"
-
 #~ msgid "New Customer Invoice"
 #~ msgstr "Новый счет клиенту"
 
@@ -10206,9 +10265,6 @@ msgstr ""
 
 #~ msgid "Entry encoding"
 #~ msgstr "Ввод проводки"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Период списания"
 
 #~ msgid "Other"
 #~ msgstr "Прочие"
@@ -10305,9 +10361,6 @@ msgstr ""
 
 #~ msgid "Full Payment"
 #~ msgstr "Полный платеж"
-
-#~ msgid "All account entries"
-#~ msgstr "Все проводки по счету"
 
 #~ msgid "Unpaid Customer Refunds"
 #~ msgstr "Невыплаченные возвраты клиентам"
@@ -10581,9 +10634,6 @@ msgstr ""
 #~ msgid "Printing Date"
 #~ msgstr "Дата печати"
 
-#~ msgid "account.move.line"
-#~ msgstr "Строки финансового документа"
-
 #~ msgid "Move Lines"
 #~ msgstr "Строки финансового документа"
 
@@ -10604,13 +10654,6 @@ msgstr ""
 
 #~ msgid "analytic Invoice"
 #~ msgstr "aналитический счет"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Банковский счет партнера для оплаты\\n\n"
-#~ "Оставьте пустым для использования по умолчанию"
 
 #~ msgid "Message"
 #~ msgstr "Сообщение"
@@ -10823,23 +10866,9 @@ msgstr ""
 #~ msgid "Date/Period Filter"
 #~ msgstr "Фильтр даты/периода"
 
-#~ msgid "supplier"
-#~ msgstr "поставщик"
-
-#~ msgid "End of Year"
-#~ msgstr "Конец года"
-
 #, python-format
 #~ msgid "Invoice "
 #~ msgstr "Счет "
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
-#~ "категориям."
-
-#~ msgid "Default UoM"
-#~ msgstr "Ед. изм. по умолчанию"
 
 #~ msgid "account.analytic.journal"
 #~ msgstr "account.analytic.journal"
@@ -10868,3 +10897,9 @@ msgstr ""
 
 #~ msgid "From statement, create entries"
 #~ msgstr "Создать записи из выписки"
+
+#~ msgid "Aged Trial Balance"
+#~ msgstr "Оборотно-сальдовая ведомость с периодами"
+
+#~ msgid "Balance:"
+#~ msgstr "Баланс:"

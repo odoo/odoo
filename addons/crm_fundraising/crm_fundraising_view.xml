@@ -6,24 +6,6 @@
             groups="base.group_extended"
             parent="base.menu_base_config" sequence="8" />
 
-        <!-- Fund Stage Search view -->
-
-        <record id="fund_stage_search" model="ir.ui.view">
-            <field name="name">Fund Stage - Search</field>
-            <field name="model">crm.case.stage</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="crm.crm_lead_stage_search"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='name']" position="before">
-                        <filter icon="terp-dolar" name="fundraising"
-                            string="Fundraising" domain="[('type', '=', 'fundraising')]" context="{'type' : 'fundraising'}"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-
         <!-- Fund Raising Categories Form View -->
 
         <record id="crm_fund_categ_action" model="ir.actions.act_window">
@@ -33,7 +15,6 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
-            <field name="search_view_id" ref="fund_stage_search"/>
             <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 
@@ -51,13 +32,6 @@
             <field name="context">{'search_default_fundraising':1}</field>
             <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
-
-
-
-         <menuitem action="crm_fundraising_stage_act"
-            groups="base.group_extended" name="Stages"
-            id="menu_crm_fundraising_stage_act"
-            parent="menu_config_fundrising" />
 
         <!-- Fund Raising Tree View -->
 
@@ -162,15 +136,15 @@
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
-                                    <field name="history" invisible="1"/>
-                                    <button
-                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
-                                        icon="terp-mail-replied" type="action" />
+                                    <field name="email_from" invisible="1"/>
+		                            <button
+		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+		                                name="%(mail.action_email_compose_message_wizard)d"
+		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -178,20 +152,18 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                        <field name="history" invisible="1"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'crm.fundraising', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
+                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
+		                                        <button colspan="4" string="Reply"
+		                                            name="%(mail.action_email_compose_message_wizard)d"
+		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+		                                            icon="terp-mail-replied" type="action"/>
                                             </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
@@ -205,10 +177,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-                            <button string="Send New Email"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'new', 'model': 'crm.fundraising'}"
-                                icon="terp-mail-message-new" type="action" />
+		                    <button string="Send New Email"
+		                        name="%(mail.action_email_compose_message_wizard)d"
+		                        icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -216,7 +187,6 @@
                                 <field name="active"/>
                                 <field name="id" select="1"/>
                                 <field name="priority" string="Priority"/>
-                                <field name="canal_id"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Dates"/>

@@ -660,11 +660,6 @@ class account_journal(osv.osv):
     def create_sequence(self, cr, uid, vals, context=None):
         """
         Create new entry sequence for every new Joural
-        @param cr: cursor to database
-        @param user: id of current user
-        @param ids: list of record ids to be process
-        @param context: context arguments, like lang, time zone
-        @return: return a result
         """
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
@@ -686,6 +681,8 @@ class account_journal(osv.osv):
             'padding': 4,
             'number_increment': 1
         }
+        if 'company_id' in vals:
+            seq['company_id'] = vals['company_id']
         return seq_pool.create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
@@ -711,6 +708,8 @@ class account_journal(osv.osv):
             name = rs.name
             if rs.currency:
                 name = "%s (%s)" % (rs.name, rs.currency.name)
+            else:
+                name = "%s (%s)" % (rs.name, rs.company_id.currency_id.name)
             res += [(rs.id, name)]
         return res
 
@@ -916,10 +915,17 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
         return ids
