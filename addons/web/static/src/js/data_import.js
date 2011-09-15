@@ -75,8 +75,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     },
     on_import_results:function(results){
         var self = this;
-        this.$element.find('#result, #success , #message').empty();
-
+        this.$element.find('#result, #success').empty();
         var result_node = $("#result");
         var records = {};
 
@@ -92,44 +91,63 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             }
         }
         this.do_check_req_field(results['req_field']);
-        var selected_fields = [];
+        var selected_fields;
         this.$element.find("td #sel_field").click(function(){
-            selected_fields = [];
-            self.$element.find("td #sel_field option:selected").each(function(){
-                selected_fields.push($(this).index());
+            selected_fields = _.map(self.$element.find("td #sel_field"), function(field){
+                return field.selectedIndex
             });
         });
+        this.on_change_check(selected_fields,results['req_field']);
         this.$element.find("td #sel_field").change(function(){
-            self.$element.find("#message").empty();
-            self.$element.find("td #sel_field").css('background-color','');
-            self.$element.find(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
-            self.do_check_req_field(results['req_field']);
-            var curr_selected = this.selectedIndex;
-            if ((curr_selected != 0) && _.contains(selected_fields, curr_selected)){
-                $(this).css('background-color','#FF6666');
-                $("#message").append("*Selected column should not be same.");
+            self.on_change_check(selected_fields,results['req_field']);
+        });
+    },
+    on_change_check:function(selected_fields,req_field){
+            var self = this;
+            self.$element.find("#message, #msg").remove();
+            var duplicate_flds = self.$element.find("td #sel_field option:selected");
+            _.each(duplicate_flds,function(fld){
+                if (fld.index != 0){
+                    var res = self.$element.find("td #sel_field option:selected[value='"+ fld.value +"']");
+                    if (res.length == 1){
+                        res.parent().removeClass("duplicate_fld");
+                        res.parent().addClass("select_fld");
+                    }else if(res.length > 1){
+                        res.parent().removeClass("select_fld");
+                        res.parent().addClass("duplicate_fld");
+                        res.parent().focus();
+                    }
+                }else{
+                    var elem = self.$element.find("td #sel_field option:selected[value='"+ fld.value +"']");
+                    elem.parent().removeClass("duplicate_fld");
+                    elem.parent().addClass("select_fld");
+                }
+            });
+            if(self.$element.find(".duplicate_fld").length){
+                $("#result").before('<div id="msg" style="color:red">*Selected column should not be same.</div>');
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
             }else{
-                $(this).css('background-color','');
+                self.$element.find("#msg").remove();
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
             }
-        });
+            self.do_check_req_field(req_field);
+
     },
     do_check_req_field: function(req_fld){
         var self = this;
         if (req_fld.length){
+            self.$element.find("#message").remove();
             var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld){
                 return fld['text']
             });
-
             var required_fields = _.filter(req_fld, function(fld){
                 return !_.contains(sel_fields, fld)
             });
-
             if (required_fields.length){
-                $("#message").append("*Required Fields are not selected which is "+required_fields+". ");
+                $("#result").before('<div id="message" style="color:red">*Required Fields are not selected which is '+required_fields+'.</div>');
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
             }else{
+                self.$element.find("#message").remove();
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
             }
         }

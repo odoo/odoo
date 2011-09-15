@@ -1399,7 +1399,6 @@
         </tr>
         <tr>
             <td width="100%" colspan="4">
-                <div id="message" style="color:red"></div>
                 <div id="result"></div>
             </td>
         </tr>
@@ -1447,7 +1446,7 @@
             </tr>
             <tr t-if="record=='sel'">
                 <td t-foreach="records.header" t-as="header">
-                    <select id="sel_field">
+                    <select id="sel_field" class="select_fld">
                         <option selected="selected" value=""></option>
                         <option t-foreach="records.sel" t-as="selection" t-att="{'selected': header[0] === selection ? 'selected' : null}"
                                 t-att-value="selection"><t t-esc="selection"/></option>
