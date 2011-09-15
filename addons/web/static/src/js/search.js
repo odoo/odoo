@@ -463,30 +463,6 @@ openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.se
         }));
     }
 });
-openerp.web.search.FilterGroup = openerp.web.search.Widget.extend(/** @lends openerp.web.search.FilterGroup# */{
-    template: 'SearchView.filters',
-    /**
-     * Inclusive group of filters, creates a continuous "button" with clickable
-     * sections (the normal display for filters is to be a self-contained button)
-     *
-     * @constructs openerp.web.search.FilterGroup
-     * @extends openerp.web.search.Widget
-     *
-     * @param {Array<openerp.web.search.Filter>} filters elements of the group
-     * @param {openerp.web.SearchView} view view in which the filters are contained
-     */
-    init: function (filters, view) {
-        this._super(view);
-        this.filters = filters;
-        this.length = filters.length;
-    },
-    start: function () {
-        this._super();
-        _.each(this.filters, function (filter) {
-            filter.start();
-        });
-    }
-});
 openerp.web.search.add_expand_listener = function($root) {
     $root.find('a.searchview_group_string').click(function (e) {
         $root.toggleClass('folded expanded');
@@ -531,6 +507,49 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
     get_domain: function () {
         throw new Error(
             "get_domain not implemented for widget " + this.attrs.type);
+    }
+});
+openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends openerp.web.search.FilterGroup# */{
+    template: 'SearchView.filters',
+    /**
+     * Inclusive group of filters, creates a continuous "button" with clickable
+     * sections (the normal display for filters is to be a self-contained button)
+     *
+     * @constructs openerp.web.search.FilterGroup
+     * @extends openerp.web.search.Input
+     *
+     * @param {Array<openerp.web.search.Filter>} filters elements of the group
+     * @param {openerp.web.SearchView} view view in which the filters are contained
+     */
+    init: function (filters, view) {
+        this._super(view);
+        this.filters = filters;
+        this.length = filters.length;
+    },
+    start: function () {
+        this._super();
+        _.each(this.filters, function (filter) {
+            filter.start();
+        });
+    },
+    get_context: function () { },
+    /**
+     * Handles domains-fetching for all the filters within it: groups them.
+     */
+    get_domain: function () {
+        var domains = _(this.filters).chain()
+            .filter(function (filter) { return filter.is_enabled(); })
+            .map(function (filter) { return filter.attrs.domain; })
+            .value();
+
+        if (!domains.length) { return; }
+        if (domains.length === 1) { return domains[0]; }
+        for (var i=domains.length; --i;) {
+            domains.unshift(['|']);
+        }
+        return _.extend(new openerp.web.CompoundDomain(), {
+            __domains: domains
+        });
     }
 });
 openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.web.search.Filter# */{
@@ -586,12 +605,11 @@ openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.w
         }
         return this.attrs.context;
     },
-    get_domain: function () {
-        if (!this.is_enabled()) {
-            return;
-        }
-        return this.attrs.domain;
-    }
+    /**
+     * Does not return anything: filter domain is handled at the FilterGroup
+     * level
+     */
+    get_domain: function () { }
 });
 openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.web.search.Field# */ {
     template: 'SearchView.field',
