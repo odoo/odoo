@@ -2,7 +2,6 @@ openerp.web.list = function (openerp) {
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
-    template: "EmptyComponent",
     defaults: {
         // records can be selected one by one
         'selectable': true,

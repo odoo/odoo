@@ -24,6 +24,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     start: function() {
+        this._super();
         return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "kanban"}, this.on_loaded);
     },
     on_loaded: function(data) {

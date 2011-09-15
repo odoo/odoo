@@ -295,6 +295,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
         this.dataset.domain = [['type', '=', 'manual']];
     },
     start: function () {
+        this._super();
         $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
                this.dataset.call('progress'))
             .then(this.on_records_loaded);
@@ -352,6 +353,7 @@ openerp.web.client_actions.add(
 openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     template: 'ApplicationTiles',
     start: function () {
+        this._super();
         var self = this;
         return new openerp.web.DataSetSearch(
                 this, 'ir.ui.menu', null, [['parent_id', '=', false]])
@@ -393,6 +395,7 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         this.widget_id = options.widget_id;
     },
     start: function () {
+        this._super();
         return new openerp.web.DataSet(this, 'res.widget').read_ids(
                 [this.widget_id], ['title'], this.on_widget_loaded);
     },

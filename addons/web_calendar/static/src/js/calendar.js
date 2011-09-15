@@ -30,6 +30,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.color_map = {};
     },
     start: function() {
+        this._super();
         this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
@@ -344,7 +345,6 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
-        debugger; //TODO niv: check
         this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false

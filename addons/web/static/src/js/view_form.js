@@ -10,7 +10,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * view should be displayed (if there is one active).
      */
     searchable: false,
-    template: "EmptyComponent",
     form_template: "FormView",
     /**
      * @constructs openerp.web.FormView
@@ -484,7 +483,6 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
-        debugger; // TODO niv: check
         this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false

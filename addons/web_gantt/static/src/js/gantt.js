@@ -32,6 +32,7 @@ init: function(parent, element_id, dataset, view_id) {
     },
 
     start: function() {
+        this._super();
         this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
     },
 

@@ -729,6 +729,7 @@ db.web.TranslateDialog = db.web.Dialog.extend({
 });
 
 db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
+    template: "EmptyComponent",
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {

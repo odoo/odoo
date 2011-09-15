@@ -33,6 +33,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.$element.hide();
     },
     start: function() {
+        this._super();
         return this.rpc("/web_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
