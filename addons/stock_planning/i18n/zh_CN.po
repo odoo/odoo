@@ -9,20 +9,20 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2011-05-06 12:31+0000\n"
-"Last-Translator: openerp-china.Black Jack <Unknown>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-07 04:53+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:51+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
 #, python-format
 msgid ""
 "No forecasts for selected period or no products in selected category !"
-msgstr "选定的周期没预计,选定的类别没产品!"
+msgstr "选定的周期没预计,选定的分类没产品!"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -30,7 +30,7 @@ msgid ""
 "Check to calculate stock location of selected warehouse only. If not "
 "selected calculation is made for input, stock and output location of "
 "warehouse."
-msgstr "对选定的仓库检测核算库存存货地点,如果没选定核算的方式是仓库的入库,出仓的存货地点."
+msgstr "如果没选定仓库的入仓,库存,出仓的计算方式,检查选定仓库的库位."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -67,13 +67,13 @@ msgstr "即将入库必须大于0!"
 msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
-msgstr "计划出库在计算周期前,在本期开始时间和计算周期前的某天."
+msgstr "在计算周期前的计划出库,在本周期开始时间和计算周期前的某天."
 
 #. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "No products in selected category !"
-msgstr "在选定的类别没产品!"
+msgstr "在选定的分类没产品!"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -115,7 +115,7 @@ msgstr "确认所有计算周期内的出仓调拨数量."
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Daily Periods"
-msgstr "创建每天周期"
+msgstr "创建周期"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -163,7 +163,7 @@ msgstr "关注这周期的预计"
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr "只有库存存货地点"
+msgstr "只有库存库位"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
@@ -176,7 +176,7 @@ msgstr "本期这仓库已派件出去的数量"
 msgid ""
 "Chect to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
-msgstr "选择指定仓库需求的存货地点,如果不选择需求将用这仓库的入库存货地点."
+msgstr "选择指定仓库需求的库位,如果不选择需求将用这仓库的入库库位."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -198,12 +198,12 @@ msgstr "仓库作为调拨的起点."
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr ""
+msgstr "stock.period.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
 msgid "Planned Out Before"
-msgstr "计划前"
+msgstr "之前的计划出库"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,forecasted_products:0
@@ -219,14 +219,14 @@ msgstr "周期:"
 #: help:stock.planning,already_in:0
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
-msgstr "本期这仓库已打包的数量."
+msgstr "本期这仓库已装箱的数量."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
 #: code:addons/stock_planning/stock_planning.py:686
 #, python-format
 msgid "    Confirmed In Before: "
-msgstr "    确认前: "
+msgstr "    之前的确认入库: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -236,7 +236,7 @@ msgstr "库存和销售预计"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "stock.sale.forecast"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
@@ -246,7 +246,7 @@ msgstr "这部门"
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
 msgid "Planned In"
-msgstr "计划内"
+msgstr "计划入库"
 
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
@@ -256,7 +256,7 @@ msgstr "库存模拟"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr ""
+msgstr "stock.planning.createlines"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -264,7 +264,7 @@ msgid ""
 "Confirmed incoming in periods before calculated (Including Already In). "
 "Between start date of current period and one day before start of calculated "
 "period."
-msgstr "确认的即将入库在计算周期前(已包括在).在本期开始日期和在计算周期开始前的某天."
+msgstr "确认计算周期前即将入库(已包括入库).在本期开始日期和在计算周期开始前的某天."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -279,7 +279,7 @@ msgstr "用户周期 5"
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
-msgstr "需求日志或计划明细里的供求"
+msgstr "需求日志或计划明细里的内部供求"
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -339,7 +339,7 @@ msgstr "创建"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr "主需求计划表"
+msgstr "主需求日程表"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
@@ -367,7 +367,7 @@ msgstr "状态"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
-msgstr "关注对这产品类别建立的产品预计"
+msgstr "关注对这产品分类创建的产品预计"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
@@ -377,7 +377,7 @@ msgstr "库存周期"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
 msgid "stock.sale.forecast.createlines"
-msgstr ""
+msgstr "stock.sale.forecast.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
@@ -404,7 +404,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
-msgstr "选中,查看公司的销售"
+msgstr "勾选,查看公司的销售"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -414,18 +414,18 @@ msgstr "名称"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr "搜索库存计划"
+msgstr "查询库存计划"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
 msgid "Incoming Before"
-msgstr "即将入库前"
+msgstr "之前的入库"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr "产品类别"
+msgstr "产品分类"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
@@ -433,7 +433,7 @@ msgstr "产品类别"
 #: code:addons/stock_planning/stock_planning.py:665
 #: code:addons/stock_planning/stock_planning.py:667
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -468,7 +468,7 @@ msgstr "预计"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr "另一个仓库提供"
+msgstr "从其它仓库提供"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -521,12 +521,12 @@ msgstr "在本期前一天的库存数量."
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr "创建每周周期"
+msgstr "创建周周期"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr "这仓库设置的最小库存规则大里的最大数量"
+msgstr "这仓库最小库存规则设置里的最大数量"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:665
@@ -537,7 +537,7 @@ msgstr "您必须要指定源仓库"
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
-msgstr "选定周期和创建仓库计划明细."
+msgstr "选定周期和仓库创建计划明细."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
@@ -566,12 +566,12 @@ msgstr "公司预计"
 msgid ""
 "Unit of Measure used to show the quanities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
-msgstr "计量单位用于显示库存数量,单位您可以使用默认类别或者第二类别(销售单位类别)."
+msgstr "计量单位用于显示库存数量,单位您可以使用默认分类或者第二分类(销售单位分类)."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per User :"
-msgstr "每用户:"
+msgstr "每个用户:"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
@@ -589,7 +589,7 @@ msgstr "周期名称"
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
 msgid "Created/Validated by"
-msgstr "创建/验证"
+msgstr "创建/审核"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -636,14 +636,14 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr "核实预计"
+msgstr "审核预计"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
 msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
-msgstr "计划将在选定的产品类别创建.如果您选择\"所有产品预计\"这字段将被忽略."
+msgstr "计划将在选定的产品分类里创建.当您勾选\"所有产品预计\"这字段将被忽略."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
@@ -692,7 +692,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create periods for Stock and Sales Planning"
-msgstr "为库存和销售计划创建周期"
+msgstr "创建库存和销售计划周期"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -934,12 +934,25 @@ msgid ""
 "periods for the same product, warehouse and company because results can be "
 "unpredictable. The same apply to Forecasts lines.\n"
 msgstr ""
+"\n"
+"这模块的主要目标：在MPS(主生产计划)外能手动生成采购(正规请求)，MPS是根据最少库存规则来自动工作。\n"
+"模块里的术语：\n"
+"    仓库和销售周期：您库存计划，销售预测和制造需求计划(MRP)的开始日期与结束日期之间时间。\n"
+"    仓库和销售预测：是在周期内您计划销售产品的数量。\n"
+"    仓库计划：在周期内您计划采购产品的数量。\n"
+"\n"
+"因为在销售预测模块也使用术语“销售预测”和“计划”但它们是金额值。所以在这模块使用“仓库和销售预测”和“仓库计划”来强调这是一个数量值。\n"
+"\n"
+"本模块的三个操作步骤：\n"
+"    1.创建周期，必须步骤。\n"
+"    2.建立销售预测并输入数量，可选步骤，但它是下一步所必须的。\n"
+"    3.建立计划的明细并输入数量，这是在周期内采购或生产的数量。\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "不能删除已证实的销售预计!"
+msgstr "不能删除已审核的销售预计!"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -958,7 +971,7 @@ msgstr ""
 msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
-msgstr "您必须指定来源的仓库不同于计算(目标)仓库!"
+msgstr "您必须指定源仓库不同于计算的(目标)仓库!"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -989,7 +1002,7 @@ msgid ""
 "Quantity expected to go out in selected period. As a difference between "
 "Planned Out and Confirmed Out. For current period Already Out is also "
 "calculated"
-msgstr "在选定周期的出库预计数量.作为计划出库和确认出库的差异,对本期已出库的已经计算进去."
+msgstr "在选定周期的出库预计数量.作为计划出库和确认出库的差,对本期已出库的已经计算进去."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
@@ -1041,7 +1054,7 @@ msgstr "创建库存计划明细"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr "常规信息"
+msgstr "一般信息"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
@@ -1068,7 +1081,7 @@ msgstr "仓库预计"
 #: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid "    Confirmed In: "
-msgstr "    确认入库: "
+msgstr "    已确认的入库: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1078,7 +1091,7 @@ msgstr "销售日志"
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr "来源仓库"
+msgstr "源仓库"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
@@ -1093,7 +1106,7 @@ msgstr "库存"
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr "库存供应存货地点"
+msgstr "库存存货库位"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
@@ -1110,7 +1123,7 @@ msgstr "用户周期 2"
 msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
-msgstr "如选择这选项将为选定的仓库和周期计划所有产品的预计.同时产品类别字段将被忽略."
+msgstr "勾选这选项将为选定的仓库和周期计划所有产品的预计.产品分类字段将被忽略."
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
@@ -1127,7 +1140,7 @@ msgstr "产品计量单位类别"
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr "确认入库"
+msgstr "已确认的入库"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
@@ -1152,7 +1165,7 @@ msgstr "复制最近预计"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr "显示关注哪个产品的预计"
+msgstr "显示关注的哪个产品的预计"
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
@@ -1188,7 +1201,7 @@ msgstr "结束"
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr "核实"
+msgstr "已审核"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1239,12 +1252,12 @@ msgstr "仓库周期 3"
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr "确认出库"
+msgstr "已确认的出库"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr "有责任"
+msgstr "负责人"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1269,19 +1282,19 @@ msgstr "当前的"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
-msgstr "库存计划"
+msgstr "stock.planning"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,warehouse_id:0
 msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
-msgstr "显示仓库的预计.如果在库存计划期间,您将需要在所有的仓库中选择一个做销售预计"
+msgstr "显示关注的仓库的预计.如果在库存计划期间,您将需要在所有的仓库中选择一个做销售预计"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr "关注仓库的计划."
+msgstr "关注的仓库计划."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -1300,12 +1313,12 @@ msgid ""
 "Enter quantity which (by your plan) should come in. Change this value and "
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
-msgstr "输入数量(您的计划).修改该值观察库存模拟.该值将大于等于确认的入库."
+msgstr "输入数量(您的计划)入库.修改该值和观察库存模拟.该值将大于等于确认的入库."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr "关注计划的周期"
+msgstr "关注周期的计划"
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
@@ -1315,7 +1328,7 @@ msgstr "已出库"
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr "计划创建的新产品"
+msgstr "创建产品的计划"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1361,18 +1374,18 @@ msgid ""
 "Quantity left to Planned incoming quantity. This is calculated difference "
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
-msgstr "即将入库的数量是在计划入库和确认入库间的差额.在本期一样算为已入库,该值用于创建需求缺少的数量."
+msgstr "即将入库的数量是在计划入库和确认入库间的差,该值用于创建需求缺少的数量."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
-msgstr "在计算周期确认所有即将入库的数量."
+msgstr "在计算周期里已确认入库的数量."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr "截止日期"
+msgstr "结束日期"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1380,7 +1393,7 @@ msgid ""
 "Check to supply from Stock location of Supply Warehouse. If not checked "
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
-msgstr "选择供货仓库的的库存存货地点.如果不选择将使用供应商出库存货地点作为供货地点.用在\"从另一个仓库供货\"的那个供应商仓库."
+msgstr "选择供货仓库的的库存库位.如果不选择将使用供应商仓库的出库库位作为供货地点.用在\"从其它仓库供货\"的那个供应商仓库."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1390,12 +1403,12 @@ msgstr "没请求"
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr "这仓库最低库存量规则的最少数量"
+msgstr "这仓库最低库存量规则的数量"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr "显示关注的预计周期"
+msgstr "显示关注周期的预计"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
@@ -1405,7 +1418,7 @@ msgstr "计量单位"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr "计算周期的模拟"
+msgstr "计算出的周期模拟"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1478,36 +1491,36 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr "产品到库存存货地点"
+msgstr "库存库位的产品"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr "批准"
+msgstr "审批"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
 msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
-msgstr "这计划的周期.请求将在周期的开始就创建."
+msgstr "这计划的周期.在周期开始创建"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr "核算销售日志"
+msgstr "计算销售日志"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
-msgstr "产品总额"
+msgstr "产品金额"
 
 #. module: stock_planning
 #: help:stock.planning,confirmed_forecasts_only:0
 msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
-msgstr "选择只要核实预计.如果不选定系要核实和对预计做草稿"
+msgstr "选择要去审核的预计.如果不选定系统去审核和对预计做草稿"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
@@ -1536,7 +1549,7 @@ msgstr "库存和销售周期"
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr "显示谁创建这预计或谁去核实"
+msgstr "显示谁创建这预计或谁去审核"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
@@ -1547,9 +1560,25 @@ msgid ""
 " Planned Out Before: "
 msgstr ""
 "\n"
-" 计划前出库 "
+" 之前的计划出库 "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
 msgstr "初始库存"
+
+#, python-format
+#~ msgid "Manual planning for "
+#~ msgstr "手动计划 "
+
+#, python-format
+#~ msgid "Procurement created in MPS by user: "
+#~ msgstr "在MPS(主生产计划)由用户创建需求： "
+
+#, python-format
+#~ msgid "Pick created from MPS by user: "
+#~ msgstr "在MPS(主生产计划)由用户创建的装箱单： "
+
+#, python-format
+#~ msgid "Pick List "
+#~ msgstr "装箱单 "

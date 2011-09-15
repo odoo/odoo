@@ -220,7 +220,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:state in ('pending')" string="Project Phases">
+                <tree colors="grey:state in ('cancelled','done');blue:state == 'pending'" string="Project Phases">
                     <field name="name"/>
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
