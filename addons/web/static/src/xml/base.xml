@@ -395,9 +395,7 @@
 <t t-name="Menu.secondary.children">
     <t t-set="level" t-value="level + 1"/>
     <a href="#" t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf')" t-att-data-menu="menu.children.length ? undefined : menu.id">
-        <span t-attf-style="padding-left: #{level - 1}em">
-            <t t-esc="menu.children.length ? '+' : '-'"/> <t t-esc="menu.name"/>
-        </span>
+        <span t-attf-style="padding-left: #{level - 1}em"> <t t-esc="menu.name"/></span>
     </a>
     <div t-attf-class="oe_secondary_submenu oe_secondary_submenu_level_#{level}" t-if="menu.children.length" style="display: none">
         <t t-foreach="menu.children" t-as="menu">
