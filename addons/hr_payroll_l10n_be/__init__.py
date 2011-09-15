@@ -19,5 +19,5 @@
 #
 ##############################################################################
 import hr_payroll_l10n_be
-import hr_contract
-import hr_payroll
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
