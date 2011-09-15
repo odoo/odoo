@@ -199,7 +199,7 @@ class sale_order(osv.osv):
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
+            ('manual', 'To Invoice'),
             ('progress', 'In Progress'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
