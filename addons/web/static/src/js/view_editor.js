@@ -1,5 +1,6 @@
 openerp.web.view_editor = function(openerp) {
-openerp.web.ViewEditor =  openerp.web.Widget.extend({
+var QWeb = openerp.web.qweb;
+openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id
@@ -56,8 +57,6 @@ openerp.web.ViewEditor =  openerp.web.Widget.extend({
        this.dialog.open();
        action_manager.appendTo(this.dialog);
        action_manager.do_action(action);
-
-
     },
     check_attr:function(xml,tag){
         var obj = new Object();
@@ -76,25 +75,29 @@ openerp.web.ViewEditor =  openerp.web.Widget.extend({
         obj.name = name1;
         return obj;
     },
-    recursiveFunction : function(main_object,parent_id,child_id){
+    save_object : function(val,parent_list,child_obj_list){
         var self = this;
-        var check = false;
-        var main_object = _.detect(main_object , function(node){
-            if(node.id == parent_id){   
-                node.child_id = child_id;
-                check = true;
-             }
-            return main_object;
-        });
-        if(check){
-            return main_object;
-        }else{ 
-            //todo recursion for saving object into objects        
+        var check_id = parent_list[0];
+        var p_list = parent_list.slice(1);
+        if(val.child_id.length != 0){
+             $.each(val.child_id, function(key,val) {
+                if(val.id==check_id){
+                    if(p_list.length!=0){
+                        self.save_object(val,p_list,child_obj_list);
+                    }else{
+                        val.child_id = child_obj_list;
+                        return;
+                    }
+                }
+            });
+        }else{
+            val.child_id = child_obj_list;
         }
     },
-    children_function : function(xml,root,main_object,parent_id){
+    children_function : function(xml,root,parent_list,parent_id,main_object){
         var self = this;
         var child_obj_list = [];
+        var parent_list = parent_list;
         var main_object = main_object;
         var children_list = $(xml).filter(root).children();
         _.each(children_list, function(child_node){
@@ -102,15 +105,23 @@ openerp.web.ViewEditor =  openerp.web.Widget.extend({
             child_obj_list.push(string);
         });
         if(children_list.length != 0){
-            main_object = self.recursiveFunction(main_object,parent_id,child_obj_list); 
+            var parents = $(children_list[0]).parents().get();
+            if(parents.length <= parent_list.length){
+                parent_list.splice(parents.length-1);}
+            parent_list.push(parent_id);
+            $.each(main_object, function(key,val) {
+                self.save_object(val,parent_list.slice(1),child_obj_list); 
+            });
         }
         for(var i=0;i<children_list.length;i++){
-            self.children_function(children_list[i],children_list[i].tagName.toLowerCase(),main_object,child_obj_list[i].id);
+            self.children_function
+(children_list[i],children_list[i].tagName.toLowerCase(),parent_list,child_obj_list[i].id,main_object);
         }
-        return child_obj_list;
+        return main_object;
     },
     edit_view : function(){
             var self = this;
+            var all_list =[];
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
             ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch) {
@@ -118,9 +129,8 @@ openerp.web.ViewEditor =  openerp.web.Widget.extend({
             var root = $(arch).filter(":first")[0];
             var tag = root.tagName.toLowerCase();
             var root_object = self.check_attr(root,tag);
-            var all_list = self.children_function(arch,tag,[root_object],root_object.id);
-            
-            //todo render the final object of tree view so xml with it child node display...            
+            one_object = self.children_function(arch,tag,[],0,[root_object]);
+            //render here
             });
             this.dialog = new openerp.web.Dialog(this,{
             modal: true,
@@ -140,7 +150,7 @@ openerp.web.ViewEditor =  openerp.web.Widget.extend({
             },
 
         });
-         this.dialog.start().open();
+         
     }
         
 });
