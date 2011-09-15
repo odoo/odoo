@@ -129,6 +129,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         if (this.$element.find(".oe_kanban_draghandle").length > 0) {
             drag_handel = ".oe_kanban_draghandle";
         }
+        if (!this.group_by.length) {
+            drag_handel = true;
+        }
         this.$element.find(".oe_column").sortable({
             connectWith: ".oe_column",
             handle : drag_handel,
