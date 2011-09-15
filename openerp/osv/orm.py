@@ -1737,8 +1737,8 @@ class orm_template(object):
         :returns: a calendar view
         :rtype: etree._Element
         """
-        arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
-                '<calendar string="%s"') % (self._description)
+        view = etree.Element('calendar', string=self._description)
+        etree.SubElement(view, 'field', name=self._rec_name)
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -1750,34 +1750,25 @@ class orm_template(object):
 
             if not date_found:
                 raise except_orm(_('Invalid Object Architecture!'), _("Insufficient fields for Calendar View!"))
-
-        if self._date_name:
-            arch += ' date_start="%s"' % (self._date_name)
+        view.set('date_start', self._date_name)
 
         for color in ["user_id", "partner_id", "x_user_id", "x_partner_id"]:
             if color in self._columns:
-                arch += ' color="' + color + '"'
+                view.set('color', color)
                 break
-
-        dt_stop_flag = False
 
         for dt_stop in ["date_stop", "date_end", "x_date_stop", "x_date_end"]:
             if dt_stop in self._columns:
-                arch += ' date_stop="' + dt_stop + '"'
-                dt_stop_flag = True
+                view.set('date_stop', dt_stop)
                 break
 
-        if not dt_stop_flag:
+        if not view.get('date_stop'):
             for dt_delay in ["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"]:
                 if dt_delay in self._columns:
-                    arch += ' date_delay="' + dt_delay + '"'
+                    view.set('date_delay', dt_delay)
                     break
 
-        arch += ('>\n'
-                 '  <field name="%s"/>\n'
-                 '</calendar>') % (self._rec_name)
-
-        return etree.fromstring(arch.encode('utf-8'))
+        return view
 
     def _get_default_search_view(self, cr, uid, context=None):
         """
