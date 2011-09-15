@@ -612,7 +612,7 @@ class ir_model_data(osv.osv):
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     @tools.ormcache()
-    def _get_id(self, cr, uid, module, xml_id, context=None):
+    def _get_id(self, cr, uid, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
         ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
@@ -621,7 +621,7 @@ class ir_model_data(osv.osv):
         return ids[0]
 
     @tools.ormcache()
-    def get_object_reference(self, cr, uid, module, xml_id, context=None):
+    def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
