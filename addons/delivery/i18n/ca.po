@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:51+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:00+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "Ref. comanda"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -35,12 +35,12 @@ msgstr "Destí"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Pes net"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Ordre de lliurament"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
@@ -51,7 +51,7 @@ msgstr "No hi ha preu disponible!"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Línia quadrícula lliurament"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -68,7 +68,7 @@ msgstr "Volum"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "La referència de la comanda ha de ser única!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -78,7 +78,7 @@ msgstr "Línia de la quadrícula"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Ordre de lliurament"
 
 #. module: delivery
 #: view:res.partner:0
@@ -88,12 +88,14 @@ msgstr "Propietats d'enviament"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Albarà per ser facturat"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr ""
+"Indica l'ordre de seqüència quan es mostra una llista de la xarxa de "
+"lliurament"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -104,7 +106,7 @@ msgstr "Països"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Ordre de lliurament :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -119,6 +121,10 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"La llista de preus per lliurament li permet calcular el cost i preu de venda "
+"del lliurament en funció del pes dels productes i d'altres criteris. Podeu "
+"definir diversos preus per un mètode de lliurament, per país, o per zona "
+"d'un país específic, definit per un rang de codis postals."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -138,7 +144,7 @@ msgstr "Mètode d'enviament"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Moviment d'estoc"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
@@ -151,12 +157,12 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Ref. seguiment transportista"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Pes net"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -165,6 +171,10 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"Creeu i gestioneu els mètodes de lliurament que necessiteu per a la seva "
+"activitat de vendes. Cada mètode de lliurament pot ser assignat a una llista "
+"de preus que calcula el preu del lliurament en funció dels productes venuts "
+"o lliurats."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
@@ -180,7 +190,7 @@ msgstr "Definició de la quadrícula"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Canceŀla"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -190,12 +200,12 @@ msgstr "Operador"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Empresa"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comanda de venda"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -205,17 +215,17 @@ msgstr "Quadrícula d'enviament"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Facturat a"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Albarà"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Realitza lliurament"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -227,6 +237,13 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"Permet afegir mètodes d'enviament en comandes de venda i albarans.\n"
+"     Podeu definir el seu propi transportista i xarxes de lliurament per als "
+"preus.\n"
+"     En crear les factures des d'albarans, OpenERP és capaç d'afegir i "
+"calcular la línia de transport.\n"
+"\n"
+"     "
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -244,6 +261,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Si el camp actiu es desmarca, permet amagar la xarxa de lliurament sense "
+"eliminar-la."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -253,7 +272,7 @@ msgstr "C.Postal final"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data comanda"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -263,12 +282,12 @@ msgstr "Nom de quadrícula"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Pesos"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Número de paquets"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -285,12 +304,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Si el camp actiu es desmarca, permet amagar el transportista sense eliminar-"
+"lo."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "No hi ha una xarxa disponible!"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -312,12 +333,12 @@ msgstr "Error! No podeu crear membres associats recursivament."
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "Lot"
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Esteu intentant assignar un lot que no és del mateix producte"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -328,7 +349,7 @@ msgstr "Actiu"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Data d'enviament"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -355,6 +376,8 @@ msgstr "Variable"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
+"Aquest mètode de lliurament serà utilitzat quan es facturi a partir de "
+"l'albarà."
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -364,7 +387,7 @@ msgstr "Valor màxim"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantitat"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -376,6 +399,7 @@ msgstr "C.Postal inicial"
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Completeu aquest camp si teniu previst facturar l'enviament segons l'albarà."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -390,17 +414,17 @@ msgstr "Vendes & Compres"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Heu d'assignar un lot de producció per a aquest producte"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "Crea lliuraments"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -411,7 +435,7 @@ msgstr "Costos d'enviament"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -472,7 +496,7 @@ msgstr "Transportista"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Aplica"
 
 #. module: delivery
 #: field:sale.order,id:0

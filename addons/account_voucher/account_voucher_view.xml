@@ -6,7 +6,7 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel');red:audit" string="Voucher Entries">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
