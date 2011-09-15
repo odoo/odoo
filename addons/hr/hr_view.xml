@@ -29,7 +29,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)" />
+                        <field name="department_id" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
@@ -284,7 +284,7 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
+            id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -309,8 +309,8 @@
                             <separator colspan="4" string="Requirements"/>
                             <field name="requirements" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Employee">
-                            <field name="employee_ids" colspan='4' nolabel="1" widget="many2many" mode="tree,form"/>
+                        <page string="Employees">
+                            <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
@@ -377,7 +377,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
+        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>
 </openerp>

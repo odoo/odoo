@@ -1,0 +1,275 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* analytic
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-09-06 06:48+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-07 04:35+0000\n"
+"X-Generator: Launchpad (build 13861)\n"
+"X-Poedit-Language: czech\n"
+
+#. module: analytic
+#: field:account.analytic.account,child_ids:0
+msgid "Child Accounts"
+msgstr "Podřízené účty"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account Name"
+msgstr "Jméno účtu"
+
+#. module: analytic
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Určuje částku množství ke spočtení."
+
+#. module: analytic
+#: model:ir.module.module,description:analytic.module_meta_information
+msgid ""
+"Module for defining analytic accounting object.\n"
+"    "
+msgstr ""
+"Modul pro definici objektu analyzického účtování.\n"
+"    "
+
+#. module: analytic
+#: field:account.analytic.account,state:0
+msgid "State"
+msgstr "Stav"
+
+#. module: analytic
+#: field:account.analytic.account,user_id:0
+msgid "Account Manager"
+msgstr "Správce účtu"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Draft"
+msgstr "Koncept"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Closed"
+msgstr "Uzavřeno"
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Má dáti"
+
+#. module: analytic
+#: help:account.analytic.account,state:0
+msgid ""
+"* When an account is created its in 'Draft' state.                           "
+"       \n"
+"* If any associated partner is there, it can be in 'Open' state.             "
+"                     \n"
+"* If any pending balance is there it can be in 'Pending'.                    "
+"               \n"
+"* And finally when all the transactions are over, it can be in 'Close' "
+"state.                                   \n"
+"* The project can be in either if the states 'Template' and 'Running'.\n"
+" If it is template then we can make projects based on the template projects. "
+"If its in 'Running' state it is a normal project.                            "
+"     \n"
+" If it is to be reviewed then the state is 'Pending'.\n"
+" When the project is completed the state is set to 'Done'."
+msgstr ""
+"* Když je účet vytvořen je ve stavu 'Koncept'.                               "
+"   \n"
+"* Pokud je zde nějaký přidružený partner, může být ve stavu 'Otevřený'.      "
+"                            \n"
+"* Pokud je zde nějaký čekající zůstatek, může být ve stavu 'Čekající'.       "
+"                            \n"
+"* A nakonec, když jsou všechny transakce dokončeny, může být ve stavu "
+"'Zavřený'.                                   \n"
+"* Projekt může být ve stavu 'Šablona' nebo 'Běžící'.\n"
+" Pokud je šablona, tak můžeme vytvářet projekty založené na šablonách "
+"projektů. Pokud je ve stavu 'Běžící' tak je to normální projekt.             "
+"                    \n"
+" Pokud potřebuje překontrolovat, tak je ve stavu 'Čekající'.\n"
+" Když je projekt dokončen, je stav nastaven na 'Dokončený'."
+
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Account Type"
+msgstr "Typ účtu"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Šablona"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Pending"
+msgstr "Čekající"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytický řádek"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "Popis"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Běžný"
+
+#. module: analytic
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "Společnost"
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Quantity"
+msgstr "Maximální množstvi"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "Uživatel"
+
+#. module: analytic
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Nadřazený analytický účet"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Account currency"
+msgstr "Měna účtu"
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Množství"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Vypočteno jako násobek množství a ceny dané cenou Výrobku. Vždy vyjádřeno v "
+"hlavní měně společnosti."
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid "Sets the higher limit of quantity of hours."
+msgstr "Nastavuje horní omezení množství hodin."
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "Dal"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Částka"
+
+#. module: analytic
+#: field:account.analytic.account,contact_id:0
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr "Chyba! Měna musí být stejná jako měna vybrané společnosti"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "Zrušeno"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "Zůstatek"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Chyba! Nemůžete vytvořit rekurzivní analytické účty."
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
+"Pokud vyberete Typ pohledu, znamená to, že nebudete moci vytvářet položky "
+"deníku použitím tohoto účtu."
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Date End"
+msgstr "Datum ukončení"
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Account Code"
+msgstr "Kód účtu"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Account Name"
+msgstr "Plné jméno účtu"
+
+#. module: analytic
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+#: model:ir.module.module,shortdesc:analytic.module_meta_information
+msgid "Analytic Account"
+msgstr "Analytický účet"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Pohled"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Počáteční datum"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Open"
+msgstr "Otevřít"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "Analytické položky"

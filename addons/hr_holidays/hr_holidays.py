@@ -361,7 +361,7 @@ class hr_employee(osv.osv):
 
 
    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, method=True, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
+        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
     }
 
 hr_employee()

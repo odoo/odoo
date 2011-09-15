@@ -13,19 +13,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:03+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:11+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:295
+#: code:addons/account_followup/wizard/account_followup_print.py:298
 #, python-format
 msgid "Follwoup Summary"
-msgstr ""
+msgstr "Напоминание кратко"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr ""
+msgstr "Искать напоминание"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -112,27 +112,27 @@ msgstr "OK"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr ""
+msgstr "Выберите контрагентов для напоминания"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Нельзя сделать действие по закрытому счету."
 
 #. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr ""
+msgstr "Дата отправки напоминания"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Ошибочное значение проводки по дебету или кредиту !"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
-msgstr ""
+msgstr "Чистых дней"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
@@ -143,7 +143,7 @@ msgstr "Дальнейшие действия"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Баланс > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -153,18 +153,18 @@ msgstr "Всего по дебету"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr ""
+msgstr "%(heading)s: заголовок операции"
 
 #. module: account_followup
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr ""
+msgstr "Сообщение напоминания"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
-msgstr ""
+msgstr "Напоминание"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -192,7 +192,7 @@ msgstr "Контрагенты"
 #: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Напоминание о счетах"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -207,7 +207,7 @@ msgstr "Конец месяца"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "Не судебное"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -226,6 +226,10 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Эта функция позволяет отправлять напоминания партнерам о рассматриваемых "
+"счетах. Вы можете отправить им сообщение по умолчанию для неоплаченного "
+"счета или ввести сообщение вручную, если необходима дополнительная "
+"информация."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -235,7 +239,7 @@ msgstr "Ссылка"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Определяет порядок вывода списка напоминаний."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -281,13 +285,14 @@ msgstr ""
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Послать эл. письмо на языке контрагента"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Нельзя сделать действие по дебетовому/кредитовому счету без контрагента"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -311,7 +316,7 @@ msgstr "Отправить дальнейшие действия"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Напомнить контрагенту"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -359,33 +364,33 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "Отправить письма"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "Статистика напоминаний по контрагентам"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr ""
+msgstr "Управление бухгалтерскими напоминаниями"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Блокировано"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
+msgstr "Это поле позволяет запланировать дату напоминания"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -396,7 +401,7 @@ msgstr "Срок"
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr ""
+msgstr "Выберите контрагентов"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -406,7 +411,7 @@ msgstr "Параметры эл. почты"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr ""
+msgstr "Печать напоминаний"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -426,7 +431,7 @@ msgstr "Баланс:"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "Статистика напоминаний"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -436,17 +441,17 @@ msgstr "Оплачено"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(user_signature)s: имя пользователя"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Элементы журнала"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Для счета и периода должна быть одна компания."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -465,7 +470,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -475,12 +480,12 @@ msgstr "%(company_name)s: Название компании пользовате
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Организации"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr ""
+msgstr "Строки напоминания"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -495,17 +500,17 @@ msgstr "Срок платежа"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "%(partner_name)s: название контрагента"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr ""
+msgstr "Строки напоминания"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
+msgstr "%(company_currency)s: валюта компании пользователя"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -523,13 +528,13 @@ msgstr "Тип термина"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr ""
+msgstr "Печать напоминания и отправка эл. письма контрагенту"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr ""
+msgstr "Последнее движение"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
@@ -539,7 +544,7 @@ msgstr "Отчет о дальнейших действиях"
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Период"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -550,22 +555,22 @@ msgstr "Отменить"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Lines"
-msgstr ""
+msgstr "Строки напоминания"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Судебный спор"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Максимальный уровень напоминаний."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "Позиции к оплате"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -593,7 +598,7 @@ msgstr "Описание"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Этот финансовый год"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -606,6 +611,8 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Не изменять текст сообщения, если вы хотите отослать письмо на языке "
+"контрагента, или настройте компанию"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -617,7 +624,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Отправленные напоминания"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -629,7 +636,7 @@ msgstr "Название"
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr ""
+msgstr "Первый шаг"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -663,7 +670,7 @@ msgstr "Дней задержки"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Документ: ведомость по счету заказчика"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -689,12 +696,12 @@ msgstr "Последовательность"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(company_name)s: название компании пользователя"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr ""
+msgstr "Заказчик:"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -714,7 +721,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Нельзя создать операцию по счету с типом Вид."
 
 #~ msgid "All payable entries"
 #~ msgstr "Все проводки к оплате"
@@ -748,3 +755,31 @@ msgstr ""
 
 #~ msgid "Lines"
 #~ msgstr "Линии"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Все эл. письма были отправлены контрагентам:.\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Нет эл. адресов, эл. письма не отосланы следующим контрагентам !\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Электронная почта отправлена контрагенту !\n"
+#~ "\n"

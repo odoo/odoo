@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-03-20 09:49+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:23+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:28+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -24,12 +24,12 @@ msgstr "订单的每个产品和服务"
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr ""
+msgstr "需求任务"
 
 #. module: project_mrp
 #: model:ir.module.module,shortdesc:project_mrp.module_meta_information
 msgid "Procurement and Project Management integration"
-msgstr ""
+msgstr "补货流程和项目管理的集成"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -44,28 +44,28 @@ msgstr "如果采购类型是服务创建这任务"
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "错误！不能创建循环引用的任务"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "错误：无效的(EAN)条码"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "项目"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
 #: field:project.task,procurement_id:0
 msgid "Procurement"
-msgstr "获得"
+msgstr "需求"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_project_task
@@ -120,11 +120,25 @@ msgid ""
 "automatically created via sale orders.\n"
 "\n"
 msgstr ""
+"\n"
+"这个模块在包含服务类产品的需求单和项目管理的任务之间建立了联系\n"
+"\n"
+"安装了这个模块以后，只要满足下列条件，就会为需求单的每个行创建一个任务：\n"
+"  产品类型为服务型\n"
+"  补货方式为按订单\n"
+"  供应方式为自制\n"
+"\n"
+"新任务不属于任何项目，但可以手工指定给项目。\n"
+"\n"
+"当任务完成或取消后，补货单的对应行状态也会更新。\n"
+"\n"
+"这个模块适用于针对任务开发票的公司按订单创建任务。\n"
+"\n"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
-msgstr ""
+msgstr "如果补货方式为按订单而且供应方式为自制"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
