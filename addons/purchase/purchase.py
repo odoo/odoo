@@ -427,7 +427,18 @@ class purchase_order(osv.osv):
                         'purchase_line_id': order_line.id,
                     })
                     if order_line.move_dest_id:
-                        self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
+                        # make the procurement's stock move into a dummy move
+                        # (source == destination) and mark it as auto validate
+                        # so that the procurement will complete when the
+                        # purchase shipment arrives. 
+                        self.pool.get('stock.move').write(
+                            cr, 
+                            uid, 
+                            [order_line.move_dest_id.id], 
+                            {
+                                'location_id': order.location_id.id, 
+                                'auto_validate': True
+                            })
                     todo_moves.append(move)    
             self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
             self.pool.get('stock.move').force_assign(cr, uid, todo_moves)

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    
+    	<!-- ================================================================  
+			  Smoke test for automated purchase process.
+			  
+			   0. Create a procurement order
+			   1. Run the procurement
+			   2. Check that the purchase order was created
+			   3. Confirm the purchase order
+			   4. Receive the goods
+			   5. Check that the procurement order was marked as done.
+			   
+    	     ================================================================
+    	-->
+    	
+    	<!-- ==== 0. Create a procurement order ==== -->
+		<record id="test_procurement_1" model="mrp.procurement">
+			<field name="product_uom" ref="product.product_uom_unit"/>
+			<field eval="3.0" name="product_qty"/>
+			<field name="product_uos" ref="product.product_uom_unit"/>
+			<field name="location_id" ref="stock.stock_location_stock"/>
+			<field eval="0" name="close_move"/>
+			<field name="name">test</field>
+			<field name="procure_method">make_to_order</field>
+			<field name="product_id" ref="product.product_product_mb1"/>
+		</record>
+    	
+    	<!-- ==== 1. Run the procurement ==== -->  
+        <workflow 
+        	model="mrp.procurement" 
+        	ref="test_procurement_1" 
+        	action="button_confirm" />
+        <workflow 
+        	model="mrp.procurement" 
+        	ref="test_procurement_1" 
+        	action="button_check" />
+        
+    	<!-- ==== 2. Check that the purchase order was created ==== -->  
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's purchase order state">
+            <test expr="purchase_id.state">draft</test>
+        </assert>
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's state">
+            <test expr="state">running</test>
+        </assert>
+        
+    	<!-- ==== 3. Confirm the purchase order ==== -->  
+        <workflow model="purchase.order" action="purchase_confirm" >
+        	<value 
+        		model="mrp.procurement" 
+        		eval="obj(ref('test_procurement_1')).purchase_id.id"/>
+        </workflow>
+        
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's purchase order state">
+            <test expr="purchase_id.state">confirmed</test>
+        </assert>
+        
+        <workflow 
+        	model="purchase.order" 
+        	action="purchase_approve" 
+        	uid="base.user_root" >
+        	<value 
+        		model="mrp.procurement" 
+        		eval="obj(ref('test_procurement_1')).purchase_id.id"/>
+        </workflow>
+        
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's purchase order state">
+            <test expr="purchase_id.state">approved</test>
+        </assert>
+
+    	<!-- ==== 4. Receive the goods ==== -->  
+        <!-- Do the same as in wizard_partial_picking lines 143-144
+        	(copied from purchase_unit_test.xml) -->
+        <function model="stock.picking" name="action_move">
+        	<value 
+        		model="mrp.procurement" 
+        		eval="[obj(ref('test_procurement_1')).purchase_id.picking_ids[0].id]"/>
+        </function>
+        
+        <workflow model="stock.picking" action="button_done">
+        	<value 
+        		model="mrp.procurement" 
+        		eval="obj(ref('test_procurement_1')).purchase_id.picking_ids[0].id"/>
+        </workflow>
+        
+    	<!-- ==== 5. Check that the procurement order was marked as done. ==== -->  
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's purchase order's picking's state">
+            <test expr="purchase_id.picking_ids[0].state">done</test>
+        </assert>
+        
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's purchase order's state">
+        	<!-- not done because we didn't process the invoice. -->
+            <test expr="purchase_id.state">approved</test>
+        </assert>
+        
+        <assert 
+        	model="mrp.procurement" 
+        	id="test_procurement_1" 
+        	string="Test procurement's state">
+            <test expr="state">done</test>
+        </assert>
+	</data>
+</openerp>
