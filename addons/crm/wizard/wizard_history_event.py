@@ -20,6 +20,7 @@
 #
 ##############################################################################
 
+<<<<<<< TREE
 from osv import osv, fields
 
 class case_history_event(osv.osv_memory):
@@ -52,6 +53,42 @@ class case_history_event(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'domain': act_id and "[('case_id','=',%d)]" % act_id or "[]",
             'search_view_id': id['res_id']
+=======
+import wizard
+import pooler
+
+def _open_history_event(self, cr, uid, data, context=None):
+    pool = pooler.get_pool(cr.dbname)
+    data_obj = pool.get('ir.model.data')
+    result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_filter')
+    id = data_obj.read(cr, uid, result, ['res_id'])
+    id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_section-view')
+    if id2:
+        id2 = data_obj.browse(cr, uid, id2, context=context).res_id 
+    res = ''    
+    if data.get('model') and data.get('ids'):
+        model_obj = pooler.get_pool(cr.dbname).get(data['model'])
+        res = model_obj.browse(cr, uid, data['ids'], context=context)
+        if len(res):
+            res = res[0].name       
+    return {
+        'name': 'History : ' +  res,
+        'view_type': 'form',
+        "view_mode": 'calendar, tree, form',
+        'view_id' : False,
+        'views': [(id2,'calendar'),(False,'form'),(False,'tree'),(False,'graph')],
+        'res_model': 'crm.case',
+        'type': 'ir.actions.act_window',
+        'domain': data.get('id',False) and "[('case_id','=',%d)]" % (data['id']) or "[]",
+        'search_view_id': id['res_id'] 
+    }
+    
+class case_history_event(wizard.interface):
+    states = {
+    'init': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _open_history_event, 'state':'end'}
+>>>>>>> MERGE-SOURCE
         }
 
 case_history_event()

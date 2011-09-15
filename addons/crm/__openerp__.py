@@ -59,7 +59,7 @@ Creates a dashboard for CRM that includes:
         'base_action_rule',
         'base_setup',
         'process',
-        'mail_gateway',
+        'mail',
         'base_calendar',
         'resource',
         'board'
@@ -85,7 +85,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_opportunity_to_phonecall_view.xml',
         'wizard/crm_partner_to_opportunity_view.xml',
 
-        'wizard/crm_send_email_view.xml',
         'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
