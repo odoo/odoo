@@ -2,21 +2,11 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="product_consultant" model="product.product">
-            <field name="list_price">75.0</field>
-            <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.uom_hour"/>
-            <field name="uom_po_id" ref="product.uom_hour"/>
-            <field name="name">Service on Timesheet</field>
-            <field name="categ_id" ref="product.cat0"/>
-            <field name="type">service</field>
-            <field eval="False" name="purchase_ok"/>
-        </record>
-
         <record id="hr.employee" model="hr.employee">
             <field name="product_id" ref="product_consultant"/>
             <field name="journal_id" ref="analytic_journal"/>
         </record>
+
         <!-- complete our example employee -->
         <record id="hr.employee1" model="hr.employee">
             <field name="product_id" ref="product_consultant"/>
@@ -87,7 +77,6 @@
             <field name="general_account_id" model="account.account" ref="account.a_expense"/>
             <field name="journal_id" ref="analytic_journal"/>
         </record>
-
 
     </data>
 </openerp>

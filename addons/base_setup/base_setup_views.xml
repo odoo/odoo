@@ -1,0 +1,246 @@
+<openerp>
+  <data>
+
+    <record id="view_base_setup_installer" model="ir.ui.view">
+      <field name="name">base.setup.installer.view</field>
+      <field name="model">base.setup.installer</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="arch" type="xml">
+        <data>
+          <form position="attributes">
+            <attribute name="string">Install Applications</attribute>
+          </form>
+          <xpath expr="//label[@string='description']" position="attributes">
+                <attribute name="string">Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later.</attribute>
+          </xpath>
+          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="string"/>
+                    <attribute name="rowspan">15</attribute>
+          </xpath>
+          <xpath expr="//button[@string='Install Modules']" position="attributes">
+                    <attribute name="string">Install</attribute>
+          </xpath>
+          <separator string="title" position="attributes">
+            <attribute name="string">Install Applications</attribute>
+          </separator>
+
+          <group colspan="8">
+            <field name="crm" />
+            <field name="sale" />
+            <field name="project" />
+            <field name="knowledge" />
+            <field name="stock" />
+            <field name="mrp" />
+            <field name="account_voucher" />
+            <field name="account_accountant" />
+            <field name="purchase" />
+            <field name="hr" />
+            <field name="profile_tools" />
+            <field name="marketing" groups="base.group_extended" />
+            <field name="point_of_sale" groups="base.group_extended" />
+            <field name="report_designer" groups="base.group_extended" />
+            <separator string="Install Specific Industry Applications" colspan="4"/>
+            <field name="association" />
+            <field name="auction" />
+            <field name="product_expiry" />
+            <group name="crm"/> 
+            <group name="sale"/> 
+            <group name="project"/> 
+            <group name="knowledge"/> 
+            <group name="mrp"/> 
+            <group name="account_accountant"/>
+            <group name="purchase"/>
+            <group name="hr"/>
+            <group name="profile_tools"/>
+            <group name="marketing"/>
+            <group name="report_designer"/>
+            <group name="association"/>
+          </group>
+        </data>
+      </field>
+    </record>
+    <record id="action_base_setup_installer" model="ir.actions.act_window">
+      <field name="name">Install Applications</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">base.setup.installer</field>
+      <field name="view_id" ref="view_base_setup_installer"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+    </record>
+    <record id="base_setup_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_setup_installer"/>
+        <field name="category_id" ref="base.category_administration_config"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="action_start_configurator" model="ir.actions.server">
+      <field name="name">Start Configuration</field>
+      <field name="model_id" ref="base.model_ir_actions_todo"/>
+      <field name="state">code</field>
+      <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
+    </record>
+
+    <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
+    <record id="ir_ui_view_sc_configuration" model="ir.ui.view_sc">
+      <field name="name">Add More Features</field>
+      <field name="resource">ir.ui.menu</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="res_id" ref="menu_view_base_module_configuration"/>
+    </record>
+
+     <!-- Import or create customers configartion view  -->
+	 <record id="action_import_create_installer" model="ir.actions.act_window">
+	     <field name="name">Import or Create Customers</field>
+	     <field name="type">ir.actions.act_window</field>
+	     <field name="res_model">res.partner</field>
+	     <field name="view_type">form</field>
+	     <field name="view_mode">tree,form</field>
+	     <field name="view_id" ref="base.view_partner_tree"/>
+	     <field name="help">Create some Customers, Suppliers and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
+	 </record>
+	<record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
+	    <field name="action_id" ref="action_import_create_installer"/>
+	    <field name="category_id" ref="base.category_administration_config"/>
+    </record>
+
+     <!-- Define default users preferences-->
+     <record id="view_user_preferences_config_form" model="ir.ui.view">
+          <field name="name">Set default users preferences</field>
+          <field name="model">user.preferences.config</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.res_config_view_base"/>
+          <field name="arch" type="xml">
+            <data>
+              <form position="attributes">
+                <attribute name="string">Define default users preferences</attribute>
+              </form>
+            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                  <attribute name="string">Define default users preferences</attribute>
+            </xpath>
+            <xpath expr="//label[@string='description']" position="attributes">
+              <attribute name="string">Specify default values. This will set the default values for each new user, each user is free to change his own preferences.</attribute>
+            </xpath>
+            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                  <attribute name="string"/>
+                  <attribute name="rowspan">12</attribute>
+            </xpath>
+             <group string="res_config_contents" position="replace">
+                    <group colspan="4">
+                        <field colspan="4" name="view"/>
+                        <field colspan="4" name="context_lang"/>
+                        <field colspan="4" name="context_tz"/>
+                        <field colspan="4" name="menu_tips"/>
+                  </group>
+              </group>
+            </data>
+          </field>
+      </record>
+      <record id="action_user_preferences_config_form" model="ir.actions.act_window">
+          <field name="name">Define default users preferences</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">user.preferences.config</field>
+          <field name="view_type">form</field>
+          <field name="view_id" ref="view_user_preferences_config_form"/>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+      </record>
+      <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
+          <field name="action_id" ref="action_user_preferences_config_form"/>
+          <field name="category_id" ref="base.category_administration_config"/>
+      </record>
+
+      <!-- Create Additional Users  -->
+      <record id="action_config_access_other_user" model="ir.actions.act_window">
+          <field name="name">Create Additional Users</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">res.users</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="base.view_users_form"/>
+      </record>
+      <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
+          <field name="action_id" ref="action_config_access_other_user"/>
+          <field name="category_id" ref="base.category_administration_config"/>
+          <field name="sequence">1000</field>
+          <field name="state">done</field>
+      </record>
+
+
+      <!--   Specify Your Terminology Config Wiz-->
+     <record id="base_setup_terminology_form" model="ir.ui.view">
+          <field name="name">Specify Your Terminology</field>
+          <field name="model">base.setup.terminology</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="base.res_config_view_base"/>
+         <field name="arch" type="xml">
+            <data>
+              <form position="attributes">
+                <attribute name="string">Specify Your Terminology</attribute>
+              </form>
+            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                  <attribute name="string">Specify Your Terminology</attribute>
+            </xpath>
+            <xpath expr="//label[@string='description']" position="attributes">
+              <attribute name="string">Based on the industry needs you can use this wizard to change the terminologies for Partners. </attribute>
+            </xpath>
+            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                  <attribute name="string"/>
+                 <attribute name="rowspan">12</attribute>
+            </xpath>
+             <group string="res_config_contents" position="replace">
+                    <group colspan="4">
+                        <field colspan="4" name="partner"/>
+                  </group>
+              </group>
+            </data>
+          </field>
+      </record>
+      <record id="action_partner_terminology_config_form" model="ir.actions.act_window">
+          <field name="name">Specify Your Terminology for Customers</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">base.setup.terminology</field>
+          <field name="view_type">form</field>
+          <field name="view_id" ref="base_setup_terminology_form"/>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+      </record>
+      <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
+          <field name="action_id" ref="action_partner_terminology_config_form"/>
+          <field name="category_id" ref="base.category_administration_config"/>
+      </record>
+
+    <!-- Company config -->
+    <record id="action_base_setup_company" model="ir.actions.act_window">
+      <field name="name">Set Company Header and Footer</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">res.company</field>
+      <field name="view_id" ref="base.view_company_form"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="context">{'res_id': user.company_id.id}</field>
+    </record>
+    <record id="base_setup_company_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_setup_company"/>
+        <field name="category_id" ref="base.category_administration_config"/>
+        <field name="sequence">1</field>
+    </record>
+    <!--   register Upload Logo configuration wizard  -->
+    <record id="base_setup_company_logo_action" model="ir.actions.act_window">
+      <field name="name">Upload Your Company Logo</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">res.company</field>
+      <field name="view_id" ref="base.view_company_form"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="context">{'res_id': user.company_id.id}</field>
+    </record>
+    <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
+        <field name="action_id" ref="base_setup_company_logo_action"/>
+        <field name="category_id" ref="base.category_administration_config"/>
+        <field name="state">done</field>
+    </record>
+
+  </data>
+</openerp>

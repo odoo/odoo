@@ -20,20 +20,18 @@
 #
 ##############################################################################
 
-import base64
 import time
 import re
 from osv import osv, fields
-import tools
 from tools.translate import _
 
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
     _name = 'crm.lead.forward.to.partner'
-    _inherit = "crm.send.mail"
+    _inherit = "mail.compose.message"
 
     _columns = {
-        'name': fields.selection([('user', 'User'), ('partner', 'Partner'), \
+        'send_to': fields.selection([('user', 'User'), ('partner', 'Partner'), \
                          ('email', 'Email Address')], 'Send to', required=True),
         'user_id': fields.many2one('res.users', "User"),
         'partner_id' : fields.many2one('res.partner', 'Partner'),
@@ -42,7 +40,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     }
 
     _defaults = {
-        'name' : 'email',
+        'send_to' : 'email',
         'history': 'latest',
         'email_from': lambda self, cr, uid, *a: self.pool.get('res.users')._get_email_from(cr, uid, uid)[uid],
     }
@@ -70,13 +68,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param hist_id: Id of latest history
         @param context: A standard dictionary for contextual values
         """
-        log_pool = self.pool.get('mailgate.message')
+        log_pool = self.pool.get('mail.message')
         hist = log_pool.browse(cr, uid, hist_id, context=context)
         header = '-------- Original Message --------'
         sender = 'From: %s' %(hist.email_from or '')
         to = 'To: %s' % (hist.email_to or '')
         sentdate = 'Date: %s' % (hist.date or '')
-        desc = '\n%s'%(hist.description)
+        desc = '\n%s'%(hist.body_text)
         original = [header, sender, to, sentdate, desc]
         original = '\n'.join(original)
         return original
@@ -111,7 +109,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res_id = context.get('active_id')
         msg_val = self._get_case_history(cr, uid, history_type, res_id, context=context)
         if msg_val:
-            res = {'value': {'body' : '\n\n' + msg_val}}
+            res = {'value': {'body_text' : '\n\n' + msg_val}}
         return res
 
     def _get_case_history(self, cr, uid, history_type, res_id, context=None):
@@ -127,12 +125,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         elif history_type == 'whole':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = map(lambda x: x.id, filter(lambda x: x.history, log_ids))
+            log_ids = map(lambda x: x.id, filter(lambda x: x.email_from, log_ids))
             msg_val = case_info + '\n\n' + self.get_whole_history(cr, uid, log_ids, context=context)
 
         elif history_type == 'latest':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = filter(lambda x: x.history and x.id, log_ids)
+            log_ids = filter(lambda x: x.email_from and x.id, log_ids)
             if not log_ids:
                 msg_val = case_info
             else:
@@ -172,6 +170,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
         return {'value': {'email_to' : email}}
 
+    def send_mail(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        super(crm_lead_forward_to_partner, self).send_mail(cr, uid, ids, context=context)
+        self.action_forward(cr, uid, ids, context)
+        return {'type': 'ir.actions.act_window_close'}
+
     def action_forward(self, cr, uid, ids, context=None):
         """
         Forward the lead to a partner
@@ -182,15 +187,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         case_pool = self.pool.get(context.get('active_model'))
         res_id = context and context.get('active_id', False) or False
         case = case_pool.browse(cr, uid, res_id, context=context)
-
         context.update({'mail': 'forward'})
-        super(crm_lead_forward_to_partner, self).action_send(cr, uid, ids, context=context)
 
         to_write = {'date_assign': time.strftime('%Y-%m-%d')}
-        if (this.name == 'partner' and this.partner_id):
+        if (this.send_to == 'partner' and this.partner_id):
             to_write['partner_assigned_id'] = this.partner_id.id
 
-        if this.name == 'user':
+        if this.send_to == 'user':
             to_write.update({'user_id' : this.user_id.id})
         email_re = r'([^ ,<@]+@[^> ,]+)'
         email_cc = re.findall(email_re, case.email_cc or '')
@@ -204,7 +207,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
                 new_cc.append(to)
         to_write.update({'email_cc' : ', '.join(new_cc) })
         case_pool.write(cr, uid, case.id, to_write, context=context)
-
         return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
@@ -287,13 +289,11 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s - %s' % (_('Fwd'), 'Openerp lead forward', lead.name),
-            'body' : body,
+            'body_text' : body,
             'email_cc' : email_cc,
             'email_to' : email or 'dummy@dummy.ly'
         })
         return defaults
-
-crm_lead_forward_to_partner()
 
 class crm_lead_mass_forward_to_partner(osv.osv_memory):
     _name = 'crm.lead.mass.forward.to.partner'
@@ -314,13 +314,11 @@ class crm_lead_mass_forward_to_partner(osv.osv_memory):
                 continue
 
             context.update({'active_id' : case.id})
-            value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history'], context=context)
+            value = self.default_get(cr, uid, ['body_text', 'email_to', 'email_cc', 'subject', 'history'], context=context)
             self.write(cr, uid, ids, value, context=context)
             self.action_forward(cr,uid, ids, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
-
-crm_lead_mass_forward_to_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

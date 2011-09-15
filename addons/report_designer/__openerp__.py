@@ -23,7 +23,7 @@
 {
     "name" : "Reporting Tools Installer",
     "version" : "1.0",
-    "depends" : ["base"],
+    "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
     "category": "Tools",
     "description": """
