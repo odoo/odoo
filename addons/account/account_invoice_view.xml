@@ -205,7 +205,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible=" draft, open, paid" statusbar_colors="{'proforma':'blue','proforma2':'blue'}"/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -300,7 +300,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible=" draft, open, paid" statusbar_colors="{'proforma':'blue','proforma2':'blue'}"/>
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
