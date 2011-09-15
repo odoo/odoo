@@ -44,6 +44,7 @@
 import calendar
 import copy
 import datetime
+import itertools
 import logging
 import warnings
 import operator
@@ -2052,13 +2053,11 @@ class orm_template(object):
             resrelate = ir_values_obj.get(cr, user, 'action',
                     'client_action_relate', [(self._name, False)], False,
                     context)
-            resprint = map(clean, resprint)
-            resaction = map(clean, resaction)
-            resaction = filter(lambda x: not x.get('multi', False), resaction)
-            resprint = filter(lambda x: not x.get('multi', False), resprint)
+            resaction = [clean(action) for action in resaction if not action.get('multi')]
+            resprint = [clean(print_) for print_ in resprint if not print_.get('multi')]
             resrelate = map(lambda x: x[2], resrelate)
 
-            for x in resprint + resaction + resrelate:
+            for x in itertools.chain(resprint, resaction, resrelate):
                 x['string'] = x['name']
 
             result['toolbar'] = {
