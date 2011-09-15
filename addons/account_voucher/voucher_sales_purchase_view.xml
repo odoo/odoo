@@ -83,7 +83,7 @@
                 <form string="Sales Receipt">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
-                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="2"/>
@@ -209,7 +209,7 @@
                 <form string="Supplier Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
-                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id)"/>
                         <field name="number"/>
                         <field name="name" colspan="2"/>

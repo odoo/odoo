@@ -24,6 +24,7 @@ import time
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
+import netsvc
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -275,7 +276,7 @@ class hr_expense_line(osv.osv):
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
-            amount_unit = product.price_get('standard_price', context=context)[product.id]
+            amount_unit = product.price_get('standard_price')[product.id]
             res['unit_amount'] = amount_unit
             if not uom_id:
                 res['uom_id'] = product.uom_id.id
