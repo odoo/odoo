@@ -56,7 +56,7 @@ class hr_attendance(osv.osv):
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
-        'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
+        'day': fields.function(_day_compute, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #please don't remove the lambda, if you remove it then the current time will not change
@@ -110,7 +110,7 @@ class hr_employee(osv.osv):
         return result
 
     _columns = {
-       'state': fields.function(_state, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
+       'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):

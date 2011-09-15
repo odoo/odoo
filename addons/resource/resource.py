@@ -43,6 +43,18 @@ class resource_calendar(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', context=context)
     }
 
+    def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
+        """
+        @param resource_calendar_id: resource.calendar browse record
+        @param day: datetime object
+        @return: returns the working hours (as float) men should work on the given day if is in the attendance_ids of the resource_calendar_id (i.e if that day is a working day), returns 0.0 otherwise
+        """
+        res = 0.0
+        for working_day in resource_calendar_id.attendance_ids:
+            if (int(working_day.dayofweek) + 1) == day.isoweekday():
+                res += working_day.hour_to - working_day.hour_from
+        return res 
+
     def _get_leaves(self, cr, uid, id, resource):
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []
@@ -229,7 +241,7 @@ class resource_resource(osv.osv):
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working Period", help="Define the schedule of resource"),
+        'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
     _defaults = {
         'resource_type' : 'user',

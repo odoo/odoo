@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:24+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -28,6 +28,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"выбор партнера, который будет использовать счет аналитики, указанный в "
+"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+"продажу, если вы выберете этого партнера, он будет автоматически "
+"использовать это как счет аналитики)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -54,7 +58,7 @@ msgstr "Объединять по..."
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "Дата окончания по умолчанию для счета аналитики"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -73,11 +77,15 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"выбор компанию, которая будет использовать счет аналитики, указанный в "
+"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+"продажу, если вы выберете эту компанию, она будет автоматически использовать "
+"это как счет аналитики)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Дата начала по умолчанию для счета аналитики"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -117,6 +125,8 @@ msgstr "Дата окончания"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"выберите пользователя, который будет использовать счет аналитики, указанный "
+"в аналитике по умолчанию"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -137,6 +147,14 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"Позволяет автоматически выбирать счета аналитики на основе критериев:\n"
+"* ТМЦ\n"
+"* Контрагент\n"
+"* Пользователь\n"
+"* Компания\n"
+"* Дата\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -145,6 +163,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"выбор товара, который будет использовать счет аналитики, указанный в "
+"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+"продажу, если вы выберете этот товар, он будет автоматически использовать "
+"это как счет аналитики)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -182,7 +204,7 @@ msgstr "Дата начала"
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Определяет порядок вывода списка разнесения аналитики."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
@@ -206,18 +228,3 @@ msgstr "Позиция заказа на продажу"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Позиция заказа на продажу"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"

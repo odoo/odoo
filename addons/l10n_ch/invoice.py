@@ -73,7 +73,7 @@ class account_invoice(osv.osv):
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
-        'amount_to_pay': fields.function(_amount_to_pay, method=True,
+        'amount_to_pay': fields.function(_amount_to_pay,
             type='float', string='Amount to be paid',
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),
@@ -84,7 +84,7 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_bvr(self, cr, uid, ids):
+    def _check_bvr(self, cr, uid, ids, context=None):
         """
         Function to validate a bvr reference like :
         0100054150009>132000000000000000000000014+ 1300132412>
@@ -111,7 +111,7 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_reference_type(self, cursor, user, ids):
+    def _check_reference_type(self, cursor, user, ids, context=None):
         """Check the customer invoice reference type depending
         on the BVR reference type and the invoice partner bank type"""
         for invoice in self.browse(cursor, user, ids):

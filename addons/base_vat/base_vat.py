@@ -23,6 +23,9 @@ import string
 
 from osv import osv, fields
 from tools.translate import _
+from tools.misc import ustr
+import re
+import datetime
 
 _ref_vat = {
     'be': 'BE0477472701', 'at': 'ATU12345675',
@@ -39,7 +42,7 @@ _ref_vat = {
     'pt': 'PT123456789', 'ro': 'RO1234567897',
     'se': 'SE123456789701', 'si': 'SI12345679',
     'sk': 'SK0012345675', 'el': 'EL12345670',
-    'mx': 'MXABC123456T1B'
+    'mx': 'MXABC123456T1B', 'no': 'NO123456785'
 
             }
 
@@ -1072,17 +1075,62 @@ class res_partner(osv.osv):
                 return False
         return True
 
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
+                                    r"[ \-_]?" \
+                                    r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
+                                    r"[ \-_]?" \
+                                    r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    
     def check_vat_mx(self, vat):
+        ''' Mexican VAT verification
+        
+        Verificar RFC México
         '''
-        Verificar RFC mÃ©xico
-        '''
-        if not 12 <= len(vat) <= 13:
+        # we convert to 8-bit encoding, to help the regex parse only bytes
+        vat = ustr(vat).encode('iso8859-1')
+        m = self.__check_vat_mx_re.match(vat)
+        if not m:
+            #No valid format
             return False
-        elif len(vat)==12 and not vat[:3].isalpha() | vat[3:9].isdigit() | vat[-3:].isalnum():
+        try:
+            ano = int(m.group('ano'))
+            if ano > 30:
+                ano = 1900 + ano
+            else:
+                ano = 2000 + ano
+            datetime.date(ano, int(m.group('mes')), int(m.group('dia')))
+        except ValueError:
             return False
-        elif len(vat)==13 and not vat[:4].isalpha() | vat[4:10].isdigit() | vat[-3:].isalnum():
-            return False
+        
+        #Valid format and valid date
         return True
+
+
+    # check_vat_no contributed by Rolv Råen (adEgo)
+    def check_vat_no(self, vat):
+        '''
+        Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
+        '''
+        if len(vat) != 9:
+            return False
+        try:
+            int(vat)
+        except ValueError:
+            return False
+
+        sum = (3 * int(vat[0])) + (2 * int(vat[1])) + \
+            (7 * int(vat[2])) + (6 * int(vat[3])) + \
+            (5 * int(vat[4])) + (4 * int(vat[5])) + \
+            (3 * int(vat[6])) + (2 * int(vat[7]))
+
+        check = 11 -(sum % 11)
+        if check == 11:
+            check = 0
+        if check == 10:
+            # 10 is not a valid check digit for an organization number
+            return False
+        return check == int(vat[8])
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
