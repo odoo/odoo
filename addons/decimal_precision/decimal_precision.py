@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools import cache
+import tools
 import pooler
 
 class decimal_precision(osv.osv):
@@ -37,7 +37,7 @@ class decimal_precision(osv.osv):
         ('name_uniq', 'unique (name)', """Only one value can be defined for each given usage!"""),
     ]
 
-    @cache(skiparg=3)
+    @tools.ormcache(skiparg=3)
     def precision_get(self, cr, uid, application):
         cr.execute('select digits from decimal_precision where name=%s', (application,))
         res = cr.fetchone()
@@ -45,7 +45,7 @@ class decimal_precision(osv.osv):
 
     def write(self, cr, uid, ids, data, *args, **argv):
         res = super(decimal_precision, self).write(cr, uid, ids, data, *args, **argv)
-        self.precision_get.clear_cache(cr.dbname)
+        self.precision_get.clear_cache(self)
         for obj in self.pool.obj_list():
             for colname, col in self.pool.get(obj)._columns.items():
                 if isinstance(col, (fields.float, fields.function)):

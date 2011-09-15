@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:23+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:28+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_sxw
 msgid "base.report.sxw"
-msgstr ""
+msgstr "base.informe.sxw"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "OpenERP Report Designer Configuration"
-msgstr ""
+msgstr "Configurador del dissenyador d'informes d'OpenERP"
 
 #. module: base_report_designer
 #: model:ir.module.module,shortdesc:base_report_designer.module_meta_information
@@ -38,6 +38,8 @@ msgid ""
 "This plug-in allows you to create/modify OpenERP Reports into OpenOffice "
 "Writer."
 msgstr ""
+"Aquest complement li permet crear/modificar els informes d'OpenERP en "
+"OpenOffice Writer."
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -56,6 +58,14 @@ msgid ""
 "you can modify in OpenOffice.Once you have modified it you can\n"
 "upload the report using the same wizard.\n"
 msgstr ""
+"\n"
+"Aquest mòdul s'utilitza juntament amb l'extensió OpenERP d'OpenOffice.\n"
+"Primer ha d'instal·lar l'extensió que es troba disponible en\n"
+"http://www.openerp.com\n"
+"\n"
+"Aquest mòdul afegeix assistents per importar/exportar informes .sxw que\n"
+"podeu modificar en OpenOffice. Una vegada ho hagueu modificat, podeu\n"
+"carregar l'informe amb el mateix assistent.\n"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -65,32 +75,32 @@ msgstr "L'informe .SXW"
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_designer_installer
 msgid "base_report_designer.installer"
-msgstr ""
+msgstr "base_informe_dissenyador.instal·lador"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,description:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "_Close"
-msgstr ""
+msgstr "_Tanca"
 
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "The RML report"
-msgstr ""
+msgstr "L'informe RML"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "title"
-msgstr ""
+msgstr "títol"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,report_id:0
@@ -101,7 +111,7 @@ msgstr "Informe"
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_rml_save
 msgid "base.report.rml.save"
-msgstr ""
+msgstr "base.informe.rml.desa"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -111,7 +121,7 @@ msgstr "Dissenyador d'informes"
 #. module: base_report_designer
 #: field:base_report_designer.installer,name:0
 msgid "File name"
-msgstr ""
+msgstr "Nom del fitxer"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -123,7 +133,7 @@ msgstr "Obté un informe"
 #: view:base_report_designer.installer:0
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_wizard
 msgid "OpenERP Report Designer"
-msgstr ""
+msgstr "Dissenyador d'informes OpenERP"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0
@@ -133,7 +143,7 @@ msgstr "Continua"
 #. module: base_report_designer
 #: field:base.report.rml.save,file_rml:0
 msgid "Save As"
-msgstr ""
+msgstr "Anomena i desa"
 
 #. module: base_report_designer
 #: help:base_report_designer.installer,plugin_file:0
@@ -141,11 +151,13 @@ msgid ""
 "OpenObject Report Designer plug-in file. Save as this file and install this "
 "plug-in in OpenOffice."
 msgstr ""
+"Fitxer del plug-in dissenyador d'informes OpenObject. Deseu aquest fitxer i "
+"instal·leu aquest plug-in en OpenOffice."
 
 #. module: base_report_designer
 #: view:base.report.rml.save:0
 msgid "Save RML FIle"
-msgstr ""
+msgstr "Desa fitxer RML"
 
 #. module: base_report_designer
 #: field:base.report.file.sxw,file_sxw:0
@@ -156,12 +168,12 @@ msgstr "El seu arxiu .SXW"
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Installation and Configuration Steps"
-msgstr ""
+msgstr "Passos d'instal·lació i configuració"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progrés de la configuració"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -171,36 +183,42 @@ msgid ""
 "Don't forget to install the OpenERP SA OpenOffice package to modify it.\n"
 "Once it is modified, re-upload it in OpenERP using this wizard."
 msgstr ""
+"Aquesta és la plantilla de l'informe sol·licitat.\n"
+"Guardeu-ho com un fitxer .SXW i obriu-ho amb OpenOffice.\n"
+"No oblideu d'instal·lar el paquet d'OpenOffice d'OpenERP SA per modificar-"
+"ho.\n"
+"Una vegada que es modifica, torneu-ho a carregar en OpenERP amb aquest "
+"assistent."
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
 msgid "Skip"
-msgstr ""
+msgstr "Salta"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Imatge"
 
 #. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
 msgid "Base Report sxw"
-msgstr ""
+msgstr "Base informe sxw"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_file_sxw
 msgid "base.report.file.sxw"
-msgstr ""
+msgstr "base.informe.fitxer.sxw"
 
 #. module: base_report_designer
 #: field:base_report_designer.installer,plugin_file:0
 msgid "OpenObject Report Designer Plug-in"
-msgstr ""
+msgstr "Plug-in dissenyador d'informe d'OpenObject"
 
 #. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_report_designer_installer
 msgid "OpenERP Report Designer Installation"
-msgstr ""
+msgstr "Instal·lació del dissenyador d'informe OpenERP"
 
 #. module: base_report_designer
 #: view:base.report.file.sxw:0
@@ -212,7 +230,7 @@ msgstr "Cancel·la"
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.accions.informe.xml"
 
 #. module: base_report_designer
 #: view:base.report.sxw:0

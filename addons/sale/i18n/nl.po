@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:15+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:21+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -25,7 +25,7 @@ msgstr "Omzet per verkoper in de laatste 90 dagen"
 #. module: sale
 #: help:sale.installer,delivery:0
 msgid "Allows you to compute delivery costs on your quotations."
-msgstr "Laat u verzendkosten berekenen op uw offertes."
+msgstr "Geeft de mogelijkheid om verzendkosten te berekenen op offertes"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -33,8 +33,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
-"Indien er onvoldoende voorraad is om alles in een zending te leveren, "
-"accepteert u dan deelleveringen?."
+"Indien er onvoldoende voorraad is om alles in een zending te leveren, worden "
+"er dan deelleveringen geaccepteerd?"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -94,7 +94,7 @@ msgstr "Stuurt verwervingsopdrachten aan voor elke verkooporderregel."
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr "Alles ineens"
+msgstr "Complete leveringen"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -823,7 +823,7 @@ msgstr ""
 "    * Relatie voorkeuren (levering, facturatie, voorwaarden, ...)\n"
 "    * Product voorraad en prijzen\n"
 "    * Levering methodes:\n"
-"        - alles ineens, deelleveringen\n"
+"        - complete leveringen, deelleveringen\n"
 "        - verzendkosten\n"
 "    * Dashboard voor verkoper die bevat:\n"
 "    * Uw open offertes\n"
@@ -1132,7 +1132,7 @@ msgstr "Belastingen"
 #. module: sale
 #: field:sale.order,order_policy:0
 msgid "Shipping Policy"
-msgstr "Leveringscondities"
+msgstr "Behandelwijze"
 
 #. module: sale
 #: help:sale.order,create_date:0
@@ -1168,7 +1168,7 @@ msgstr "Voorschotbedrag"
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Shipped Quantities"
-msgstr "Verzonden aantallen"
+msgstr "Verzonden hoeveelheden"
 
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
@@ -1761,7 +1761,7 @@ msgstr "Instellingen"
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Complete Delivery"
-msgstr "Volledige levering"
+msgstr "Complete zending"
 
 #. module: sale
 #: view:sale.report:0
@@ -1938,7 +1938,7 @@ msgstr "Verkooporders"
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "Direct Delivery"
-msgstr "Rechtstreekse levering"
+msgstr "Deelleveringen"
 
 #. module: sale
 #: field:sale.installer,sale_journal:0
@@ -2211,77 +2211,6 @@ msgstr "Jaar"
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
 msgstr "Facturatie gebaseer op leveringen"
-
-#~ msgid "Quantity (UOS)"
-#~ msgstr "Aantal (UOS)"
-
-#~ msgid "Product UOS"
-#~ msgstr "Product Verkoopeenh."
-
-#~ msgid "Customer Ref."
-#~ msgstr "Klant ref"
-
-#~ msgid "Invoice from the packings"
-#~ msgstr "Factureer op basis van pakbonnen"
-
-#~ msgid "Shop name"
-#~ msgstr "Naam verkooppunt"
-
-#~ msgid ""
-#~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice validation "
-#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
-#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
-#~ "for the scheduler to be on the date 'Date Ordered'."
-#~ msgstr "Dit geeft de status van de offerte-aanvraag of verkooporder."
-
-#~ msgid "Manual in progress"
-#~ msgstr "Handmatig in bewerking"
-
-#~ msgid "Number packages"
-#~ msgstr "Aantal pakketten"
-
-#~ msgid "Related Packings"
-#~ msgstr "Gerelateerde pakbonnen"
-
-#~ msgid ""
-#~ "If you don't have enough stock available to deliver all at once, do you "
-#~ "accept partial shippings or not."
-#~ msgstr ""
-#~ "Wanneer er niet voldoende voorraad aanwezig is om alles te leveren moet er "
-#~ "dan deels worden geleverd of niet."
-
-#, python-format
-#~ msgid "You must first cancel all packings attached to this sale order."
-#~ msgstr "Eerst moeten alle pakbonnen geannuleerd worden van deze verkooporder"
-
-#, python-format
-#~ msgid "You can not cancel a sale order line that has already been invoiced !"
-#~ msgstr "U kunt geen verkooporder annuleren die al is verzonden !"
-
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all packing lists have been finished.\n"
-#~ "  - The 'Invoice from the packings' choice is used to create an invoice "
-#~ "during the packing process."
-#~ msgstr ""
-#~ "De verzendpolicy wordt gebruikt om facturering en verzending te "
-#~ "synchroniseren\n"
-#~ "  - De 'Vooraf betalen' optie genereert eerst een factuur en genereerd de "
-#~ "verzendopdracht nadat de factuur is betaald\n"
-#~ "  - De 'Verzenden en handmatig factureren' optie genereerd direct een "
-#~ "verzendopdracht en wacht tot de gebruiker op 'Factureren' knop klikt om een "
-#~ "concept factuur te maken\n"
-#~ "  - De 'Factureren na verzending' optie genereert een concept factuur nadat "
-#~ "alle pakbonnen zijn verwerkt.\n"
-#~ "  - De 'Factureren op basis van pakbonnen' optie wordt gebruikt om de "
-#~ "factuur te genereren in het verzend proces."
 
 #~ msgid "Recreate Procurement"
 #~ msgstr "Vraag opnieuw aan"
@@ -2646,125 +2575,8 @@ msgstr "Facturatie gebaseer op leveringen"
 #~ "In de verkooporder, de aanschaf voor elke verkoopregel komt in de "
 #~ "inkooporder."
 
-#~ msgid "Dashboard for sales"
-#~ msgstr "Dashboard voor verkoop"
-
-#~ msgid "Sales manager board"
-#~ msgstr "Verkopers dashboard"
-
-#~ msgid "Cases of the month"
-#~ msgstr "Dossiers van de maand"
-
-#~ msgid "Sale Dashboard"
-#~ msgstr "Verkoop dashboard"
-
-#~ msgid "Sales of the month"
-#~ msgstr "Maandelijkse verkopen"
-
-#~ msgid "My open quotations"
-#~ msgstr "Mijn open offerte aanvragen"
-
-#~ msgid "Cases statistics"
-#~ msgstr "Dossier-statistieken"
-
-#~ msgid "Turnover Per Product"
-#~ msgstr "Omzet per product"
-
-#~ msgid "Monthly Sales Turnover Over One Year"
-#~ msgstr "Maandelijkse verkoop-omzet over één jaar"
-
-#~ msgid "All Months"
-#~ msgstr "Alle maanden"
-
-#~ msgid "Top ten sales of the month"
-#~ msgstr "Top-tien verkopen van de maand"
-
-#~ msgid "Average Price"
-#~ msgstr "Gemiddelde prijs"
-
-#~ msgid "Monthly sales turnover over one year"
-#~ msgstr "Maandelijkse verkoopomzet gedurende één jaar"
-
-#~ msgid "Sales by Product (this month)"
-#~ msgstr "Verkoop per product (deze maand)"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "Verkoopbeheer - Overzichten"
-
-#~ msgid "Monthly Cumulated Sales Turnover Over One Year"
-#~ msgstr "Maandelijkse cumulatieve verkoop-omzet over één jaar"
-
-#~ msgid "# of Products"
-#~ msgstr "# Producten"
-
-#~ msgid "Daily sales turnover over one year"
-#~ msgstr "Dagelijkse verkoop-omzet over één jaar"
-
-#~ msgid "Daily Sales Turnover Over One Year"
-#~ msgstr "Dagelijkse verkoop-omzet over één jaar"
-
-#~ msgid "Total Turnover"
-#~ msgstr "Totale omzet"
-
-#~ msgid "Categories"
-#~ msgstr "Categorieën"
-
-#~ msgid "Turnover Per Month"
-#~ msgstr "Omzet per maand"
-
-#~ msgid "Create Date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid "Sales by State"
-#~ msgstr "Verkopen per status"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Report of Created Sale Order"
-#~ msgstr "Overzicht aangemaakte verkoopopdrachten"
-
-#~ msgid "Sales Orders by category"
-#~ msgstr "Verkoopopdrachten per categorie"
-
-#~ msgid "Monthly cumulated sales turnover over one year"
-#~ msgstr "Maandelijkse cumulatieve verkoop over een jaar"
-
-#~ msgid "Sales Orders by Products"
-#~ msgstr "Verkoopopdrachten per product"
-
-#~ msgid "Sales Orders by Categories"
-#~ msgstr "Verkoopopdrachten per categorie"
-
-#~ msgid "Sales of the Month"
-#~ msgstr "Verkoop van de maand"
-
-#~ msgid "Sales by Category of Products"
-#~ msgstr "Verkoop per productcategorie"
-
-#~ msgid "Sales by Product"
-#~ msgstr "Verkoop per product"
-
-#~ msgid "This Month"
-#~ msgstr "Deze maand"
-
-#~ msgid "Created Sale Orders"
-#~ msgstr "Gemaakte verkoopopdrachten"
-
-#~ msgid "Reporting"
-#~ msgstr "Overzichten"
-
-#~ msgid "Graphs"
-#~ msgstr "Diagrammen"
-
-#~ msgid "In progress"
-#~ msgstr "In behandeling"
-
-#~ msgid "Sales by Category of Product (this month)"
-#~ msgstr "Verkoop per productcategorie (deze maand)"
-
-#~ msgid "Created Sales orders"
-#~ msgstr "Aangemaakte verkoopopdrachten"
 
 #~ msgid "Invoice from the Packing"
 #~ msgstr "Factureren van pakbon"
@@ -2774,30 +2586,3 @@ msgstr "Facturatie gebaseer op leveringen"
 
 #~ msgid "Related Packing"
 #~ msgstr "Gerelateerde verzending"
-
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order After Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all packing lists have been finished.\n"
-#~ "  - The 'Invoice from the packing' choice is used to create an invoice "
-#~ "during the packing process."
-#~ msgstr ""
-#~ "Het verzend-beleid wordt gebruikt om de factuur en de levering te "
-#~ "synchroniseren.\n"
-#~ "  - Bij 'Vooruitbetaling' wordt er eerst een factuur gegenereerd. Nadat de "
-#~ "factuur is voldaan wordt er een pakbon gegenereerd.\n"
-#~ "  - Bij 'Verzenden & handmatige facturatie' wordt er direct een pakbon "
-#~ "aangemaakt. Vervolgens moet er handmatig een concept factuur worden "
-#~ "aangemaakt.\n"
-#~ "  - Bij 'Factureren na uitlevering' wordt er een concept factuur aangemaakt "
-#~ "aan de hand van de verkooporder nadat alle pakbonnen zijn afgehandeld.\n"
-#~ "  - Bij 'Factureren van Pakbon' wordt de factuur aangemaakt tijdens het "
-#~ "order-picken."
-
-#~ msgid "Configure Sale Order Logistics"
-#~ msgstr "Stel verkooplogistiek in"

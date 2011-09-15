@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:53+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:55+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: lunch
 #: wizard_view:lunch.cashbox.clean,init:0
 msgid "Reset cashbox"
-msgstr "复位现金箱"
+msgstr "重设外卖现金"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_form
@@ -37,7 +37,7 @@ msgstr "您确定要取消此订单？"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
 msgid "Cash Moves"
-msgstr ""
+msgstr "现金划拨"
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -45,7 +45,7 @@ msgstr ""
 #: view:report.lunch.amount:0
 #: view:report.lunch.order:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order_confirm
@@ -67,6 +67,11 @@ msgid ""
 "    Apply Different Category for the product.\n"
 "    "
 msgstr ""
+"\n"
+"    这是一个管理午餐的模块\n"
+"保存对午餐订单，现金划拨，外卖现金，外卖品种等的跟踪信息。\n"
+"加入不同类型的外卖品种。\n"
+"    "
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -78,7 +83,7 @@ msgstr "今日"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "March"
-msgstr "三月"
+msgstr "3月"
 
 #. module: lunch
 #: report:lunch.order:0
@@ -108,12 +113,12 @@ msgstr "金额"
 #: model:ir.ui.menu,name:lunch.menu_lunch_product_form
 #: view:lunch.product:0
 msgid "Products"
-msgstr "产品列表"
+msgstr "品种列表"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_report_lunch_amount
 msgid "Amount available by user and box"
-msgstr ""
+msgstr "用户和外卖现金的可用金额"
 
 #. module: lunch
 #: view:report.lunch.amount:0
@@ -123,14 +128,14 @@ msgstr "   月   "
 #. module: lunch
 #: model:ir.model,name:lunch.model_report_lunch_order
 msgid "Lunch Orders Statistics"
-msgstr "午餐单统计"
+msgstr "午餐订单统计"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: view:lunch.cashmove:0
 #: field:lunch.order,cashmove:0
 msgid "CashMove"
-msgstr ""
+msgstr "现金划拨"
 
 #. module: lunch
 #: selection:lunch.order,state:0
@@ -160,13 +165,13 @@ msgstr "状态"
 #. module: lunch
 #: field:report.lunch.order,price_total:0
 msgid "Total Price"
-msgstr "总价"
+msgstr "总价格"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
 #: view:report.lunch.amount:0
 msgid "Box Amount by User"
-msgstr ""
+msgstr "用户的外卖现金金额"
 
 #. module: lunch
 #: field:lunch.cashmove,create_date:0
@@ -181,7 +186,7 @@ msgstr "单号/日期"
 #. module: lunch
 #: field:lunch.order,descript:0
 msgid "Description Order"
-msgstr "说明"
+msgstr "订单说明"
 
 #. module: lunch
 #: model:ir.actions.wizard,name:lunch.lunch_order_confirm
@@ -193,14 +198,14 @@ msgstr "确认订单"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "July"
-msgstr "七月"
+msgstr "7月"
 
 #. module: lunch
 #: view:lunch.cashmove:0
 #: view:report.lunch.amount:0
 #: view:report.lunch.order:0
 msgid "Box"
-msgstr ""
+msgstr "外卖现金"
 
 #. module: lunch
 #: view:report.lunch.order:0
@@ -220,7 +225,7 @@ msgstr "创建日期"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_category_form
 msgid " Product Categories "
-msgstr " 商品分类 "
+msgstr " 品种分类 "
 
 #. module: lunch
 #: wizard_button:lunch.cashbox.clean,init,zero:0
@@ -230,25 +235,25 @@ msgstr "设为0"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 msgid "Cash Move"
-msgstr ""
+msgstr "现金划拨"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "April"
-msgstr "四月"
+msgstr "4月"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "September"
-msgstr "九月"
+msgstr "9月"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "December"
-msgstr "十二月"
+msgstr "12月"
 
 #. module: lunch
 #: field:report.lunch.amount,month:0
@@ -260,7 +265,7 @@ msgstr "月"
 #. module: lunch
 #: wizard_field:lunch.order.confirm,init,confirm_cashbox:0
 msgid "Name of box"
-msgstr ""
+msgstr "外卖现金名称"
 
 #. module: lunch
 #: wizard_button:lunch.order.cancel,init,cancel:0
@@ -277,12 +282,12 @@ msgstr "分类"
 #. module: lunch
 #: view:report.lunch.amount:0
 msgid "  Year  "
-msgstr ""
+msgstr "  年  "
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_category_form
 msgid "Product Categories"
-msgstr "产品分类"
+msgstr "品种分类"
 
 #. module: lunch
 #: wizard_button:lunch.order.cancel,init,end:0
@@ -297,7 +302,7 @@ msgstr "订单确认"
 #. module: lunch
 #: wizard_view:lunch.cashbox.clean,init:0
 msgid "Are you sure you want to reset this cashbox ?"
-msgstr ""
+msgstr "你确定要重置这外卖现金？"
 
 #. module: lunch
 #: selection:lunch.order,state:0
@@ -308,19 +313,19 @@ msgstr "草稿"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "August"
-msgstr "八月"
+msgstr "8月"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_report_lunch_order_all
 #: view:report.lunch.order:0
 msgid "Lunch Order Analysis"
-msgstr ""
+msgstr "午餐订单分析"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "June"
-msgstr "六月"
+msgstr "6月"
 
 #. module: lunch
 #: field:lunch.cashmove,user_cashmove:0
@@ -332,7 +337,7 @@ msgstr "用户名"
 #. module: lunch
 #: view:report.lunch.order:0
 msgid "Sales Analysis"
-msgstr ""
+msgstr "销售分析"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch
@@ -354,30 +359,30 @@ msgstr "日期"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "November"
-msgstr "十一月"
+msgstr "11月"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "October"
-msgstr "十月"
+msgstr "10月"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "January"
-msgstr "一月"
+msgstr "1月"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox_clean
 msgid "clean cashbox"
-msgstr ""
+msgstr "外卖现金清零"
 
 #. module: lunch
 #: field:lunch.cashmove,active:0
 #: field:lunch.product,active:0
 msgid "Active"
-msgstr "激活"
+msgstr "生效"
 
 #. module: lunch
 #: field:report.lunch.order,date:0
@@ -387,18 +392,18 @@ msgstr "订单日期"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox
 msgid "Cashbox for Lunch "
-msgstr ""
+msgstr "午餐的外卖现金 "
 
 #. module: lunch
 #: model:ir.actions.wizard,name:lunch.wizard_clean_cashbox
 msgid "Set CashBox to Zero"
-msgstr ""
+msgstr "设置外卖现金为0"
 
 #. module: lunch
 #: field:lunch.cashmove,box:0
 #: field:report.lunch.amount,box:0
 msgid "Box Name"
-msgstr ""
+msgstr "外卖现金的名称"
 
 #. module: lunch
 #: wizard_button:lunch.cashbox.clean,init,end:0
@@ -409,7 +414,7 @@ msgstr "取消"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_form
 msgid " Cashboxes "
-msgstr ""
+msgstr " 外卖现金列表 "
 
 #. module: lunch
 #: rml:lunch.order:0
@@ -420,7 +425,7 @@ msgstr "单价"
 #: model:ir.actions.act_window,name:lunch.action_lunch_product_form
 #: field:lunch.order,product:0
 msgid "Product"
-msgstr "货品"
+msgstr "品种"
 
 #. module: lunch
 #: rml:lunch.order:0
@@ -432,7 +437,7 @@ msgstr "说明"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "May"
-msgstr "五月"
+msgstr "5月"
 
 #. module: lunch
 #: field:lunch.order,price:0
@@ -443,22 +448,22 @@ msgstr "价格"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "Search CashMove"
-msgstr ""
+msgstr "搜索外卖现金"
 
 #. module: lunch
 #: view:report.lunch.amount:0
 msgid "Total box"
-msgstr ""
+msgstr "总外卖现金"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "午餐品种"
 
 #. module: lunch
 #: field:lunch.cashbox,sum_remain:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "总剩余"
 
 #. module: lunch
 #: view:lunch.order:0
@@ -469,7 +474,7 @@ msgstr "总价"
 #: selection:report.lunch.amount,month:0
 #: selection:report.lunch.order,month:0
 msgid "February"
-msgstr "二月"
+msgstr "2月"
 
 #. module: lunch
 #: field:lunch.cashbox,name:0
@@ -478,7 +483,7 @@ msgstr "二月"
 #: rml:lunch.order:0
 #: field:lunch.product,name:0
 msgid "Name"
-msgstr "品名"
+msgstr "名称"
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -488,13 +493,13 @@ msgstr "总金额"
 #. module: lunch
 #: view:lunch.category:0
 msgid "Category related to Products"
-msgstr ""
+msgstr "该分类的品种"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashbox_form
 #: view:lunch.cashbox:0
 msgid "Cashboxes"
-msgstr ""
+msgstr "外卖现金列表"
 
 #. module: lunch
 #: view:lunch.category:0
@@ -509,13 +514,13 @@ msgstr "订单"
 #: model:ir.ui.menu,name:lunch.menu_lunch
 #: report:lunch.order:0
 msgid "Lunch Order"
-msgstr ""
+msgstr "午餐订单"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_report_lunch_amount_tree
 #: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
 msgid "Cash Position by User"
-msgstr ""
+msgstr "用户现金状况"
 
 #. module: lunch
 #: field:lunch.cashbox,manager:0

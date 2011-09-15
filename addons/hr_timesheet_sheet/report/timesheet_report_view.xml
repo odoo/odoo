@@ -18,7 +18,7 @@
             <field name="model">timesheet.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('cancel')" string="Timesheet">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'cancel'" string="Timesheet">
                     <field name="date_current" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="user_id" invisible="1"/>

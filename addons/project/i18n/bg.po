@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:43+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:53+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
@@ -56,7 +56,7 @@ msgid "Deadlines"
 msgstr "Крайни срокове"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Действието не е разрешено"
@@ -242,7 +242,7 @@ msgid "Day"
 msgstr "Ден"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "Задачата '%s' е завършена"
@@ -428,7 +428,7 @@ msgid "Reactivate Project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Задачата '%s' е приключена"
@@ -478,8 +478,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Грешка! Не можете да създавате рекурсивни аналитични сметки."
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (копие)"
@@ -618,7 +618,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -711,7 +711,7 @@ msgid "Starting Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -736,7 +736,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -1138,7 +1138,6 @@ msgstr "Табло на проекта"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr ""
 
@@ -1168,7 +1167,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1216,7 +1215,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1353,7 +1352,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr ""
@@ -1402,7 +1401,7 @@ msgid "Open"
 msgstr "Отвoри"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1726,7 +1725,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1801,7 +1800,7 @@ msgid "Validation State"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr ""
@@ -1829,7 +1828,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -1980,84 +1979,3 @@ msgstr ""
 
 #~ msgid "Delay"
 #~ msgstr "Закъснение"
-
-#~ msgid "Tasks finished by project (this month)"
-#~ msgstr "Приключени задачи по проект (текущ месец)"
-
-#~ msgid "Tasks Closed by Project and User"
-#~ msgstr "Приключени задачи по проект и по потребител"
-
-#~ msgid "Tasks finished by project and user (this month)"
-#~ msgstr "Приключени задачи по проект и по потребител (текущ месец)"
-
-#~ msgid "Task Closed"
-#~ msgstr "Приключване на задача"
-
-#~ msgid "Tasks by Project"
-#~ msgstr "Задачи по проект"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "Управление на продажби – справки"
-
-#~ msgid "User"
-#~ msgstr "Потребител"
-
-#~ msgid "Tasks by Project and User"
-#~ msgstr "Задачи по проект и по потребител"
-
-#~ msgid "This Month"
-#~ msgstr "Текущ месец"
-
-#~ msgid "Tasks by projects and users"
-#~ msgstr "Задачи по проекти и по потребители"
-
-#~ msgid "Avg Closing Delay"
-#~ msgstr "Прибл. закъснение на приключването"
-
-#~ msgid "Tasks by project"
-#~ msgstr "Задачи по проект"
-
-#~ msgid "Tasks Closed by Project"
-#~ msgstr "Приключени задачи по проект"
-
-#~ msgid "Tasks by User"
-#~ msgstr "Задачи според потребител"
-
-#~ msgid "No Task"
-#~ msgstr "Няма задача"
-
-#~ msgid "Report on tasks by user for projects"
-#~ msgstr "Доклад на задачите по проекти според потребител"
-
-#~ msgid "Timesheet / Task Hours Per Month"
-#~ msgstr "График / Часове задачи на месец"
-
-#~ msgid "Reporting"
-#~ msgstr "Справки"
-
-#~ msgid "Task Closed Within Past 15 Days"
-#~ msgstr "Приключени задачи през последните 15 дни"
-
-#~ msgid "Task Hours"
-#~ msgstr "Часове задачи"
-
-#~ msgid "Task Number"
-#~ msgstr "Номер на задача"
-
-#~ msgid "report.timesheet.task.user"
-#~ msgstr "report.timesheet.task.user"
-
-#~ msgid "Timesheet/Task hours Report Per Month"
-#~ msgstr "График / Доклад на часовете задачи на месец"
-
-#~ msgid "Task Progress"
-#~ msgstr "Напредък на задачата"
-
-#~ msgid "Closed Task Report"
-#~ msgstr "Доклад за приключена задача"
-
-#~ msgid "Timesheet Hours"
-#~ msgstr "Часове по график"
-
-#~ msgid "Closed Tasks"
-#~ msgstr "Приключени задачи"
