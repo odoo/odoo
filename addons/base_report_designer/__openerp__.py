@@ -24,6 +24,7 @@
     'name': 'OpenOffice Report Designer Interface',
     'version': '0.1',
     'category': 'Tools',
+    'complexity': "normal",
     'description': """
 This module is used along with OpenERP OpenOffice Plugin.
 =========================================================

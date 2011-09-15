@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:24+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -28,6 +28,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"seleccione o parceiro que ira utilizar a conta analítica especificada (e.g. "
+"ao criar uma nova factura, se este parceiro for seleccionado, será "
+"automaticamente utilizada esta conta analítica)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -73,6 +76,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"seleccione a empresa que irá utilizar a conta analítica especificada (eg. ao "
+"criar uma nova factura, se for seleccionada esta empresa, a conta analítica "
+"especificada será utilizada automaticamente)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -117,6 +123,7 @@ msgstr "Data Final"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"seleccione um utilizador que irá utilizar a conta analítica especificada"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -137,6 +144,14 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"Permite a selecção automática de contas analíticas com base em critérios:\n"
+"* Produto\n"
+"* Parceiro\n"
+"* Utilizador\n"
+"* Empresa\n"
+"* Data\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -145,6 +160,9 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"seleccione o produto que irá utilizar a conta analítica especificada (eg. ao "
+"criar uma nova factura, se for seleccionado este produto, a conta analítica "
+"especificada será utilizada automaticamente)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -187,7 +205,7 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linha da ordem de venda"
 
 #~ msgid "Seq"
 #~ msgstr "Seq"
@@ -200,21 +218,6 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo inválido na definição da acção"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erro ! Não pode criar menus recursivos"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "O ID do certificado do módulo tem de ser único!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "O nome do módulo deve ser único!"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Linha de ordem de venda"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

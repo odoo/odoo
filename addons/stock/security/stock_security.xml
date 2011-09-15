@@ -2,11 +2,12 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="group_stock_manager" model="res.groups">
-        <field name="name">Warehouse / Manager</field>
-    </record>
     <record id="group_stock_user" model="res.groups">
         <field name="name">Warehouse / User</field>
+    </record>
+    <record id="group_stock_manager" model="res.groups">
+        <field name="name">Warehouse / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_stock_user'))]"/>
     </record>
 
 <!-- multi -->
