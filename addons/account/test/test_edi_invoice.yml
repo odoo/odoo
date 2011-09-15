@@ -150,11 +150,14 @@
     assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected"
-    assert invoice_new.type == 'in_invoice', 'Imported in voice is not supplier invoice'
+    assert invoice_new.type == 'in_invoice', "Imported in voice is not supplier invoice"
+    assert invoice_new.amount_total == 1010.0, "Amount total is not same"
+    assert invoice_new.amount_tax == 1000.0, "Amount tax is not same"
+    assert invoice_new.amount_untaxes == 10.0, "Amount untaxed is not same"
     product = ['Medium PC','Basic PC']
     for inv_line in invoice_new.invoice_line:
         assert inv_line.account_id.id, "account_id is not taken from product's default"
-        assert inv_line.product_id.name in product, "product  is not in Invoice line"
+        assert inv_line.product_id.name in ['Medium PC','Basic PC'], "product  is not in Invoice line"
     for inv_tax in invoice_new.tax_line:
         assert inv_tax.manual, "for tax line manual is not set to True"
         assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
