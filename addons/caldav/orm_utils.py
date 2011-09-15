@@ -31,7 +31,7 @@ if True: # we need this indentation level ;)
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', True)
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)

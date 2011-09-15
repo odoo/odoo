@@ -9,7 +9,7 @@
             <field name="model">report.membership</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:membership_state in ('draft');black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
+                <tree colors="blue:membership_state == 'draft';black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
                     <field name="partner_id"/>
                     <field name="membership_state"/>
                     <field name="associate_member_id" invisible="1"/>
