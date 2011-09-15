@@ -71,7 +71,7 @@ class stock_location(osv.osv):
     _parent_name = "location_id"
     _parent_store = True
     _parent_order = 'posz,name'
-    _order = 'complete_name, parent_left'
+    _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
