@@ -89,6 +89,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_save_edit').click(this.do_save_edit);
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
+        this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
 
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
@@ -301,6 +302,20 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
                 self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                    def.resolve();
+                });
+            }
+        });
+        return def.promise();
+    },
+    on_button_duplicate: function() {
+        var self = this;
+        var def = $.Deferred();
+        $.when(this.has_been_loaded).then(function() {
+            if (self.can_be_discarded()) {
+                self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
+                    return self.on_created({ result : new_id });
+                }).then(function() {
                     def.resolve();
                 });
             }
