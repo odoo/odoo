@@ -252,7 +252,7 @@ class document_file(osv.osv):
             ids = ids2
         if 'file_size' in vals: # only write that field using direct SQL calls
             del vals['file_size']
-        if len(ids) and len(vals):
+        if ids and vals:
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
         cr.commit() # ?
         return result
