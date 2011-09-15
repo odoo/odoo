@@ -1,137 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <record id="HRA" model="hr.allounce.deduction.categoty">
-            <field name="code">HRA</field>
-            <field name="type">allowance</field>
-            <field name="name">House Rent Allowance</field>
-            <field name="sequence" eval="5"/>
+    
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+    
+        <record id="ALW" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+        </record>
+        
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+        
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Gross</field>
+            <field name="code">GROSS</field>
+        </record>
+        
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+        
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+        
+        <record id="hr_rule_basic" model="hr.salary.rule">
+            <field name="name">Basic</field>
+            <field name="sequence" eval="1"/>
+            <field name="code">BASIC</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.wage</field>
         </record>
 
-        <record id="CA" model="hr.allounce.deduction.categoty">
-            <field name="code">CA</field>
-            <field name="type">allowance</field>
-            <field name="name">Conveyance Allowance</field>
-            <field name="sequence" eval="10"/>
-        </record>
-        
-        <record id="MA" model="hr.allounce.deduction.categoty">
-            <field name="code">MA</field>
-            <field name="type">allowance</field>
-            <field name="name">Medical Allowance</field>
-            <field name="sequence" eval="15"/>
+        <record id="hr_rule_taxable" model="hr.salary.rule">
+            <field name="name">Gross</field>
+            <field name="sequence" eval="100"/>
+            <field name="code">GROSS</field>
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW</field>
         </record>
 
-        <record id="TELA" model="hr.allounce.deduction.categoty">
-            <field name="code">TELA</field>
-            <field name="type">allowance</field>
-            <field name="name">Telephone Allowance</field>
-            <field name="sequence" eval="20"/>
+        <record id="hr_rule_net" model="hr.salary.rule">
+            <field name="name">Net</field>
+            <field name="sequence" eval="200"/>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="condition_select">none</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
+        </record>
+
+
+        <!-- Salary Structure -->
+
+         <record id="structure_base" model="hr.payroll.structure">
+            <field name="code">BASE</field>
+            <field name="name">Base for new structures</field>
+            <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
+            <field name="company_id" ref="base.main_company"/>
         </record>
         
-        <record id="LTA" model="hr.allounce.deduction.categoty">
-            <field name="code">LTA</field>
-            <field name="type">allowance</field>
-            <field name="name">Leave Travel Allowance</field>
-            <field name="sequence" eval="25"/>
+        <!-- Decimal Precision -->
+        
+        <record forcecreate="True" id="decimal_payroll" model="decimal.precision">
+            <field name="name">Payroll</field>
+            <field name="digits">2</field>
         </record>
         
-        <record id="NA" model="hr.allounce.deduction.categoty">
-            <field name="code">NA</field>
-            <field name="type">allowance</field>
-            <field name="name">Newspaper Allowance</field>
-            <field name="sequence" eval="30"/>
-        </record>
-        
-        <record id="TA" model="hr.allounce.deduction.categoty">
-            <field name="code">TA</field>
-            <field name="type">allowance</field>
-            <field name="name">Traveling Allowance</field>
-            <field name="sequence" eval="35"/>
-        </record>
-        
-        <record id="FA" model="hr.allounce.deduction.categoty">
-            <field name="code">FA</field>
-            <field name="type">allowance</field>
-            <field name="name">Food Allowance</field>
-            <field name="sequence" eval="40"/>
-        </record>
-        
-        <record id="DA" model="hr.allounce.deduction.categoty">
-            <field name="code">DA</field>
-            <field name="type">allowance</field>
-            <field name="name">Dearness Allowance</field>
-            <field name="sequence" eval="45"/>
-        </record>
-        
-        <record id="PF" model="hr.allounce.deduction.categoty">
-            <field name="code">PF</field>
-            <field name="type">deduction</field>
-            <field name="name">Provident Fund</field>
-            <field name="sequence" eval="50"/>
-        </record>
-        
-        <record id="PT" model="hr.allounce.deduction.categoty">
-            <field name="code">PT</field>
-            <field name="type">deduction</field>
-            <field name="name">Professional Tax</field>
-            <field name="sequence" eval="55"/>
-        </record>
-        
-        <record id="WF" model="hr.allounce.deduction.categoty">
-            <field name="code">WF</field>
-            <field name="type">deduction</field>
-            <field name="name">Welfare</field>
-            <field name="sequence" eval="60"/>
-        </record>
-        
-        <record id="TDS" model="hr.allounce.deduction.categoty">
-            <field name="code">TDS</field>
-            <field name="type">deduction</field>
-            <field name="name">Tax Deduct at Source</field>
-            <field name="sequence" eval="65"/>
-        </record>
-        
-        <record id="LWP" model="hr.allounce.deduction.categoty">
-            <field name="code">LWP</field>
-            <field name="type">deduction</field>
-            <field name="name">Leave without pay</field>
-            <field name="sequence" eval="70"/>
-        </record>
-        
-        <record id="FC" model="hr.allounce.deduction.categoty">
-            <field name="code">FC</field>
-            <field name="type">deduction</field>
-            <field name="name">Food Coupons</field>
-            <field name="sequence" eval="75"/>
-        </record>
-        
-        <record id="ESI" model="hr.allounce.deduction.categoty">
-            <field name="code">ESI</field>
-            <field name="type">deduction</field>
-            <field name="name">Employee's State Insurance</field>
-            <field name="sequence" eval="80"/>
-        </record>
-        
-        <record id="OTHERD" model="hr.allounce.deduction.categoty">
-            <field name="code">OTHERD</field>
-            <field name="type">otherdeduct</field>
-            <field name="name">Other Deduction</field>
-            <field name="sequence" eval="85"/>
-        </record>
-        
-        <record id="OTHERA" model="hr.allounce.deduction.categoty">
-            <field name="code">OTHERA</field>
-            <field name="type">otherpay</field>
-            <field name="name">Other Taxable Allowance</field>
-            <field name="sequence" eval="90"/>
-        </record>
-        
-        <!-- Contract Wage Types -->
-        <record id="hr_contract_monthly_basic" model="hr.contract.wage.type">
-            <field name="name">Monthly Basic Wage</field>
-            <field name="type">basic</field>
-            <field name="period_id" ref="hr_contract.hr_contract_wage_type_period_monthly"/>
-        </record>
     </data>
 </openerp>

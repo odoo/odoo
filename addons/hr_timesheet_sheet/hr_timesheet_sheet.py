@@ -264,7 +264,7 @@ class hr_timesheet_sheet(osv.osv):
         return self.sign(cr,uid,ids,'sign_out',context=None)
 
     _columns = {
-        'name': fields.char('Description', size=64, select=1,
+        'name': fields.char('Note', size=64, select=1,
                             states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True),
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
@@ -280,19 +280,19 @@ class hr_timesheet_sheet(osv.osv):
         'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances'),
         'state' : fields.selection([
             ('new', 'New'),
-            ('draft','Draft'),
-            ('confirm','Confirmed'),
-            ('done','Done')], 'State', select=True, required=True, readonly=True,
+            ('draft','Open'),
+            ('confirm','Waiting Approval'),
+            ('done','Approved')], 'State', select=True, required=True, readonly=True,
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
-        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
-        'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance', multi="_total_day"),
-        'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet', multi="_total_day"),
-        'total_difference_day': fields.function(_total_day, method=True, string='Difference', multi="_total_day"),
-        'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total_sheet"),
-        'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total_sheet"),
-        'total_difference': fields.function(_total, method=True, string='Difference', multi="_total_sheet"),
+        'state_attendance' : fields.function(_state_attendance, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
+        'total_attendance_day': fields.function(_total_day, string='Total Attendance', multi="_total_day"),
+        'total_timesheet_day': fields.function(_total_day, string='Total Timesheet', multi="_total_day"),
+        'total_difference_day': fields.function(_total_day, string='Difference', multi="_total_day"),
+        'total_attendance': fields.function(_total, string='Total Attendance', multi="_total_sheet"),
+        'total_timesheet': fields.function(_total, string='Total Timesheet', multi="_total_sheet"),
+        'total_difference': fields.function(_total, string='Difference', multi="_total_sheet"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -479,7 +479,7 @@ class hr_timesheet_line(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     _columns = {
-        'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+        'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
             fnct_search=_sheet_search),
     }
@@ -500,6 +500,8 @@ class hr_timesheet_line(osv.osv):
     ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
 
@@ -602,7 +604,7 @@ class hr_attendance(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     _columns = {
-        'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+        'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
             fnct_search=_sheet_search),
     }
@@ -625,12 +627,16 @@ class hr_attendance(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         res = super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
         if 'sheet_id' in context:
@@ -735,7 +741,7 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
     _auto = False
     _order='name'
     _columns = {
-        'name': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
+        'name': fields.many2one('account.analytic.account', 'Project / Analytic Account', readonly=True),
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True),
         'total': fields.float('Total Time', digits=(16,2), readonly=True),
         'invoice_rate': fields.many2one('hr_timesheet_invoice.factor', 'Invoice rate', readonly=True),

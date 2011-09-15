@@ -25,9 +25,9 @@ from crm import crm
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
-    ('open','Open'),
+    ('open','Todo'),
     ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
+    ('done', 'Held'),
     ('pending','Pending')
 ]
 

@@ -26,6 +26,7 @@
     'version': '1.1',
     'category': 'Sales',
     'category': 'Generic Modules/CRM & SRM',
+    'complexity': "normal",
     'description': """
 Caldav features in Meeting.
 ===========================

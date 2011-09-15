@@ -7,6 +7,24 @@
     	<record id="account.cash_journal" model="account.journal">
             <field eval="[(6, 0, [ref('base.user_root')])]" name="journal_users"/>
         </record>
+        
+        <record id="product_product_putmoneyforchange0" model="product.product">
+			<field name="supply_method">buy</field>
+			<field name="uom_id" ref="product.product_uom_unit"/>
+			<field name="name_template">Cash In</field>
+			<field name="property_account_income" ref="account.cash"/>
+			<field name="name">Cash In</field>
+			<field eval="1" name="income_pdt"/>
+		</record>
+		
+		<record id="product_product_putmoneyforchange1" model="product.product">
+			<field name="supply_method">buy</field>
+			<field name="uom_id" ref="product.product_uom_unit"/>
+			<field name="name_template">Cash Out</field>
+			<field name="property_account_income" ref="account.cash"/>
+			<field name="name">Cash Out</field>
+			<field eval="1" name="expense_pdt"/>
+		</record>
 
     	 <record id="account_invoice_invoicefrompospos0" model="account.invoice">
 			<field name="origin">POS/019</field>

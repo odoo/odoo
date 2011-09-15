@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-import calendar_event_edit_all
 import base_calendar_invite_attendee
-import base_calendar_set_exrule
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
