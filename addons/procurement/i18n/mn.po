@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:50+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -69,7 +69,7 @@ msgid "Procurement Method"
 msgstr "Нөхөн дүүргэх хэлбэр"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Нийлүүлэгчийн хаяг байхгүй"
@@ -320,7 +320,7 @@ msgid "Quantity"
 msgstr "Тоо хэмжээ"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Хангалттай бараа байхгүй, зохистой нөөцийн дүрэм байхгүй."
@@ -458,7 +458,7 @@ msgid "plus"
 msgstr "нэмэх"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -631,7 +631,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "%s төлөвтэй нөхөн дүүргэлтийн захиалгыг устгах боломжгүй!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Өгөгдөл хангалтгүй !"
@@ -860,7 +860,7 @@ msgid "Product UoS"
 msgstr "Хоёрдогч х.нэгж"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "агуулахаас: бараа хувиарлагдсан."
@@ -925,106 +925,3 @@ msgstr "Нөхөн дүүргэлтийн дэлгэрэнгүй"
 #, python-format
 msgid "SCHEDULER"
 msgstr "ТӨЛӨВЛӨГЧ"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Дэлгэцийн XML алдаатай!"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Алдаатай аргумент"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-#~ "болохгүй!"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
-
-#, python-format
-#~ msgid "Project_mrp module not installed !"
-#~ msgstr "Project_mrp модуль суугаагүй !"
-
-#, python-format
-#~ msgid "is done."
-#~ msgstr "дууссан."
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "Үйлдвэрлэл & Логистик"
-
-#, python-format
-#~ msgid "has an exception."
-#~ msgstr "алдаатай."
-
-#, python-format
-#~ msgid "is running."
-#~ msgstr "ажиллаж байна."
-
-#, python-format
-#~ msgid "Not enough stock "
-#~ msgstr "Нөөц хүрэлцэхгүй "
-
-#~ msgid ""
-#~ "Wizard run all the procurements, and generate task, production order or "
-#~ "purchase order based on the product type"
-#~ msgstr ""
-#~ "Визард нь татан авалтыг ажиллуулдаг ба даалгавруудыг биелүүлдэг, барааны "
-#~ "захиалга эсвэл худалдан авалтын захиалга нь барааны төрлөөс хамаарна."
-
-#, python-format
-#~ msgid ""
-#~ "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-#~ "        \"\"\" Finds UoM and UoS of changed product.\n"
-#~ "        @param product_id: Changed id of product.\n"
-#~ "        @return: Dictionary of values.\n"
-#~ "        \"\"\"\n"
-#~ "        if product_id:\n"
-#~ "            w = self.pool.get('product.product"
-#~ msgstr ""
-#~ "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-#~ "        \"\"\" Finds UoM and UoS of changed product.\n"
-#~ "        @param product_id: Changed id of product.\n"
-#~ "        @return: Dictionary of values.\n"
-#~ "        \"\"\"\n"
-#~ "        if product_id:\n"
-#~ "            w = self.pool.get('product.product"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurements that are not between today and today+range "
-#~ "are skipped for futur computation."
-#~ msgstr ""
-#~ "Энэ бол автомат төлөвлөгч ямар цар хүрээнд төлөвлөгдсөн захиалгуудыг "
-#~ "автоматаар шалгаж гүйцэтгэж байх вэ гэдгийг тохируулах өдрийн тоо юм. "
-#~ "Өнөөдөр + цар хүрээ = Захиалгын төлөвлөсөн огнооны хязгаар байх бөгөөд энэ "
-#~ "хязгаараас давж буй захиалгыг шалгахгүй орхино."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the orderpoint "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Системд зөвхөн идэвхитэй дүрмүүд хэрэглэгдэх бөгөөд энэ талбарын "
-#~ "тусламжтайгаар тухайн нөөцийн дүрмийг түр хугацаагаар ашиглагдахааргүй "
-#~ "болгох боломжтой."
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "Нөхөн дүүргэлтийн түр саналууд"
-
-#~ msgid "Procurement Exceptions to Fix"
-#~ msgstr "Нөхөн дүүргэлтийн засах саналууд"
-
-#, python-format
-#~ msgid "Procurement "
-#~ msgstr "Нөхөн дүүргэлт "

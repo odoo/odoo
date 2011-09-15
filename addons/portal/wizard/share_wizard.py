@@ -187,3 +187,4 @@ class share_wizard_portal(osv.osv_memory):
         self.copy_share_group_access_and_delete(cr, wizard_data, share_group_id, context=context)
 
 share_wizard_portal()
+

@@ -45,12 +45,12 @@ class crm_meeting(crm_base, osv.osv):
     _inherit = "calendar.event"
     _columns = {
         # From crm.case
-        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}), 
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}), 
+        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
+        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}), 
+                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
-                        select=True, help='Sales team to which Case belongs to.'), 
+                        select=True, help='Sales team to which Case belongs to.'),
         'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
         'id': fields.integer('ID'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
@@ -67,7 +67,7 @@ class crm_meeting(crm_base, osv.osv):
                                  'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),
@@ -75,7 +75,7 @@ class crm_meeting(crm_base, osv.osv):
                                     size=16, readonly=True),
     }
     _defaults = {
-        'state': 'draft', 
+        'state': 'draft',
         'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
@@ -138,16 +138,18 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
-            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                        'user_id': user_id}, context=context)
-        except:
-            # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-            
+
+        # add shortcut unless 'noshortcut' is True in context
+        if not(context and context.get('noshortcut', False)):
+            data_obj = self.pool.get('ir.model.data')
+            try:
+                data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
+                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                            'user_id': user_id}, context=context)
+            except:
+                # Tolerate a missing shortcut. See product/product.py for similar code.
+                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
         return user_id
 
 res_users()

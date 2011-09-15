@@ -45,7 +45,7 @@ class lunch_product(osv.osv):
     _columns = {
         'name': fields.char('Name', size=50, required=True),
         'category_id': fields.many2one('lunch.category', 'Category'),
-        'description': fields.char('Description', size=128, required=False),
+        'description': fields.text('Description', size=128, required=False),
         'price': fields.float('Price', digits=(16,2)),
         'active': fields.boolean('Active'),
     }
