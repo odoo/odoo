@@ -160,7 +160,7 @@
                                 <separator string="Buyer Invoices" colspan="2"/>
                                 <field name="buyer_invoice_history" nolabel="1" widget="one2many_list"
                                         height="400">
-                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                    <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                                         <field name="date_invoice"/>
                                         <field name="number"/>
                                         <field name="partner_id" groups="base.group_user"/>
@@ -177,7 +177,7 @@
                                 <separator string="Seller Invoices" colspan="2"/>
                                 <field name="seller_invoice_history" nolabel="1" widget="one2many_list"
                                         height="400">
-                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                    <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                                         <field name="date_invoice"/>
                                         <field name="number"/>
                                         <field name="partner_id" groups="base.group_user"/>
@@ -272,7 +272,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('unsold','draft');black:state in ('sold','taken_away');gray:state in ('paid') " string="Objects">
+            <tree colors="blue:state in ('unsold','draft');black:state in ('sold','taken_away');gray:state == 'paid' " string="Objects">
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_uid"/>

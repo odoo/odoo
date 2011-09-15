@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-03 04:46+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:19+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -900,6 +900,7 @@ msgstr "Criar período de 3 meses"
 
 #. module: account
 #: report:account.overdue:0
+#: report:account.aged_trial_balance:0
 msgid "Due"
 msgstr "Vencimento"
 
@@ -994,6 +995,10 @@ msgstr "Modelo para lançamentos"
 #: field:account.journal,code:0
 #: report:account.partner.balance:0
 #: field:account.period,code:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Code"
 msgstr "Código"
 
@@ -1321,6 +1326,7 @@ msgstr "Análise de Itens de Diário"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
+#: report:account.aged_trial_balance:0
 msgid "Partners"
 msgstr "Parceiros"
 
@@ -2211,6 +2217,11 @@ msgstr "Modelo de produto"
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
 #: model:ir.model,name:account.model_account_fiscalyear
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Fiscal Year"
 msgstr "Ano fiscal"
 
@@ -4726,6 +4737,11 @@ msgstr "Balanço analítico -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Target Moves"
 msgstr "Movimentos de destino"
 
@@ -4842,6 +4858,8 @@ msgstr "Resultado da conciliação"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
 msgid "Balance Sheet"
 msgstr "Folha de Balanço"
 
@@ -6611,6 +6629,8 @@ msgstr "Gráfico de contas de taxas"
 #: report:account.general.journal:0
 #: report:account.invoice:0
 #: report:account.partner.balance:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Total:"
 msgstr "Total:"
 
@@ -7923,6 +7943,11 @@ msgstr "Moeda da empresa"
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Chart of Account"
 msgstr "Plano de Conta"
 
@@ -8043,6 +8068,10 @@ msgstr "Diário de Devolução"
 #: report:account.general.journal:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Filter By"
 msgstr "Filtrar Por"
 
@@ -8624,6 +8653,7 @@ msgstr "Impossível localizar o código da conta pai para o modelo de conta!"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
+#: report:account.aged_trial_balance:0
 msgid "Analysis Direction"
 msgstr "Direção analítica"
 
@@ -8746,6 +8776,10 @@ msgstr "Manter vazio para usar a conta de receita"
 #: report:account.third_party_ledger_other:0
 #: field:report.account.receivable,balance:0
 #: field:report.aged.receivable,balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Balance"
 msgstr "Saldo"
 
@@ -8757,6 +8791,10 @@ msgstr "Entrada manual ou automática no sistema"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.general.ledger_landscape:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Display Account"
 msgstr "Mostrar Conta"
 
@@ -9076,6 +9114,7 @@ msgstr "Inscrição de Lançamento"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,date_from:0
+#: report:account.aged_trial_balance:0
 msgid "Start Date"
 msgstr "Data de Início"
 
@@ -9565,6 +9604,7 @@ msgstr "Estado"
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
+#: report:account.aged_trial_balance:0
 msgid "Total"
 msgstr "Total"
 
@@ -10081,6 +10121,7 @@ msgstr "account.addtmpl.wizard"
 #: field:account.partner.ledger,result_selection:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.aged_trial_balance:0
 msgid "Partner's"
 msgstr "Do parceiro"
 
@@ -10217,14 +10258,8 @@ msgstr ""
 "O valor residual de um recebimento ou pagamento em um lançamento de diário "
 "expresso na respectiva moeda (pode ser diferente da moeda da empresa)"
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Mantenha vazio pra usar o período na data de validação"
-
 #~ msgid "O_k"
 #~ msgstr "O_k"
-
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Erro! voce não pode criar conta recursiva."
 
 #~ msgid "Supplier invoice"
 #~ msgstr "Fatura de fornecedor"
@@ -10392,9 +10427,6 @@ msgstr ""
 #~ msgid "Journal/Payment Mode"
 #~ msgstr "Modo Diário/Pagamento"
 
-#~ msgid "Partner name"
-#~ msgstr "Nome do parceiro"
-
 #~ msgid "Unpaid Customer Invoices"
 #~ msgstr "Faturas não pagas de clientes"
 
@@ -10418,10 +10450,6 @@ msgstr ""
 
 #~ msgid "Modify Invoice"
 #~ msgstr "Modificar fatura"
-
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr "Você não pode desativar uma conta que contem lançamentos."
 
 #~ msgid "Crebit"
 #~ msgstr "Crédito"
@@ -10497,9 +10525,6 @@ msgstr ""
 
 #~ msgid "Write-Off journal"
 #~ msgstr "Diário de baixas"
-
-#~ msgid "All account entries"
-#~ msgstr "Todas as entradas de contas"
 
 #~ msgid "Date Filter"
 #~ msgstr "Filtrar data"
@@ -10627,17 +10652,6 @@ msgstr ""
 #~ msgid "Total entries"
 #~ msgstr "Total de lançamentos"
 
-#~ msgid "Disc. (%)"
-#~ msgstr "Desconto (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Caso seu pagamento já tenha sido efetuado, favor desconsiderar este "
-#~ "comunicado. Não hesite em contactar nosso departamento financeiro."
-
 #~ msgid "Contra"
 #~ msgstr "Contra"
 
@@ -10652,9 +10666,6 @@ msgstr ""
 
 #~ msgid "Journal Voucher"
 #~ msgstr "Comprovante diário"
-
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
 
 #~ msgid "Analytic Invoice"
 #~ msgstr "Fatura analitica"
@@ -10719,9 +10730,6 @@ msgstr ""
 #~ msgid "Display accounts "
 #~ msgstr "Exibir contas "
 
-#~ msgid "Crédit"
-#~ msgstr "Crédito"
-
 #~ msgid "Income"
 #~ msgstr "Receita"
 
@@ -10773,13 +10781,6 @@ msgstr ""
 #~ msgid "Payment Reconcile"
 #~ msgstr "Conciliar pagamento"
 
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Erro de configuração !"
-
-#~ msgid "Débit"
-#~ msgstr "Débito"
-
 #~ msgid "Date Invoiced"
 #~ msgstr "Data da fatura"
 
@@ -10814,9 +10815,6 @@ msgstr ""
 #~ msgid "Analytic Chart of Accounts"
 #~ msgstr "Plano analítico de contas"
 
-#~ msgid "Partner ID"
-#~ msgstr "ID do parceiro"
-
 #~ msgid "New Customer Invoice"
 #~ msgstr "Nova fatura de cliente"
 
@@ -10835,27 +10833,17 @@ msgstr ""
 #~ msgid "Document"
 #~ msgstr "Documento"
 
-#~ msgid "Move name"
-#~ msgstr "Mover nomes"
-
 #~ msgid "Cancel selected invoices"
 #~ msgstr "Cancelar faturas selecionadas"
 
 #~ msgid "Proposed invoice to be checked, validated and printed"
 #~ msgstr "Fatura proposta pode ser marcada, validada ou impressa"
 
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
-
 #~ msgid "By Date and Period"
 #~ msgstr "Por data e período"
 
 #~ msgid "Financial Management"
 #~ msgstr "Administração financeira"
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "A conta nao foi definida para conciliação !"
 
 #~ msgid "Additionnal Information"
 #~ msgstr "Informação adicional"
@@ -11049,13 +11037,6 @@ msgstr ""
 
 #~ msgid "Maximum Quantity"
 #~ msgstr "Quantidade máxima"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "A conta bancária do parceiro a pagar\n"
-#~ "Deixe em branco para usar a padrão"
 
 #~ msgid "Error ! The duration of the Fiscal Year is invalid. "
 #~ msgstr "Erro ! A duração do ano fiscal é inválida. "
@@ -11257,10 +11238,6 @@ msgstr ""
 #~ "Selecione para marcar a linha de lançamento como litígio com o parceiro "
 #~ "relacionado"
 
-#, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "O ano fiscal antigo não tem qualquer entrada para reconciliar !"
-
 #~ msgid "Entry Model Line"
 #~ msgstr "Linha Modelo de lançamento"
 
@@ -11328,15 +11305,6 @@ msgstr ""
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Lançamentos codificados por movimento"
 
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Se você usa formas de pagamento, o vencimento será calculado automaticamente "
-#~ "ao gerar os lançamentos contábeis. Se você deixar em branco a forma de "
-#~ "pagamento e o vencimento, significa pagamento à vista."
-
 #~ msgid "General Ledger -"
 #~ msgstr "Livro Razão -"
 
@@ -11378,9 +11346,6 @@ msgstr ""
 #, python-format
 #~ msgid "The statement balance is incorrect !\n"
 #~ msgstr "O saldo do demonstrativo está incorreto\n"
-
-#~ msgid "Balance brought forward"
-#~ msgstr "Saldo transferido de para"
 
 #~ msgid ""
 #~ "Check this box if you want to print all entries when printing the General "
@@ -11461,10 +11426,6 @@ msgstr ""
 
 #~ msgid "The sequence used for invoice numbers in this journal."
 #~ msgstr "A sequência utilizada para numeração das faturas neste diário."
-
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Você não pode validar um lançamento sem saldo !"
 
 #~ msgid "x Expenses Credit Notes Journal"
 #~ msgstr "x Diário de Notas de Crédito gastas"
@@ -11607,179 +11568,6 @@ msgstr ""
 
 #~ msgid "Statement encoding produces payment entries"
 #~ msgstr "Codificação de demonstrativos para lançamentos de pagamento"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Período de Baixa ou Exclusão"
-
-#~ msgid "My indicators"
-#~ msgstr "Meus indicadores"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Faturas provisórias"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Custos a faturar"
-
-#~ msgid "Aged receivables"
-#~ msgstr "Recebíveis vencidos"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Mostrar comparação em %"
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Mostrar relatório em formato de paisagem"
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr "Você tem que selecionar a opção 'Paisagem'. Por favor marque-a."
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Selecione conta de referência (para comparação de %)"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Selecione Ano(s) Fiscal(is) (máximo três anos)"
-
-#~ msgid "Don't Compare"
-#~ msgstr "Não Comparar"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. Você selecionou mais de 3 anos em qualquer caso."
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Comparação de Contas de Contabilidade e gestão financeira,"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "Você pode escolher no maximo 3 anos. Por favor tente novamente"
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. Você selecionou a opção 'Porcentagem' com mais de 2 anos, mas não "
-#~ "escolheu o formato paisagem."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Você pode ter cometido os enganos a seguir. Por favor, corrija-os e tente "
-#~ "novamente."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Mantenha vazia para a comparação com sua matriz"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Mostrar Contas"
-
-#~ msgid "Creation Date"
-#~ msgstr "Data de criação"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr ""
-#~ "2. Você não selecionou a Opção 'Porcentagem', mas você selecionou mais de 2 "
-#~ "anos."
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr "Você tem que escolher pelo menos 1 ano fiscal. Tente novamente."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "Você pode ter selecionado a opção de comparar com mais de 1 ano de colunas "
-#~ "crédito/débito e opção %. Isso pode gerar a impressão fora do papel. Por "
-#~ "favor tente novamente."
-
-#~ msgid "Customize Report"
-#~ msgstr "Personalizar relatório"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr "Um módulo que adiciona novos relatórios com base no módulo de conta."
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Contas a serem faturadas"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Painel de Contabilização"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Exibir Informações de Débito/Crédito"
-
-#~ msgid "Financial Period"
-#~ msgstr "Período Financeiro"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Relatório de Contas"
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "O Módulo de Saldo da Conta é uma funcionalidade adicional ao Módulo de "
-#~ "Gestão Financeira.\n"
-#~ "\n"
-#~ "    Este módulo oferece diversas opções para impressão.\n"
-#~ "\n"
-#~ "    1. Você pode comparar o balanço de diferentes anos.\n"
-#~ "\n"
-#~ "    2. Você pode configurar uma comparação por dinheiro ou percentual para "
-#~ "comparação entre dois anos.\n"
-#~ "\n"
-#~ "    3. Você pode configurar a conta de referência para a comparação "
-#~ "percentual para os anos específicos.\n"
-#~ "\n"
-#~ "    4. Você pode selecionar períodos como data atual ou períodos por data de "
-#~ "criação.\n"
-#~ "\n"
-#~ "    5. Você tem a opção de imprimir o relatório desejado em formato "
-#~ "paisagem.\n"
-#~ "    "
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Balanço de Contas - Comparação Anual"
-
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Contas analíticas em aberto"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Lançamentos escolhidos com base em"
-
-#~ msgid "Notification"
-#~ msgstr "Alerta"
-
-#~ msgid "All accounts"
-#~ msgstr "Todas as contas"
-
-#~ msgid "Aged income"
-#~ msgstr "Receita vencida"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Comparar os Anos Escolhidos em Termos de"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Selecione o(s) Período(s)"
-
-#~ msgid "supplier"
-#~ msgstr "fornecedor"
-
-#~ msgid "Expenses Credit Notes Journal - (test)"
-#~ msgstr "Diário de Notas de Crédito de despesas"
 
 #, python-format
 #~ msgid "Invoice "
