@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-10-30 14:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-05-08 17:12+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:35+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:39+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -31,7 +31,7 @@ msgstr "Hata !"
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Mesai Kartı Satırı"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
@@ -55,14 +55,14 @@ msgstr "Kullanıcı"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Hata! Para birim seçilen şirketin para birimiyle aynı olmalı"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:97
 #: code:addons/analytic_user_function/analytic_user_function.py:132
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Bu ürün için tanımlı gider hesabı yok: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
@@ -85,6 +85,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Bu modül, belirli bir kullanıcının varsayılan işlevinin ne olduğunu "
+"tanımlamanızı sağlar. Bu çoğunlukla bir kullanıcı zaman çizelgesi kodlaması "
+"yaparken kullanılır: değerler alınır ve alanlar otomatik doldurulur ... "
+"ancak bu değerleri değiştirme olasılığı hala mevcuttur.\n"
+"\n"
+"    Mevcut hesap için hiçbir veri kaydedilmemişse, varsayılan değer genel "
+"olarak personel bilgisi olarak verilir ki; bu modülün eski yapılandırmalarla "
+"ne mükemmel bir uyum içinde olduğunu gösterir.\n"
+"\n"
+"    "
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
@@ -94,7 +106,7 @@ msgstr "Analitik Kullanıcı Fonksiyonu"
 #. module: analytic_user_function
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Hata! Yinelenen çözümleme hesabı oluşturamazsınız."
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0

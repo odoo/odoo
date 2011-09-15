@@ -98,6 +98,7 @@ class survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = current_rec.get('title') + ' (Copy)'
         vals.update({'title':title})
+        vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):
@@ -246,7 +247,7 @@ class survey_question(osv.osv):
         'req_error_msg': fields.text('Error Message'),
         'allow_comment': fields.boolean('Allow Comment Field'),
         'sequence': fields.integer('Sequence'),
-        'tot_resp': fields.function(_calc_response, method=True, string="Total Answer"),
+        'tot_resp': fields.function(_calc_response, string="Total Answer"),
         'survey': fields.related('page_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'descriptive_text': fields.text('Descriptive Text', size=255),
         'column_heading_ids': fields.one2many('survey.question.column.heading', 'question_id',' Column heading'),
@@ -585,8 +586,8 @@ class survey_answer(osv.osv):
         'question_id': fields.many2one('survey.question', 'Question', ondelete='cascade'),
         'answer': fields.char('Answer', size=128, required=1),
         'sequence': fields.integer('Sequence'),
-        'response': fields.function(_calc_response_avg, method=True, string="#Answer", multi='sums'),
-        'average': fields.function(_calc_response_avg, method=True, string="#Avg", multi='sums'),
+        'response': fields.function(_calc_response_avg, string="#Answer", multi='sums'),
+        'average': fields.function(_calc_response_avg, string="#Avg", multi='sums'),
         'type': fields.selection([('char','Character'),('date','Date'),('datetime','Date & Time'),\
             ('integer','Integer'),('float','Float'),('selection','Selection'),\
             ('email','Email')], "Type of Answer",required=1),
@@ -740,7 +741,7 @@ class survey_request(osv.osv):
         if user_id:
             user_obj = self.pool.get('res.users')
             user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.address_id.email}}
+            return {'value': {'email': user.user_email}}
         return {}
 
 survey_request()

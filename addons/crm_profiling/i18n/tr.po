@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-09-09 07:09+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-05-16 20:15+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:32+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:36+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -41,6 +41,21 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"    Bu modül, kullanıcıların paydaşları kendi içinde bölümlere ayırmasını "
+"sağlar.\n"
+"    Daha önceki bölümlenmiş modüllerdeki profil kriterlerini kullanır ve "
+"geliştirir. Bu da yeni anket konsepti sayesinde olur. Şimdi soruları yeniden "
+"gruplandırıp anketlere koyabilir ve direkt olarak bir paydaş üzerinde "
+"uygulayabilirsiniz\n"
+"    Çakıştıkları için daha önceki CRM & SRM\\Yapılandırma\\Bölümleme aracı "
+"ile birleştirilmiştir.\n"
+"\n"
+"    İlgili menü maddeleri \"CRM & SRM\\Yapılandırma\\Bölümleme\" içindedir.\n"
+"\n"
+"    *Not: yeniden adlandırılanla aynı olmasına rağmen bu modül bölümleme "
+"modülü ile uyumlu değildir.\n"
+"    "
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -50,6 +65,10 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"Satış Takımınızın satış süreçlerinde doğru soruları sormaları için özel "
+"konulu anketler düzenleyerek onlara yardımcı olabilirsiniz. Bölümleme aracı "
+"ile, değişik anketlere verdikleri yanıtlara göre paydaşlarınızı otomatik "
+"olarak sınıflandırabilirsiniz."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -66,23 +85,23 @@ msgstr "Soru Aç"
 #. module: crm_profiling
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hata ! Yinelenen ilişkili taraf ekleyemezsiniz."
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr ""
+msgstr "Paydaş Bölümlendirmeleri"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
 msgid "Answer"
-msgstr "Cevap"
+msgstr "Yanıt"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "Paydaş Bölümlendirmesi"
 
 #. module: crm_profiling
 #: view:res.partner:0
@@ -93,6 +112,7 @@ msgstr "Profil"
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
 msgid "Crm Profiling management - To Perform Segmentation within Partners"
 msgstr ""
+"Miy Profil Yönetimi - Paydaşlar arasında Bölümler oluşturmak içindir."
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -103,14 +123,14 @@ msgstr "Açıklama"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr "Hariç Tutulan Cevaplar"
+msgstr "Hariç Olan Yanıtlar"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
 #: view:crm_profiling.question:0
 #: field:res.partner,answers_ids:0
 msgid "Answers"
-msgstr "Cevaplar"
+msgstr "Yanıtlar"
 
 #. module: crm_profiling
 #: wizard_field:open_questionnaire,init,questionnaire_name:0
@@ -136,32 +156,34 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
+"Bu sekmeyi bölümleme kuralının bir parçası olarak kullanmak istiyorsanız bu "
+"kutuyu işaretleyin. İşaretlemezseniz buradaki kriter gözardı edilecektir."
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
 msgid "Error ! You can not create recursive profiles."
-msgstr ""
+msgstr "Hata ! Yinelen profiller oluşturamazsınız."
 
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
-msgstr ""
+msgstr "Profil Kurallarını Kullan"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
-msgstr "Mevcut Cevaplar"
+msgstr "Uygun Yanıtlar"
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr "Dahil Edilen Cevaplar"
+msgstr "Dahil Olan Yanıtlar"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr ""
+msgstr "Alt Profiller"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -174,18 +196,18 @@ msgstr "Sorular"
 #. module: crm_profiling
 #: field:crm.segmentation,parent_id:0
 msgid "Parent Profile"
-msgstr ""
+msgstr "Ana Profil"
 
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,init,end:0
 #: wizard_button:open_questionnaire,open,end:0
 msgid "Cancel"
-msgstr "İptal"
+msgstr "Vazgeç"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Paydaş"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/crm_profiling.py:178
@@ -199,12 +221,12 @@ msgstr "Anket"
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
 msgid "Using a questionnaire"
-msgstr "Anket Kullanımı"
+msgstr "Bir anket kullanımı"
 
 #. module: crm_profiling
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
-msgstr ""
+msgstr "Veriyi Kaydet"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class misc_tools_installer(osv.osv_memory):
-    _name = 'misc_tools.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         'lunch':fields.boolean('Lunch',help='A simple module to help you to manage Lunch orders.'),

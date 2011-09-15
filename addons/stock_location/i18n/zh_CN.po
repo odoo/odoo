@@ -7,25 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-27 01:25+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2011-05-04 10:22+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:37+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr "发送商品"
+msgstr "送货"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "拉式路径"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -35,7 +35,7 @@ msgstr "调拨"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "推式流程"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -55,13 +55,13 @@ msgstr "源库位"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
+msgstr "允许您取消拉式流程相关的调拨"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "拉式流程"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -71,7 +71,7 @@ msgstr "您必须为此产品赋予一个生产批次"
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "库位用于提供目标的库位"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -85,7 +85,7 @@ msgstr "内部"
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
-msgstr ""
+msgstr "拉式需求来自源库位%s ,拉式规则 %s,通过源需求 %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -101,7 +101,7 @@ msgstr "发票状态"
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
+msgstr "这字段填入源装箱单和它的调拨单名称."
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -114,12 +114,14 @@ msgid ""
 "location is replaced in the original move."
 msgstr ""
 "这些规则确定了产品在库位树中的正确移动路径.\n"
-"‘自动调拨’ 将创建库存调拨后自动确认. ‘手动操作’ 库存调拨需要人工确认. ‘自动不加入步骤’ 库位是取代调拨源库位."
+"‘自动调拨’ 将在创建仓库调拨后自动确认.\n"
+"‘手动操作’ 库存调拨需要人工确认. \n"
+"‘自动不加入步骤’ 这库位取代调拨的源库位."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr "库位路径"
+msgstr "仓库库位路径"
 
 #. module: stock_location
 #: view:product.product:0
@@ -129,7 +131,7 @@ msgstr "条件"
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr "包装区"
+msgstr "装箱区"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -149,7 +151,7 @@ msgstr "购买"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "推式流程"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
@@ -164,7 +166,7 @@ msgstr "库存调拨"
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "拉式流程"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
@@ -180,7 +182,7 @@ msgstr "物流"
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
-msgstr ""
+msgstr "如果选择,在取消这调拨时,也取消与它相关的调拨."
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -211,7 +213,7 @@ msgstr "待开票"
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr "转换要的天数"
+msgstr "过程要的天数"
 
 #. module: stock_location
 #: model:ir.module.module,description:stock_location.module_meta_information
@@ -300,6 +302,40 @@ msgid ""
 "from Gate A\n"
 "    "
 msgstr ""
+"\n"
+"这模块对库存管理增加对每种产品的逻辑路径，推式和拉式的库存流程应用.\n"
+"\n"
+"它主要用在:\n"
+"  * 管理产品的生产链.\n"
+"  * 管理每个产品的默认库位.\n"
+"  * 根据业务需要定义您的仓库路线如:\n"
+"      -质量控制\n"
+"      -售后服务\n"
+"      -供应商退货\n"
+"  * 帮助租贷管理,为租用的产品自动生成退还调拨.\n"
+"\n"
+"一旦安装这个模块,在产品界面增加一个标签,您可以加入拉式或推式流程,以产品cpu1为例:\n"
+"  推式流程\n"
+"\n"
+"  在某些产品到达某一规划库位它将调拨到另一个库位,当然这需要经过一段时间.\n"
+"    原来的系统已支持这种拉式的操作(它叫连锁库位)但它不能精确到对每一个产品. \n"
+"    一个推式流程需要指定相对应的连锁库位和一些参数如: \n"
+"      指定源库位的产品数量,连锁调拨是自动按流程规划的参数产生(目标库位,耽搁,调拨的类型,账簿等),\n"
+"      这些调拨可以自动处理也可根据参数人手确认.\n"
+"\n"
+"  拉式流程\n"
+"\n"
+"    它不同与推式流程,从某种意义上说它是不相关产品的调拨,但它是相关需求单处理的部分.\n"
+"      一个典型的例子: [客户] <- A - [直销店] <- B - [仓库] <~ C ~ [供应商]\n"
+"      当有一个需求单(销售单确认要A),来到直销店转到B(通过推式流程\"调拨\"),再转化为对供应商C的采购订单(推式流程为采购).\n"
+"      技术上拉式流程允许您处理不同的需求单,它不仅取决您要什么产品,还要看是哪个库位需要这产品.\n"
+"    案例:\n"
+"      CPU1: 在商店1您销售CPU1并运行日程表(scheduler). \n"
+"        - 仓库送货单,商店1:收货. \n"
+"      CPU3: \n"
+"        - 产品收货时放在货架2 做来料质量检测的临时库位.\n"
+"        - 当给客户送货时: 装箱单 -> 送货单.\n"
+"    "
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -309,7 +345,7 @@ msgstr "需求类型"
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
-msgstr ""
+msgstr "它用来知道属于哪个公司的装箱单和调拨"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
@@ -320,7 +356,7 @@ msgstr "名称"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr "这些规则确定了产品在整个库位树的正确路径"
+msgstr "这些规则确定了产品在整个库位树的正确路径。"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -342,7 +378,7 @@ msgstr "获得方式"
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr "运送类型"
+msgstr "货运类型"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -350,12 +386,14 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr "按库存生产:  在仓库或等待重新供应时得到需求。按订单生产:  在采购或产品获得请求时得到需求。"
+msgstr ""
+"按库存生产: 在仓库或等待重新供应时得到需求.\r\n"
+"按订单生产: 在采购或产品获得请求时得到需求."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "需要提供目标库位"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -366,7 +404,7 @@ msgstr "产品"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "通过需求%d 拉到另一个库位"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -377,7 +415,7 @@ msgstr "质量控制"
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "无效"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -390,12 +428,12 @@ msgstr "延期(天)"
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
-msgstr ""
+msgstr "拉式装箱单来自源库位%s, 拉式规则 %s,通过源需求 %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "推式流程"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -403,7 +441,7 @@ msgstr ""
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
-msgstr ""
+msgstr "拉式调拨需求来自源库位 %s,拉式规则 %s,通过源需求 %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -413,7 +451,7 @@ msgstr "您尝试为另外的产品赋予批次"
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr "请料单"
+msgstr "需求单"
 
 #. module: stock_location
 #: field:stock.location.path,location_dest_id:0
@@ -448,12 +486,12 @@ msgstr "错误：无效的(EAN)条码"
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
+msgstr "根据公司,选择您是收货还是发货"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "订单处理"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -471,13 +509,13 @@ msgstr "库位路径"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "账簿"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "取消级联"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
@@ -487,32 +525,6 @@ msgstr "已开票"
 
 #~ msgid "Stock Location Paths"
 #~ msgstr "库存库位路径"
-
-#~ msgid ""
-#~ "\n"
-#~ "Manages product's path in locations.\n"
-#~ "\n"
-#~ "This module may be useful for different purposes:\n"
-#~ "* Manages the product in his whole manufacturing chain\n"
-#~ "* Manages different default locations by products\n"
-#~ "* Define paths within the warehouse to route products based on operations:\n"
-#~ "   - Quality Control\n"
-#~ "   - After Sales Services\n"
-#~ "   - Supplier Return\n"
-#~ "* Manage products to be rent.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "管理产品的库位路径\n"
-#~ "\n"
-#~ " 这模块可能有不同的目的:\n"
-#~ "\t*在整个工业链管理产品\n"
-#~ "\t*基于运营为产品定义仓库的路径\n"
-#~ "\t- 质量控制\n"
-#~ "\t- 售后服务\n"
-#~ "\t- 供应退货\n"
-#~ "\t*管理产品免租\n"
-#~ "    "
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "产品需求&库位"

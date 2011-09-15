@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-12-23 16:25+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-05-19 16:47+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:20+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -23,17 +23,17 @@ msgid ""
 "Number of hours that can be invoiced plus those that already have been "
 "invoiced."
 msgstr ""
-"Broj sati koji mogu biti fakturirani zajedno s onima koji su već fakturisana."
+"Broj sati koji mogu biti obračunati zajedno s onima koji su već obračunati."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
-msgstr "Izračunato pomoću formule: Max Cijena Iznos - Iznos dostavnice."
+msgstr "Izračunato pomoću formule: Max cena obračuna - Iznos obračuna."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Quantity - Hours Tot."
-msgstr "Izračunato pomoću formule: Najveća količina - Ukupno vrijeme"
+msgstr "Izračunato pomoću formule: Najveća količina - Ukupno vreme"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
@@ -45,7 +45,7 @@ msgstr "Greška u pristupu"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "Date of the last invoice created for this analytic account."
-msgstr "Datum zadnje fakture kreirana za ovaj analitički račun."
+msgstr "Datum poslednjeg obračuna napravljenoh za ovaj analitički nalog."
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,description:account_analytic_analysis.module_meta_information
@@ -58,26 +58,30 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"Ovaj modul je za izmenu pregleda analitičkog naloga da bi se prikazali\n"
+"važni podaci vođi projekta servisnih kompanija.\n"
+"Dodaje meni da pokaže relevantne informacije o svakom vođi.\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
 msgid "Last Invoice Date"
-msgstr "Zadnji Datum fakture"
+msgstr "Datum poslednjeg obračuna"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
-msgstr "Izračunato pomoću formule: Prihodi Teorijski - Ukupni troškovi"
+msgstr "Izračunato pomoću formule: Teoretski prihodi - Ukupni troškovi"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
-msgstr "Realna Stopa Margine (%)"
+msgstr "Realna Stopa Marže (%)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "Teoretski prihod"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -85,18 +89,18 @@ msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
 "have been invoiced."
 msgstr ""
-"Ako račun od troškova, to je datum najnoviji rad ili cijene koje su "
-"fakturirane."
+"Ako je faktura izvedena iz troškova, to je datum poslednjeg rada ili već "
+"fakturisani računi."
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
 msgid "Billing"
-msgstr "Obracunavanje"
+msgstr "Obračunavanje"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
 msgid "Date of Last Cost/Work"
-msgstr "Datum poslednjeg  Cena / Posao"
+msgstr "Datum poslednje  Cene / Rada"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
@@ -109,8 +113,8 @@ msgid ""
 "Number of hours you spent on the analytic account (from timesheet). It "
 "computes on all journal of type 'general'."
 msgstr ""
-"Broj sati provedenih na tom analitičkom račun (iz timesheet). Izračunava se "
-"iz svih dnevnih knjiga za tip 'Generalno'."
+"Broj sati potrošenih na tom analitičkom nalogu (prema vremenskoj tablici). "
+"Izračunava se u svim dnevnicima za tip 'Opšte'."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_hours:0
@@ -120,7 +124,7 @@ msgstr "Preostali Sati"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "Teoretska stopa marže"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -129,9 +133,8 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
-"Na temelju troškova koje ste imali na projektu, što bi bio prihod ako su svi "
-"ovi troškovi su obračunati po normalnoj prodajnoj cijeni proistekli iz "
-"cenovnika."
+"S obzirom na troškove koje ste imali na projektu, koliki bi bio prihod ako "
+"su svi ovi troškovi obračunati po normalnoj prodajnoj ceni, prema cenovniku."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -142,27 +145,27 @@ msgstr "Korisnik"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
-msgstr "Nefakturirani iznos"
+msgstr "Neobračunati iznos"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr "Izračunato korištenjem formule: Fakturirani iznos - Ukupni troškovi."
+msgstr "Izračunato pomoću formule: Fakturisani iznos - Ukupni troškovi."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
-msgstr "Nefakturirani sati"
+msgstr "Neobračunati sati"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
-msgstr "Datum najnovijeg rada obavljenog na ovom računu."
+msgstr "Datum poslednjeg rada obavljenog na ovom nalogu."
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
-msgstr "izvestaj_analitickog_konta"
+msgstr "izveštaj_analitičkog_naloga"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -172,7 +175,7 @@ msgstr "Ukupno sati po Korisniku"
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr "Fakturirani iznos"
+msgstr "Obračunati iznos"
 
 #. module: account_analytic_analysis
 #: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
@@ -184,40 +187,39 @@ msgstr "Pokušavate da zaobiđete pravilo za pristup (Dokument tipa: %s)."
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr "Datum zadnje fakturiranog troška"
+msgstr "Datum poslednjeg obračunatog troška"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
 msgid "Invoiced Hours"
-msgstr "Fakturirani sati"
+msgstr "Obračunati sati"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
-msgstr "Realna marza"
+msgstr "Realna marža"
 
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Greška! Valuta mora biti ista kao i valuta izabranog preduzeća"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr "Ukupni iznos izlaznih faktura za ovaj račun."
+msgstr "Ukupni iznos korisničkih obračuna za ovaj nalog."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr "Ukupno sati po mjesecu"
+msgstr "Ukupno sati po mesecu"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
-msgstr ""
-"Računa se korištenjem formule: (Stvarna granica / Ukupni troškovi) * 100"
+msgstr "Izračunava se pomoću formule: (Realna marža / ukupni troškovi) * 100"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -225,13 +227,13 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
-"Broj sati (iz dnevnika ' generalnog' tipa) koji mogu biti fakturirani ako "
-"fakturirate na osnovu analitičkog računa."
+"Broj sati (iz dnevnika, tip 'opšte') koji mogu biti obračunati ako vršite "
+"obračun na osnovu analitičkog naloga."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Analytic accounts"
-msgstr "Analitički računi"
+msgstr "Analitički nalozi"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
@@ -244,18 +246,18 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
-"Ako fakturirate iz analitičkog računa, preostali iznos kojeg možete "
-"fakturirati kupcu je zasnovan na ukupnim troškovima."
+"Ako je obračun iz analitičkog naloga, preostali iznos za obračunavanje "
+"korisniku bazira se na ukupnim troškovima."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Hours Tot."
-msgstr "Izračunato korištenjem formule: Fakturirani iznos / Ukupno sati"
+msgstr "Izračunato pomoću formule: Iznos obračuna / Ukupno sati"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Hours (real)"
-msgstr "Prihod po satiima ( stvarni)"
+msgstr "Prihod po satima (stvarni)"
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
@@ -274,19 +276,19 @@ msgstr "Mesec"
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analitički konto"
+msgstr "Analitički nalog"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
 msgid "Overpassed Accounts"
-msgstr "Prekoračeni računi"
+msgstr "Prekoračeni nalozi"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "All Uninvoiced Entries"
-msgstr "Sve nefakturirane stavke"
+msgstr "Sve neobračunate stavke"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -296,7 +298,7 @@ msgstr "Ukupno sati"
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Greška! Ne možete praviti rekurzivne analitičke naloge."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -304,8 +306,8 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
-"Ukupno troškova za ovaj račun. Uključuje stvarne troškove (iz faktura) i "
-"indirektne troškove, kao, npr,vrijeme potrošeno na timesheetovima."
+"Suma troškova za ovaj naloga. Uključuje stvarne troškove (iz obračunâ) i "
+"indirektne troškove, kao, npr. vreme potrošeno na vremenskim tablicama."
 
 #~ msgid "Theorical Revenue"
 #~ msgstr "Teorijski Prihod"
@@ -317,9 +319,6 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Pogrešno ime modela u definiciji akcije."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
 
 #~ msgid "Theorical Margin"
 #~ msgstr "Teoretska margina"

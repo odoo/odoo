@@ -22,6 +22,7 @@
 {
     "name": "Lunch Module",
     "author": "OpenERP SA",
+    'complexity': "easy",
     "Description": """
     The lunch module is for keeping a record of the order placed and payment of the orders.
     =======================================================================================
@@ -49,6 +50,7 @@
         'lunch_view.xml',
         'lunch_report.xml',
         'report/report_lunch_order_view.xml',
+        'lunch_installer_view.xml'
     ],
     "demo_xml": ['lunch_demo.xml'],
     "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],

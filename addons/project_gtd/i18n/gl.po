@@ -1,0 +1,304 @@
+# Galician translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-05-12 15:05+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Galician <gl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:31+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: project_gtd
+#: help:project.task,timebox_id:0
+msgid "Time-laps during which task has to be treated"
+msgstr "Iteracións de tempo durante as que a tarefa tense que realizar."
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_timebox
+msgid "project.gtd.timebox"
+msgstr "proxecto.gtd.períodotempo"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Reactivate"
+msgstr "Reactivar"
+
+#. module: project_gtd
+#: help:project.gtd.timebox,sequence:0
+msgid "Gives the sequence order when displaying a list of timebox."
+msgstr ""
+"Indica a orde de secuencia cando se amosa unha lista de períodos de tempo."
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_travel
+msgid "Travel"
+msgstr "Viaxe"
+
+#. module: project_gtd
+#: view:project.timebox.empty:0
+msgid "Timebox Empty Process Completed Successfully."
+msgstr "O proceso de períodos de tempo baleiros realizouse corretamente."
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "Non existe período de tempo fillo de este!"
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:112
+#, python-format
+msgid "GTD"
+msgstr "GTD"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_lt
+msgid "Long Term"
+msgstr "Longo prazo"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_timebox_empty
+msgid "Project Timebox Empty"
+msgstr "Período de tempo do proxecto baleiro"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_daily
+msgid "Today"
+msgstr "Hoxe"
+
+#. module: project_gtd
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: view:project.task:0
+#: field:project.task,timebox_id:0
+msgid "Timebox"
+msgstr "Período de tempo"
+
+#. module: project_gtd
+#: model:ir.module.module,shortdesc:project_gtd.module_meta_information
+msgid "Getting Things Done - Time Management Module"
+msgstr ""
+"Módulo de xestión do tempo: Getting things done \"Facendo as cousas\""
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,timebox_to_id:0
+msgid "Set to Timebox"
+msgstr "Configurar en período de tempo"
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error !"
+msgstr "Erro!"
+
+#. module: project_gtd
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Erro! Non pode crear tarefas recorrentes."
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "_Cancel"
+msgstr "_Anular"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
+#: view:project.timebox.empty:0
+msgid "Empty Timebox"
+msgstr "Período de tempo baleiro"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
+"defines a period of time in order to categorize your tasks: today, this "
+"week, this month, long term."
+msgstr ""
+"Os 'períodos de tempo' defínense na metodoloxía \"Getting Things Done\" "
+"(Facendo as cousas). Un \"período de tempo\" define un lapso coa finalidade "
+"de clasificar as súas tarefas: hoxe, esta semana, este mes, a longo prazo."
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Esta semana"
+
+#. module: project_gtd
+#: model:project.gtd.timebox,name:project_gtd.timebox_monthly
+msgid "This Month"
+msgstr "Este mes"
+
+#. module: project_gtd
+#: field:project.gtd.timebox,icon:0
+msgid "Icon"
+msgstr "Icona"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
+msgid "Project Timebox Fill"
+msgstr "Período de tempo do proxecto completo"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_task
+msgid "Task"
+msgstr "Tarefa"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Add to Timebox"
+msgstr "Engadir ó período de tempo"
+
+#. module: project_gtd
+#: field:project.timebox.empty,name:0
+msgid "Name"
+msgstr "Nome"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
+#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
+msgid "Contexts"
+msgstr "Contextos"
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr "Automóbil"
+
+#. module: project_gtd
+#: model:ir.module.module,description:project_gtd.module_meta_information
+msgid ""
+"\n"
+"This module implements all concepts defined by the Getting Things Done\n"
+"methodology. This world-wide used methodology is used for personal\n"
+"time management improvement.\n"
+"\n"
+"Getting Things Done (commonly abbreviated as GTD) is an action management\n"
+"method created by David Allen, and described in a book of the same name.\n"
+"\n"
+"GTD rests on the principle that a person needs to move tasks out of the mind "
+"by\n"
+"recording them externally. That way, the mind is freed from the job of\n"
+"remembering everything that needs to be done, and can concentrate on "
+"actually\n"
+"performing those tasks.\n"
+"    "
+msgstr ""
+"\n"
+"Este módulo implementa tódolos conceptos definidos pola metodoloxía "
+"\"Getting Things Done\" (Facendo as cousas). Esta metodoloxía recoñecida "
+"mundialmente úsase para mellorar a xestión do tempo persoal. \"Getting "
+"Things Done\" (habitualmente abreviado como GTD) é un método de xestión de "
+"actividades creado por David Allen, e descrito nun libro co mesmo nome. GTD "
+"baséase no principio de que unha persoa necesita liberar a mente de tarefas, "
+"anotándoas externamente. Dese modo, a mente é libre de recordar todo o que "
+"hai que facer, e pódese concentrar en realizar realmente esas tarefas.\n"
+"    "
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
+#: view:project.timebox.fill.plan:0
+msgid "Plannify Timebox"
+msgstr "Planifica período de tempo"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
+#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
+#: view:project.gtd.timebox:0
+msgid "Timeboxes"
+msgstr "Períodos de tempo"
+
+#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_context
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
+#: field:project.task,context_id:0
+msgid "Context"
+msgstr "Contexto"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Next"
+msgstr "Seguinte"
+
+#. module: project_gtd
+#: view:project.timebox.empty:0
+msgid "_Ok"
+msgstr "_Aceptar"
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:110
+#, python-format
+msgid "Getting Things Done"
+msgstr "Facendo as cousas (GTD)"
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_office
+msgid "Office"
+msgstr "Oficina"
+
+#. module: project_gtd
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: project_gtd
+#: help:project.gtd.context,sequence:0
+msgid "Gives the sequence order when displaying a list of contexts."
+msgstr "Indica a orde de secuencia cando se amosa unha lista de contextos."
+
+#. module: project_gtd
+#: view:project.gtd.timebox:0
+msgid "Timebox Definition"
+msgstr "Definición períodos de tempo"
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Selección de tarefas"
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:111
+#, python-format
+msgid "Inbox"
+msgstr "Bandexa de entrada"
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,timebox_id:0
+msgid "Get from Timebox"
+msgstr "Obter desde período de tempo"
+
+#. module: project_gtd
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr "O lugar de contexto onde o usuario ten que realizar a tarefa."
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr "Inicio"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at the office, at home, when I take my car, etc."
+msgstr ""
+"Os contextos defínense na metodoloxía \"Getting Things Done\" (Facendo as "
+"cousas). Permítelle clasificar as súas tarefas de acordo co contexto no que "
+"se teñen que realizar: na oficina, na casa, ó coller o coche, etc."
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Previous"
+msgstr "Previo"

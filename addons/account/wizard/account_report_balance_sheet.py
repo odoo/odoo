@@ -44,11 +44,11 @@ class account_bs_report(osv.osv_memory):
                                       help='This Account is used for transfering Profit/Loss ' \
                                            '(Profit: Amount will be added, Loss: Amount will be duducted), ' \
                                            'which is calculated from Profilt & Loss Report',
-                                      domain = [('type','=','payable')]),
+                                      domain = [('type','=','other')]),
     }
 
     _defaults={
-        'display_type': True,
+        'display_type': False,
         'journal_ids': [],
         'reserve_account_id': _get_def_reserve_account,
     }

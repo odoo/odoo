@@ -41,7 +41,7 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Logistics Flows">
-                        <field name="flow_pull_ids" editable="bottom" colspan="4" nolabel="1">
+                        <field name="flow_pull_ids" colspan="4" nolabel="1">
                             <tree string="Pulled flows">
                                 <field name="name"/>
                                 <field name="location_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
@@ -69,7 +69,7 @@
                                 </group>
                             </form>
                         </field>
-                        <field name="path_ids" editable="bottom" colspan="4" nolabel="1">
+                        <field name="path_ids" colspan="4" nolabel="1">
                         <field name="name"/>
                             <tree string="Pushed flows">
                                 <field name="location_from_id"/>
