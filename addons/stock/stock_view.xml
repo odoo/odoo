@@ -57,7 +57,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines">
-                    <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)" select="1" domain="[('type','&lt;&gt;','service')]"/>
+                    <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="prod_lot_id" groups="base.group_extended"/>
@@ -95,7 +95,7 @@
             <field name="model">stock.inventory</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state in ('cancel')">
+                <tree string="Lot Inventory" colors="grey:state == 'cancel'">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -117,7 +117,7 @@
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
-                                <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <field name="prod_lot_id" groups="base.group_extended"/>
@@ -129,7 +129,7 @@
                             <form string="Products ">
                                 <field domain="[('usage','=','internal')]" name="location_id"/>
                                 <newline/>
-                                <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <group colspan="2" col="4">
@@ -423,7 +423,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -437,7 +437,6 @@
                     <field name="date" string="Date"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -448,7 +447,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -674,7 +673,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
@@ -699,6 +698,7 @@
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
                             <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="invoice_state" string="Invoice Control" groups="base.group_extended"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
@@ -709,7 +709,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -738,7 +738,6 @@
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
@@ -761,7 +760,7 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
                                         <field name="location_dest_id" domain="[('usage','=','internal')]" />
                                     </group>
 
@@ -811,7 +810,6 @@
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
                             <field name="auto_picking" groups="base.group_extended"/>
-                            <field name="invoice_state" groups="base.group_extended"/>
                             <field name="date_done" groups="base.group_extended"/>
                             <field name="move_type" groups="base.group_extended"/>
                             <field name="type" groups="base.group_extended"/>
@@ -868,7 +866,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -1088,7 +1086,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="partner_id" />
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1113,7 +1111,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
-                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" domain="[('partner_id','&lt;&gt;',False)]" colspan="4"/>
                             <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
@@ -1248,15 +1246,13 @@
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id"/>
                         <field name="origin"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -1369,7 +1365,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
+                <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
@@ -1499,14 +1495,8 @@
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                         <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
                         <field name="date"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8" groups="base.group_extended">
-                            <field name="origin"/>
-                            <field name="picking_id"/>
-                            <field name="prodlot_id"/>
-                            <field name="tracking_id"/>
-                            <field name="state"/>
+                        <field name="origin"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
@@ -1552,7 +1542,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="6" />
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="partner_id" string="Partner"/>
@@ -1582,7 +1572,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
+                    <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1692,11 +1682,7 @@
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="tracking_id" context="{'tracking': self}"/>
-                       <field name="prodlot_id"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
@@ -1729,11 +1715,7 @@
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="tracking_id" context="{'tracking_id': self}"/>
-                       <field name="prodlot_id"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">

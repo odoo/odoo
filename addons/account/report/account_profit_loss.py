@@ -101,6 +101,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
 
         cal_list = {}
         account_id = data['form'].get('chart_account_id', False)
+        company_currency = account_pool.browse(self.cr, self.uid, account_id).company_id.currency_id
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
@@ -121,7 +122,10 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)
-            if self.result_sum_dr > self.result_sum_cr:
+            if currency_pool.is_zero(self.cr, self.uid, company_currency, (self.result_sum_dr-self.result_sum_cr)):
+                self.res_pl['type'] = None
+                self.res_pl['balance'] = 0.0
+            elif self.result_sum_dr > self.result_sum_cr:
                 self.res_pl['type'] = _('Net Loss')
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:

@@ -104,6 +104,7 @@
                 <page string="Categories" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
                         <field name="product_id" domain="[('type','=','service')]"/>
+                        <field name="uom_id"/>
                         <field name="journal_id" widget="selection"/>
                     </page>
                 </page>
