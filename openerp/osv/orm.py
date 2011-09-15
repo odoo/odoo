@@ -1689,7 +1689,7 @@ class orm_template(object):
                 raise except_orm('View error', msg)
         return arch, fields
 
-    def __get_default_form_view(self, cr, user, context=None):
+    def _get_default_form_view(self, cr, user, context=None):
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         res = self.fields_get(cr, user, context=context)
         xml = '<?xml version="1.0" encoding="utf-8"?> ' \
@@ -1702,7 +1702,7 @@ class orm_template(object):
         xml += "</form>"
         return xml
 
-    def __get_default_tree_view(self, cr, user, context=None):
+    def _get_default_tree_view(self, cr, user, context=None):
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
             _rec_name = self._columns.keys()[0]
@@ -1711,7 +1711,7 @@ class orm_template(object):
               % (self._description, _rec_name)
         return xml
 
-    def __get_default_calendar_view(self):
+    def _get_default_calendar_view(self, cr, user, context=None):
         """Generate a default calendar view (For internal use only).
         """
         # TODO could return an etree instead of a string
@@ -1758,7 +1758,7 @@ class orm_template(object):
 
         return arch
 
-    def __get_default_search_view(self, cr, uid, context=None):
+    def _get_default_search_view(self, cr, uid, context=None):
         form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
@@ -1984,23 +1984,14 @@ class orm_template(object):
                 name=sql_res['name'],
                 field_parent=sql_res['field_parent'] or False)
         else:
-
             # otherwise, build some kind of default view
-            if view_type == 'form':
-                xml = self.__get_default_form_view(cr, user, context)
-
-            elif view_type == 'tree':
-                xml = self.__get_default_tree_view(cr, user, context)
-
-            elif view_type == 'calendar':
-                xml = self.__get_default_calendar_view()
-
-            elif view_type == 'search':
-                xml = self.__get_default_search_view(cr, user, context)
-
-            else:
+            try:
+                xml = getattr(self, '_get_default_%s_view' % view_type)(
+                    cr, user, context)
+            except AttributeError:
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
+
             result.update(
                 arch=etree.fromstring(encode(xml)),
                 name='default',
