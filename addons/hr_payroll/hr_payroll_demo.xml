@@ -89,7 +89,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Get 1% of sales</field>
             <field name="sequence" eval="17"/>
-            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * contract.wage * 0.01</field>
+            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * 0.01</field>
          </record>
 
         <!-- Rule Inputs -->
