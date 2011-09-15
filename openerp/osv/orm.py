@@ -1761,12 +1761,15 @@ class orm_template(object):
             if dt_stop in self._columns:
                 view.set('date_stop', dt_stop)
                 break
-
-        if not view.get('date_stop'):
+        if 'date_stop' not in view.attrib:
             for dt_delay in ["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"]:
                 if dt_delay in self._columns:
                     view.set('date_delay', dt_delay)
                     break
+            if 'date_delay' not in view.attrib:
+                raise except_orm(
+                    _('Invalid Object Architecture!'),
+                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
 
         return view
 
