@@ -93,7 +93,7 @@ class StockMove(osv.osv):
                     })
                     wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 pack_location = move.sale_line_id and move.sale_line_id.order_id.shop_id.warehouse_id.lot_output_id.id or \
-                           move.location_dest_id.id
+                                move.location_dest_id.id
                 move_obj.write(cr, uid, [move.id], {
                     'location_id': pack_location,
                     'auto_validate': True,
