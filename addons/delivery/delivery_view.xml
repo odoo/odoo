@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <!-- Delivery Carriers -->
         <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" sequence="4"/>
-
-
-
 
         <record id="view_delivery_carrier_tree" model="ir.ui.view">
             <field name="name">delivery.carrier.tree</field>
@@ -25,10 +21,46 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Carrier">
-                    <field name="name" select="1"/>
-                    <field name="active" select="1"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
+                    <group colspan="4" col="4" name="general">
+                        <field name="name" select="1"/>
+                        <field name="active" select="1"/>
+                        <field name="partner_id" select="1"/>
+                        <field name="product_id" select="1"/>
+                        <separator string="Pricing Information" colspan="6"/>
+                        <group colspan="2" col="4">
+                            <field name="normal_price" select="1" colspan="4"/>
+                            <newline/>
+                            <field name="free_if_more_than"/>
+                            <field name="amount" attrs="{'invisible':[('free_if_more_than','=',False)]}"/>
+                        </group>
+                        <newline/>
+                        <field name="use_detailed_pricelist"/>
+                    </group>
+                        <field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
+                         <tree string="Delivery grids">
+                              <field name="sequence"/>
+                              <field name="carrier_id"/>
+                              <field name="name"/>
+                         </tree>
+                        <form string="Delivery grids">
+                             <field name="name" select="1"/>
+                             <field name="active" select="1"/>
+                             <field name="sequence" groups="base.group_extended" select="1"/>
+                             <notebook colspan="4">
+                               <page string="Grid definition">
+                                  <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                               </page>
+                               <page string="Destination">
+                                   <separator colspan="4" string="Countries"/>
+                                   <field colspan="4" name="country_ids" nolabel="1"/>
+                                   <separator colspan="4" string="States"/>
+                                   <field colspan="4" name="state_ids" nolabel="1"/>
+                                   <field name="zip_from"/>
+                                   <field name="zip_to"/>
+                               </page>
+                             </notebook>
+                       </form>
+                   </field>
                 </form>
             </field>
         </record>
@@ -38,8 +70,18 @@
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create and manage the delivery methods you need for your sales activities. Each delivery method can be assigned to a price list which computes the price of the delivery according to the products sold or delivered.</field>
+            <field name="help">Define the delivery methods you are using and their pricing in order to reinvoice the delivery costs when you are doing invoicing based on delivery orders</field>
         </record>
+
+        <record id="action_delivery_carrier_form1" model="ir.actions.act_window">
+            <field name="name">Delivery Method</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.carrier</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="help">Define the delivery methods you are using and their pricing in order to reinvoice the delivery costs when you are doing invoicing based on delivery orders</field>
+        </record>
+
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" groups="base.group_extended"/>
 
         <!-- Delivery Grids -->
@@ -98,13 +140,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grid Lines">
-                    <field colspan="4" name="name" select="1"/>
-                    <field name="type" string="Condition"/>
-                    <field name="operator" nolabel="1"/>
-                    <field name="max_value" nolabel="1"/>
+                    <group colspan="5" col="5">
+                        <field colspan="4" name="name" select="1"/>
+                        <newline/>
+                        <field name="type" string="Condition"/>
+                        <field name="operator" nolabel="1"/>
+                        <field name="max_value" nolabel="1"/>
+                    </group>
+                    <newline/>
                     <field name="list_price"/>
                     <field name="standard_price" groups="base.group_extended"/>
-                    <field name="price_type"  />
+                    <field name="price_type"/>
                     <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}"/>
                 </form>
             </field>
@@ -118,7 +164,7 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="operator"/>
-                    <field name="max_value"/>
+                    <field name="max_value" nolabel="1"/>
                     <field name="list_price"/>
                     <field name="standard_price" groups="base.group_extended"/>
                 </tree>
@@ -286,6 +332,10 @@
             </field>
         </record>
 
+       <record id="delivery_method_form_view_todo" model="ir.actions.todo">
+           <field name="action_id" ref="action_delivery_carrier_form1"/>
+           <field name="sequence">10</field>
+       </record>
 
     </data>
 </openerp>

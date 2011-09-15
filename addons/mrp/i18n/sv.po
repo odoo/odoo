@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-27 22:20+0000\n"
-"Last-Translator: Magnus Brandt (mba), Aspirix AB <Unknown>\n"
+"PO-Revision-Date: 2011-08-03 23:21+0000\n"
+"Last-Translator: Stefan Lind <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:50+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:59+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -122,7 +122,7 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
-msgstr ""
+msgstr "Att tillverka"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -720,7 +720,7 @@ msgid "Per month"
 msgstr "Per månad"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -733,7 +733,7 @@ msgid "Product Name"
 msgstr "Produktnamn"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Invalid action !"
@@ -1299,7 +1299,7 @@ msgid "Month -1"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr ""
@@ -1310,7 +1310,7 @@ msgid "Production Order N° :"
 msgstr "Production Order N° :"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr ""
@@ -1539,7 +1539,7 @@ msgid "Manufacturing Orders To Start"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
@@ -1629,7 +1629,7 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr ""
@@ -2118,7 +2118,7 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -2623,9 +2623,6 @@ msgstr ""
 #~ msgid "Stockable Production Order"
 #~ msgstr "Stockable Production Order"
 
-#~ msgid "Caution!"
-#~ msgstr "Caution!"
-
 #~ msgid "Stockable Request"
 #~ msgstr "Stockable Request"
 
@@ -2645,9 +2642,6 @@ msgstr ""
 
 #~ msgid "Stockable Make to Stock"
 #~ msgstr "Stockable Make to Stock"
-
-#~ msgid "Qty Multiple must be greater than zero."
-#~ msgstr "Qty Multiple must be greater than zero."
 
 #~ msgid "Procure Service Product"
 #~ msgstr "Procure Service Product"
@@ -2701,15 +2695,6 @@ msgstr ""
 
 #~ msgid "Procurement convert into the draft purchase order."
 #~ msgstr "Procurement convert into the draft purchase order."
-
-#~ msgid ""
-#~ "Before splitting the production lots,make sure this move or its Production "
-#~ "Order has a Picking attached !\n"
-#~ "You must save the move before performing this operation."
-#~ msgstr ""
-#~ "Before splitting the production lots,make sure this move or its Production "
-#~ "Order has a Picking attached !\n"
-#~ "You must save the move before performing this operation."
 
 #, python-format
 #~ msgid "from stock and no minimum orderpoint rule defined"
@@ -2820,25 +2805,6 @@ msgstr ""
 #~ msgid "Compute All Schedulers"
 #~ msgstr "Beräkna alla schemaläggare"
 
-#~ msgid ""
-#~ "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def copy(self, cr, uid, id, default=None,context=None):\n"
-#~ "        if not default:\n"
-#~ "            default = {}\n"
-#~ "        default.update({\n"
-#~ "            'name': self.pool.get('ir.sequence"
-#~ msgstr ""
-#~ "Cannot delete Production Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def copy(self, cr, uid, id, default=None,context=None):\n"
-#~ "        if not default:\n"
-#~ "            default = {}\n"
-#~ "        default.update({\n"
-#~ "            'name': self.pool.get('ir.sequence"
-
 #, python-format
 #~ msgid "Product uom"
 #~ msgstr "Product uom"
@@ -2911,9 +2877,6 @@ msgstr ""
 #~ msgid "Procurement orders"
 #~ msgstr "Anskaffningsorders"
 
-#~ msgid "No production sequence defined"
-#~ msgstr "No production sequence defined"
-
 #~ msgid "If product type is service and procure method is Make to order"
 #~ msgstr "If product type is service and procure method is Make to order"
 
@@ -2922,9 +2885,6 @@ msgstr ""
 
 #~ msgid "Max Quantity"
 #~ msgstr "Max Quantity"
-
-#~ msgid "Procurement Request"
-#~ msgstr "Procurement Request"
 
 #~ msgid "Minimum Stock Procure"
 #~ msgstr "Minimum Stock Procure"
@@ -2965,9 +2925,6 @@ msgstr ""
 
 #~ msgid "Production Orders Waiting Products"
 #~ msgstr "Production Orders Waiting Products"
-
-#~ msgid "Data Insufficient !"
-#~ msgstr "Data Insufficient !"
 
 #~ msgid "The procurement quantity will by rounded up to this multiple."
 #~ msgstr "The procurement quantity will by rounded up to this multiple."
@@ -3050,13 +3007,6 @@ msgstr ""
 #~ msgid "No address defined for the supplier"
 #~ msgstr "No address defined for the supplier"
 
-#~ msgid ""
-#~ "Please check the Quantity of Procurement Order(s), it should not be less "
-#~ "than 1!"
-#~ msgstr ""
-#~ "Please check the Quantity of Procurement Order(s), it should not be less "
-#~ "than 1!"
-
 #~ msgid "Your procurement request has been sent !"
 #~ msgstr "Your procurement request has been sent !"
 
@@ -3068,9 +3018,6 @@ msgstr ""
 
 #~ msgid "Compute Procurements Only"
 #~ msgstr "Beräkna endast anskaffningar"
-
-#~ msgid "Error!"
-#~ msgstr "Error!"
 
 #~ msgid "Temporary Procurement Exceptions"
 #~ msgstr "Temporary Procurement Exceptions"
@@ -3093,9 +3040,6 @@ msgstr ""
 
 #~ msgid "New Bill of Materials"
 #~ msgstr "New Bill of Materials"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Invalid arguments"
 
 #, python-format
 #~ msgid "Product quantity"
@@ -3182,23 +3126,5 @@ msgstr ""
 #~ msgid "You can see its bill of material which are used to make product"
 #~ msgstr "You can see its bill of material which are used to make product"
 
-#~ msgid "Scheduled End"
-#~ msgstr "Scheduled End"
-
 #~ msgid "Bill of Materials Components"
 #~ msgstr "Bill of Materials Components"
-
-#~ msgid ""
-#~ "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-#~ "        if product_id:\n"
-#~ "            w=self.pool.get('product.product"
-#~ msgstr ""
-#~ "Cannot delete Procurement Order(s) which are in %s State!' % s['state']))\n"
-#~ "        return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)\n"
-#~ "\n"
-#~ "    def onchange_product_id(self, cr, uid, ids, product_id, context={}):\n"
-#~ "        if product_id:\n"
-#~ "            w=self.pool.get('product.product"

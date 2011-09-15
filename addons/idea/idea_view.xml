@@ -263,7 +263,7 @@
         <field name="model">idea.idea</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-        <tree colors="blue:state in ('draft');black:state in ('open','close');gray:state in('cancel')" string="Ideas">
+        <tree colors="blue:state == 'draft';black:state in ('open','close');gray:state == 'cancel'" string="Ideas">
             <field name="name"/>
             <field name="category_id"/>
             <field name="user_id"/>

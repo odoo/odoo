@@ -144,13 +144,6 @@ Normal - the campaign runs normally and automatically sends all emails and repor
             if activity.signal and len(activity.from_ids) == 0:
                 has_signal_without_from = True
 
-            if activity.type != 'email':
-                continue
-            if not activity.email_template_id.from_account:
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is missing in email activity '%s'")%activity.name)
-            if activity.email_template_id.from_account.state != 'approved':
-                raise osv.except_osv(_("Error"), _("The campaign cannot be started: the email account is not approved in email activity '%s'")%activity.name)
-
         if not has_start and not has_signal_without_from:
             raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"))
 
@@ -281,7 +274,7 @@ class marketing_campaign_segment(osv.osv):
                                    'State',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
-        'date_next_sync': fields.function(_get_next_sync, method=True, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
+        'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
     }
 
     _defaults = {
@@ -484,9 +477,9 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').generate_mail(cr, uid,
+        return self.pool.get('email.template').send_mail(cr, uid,
                                             activity.email_template_id.id,
-                                            [workitem.res_id], context=context)
+                                            workitem.res_id, context=context)
 
     def _process_wi_action(self, cr, uid, activity, workitem, context=None):
         if context is None:
@@ -548,7 +541,7 @@ class marketing_campaign_transition(osv.osv):
 
 
     _columns = {
-        'name': fields.function(_get_name, method=True, string='Name',
+        'name': fields.function(_get_name, string='Name',
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
                                             'Previous Activity', select=1,
@@ -649,7 +642,7 @@ class marketing_campaign_workitem(osv.osv):
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
              type='many2one', relation='ir.model', string='Resource', select=1, readonly=True, store=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
+        'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
         'state': fields.selection([('todo', 'To Do'),
@@ -807,7 +800,7 @@ class marketing_campaign_workitem(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
-                'context': "{'template_id':%d,'default_rel_model_ref':%d}"%
+                'context': "{'template_id':%d,'default_res_id':%d}"%
                                 (wi_obj.activity_id.email_template_id.id,
                                  wi_obj.res_id)
             }
@@ -831,7 +824,7 @@ marketing_campaign_workitem()
 class email_template(osv.osv):
     _inherit = "email.template"
     _defaults = {
-        'object_name': lambda obj, cr, uid, context: context.get('object_id',False),
+        'model_id': lambda obj, cr, uid, context: context.get('object_id',False),
     }
 
     # TODO: add constraint to prevent disabling / disapproving an email account used in a running campaign

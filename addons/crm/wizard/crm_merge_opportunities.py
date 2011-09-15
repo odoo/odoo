@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -67,11 +66,13 @@ class crm_merge_opportunity(osv.osv_memory):
             ids = list(set(ids) - set(context.get('lead_ids', False)) )
         lead_obj = self.pool.get('crm.lead')
         op_id = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
+        if not op_id:
+            return False
         opps = lead_obj.browse(cr, uid, [op_id[0]], context=context)
         return opps[0]
-        
+
     def _update_data(self, op_ids, oldest_opp):
-		data = {
+        data = {
                 'partner_id': self._get_first_not_null_id('partner_id', op_ids, oldest_opp),  # !!
                 'title': self._get_first_not_null_id('title', op_ids, oldest_opp),
                 'name' : self._get_first_not_null('name', op_ids, oldest_opp),  #not lost
@@ -104,16 +105,15 @@ class crm_merge_opportunity(osv.osv_memory):
                 'email_from' : self._get_first_not_null('email_from', op_ids, oldest_opp),
                 'email_cc' : self._get_first_not_null('email_cc', op_ids, oldest_opp),
                 'partner_name' : self._get_first_not_null('partner_name', op_ids, oldest_opp),
-
-            }
-		return data
+        }
+        return data
 
     def merge(self, cr, uid, op_ids, context=None):
         """
-            @param opp_ids : list of opportunities ids to merge
+            :param opp_ids: list of opportunities ids to merge
         """
         opp_obj = self.pool.get('crm.lead')
-        message_obj = self.pool.get('mailgate.message')
+        message_obj = self.pool.get('mail.message')
 
         lead_ids = context and context.get('lead_ids', []) or []
 
@@ -129,17 +129,15 @@ class crm_merge_opportunity(osv.osv_memory):
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
-            
 
-        
         data = self._update_data(op_ids, oldest_opp)
         #copy message into the first opportunity + merge attachement
-        
+
         for opp in tail_opportunities + [first_opportunity]:
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
             self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
-            for history in opp.message_ids:
-                new_history = message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
+            for mail_msg in opp.message_ids:
+                message_obj.write(cr, uid, mail_msg.id, {'res_id': first_opportunity.id, 'subject' : _("From %s : %s") % (opp.name, mail_msg.subject) }, context=context)
 
         #Notification about loss of information
         details = []
@@ -171,7 +169,7 @@ class crm_merge_opportunity(osv.osv_memory):
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
 
-        opp_obj._history(cr, uid, [first_opportunity], subject, details=details)
+        opp_obj.message_append(cr, uid, [first_opportunity], subject, body_text=details)
         #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
         opp_obj.write(cr, uid, [first_opportunity.id], data)
         unlink_ids = map(lambda x: x.id, tail_opportunities)
@@ -179,11 +177,7 @@ class crm_merge_opportunity(osv.osv_memory):
 
         models_data = self.pool.get('ir.model.data')
 
-
-
         # Get Opportunity views
-        result = models_data._get_id(
-            cr, uid, 'crm', 'view_crm_case_opportunities_filter')
         opportunity_view_form = models_data._get_id(
             cr, uid, 'crm', 'crm_case_form_view_oppor')
         opportunity_view_tree = models_data._get_id(
@@ -217,7 +211,6 @@ class crm_merge_opportunity(osv.osv_memory):
         context['lead_ids'] = [op_ids[0].id]
         return self.merge(cr, uid, op_ids, context)
 
-
     _columns = {
         'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
     }
@@ -227,7 +220,7 @@ class crm_merge_opportunity(osv.osv_memory):
         This function gets default values
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current users ID for security checks,
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
 

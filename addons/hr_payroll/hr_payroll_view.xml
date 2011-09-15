@@ -6,83 +6,6 @@
         <menuitem id="payroll_configure" parent="hr.menu_hr_configuration" name="Payroll"/>
         <menuitem id="menu_hr_payroll_reporting" parent="hr.menu_hr_reporting" name="Payroll" groups="base.group_hr_manager"/>
 
-        <!-- Passport Views    -->
-        <record id="hr_passport_form" model="ir.ui.view">
-            <field name="name">hr.passport.form</field>
-            <field name="model">hr.passport</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Passport">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
-                        <field name="employee_id" />
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Country &amp; Address" colspan="4"/>
-                        <field name="country_id" select="1"/>
-                        <field name="address_id" select="1"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Valid From" colspan="2"/>
-                        <field name="date_issue" select="1"/>
-                        <field name="date_expire" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <separator string="Description" colspan="2"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="hr_passport_tree" model="ir.ui.view">
-            <field name="name">hr.passport.tree</field>
-            <field name="model">hr.passport</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Passport">
-                    <field name="name" />
-                    <field name="employee_id" />
-                    <field name="address_id"/>
-                    <field name="country_id" />
-                    <field name="date_expire"/>
-                    <field name="date_issue" />
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_passport_filter" model="ir.ui.view">
-            <field name="name">hr.passport.select</field>
-            <field name="model">hr.passport</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Passport">
-                    <group col="8" colspan="4">
-                        <field name="name"/>
-                        <field name="employee_id"/>
-                        <field name="country_id"/>
-                        <field name="address_id"/>
-                    </group>
-                    <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Employees" icon="terp-partner" name="employee_id" context="{'group_by':'employee_id'}"/>
-                        <filter string="Country" name="country_id" icon="terp-go-home" context="{'group_by':'country_id'}"/>
-                        <filter string="Expire" name="date_expire" icon="terp-go-month" context="{'group_by':'date_expire'}"/>
-                        <filter string="Issue" name="date_issue" icon="terp-go-month" context="{'group_by':'date_issue'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="action_hr_passport_tree" model="ir.actions.act_window">
-            <field name="name">All Passports</field>
-            <field name="res_model">hr.passport</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_passport_tree"/>
-            <field name="search_view_id" ref="view_hr_passport_filter"/>
-        </record>
-        <!-- End Passport Views -->
-
         <!-- Employee View -->
         <record id="hr_contract.hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
@@ -97,6 +20,7 @@
                             <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
                             <field name="place_of_birth"/>
                             <field name="children"/>
+                            <!-- <field name="basic" invisible="0"/> -->
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Job Info" colspan="2"/>
@@ -110,75 +34,27 @@
             </data>
             </field>
         </record>
-        <record id="view_employee_passport_form" model="ir.ui.view">
-            <field name="name">hr.employee.passport.form</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="passport_id" position="replace">
-                    <field name="passport_id"/>
-                    <field name="otherid"/>
-                </field>
-            </field>
-        </record>
-
         <!-- End Employee View -->
 
         <!-- Contract View -->
-        <record id="hr_contract.hr_contract_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.view.form</field>
+        <record id="hr_contract_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.inherit</field>
             <field name="model">hr.contract</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
-                <form string="Contract">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="employee_id" select="1"/>
-                        <field name="job_id"/>
-                        <field name="wage"/>
-                        <field name="wage_type_id" widget="selection"/>
-                        <field name="type_id" widget="selection"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Main Data">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Duration"/>
-                                <field name="date_start" select="1"/>
-                                <field name="date_end" select="1"/>
-                                <field name="working_hours"/>
-                                <field name="working_days_per_week" select="1"/>
-                                <separator colspan="2" string="Trial Period"/>
-                                <field name="trial_date_start" />
-                                <field name="trial_date_end" />
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Advantages"/>
-                                <field name="struct_id" select="1"/>
-                                <field name="advantages_gross"/>
-                                <field name="advantages_net"/>
-                                <field name="advantages" nolabel="1" colspan="2"/>
-                            </group>
-                        </page>
-                        <page string="Work Permit">
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Passport"/>
-                                <field name="passport_id" domain="[('employee_id','=',employee_id)]"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="2" string="Valid for"/>
-                                <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                            </group>
-                        </page>
-                    </notebook>
-                    <separator colspan="4" string="Notes"/>
-                    <field colspan="4" name="notes" nolabel="1"/>
-                </form>
+            <data>
+                <xpath expr="/form/notebook/page/group/separator[@name='advantages']" position="before">
+                    <separator string="Payslip Info" colspan="2"/>
+                    <field name="struct_id" required="1"/>
+                </xpath>
+                 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
+                    <field name="schedule_pay"/>
+                </xpath>
+            </data>
             </field>
         </record>
-        <!--menuitem action="hr_contract.action_hr_contract" id="hr_menu_contract" parent="payroll_configure" name="Contracts" sequence="4"/-->
+
         <!-- End Contract View-->
 
         <!-- Salary structure -->
@@ -190,9 +66,24 @@
                 <tree string="Employee Function">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="line_ids"/>
+                    <field name="rule_ids"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_hr_payroll_structure_filter" model="ir.ui.view">
+            <field name="name">hr.payroll.structure.select</field>
+            <field name="model">hr.payroll.structure</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Payroll Structures">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                    <newline/>
+                </search>
             </field>
         </record>
 
@@ -202,59 +93,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Function">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="4" select="1"/>
+                    <group col="6" colspan="6">
+                        <field name="name" select="1"/>
                         <field name="code" select="1"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="parent_id"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Salary Structure">
-                            <field name="line_ids" nolabel="1" colspan="4">
-                                <form string="Payslip Line">
-                                    <group col="6" colspan="4">
-                                        <field name="name" colspan="4" select="1"/>
-                                        <field name="code" select="1"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Calculations"/>
-                                        <field name="category_id" on_change="onchange_category(category_id)"/>
-                                        <field name="type"/>
-                                        <field name="amount_type"/>
-                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
-                                        <field name="sequence" groups="base.group_extended"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Company contribution"/>
-                                        <field name="company_contrib"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Function">
-                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
-                                                <tree string="Function Arguments" editable="bottom">
-                                                    <field name="name"/>
-                                                    <field name="sequence" groups="base.group_extended"/>
-                                                    <field name="from_val"/>
-                                                    <field name="to_val"/>
-                                                    <field name="amount_type"/>
-                                                    <field name="value"/>
-                                                </tree>
-                                            </field>
-                                        </page>
-                                        <page string="Description">
-                                            <separator colspan="4" string="Description"/>
-                                            <field name="note" colspan="4" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                </form>
-                            </field>
-                        </page>
+                         <page string="Salary Rules">
+                           <field colspan="4" name="rule_ids" nolabel="1" domain="[('parent_rule_id','=',False)]">
+                             <tree>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="category_id"/>
+                                <field name="sequence" groups="base.group_extended" invisible="1"/>
+                                <field name="register_id"/>
+                             </tree>
+                          </field>
+                         </page>
                     </notebook>
                 </form>
             </field>
         </record>
 
         <record id="action_view_hr_employee_grade_form" model="ir.actions.act_window">
-            <field name="name">Salary Structure</field>
+            <field name="name">Salary Structures</field>
             <field name="res_model">hr.payroll.structure</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_employee_grade_tree"/>
@@ -263,35 +126,9 @@
             id="menu_hr_employee_function"
             action="action_view_hr_employee_grade_form"
             parent="payroll_configure"
+            sequence="1"
         />
         <!-- End Salary structure -->
-
-        <!-- Holiday Status -->
-        <record model="ir.ui.view" id="view_holiday_status_form1">
-            <field name="name">hr.holidays.status.inherit</field>
-            <field name="model">hr.holidays.status</field>
-            <field name="inherit_id" ref="hr_holidays.edit_holiday_status_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-            <xpath expr="//group[@name='selection']" position="replace">
-                <group colspan="2">
-                            <separator string="Validation" colspan="2"/>
-                                <newline/>
-                            <field name="double_validation"/>
-                                <newline/>
-                            <field name="limit"/>
-                  </group>
-                <group colspan="2">
-                    <separator colspan="2" string="Payroll Configurtion"/><newline/>
-                    <field name="type"/><newline/>
-                    <field name="head_id"/><newline/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection" select="2"/><newline/>
-                    <field name="code" readonly="True"/>
-                </group>
-            </xpath>
-        </field>
-        </record>
-        <!-- End Holiday Status -->
 
         <!-- Payslip Line -->
         <record id="view_hr_payslip_line_tree" model="ir.ui.view">
@@ -299,14 +136,17 @@
             <field name="model">hr.payslip.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Salary Structure" editable="bottom">
-                    <field name="category_id" on_change="onchange_category(category_id)"/>
+                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
+                    <field name="category_id"/>
+                    <field name="employee_id" invisible="1"/>
                     <field name="sequence" groups="base.group_extended"/>
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="type"/>
-                    <field name="amount_type"/>
-                    <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
+                    <field name="quantity" string="Quantity/Rate"/>
+                    <field name="amount"/>
+                    <field name="total"/>
+                    <field name="amount_select" invisible="1"/>
+                    <field name="register_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -321,33 +161,16 @@
                         <field name="code" select="1"/>
                         <field name="slip_id" select="1"/>
                         <field name="employee_id"/>
-                        <field name="function_id"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Calculations"/>
-                        <field name="category_id" on_change="onchange_category(category_id)"/>
-                        <field name="type"/>
-                        <field name="amount_type"/>
-                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                        <field name="category_id"/>
+                        <field name="amount_select"/>
+                        <field name="amount_fix"  attrs="{'readonly':[('amount_select','&lt;&gt;','fix')]}"/>
+                        <field name="amount_percentage"  attrs="{'readonly':[('amount_select','&lt;&gt;','percentage')]}"/>
                         <field name="sequence" groups="base.group_extended"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Company contribution"/>
-                        <field name="company_contrib"/>
-                    </group>
                     <notebook colspan="4">
-                        <page string="Function">
-                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
-                                <tree string="Function Arguments" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="sequence" groups="base.group_extended"/>
-                                    <field name="from_val"/>
-                                    <field name="to_val"/>
-                                    <field name="amount_type"/>
-                                    <field name="value"/>
-                                </tree>
-                            </field>
-                        </page>
                         <page string="Description">
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
@@ -357,21 +180,48 @@
             </field>
         </record>
 
+        <record id="view_hr_payslip_line_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.line.select</field>
+            <field name="model">hr.payslip.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslip Lines">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="slip_id"/>
+                        <field name="amount_select"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
+                        <filter string="Contribution Register" name="register_id" icon="terp-folder-yellow" context="{'group_by':'register_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Employees" name="employee_id" icon="terp-personal" context="{'group_by':'employee_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <!-- payslip -->
+
         <record id="view_hr_payslip_tree" model="ir.ui.view">
             <field name="name">hr.payslip.tree</field>
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslip">
+                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state == 'new';gray:state == 'cancel'" string="Payslips">
                     <field name="number"/>
                     <field name="employee_id"/>
-                    <field name="register_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="date"/>
-                    <field name="grows"/>
-                    <field name="net"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
                     <field name="state"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="payslip_run_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -383,104 +233,120 @@
             <field name="arch" type="xml">
                 <form string="Payslip">
                     <group col="6" colspan="4">
-                        <field name="employee_id"/>
-                        <field name="name"/>
-                        <field name="number" select="1"/>
-                        <field name="date"/>
+                        <field name="employee_id" on_change="onchange_employee_id(date_from, date_to, employee_id, contract_id)"/>
+                        <field name="number"/>
+                        <field name="date_from"/>
+                        <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)"/>
+                        <field name="struct_id" groups="base.group_extended" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
+                        <field name="date_to"/>
+                        <field name="name" colspan="4"/>
+                        <field name="credit_note"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Salary Computation">
+                        <page string="Salary Computation" >
                             <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Salary Structure" editable="bottom">
-                                    <field name="category_id" on_change="onchange_category(category_id)"/>
-                                    <field name="sequence" groups="base.group_extended"/>
+                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
                                     <field name="name"/>
                                     <field name="code"/>
-                                    <field name="type"/>
-                                    <field name="amount_type"/>
-                                    <field name="amount" on_change="onchange_amount(amount, amount_type)"/>
+                                    <field name="category_id"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="quantity" string="Quantity/Rate"/>
+                                    <field name="amount"/>
                                     <field name="total"/>
                                 </tree>
                                 <form string="Payslip Line">
-                                    <group col="6" colspan="4">
-                                        <field name="name" colspan="4" select="1"/>
+                                    <group>
+                                        <field name="name" select="1"/>
                                         <field name="code" select="1"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Calculations"/>
-                                        <field name="category_id" on_change="onchange_category(category_id)"/>
-                                        <field name="type"/>
-                                        <field name="amount_type"/>
-                                        <field name="amount" on_change="onchange_amount(amount, amount_type)" attrs="{'readonly':[('amount_type','=','func')]}"/>
+                                        <field name="category_id"/>
                                         <field name="sequence" groups="base.group_extended"/>
+                                        <field name="quantity" string="Quantity/Rate"/>
+                                        <field name="amount"/>
+                                        <field name="total"/>
+                                        <field name="salary_rule_id" groups="base.group_extended"/>
                                     </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="4" string="Company contribution"/>
-                                        <field name="company_contrib"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Function">
-                                            <field name="line_ids" colspan="4" nolabel="1" attrs="{'readonly':[('amount_type','!=','func')]}">
-                                                <tree string="Function Arguments" editable="bottom">
-                                                    <field name="name"/>
-                                                    <field name="sequence" groups="base.group_extended"/>
-                                                    <field name="from_val"/>
-                                                    <field name="to_val"/>
-                                                    <field name="amount_type"/>
-                                                    <field name="value"/>
-                                                </tree>
-                                            </field>
-                                        </page>
-                                        <page string="Description">
-                                            <separator colspan="4" string="Description"/>
-                                            <field name="note" colspan="4" nolabel="1"/>
-                                        </page>
-                                    </notebook>
                                 </form>
                             </field>
-                            <group col="6" colspan="4">
-                                <separator string="Computation Overview" colspan="6"/>
-                                <field name="working_days"/>
-                                <field name="holiday_days"/>
-                                <field name="worked_days"/>
-                                <field name="basic_before_leaves"/>
-                                <field name="leaves"/>
-                                <field name="basic"/>
-                                <field name="allounce"/>
-                                <field name="deduction"/>
-                                <field name="other_pay"/>
-                                <field name="grows"/>
-                                <field name="net"/>
-                                <field name="total_pay"/>
-                            </group>
                         </page>
-                        <page string="Other Informations">
-                            <group col="2" colspan="1">
-                                <separator colspan="2" string="Other Informations"/>
-                                <field name="paid" readonly="1"/>
+                        <page string="Details By Salary Rule Category">
+                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
+                                <tree string="Payslip Lines" colors="blue:total == 0">
+                                    <field name="category_id"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="total"/>
+                                </tree>
+                            </field>
+                       </page>
+
+                       <page string="Worked Days &amp; Inputs">
+                            <field name="worked_days_line_ids" colspan="4" nolabel="1">
+                                <tree string="Worked Days" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="number_of_days" sum="Total Working Days"/>
+                                    <field name="number_of_hours"/>
+                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="sequence" invisible="True"/>
+                                </tree>
+                                <form string="Worked Day">
+                                    <group>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="payslip_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="number_of_days"/>
+                                        <field name="number_of_hours"/>
+                                        <field name="contract_id" groups="base.group_extended"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <field name="input_line_ids" colspan="4" nolabel="1">
+                                <tree string="Input Data" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="amount"/>
+                                    <field name="contract_id" groups="base.group_extended"/>
+                                    <field name="sequence" invisible="True"/>
+                                </tree>
+                                <form string="Payslip Line">
+                                    <group>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="payslip_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="amount"/>
+                                        <field name="contract_id" groups="base.group_extended"/>
+                                    </group>
+                                </form>
+                            </field>
+                       </page>
+
+                       <page string="Other Information">
+                            <separator colspan="4" string="Other Information"/>
+                            <group col="5" colspan="2">
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                <field name="register_id" groups="base.group_extended"/>
-                                <field name="deg_id" groups="base.group_extended"/>
-                                <field name="contract_id" groups="base.group_extended" domain="[('employee_id','=',employee_id)]"/>
+                                <field name="payslip_run_id" domain="[('state','=','draft')]"/>
+                                <field name="paid" readonly="1"/>
                             </group>
                             <newline/>
-                            <separator colspan="4" string="Description"/>
+                            <separator colspan="4" string="Notes"/>
                             <field name="note" colspan="4" nolabel="1"/>
-                        </page>
+                       </page>
+
                     </notebook>
                     <group col="10" colspan="4">
                         <field name="state"/>
-                        <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm"/>
-                        <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" states="new"/>
-                        <button string="Recompute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
-                        <button string="Verify Sheet" icon="terp-camera_test" name="verify_sheet" states="draft"/>
-                        <button string="Approve Sheet" icon="terp-camera_test" name="final_verify_sheet" states="hr_check"/>
-                        <button string="Pay Salary" icon="terp-dolar_ok!" name="process_sheet" states="confirm"/>
-                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="set_to_draft" states="cancel"/>
+                        <button string="Cancel" icon="terp-dialog-close" name="cancel_sheet" states="draft,hr_check,confirm,verify"/>
+                        <button string="Compute Sheet" icon="terp-stock_format-scientific" name="compute_sheet" type="object" states="draft"/>
+                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="draft" states="cancel"/>
+                        <button string="Refund" icon="gtk-execute" name="refund_sheet" states="confirm,done" type='object'/>
+                        <button string="Confirm" icon="terp-camera_test" name="hr_verify_sheet" states="draft"/>
                     </group>
                 </form>
             </field>
         </record>
+
         <record id="view_hr_payslip_filter" model="ir.ui.view">
             <field name="name">hr.payslip.select</field>
             <field name="model">hr.payslip</field>
@@ -489,22 +355,21 @@
                 <search string="Search Payslips">
                     <group col="8" colspan="4">
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Slip"/>
+                        <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-dolar_ok!" string="Paid" domain="[('state','=','done'),('paid','=',True)]" help="Paid Slip"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="employee_id"/>
                         <field name="number"/>
-                        <field name="date"/>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="date_from"/>
+                        <field name="payslip_run_id"/>
                     </group>
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Register" icon="terp-folder-yellow" name="register_id" context="{'group_by':'register_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Companies" name="company_id"  icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                        <filter string="PaySlip Run" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="States" name="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     </group>
@@ -512,7 +377,7 @@
             </field>
         </record>
         <record id="action_view_hr_payslip_form" model="ir.actions.act_window">
-            <field name="name">Employee Payslip</field>
+            <field name="name">Employee Payslips</field>
             <field name="res_model">hr.payslip</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_payslip_tree"/>
@@ -520,447 +385,293 @@
         </record>
         <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll"/>
 
-        <!-- Payment Heads -->
-        <record id="hr_allounce_deduction_categoty_form" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.form</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+        <!-- Salary Category-->
+        <record id="hr_salary_rule_category_form" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.form</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Salary Heads">
-                    <group col="6" colspan="6">
+                <form string="Salary Categories">
+                    <group col="3" colspan="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="type" select="1"/>
-                        <group col="2" colspan="4">
-                            <separator colspan="4" string="Based on"/>
-                            <field name="base" colspan="4" nolabel="1"/>
-                        </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="4" string="Dynamic Computation"/>
-                            <field name="condition"/>
-                            <field name="sequence"/>
-                        </group>
+                        <field name="parent_id" select="1"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Contribution">
-                            <field name="contribute_ids" colspan="4" nolabel="1" height="300">
-                                <form string="Company Contribution">
-                                    <group col="6" colspan="6">
-                                        <field name="name" select="1"/>
-                                        <field name="code" select="1"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="2" string="Contributions"/>
-                                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
-                                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
-                                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
-                                    </group>
-                                    <group col="2" colspan="2">
-                                        <separator colspan="2" string="Other Information"/>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
-                                        <field name="active" select="1"/>
-                                    </group>
-                                    <notebook colspan="4">
-                                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
-                                            <field name="line_ids" colspan="4" nolabel="1">
-                                                <tree string="Function Arguments" editable="bottom">
-                                                    <field name="name"/>
-                                                    <field name="sequence"/>
-                                                    <field name="from_val"/>
-                                                    <field name="to_val"/>
-                                                    <field name="amount_type"/>
-                                                    <field name="value"/>
-                                                </tree>
-                                            </field>
-                                        </page>
-                                        <page string="Description">
-                                            <field name="note" colspan="4" nolabel="1"/>
-                                        </page>
-                                    </notebook>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
+                    <separator colspan="4" string="Notes"/>
+                        <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
-        <record id="hr_allounce_deduction_categoty_tree" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.tree</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+
+        <record id="hr_salary_rule_category_tree" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.tree</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Salary Heads">
+                <tree string="Salary Rule Categories">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="type"/>
-                    <field name="base"/>
-                    <field name="condition"/>
-                    <field name="sequence"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_allounce_deduction_categoty_filter" model="ir.ui.view">
-            <field name="name">hr.allounce.deduction.categoty.select</field>
-            <field name="model">hr.allounce.deduction.categoty</field>
+        <record id="view_hr_salary_rule_category_filter" model="ir.ui.view">
+            <field name="name">hr.salary.rule.category.select</field>
+            <field name="model">hr.salary.rule.category</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Salary Heads">
-                    <filter icon="terp-document-new" string="Allowance" domain="[('type','=','allowance')]"/>
-                    <filter icon="terp-check" string="Deduction" domain="[('type','=','deduction')]"/>
-                    <separator orientation="vertical"/>
+                <search string="Salary Rule Categories">
                     <field name="name" select="1"/>
                      <field name="code" select="1"/>
-                    <field name="type"/>
-                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
-                        <filter string="Based" icon="terp-go-month" domain="[]" context="{'group_by':'base'}"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
-                    </group>
                </search>
             </field>
         </record>
 
-        <record id="hr_allounce_deduction_tree" model="ir.actions.act_window">
-            <field name="name">Salary Heads</field>
-            <field name="res_model">hr.allounce.deduction.categoty</field>
+        <record id="action_hr_salary_rule_category" model="ir.actions.act_window">
+            <field name="name">Salary Rule Categories</field>
+            <field name="res_model">hr.salary.rule.category</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_allounce_deduction_categoty_tree"/>
-           <field name="search_view_id" ref="view_allounce_deduction_categoty_filter"/>
+            <field name="view_id" ref="hr_salary_rule_category_tree"/>
+           <field name="search_view_id" ref="view_hr_salary_rule_category_filter"/>
         </record>
         <menuitem
-            id="menu_hr_allounce_deduction_tree"
-            action="hr_allounce_deduction_tree"
+            id="menu_hr_salary_rule_category"
+            action="action_hr_salary_rule_category"
             parent="payroll_configure"
-        />
-        <!-- End Payment Heads -->
-
-        <!-- Company Contribution -->
-        <record id="hr_company_contribution_form" model="ir.ui.view">
-            <field name="name">company.contribution.form</field>
-            <field name="model">company.contribution</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Company Contribution">
-                    <group col="6" colspan="6">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="category_id"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Contributions"/>
-                        <field name="amount_type" attrs="{'required': [('contribute','=',True)]}"/>
-                        <field name="contribute_per" attrs="{'required': [('contribute','=',True)], 'readonly':[(('amount_type','=','func'))]}"/>
-                        <field name="register_id" attrs="{'required': [('contribute','=',True)]}"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Other Information"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection" select="1"/>
-                        <field name="active" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Function" attrs="{'readonly': [('amount_type','!=','func')]}">
-                            <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Function Arguments" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="sequence"/>
-                                    <field name="from_val"/>
-                                    <field name="to_val"/>
-                                    <field name="amount_type"/>
-                                    <field name="value"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Description">
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-        <record id="hr_company_contribution_tree" model="ir.ui.view">
-            <field name="name">company.contribution.tree</field>
-            <field name="model">company.contribution</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Company Contribution">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="contribute_per"/>
-                    <field name="amount_type"/>
-                    <field name="register_id"/>
-                     <field name="category_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_company_contribution_filter" model="ir.ui.view">
-            <field name="name">company.contribution.select</field>
-             <field name="model">company.contribution</field>
-            <field name="type">search</field>
-             <field name="arch" type="xml">
-                <search string="Search Company Contribution">
-                    <group col="8" colspan="4">
-                        <filter icon="terp-document-new" string="Fixed Amount" domain="[('amount_type','=','fix')]" help="Draft Slip"/>
-                        <filter icon="terp-camera_test" string="Function Calculation" domain="[('amount_type','=','func')]" help="Posted Slip"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="contribute_per"/>
-                        <field name="register_id"/>
-                    </group>
-                    <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
-                        <filter string="Type" icon="terp-stock_symbol-selection" name="amount_type" context="{'group_by':'amount_type'}"/>
-                        <filter string="Category" name="category_id" icon="terp-stock_symbol-selection"  context="{'group_by':'category_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-        <record id="action_hr_company_contribution_tree" model="ir.actions.act_window">
-            <field name="name">Company Contributions</field>
-            <field name="res_model">company.contribution</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="hr_company_contribution_tree"/>
-             <field name="search_view_id" ref="view_hr_company_contribution_filter"/>
-        </record>
-        <menuitem
-            id="menu_hr_company_contribution_tree"
-            action="action_hr_company_contribution_tree"
-            parent="payroll_configure"
-        />
-        <!-- End Company Contribution -->
-
-        <record id="view_hr_bank_advice_tree" model="ir.ui.view">
-            <field name="name">hr.payroll.advice.tree</field>
-            <field name="model">hr.payroll.advice</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Bank Advice">
-                    <field name="number" select="1"/>
-                    <field name="name" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_bank_advice_form" model="ir.ui.view">
-            <field name="name">hr.payroll.advice.form</field>
-            <field name="model">hr.payroll.advice</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Bank Advice">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="4" select="1"/>
-                        <field name="number" select="1"/>
-                        <field name="register_id"/>
-                        <field name="bank_id"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Paymeny Lines">
-                            <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Payment Lines" editable="bottom">
-                                    <field name="employee_id" on_change="onchange_employee_id(parent.date, employee_id)"/>
-                                    <field name="name"/>
-                                    <field name="amount"/>
-                                    <field name="bysal"/>
-                                    <field name="flag"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Letter Content">
-                            <group colspan="4" col="6">
-                              <field name="company_id" on_change="onchange_company_id(company_id)" groups="base.group_multi_company" widget="selection"/>
-                              <field name="chaque_nos"/>
-                              <field name="date" select="1"/>
-                            </group>
-                            <separator colspan="4" string="Letter Details"/>
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                    <group col="6" colspan="6">
-                        <field name="state"/>
-                        <button name="cancel_sheet" string="Cancel Sheet" states="draft" icon="gtk-cancel"  type="object"/>
-                        <button name="confirm_sheet"  icon="gtk-apply" string="Confirm Sheet" states="draft" type="object"/>
-                        <button name="set_to_draft" string="Set to Draft"  icon="gtk-convert"  states="cancel,confirm" type="object"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_view_hr_bank_advice_tree" model="ir.actions.act_window">
-            <field name="name">Payment Advice</field>
-            <field name="res_model">hr.payroll.advice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_hr_bank_advice_tree"/>
-        </record>
-        <menuitem
-            action="action_view_hr_bank_advice_tree"
-            id="hr_menu_payment_advice"
-            parent="menu_hr_root_payroll"
-        />
-
-        <record id="view_hr_payroll_register_tree" model="ir.ui.view">
-            <field name="name">hr.payroll.register.tree</field>
-            <field name="model">hr.payroll.register</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree  colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payroll Register">
-                    <field name="number"/>
-                    <field name="name"/>
-                    <field name="date"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_hr_payroll_register_form" model="ir.ui.view">
-            <field name="name">hr.payroll.register.form</field>
-            <field name="model">hr.payroll.register</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Payroll Register">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="4" select="1"/>
-                        <field name="number" select="1"/>
-                        <field name="bank_id"/>
-                        <field name="date" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Payslips">
-                            <field name="line_ids" colspan="4" nolabel="1">
-                                <tree colors="blue:state in ('draft');black:state in ('confirm','new','hr_check','accont_check');gray:state in('done','cancel')" string="Payslip">
-                                    <field name="number"/>
-                                    <field name="employee_id"/>
-                                    <field name="name"/>
-                                    <field name="date"/>
-                                    <field name="basic"/>
-                                    <field name="allounce"/>
-                                    <field name="grows"/>
-                                    <field name="deduction"/>
-                                    <field name="net"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Allowance / Deduction"/>
-                                <field name="allounce"/>
-                                <field name="deduction"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator colspan="4" string="Salary Information"/>
-                                <field name="grows"/>
-                                <field name="net"/>
-                            </group>
-                        </page>
-                    </notebook>
-                    <group col="8" colspan="4">
-                        <field name="state"/>
-                        <button string="Cancel" name="cancel_sheet" icon="gtk-cancel" states="draft,hr_check,accont_check,confirm" type="object"/>
-                        <button string="Compute" name="compute_sheet" states="new" icon="terp-document-new" type="object"/>
-                        <button string="Verify Sheet" icon="gtk-ok" name="verify_sheet" states="draft" type="object"/>
-                        <button string="Complete HR Checking"  icon="gtk-apply" name="final_verify_sheet" type="object" states="hr_check"/>
-                        <button string="Pay Salary" icon="gtk-apply"  name="process_sheet" states="confirm" type="object" />
-                        <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" />
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_view_hr_payroll_register_form" model="ir.actions.act_window">
-            <field name="name">Payroll Register</field>
-            <field name="res_model">hr.payroll.register</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem
-            action="action_view_hr_payroll_register_form"
-            id="hr_menu_payroll_register"
-            parent="menu_hr_root_payroll"
+            sequence="11"
         />
 
         <!--
         Contribution Register
         -->
-        <record id="hr_contibution_register_tree" model="ir.ui.view">
-            <field name="name">hr.contibution.register.tree</field>
-            <field name="model">hr.contibution.register</field>
+        <record id="hr_contribution_register_tree" model="ir.ui.view">
+            <field name="name">hr.contribution.register.tree</field>
+            <field name="model">hr.contribution.register</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contribution Registers">
                     <field name="name" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
-                    <field name="monthly_total_by_emp"/>
-                    <field name="monthly_total_by_comp"/>
                 </tree>
             </field>
         </record>
-        <record id="hr_contibution_register_form" model="ir.ui.view">
-            <field name="name">hr.contibution.register.form</field>
-            <field name="model">hr.contibution.register</field>
+        <record id="hr_contribution_register_filter" model="ir.ui.view">
+            <field name="name">hr.contribution.register.search</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Contribution Registers">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </search>
+            </field>
+        </record>
+        <record id="hr_contribution_register_form" model="ir.ui.view">
+            <field name="name">hr.contribution.register.form</field>
+            <field name="model">hr.contribution.register</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contribution">
                     <field name="name" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     <notebook colspan="4">
-                        <page string="Contribution Lines">
-                            <field colspan="4" name="register_line_ids" nolabel="1" select="1">
-                                <tree string="Register Lines" editable="top">
-                                    <field name="code"/>
-                                    <field name="name"/>
-                                    <field name="employee_id"/>
-                                    <field name="emp_deduction"/>
-                                    <field name="comp_deduction"/>
-                                    <field name="total"/>
-                                </tree>
-                             </field>
-                         </page>
                          <page string="Description">
                             <separator colspan="4" string="Description"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
-                    <group col="2" colspan="2" name="Month">
-                        <separator colspan="2" string="Month"/>
-                        <field name="monthly_total_by_emp"/>
-                        <field name="monthly_total_by_comp"/>
+                </form>
+            </field>
+        </record>
+        <record id="action_contribution_register_form" model="ir.actions.act_window">
+            <field name="name">Contribution Registers</field>
+            <field name="res_model">hr.contribution.register</field>
+            <field name="view_type">form</field>
+            <field name="help">A contribution register is a third party involved in the salary payment of the employees. It can be the social security, the estate or anyone that collect or inject money on payslips.</field>
+            <field name="view_id" ref="hr_contribution_register_tree"/>
+        </record>
+        <menuitem
+            id="menu_action_hr_contribution_register_form"
+            action="action_contribution_register_form"
+            parent="payroll_configure"
+            sequence="14"
+        />
+
+        <!-- Salary Rules -->
+
+        <record id="hr_salary_rule_tree" model="ir.ui.view">
+            <field name="name">hr.salary.rule.tree</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Salary Rules">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id"/>
+                    <field name="sequence" groups="base.group_extended" invisible="1"/>
+                    <field name="register_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hr_salary_rule_form" model="ir.ui.view">
+            <field name="name">hr.salary.rule.form</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Salary Rules">
+                    <group col="6" colspan="6">
+                       <field name="name"/>
+                       <field name="code" select="1"/>
+                       <field name="category_id"/>
+                       <field name="sequence" />
+                       <field name="active"/>
+                       <field name="appears_on_payslip"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <notebook colspan="6">
+                        <page string="General">
+                                <group col="4" colspan="6">
+                                    <separator colspan="4" string="Conditions"/>
+                                    <field name="condition_select"/><newline/>
+                                    <field name="condition_python" attrs="{'invisible':[('condition_select','&lt;&gt;','python')], 'required': [('condition_select','=','python')]}" colspan="4"/> <newline/>
+                                    <field name="condition_range" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                    <field name="condition_range_min" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                    <field name="condition_range_max" colspan="2" attrs="{'invisible':[('condition_select','&lt;&gt;','range')], 'required':[('condition_select','=','range')]}"/><newline/>
+                                    <separator colspan="4" string="Computation"/>
+                                    <field name="amount_select"/><newline/>
+                                    <field name="amount_percentage_base" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required': [('amount_select','=','percentage')]}"/><newline/>
+                                    <field name="quantity" attrs="{'invisible':[('amount_select','=','code')], 'required':[('amount_select','!=','code')]}"/><newline/>
+                                    <field name="amount_fix"  attrs="{'invisible':[('amount_select','&lt;&gt;','fix')], 'required':[('amount_select','=','fix')]}"/><newline/>
+                                    <field name="amount_percentage" attrs="{'invisible':[('amount_select','&lt;&gt;','percentage')], 'required':[('amount_select','=','percentage')]}"/>
+                                    <field colspan="4" name="amount_python_compute" attrs="{'invisible':[('amount_select','&lt;&gt;','code')], 'required':[('amount_select','=','code')]}"/>
+                                    <separator colspan="4" string="Company contribution"/>
+                                    <field name="register_id"/>
+                                </group>
+                        </page>
+                        <page string="Child Rules">
+                           <field name="parent_rule_id"/>
+                           <separator colspan="4" string="Children definition"/>
+                           <field colspan="4" name="child_ids" nolabel="1"/>
+                        </page>
+                           <page string="Inputs">
+                                <field name="input_ids" colspan="4" nolabel="1" mode="tree, form">
+                                    <tree string="Input Data" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
+                           </page>
+                        <page string="Description">
+                            <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_rule_filter" model="ir.ui.view">
+            <field name="name">hr.salary.rule.select</field>
+            <field name="model">hr.salary.rule</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Salary Rule">
+                    <group col="8" colspan="4">
+                        <field name="name"/>
+                        <field name="code" select="1"/>
+                        <field name="category_id"/>
+                        <field name="condition_range_min"/>
+                    </group>
+                    <newline/>
+                    <group col="8" colspan="4" expand="0" string="Group By...">
+                        <filter string="Category" icon="terp-folder-yellow" name="head" context="{'group_by':'category_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_salary_rule_form" model="ir.actions.act_window">
+            <field name="name">Salary Rules</field>
+            <field name="res_model">hr.salary.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_salary_rule_tree"/>
+            <field name="domain">[('parent_rule_id','=',False)]</field>
+            <field name="search_view_id" ref="view_hr_rule_filter"/>
+        </record>
+
+        <menuitem id="menu_action_hr_salary_rule_form" action="action_salary_rule_form" parent="payroll_configure" sequence="12"/>
+
+
+        <!-- payslip runs -->
+
+        <record id="hr_payslip_run_filter" model="ir.ui.view">
+            <field name="name">hr.payslip.run.search</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Payslip Runs">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft runs"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done runs"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_tree" model="ir.ui.view">
+            <field name="name">hr.payslip.run.tree</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Payslips Run">
+                    <field name="name"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="credit_note"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_payslip_run_form" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Payslips Run">
+                    <group col="6" colspan="4">
+                        <field name="name" colspan="4"/>
+                        <field name="credit_note"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Payslips">
+                            <field name="slip_ids" colspan="4" nolabel="1"/>
+                        </page>
+                    </notebook>
+                    <group col="6" colspan="4">
+                        <field name="state"/>
+                        <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" icon="gtk-execute" string="Generate Payslips" />
+                        <button name="close_payslip_run" type="object" icon="terp-camera_test" string="Close" states="draft"/>
+                        <button string="Set to Draft" icon="terp-stock_effects-object-colorize" name="draft_payslip_run" type="object" states="close"/>
                     </group>
                 </form>
             </field>
         </record>
-        <record id="action_contibution_register_form" model="ir.actions.act_window">
-            <field name="name">Contribution Register</field>
-            <field name="res_model">hr.contibution.register</field>
+
+        <record id="action_hr_payslip_run_tree" model="ir.actions.act_window">
+            <field name="name">Payslips Run</field>
+            <field name="res_model">hr.payslip.run</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="hr_contibution_register_tree"/>
+            <field name="view_id" ref="hr_payslip_run_tree"/>
+            <field name="search_view_id" ref="hr_payslip_run_filter"/>
         </record>
-        <menuitem
-            id="menu_action_hr_contibution_register_form"
-            action="action_contibution_register_form"
-            parent="payroll_configure"
-        />
-        <record id="hr_contibution_register_line_form" model="ir.ui.view">
-            <field name="name">hr.contibution.register.line.form</field>
-            <field name="model">hr.contibution.register.line</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Contribution">
-                      <field name="name"/>
-                      <field name="code"/>
-                      <field name="employee_id"/>
-                      <field name="emp_deduction"/>
-                      <field name="comp_deduction"/>
-                      <field name="total"/>
-                </form>
-            </field>
-        </record>
-
-
+        <menuitem action="action_hr_payslip_run_tree" id="menu_hr_payslip_run" parent="menu_hr_root_payroll"/>
 
         <!--  Shortcuts -->
+
         <act_window name="Payslips"
             domain="[('employee_id', '=', active_id)]"
             context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
@@ -969,6 +680,8 @@
             view_id ="view_hr_payslip_tree"
             id="act_hr_employee_payslip_list"
             groups="base.group_hr_manager"/>
+
+        <act_window domain="[('slip_id', '=', active_id)]" context="{'search_default_register_id': 1}" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
     </data>
 </openerp>

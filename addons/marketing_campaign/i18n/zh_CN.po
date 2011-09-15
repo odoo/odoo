@@ -1,0 +1,1087 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-07-01 03:28+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:53+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Manual Mode"
+msgstr "手工模式"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,activity_from_id:0
+msgid "Previous Activity"
+msgstr "前一个活动"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:772
+#, python-format
+msgid "The current step for this item has no email or report to preview."
+msgstr "这步没有邮件或者报表。"
+
+#. module: marketing_campaign
+#: constraint:marketing.campaign.transition:0
+msgid "The To/From Activity of transition must be of the same Campaign "
+msgstr "前后活动必须属于同一个营销活动 "
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:144
+#, python-format
+msgid ""
+"The campaign cannot be started: it doesn't have any starting activity (or "
+"any activity with a signal and no previous activity)"
+msgstr "营销活动无法开始：它没有开始的活动（或者标识为开始但没有前一个活动的活动）"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "时间"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Custom Action"
+msgstr "自定义操作"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:139
+#, python-format
+msgid ""
+"The campaign cannot be started: the email account is missing in email "
+"activity '%s'"
+msgstr "营销活动无法开始：没有为邮件活动'%s'设置邮箱帐号"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Group By..."
+msgstr "分组..."
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,revenue:0
+msgid ""
+"Set an expected revenue if you consider that every campaign item that has "
+"reached this point has generated a certain revenue. You can get revenue "
+"statistics in the Reporting section"
+msgstr "设置一个期望的收入，即如果你认为每个达到这个点的活动项会产生一定的收入。你可以在报表里面查看到收入统计。"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,trigger:0
+msgid "Trigger"
+msgstr "触发器"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,count:0
+msgid "# of Actions"
+msgstr "活动#"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Campaign Editor"
+msgstr "营销活动编辑器"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: view:marketing.campaign.workitem:0
+msgid "Today"
+msgstr "今天"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "March"
+msgstr "3"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,sync_mode:0
+msgid ""
+"Determines an additional criterion to add to the filter when selecting new "
+"records to inject in the campaign."
+msgstr "当选择新的纪录添加的营销活动中的时候，确定一个额外的标准添加到过滤器中。"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,object_id:0
+msgid "Object"
+msgstr "主题"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,condition:0
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+"由Python表达式决定活动是否被执行的，或者被删除，或者被取消。表达式可以用以下[browsable]变量：\n"
+"   -activity：营销活动项\n"
+"   -workitem：营销活动工作项\n"
+"   -resource：营销活动代表的资源对象\n"
+"   -transitions：从此活动转出的营销活动列表\n"
+"...-re：Python正则表达式模块"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+msgid "Set to Draft"
+msgstr "设为草稿"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,to_ids:0
+msgid "Next Activities"
+msgstr "下一个活动"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+msgid "Synchronization"
+msgstr "同步"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+msgid "This Year"
+msgstr "本年"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:772
+#, python-format
+msgid "No preview"
+msgstr "无预览"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,date_run:0
+msgid "Launch Date"
+msgstr "发起日期"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,day:0
+msgid "Day"
+msgstr "天"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+msgid "Outgoing Transitions"
+msgstr "输出转换"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Reset"
+msgstr "重置"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,object_id:0
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr "选择此营销活动需要的资源"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,sync_last_date:0
+msgid "Last Synchronization"
+msgstr "最近同步"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Year(s)"
+msgstr "年"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:209
+#, python-format
+msgid "Sorry, campaign duplication is not supported at the moment."
+msgstr "对不起，暂时不支持营销活动复制。"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,sync_last_date:0
+msgid ""
+"Date on which this segment was synchronized last time (automatically or "
+"manually)"
+msgstr "这部分上次同步的日期（自动或手工）"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Automatic"
+msgstr "自动的"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,mode:0
+msgid ""
+"Test - It creates and process all the activities directly (without waiting "
+"for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but "
+"does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to "
+"validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and "
+"reports (be very careful with this mode, you're live!)"
+msgstr ""
+"测试 - 直接生成和处理所有活动（不等待事务的延迟），但是不发送邮件或者生成报表。\n"
+"实时测试 - 直接生成和处理所有活动，但是不发送邮件或者生成报表.\n"
+"手工确认 - 营销活动正常启动，但是用户必须手工验证所有工作项。\n"
+"正常 - 营销活动正常启动，并自动发送所有邮件和报表（请小心使用这个模式，所有的都是实时的！）"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_run:0
+msgid "Initial start date of this segment."
+msgstr "这部分初始的开始日期"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,campaign_id:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign.activity,campaign_id:0
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,campaign_id:0
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,campaign_id:0
+msgid "Campaign"
+msgstr "营销活动"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,start:0
+msgid "Start"
+msgstr "开始"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,partner_field_id:0
+msgid ""
+"The generated workitems will be linked to the partner related to the record. "
+"If the record is the partner itself leave this field empty."
+msgstr "生成的工作项将会关联此记录相关的业务伙伴。如果此记录本身是业务伙伴，请留空。"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,segment_id:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,segment_id:0
+msgid "Segment"
+msgstr "段"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+msgid "Cost / Revenue"
+msgstr "成本/利润"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,type:0
+msgid ""
+"The type of action to execute when an item enters this activity, such as:\n"
+"   - Email: send an email using a predefined email template\n"
+"   - Report: print an existing Report defined on the resource item and save "
+"it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields "
+"of the resource record\n"
+"  "
+msgstr ""
+"工作项进入此活动时执行的操作类型，比如：\n"
+"    - 邮件：通过预定义的邮件模板发送邮件\n"
+"    - 报表：打印定义在资源上的报表，并把它保存到指定的目录\n"
+"    - 自定义操作： 执行一个预定义的操作，比如，修改资源记录的字段\n"
+"  "
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_next_sync:0
+msgid "Next time the synchronization job is scheduled to run automatically"
+msgstr "下次同步工作将被设为自动执行"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Month(s)"
+msgstr "月"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,partner_id:0
+#: model:ir.model,name:marketing_campaign.model_res_partner
+#: field:marketing.campaign.workitem,partner_id:0
+msgid "Partner"
+msgstr "业务伙伴"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+msgid "Transitions"
+msgstr "转换"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid "Don't delete workitems"
+msgstr "不要删除工作项"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,state:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,state:0
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,state:0
+msgid "State"
+msgstr "状态"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+msgid "Marketing Reports"
+msgstr "市场报告"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,type:0
+msgid "Type"
+msgstr "类型"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Related Resource"
+msgstr "相关资源"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,name:0
+#: field:marketing.campaign.activity,name:0
+#: field:marketing.campaign.segment,name:0
+#: field:marketing.campaign.transition,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.workitem,res_name:0
+msgid "Resource Name"
+msgstr "资源名称"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,sync_mode:0
+msgid "Synchronization mode"
+msgstr "同步模式"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+msgid "Run"
+msgstr "执行"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,from_ids:0
+msgid "Previous Activities"
+msgstr "前面的活动"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_done:0
+msgid "Date this segment was last closed or cancelled."
+msgstr "此部分最近关闭或取消的日期"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Marketing Campaign Activities"
+msgstr "市场营销活动"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,error_msg:0
+msgid "Error Message"
+msgstr "错误消息"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
+#: view:marketing.campaign:0
+msgid "Campaigns"
+msgstr "营销活动"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,interval_type:0
+msgid "Interval Unit"
+msgstr "间隔单位"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "国家/地区"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,report_id:0
+#: selection:marketing.campaign.activity,type:0
+msgid "Report"
+msgstr "报表"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "July"
+msgstr "7"
+
+#. module: marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_configuration
+msgid "Configuration"
+msgstr "设置"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,variable_cost:0
+msgid ""
+"Set a variable cost if you consider that every campaign item that has "
+"reached this point has entailed a certain cost. You can get cost statistics "
+"in the Reporting section"
+msgstr "设置一个可变成本，如果你认为每项到达这个点的营销活动项就会需要一定的成本。你可以在报表栏查看成本统计分析结果。"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Hour(s)"
+msgstr "小时数"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
+msgid "Campaign Segment"
+msgstr "营销活动段"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid ""
+"By activating this option, workitems that aren't executed because the "
+"condition is not met are marked as cancelled instead of being deleted."
+msgstr "激活此选项，由于条件没有满足而未执行的工作项会被标记为已取消，而不是被删除。"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+msgid "Exceptions"
+msgstr "异常"
+
+#. module: marketing_campaign
+#: field:res.partner,workitem_ids:0
+msgid "Workitems"
+msgstr "工作项"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,fixed_cost:0
+msgid "Fixed Cost"
+msgstr "固定成本"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+msgid "Newly Modified"
+msgstr "新修改"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,interval_nbr:0
+msgid "Interval Value"
+msgstr "间隔值"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,revenue:0
+#: field:marketing.campaign.activity,revenue:0
+msgid "Revenue"
+msgstr "收入"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "September"
+msgstr "9月"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "December"
+msgstr "12"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,month:0
+msgid "Month"
+msgstr "月份"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,activity_to_id:0
+msgid "Next Activity"
+msgstr "下一个活动"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+msgid "Campaign Follow-up"
+msgstr "营销活动追踪"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,email_template_id:0
+msgid "The e-mail to send when this activity is activated"
+msgstr "活动激活时发送的邮件"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+msgid "This Month"
+msgstr "本月"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Test Mode"
+msgstr "测试模式"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records modified after last sync (no duplicates)"
+msgstr "从最近一次同步到现在被修改的记录（不重复）"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.actions.report.xml"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+msgid "Campaign Statistics"
+msgstr "营销活动统计"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,server_action_id:0
+msgid "The action to perform when this activity is activated"
+msgstr "活动激活时执行的操作"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,partner_field_id:0
+msgid "Partner Field"
+msgstr "业务伙伴字段"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
+#: model:ir.model,name:marketing_campaign.model_campaign_analysis
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
+msgid "Campaign Analysis"
+msgstr "营销活动分析"
+
+#. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "时间间隔必须为正数或零"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test in Realtime"
+msgstr "实时检验"
+
+#. module: marketing_campaign
+#: sql_constraint:email.template:0
+msgid "The template name must be unique !"
+msgstr "模板名称必须唯一！"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test Directly"
+msgstr "直接检验"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,report_directory_id:0
+msgid "Directory"
+msgstr "目录"
+
+#. module: marketing_campaign
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "出错！不能创建循环关联的成员。"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: selection:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: selection:marketing.campaign.segment,state:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Preview"
+msgstr "预览"
+
+#. module: marketing_campaign
+#: model:ir.module.module,description:marketing_campaign.module_meta_information
+msgid ""
+"\n"
+"This module provides leads automation through marketing campaigns (campaigns "
+"can in fact be defined on any resource, not just CRM Leads).\n"
+"         The campaigns are dynamic and multi-channels. The process is as "
+"follows:\n"
+"          * Design marketing campaigns like workflows, including email "
+"templates to send, reports to print and send by email, custom actions, etc.\n"
+"          * Define input segments that will select the items that should "
+"enter the campaign (e.g leads from certain countries, etc.)\n"
+"          * Run you campaign in simulation mode to test it real-time or "
+"accelerated, and fine-tune it\n"
+"          * You may also start the real campaign in manual mode, where each "
+"action requires manual validation\n"
+"          * Finally launch your campaign live, and watch the statistics as "
+"the campaign does everything fully automatically. \n"
+"          While the campaign runs you can of course continue to fine-tune "
+"the parameters, input segments, workflow, etc.\n"
+"          \n"
+"          Note: If you need demo data, you can install the "
+"marketing_campaign_crm_demo module, but this will also install the CRM "
+"application as it depends on CRM Leads.\n"
+"    "
+msgstr ""
+"\n"
+"此模块通过市场营销活动自动提供线索（实际上营销活动可以定义在任何资源上，不仅仅是CRM线索）。\n"
+"         营销活动是自动的，多渠道的。有以下过程：\n"
+"          *像工作流一样设计市场营销活动，包括要发送的邮件模板，打印和通过邮件发送的报表，自定义操作等。\n"
+"          *定义应该进入营销活动的输入段（比如，某些国家/地区的线索等）\n"
+"          *在模拟模式下启动营销活动，以实时或加速测试它，并且对它进行调优\n"
+"          *也可以通过手工模式启动实时的营销活动，每个操作需要手工验证\n"
+"          *最后启动营销活动，由于营销活动会完全自动执行所有操作，你只需要观察统计数字。\n"
+"          当营销活动运行时，你可以继续对参数，输入段，工作流等进行调优。\n"
+"          \n"
+"          "
+"注意：如果你需要演示数据，你可以安装marketing_campaign_crm_demo模块，它同时也会安装CRM应用程序，因为它依赖CRM "
+"线索模块。\n"
+"    "
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "August"
+msgstr "8"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Normal"
+msgstr "正常"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,start:0
+msgid "This activity is launched when the campaign starts."
+msgstr "此活动在营销活动开始时启动。"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,signal:0
+msgid ""
+"An activity with a signal can be called programmatically. Be careful, the "
+"workitem is always created when a signal is sent"
+msgstr "带信号的活动可以通过编程方式访问。请小心，当信号发出去的时候工作项会自动创建好。"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "June"
+msgstr "6"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "All records (no duplicates)"
+msgstr "所有记录（不重复）"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+msgid "Newly Created"
+msgstr "新创建的"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,date:0
+#: view:marketing.campaign.workitem:0
+msgid "Date"
+msgstr "日期"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "November"
+msgstr "11"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+#: field:marketing.campaign.activity,condition:0
+msgid "Condition"
+msgstr "条件"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,report_id:0
+msgid "The report to generate when this activity is activated"
+msgstr "活动被激活时生成的报表"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Exception"
+msgstr "异常"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "October"
+msgstr "10"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:141
+#, python-format
+msgid ""
+"The campaign cannot be started: the email account is not approved in email "
+"activity '%s'"
+msgstr "营销活动无法开始：邮件活动'%s'的邮箱帐号还没有通过审批。"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,email_template_id:0
+msgid "Email Template"
+msgstr "邮件模板"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "January"
+msgstr "1"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,date:0
+msgid "Execution Date"
+msgstr "执行日期"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
+msgid "Campaign Workitem"
+msgstr "营销活动工作项"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr "营销活动活动项"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,report_directory_id:0
+msgid "This folder is used to store the generated reports"
+msgstr "此文件夹用于存储生成的报表"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:125
+#: code:addons/marketing_campaign/marketing_campaign.py:139
+#: code:addons/marketing_campaign/marketing_campaign.py:141
+#: code:addons/marketing_campaign/marketing_campaign.py:144
+#: code:addons/marketing_campaign/marketing_campaign.py:154
+#, python-format
+msgid "Error"
+msgstr "出错"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+#: field:marketing.campaign.activity,server_action_id:0
+msgid "Action"
+msgstr "操作"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:488
+#, python-format
+msgid "Automatic transition"
+msgstr "自动迁移"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+#: view:res.partner:0
+msgid "History"
+msgstr "日志"
+
+#. module: marketing_campaign
+#: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
+msgid "marketing_campaign"
+msgstr "marketing_campaign"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Process"
+msgstr "流程"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:490
+#: selection:marketing.campaign.transition,trigger:0
+#, python-format
+msgid "Cosmetic"
+msgstr "装饰"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.transition,trigger:0
+msgid "How is the destination workitem triggered"
+msgstr "如何触发目标工作项"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"A marketing campaign is an event or activity that will help you manage and "
+"reach your partners with specific messages. A campaign can have many "
+"activities that will be triggered from a specific situation. One action "
+"could be sending an email template that has previously been created in the "
+"system."
+msgstr ""
+"一个市场营销活动是一个事件或者活动，能帮助你管理和传递特定的信息给你的业务伙伴。营销活动可以拥有许多在特定条件下触发的活动。一个操作可以是发送一条以前在系"
+"统里面创建好的邮件模板。"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: selection:campaign.analysis,state:0
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Done"
+msgstr "已完成"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:209
+#, python-format
+msgid "Operation not supported"
+msgstr "操作不支持"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template
+msgid "Email Templates for Models"
+msgstr "模型的邮件模板"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+msgid "Close"
+msgstr "结束"
+
+#. module: marketing_campaign
+#: constraint:marketing.campaign.segment:0
+msgid "Model of filter must be same as resource model of Campaign "
+msgstr "模型的过滤器必须和营销活动的资源模型一致 "
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+msgid "Synchronize Manually"
+msgstr "手工同步"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:154
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are done"
+msgstr "只有所有的活动片段完成之后才能把营销活动设置为已完成"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "资源ID"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
+msgid "Campaign Transition"
+msgstr "营销互动迁移"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "待办"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Campaign Step"
+msgstr "营销活动步骤"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign.segment:0
+msgid "Segments"
+msgstr "片段"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
+msgid "All Segments"
+msgstr "所有片段"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:0
+msgid "Incoming Transitions"
+msgstr "转入迁移"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "E-mail"
+msgstr "电子邮件"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Day(s)"
+msgstr "天"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,activity_ids:0
+#: view:marketing.campaign.activity:0
+msgid "Activities"
+msgstr "活动"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "May"
+msgstr "5"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: selection:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: selection:marketing.campaign.segment,state:0
+msgid "Running"
+msgstr "正在运行"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:489
+#, python-format
+msgid "After %(interval_nbr)d %(interval_type)s"
+msgstr "在%(interval_nbr)d %(interval_type)s之后"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign
+msgid "Marketing Campaign"
+msgstr "市场营销活动"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,date_done:0
+msgid "End Date"
+msgstr "截止日期"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "February"
+msgstr "2"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,res_id:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign,object_id:0
+#: field:marketing.campaign.segment,object_id:0
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,object_id:0
+msgid "Resource"
+msgstr "资源"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,fixed_cost:0
+msgid ""
+"Fixed cost for running this campaign. You may also specify variable cost and "
+"revenue on each campaign activity. Cost and Revenue statistics are included "
+"in Campaign Reporting."
+msgstr "开展此营销活动的固定成本。你也可以为每个营销活动指定可变成本和收入。成本和收入统计包含在营销活动报表中。"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:746
+#, python-format
+msgid "Email Preview"
+msgstr "邮件预览"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,signal:0
+msgid "Signal"
+msgstr "信号"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:125
+#, python-format
+msgid "The campaign cannot be started: there are no activities in it"
+msgstr "营销活动无法启动：没有任何活动项"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.workitem,date:0
+msgid "If date is not set, this workitem has to be run manually"
+msgstr "如果没有设置日期，此工作项必须由手工启动"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "April"
+msgstr "4"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+#: field:marketing.campaign,mode:0
+msgid "Mode"
+msgstr "模式"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,activity_id:0
+#: view:marketing.campaign.activity:0
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,activity_id:0
+msgid "Activity"
+msgstr "活动"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,ir_filter_id:0
+msgid ""
+"Filter to select the matching resource records that belong to this segment. "
+"New filters can be created and saved using the advanced search on the list "
+"view of the Resource. If no filter is set, all records are selected without "
+"filtering. The synchronization mode may also add a criterion to the filter."
+msgstr ""
+"过滤器，选择属于此活动段的匹配的资源记录。可以通过资源的列表视图的高级查询来创建和保存新的过滤器。如果没有设置过滤器，所有的都会被选中。同步模式也可以添加"
+"条件到过滤器中。"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
+msgid "Campaign Followup"
+msgstr "营销活动追踪"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,date_next_sync:0
+msgid "Next Synchronization"
+msgstr "下一个同步"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,ir_filter_id:0
+msgid "Filter"
+msgstr "过滤器"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:0
+msgid "All"
+msgstr "全选"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records created after last sync"
+msgstr "最近一次同步后创建的新记录"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,variable_cost:0
+msgid "Variable Cost"
+msgstr "可变成本"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr "通过手工确认"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,total_cost:0
+#: view:marketing.campaign:0
+msgid "Cost"
+msgstr "成本"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,year:0
+msgid "Year"
+msgstr "年"

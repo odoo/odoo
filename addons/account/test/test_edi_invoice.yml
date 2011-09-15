@@ -16,6 +16,7 @@
     name: Junjun wala
     supplier: False
     company_id: res_company_test11
+    opt_out: True
 -
   I create one customer invoice
 -
@@ -37,6 +38,14 @@
         price_unit: 10.0
         name: 'basic pc'
         account_id: account.a_pay
+    invoice_line:
+      - product_id: product.product_product_pc3
+        partner_id: res_partner_test20
+        uos_id: 1
+        quantity: 5.0
+        price_unit: 100.0
+        name: 'Medium PC'
+        account_id: account.a_pay
         
     tax_line:
       - name: sale tax
@@ -55,38 +64,97 @@
     wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
 
 -
-  I Tesing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
+  I Testing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
 -
   !python {model: ir.edi.document}: |
     invoice_pool = self.pool.get('account.invoice')
     invoice = invoice_pool.browse(cr, uid, ref("customer_invoice_test"))
+
     tokens = self.export_edi(cr, uid, [invoice])
     assert tokens, 'Token is not generated'
-    document = self.get_document(cr, uid, tokens[0])
-    a = self.import_edi(cr, uid, edi_document = document)
-    assert a, 'Invoice is not imported'
 -
-  I Checking the out invoice become in invoice or not after import
+  I import of EDI document of custmer invoice
+-
+  !python {model: ir.edi.document}: |
+    invoice_pool = self.pool.get('account.invoice')
+    edi_document = {
+        "internal_number": "SAJ/2011/002", 
+        "company_address": {
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "__last_update": False, 
+                "country_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.be", "Belgium"], 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:base.main_address", 
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40"
+        }, 
+        "company_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_company_test11", "Thomson pvt. ltd."], 
+        "currency_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.EUR", "EUR (\u20ac)"], 
+        "address_invoice_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
+        "partner_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_partner_test20", "Junjun wala"], 
+        "__attachments": [], 
+        "__module": "account", 
+        "amount_total": 1010.0, 
+        "date_invoice": "2011-06-22", 
+        "amount_untaxed": 10.0, 
+        "name": "selling product", 
+        "__model": "account.invoice", 
+        "__last_update": False, 
+        "tax_line": [{
+                "amount": 1000.0, 
+                "manual": True, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_tax-4g4EutbiEMVl", 
+                "name": "sale tax", 
+                "__last_update": False
+        }], 
+        "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:account.customer_invoice_test", 
+        "amount_tax": 1000.0, 
+        "__version": [6, 1], 
+        "type": "out_invoice", 
+        "invoice_line": [{
+                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
+                "name": "basic pc", 
+                "__last_update": False, 
+                "price_unit": 10.0, 
+                "price_subtotal": 10.0, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
+                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"], 
+                "quantity": 1.0
+        },
+        {
+                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
+                "name": "Medim PC", 
+                "__last_update": False, 
+                "price_unit": 100.0, 
+                "price_subtotal": 100.0, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
+                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc3", "[PC3] Medium PC"], 
+                "quantity": 5.0
+        }]
+    }
+
+    invoice_id = invoice_pool.edi_import(cr, uid, edi_document, context=context)
+    invoice_new = invoice_pool.browse(cr, uid, invoice_id, context=context)
+    assert invoice_id, 'Invoice is not imported'
+-
+  I Checking the out invoice become in invoice or not after import 
 -
   !python {model: account.invoice}: |
     
-    invoice_old = self.browse(cr, uid, ref("customer_invoice_test"))
-    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, invoice_old.company_id.name)
+    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, "Thomson pvt. ltd.")
     assert new_partner_id, 'Partner is not created of Supplier'
-    
-    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',invoice_old.internal_number)])
+    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',"SAJ/2011/002")])
     assert ids, 'Invoice does not have created of party'
     invoice_new = self.browse(cr, uid, ids[0])
-    assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"
+    assert invoice_new.reference == "SAJ/2011/002", "internal number is not stored in reference"
     assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
     assert invoice_new.internal_number == False, "internal number is not reset"
-    assert invoice_new.journal_id.id, "journal id is not selected" 
+    assert invoice_new.journal_id.id, "journal id is not selected"
+    assert invoice_new.type == 'in_invoice', 'Imported in voice is not supplier invoice'
+    product = ['Medium PC','Basic PC']
     for inv_line in invoice_new.invoice_line:
         assert inv_line.account_id.id, "account_id is not taken from product's default"
+        assert inv_line.product_id.name in product, "product  is not in Invoice line"
     for inv_tax in invoice_new.tax_line:
         assert inv_tax.manual, "for tax line manual is not set to True"
         assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
-    
-    
-    
-   
