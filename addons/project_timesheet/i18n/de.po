@@ -14,11 +14,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:29+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:33+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:53
+#: code:addons/project_timesheet/project_timesheet.py:44
 #, python-format
 msgid "No employee defined for user \"%s\". You must create one."
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Mitarbeiter für diesen Benutzer erstellen."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:61
+#: code:addons/project_timesheet/project_timesheet.py:52
 #, python-format
 msgid ""
 "No journal defined on the related employee.\n"
@@ -107,7 +107,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:229
+#: code:addons/project_timesheet/project_timesheet.py:220
 #, python-format
 msgid "Cannot delete Partner which is Assigned to project  !"
 msgstr "Kann Partner, der zum Projekt zugewiesen wurde, nicht löschen!"
@@ -143,7 +143,7 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:229
+#: code:addons/project_timesheet/project_timesheet.py:220
 #, python-format
 msgid "Invalid action !"
 msgstr "Fehlerhafte Aktion !"
@@ -264,7 +264,7 @@ msgid "Tasks by User"
 msgstr "Aufgaben je Benutzer"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
+#: code:addons/project_timesheet/project_timesheet.py:48
 #, python-format
 msgid ""
 "No product defined on the related employee.\n"
@@ -275,7 +275,6 @@ msgstr ""
 "'Zeiterfassung'"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
 #: model:ir.model,name:project_timesheet.model_project_project
 msgid "Project"
 msgstr "Projekt"
@@ -306,10 +305,10 @@ msgid "Timesheet/Task hours Report Per Month"
 msgstr "Arbeitstunden und Aufgaben nach Monat"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:52
-#: code:addons/project_timesheet/project_timesheet.py:56
-#: code:addons/project_timesheet/project_timesheet.py:60
-#: code:addons/project_timesheet/project_timesheet.py:67
+#: code:addons/project_timesheet/project_timesheet.py:43
+#: code:addons/project_timesheet/project_timesheet.py:47
+#: code:addons/project_timesheet/project_timesheet.py:51
+#: code:addons/project_timesheet/project_timesheet.py:58
 #, python-format
 msgid "Bad Configuration !"
 msgstr "Falsche Konfiguration !"
@@ -366,7 +365,7 @@ msgid "Invoice Task Work"
 msgstr "Abrechnen Arbeitsstunden"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
+#: code:addons/project_timesheet/project_timesheet.py:59
 #, python-format
 msgid ""
 "No product and product category property account defined on the related "
@@ -404,55 +403,8 @@ msgstr ""
 #~ msgstr ""
 #~ "Kein Mitarbeiter für den Benutzer definiert. Sie müssen einen erzeugen."
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Das Objekt muss mit einem x_ starten und darf keine Sonderzeichen haben!"
+#~ msgid "Working Hours"
+#~ msgstr "Arbeitsstunden"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#~ msgid "This Year"
-#~ msgstr "Aktuelles Jahr"
-
-#~ msgid "Invoiceble"
-#~ msgstr "Nicht Abrechenbar"
-
-#~ msgid "This Month"
-#~ msgstr "Dieser Monat"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid "My Entries"
-#~ msgstr "Meine Arbeitszeiten"
-
-#~ msgid "Journal"
-#~ msgstr "Journal"
-
-#~ msgid "Product"
-#~ msgstr "Produkt"
-
-#~ msgid "Search Analytic Lines"
-#~ msgstr "Suche Analytische Buchungen"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Erweiterter Filter..."
-
-#~ msgid "Account"
-#~ msgstr "Analysekonto"
-
-#~ msgid "Fin.Account"
-#~ msgstr "Finanzkonto"
+#~ msgid "My Timesheet"
+#~ msgstr "Meine Zeiterfassung"

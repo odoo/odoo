@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+<data>
 
-   	<record model="res.groups" id="base.group_tool_manager">
-        	<field name="name">Tools / Manager</field>
-   		</record>
-   	<record model="res.groups" id="base.group_tool_user">
-        	<field name="name">Tools / User</field>
-   	</record>
+    <record model="res.groups" id="base.group_tool_user">
+        <field name="name">Tools / User</field>
+    </record>
+    <record model="res.groups" id="base.group_tool_manager">
+        <field name="name">Tools / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_tool_user'))]"/>
+    </record>
 
-	</data>
+</data>
 </openerp>
 

@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <!-- Types -->
-        <record model="account.account.type" id="conf_account_type_receivable" >
+        <record model="account.account.type" id="conf_account_type_receivable">
           <field name="name">Receivable</field>
           <field name="code">receivable</field>
           <field name="report_type">income</field>
           <field name="close_method">unreconciled</field>
         </record>
 
-        <record model="account.account.type" id="conf_account_type_payable" >
+        <record model="account.account.type" id="conf_account_type_payable">
           <field name="name">Payable</field>
           <field name="code">payable</field>
           <field name="report_type">expense</field>
@@ -43,7 +42,7 @@
 	        <field name="report_type">liability</field>
 	    </record>
 
-        <record model="account.account.type" id="conf_account_type_income" >
+        <record model="account.account.type" id="conf_account_type_income">
           <field name="name">Income</field>
           <field name="code">income</field>
           <field name="report_type">income</field>
@@ -591,15 +590,15 @@
 
 
     	<record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_normal_taxes_template1" />
-            <field name="tax_src_id" ref="itaxs" />
-            <field name="tax_dest_id" ref="otaxs" />
+            <field name="position_id" ref="fiscal_position_normal_taxes_template1"/>
+            <field name="tax_src_id" ref="itaxs"/>
+            <field name="tax_dest_id" ref="otaxs"/>
         </record>
 
     	<record id="fiscal_position_tax_exempt" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_tax_exempt_template2" />
-            <field name="tax_src_id" ref="itaxx" />
-            <field name="tax_dest_id" ref="otaxx" />
+            <field name="position_id" ref="fiscal_position_tax_exempt_template2"/>
+            <field name="tax_src_id" ref="itaxx"/>
+            <field name="tax_dest_id" ref="otaxx"/>
         </record>
 
 
@@ -617,7 +616,7 @@
 			<field name="name">Generate Chart of Accounts from a Chart Template</field>
 			<field name="action_id" ref="account.action_wizard_multi_chart"/>
 			<field name="category_id" ref="account.category_accounting_configuration"/>
-			<field name="type">special</field>
+			<field name="type">automatic</field>
 		</record>
 
 
