@@ -24,6 +24,7 @@
     "images" : ["images/sale_layout.jpeg"],
     "depends" : ["sale", "account_invoice_layout"],
     "author" : "OpenERP SA",
+    'complexity': "easy",
     "description": """
 This module provides features to improve the layout of the Sales Order.
 =======================================================================

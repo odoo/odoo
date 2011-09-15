@@ -5,6 +5,9 @@
     <record id="group_account_payment" model="res.groups">
         <field name="name">Accounting / Payments</field>
     </record>
+    <record id="account.group_account_invoice" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_account_payment'))]"/>
+    </record>
 
     <record id="payment_mode_comp_rule" model="ir.rule">
         <field name="name">Payment Mode company rule</field>

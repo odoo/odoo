@@ -16,10 +16,23 @@
             </field>
         </record>
 
+        <!-- Hide share users/groups by default -->
         <record model="ir.actions.act_window" id="base.action_res_users">
             <field name="name">Users</field>
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
+        <record id="view_users_form_share" model="ir.ui.view">
+            <field name="name">res.users.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page//field[@name='groups_id']" position="attributes">
+                    <attribute name="context">{'search_default_no_share':1}</attribute>
+                </xpath>
+            </field>
+        </record>
+
 
         <record model="ir.ui.view" id="res_groups_search_sharing">
             <field name="name">res.groups.search.share</field>
@@ -37,10 +50,21 @@
             </field>
         </record>
 
+        <!-- Hide share users/groups by default -->
         <record model="ir.actions.act_window" id="base.action_res_groups">
             <field name="name">Groups</field>
             <field name="context">{'search_default_no_share': 1}</field>
         </record>
-
+        <record id="view_groups_form_share" model="ir.ui.view">
+            <field name="name">res.groups.form</field>
+            <field name="model">res.groups</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_groups_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page//field[@name='users']" position="attributes">
+                    <attribute name="context">{'search_default_no_share':1}</attribute>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

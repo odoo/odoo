@@ -31,7 +31,6 @@ class res_partner(osv.osv):
           relation='product.pricelist', 
           domain=[('type','=','purchase')],
           string="Purchase Pricelist", 
-          method=True,
           view_load=True,
           help="This pricelist will be used, instead of the default one, for purchases from the current partner"),
     }
