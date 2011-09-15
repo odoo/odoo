@@ -67,7 +67,7 @@ class procurement_order(osv.osv):
             report_except = 0
             report_later = 0
             while True:
-                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], order='priority,date_planned')
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority,date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
