@@ -2554,7 +2554,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
-    template: "FieldStatus",
+    template: "EmptyComponent",
     start: function() {
         this._super();
         this.selected_value = null;
