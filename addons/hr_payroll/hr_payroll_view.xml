@@ -736,6 +736,13 @@
 
         <act_window domain="[('slip_id', '=', active_id)]" context="{'search_default_register_id': 1}" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
 
+        <act_window name="Payslip Lines"
+        	domain="[('register_id', '=', active_id)]"
+        	context="{'search_default_register_id': 1}"
+        	res_model="hr.payslip.line"
+        	src_model="hr.contribution.register"
+        	id="act_contribution_reg_payslip_lines"/>
+
     </data>
 </openerp>
 
