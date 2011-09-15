@@ -23,21 +23,20 @@ import tools
 
 class hr_evaluation_reminder(osv.osv_memory):
     _name = "hr.evaluation.reminder"
-    _description = "Sends Reminders to employess to fill the evaluations"
+    _description = "Sends Reminders to employees to fill the evaluations"
     _columns = {
         'evaluation_id': fields.many2one('hr.evaluation.interview', 'Interview', required=True)
     }
 
     def send_mail(self, cr, uid, ids, context=None):
+        mail_message = self.pool.get('mail.message')
         hr_evaluation_interview_obj = self.pool.get('hr.evaluation.interview')
         evaluation_data = self.read(cr, uid, ids, context=context)[0]
         current_interview = hr_evaluation_interview_obj.browse(cr, uid, evaluation_data.get('evaluation_id'))
         if current_interview.state == "waiting_answer" and current_interview.user_to_review_id.work_email :
             msg = " Hello %s, \n\n Kindly post your response for '%s' survey interview. \n\n Thanks,"  %(current_interview.user_to_review_id.name, current_interview.survey_id.title)
-            tools.email_send(tools.config['email_from'], [current_interview.user_to_review_id.work_email],\
-                                          'Reminder to fill up Survey', msg)
+            mail_message.schedule_with_attach(cr, uid, tools.config['email_from'], [current_interview.user_to_review_id.work_email],\
+                                          'Reminder to fill up Survey', msg, context=context)
         return {'type': 'ir.actions.act_window_close'}
-
-hr_evaluation_reminder()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
