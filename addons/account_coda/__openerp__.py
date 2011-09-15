@@ -24,6 +24,7 @@
     "version"   : "1.0",
     "author"    : "OpenERP SA",
     "category"  : "Finance",
+    'complexity': "normal",
     "description": """
 Module provides functionality to import bank statements from coda files.
 ========================================================================

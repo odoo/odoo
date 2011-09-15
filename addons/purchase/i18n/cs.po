@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* purchase
+# 	* purchase
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2009-02-03 10:09+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-07-15 02:37+0000\n"
+"Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:52+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:01+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+"X-Poedit-Language: Czech\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -22,37 +23,40 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"Kupec musí schválit RFQ před tím, než bude zaslat dodavateli. RFQ se stance "
+"potvrzenou nákupní objednávkou."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr ""
+msgstr "Nemůžete potvrdit nákupní objednávku bez řádků Nákupní objednávky."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr ""
+msgstr "Fakturováno & Zaplaceno"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
 #: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "Cíl"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Musíte vybrat MJ výrobku ze stejné kategorie jako nákupní MJ výrobku."
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Datum, kdy byl dokument vytvořen"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -69,24 +73,24 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
+msgid "From Reception"
 msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nefakturováno"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Cílová adresa"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.report,validator:0
 msgid "Validated By"
-msgstr ""
+msgstr "Zkontrolováno"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -95,12 +99,12 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
-msgstr ""
+msgstr "Dodavatel"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "Chcete generovat faktury dodavatele ?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -109,47 +113,50 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Použijte tuto nabídku k hledání ve vašich nákupních objednávkách podle "
+"odkazu, dodavatele, výrobků, aj. Pro každou nákupní objednávku můžete "
+"sledovat obdržené výrobky a ovládat faktury dodavatelů."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Vybraný dodavatel prodává pouze tento výrobek po %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Faktury dodavatele"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Odkaz objednávky musí být jedinečný !"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "Ze seznamu navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Žádný ceník !"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
 #: view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Množství"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "VYberte otevřenou prodejní objednávku"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -157,35 +164,35 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Společnost"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Měsíční nákupy podle kategorie"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Nastavit na koncept"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Výjimka faktury"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr ""
+msgstr "Výchozí nákupní ceník"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr ""
+msgstr "Aktuální nákupy"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -194,6 +201,8 @@ msgid ""
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
 msgstr ""
+"Vložte adresu, pokud chcete doručit přímo od dodavatel k zákazníkovi. V "
+"tomto případě bude odstraněn odkaz na sklad a nastaveno umístění zákazníka."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -201,11 +210,12 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Pro nákup od aktuálního partnera bude použit tento ceník namísto výchozího"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -213,22 +223,24 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"Ceník nastavuje měnu použitou pro nákupní objednáku. Také spočítá ceny "
+"dodavatele pro vybrané výrobky/množství."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Částečné navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Nákupní objednávka '%s' je potvrzena."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr ""
+msgstr "Schválit nákup"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
@@ -236,27 +248,27 @@ msgstr ""
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Scháleno"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referenční MJ"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Origin"
-msgstr ""
+msgstr "Původ"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referenční MJ"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Nákupy"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -264,20 +276,22 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Poznámky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"V nákupním formuláři musíte vybrat ceník nebo dodavatele !\n"
+"Před výběrem výrobku prosíme nastavte jednoho."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Září"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -285,7 +299,7 @@ msgstr ""
 #: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Daně"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -296,35 +310,35 @@ msgstr ""
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Nákupní příkaz"
 
 #. module: purchase
 #: field:purchase.order,name:0
 #: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Odkaz objednávky"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Čistého celkem:"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "Nastavit vaši aplikaci Řízení nákupu"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
-msgstr ""
+msgstr "Výrobky"
 
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Průběh nastavení"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -338,188 +352,188 @@ msgstr ""
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Zrušeno"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
-msgstr ""
+msgstr "Částka nákupu je nad limitem"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr ""
+msgstr "Převést na nákupní příkaz"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
 #: field:purchase.report,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Ceník"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Výjimka přepravy"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Řádky faktury"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr ""
+msgstr "Příchozí výrobky"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Odchozí výrobky"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Ručně opraveno"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Měsíc   "
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr ""
+msgstr "Odkaz"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+msgstr "Nelze smazat Nákupní objednávku(y), která je ve stavu %s!"
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "Kontaktní jméno cílové adresy"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Přesun zásob"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Den"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Nákupní objednávka '%s' byla nasatavena do návrhového stavu."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analytický účet"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# z řádek"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varování"
 
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "Analytické plány nákupů"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "purchase.installer"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Koncept"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Price"
-msgstr ""
+msgstr "Čista cena"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Order Line"
-msgstr ""
+msgstr "Řádek objednávky"
 
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "Indikuje, že navádění bylo dokončeno"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Nesprávná MJ výrobku !"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
 #: selection:purchase.order.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potvrzeno"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Průměrná cena"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Celkem :"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 #: view:purchase.order.line_invoice:0
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdit"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 #: view:purchase.order:0
 msgid "Invoice Control"
-msgstr ""
+msgstr "Řízení faktury"
 
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvořit rekurzivní společnosti."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "Odkaz dodavatele"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Částka daně"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -536,7 +550,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "State"
-msgstr ""
+msgstr "Stav"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -544,65 +558,67 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"Přijímací analýza vám umožní jednoduše zkontrolovat a vyhodnotit příjmání "
+"obejdnávek vaší společnost a výkonnost doručování vašich dodavatelů."
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Tel.:"
-msgstr ""
+msgstr "Tel.:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr ""
+msgstr "Naváděcí seznam"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr ""
+msgstr "Tisk"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "Sloučit nákupní objednávky"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Řádky objednávky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "Žádný partner!"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Fax:"
-msgstr ""
+msgstr "Fax:"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Celková cena"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Nezdaněná částka"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Ceníky"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
-msgstr ""
+msgstr "Jméno kontaktu adresy"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -618,31 +634,31 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Faktury generované pro nákupní objednávku"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Chyba !"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "General Information"
-msgstr ""
+msgstr "Obecné informace"
 
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Moje tabule"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "Potvrzení nákupní objednávky N°"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -651,11 +667,14 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
+"Nákupní analýza vám umožní jednoduše zkontrolovat a analýzovat vaši historii "
+"nákupů a výkonnost společnosti. Z této nabídky můžete sledovat vaši "
+"vyjednanou výkonnost, výkonnost doručování vašich dodavatelů, aj."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved by Supplier"
-msgstr ""
+msgstr "Schváleno dodavatelem"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -668,63 +687,63 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr ""
+msgstr "Z příkazu"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr ""
+msgstr "Vytvořit fakturu"
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr ""
+msgstr "Cíl rezervace"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Neplatná akce !"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Dokončeno"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Červenec"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Nastavení"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
 #: view:purchase.report:0
 msgid "Purchase by supplier"
-msgstr ""
+msgstr "Nakoupeno dodavatelem"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
-msgstr ""
+msgstr "Celková částka"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Příjem zboží"
 
 #. module: purchase
 #: field:purchase.order,validator:0
 #: view:purchase.report:0
 msgid "Validated by"
-msgstr ""
+msgstr "Ověřeno"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -739,12 +758,12 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "RFQ"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr ""
+msgstr "Faktury dodavatele k obdržení"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -752,50 +771,53 @@ msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
 msgstr ""
+"Spravuje vaše nákupní požadavky a umožňuje vám jednoduše sledovat a "
+"spravovat všechny vaše nákupní objednávky."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Měsíc-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Pro tuto společnost není určen nákupní deník: \"%s\" (id:%d)"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Manual"
-msgstr ""
+msgstr "Ruční"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
+"Musíte nejdříve zrušit všechna navádění připojená k této nákupní objednávce."
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Datum objednání"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "Příchozí výrobky k ovládání"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr ""
+msgstr "Odsouhlasení"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "Statistiky nákupních objednávek"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -810,12 +832,12 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Návrh faktury"
 
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
 msgid "Manages analytic distribution and purchase orders."
-msgstr ""
+msgstr "Spravuje analytické rozdělování a nákupní objednávky."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -823,198 +845,206 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
+"Toto je spočítáno jako minimální plánovaný datum všechn řádek výrobků "
+"prodejní objednávky."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Srpen"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "Vyžádání nákupu"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorie měrných jednotek"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Dnů do doručení"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr ""
+msgstr "Obdržet výrobky"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Zásobování"
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Faktury"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr ""
+msgstr "Potvrzená nákupní objednávka k fakturaci"
 
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr ""
+msgstr "Celkem řádek objednávek na uživatele podle měsíce"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Měsíc"
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Čekání na potvrzení dodavatelem"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr ""
+msgstr "Požadavek na cenovou nabídku :"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
-msgstr ""
+msgstr "Nákupní objednávka čeká na schválení"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Celková částka bez daně"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
 #: field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr ""
+msgstr "Obdrženo"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "Seznam objednaných výrobků."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
 msgstr ""
+"Toto je seznam naváděcích seznamů, které byly generovány pro tuto objednávku"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
-msgstr ""
+msgstr "Řízení nákupu"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "K překontrolování účetním."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
 msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Daně :"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0
 #: field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Fakturováno"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr ""
+msgstr "Stav nákupní objednávky."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Rok  "
 
 #. module: purchase
 #: field:purchase.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "Stav objednávky"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Vytvořit faktury"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Řádek nákupní objednávky"
 
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
-msgstr ""
+msgstr "Kalendářový pohled"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr ""
+msgstr "Sloučení nákupní objednávky"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr ""
+msgstr "S pozdravem,"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr ""
+msgstr "Vyjednáno dodavatelem"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "Vlastnosti nákupu"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1027,114 +1057,115 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Nezdaněná částka"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Indikuje, že faktura již byla zaplacena."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "Odchozí výrobky k fakturaci"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
-msgstr ""
+msgstr "Množ. na výrobek"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Snažíte se přiřadit dávku, která není ze stejného výrobku"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Datum vytvoření dokumentu"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Prodej & Nákup"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Červen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "Nákupní objednávky"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Ruční faktury"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr ""
+msgstr "Někdo právě potvrdil nákup za částku větší než je limit"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Rozšířené filtry..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Pro tento výrobek nebyl definován nákladový účet: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
+"Nejprve musíte zrušit všechny faktury připojené k této prodejní objednávce."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
+msgstr "Prosíme vyberte ze seznamu více objednávek ke sloučení."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "Vygenerován seznam navádění"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr ""
+msgstr "Výjimka"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Říjen"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Compute"
-msgstr ""
+msgstr "Spočítat"
 
 #. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
@@ -1152,86 +1183,89 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Vybraný dodavatel má minimální množství nastaveno na %s, nemůžete objednat "
+"méně."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Leden"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Společnosti"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Purchase Order"
-msgstr ""
+msgstr "Zrušit nákupní objednávku"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Pro tento výrobek musíte přiřadit výrobní dávku."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr ""
+msgstr "Naváděcí seznam vygenerován pro sledování příchozích výrobků."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Nástěnka"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Hodnota výrobků"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Typy ceníků"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Cenové nabídky"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
 #: view:purchase.report:0
 msgid "Purchase order per month"
-msgstr ""
+msgstr "Nákupních objednávky podle měsíce"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Výrobky podle kategorie"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "Dnů k ověření"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
 msgstr ""
+"Odkaz na dokument, který vygeneroval tento požadavek na nákupní objednávku."
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1247,62 +1281,62 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Mezivýsledek"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Vyžádání ocenění"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "Datum, kdy byla schválena nákupní objednávka"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Čekající"
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr ""
+msgstr "Výchozí verze ceníku nákupů"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
-msgstr ""
+msgstr "Rozšířuje vaši aplikaci Řízení nákupů o doplňují funkce."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr ""
+msgstr "Nastavení Nákupní aplikace"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Finanční pozice"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Požadavek na ocenění N°"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Prosinec"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1311,18 +1345,18 @@ msgstr ""
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
-msgstr "Storno"
+msgstr "Zrušit"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Řádky nákupní objednávky"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr ""
+msgstr "Dodavatel potvrdil Nákupní objednávku"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1330,108 +1364,108 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Nákupní objednávky"
 
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Zdrojový dokument"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr "Sloučit objednávky(Merge orders)"
+msgstr "Sloučit objednávky"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr ""
+msgstr "Řádek nákupní objednávky vytváří fakturu"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Příchozí zásilka"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr ""
+msgstr "Celkem objednávek podle uživatele podle měsíce"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Požadavek na cenovou nabídku"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tél. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: purchase
 #: field:purchase.order,create_uid:0
 #: view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odopovědné"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Our Order Reference"
-msgstr ""
+msgstr "Náš objednávací odkaz"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Hledat nákupní objednávku"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
 #: view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Sklad"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr ""
+msgstr "Vyžádat ocenění"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Datum pož."
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
 #: field:purchase.report,date_approve:0
 msgid "Date Approved"
-msgstr ""
+msgstr "Datum schválení"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Nelze zrušit tuto nákupní objednávku !"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Cena za kus"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr ""
+msgstr "Doručení & Fakturace"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Plánovaný datum"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
@@ -1441,41 +1475,41 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Výrobek"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr ""
+msgstr "Potvrzení"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "Toto je Čekací/Ochranná lhůta pro nákupní objednávku."
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr ""
+msgstr "Očekávaná adresa doručení:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr ""
+msgstr "Analýza přijímání"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Částka bez daně"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1488,46 +1522,46 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery"
-msgstr ""
+msgstr "Dodání"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Vyžádat ocenění"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "MJ výrobku"
 
 #. module: purchase
 #: report:purchase.order:0
 #: report:purchase.quotation:0
 msgid "Qty"
-msgstr ""
+msgstr "Množ."
 
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Adresa"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr ""
+msgstr "Rezervace"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr ""
+msgstr "Celkové množ. a částka za měsíc"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Nelze zrušit nákupní objednávku !"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1535,27 +1569,29 @@ msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
 msgstr ""
+"Kupec může vyplnit a potvrdit formulář ručně v případě, že není žádný "
+"dodavatel výrobku. RFQ se stane potvrzenou nákupní objednávkou."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Únor"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Kategorie výrobků"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Analýza nákupů"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr ""
+msgstr "Váš odkaz objednávky"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1563,44 +1599,44 @@ msgstr ""
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Očekávaný datum"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
 #: view:purchase.report:0
 msgid "Total price by product by state"
-msgstr ""
+msgstr "Celková cena podle výrobku podle stavu"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr ""
+msgstr "TVA :"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Datum objednání"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Dodací adresa :"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
-msgstr ""
+msgstr "Ovládání nákupů"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Březen"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Duben"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1622,38 +1658,38 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Standardní ceny nákupů"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr ""
+msgstr "Ceník nákupů"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr ""
+msgstr "Řízení fakturace"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr ""
+msgstr "Schválit"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr ""
+msgstr "Ke schválení"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Fakturování"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1668,64 +1704,62 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr ""
+msgstr "Nákupní objednávka '%s' zrušena."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Celkem"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Verze ceníku"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Adresy"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr ""
-"Opravdu chcete tyto obejdnávky sloučit?(Are you sure you want to merge these "
-"orders ?)"
+msgstr "Opravdu chcete tyto objednávky sloučit?"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr ""
+msgstr "Z nákupní objednávky"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "Celková částka"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Květen"
 
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Čekací čas nákupu"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -1734,51 +1768,56 @@ msgid ""
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Faktura je vytvořena automaticky, pokud Řízení faktury nákupní objednávky je "
+"'Objednáno'. Faktura může být generována také ručně účetním (Řízení "
+"fakturace = Ruční)."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase"
-msgstr ""
+msgstr "Nákup"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
+"Musíte vybrat partnera v nákupním formuláři !\n"
+"Prosíme před výběrem výrobku nastavte jednoho partnera."
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "title"
-msgstr ""
+msgstr "název"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Částečný přesun"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Skladové pohyby"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Měrné jednotky"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "Objednávky"
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1786,9 +1825,20 @@ msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
 msgstr ""
+"unikátní číslo nákupní objednávky, spočítané automaticky, když je vytvořena "
+"nákupní objednávka"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr ""
+msgstr "Nástěnka nákupu"
+
+#~ msgid "From Picking"
+#~ msgstr "Z navádění"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Nefakturované nákupní řádky"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neplatné jméno modelu v definici akce."

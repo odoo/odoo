@@ -28,9 +28,9 @@ class document_configuration(osv.osv_memory):
     _inherit = 'res.config'
 
     _columns = {
-        'sale_order' : fields.boolean('Sale Order', help="Auto directory configuration for Sale Orders and Quotation with report."),
-        'product' : fields.boolean('Product', help="Auto directory configuration for Products."),
-        'project': fields.boolean('Project', help="Auto directory configuration for Projects."),
+        'sale_order' : fields.boolean('Sale Orders', help="Create virtual folders for Sale Orders and Quotations. One virtual folder will appear for each, in which the latest printed PDF document can be downloaded at any time, and where you can manage (view, add, delete) other attachments."),
+        'product' : fields.boolean('Products', help="Create virtual folders for Products. One virtual folder will appear for each product, where you can manage (view, add, delete) the files attached to the product"),
+        'project': fields.boolean('Projects', help="Create virtual folders for Projects. One virtual folder will appear for each project, where you can manage (view, add, delete) the files attached to the project"),
     }
 
 
@@ -81,7 +81,7 @@ class document_configuration(osv.osv_memory):
                 })
 
                 content_pool.create(cr, uid, {
-                    'name': "Print Qutation",
+                    'name': "Print Quotation",
                     'suffix': "_print",
                     'report_id': order_report_id,
                     'extension': '.pdf',

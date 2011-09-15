@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:19+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:24+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -106,8 +106,8 @@ msgstr "固定的"
 
 #. module: product
 #: code:addons/product/pricelist.py:186
-#: code:addons/product/pricelist.py:339
-#: code:addons/product/pricelist.py:357
+#: code:addons/product/pricelist.py:342
+#: code:addons/product/pricelist.py:360
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
@@ -206,7 +206,7 @@ msgstr "计量单位"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
-msgstr "块（片，包等）"
+msgstr "个"
 
 #. module: product
 #: view:product.template:0
@@ -253,7 +253,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  例: 1*(目标单位) = ratio * (参照单位)"
 
 #. module: product
-#: code:addons/product/product.py:378
+#: code:addons/product/product.py:380
 #, python-format
 msgid "Products: "
 msgstr "产品： "
@@ -523,7 +523,7 @@ msgid "Metal Cleats"
 msgstr "金属螺栓"
 
 #. module: product
-#: code:addons/product/pricelist.py:340
+#: code:addons/product/pricelist.py:343
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -708,7 +708,7 @@ msgstr "新价格 ="
 msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
-msgstr ""
+msgstr "这个价格是供应商计量单位的价格。如果没有输入供应商计量单位则此价格是产品基本计量单位的价格。"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1258,7 +1258,7 @@ msgid "Pallet Dimension"
 msgstr "垫板尺寸"
 
 #. module: product
-#: code:addons/product/product.py:603
+#: code:addons/product/product.py:618
 #, python-format
 msgid " (copy)"
 msgstr " (复件)"
@@ -1411,6 +1411,7 @@ msgid ""
 "the level of this product. Different lead times will be summed for all "
 "levels and purchase orders."
 msgstr ""
+"平均制造提前期。这个天数只适用于生产订单，在多层物料清单里他只表述了本层的天数。BOM总计的提前期要根据所有层制造提前期和采购提前期的合计。"
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -1726,7 +1727,7 @@ msgid ""
 msgstr "计算客户价格的基础价格.有时候它被称为目录价格"
 
 #. module: product
-#: code:addons/product/pricelist.py:515
+#: code:addons/product/pricelist.py:518
 #, python-format
 msgid "Partner section of the product form"
 msgstr "供应产品的业务伙伴"
@@ -1821,7 +1822,7 @@ msgid ""
 "Future stock for this product according to the selected locations or all "
 "internal if none have been selected. Computed as: Real Stock - Outgoing + "
 "Incoming."
-msgstr ""
+msgstr "此产品在所选库位（如未选库位则是在所有内部库位）未来的数量。算法是 账面数量 - 未发出数量 + 未收到数量"
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -2148,7 +2149,7 @@ msgid "Description"
 msgstr "说明"
 
 #. module: product
-#: code:addons/product/pricelist.py:358
+#: code:addons/product/pricelist.py:361
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2193,7 +2194,7 @@ msgid "Shelves"
 msgstr "架子"
 
 #. module: product
-#: code:addons/product/pricelist.py:514
+#: code:addons/product/pricelist.py:517
 #, python-format
 msgid "Other Pricelist"
 msgstr "其他价格表"
@@ -2278,21 +2279,6 @@ msgstr "这体积是m3"
 msgid "Price Discount"
 msgstr "价格折扣"
 
-#~ msgid "Childs Categories"
-#~ msgstr "子项分类"
-
-#~ msgid "Rentable product"
-#~ msgstr "可出租产品"
-
-#~ msgid "Price Max. Margin"
-#~ msgstr "最高价"
-
-#~ msgid "Price Min. Margin"
-#~ msgstr "最低价"
-
-#~ msgid "Supplier of Product"
-#~ msgstr "产品供应商"
-
 #~ msgid "Prices Computations"
 #~ msgstr "价格计算"
 
@@ -2302,15 +2288,6 @@ msgstr "价格折扣"
 #~ msgid "Priority"
 #~ msgstr "优先级"
 
-#~ msgid ""
-#~ "This is the average time between the confirmation of the customer order and "
-#~ "the delivery of the finnished products. It's the time you promise to your "
-#~ "customers."
-#~ msgstr "从确认用户订单到发货给客户的平均时间。也就是您承诺给您的客户的时间。"
-
-#~ msgid "Starting date for validity of this pricelist version."
-#~ msgstr "价该格表版本的生效时间"
-
 #~ msgid "Default UoM"
 #~ msgstr "默认计量单位"
 
@@ -2319,13 +2296,6 @@ msgstr "价格折扣"
 
 #~ msgid "Partner Product Name"
 #~ msgstr "业务伙伴产品名称"
-
-#~ msgid "You can see the list of supplier for that product."
-#~ msgstr "您可以看见该产品的供应商列表。"
-
-#~ msgid ""
-#~ "Unit of Measure of the same category can be converted between each others."
-#~ msgstr "同一分类下的计量单位可以互相转换。"
 
 #~ msgid "Price list"
 #~ msgstr "价格表"
@@ -2342,17 +2312,8 @@ msgstr "价格折扣"
 #~ msgid "Supplier Info"
 #~ msgstr "供应商信息"
 
-#~ msgid "Ending date for validity of this pricelist version."
-#~ msgstr "价格表版本失效时间。"
-
-#~ msgid "You can not have 2 pricelist version that overlaps!"
-#~ msgstr "您不能有2个重叠的价格表版本。"
-
 #~ msgid "KGM"
 #~ msgstr "千克"
-
-#~ msgid "The mode of computation of the price for this rule."
-#~ msgstr "该规则的价格计算模式"
 
 #~ msgid "Customer Price"
 #~ msgstr "客户价格"
@@ -2372,16 +2333,8 @@ msgstr "价格折扣"
 #~ msgid "Price type"
 #~ msgstr "价格类型"
 
-#, python-format
-#~ msgid "%d unit"
-#~ msgstr "%d 单位"
-
 #~ msgid "Rate"
 #~ msgstr "比率"
-
-#, python-format
-#~ msgid "%d units"
-#~ msgstr "%d 单位"
 
 #~ msgid "Delivery Delay"
 #~ msgstr "交货延迟"
@@ -2390,21 +2343,12 @@ msgstr "价格折扣"
 #~ msgstr "获得方式"
 
 #~ msgid ""
-#~ "Used by companies that manages two unit of measure: invoicing and inventory "
-#~ "management. For example, in food industries, you will manage a stock of ham "
-#~ "but invoice in Kg. Keep empty to use the default UOM."
-#~ msgstr "处理发票和库存管理两个计量单位的公司使用。例如，在食品工业中，您在库存中管理火腿，但发票使用公斤为计量单位。留空以使用默认计量单位。"
-
-#~ msgid ""
 #~ "The cost of the product for accounting stock valuation. It can serves as a "
 #~ "base price for supplier price."
 #~ msgstr "产品成本的会计库存价值.它能作为供应商价格的一个基础价格."
 
 #~ msgid "Product Process"
 #~ msgstr "产品工艺"
-
-#~ msgid "Price List Name:"
-#~ msgstr "价格表名称:"
 
 #~ msgid "Factor"
 #~ msgstr "系数"
@@ -2415,64 +2359,12 @@ msgstr "价格折扣"
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr "错误:销售单位必须和计量单位在不同的分类."
 
-#~ msgid "Currency :"
-#~ msgstr "货币:"
-
 #~ msgid "Suppliers of Product"
 #~ msgstr "产品供应商"
-
-#~ msgid "Product Pricelist"
-#~ msgstr "产品价格表"
-
-#~ msgid "Printing Date :"
-#~ msgstr "打印日期:"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#~ msgid "units"
-#~ msgstr "单位"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This is the base module for managing products and pricelists in Open "
-#~ "ERP.\n"
-#~ "\n"
-#~ "    Products support variants, different pricing methods, suppliers\n"
-#~ "    information, make to stock/order, different unit of measures,\n"
-#~ "    packaging and properties.\n"
-#~ "\n"
-#~ "    Pricelists support:\n"
-#~ "    * Multiple-level of discount (by product, category, quantities)\n"
-#~ "    * Compute price based on different criteria:\n"
-#~ "        * Other pricelist,\n"
-#~ "        * Cost price,\n"
-#~ "        * List price,\n"
-#~ "        * Supplier price, ...\n"
-#~ "    Pricelists preferences by product and/or partners.\n"
-#~ "\n"
-#~ "    Print product labels with barcode.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这基础模块管理系统的产品和价格表.\n"
-#~ "\n"
-#~ "产品支持系列型号不同的\n"
-#~ "计价方式,供应商信息,按库存/按单生产,不同的单位,\n"
-#~ "包装和属性.\n"
-#~ "\n"
-#~ "价格表支持:\n"
-#~ "- 多层折扣(按产品,分类,数量)\n"
-#~ "- 计算价格根据不同的准则\n"
-#~ "\t- 其它价格表\n"
-#~ "\t- 成本价\n"
-#~ "\t- 标价\n"
-#~ "\t- 供应商价格..\n"
-#~ "价格表参数根据产品或业务伙伴\n"
-#~ "\n"
-#~ "打印产品标签和条码\n"
-#~ "    "
 
 #~ msgid "Prices & Suppliers"
 #~ msgstr "价格&供应商"
@@ -2615,23 +2507,3 @@ msgstr "价格折扣"
 #~ msgstr ""
 #~ "延迟天数是确认采购订单到仓库接收产品之间的延迟天数.\n"
 #~ "用于制定采购订单计划时调度程序自动计算."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "模块的认证ID必须唯一"
-
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "群组名称必须唯一"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the pricelist "
-#~ "without removing it."
-#~ msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"
-
-#~ msgid "You can not have two users with the same login !"
-#~ msgstr "两个用户不能使用相同的用户名！"
-
-#~ msgid "Supplier Product UoM."
-#~ msgstr "供应商产品计量单位"
-
-#~ msgid "res.users"
-#~ msgstr "res.users"

@@ -7,35 +7,35 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-09-09 07:16+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-06-27 18:21+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:37+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Mal Gönderme"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "Çekilen Rotalar"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Hareket"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "İtilen Akışlar"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -45,39 +45,39 @@ msgstr "Otomatik No Adımı Eklendi"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "Katsayılar"
 
 #. module: stock_location
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr "Kaynak Lokasyon"
+msgstr "Kaynak Konumu"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
+msgstr "Ürün çekme akışına ilişkin hareketleri iptal etmenizi sağlar"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "Çekilen Akışlar"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Bu ürün için bir üretim partisi girmeniz gerekir"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "Gönderilecek Hedef Konumu tarafından kullanılan konum"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "İç"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -86,22 +86,24 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Çekilir tedarik %s başlangıç konumundan, %s çekme kuralından, başlangıç %s "
+"Tedariki (#%d) yolundan gelir."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Konum"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Fatura Durumu"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
+msgstr "Bu alana paketleme Orijini ve hareket adları doldurulacaktır"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -113,103 +115,110 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
+"Bu, konum ağacında ürünün izlemesi gereken rotaları belirtmek için "
+"kullanılır.\n"
+"'Otomatik Hareket' değeri, otomatik olarak onaylanacak olan geçerli birinden "
+"bir stok hareketi oluşturacaktır. 'Manual Operasyon' durumunda, stok "
+"hareketi bir çalışan tarafından onaylanmalıdır. 'Otomatik No Adımı Eklendi' "
+"durumunda, konum orijinal harekette değiştirilir."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr ""
+msgstr "Depo Konumu Rotaları"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Koşullar"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Paket Bölgesi"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "B Kapısı"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "A Kapısı"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Satın Al"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "İtilen akışlar"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Sevk Etme Bölgesi"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Stok Hareketi"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "Çekilen akışlar"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Şirket"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Logistics Flows"
-msgstr ""
+msgstr "Lojistik Akışlar"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Kontrol edildiyse, bu hareket iptal edildiğinde, ilgi hareketi de iptal edin"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Oluştur"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Sipariş Ver"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Stokla"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Ortak Adresi"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Faturalandırılacak"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
 msgid "Number of days to do this transition"
-msgstr ""
+msgstr "Bu geçişin yapılacağı gün sayısı"
 
 #. module: stock_location
 #: model:ir.module.module,description:stock_location.module_meta_information
@@ -298,27 +307,104 @@ msgid ""
 "from Gate A\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül her bir ürün için destek sağlayarak Depo uygulamasını tamamlar\n"
+"konum rotaları, İletme ve Çekme envanteri etkili uygulaması.\n"
+"\n"
+"Genellikle şu amaçla kullanılır:\n"
+"* Ürün üretim zincirlerini yönetme\n"
+"* Her bir ürün için varsayılan konumları yönetme\n"
+"* Aşağıdaki işletme ihtiyaçlarına göre deponuzdaki rotaları belirleme:\n"
+"   - Kalite Kontrol\n"
+"   - Satış Sonrası Hizmetler\n"
+"   - Tedarikçi İadeleri\n"
+"* Kiralanan ürünler için otomatik iade hareketleri oluşturarak kiralama "
+"yönetimine yardımcı olma\n"
+"\n"
+"Bu modül kurulduğunda, ürün formunda İletme ve Çekme özelliklerini "
+"ekleyebileceğiniz\n"
+"ilave bir sekme belirir. İletme/çekme için CPU1 ürünü gösterim verileri:\n"
+"\n"
+"İletme akışları\n"
+"----------\n"
+"İletme akışları, belirli bir ürünün belirli bir lokasyona ulaşması, ilgili "
+"başka bir konuma hareket\n"
+"tarafından, isteğe bağlı olarak belirli bir gecikme süresinden sonra, daima "
+"izlenmesi gerektiğinde kullanışlıdır.\n"
+"Orijinal Depo uygulaması, Konumlardaki İletme akışı gibi özellikleri zaten "
+"destekler, ancak\n"
+"bunlar her ürün için tavsiye edilmez.\n"
+"\n"
+"Bir iletme akışı özelliği hangi konumun hangi konuma ve hangi parametrelere "
+"bağlandığını\n"
+"gösterir. Ürünün belirli bir miktarı kaynak konuma hareket ettiğinde, akış "
+"özelliğinde ayarlanan parametrelere göre\n"
+"bağlı bir hareket otomatik olarak öngörülür\n"
+"(hedef konum, gecikme süresi, hareket türü, seyir durumu vb.) Parametrelere "
+"bağlı olarak, yeni hareket\n"
+"otomatik olarak işlenir veya manuel bir onay gerekir.\n"
+"\n"
+"Çekme akışları\n"
+"----------\n"
+"Çekme akışları, ürün hareketlerinin işlenmesine ilişkin olmayıp, daha ziyade "
+"satınalma siparişlerinin işlenmesine\n"
+"ilişkin olması bakımından, İletme akışlarından biraz farklıdır.\n"
+"Çekilecek olan şey, doğrudan ürün değil, bir ihtiyaçtır.\n"
+"Satıcı firma tedarik işlemlerinden sorumlu air ana Firma ile\n"
+"bir Satıcı firmaya sahip olduğunuz durum klasik bir İletme akışı durumudur.\n"
+"\n"
+"  [ Müşteri ] <- A - [ Satıcı Firma ]  <- B -  [ Holding ] <~ C ~ [ "
+"Tedarikçi ]\n"
+"\n"
+"Yeni bir satınalma siparişi (A, örneğin bir Satış Siparişi onayından gelen)\n"
+"Satıcı firmaya ulaştığında, Holding tarafından talep edilen başka bir "
+"satınalmaya (B, 'hareket' tipi İletme akışıyla)\n"
+"dönüştürülür. Satınalma siparişi B Holding firma tarafından işlendiğinde ve\n"
+"ürün stokta yoksa, Tedarikçiden bir Satınalma Siparişine (C) dönüştürülür\n"
+"(Satınalma tipi İletme akışı). Sonuç olarak satınalma siparişi, ihtiyaç, her "
+"türlü\n"
+"Müşteri ve Tedarikçi arasında iletilir.\n"
+"\n"
+"Teknik olarak, Çekma akışları satınalma siparişlerinin sadece ele alınan "
+"ürüne göre değil\n"
+"ürün için \"ihtiyaç\" duyulan konuma göre de farklı olarak işlenmesine "
+"olanak sağlar\n"
+"(örn. satınalma siparişinin gönderileceği hedef konum).\n"
+"\n"
+"Kullanım-Durumu\n"
+"--------\n"
+"\n"
+"Gösterim verilerini aşağıdaki gibi kullanabilirsiniz:\n"
+"  CPU1: Mağaza 1'den bir miktar CPU1 satın ve zamanlayıcıyı çalıştırın\n"
+"     - Depo: teslimat siparişi, Mağaza 1: resepsiyon\n"
+"  CPU3:\n"
+"     - Ürünü alırken, Kalite Kontrol konumuna gider ve ardından raf 2'ye "
+"saklanır.\n"
+"     - Müşteriye teslim edilirken: Alım Listesi -> Paketleme -> A Kapısından "
+"Teslimat Siparişi\n"
+"    "
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Satınalma Tipi"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
+"Paketleme ve hareketleri gerçekleştiren firmayı öğrenmek için kullanılır"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Ad"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr ""
+msgstr "Bu kurallar, tüm konum ağacı boyunca doğru ürün rotasını ayarlar."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -329,18 +415,18 @@ msgstr "Manuel Operasyon"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Ürün"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Satınalma Metodu"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Sevkıyat Türü"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -349,11 +435,14 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Stokla': Gerektiğinde stoktan alın ya da tekrar tedarik edilinceye kadar "
+"bekleyin. 'Sipariş Ver': Gerektiğinde, satın alın ya da satınalma talebi "
+"oluşturun."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "Tedarik işleminin yapılacağı hedef konumdur"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -364,18 +453,18 @@ msgstr "Stok Kartları"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "Satınalma %d aracılığıyla başka bir konumdan çekilir"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Kalite Kontrol"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Uygun Değil"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -389,11 +478,13 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Orijinal konumdan %s çekilen satınalma için alım, çekme kuralı %s, orijinal "
+"Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "İletilen Akış"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -402,21 +493,23 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"Orijinal konumdan %s iletilen satınalma için hareket, çekme kuralı %s, "
+"orijinal Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Aynı üründen olmayan bir grup atamaya çalışıyorsunuz"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Satınalma"
 
 #. module: stock_location
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "Hedef Lokasyon"
+msgstr "Varış Konumu"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -428,17 +521,17 @@ msgstr "Otomatik Hareket"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Mal Alımı"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "İşlem Tipi"
 
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Hata: Geçersiz kazanç kodu"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -446,12 +539,12 @@ msgstr ""
 msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
-msgstr ""
+msgstr "Firmaya göre, göndermek veya almak istediğiniz ürünleri seçin"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Sipariş İşleme"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -463,25 +556,25 @@ msgstr "Operasyon"
 #: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Lokasyon Rotası"
+msgstr "Konum Rotası"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Yevmiye defteri"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Basamağı İptal Et"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturalandırıldı"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
