@@ -1381,7 +1381,7 @@ class Reports(View):
                 report_data['form'] = action['datas']['form']
             if 'ids' in action['datas']:
                 report_ids = action['datas']['ids']
-        
+
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
             action["report_name"], report_ids,
@@ -1461,7 +1461,7 @@ class Import(View):
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
 
-        all_fields = fields.keys()
+        all_fields = _fields.keys()
         all_fields.sort()
 
         try:
@@ -1511,16 +1511,9 @@ class Import(View):
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
                         jsonp):
 
-        _fields = {}
-        _fields_invert = {}
-        prefix_node=''
-        prefix_value = ''
-
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)
         res = None
-
-        limit = 0
         data = []
 
         if not (csvdel and len(csvdel) == 1):
@@ -1547,24 +1540,6 @@ class Import(View):
         if not isinstance(fields, list):
             fields = [fields]
 
-        flds = modle_obj.fields_get(False, req.session.eval_context(req.context))
-        flds.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
-        fields_order = flds.keys()
-        for field in fields_order:
-            st_name = prefix_value+flds[field]['string'] or field
-            _fields[prefix_node+field] = st_name
-            _fields_invert[st_name] = prefix_node+field
-
-        unmatch_field = []
-        for fld in fields:
-            if ((fld not in _fields) and (fld not in _fields_invert)):
-                unmatch_field.append(fld)
-
-        if unmatch_field:
-            error = {'message':("You cannot import the fields '%s',because we cannot auto-detect it." % (unmatch_field))}
-            return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
-
         for line in data[1:]:
             try:
                 datas.append(map(lambda x:x.decode(csvcode).encode('utf-8'), line))
@@ -1573,7 +1548,7 @@ class Import(View):
 
         # If the file contains nothing,
         if not datas:
-            error = {'message': 'The file is empty !', 'title': 'Importation !'}
+            error = {'message': 'The file is empty !'}
             return '<script>window.top.%s(%s);</script>' % (
                 jsonp, simplejson.dumps({'error':error}))
 
@@ -1593,6 +1568,6 @@ class Import(View):
         for key,val in res[1].items():
             d+= ('%s: %s' % (str(key),str(val)))
         msg = 'Error trying to import this record:%s. ErrorMessage:%s %s' % (d,res[2],res[3])
-        error = {'message':str(msg), 'title':'ImportationError'}
+        error = {'message':str(msg)}
         return '<script>window.top.%s(%s);</script>' % (
             jsonp, simplejson.dumps({'error':error}))
