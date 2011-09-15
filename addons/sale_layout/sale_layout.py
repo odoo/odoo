@@ -124,17 +124,21 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-class one2many_mod2(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not values:
-            values = {}
-        res = {}
-        for id in ids:
-            res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids), ('layout_type', '=', 'article')], limit=self._limit)
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            res[r[self._fields_id]].append( r['id'] )
-        return res
+#class one2many_mod2(fields.one2many):
+#    print "one2many_mod2 CLASSSSS"
+#    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
+#        print "GET", ids
+#        if not values:
+#            values = {}
+#        res = {}
+#        for id in ids:
+#            res[id] = []
+#        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids), ('layout_type', '=', 'article')], limit=self._limit)
+#        print "ids2", ids2
+#        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+#            res[r[self._fields_id]].append( r['id'] )
+#        print "res", res
+#        return res
 
 
 class sale_order(osv.osv):
@@ -147,8 +151,8 @@ class sale_order(osv.osv):
 
     _inherit = "sale.order"
     _columns = {
-        'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
-        'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        #'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
     }
 
 sale_order()

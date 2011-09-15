@@ -13,7 +13,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/field[@name='order_line']" position="replace">
-                    <field name="abstract_line_ids" colspan="4" nolabel="1" widget="one2many_list">
+                    <field name="order_line" colspan="4" nolabel="1" widget="one2many_list">
                             <form string="Sale Order Lines">
                                 <notebook>
                                     <page string="Order Line">
@@ -46,6 +46,7 @@
                                         <field name="sequence" string="Seq."/>
                                         <field colspan="4" name="name" select="2" attrs="{'readonly':[('layout_type','in',('line','break'))] }"/>
                                         <field name="price_unit" select="2" attrs="{'readonly':[('layout_type','!=','article')],'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"/>
+                                        <field name="purchase_price"/>
                                         <field name="discount" attrs="{'readonly':[('layout_type','!=','article')]}"/>
                                         <field name="type" attrs="{'readonly':[('layout_type','!=','article')]}"/>
                                         <field name="delay" select="2" attrs="{'readonly':[('layout_type','!=','article')]}"/>
@@ -81,6 +82,7 @@
                                     <field name="product_uom" string="UoM"/>
                                     <field name="discount"/>
                                     <field name="price_unit"/>
+                                    <field name="purchase_price"/>
                                     <!-- field name="price_net"/-->
                                     <field name="price_subtotal"/>
                                     <field name="sequence"/>
