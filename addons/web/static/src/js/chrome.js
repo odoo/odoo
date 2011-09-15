@@ -787,18 +787,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             var v = { menu : this.data.data.children[i] };
             this.$secondary_menu.append(QWeb.render("Menu.secondary", v));
         }
-        this.$secondary_menu.find("div.menu_accordion").accordion({
-            animated : false,
-            autoHeight : false,
-            icons : false
-        });
-        this.$secondary_menu.find("div.submenu_accordion").accordion({
-            animated : false,
-            autoHeight : false,
-            active: false,
-            collapsible: true,
-            header: 'h4'
-        });
 
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
     },
@@ -817,15 +805,14 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             id = $menu.data('menu');
         }
         if (this.$secondary_menu.has($menu).length) {
-            $secondary = $menu.parents('.menu_accordion');
+            $secondary = $menu.parents('.oe_secondary_menu');
             $parent = this.$element.find('a[data-menu=' + $secondary.data('menu-parent') + ']');
         } else {
             $parent = $menu;
-            $secondary = this.$secondary_menu.find('.menu_accordion[data-menu-parent=' + $menu.attr('data-menu') + ']');
+            $secondary = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $menu.attr('data-menu') + ']');
         }
 
-        this.$secondary_menu.find('.menu_accordion').hide();
-        // TODO: ui-accordion : collapse submenus and expand the good one
+        this.$secondary_menu.find('.oe_secondary_menu').hide();
         $secondary.show();
 
         if (id) {
@@ -837,11 +824,15 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
         $parent.addClass('active');
         $menu.addClass('active');
-        $menu.parent('h4').addClass('active');
 
         if (this.$secondary_menu.has($menu).length) {
+            if ($menu.is('.submenu')) {
+                $menu.next().toggle();
+                return false;
+            }
             return !$menu.is(".leaf");
         } else {
+            $secondary.find('.oe_secondary_submenu').hide().eq(0).show();
             return false;
         }
     },

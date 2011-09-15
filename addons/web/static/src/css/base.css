@@ -221,17 +221,11 @@ label.error {
     height: 100%;
     background: #f0eeee;
 }
+.openerp .oe-application-container {
+    height: 100%;
+}
 
 /* Menu */
-.openerp .sf-menu {
-    margin-bottom: 0;
-}
-/*
-.sf-menu a {
-    padding: 5px 5px;
-}
-*/
-
 .openerp .menu {
     height: 34px;
     background: #cc4e45; /* Old browsers */
@@ -291,11 +285,7 @@ label.error {
     background: linear-gradient(top, #c6c6c6 0%,#5c5c5c 7%,#969595 86%); /* W3C */
     /* for ie */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5c5c5c', endColorstr='#969595',GradientType=0 ); /* IE6-9 */
-    
     color: #fff;
-}
-.openerp .oe-application-container {
-    height: 100%;
 }
 /* Secondary Menu */
 .openerp .secondary_menu {
@@ -307,14 +297,16 @@ label.error {
     vertical-align: top;
     height: 100%;
 }
-.openerp .secondary_menu .menu_content {
-    padding: 0;
-    border: none;
-    background: none;
-    overflow: hidden;
+.openerp .secondary_menu a {
+    display: block;
+    padding: 0 5px 2px 5px;
+    line-height: 20px;
+    text-decoration: none;
+    white-space: nowrap;
+    color: white;
+    text-shadow: 0 1px 0 #333;
 }
-.openerp .secondary_menu h3 {
-    padding: 0 0 2px;
+.openerp .secondary_menu a.oe_secondary_menu_item {
     background: #949292; /* Old browsers */
     background: -moz-linear-gradient(top, #949292 0%, #6d6b6b 87%, #282828 99%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#949292), color-stop(87%,#6d6b6b), color-stop(99%,#282828)); /* Chrome,Safari4+ */
@@ -325,34 +317,13 @@ label.error {
     background: linear-gradient(top, #949292 0%,#6d6b6b 87%,#282828 99%); /* W3C */
     /* for ie9 */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#949292', endColorstr='#5B5A5A',GradientType=0 ); /* IE6-9 */
-    border: none;
-    /* overriding jquery ui */
-    -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0;
-}
-.openerp .secondary_menu h4 {
-    padding: 0 0 2px 10px;
-    border: none;
-    background: none;
-}
-.openerp .secondary_menu h3 span, .openerp .secondary_menu h4 span {
-    left: 0 !important;
-}
-.openerp .secondary_menu a {
-    display: block;
-    height: 20px;
-    padding: 0 5px;
-    line-height: 20px;
     white-space: nowrap;
     color: white;
-    text-decoration: none;
     text-shadow: 0 1px 0 #333;
 }
-.openerp .secondary_menu a.leaf:hover,
-.openerp .secondary_menu a.leaf:active,
-.openerp .secondary_menu a.leaf.active,
-.openerp .secondary_menu h4:hover,
-.openerp .secondary_menu h4:active,
-.openerp .secondary_menu h4.active {
+.openerp a.oe_secondary_submenu_item:hover,
+.openerp a.oe_secondary_submenu_item.leaf.active {
+    display: block;
     background: #ffffff; /* Old browsers */
     background: -moz-linear-gradient(top, #ffffff 0%, #d8d8d8 11%, #afafaf 86%, #333333 91%, #5a5858 96%); /* FF3.6+ */
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(11%,#d8d8d8), color-stop(86%,#afafaf), color-stop(91%,#333333), color-stop(96%,#5a5858)); /* Chrome,Safari4+ */
@@ -361,22 +332,11 @@ label.error {
     background: -ms-linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,#5a5858 96%); /* IE10+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#5A5858',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,#5a5858 96%); /* W3C */
-    /* overriding jquery ui */
-    -moz-border-radius-topright: 0; -webkit-border-top-right-radius: 0; border-top-right-radius: 0;
+    padding: 0 5px 2px 5px;
+    line-height: 20px;
     color: #3f3d3d;
+    text-decoration: none;
     text-shadow: #fff 0 1px 0;
-    border: none !important;
-}
-
-.openerp .secondary_menu h4:hover a,
-.openerp .secondary_menu h4:active a,
-.openerp .secondary_menu h4.active a {
-    color: #3f3d3d;
-    text-shadow: #fff 0 1px 0;
-    border: none !important;
-}
-.openerp div.submenu_accordion div.menu_content a span {
-    padding-left: 20px;
 }
 
 /* Header */

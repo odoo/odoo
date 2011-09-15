@@ -374,45 +374,35 @@
 </ul>
 <t t-name="Menu">
     <table align="center">
-        <tr>
-        <t t-foreach="data.children" t-as="menu">
-            <td>
-                <a href="#" t-att-data-menu="menu.id">
-                    <t t-esc="menu.name"/>
-                </a>
-            </td>
-        </t>
-        </tr>
+    <tr>
+        <td t-foreach="data.children" t-as="menu">
+            <a href="#" t-att-data-menu="menu.id">
+                <t t-esc="menu.name"/>
+            </a>
+        </td>
+    </tr>
     </table>
 </t>
 <t t-name="Menu.secondary">
-    <div style="display: none" class="menu_accordion" t-att-data-menu-parent="menu.id">
+    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="header">h3</t>
+            <t t-set="classname">oe_secondary_menu_item</t>
+            <t t-set="level" t-value="0"/>
             <t t-call="Menu.secondary.children"/>
         </t>
     </div>
 </t>
 <t t-name="Menu.secondary.children">
-    &lt;<t t-esc="header"/>&gt;
-        <a href="#" t-attf-id="menu_#{menu.id}">
-            <span><t t-esc="menu.name"/></span>
-        </a>
-    &lt;/<t t-esc="header"/>&gt;
-    <div class="menu_content">
+    <t t-set="level" t-value="level + 1"/>
+    <a href="#" t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf')" t-att-data-menu="menu.children.length ? undefined : menu.id">
+        <span t-attf-style="padding-left: #{level - 1}em">
+            <t t-esc="menu.children.length ? '+' : '-'"/> <t t-esc="menu.name"/>
+        </span>
+    </a>
+    <div t-attf-class="oe_secondary_submenu oe_secondary_submenu_level_#{level}" t-if="menu.children.length" style="display: none">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-if="!menu.children.length">
-                <a href="#" class="leaf" t-att-data-menu="menu.id">
-                    <span><t t-esc="menu.name"/></span>
-                </a>
-            </t>
-            <t t-if="menu.children.length">
-                <div class="submenu_accordion">
-                    <t t-call="Menu.secondary.children">
-                        <t t-set="header">h4</t>
-                    </t>
-                </div>
-            </t>
+            <t t-set="classname">oe_secondary_submenu_item</t>
+            <t t-call="Menu.secondary.children"/>
         </t>
     </div>
 </t>
