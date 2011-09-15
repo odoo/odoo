@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2010-08-03 06:06+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:01+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:09+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -24,7 +24,7 @@ msgstr "客户"
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
-msgstr ""
+msgstr "转为报价单"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:108
@@ -36,18 +36,18 @@ msgstr ""
 #: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "数据不够！"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Customer has no addresses defined!"
-msgstr ""
+msgstr "没有客户地址信息！"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_make_sale
 msgid "Make sales"
-msgstr ""
+msgstr "生成销售订单"
 
 #. module: sale_crm
 #: model:ir.module.module,description:sale_crm.module_meta_information
@@ -65,22 +65,30 @@ msgid ""
 "crm modules.\n"
 "    "
 msgstr ""
+"\n"
+"此模块在CRM中为一个或多个商机案例添加了快捷方式。\n"
+"这个快捷方式允许你为选中的商机生成销售订单。\n"
+"如果打开了不同的商机（列表）， 它会为每个商机生成一个销售订单。\n"
+"然后关闭商机，并且关联到生成的销售订单上。\n"
+"\n"
+"如果你已经安装了销售和CRM模块，我建议你安装此模块。\n"
+"    "
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
-msgstr ""
+msgstr "创建(_C)"
 
 #. module: sale_crm
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "单号必须唯一！"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
 "Check this to close the opportunity after having created the sale order."
-msgstr ""
+msgstr "在生成销售订单后检查是否关闭商机。"
 
 #. module: sale_crm
 #: view:crm.lead:0
@@ -91,29 +99,29 @@ msgstr "转为报价"
 #: view:account.invoice.report:0
 #: view:board.board:0
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "月营业额"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:110
 #, python-format
 msgid "Converted to Sales Quotation(id: %s)."
-msgstr ""
+msgstr "转为销售报价(id: %s)。"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Opportunity: %s"
-msgstr ""
+msgstr "商机： %s"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
 msgid "Creates Sales order from Opportunity"
-msgstr ""
+msgstr "通过商机生成销售订单"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_quotation_for_sale_crm
 msgid "Quotations"
-msgstr ""
+msgstr "报价单"
 
 #. module: sale_crm
 #: field:crm.make.sale,shop_id:0
@@ -123,23 +131,23 @@ msgstr "商店"
 #. module: sale_crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "按阶段查看商机"
 
 #. module: sale_crm
 #: view:board.board:0
 msgid "My Quotations"
-msgstr ""
+msgstr "我的报价单"
 
 #. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Close Opportunity"
-msgstr ""
+msgstr "关闭商机"
 
 #. module: sale_crm
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "销售团队"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -154,7 +162,7 @@ msgstr "取消"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "销售订单"
 
 #~ msgid "Quotation"
 #~ msgstr "报价"
@@ -251,3 +259,11 @@ msgstr ""
 
 #~ msgid "Case Section"
 #~ msgstr "业务个案项"
+
+#, python-format
+#~ msgid "is converted to Quotation."
+#~ msgstr "已经被转为报价单。"
+
+#, python-format
+#~ msgid "Opportunity "
+#~ msgstr "商机 "
