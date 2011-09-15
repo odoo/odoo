@@ -179,7 +179,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open')" string="Payment order">
+                <tree colors="blue:state == 'draft';gray:state in ('cancel','done');black:state == 'open'" string="Payment order">
                     <field name="reference"/>
                     <field name="mode"/>
                     <field name="user_id"/>

@@ -23,6 +23,7 @@
     'name': 'Action Rule',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "expert",
     'category': 'Generic Modules/Others',
     'description': """
 This module allows to implement action rules for any object.
@@ -36,7 +37,7 @@ trigger an automatic reminder email.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
     'init_xml': [
         'base_action_rule_data.xml'
     ],
