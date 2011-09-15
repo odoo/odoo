@@ -86,7 +86,10 @@
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
-            <field name="help">This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically.</field>
+            <field name="help">You will find here all works made on tasks that you can invoice.
+In order to invoice the time spent on a project, you must define the
+pricelist and the field 'Invoice Task Work' on the tab 'Billing' of
+the project form.</field>
         </record>
         <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"

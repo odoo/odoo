@@ -1,0 +1,22 @@
+<openerp>
+    <data>
+
+         <record id="product_form_config_action" model="ir.actions.act_window">
+            <field name="name">Create some Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="help">Create a product form for everything you buy or sell. Specify a supplier if the product can be purchased.</field>
+        </record>
+        
+         <!--      register configuration wizard -->
+        <record id="config_wizard_res_product_installer" model="ir.actions.todo">
+            <field name="action_id" ref="product_form_config_action"/>
+            <field name="category_id" ref="base.category_sales_management_config"/>
+            <field name="sequence">20</field>
+        </record>
+        
+    </data>
+</openerp>

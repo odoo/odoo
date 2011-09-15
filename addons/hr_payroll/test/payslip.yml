@@ -1,94 +1,80 @@
 -
-  I test the 'Payment Advice' in order to check the hr_payroll in OpenERP
+  I test "Payslip" in order to check the hr_payroll module in OpenERP
 -
-  I Create a bank record
--
-  !record {model: res.partner.bank, id: res_partner_bank_0}:
-    acc_number: '987654321'
-    partner_id: base.res_partner_desertic_hispafuentes
-    sequence: 0.0
-    name: Fortis
-    state: bank
-    bank: base.res_bank_1
--
-  I create a new employee “Richard”
+  I create a new employee "Richard"
 -
   !record {model: hr.employee, id: hr_employee_richard0}:
-    address_home_id: base.res_partner_address_2
-    address_id: base.res_partner_address_9
     birthday: '1984-05-01'
-    children: 0.0
-    contract_ids:
-      - advantages_gross: 0.0
-        advantages_net: 0.0
-        date_end: !eval "'%s-%s-%s' %(datetime.now().year+1,datetime.now().month,datetime.now().day)"
-        date_start: !eval time.strftime('%Y-%m-%d')
-        name: reference
-        wage: 5000.0
-        wage_type_id: hr_contract.hr_contract_monthly_gross
-        type_id: hr_contract.hr_contract_type_emp
-    country_id: base.in
+    country_id: base.be
     department_id: hr.dep_it
     gender: male
-    marital: hr.hr_employee_marital_status_single
     name: Richard
-    bank_account_id: res_partner_bank_0
-    vehicle_distance: 0.0
 -
-  I create a new payroll structure for software developer
+  I create a salary structure for "Software Developer"
 -
-  !record {model: hr.payroll.structure, id: hr_payroll_structure_softwaredeveloper0}:
+  !record {model: hr.payroll.structure, id: hr_payroll_structure_softwaredeveloper}:
+    name: Salary Structure for Software Developer
     code: SD
-    line_ids:
-      - amount: 0.40000000000000002
-        amount_type: per
-        category_id: hr_payroll.HRA
-        code: HRA
-        company_contrib: 0.0
-        name: House Rant Allowance
-        sequence: 5
-        total: 0.0
-        type: allowance
-      - amount: 10000.0
-        amount_type: fix
-        category_id: hr_payroll.CA
-        code: CA
-        company_contrib: 0.0
-        name: Convance Allowance
-        sequence: 10
-        total: 0.0
-        type: allowance
-      - amount: 10000.0
-        amount_type: fix
-        category_id: hr_payroll.PT
-        code: PT
-        company_contrib: 0.0
-        name: Professional Tax
-        sequence: 15
-        total: 0.0
-        type: deduction
-      - amount: 0.125
-        amount_type: per
-        category_id: hr_payroll.PF
-        code: PF
-        company_contrib: 0.0
-        name: Provident Fund
-        sequence: 20
-        total: 0.0
-        type: deduction
-    name: Software Developer
+    company_id: base.main_company
+    parent_id: structure_base
+    rule_ids:
+      - hr_salary_rule_houserentallowance1
+      - hr_salary_rule_convanceallowance1
+      - hr_salary_rule_professionaltax1
+      - hr_salary_rule_providentfund1
+      - hr_salary_rule_meal_voucher
+      - hr_salary_rule_sales_commission
 -
-  I create a employee payslip record
+  I create a contract for "Richard"
+-
+  !record {model: hr.contract, id: hr_contract_richard}:
+    date_end: !eval "'%s-%s-%s' %(datetime.now().year+1,datetime.now().month,datetime.now().day)"
+    date_start: !eval time.strftime('%Y-%m-%d')
+    name: Contract for Richard
+    wage: 5000.0
+    type_id: hr_contract.hr_contract_type_emp
+    employee_id: hr_employee_richard0
+    struct_id: hr_payroll_structure_softwaredeveloper
+    working_hours: resource.timesheet_group1
+-
+  I create a Employee Payslip
 -
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_payroll.hr_employee_richard0
-
 -
-  I click on 'Compute Sheet' button
+  The selection of an employee fills the contract, structure, worked days and input data fields
 -
-  !workflow {model: hr.payslip, action: compute_sheet, ref: hr_payslip_0}
+  !python {model: hr.payslip}: |
+    import time
+    from datetime import datetime
+    from dateutil import relativedelta
+    date_from = time.strftime('%Y-%m-01')
+    worked_days_obj = self.pool.get('hr.payslip.worked_days')
+    date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
+    res = self.onchange_employee_id(cr, uid, [], date_from, date_to, ref("hr_employee_richard0"), False, None)
+    vals = {
+      'struct_id': res['value']['struct_id'],
+      'contract_id': res['value']['contract_id'],
+      'name': res['value']['name'],
+      }
+    vals['worked_days_line_ids'] = [(0,0,i) for i in res['value']['worked_days_line_ids']]
+    vals['input_line_ids'] = [(0, 0, i) for i in res['value']['input_line_ids']]
+    self.write(cr, uid, ref("hr_payslip_0"), vals)
 -
-  just to test
+  I assign the amount to Input data
+-
+  !python {model: hr.payslip.input}: |
+    ids = self.search(cr, uid, [('payslip_id', '=', ref("hr_payslip_0"))])
+    self.write(cr, uid, ids, {'amount': 5.0})
+-
+  I verify the payslip is in draft state
+-
+  !python {model: hr.payslip}: |
+    from tools.translate import _
+    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
+    assert(payslip_brw.state == 'draft'), _('State not changed!')
+-
+  I click on 'Compute Sheet' button on payslip
 -
   !python {model: hr.payslip}: |
     self.compute_sheet(cr, uid, [ref("hr_payslip_0")], {"lang": "en_US", "tz": False,
@@ -96,40 +82,11 @@
       "section_id": False, "active_id": ref("hr_payroll.menu_department_tree"),
       })
 -
-  I check that the order is now in "Waiting for Verification" state
+  Then I click on the 'Confirm' button on payslip
 -
-  !python {model: hr.payslip}: |
-    from tools.translate import _
-    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'draft'), _('State not changed!')
+  !workflow {model: hr.payslip, action: hr_verify_sheet, ref: hr_payslip_0}
 -
-  I click on Verify Sheet button.
--
-  !workflow {model: hr.payslip, action: verify_sheet, ref: hr_payslip_0}
--
-  I check that the order is in the "Waiting for HR Verification" state
--
-  !python {model: hr.payslip}: |
-    from tools.translate import _
-    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'hr_check'), _('State not changed!')
--
-  I click on Complete HR Checking button.
--
-  !workflow {model: hr.payslip, action: final_verify_sheet, ref: hr_payslip_0}
--
-  I check that the order is in "Confirm Sheet" state.
--
-  !python {model: hr.payslip}: |
-    from tools.translate import _
-    payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
-    assert(payslip_brw.state == 'confirm'), _('State not changed!')
--
-  I click on Pay Salary button
--
-  !workflow {model: hr.payslip, action: process_sheet, ref: hr_payslip_0}
--
-  I check that the order is in "Paid Salary" state.
+  I verify that the payslip is in done state
 -
   !python {model: hr.payslip}: |
     from tools.translate import _

@@ -130,7 +130,7 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly',True)]}),
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, method=True, string='Balance'),
+        'balance_end': fields.function(_end_balance, string='Balance'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
@@ -142,7 +142,7 @@ class account_bank_statement(osv.osv):
             states={'confirm': [('readonly', True)]}, readonly="1",
             help='When new statement is created the state will be \'Draft\'. \
             \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
-        'currency': fields.function(_currency, method=True, string='Currency',
+        'currency': fields.function(_currency, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
     }
