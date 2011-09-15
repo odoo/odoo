@@ -11,12 +11,12 @@
                    	<page string="Messages" groups="base.group_extended">
                    		<field name="message_ids" nolabel="1" colspan="4">
                    			<tree editable="bottom" string="Messages">
-		                     	<field name="message" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
+		                     	<field name="message"/>
 		                     	<field name="from_id"/>
-		                     	<field name="to_id" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
+		                     	<field name="to_id"/>
                    			</tree>
                    			<form>
-                   				<group attrs="{'readonly':[('from_id', '!=', uid)]}">
+                   				<group>
 	                   				<field name="from_id"/>
 			                        <field name="to_id"/>
 			                        <newline/>
@@ -36,7 +36,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Messages">
-                	<group attrs="{'readonly':[('from_id', '!=', uid)]}">
+                	<group>
                         <field name="project_id" select="1" domain="[('user_id','=',uid)]"/>
                         <newline/>
                         <field name="from_id" select="1"/>

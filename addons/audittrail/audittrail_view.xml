@@ -37,7 +37,7 @@
             <field name="model">audittrail.rule</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('subscribed')" string="AuditTrail Rules">
+                <tree colors="blue:state == 'draft';black:state == 'subscribed'" string="AuditTrail Rules">
                     <field name="name" />
                     <field name="object_id"/>
                     <field name="log_read" />
