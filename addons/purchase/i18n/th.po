@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:53+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:02+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -23,12 +23,14 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"ผู้ซื้อต้องอนุมัติใบแจ้งขอใบเสนอราคาก่อนที่จะส่งให้ผู้จัดจำหน่าย "
+"จากนั้นใบแจ้งขอใบเสนอราคาจึงจะเปลี่ยนเป็นใบสั่งซื้อสถานะยืนยัน"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr ""
+msgstr "คุณไม่สามารถยืนยันใบสั่งซื้อที่ไม่มีรายการสั่งซื้อได้"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -43,12 +45,12 @@ msgid "Destination"
 msgstr "ปลายทาง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
-msgstr ""
+msgstr "คุณต้องเลือกหน่วยของสินค้าที่อยู่ในประเภทเดียวกันกับหน่วยที่สั่งซื้อ"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -67,10 +69,17 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"คุณสามารถสร้างใบแจ้งขอใบเสนอราคาได้จากใบสั่งซื้อที่สถานะยังไม่ยืนยัน "
+"และใช้สำหรับตรวจสอบใบแจ้งขอใบเสนอราคาที่ระบบสร้างขึ้นอัตโนมัติจากกฎต่างๆ "
+"เช่น จากกฎการสั่งซื้อ เป็นต้น; คุณสามารถเปลี่ยนจากใบแจ้งขอใบเสนอราคา "
+"ให้เป็นใบสั่งซื้อสถานะยืนยันได้; "
+"หากคุณใช้มุมมองแบบแสดงทั้งหมด(สามารถเลือกได้จากการตั้งค่าของแต่ละผู้ใช้งาน) "
+"คุณจะสามารถเลือกรูปแบบการสร้างใบแจ้งหนี้โดย สร้างจากใบสั่งซื้อ, "
+"สร้างจากใบรับสินค้า และสร้างเอง"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
+msgid "From Reception"
 msgstr ""
 
 #. module: purchase
@@ -96,12 +105,12 @@ msgstr "ตรวจสอบโดย"
 #: view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
-msgstr "ผู้จำหน่าย"
+msgstr "ผู้จัดจำหน่าย"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "คุณต้องการสร้างใบแจ้งหนี้หรือไม่?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -110,9 +119,12 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"ใช้เมนูนี้เพื่อค้นหาใบสั่งซื้อจาก เลขที่, ผู้จัดจำหน่าย, สินค้า เป็นต้น; "
+"คุณสามารถตรวจสอบสถานะใบสั่งซื้อได้ด้วยว่ารับสินค้ามาแล้วเท่าไหร่และแจ้งหนี้แล"
+"้วเท่าใด"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
@@ -121,24 +133,24 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "ใบแจ้งหนี้จากผู้จัดจำหน่าย"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "เลขที่เอกสารห้ามซ้ำกัน!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "สร้างจากใบรับ/จ่ายสินค้า"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "ไม่มีรายการาคา!"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -150,7 +162,7 @@ msgstr "จำนวน"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "เลือกใบสั่งขายสถานะเปิด"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -176,12 +188,12 @@ msgstr "กำหนดให้เป็นแบบร่าง"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "ยกเว้นใบแจ้งหนี้"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr ""
+msgstr "ใช้ค่าเริ่มต้นรายการราคาซื้อ"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
@@ -195,6 +207,8 @@ msgid ""
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
 msgstr ""
+"ใส่ที่อยู่ในช่องนี้หากต้องการให้จัดส่งโดยตรงจากผู้จัดจำหน่ายไปยังลูกค้า, "
+"สินค้าจะไม่ถูกส่งเข้าคลังแต่จะถูกตั้งค่าให้ส่งไปยังลูกค้าแทน"
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -202,11 +216,13 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"รายการราคานี้จะถูกใช้งานแทนที่รายการราคาเริ่มต้นสำหรับการสั่งซื้อที่เกิดจากคู"
+"่ค้ารายนี้"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "แฟกซ์ :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -214,17 +230,19 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"รายการราคาจะเลือกสกุลเงินให้กับใบสั่งซื้อนี้ "
+"และจะคำนวณหาราคาซื้อของคู่ค้าปัจจุบันให้ตรงกับสินค้าและจำนวนที่เลือกไว้"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "ทยอยส่ง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "ใบสั่งซื้อ '%s' นี้ถูกยืนยันแล้ว"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -257,7 +275,7 @@ msgstr "หน่วยอ้างอิง"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr "จัดซื้อ"
+msgstr "ประวัติใบสั่งซื้อ"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -268,12 +286,14 @@ msgid "Notes"
 msgstr "บันทึก"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"คุณต้องเลือกรายการราคาและผู้จัดจำหน่ายลงในแบบฟอร์มใบสั่งซื้อ !\n"
+"กรุณาเลือกก่อนที่จะเลือกสินค้า"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -304,7 +324,7 @@ msgstr "ใบสั่งซื้อ"
 #: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "ข้อมูลอ้างอิงใบสั่งซื้อ"
+msgstr "เลขที่"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -314,7 +334,7 @@ msgstr "รวมสุทธิ :"
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "ตั้งค่าแอพพลิเคชั่นการจัดการซื้อ"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
@@ -325,7 +345,7 @@ msgstr "สินค้า"
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "ความก้าวหน้าการตั้งค่า"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -333,6 +353,9 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
+"ใบแจ้งหนี้จะสามารถสร้างขึ้นจากใบรับ/จ่ายสินค้าได้หรือไม่ "
+"ขึ้นอยู่กับการตั้งค่าในใบสั่งขายว่าเลือกให้สร้างใบแจ้งหนี้ จากการจัดส่ง "
+"หรือเลือกจากจำนวนสินค้าที่สั่ง"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -342,7 +365,7 @@ msgid "Cancelled"
 msgstr "ยกเลิกแล้ว"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "จำนวนเงินที่ซื้อเกินขีดจำกัด"
@@ -367,7 +390,7 @@ msgstr "ยกเว้นการจัดส่งสินค้า"
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "รายการจากใบแจ้งหนี้"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
@@ -393,23 +416,23 @@ msgstr "   เดือน   "
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr "ข้อมูลอ้างอิง"
+msgstr "เลขที่"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+msgstr "ไม่สามารถลบใบสั่งซื้อที่อยู่ในสถานะ %s ได้!"
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "ที่อยู่ปลายทาง"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr "ย้ายสต็อก"
+msgstr "รายการเคลื่อนไหวสินค้า"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -418,10 +441,10 @@ msgid "Day"
 msgstr "วัน"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "ใบสั่งซื้อ '%s' ถูกเปลี่ยนเป็นสถานะฉบับร่างแล้ว"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -435,8 +458,8 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -450,7 +473,7 @@ msgstr "แผนการจัดซื้อเชิงวิเคราะ
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "ตัวติดตั้งใบสั่งซื้อ"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -470,10 +493,10 @@ msgstr "รายการสั่งซื้อ"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "ช่องนี้บ่งบอกถึงการจัดส่งสินค้าเสร็จสมบูรณ์"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "หน่วยของสินค้าไม่ถูกต้อง!"
@@ -505,17 +528,17 @@ msgstr "ยืนยัน"
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 #: view:purchase.order:0
 msgid "Invoice Control"
-msgstr "การควบคุมใบแจ้งหนี้"
+msgstr "เกี่ยวกับการแจ้งหนี้"
 
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "พบข้อผิดพลาด! คุณไม่สามารถสร้างบริษัทที่มีลักษณะวนซ้ำกันได้"
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "เลขที่อ้างอิงของผู้จัดจำหน่าย"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -529,6 +552,9 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
+"ใบแจ้งหนี้จะสามารถสร้างขึ้นจากใบรับ/จ่ายสินค้าได้หรือไม่ "
+"ขึ้นอยู่กับการตั้งค่าในใบสั่งซื้อว่าเลือกให้สร้างใบแจ้งหนี้ "
+"จากการสินค้าที่ได้รับ หรือเลือกจากจำนวนสินค้าที่สั่งซื้อ"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -545,6 +571,8 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"ตัวช่วยการวิเคราะห์นี้ช่วยให้คุณตรวจสอบง่ายขึ้นและช่วยวิเคราะห์การรับคำสั่งซื"
+"้อตลอดจนการประเมิณประสิทธิภาพการจัดส่งสินค้าของผู้จัดจำหน่าย"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -573,10 +601,10 @@ msgid "Order Lines"
 msgstr "รายการสั่งซื้อ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "ไม่พบผู้จัดจำหน่าย!"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -598,7 +626,7 @@ msgstr "จำนวนเงินที่ไม่ต้องเสียภ
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "รายการราคา"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -615,6 +643,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"จากใบสั่งซื้อ: ใบแจ้งหนี้ฉบับร่างจะถูกสร้างขึ้นโดยยึดข้อมูลจากใบสั่งซื้อนี้ "
+"เจ้าหน้าที่บัญชีเพียงแค่ยืนยันความถูกต้องของใบแจ้งหนี้\n"
+"จากใบรับ: ใบแจ้งหนี้ฉบับร่างจะถูกสร้างขึ้นโดยยึดข้อมูลจากการรับสินค้า\n"
+"กำหนดเอง: "
+"อนุญาตให้สร้างใบแจ้งหนี้โดยเลือกรายการที่ยังไม่ถูกแจ้งหนี้ทั้งหมดของใบสั่งซื้"
+"อปัจจุบัน นำมาสร้างเป็นใบแจ้งหนี้"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -622,9 +656,9 @@ msgid "Invoices generated for a purchase order"
 msgstr "ใบแจ้งหนี้ที่สร้างขึ้นสำหรับการสั่งซื้อ"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -638,12 +672,12 @@ msgstr "ข้อมูลทั่วไป"
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "กระดานงานของฉัน"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr ""
+msgstr "ยืนยันใบสั่งซื้อเลขที่:"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -669,7 +703,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr "จากการ สั่งซื้อ"
+msgstr "สร้างจากใบสั่งซื้อ"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -679,10 +713,10 @@ msgstr "สร้างใบแจ้งหนี้"
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr ""
+msgstr "ปลายทางการจอง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
 msgstr "การกระทำไม่ถูกต้อง !"
@@ -692,7 +726,7 @@ msgstr "การกระทำไม่ถูกต้อง !"
 #: selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Done"
-msgstr "เสร็จแล้ว"
+msgstr "เสร็จสมบูรณ์"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -760,7 +794,7 @@ msgid "    Month-1    "
 msgstr "    เดือน - 1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -771,10 +805,11 @@ msgid "Manual"
 msgstr "กำหนดเอง"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
+"คุณต้องยกเลิกใบรับ/จ่ายสินค้าทั้งหมดที่เกี่ยวข้องกับใบสั่งซื้อนี้ก่อน"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -811,7 +846,7 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "ใบแจ้งหนี้ฉบับร่าง"
 
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
@@ -833,18 +868,18 @@ msgstr ""
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "ใบขอซื้อ"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "หมวดหมู่ของหน่วยนับ"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "วันที่จัดส่งสินค้า"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
@@ -855,13 +890,13 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "ใบจัดหาสินค้า"
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "ใบแจ้งหนี้"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -871,7 +906,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "รูปภาพ"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -882,10 +917,9 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "เดือน"
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr ""
@@ -893,29 +927,29 @@ msgstr ""
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr ""
+msgstr "ใบแจ้งขอใบเสนอราคา"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
-msgstr ""
+msgstr "ใบสั่งซื้อรอการอนุมัติ"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "รวมจำนวนเงิน(ไม่รวมภาษี)"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
 #: field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr ""
+msgstr "สินค้าที่ได้รับ"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "รายการสินค้าที่สั่งซื้อ"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
@@ -927,47 +961,53 @@ msgstr ""
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
-msgstr ""
+msgstr "การจัดการซื้อ"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "รอการตรวจสอบอีกครั้งจากเจ้าหน้าที่บัญชี"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
 msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "ภาษี :"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0
 #: field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "แจ้งหนี้แล้ว"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "หมวดหมู่"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr ""
+msgstr "สถานะใบสั่งซื้อ"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  ปี  "
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -977,14 +1017,14 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "สร้างใบแจ้งหนี้"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0
 #: field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "รายการสั่งซื้อ"
 
 #. module: purchase
 #: constraint:res.partner:0
@@ -994,17 +1034,17 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
-msgstr ""
+msgstr "มุมมองปฏิทิน"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr ""
+msgstr "รวมใบสั่งซื้อ"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr ""
+msgstr "ด้วยความเคารพ,"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
@@ -1015,7 +1055,7 @@ msgstr ""
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "เกี่ยวกับการสั่งซื้อ"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1033,7 +1073,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "ช่องนี้บ่งบอกถึงใบแจ้งหนี้ได้รับการจ่ายเงินแล้ว"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
@@ -1043,7 +1083,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "ตั้งค่า"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
@@ -1082,7 +1122,7 @@ msgid "Manual Invoices"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1099,14 +1139,14 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1153,7 +1193,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1413,7 +1453,7 @@ msgid "Date Approved"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr ""
@@ -1525,7 +1565,7 @@ msgid "Total Qty and Amount by month"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr ""
@@ -1669,7 +1709,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr ""
@@ -1746,7 +1786,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1794,3 +1834,9 @@ msgstr ""
 
 #~ msgid "Purchase Orders in Progress"
 #~ msgstr "ใบสั่งซื้ออยู่ระหว่างดำเนินการ"
+
+#~ msgid "From Picking"
+#~ msgstr "จากใบรับสินค้า"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "รายการสั่งซื้อยังไม่ถูกแจ้งหนี้"

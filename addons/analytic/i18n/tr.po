@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-26 21:49+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-05-29 17:52+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:44+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Muavin Hesaplar"
+msgstr "Alt Hesaplar"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -30,7 +30,7 @@ msgstr "Hesap Adı"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Sayılacak miktarı belirtir."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -38,6 +38,8 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
+"Analiz hesabı nesnesini tanımlama modülü.\n"
+"    "
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -82,74 +84,87 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* Bir hesap 'Taslak' durumunda oluşturulduğunda.                             "
+"     \n"
+"* Herhangi bir bağlı ortak varsa, 'Açık' durumda olabilir.                   "
+"               \n"
+"* Beklemede herhangi bir bakiye varsa 'Beklemede' olabilir.                  "
+"                 \n"
+"* Ve son olarak tüm işlemler sona erdiğinde, 'Kapalı' durumunda olabilir.    "
+"                               \n"
+"* Durumlar 'Şablon' ve 'Çalışıyor' ise proje ikisi de olabilir.\n"
+" Şablonsa, o zaman şablon projeler bazında projeler yapabiliriz. 'Çalışıyor' "
+"durumundaysa normal bir projedir.                                 \n"
+" İncelenecekse, durum 'Beklemede'dir.\n"
+" Proje tamamlandığında durum 'Bitti' olarak belirlenir."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
-msgstr ""
+msgstr "Hesap Tipi"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr ""
+msgstr "Şablon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Beklemede"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analiz Satırı"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
 #: field:account.analytic.line,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Şirket"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Maksimum Miktar"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Kullanıcı"
 
 #. module: analytic
 #: field:account.analytic.account,parent_id:0
 msgid "Parent Analytic Account"
-msgstr ""
+msgstr "Üst Hesap Analizi"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Hesap para birimi"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
 #: field:account.analytic.line,unit_amount:0
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -157,48 +172,50 @@ msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
 msgstr ""
+"Ürünün maliyet bedeli olarak verilen fiyatın miktarla çarpılmasıyla "
+"hesaplanır. Her zaman şirketin ana para birimi cinsinden ifade edilmelidir."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of quantity of hours."
-msgstr ""
+msgstr "Saat miktarının üst limitini belirler."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
 msgid "Credit"
-msgstr ""
+msgstr "Kredi"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Tutar"
 
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr ""
+msgstr "İletişim"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Hata! Para birimi, seçilen şirketin para birimiyle aynı olmalıdır"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "İptal edildi"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
 msgid "Balance"
-msgstr ""
+msgstr "Bakiye"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Hata! Geriye dönük analitik hesap oluşturamazsınız."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -206,50 +223,52 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Görünüm Tipi'ni seçerseniz, bu hesabı kullanarak defter kaydı oluşturmaya "
+"izin vermeyeceğiniz anlamına gelir."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Account Code"
-msgstr ""
+msgstr "Hesap Kodu"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr ""
+msgstr "Tam Hesap Adı"
 
 #. module: analytic
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 #: model:ir.module.module,shortdesc:analytic.module_meta_information
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analitik Hesap"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr ""
+msgstr "Görüntüle"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Ortak"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Başlangıç Tarihi"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Open"
-msgstr ""
+msgstr "Açık"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Analitik Girişler"

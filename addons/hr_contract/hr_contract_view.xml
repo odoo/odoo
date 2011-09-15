@@ -2,100 +2,7 @@
 <openerp>
     <data>
 
-        <record id="hr_contract_wage_type_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.form</field>
-            <field name="model">hr.contract.wage.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Wage Type">
-                    <field colspan="4" name="name"/>
-                    <field name="period_id" widget="selection"/>
-                    <field name="type"/>
-                    <separator colspan="4" string="Hourly cost computation"/>
-                    <field name="factor_type"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="hr_contract_wage_type_view_tree" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.tree</field>
-            <field name="model">hr.contract.wage.type</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Wage Types">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="period_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="hr_contract_wage_type_view_search" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.view.search</field>
-            <field name="model">hr.contract.wage.type</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Wage Type">
-                   <group col='15' colspan='4'>
-                   <field name="name"/>
-                   <field name="type"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20">
-                   <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-
-        <record id="action_hr_contract_wage_type" model="ir.actions.act_window">
-            <field name="name">Wage Type</field>
-            <field name="res_model">hr.contract.wage.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="search_view_id" ref="hr_contract_wage_type_view_search"/>
-        </record>
-
         <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5"/>
-        <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56" sequence="7"/>
-
-        <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.period.view.form</field>
-            <field name="model">hr.contract.wage.type.period</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Wage Period">
-                    <field colspan="4" name="name"/>
-                    <field name="factor_days"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="hr_contract_wage_type_period_view_search" model="ir.ui.view">
-            <field name="name">hr.contract.wage.type.period.view.search</field>
-            <field name="model">hr.contract.wage.type.period</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Search Wage Period">
-                   <group col='15' colspan='4'>
-                    <field name="name"/>
-                   </group>
-               </search>
-            </field>
-        </record>
-
-        <record id="action_hr_contract_wage_type_period" model="ir.actions.act_window">
-            <field name="name">Wage period</field>
-            <field name="res_model">hr.contract.wage.type.period</field>
-            <field name="view_type">form</field>
-            <field name="domain">[]</field>
-            <field name="search_view_id" ref="hr_contract_wage_type_period_view_search"/>
-        </record>
-
-        <menuitem action="action_hr_contract_wage_type_period" id="hr_menu_contract_wage_type_period"
-                parent="hr_contract.next_id_56"/>
-
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
@@ -132,9 +39,9 @@
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group col='15' colspan='4'>
-                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/> 
-                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>   
-                   <separator orientation="vertical"/>                  
+                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/>
+                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>
+                   <separator orientation="vertical"/>
                    <field name="name"/>
                    <field name="employee_id"/>
                    <field name="working_hours"/>
@@ -143,11 +50,11 @@
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
-                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/> 
-                   <separator orientation="vertical"/> 
+                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                   <separator orientation="vertical"/>
                    <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
                    <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <separator orientation="vertical"/> 
+                    <separator orientation="vertical"/>
                     <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                    </group>
                </search>
@@ -161,33 +68,37 @@
             <field name="arch" type="xml">
                 <form string="Contract">
                     <group colspan="3" col="6">
-                    <field name="name" />
-                    <field name="employee_id" />
-                    <field name="job_id"/>
-                    <field name="wage"/>
-                    <field name="wage_type_id" widget="selection"/>
-                    <field name="type_id" widget="selection"/>
+                        <field name="name" />
+                        <field name="employee_id" />
+                        <field name="job_id"/>
+                        <field name="wage"/>
+                        <field name="type_id" widget="selection"/>
                     </group>
                     <notebook>
-                    <page string="Information">
-                        <group col="2" colspan="2">
-                        <separator colspan="2" string="Duration"/>
-                        <field name="date_start" />
-                        <field name="date_end" />
-                        <field name="working_hours"/>
-                        <separator colspan="2" string="Trial Period"/> 
-                        <field name="trial_date_start" />
-                        <field name="trial_date_end" />
-                        </group>                 
-                        <group col="2" colspan="2">
-                        <separator colspan="2" string="Advantages"/>
-                        <field name="advantages_net"/>
-                        <field name="advantages_gross"/>
-                        <separator colspan="2" string="Advantages Notes"/>
-                        <field name="advantages" nolabel="1" colspan="2"/>
+                    <page string="Information" name="information">
+                        <group col="2" colspan="2" name="left_column">
+                            <separator colspan="2" string="Duration"/>
+                            <field name="date_start" />
+                            <field name="date_end" />
+                            <field name="working_hours"/>
+                            <separator colspan="2" string="Trial Period"/>
+                            <field name="trial_date_start" />
+                            <field name="trial_date_end" />
+                        </group>
+                            <group col="2" colspan="2" name="right_column">
+                            <separator name="advantages" colspan="2" string="Advantages"/>
+                            <field name="advantages" nolabel="1" colspan="2"/>
                         </group>
                         <separator colspan="4" string="Notes"/>
                         <field colspan="4" name="notes" nolabel="1"/>
+                    </page>
+                    <page string="Work Permit">
+                        <group col="2" colspan="2">
+                            <separator colspan="2" string="Valid for"/>
+                            <field name="visa_no"/>
+                            <field name="permit_no"/>
+                            <field name="visa_expire"/>
+                        </group>
                     </page>
                     </notebook>
                 </form>
@@ -204,11 +115,9 @@
                     <field name="employee_id"/>
                     <field name="type_id"/>
                     <field name="job_id"/>
-                    <!--field name="department_id"/-->
-                    <field name="working_hours"/>                    
+                    <field name="working_hours"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="wage_type_id" invisible="1"/>
                     <field name="wage" invisible="1"/>
                 </tree>
             </field>
@@ -271,11 +180,12 @@
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
         <!-- Contracts Button on Employee Form -->
-        <act_window 
+
+        <act_window
         context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-        id="act_hr_employee_2_hr_contract" 
-        name="Contracts" 
-        res_model="hr.contract" 
+        id="act_hr_employee_2_hr_contract"
+        name="Contracts"
+        res_model="hr.contract"
         src_model="hr.employee"
         groups="base.group_hr_manager"/>
 

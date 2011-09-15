@@ -117,10 +117,10 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
             num_entry = self.cr.fetchone()[0] or 0
             sold_account = self._sum_balance_account(child_account)
             self.sold_accounts[child_account.id] = sold_account
-            if self.display_account == 'bal_movement':
+            if self.display_account == 'movement':
                 if child_account.type != 'view' and num_entry <> 0:
                     res.append(child_account)
-            elif self.display_account == 'bal_solde':
+            elif self.display_account == 'not_zero':
                 if child_account.type != 'view' and num_entry <> 0:
                     if not currency_obj.is_zero(self.cr, self.uid, currency, sold_account):
                         res.append(child_account)

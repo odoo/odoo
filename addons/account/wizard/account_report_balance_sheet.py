@@ -48,7 +48,7 @@ class account_bs_report(osv.osv_memory):
     }
 
     _defaults={
-        'display_type': True,
+        'display_type': False,
         'journal_ids': [],
         'reserve_account_id': _get_def_reserve_account,
     }
