@@ -38,6 +38,10 @@ function searchmail()
         return true
     }
     var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+    var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
+    	getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
+    var homeDir = dirService.path;
+    var path = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
     var version_obj = prefService.getBranch("extensions.");
     version_obj.QueryInterface(Components.interfaces.nsIPrefBranch2);
     version = version_obj.getCharPref("lastAppVersion");
@@ -148,19 +152,7 @@ function searchmail()
             url[i] = currentAttachments[i].url;
             name[i] = currentAttachments[i].displayName;
             var obj = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-            if(navigator.userAgent.indexOf('Linux')!= -1){
-                obj.initWithPath("/tmp/");
-            }
-            else if(navigator.userAgent.indexOf('Win')!= -1){
-                obj.initWithPath("c:\\");
-            }
-            else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-                obj.initWithPath("/tmp/");
-            } 
-            else{
-                alert("Not Compatible for this Operating System");
-                false();
-            }
+            obj.initWithPath(path)
             //saving the attachment files in system's temp folder
             test[i] = messenger.saveAttachmentToFolder(contentType[i],url[i],name[i],uri,obj);
         }
@@ -335,15 +327,10 @@ var listDocumentHandler = {
 //function to archive the mail content through xmlrpc request
 function parse_eml(){
     var fpath =""
-    if(navigator.userAgent.indexOf('Linux')!= -1){
-        fpath ="/tmp/"
-    }
-    else if(navigator.userAgent.indexOf('Win')!= -1){
-        fpath ="C:\\"
-    }
-    else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-        fpath ="/tmp/"
-    } 
+    var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
+        getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
+    var homeDir = dirService.path;
+    fpath = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
     name = fpath + getPref().getCharPref('fname') +".eml"
     var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
     file.initWithPath( name );
