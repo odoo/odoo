@@ -11,6 +11,21 @@
             <field name="name">Experience</field>
         </record>
 
+        <record id="category_sr_exec" model="hr.employee.category">
+            <field name="name">Senior (5 years)</field>
+            <field name="parent_id" ref="category_experience"/>
+        </record>
+
+        <record id="category_jr_exec" model="hr.employee.category">
+            <field name="name">Junior (6 months)</field>
+            <field name="parent_id" ref="category_experience"/>
+        </record>
+
+        <record id="category_trainee" model="hr.employee.category">
+            <field name="name">Trainee</field>
+            <field name="parent_id" ref="category_experience"/>
+        </record>
+
         <record id="category_ranking" model="hr.employee.category">
             <field name="name">Ranking</field>
         </record>
@@ -20,41 +35,15 @@
             <field name="parent_id" ref="category_ranking"/>
         </record>
 
-        <record id="category_cto" model="hr.employee.category">
-            <field name="name">CTO</field>
-            <field name="parent_id" ref="category_ceo"/>
-        </record>
-
         <record id="category_managers" model="hr.employee.category">
-            <field name="name">Managers (Tech. Heads)</field>
-            <field name="parent_id" ref="category_cto"/>
-        </record>
-
-        <record id="category_project_managers" model="hr.employee.category">
-            <field name="name">Project Managers</field>
-            <field name="parent_id" ref="category_managers"/>
+            <field name="name">Executive Managers</field>
+            <field name="parent_id" ref="category_ranking"/>
         </record>
 
         <record id="category_employee" model="hr.employee.category">
             <field name="name">Employees</field>
-            <field name="parent_id" ref="category_project_managers"/>
+            <field name="parent_id" ref="category_ranking"/>
         </record>
-
-        <record id="category_sr_exec" model="hr.employee.category">
-            <field name="name">Sr. Executives (5 years)</field>
-            <field name="parent_id" ref="category_experience"/>
-        </record>
-
-        <record id="category_jr_exec" model="hr.employee.category">
-            <field name="name">Jr. Executives (6 months)</field>
-            <field name="parent_id" ref="category_experience"/>
-        </record>
-
-        <record id="category_trainee" model="hr.employee.category">
-            <field name="name">Trainee</field>
-            <field name="parent_id" ref="category_experience"/>
-        </record>
-
 
         <!-- Example employee -->
 
@@ -76,7 +65,7 @@
             <field name="name">Antoine Philippe</field>
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="category_ids" eval="[(6, 0, [ref('category_trainee')])]"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_trainee'),ref('category_employee')])]"/>
         </record>
 
         <record id="ir_ui_view_sc_employees_demo" model="ir.ui.view_sc">
