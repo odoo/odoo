@@ -57,7 +57,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                <tree colors="blue:type == 'view';red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -215,12 +215,6 @@
                         <field name="user_id">
                             <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
                         </field>
-                    </group>
-					<newline/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="journal_id" widget="selection"/>
-                        <field name="product_id" widget="selection"/>
-                        <field name="amount" select="1"/>
                     </group>
                     <newline/>
                     <group string="Group By..." expand="0">
