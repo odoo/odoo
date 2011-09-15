@@ -666,7 +666,7 @@ class sale_order(osv.osv):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
+                date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
                 date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
 
                 if line.state == 'done':
