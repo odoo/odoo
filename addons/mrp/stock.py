@@ -55,7 +55,8 @@ class StockMove(osv.osv):
                 factor = move.product_qty
                 bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
-                dest = move.product_id.product_tmpl_id.property_stock_production.id
+                dest = move.sale_line_id and move.sale_line_id.order_id.shop_id.warehouse_id.lot_output_id.id or \
+                       move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
                 if move.state == 'assigned':
                     state = 'assigned'
@@ -91,8 +92,10 @@ class StockMove(osv.osv):
                         'move_id': mid,
                     })
                     wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+                pack_location = move.sale_line_id and move.sale_line_id.order_id.shop_id.warehouse_id.lot_output_id.id or \
+                           move.location_dest_id.id
                 move_obj.write(cr, uid, [move.id], {
-                    'location_id': move.location_dest_id.id,
+                    'location_id': pack_location,
                     'auto_validate': True,
                     'picking_id': False,
                     'state': 'waiting'

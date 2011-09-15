@@ -660,7 +660,9 @@ class sale_order(osv.osv):
         company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
             proc_ids = []
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
+            output_id = order.partner_id.property_stock_customer and \
+                        order.partner_id.property_stock_customer.id or \
+                        order.shop_id.warehouse_id.lot_output_id.id
             picking_id = False
             for line in order.order_line:
                 proc_id = False
