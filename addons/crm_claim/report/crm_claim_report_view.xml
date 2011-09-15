@@ -110,7 +110,7 @@
                         <separator orientation="vertical"/>
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'claim')]"/>
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
                         <separator orientation="vertical"/>
                         <field name="priority" />

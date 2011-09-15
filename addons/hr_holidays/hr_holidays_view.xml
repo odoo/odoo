@@ -22,9 +22,6 @@
                             <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters...">
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
@@ -147,7 +144,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves">
+                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Leaves">
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
@@ -202,7 +199,7 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="type"/>
@@ -227,7 +224,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')">
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')">
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
