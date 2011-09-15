@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:44+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:54+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "A tarefa '%s' foi atribuída a %s."
@@ -58,7 +58,7 @@ msgid "Deadlines"
 msgstr "Prazos"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Operação Não Permitida !"
@@ -247,7 +247,7 @@ msgid "Day"
 msgstr "Dia"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "A tarefa '%s' está concluída"
@@ -439,7 +439,7 @@ msgid "Reactivate Project"
 msgstr "Reactivar projecto"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Tarefa '%s' fechada"
@@ -489,8 +489,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Erro! Não pode criar contas analíticas recursivamente"
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -630,7 +630,7 @@ msgid "Reevaluate"
 msgstr "Reavaliar"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Enviar mensagem após o fecho da tarefa"
@@ -723,7 +723,7 @@ msgid "Starting Date"
 msgstr "Data Inicial"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -748,7 +748,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "A tarefa '%s' está em aberto"
@@ -1150,7 +1150,6 @@ msgstr "Painel de projecto"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Projecto Ascendente"
 
@@ -1180,7 +1179,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1229,7 +1228,7 @@ msgstr ""
 "Quando a tarefa é completada, irá aparecer dentro do estado concluído."
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "O projeto '%s' foi aberto."
@@ -1368,7 +1367,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Tarefa '%s' definida em progresso"
@@ -1420,7 +1419,7 @@ msgid "Open"
 msgstr "Abrir"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1748,7 +1747,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1825,7 +1824,7 @@ msgid "Validation State"
 msgstr "Estado de Validação"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Tarefa '%s' cancelada"
@@ -1853,7 +1852,7 @@ msgid "Create Date"
 msgstr "Data de criação"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -2064,63 +2063,6 @@ msgstr "Orçamentos"
 #~ msgid "New title of your own task to validate the work done."
 #~ msgstr "Novo título da sua própria tarefa para validar o trabalho feito."
 
-#~ msgid "My project's planning"
-#~ msgstr "Meus planeamentos de projectos"
-
-#~ msgid "Pipeline of tasks"
-#~ msgstr "Encanamento de tarefas"
-
-#~ msgid "Project Manager Dashboard"
-#~ msgstr "Painel de administração de projecto"
-
-#~ msgid "My Deadlines"
-#~ msgstr "Meus prazos"
-
-#~ msgid "User's timesheets"
-#~ msgstr "Folha de presença do utilizador"
-
-#~ msgid "Project manager board"
-#~ msgstr "Quadro de gestão de projecto"
-
-#~ msgid "My tasks board"
-#~ msgstr "Meu quadro de tarefas"
-
-#~ msgid "My user's pipeline"
-#~ msgstr "Fila do meu utilizador"
-
-#~ msgid "Tasks Closed by Project and User"
-#~ msgstr "Tarefas fechados por projecto e utilizador"
-
-#~ msgid "Task Closed"
-#~ msgstr "Tarefa fechado"
-
-#~ msgid "Tasks by Project"
-#~ msgstr "Tarefas por projecto"
-
-#~ msgid "User"
-#~ msgstr "Utilizador"
-
-#~ msgid "Tasks by Project and User"
-#~ msgstr "Tarefas por projecto e utilizador"
-
-#~ msgid "This Month"
-#~ msgstr "Este mês"
-
-#~ msgid "Tasks by projects and users"
-#~ msgstr "Tarefas por projectos e utilizadores"
-
-#~ msgid "Avg Closing Delay"
-#~ msgstr "Avg atraso do fecho"
-
-#~ msgid "Tasks by project"
-#~ msgstr "tarefas por projectos"
-
-#~ msgid "Tasks Closed by Project"
-#~ msgstr "Tarefas fechadas por projecto"
-
-#~ msgid "Reporting"
-#~ msgstr "Relatório"
-
 #~ msgid "Tasks Process"
 #~ msgstr "Processo de Tarefas"
 
@@ -2263,12 +2205,3 @@ msgstr "Orçamentos"
 
 #~ msgid "Running projects"
 #~ msgstr "Projectos em execução"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "O nome do módulo deve ser único!"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "O ID do certificado do módulo tem de ser único!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erro ! Não pode criar menus recursivos"

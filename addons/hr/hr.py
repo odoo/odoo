@@ -202,6 +202,7 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
+        'marital': 'single',
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

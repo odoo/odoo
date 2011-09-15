@@ -39,7 +39,7 @@
   I create Minimal Chart Account.
 -
   !record {model: account.account, id: account_pos_account_minimalchart}:
-    code: '0'
+    code: 'x_0'
     company_id: base.main_company
     currency_mode: current
     name: Minimal Chart
@@ -115,14 +115,14 @@
     type: other
     user_type: account_account_type_income0
 -
-  I create Purchase Journal.
+  I create Purchase Journal - (test).
 -
   !record {model: account.journal, id: account_pos_account_journal_purchasejournal}:
     code: PUJ
     company_id: base.main_company
     default_credit_account_id: account_pos_account_purchases
     default_debit_account_id: account_pos_account_purchases
-    name: Purchase Journal
+    name: Purchase Journal - (test)
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
@@ -130,7 +130,7 @@
   I create Sale Journal.
 -
   !record {model: account.journal, id: account_pos_account_journal_salejournal}:
-    code: SAJ
+    code: SJ
     company_id: base.main_company
     default_credit_account_id: account_pos_account_sales
     default_debit_account_id: account_pos_account_sales

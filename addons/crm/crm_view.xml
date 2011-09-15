@@ -7,7 +7,7 @@
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
-        
+
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
 
@@ -20,6 +20,39 @@
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
 
+
+        <!-- crm.case.channel -->
+        <record id="crm_case_channel_view_tree" model="ir.ui.view">
+            <field name="name">crm.case.channel.tree</field>
+            <field name="model">crm.case.channel</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Channels">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="crm_case_channel_view_form" model="ir.ui.view">
+            <field name="name">crm.case.channel.form</field>
+            <field name="model">crm.case.channel</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                </form>
+            </field>
+        </record>
+        <record id="crm_case_channel_action" model="ir.actions.act_window">
+            <field name="name">Channels</field>
+            <field name="res_model">crm.case.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">Track from where is coming your leads and opportunities by creating specific channels that will be maintained at the creation of a document in the system. Some examples of channels can be: Website, Phone Call, Reseller, etc.</field>
+        </record>
+
+        <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4"/>
 
         <!-- Case Sections Form View -->
 
@@ -41,7 +74,7 @@
                     <notebook colspan="4">
                         <page string="Sales Team">
                             <group col="2" colspan="1">
-                                <separator string="Mailgateway" colspan="2"/>
+                                <separator string="Mail Gateway" colspan="2"/>
                                 <field name="reply_to" select="2"/>
                             </group>
                             <group col="2" colspan="1">
@@ -108,7 +141,6 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
-                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -124,8 +156,6 @@
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                    <field name="type" groups="base.group_extended" />
-                     
                     <field name="sequence"/>
                     <field name="probability"/>
                     <group colspan="4" col="2" >
@@ -133,7 +163,7 @@
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
-            <field name="section_ids" invisible="1" />
+                    <field name="section_ids" invisible="1" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -146,9 +176,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
-       
 
- <!-- Case Categories Form View -->
+
+     <!-- Case Categories Form View -->
 
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
@@ -350,12 +380,11 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Current Activity" position="inside">
+                <group name="default_filters" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
-                        context="{'user_prefence':True}"
                         readonly="0"/>
-                </page>
+                </group>
             </field>
         </record>
 
@@ -366,55 +395,12 @@
                 <field name="inherit_id" ref="base.view_users_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <xpath expr="/form/notebook" position="before">
+                    <group name="default_filters" position="inside">
                         <field name="context_section_id" completion="1" widget="selection"/>
-                    </xpath>
+                    </group>
                 </field>
         </record>
 
-        <!-- Inherit View From Partner  -->
-
-        <record id="view_partners_form_crm1" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited1</field>
-                <field name="model">res.partner</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_partner_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="user_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
-
-        <record id="view_partners_tree_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.tree.crm.inherited2</field>
-                <field name="model">res.partner</field>
-                <field name="type">tree</field>
-                <field name="inherit_id" ref="base.view_partner_tree"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="country" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
-
-        <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.search.crm.inherited3</field>
-                <field name="model">res.partner</field>
-                <field name="type">search</field>
-                <field name="inherit_id" ref="base.view_res_partner_filter"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 

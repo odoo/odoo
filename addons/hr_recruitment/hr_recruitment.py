@@ -29,6 +29,9 @@ import collections
 import binascii
 import tools
 from tools.translate import _
+from crm import wizard
+
+wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -39,12 +42,23 @@ AVAILABLE_STATES = [
 ]
 
 AVAILABLE_PRIORITIES = [
+    ('', ''),
     ('5', 'Not Good'),
     ('4', 'On Average'),
     ('3', 'Good'),
     ('2', 'Very Good'),
     ('1', 'Excellent')
 ]
+
+class hr_recruitment_source(osv.osv):
+    """ Sources of HR Recruitment """
+    _name = "hr.recruitment.source"
+    _description = "Source of Applicants"
+    _columns = {
+        'name': fields.char('Source Name', size=64, required=True, translate=True),
+    }
+hr_recruitment_source()
+
 
 class hr_recruitment_stage(osv.osv):
     """ Stage of HR Recruitment """
@@ -54,7 +68,7 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Department'),
+        'department_id':fields.many2one('hr.department', 'Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
@@ -82,7 +96,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['mail.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -120,7 +134,7 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -147,6 +161,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
         'job_id': fields.many2one('hr.job', 'Applied Job'),
+        'salary_proposed_extra': fields.char('Proposed Salary Extra', size=100, help="Salary Proposed by the Organisation, extra advantages"),
+        'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
         'availability': fields.integer('Availability (Days)'),
@@ -158,7 +174,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
         'response': fields.integer("Response"),
-        'reference': fields.char('Reference', size=128),
+        'reference': fields.char('Refered By', size=128),
+        'source_id': fields.many2one('hr.recruitment.source', 'Source'),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
@@ -171,10 +188,10 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'stage_id': _get_stage,
         'user_id':  lambda self, cr, uid, context: uid,
         'email_from': crm.crm_case. _get_default_email,
         'state': lambda *a: 'draft',
+        'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
@@ -211,6 +228,8 @@ class hr_applicant(crm.crm_case, osv.osv):
             stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
             if st and stage_ids.index(st):
                 self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)-1]}, context=context)
+            else:
+                self.write(cr, uid, [case.id], {'stage_id': False}, context=context)
         return True
 
     def stage_next(self, cr, uid, ids, context=None):
@@ -226,8 +245,14 @@ class hr_applicant(crm.crm_case, osv.osv):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
             stage_ids = stage_obj.search(cr, uid, ['|',('department_id','=',department),('department_id','=',False)], context=context)
+            val = False
             if st and len(stage_ids) != stage_ids.index(st)+1:
-                self.write(cr, uid, [case.id], {'stage_id': stage_ids[stage_ids.index(st)+1]}, context=context)
+                val = stage_ids[stage_ids.index(st)+1]
+            elif (not st) and stage_ids:
+                val = stage_ids[0]
+            else:
+                val = False
+            self.write(cr, uid, [case.id], {'stage_id': val}, context=context)
         return True
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
@@ -300,22 +325,13 @@ class hr_applicant(crm.crm_case, osv.osv):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        """
-        mailgate_pool = self.pool.get('email.server.tools')
-        attach_obj = self.pool.get('ir.attachment')
-
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -323,42 +339,19 @@ class hr_applicant(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
+        self.write(cr, uid, [res_id], vals, context)
+        return res_id
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from'))
-        if res:
-            vals.update(res)
-        res = self.create(cr, uid, vals, context=context)
-
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            attach_obj.create(cr, uid, data_attach, context=context)
-
-        return res
-
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
-
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
         msg_from = msg['from']
         vals.update({
-            'description': msg['body']
+            'description': msg['body_text']
         })
         if msg.get('priority', False):
             vals['priority'] = msg.get('priority')
@@ -369,7 +362,7 @@ class hr_applicant(crm.crm_case, osv.osv):
             'probability':'probability'
         }
         vls = { }
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
@@ -378,18 +371,8 @@ class hr_applicant(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals, context=context)
+        self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
 
     def case_open(self, cr, uid, ids, *args):
         """
