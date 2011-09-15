@@ -7,7 +7,7 @@
         <field name="model">hr.expense.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')" string="Expenses Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>

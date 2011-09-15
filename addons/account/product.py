@@ -29,7 +29,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
-            method=True,
             view_load=True,
             help="This account will be used for invoices to value sales for the current product category"),
         'property_account_expense_categ': fields.property(
@@ -37,7 +36,6 @@ class product_category(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            method=True,
             view_load=True,
             help="This account will be used for invoices to value expenses for the current product category"),
     }
@@ -61,7 +59,6 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Income Account",
-            method=True,
             view_load=True,
             help="This account will be used for invoices instead of the default one to value sales for the current product"),
         'property_account_expense': fields.property(
@@ -69,7 +66,6 @@ class product_template(osv.osv):
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            method=True,
             view_load=True,
             help="This account will be used for invoices instead of the default one to value expenses for the current product"),
     }

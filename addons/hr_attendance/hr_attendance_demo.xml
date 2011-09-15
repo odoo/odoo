@@ -122,6 +122,10 @@
             <field name="employee_id" ref="hr.employee1"/>
         </record>
         
+<!-- FIXME! Commented out to enable installation without creating conflicts
+     during the first days of a month. To be properly fixed, see
+     launchpad bug 791087!
+
         <record id="attendance21" model="hr.attendance">
             <field eval="time.strftime('%Y-%m-%d 10:00')" name="name"/>
             <field name="action">sign_in</field>
@@ -133,6 +137,6 @@
             <field name="action">sign_out</field>
             <field name="employee_id" ref="hr.employee1"/>
         </record>
-
+-->
     </data>
 </openerp>
