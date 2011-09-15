@@ -41,8 +41,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {void|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
-     *
-     * @borrows openerp.web.ActionExecutor#execute_action as #execute_action
      */
     init: function(parent, element_id, dataset, view_id, options) {
         var self = this;
@@ -61,6 +59,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         if (this.dataset instanceof openerp.web.DataSetStatic) {
             this.groups.datagroup = new openerp.web.StaticDataGroup(this.dataset);
+        } else {
+            this.groups.datagroup = new openerp.web.DataGroup(
+                this, this.model,
+                dataset.get_domain(),
+                dataset.get_context(),
+                {});
+            this.groups.datagroup.sort = this.dataset._sort;
         }
 
         this.page = 0;
@@ -152,7 +157,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     on_loaded: function(data, grouped) {
         var self = this;
         this.fields_view = data;
-        //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
         this.setup_columns(this.fields_view.fields, grouped);
@@ -484,7 +488,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(action, this.dataset, id, callback);
+        this.do_execute_action(action, this.dataset, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -771,6 +775,31 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
                 render_cell: openerp.web.format_cell}, this)));
+        this.pad_table_to(5);
+    },
+    pad_table_to: function (count) {
+        if (this.records.length >= count ||
+                _(this.columns).any(function(column) { return column.meta; })) {
+            return;
+        }
+        var cells = [];
+        if (this.options.selectable) {
+            cells.push('<td title="selection"></td>');
+        }
+        _(this.columns).each(function(column) {
+            if (column.invisible !== '1') {
+                cells.push('<td title="' + column.string + '">&nbsp;</td>');
+            }
+        });
+        if (this.options.deletable) {
+            cells.push('<td><button type="button" style="visibility: hidden"> </button></td>');
+        }
+        cells.unshift('<tr>');
+        cells.push('</tr>');
+
+        var row = cells.join('');
+        this.$current.append(new Array(count - this.records.length + 1).join(row));
+        this.refresh_zebra(this.records.length);
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -1133,12 +1162,14 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         }
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
+            axis: 'y',
+            items: '> tr[data-id]',
             stop: function (event, ui) {
                 var to_move = list.records.get(ui.item.data('id')),
                     target_id = ui.item.prev().data('id');
 
                 list.records.remove(to_move);
-                var to = target_id ? list.records.indexOf(list.records.get(target_id)) : 0;
+                var to = target_id ? list.records.indexOf(list.records.get(target_id)) + 1 : 0;
                 list.records.add(to_move, { at: to });
 
                 // resequencing time!

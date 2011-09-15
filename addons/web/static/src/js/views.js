@@ -2,17 +2,21 @@
  * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.web.views = function(openerp) {
+openerp.web.views = function(db) {
 
-var _t = openerp.web._t;
-var QWeb = openerp.web.qweb;
+var _t = db.web._t;
 
 /**
  * Registry for all the client actions key: tag value: widget
  */
-openerp.web.client_actions = new openerp.web.Registry();
+db.web.client_actions = new db.web.Registry();
 
-openerp.web.ActionManager = openerp.web.Widget.extend({
+/**
+ * Registry for all the main views
+ */
+db.web.views = new db.web.Registry();
+
+db.web.ActionManager = db.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
@@ -20,7 +24,6 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
-        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -44,8 +47,11 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         }
     },
     url_update: function(action) {
+        var url = {};
+        if(action.id)
+            url.action_id = action.id;
         // this.url = {
-        //     "model": action.model,
+        //     "model": action.res_model,
         //     "domain": action.domain,
         // };
         // action.res_model
@@ -56,14 +62,15 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         // action.res_id
         // mode
         // menu
+        this.do_url_set_hash(url);
     },
-    url_stringify: function(action) {
+    do_url_set_hash: function(url) {
     },
-    url_parse: function(action) {
-    },
-    on_url_update: function(url) {
-    },
-    do_url_action: function(url) {
+    on_url_hashchange: function(url) {
+        var self = this;
+        self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
+                self.do_action(result.result);
+            });
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -76,7 +83,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            this.log("Action manager can't handle action of type " + action.type, action);
+            console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
         this[type](action, on_close);
@@ -84,20 +91,20 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
     ir_actions_act_window: function (action, on_close) {
         if (action.target === 'new') {
             if (this.dialog == null) {
-                this.dialog = new openerp.web.Dialog(this, { title: action.name, width: '80%' });
+                this.dialog = new db.web.Dialog(this, { title: action.name, width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
                 this.dialog.start();
             } else {
                 this.dialog_viewmanager.stop();
             }
-            this.dialog_viewmanager = new openerp.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new db.web.ViewManagerAction(this, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
             this.dialog_stop();
             this.content_stop();
-            this.inner_viewmanager = new openerp.web.ViewManagerAction(this, action);
+            this.inner_viewmanager = new db.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.url_update(action);
         }
@@ -122,7 +129,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
-        var ClientWidget = openerp.web.client_actions.get_object(action.tag);
+        var ClientWidget = db.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
@@ -135,12 +142,12 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.ViewManager# */{
+db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
     identifier_prefix: "viewmanager",
     template: "ViewManager",
     /**
-     * @constructs openerp.web.ViewManager
-     * @extends openerp.web.Widget
+     * @constructs db.web.ViewManager
+     * @extends db.web.Widget
      *
      * @param parent
      * @param dataset
@@ -155,10 +162,13 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
-        this.registry = openerp.web.views;
+        this.registry = db.web.views;
     },
     render: function() {
-    	return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
+        return db.web.qweb.render(this.template, {
+            self: this,
+            prefix: this.element_id,
+            views: this.views_src});
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -266,7 +276,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     /**
      * Sets up the current viewmanager's search view.
      *
-     * @param view_id the view to use or false for a default one
+     * @param {Number|false} view_id the view to use or false for a default one
      * @returns {jQuery.Deferred} search view startup deferred
      */
     setup_search_view: function(view_id, search_defaults) {
@@ -274,10 +284,10 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new openerp.web.SearchView(this, this.element_id + "_search", this.dataset, view_id, search_defaults);
-        if (this.flags.search_view === false) {
-            this.searchview.hide();
-        }
+        this.searchview = new db.web.SearchView(
+                this, this.element_id + "_search", this.dataset,
+                view_id, search_defaults);
+
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             var controller = self.views[self.active_view].controller;
             controller.do_search.call(controller, domains, contexts, groupbys);
@@ -294,66 +304,128 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     on_remove: function() {
     },
     on_edit: function() {
-    }
+    },
+    /**
+     * Called by children view after executing an action
+     */
+    on_action_executed: function () {}
 });
 
-openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
-	template: "ViewManagerAction",
-	init: function(parent, action) {
+db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
+    template:"ViewManagerAction",
+    /**
+     * @constructs db.web.ViewManagerAction
+     * @extends db.web.ViewManager
+     *
+     * @param {db.web.ActionManager} parent parent object/widget
+     * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
+     */
+    init: function(parent, action) {
+        // dataset initialization will take the session from ``this``, so if we
+        // do not have it yet (and we don't, because we've not called our own
+        // ``_super()``) rpc requests will blow up.
         this.session = parent.session;
         this.action = action;
-        var dataset;
-        if (!action.res_id) {
-            dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-        } else {
-            this.action.flags.search_view = false;
-            dataset = new openerp.web.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
+        var dataset = new db.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
             dataset.index = 0;
         }
         this._super(parent, dataset, action.views);
-        this.action = action;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            // Not elegant but allows to avoid form chrome (pager, save/new
+            // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
+
+        // setup storage for session-wise menu hiding
+        if (this.session.hidden_menutips) {
+            return;
+        }
+        this.session.hidden_menutips = {}
     },
+    /**
+     * Initializes the ViewManagerAction: sets up the searchview (if the
+     * searchview is enabled in the manager's action flags), calls into the
+     * parent to initialize the primary view and (if the VMA has a searchview)
+     * launches an initial search after both views are done rendering.
+     */
     start: function() {
-        var inital_view_loaded = this._super();
+        var self = this;
 
-        var search_defaults = {};
-        _.each(this.action.context, function (value, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                search_defaults[match[1]] = value;
-            }
-        });
-
+        var searchview_loaded;
         if (this.flags.search_view !== false) {
+            var search_defaults = {};
+            _.each(this.action.context, function (value, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value;
+                }
+            });
             // init search view
-            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-            var searchview_loaded = this.setup_search_view(
+            searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
+        }
 
+        var main_view_loaded = this._super();
+
+        var manager_ready = $.when(searchview_loaded, main_view_loaded);
+        if (searchview_loaded && this.action['auto_search']) {
             // schedule auto_search
-            if (searchview_loaded != null && this.action['auto_search']) {
-                $.when(searchview_loaded, inital_view_loaded)
-                    .then(this.searchview.do_search);
+            manager_ready.then(this.searchview.do_search);
+        }
+
+        this.$element.find('.oe_get_xml_view').click(function () {
+            // TODO: add search view?
+            $('<pre>').text(db.web.json_node_to_xml(
+                self.views[self.active_view].controller.fields_view.arch, true))
+                    .dialog({ width: '95%'});
+        });
+        if (this.action.help && !this.flags.low_profile) {
+            var Users = new db.web.DataSet(self, 'res.users'),
+                header = this.$element.find('.oe-view-manager-header');
+            header.delegate('blockquote button', 'click', function() {
+                var $this = $(this);
+                //noinspection FallthroughInSwitchStatementJS
+                switch ($this.attr('name')) {
+                case 'disable':
+                    Users.write(self.session.uid, {menu_tips:false});
+                case 'hide':
+                    $this.closest('blockquote').hide();
+                    self.session.hidden_menutips[self.action.id] = true;
+                }
+            });
+            if (!(self.action.id in self.session.hidden_menutips)) {
+                Users.read_ids([this.session.uid], ['menu_tips'], function(users) {
+                    var user = users[0];
+                    if (!(user && user.id === self.session.uid)) {
+                        return;
+                    }
+                    header.find('blockquote').toggle(user.menu_tips);
+                });
             }
         }
+
+        return manager_ready;
     },
     on_mode_switch: function (view_type) {
+        var self = this;
         return $.when(
             this._super(view_type),
-            this.shortcut_check(this.views[view_type]));
+            this.shortcut_check(this.views[view_type])).then(function () {
+                var view_id = self.views[self.active_view].controller.fields_view.view_id;
+                self.$element.find('.oe_get_xml_view span').text(view_id);
+        });
     },
     shortcut_check : function(view) {
         var self = this;
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof openerp.web.WebClient) ||
+        if (!(grandparent instanceof db.web.WebClient) ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
@@ -385,10 +457,39 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
                     $shortcut_toggle.addClass("oe-shortcut-remove");
                 }
             });
+    },
+    /**
+     * Intercept do_action resolution from children views
+     */
+    on_action_executed: function () {
+        new db.web.DataSet(this, 'res.log')
+                .call('get', [], this.do_display_log);
+    },
+    /**
+     * @param {Array<Object>} log_records
+     */
+    do_display_log: function (log_records) {
+        var self = this,
+            $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
+        _(log_records).each(function (record) {
+            $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
+                .appendTo($logs)
+                .delegate('a', 'click', function (e) {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: record.res_model,
+                        res_id: record.res_id,
+                        // TODO: need to have an evaluated context here somehow
+                        //context: record.context,
+                        views: [[false, 'form']]
+                    });
+                    return false;
+                });
+        });
     }
 });
 
-openerp.web.Sidebar = openerp.web.Widget.extend({
+db.web.Sidebar = db.web.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -397,7 +498,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
     start: function() {
         this._super(this);
         var self = this;
-        this.$element.html(QWeb.render('Sidebar'));
+        this.$element.html(db.web.qweb.render('Sidebar'));
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.do_toggle();
         });
@@ -439,7 +540,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                 this.items[items[i].element_id] = items[i];
             }
         }
-        var $section = $(QWeb.render("Sidebar.section", {
+        var $section = $(db.web.qweb.render("Sidebar.section", {
             section_id: section_id,
             name: name,
             classname: 'oe_sidebar_' + code,
@@ -495,7 +596,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.TranslateDialog = openerp.web.Dialog.extend({
+db.web.TranslateDialog = db.web.Dialog.extend({
     dialog_title: _t("Translations"),
     init: function(view) {
         // TODO fme: should add the language to fields_view_get because between the fields view get
@@ -515,14 +616,14 @@ openerp.web.TranslateDialog = openerp.web.Dialog.extend({
         this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name });
         this.languages = null;
         this.languages_loaded = $.Deferred();
-        (new openerp.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
+        (new db.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
             [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }, this.on_languages_loaded);
     },
     start: function() {
         var self = this;
         this._super();
         $.when(this.languages_loaded).then(function() {
-            self.$element.html(QWeb.render('TranslateDialog', { widget: self }));
+            self.$element.html(db.web.qweb.render('TranslateDialog', { widget: self }));
             self.$element.tabs();
             if (!(self.view.translatable_fields && self.view.translatable_fields.length)) {
                 self.hide_tabs('fields');
@@ -627,11 +728,7 @@ openerp.web.TranslateDialog = openerp.web.Dialog.extend({
     }
 });
 
-/**
- * @class
- * @extends openerp.web.Widget
- */
-openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
+db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
@@ -644,7 +741,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     },
     open_translate_dialog: function(field) {
         if (!this.translate_dialog) {
-            this.translate_dialog = new openerp.web.TranslateDialog(this).start();
+            this.translate_dialog = new db.web.TranslateDialog(this).start();
         }
         this.translate_dialog.open(field);
     },
@@ -656,12 +753,16 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
      * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
-     * @param {openerp.web.DataSet} dataset a dataset object used to communicate with the server
+     * @param {db.web.DataSet} dataset a dataset object used to communicate with the server
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, record_id, on_closed) {
+    do_execute_action: function (action_data, dataset, record_id, on_closed) {
         var self = this;
+        var result_handler = function () {
+            if (on_closed) { on_closed.apply(null, arguments); }
+            self.widget_parent.on_action_executed.apply(null, arguments);
+        };
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -671,14 +772,14 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
                     active_ids: [record_id || false],
                     active_model: dataset.model
                 });
-                action.context = new openerp.web.CompoundContext(dataset.get_context(), action.context);
-                self.do_action(action, on_closed);
-            } else if (on_closed) {
-                on_closed(action);
+                action.context = new db.web.CompoundContext(dataset.get_context(), action.context);
+                self.do_action(action, result_handler);
+            } else {
+                result_handler();
             }
         };
 
-        var context = new openerp.web.CompoundContext(dataset.get_context(), action_data.context || {});
+        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
         if (action_data.special) {
             handler({result: {"type":"ir.actions.act_window_close"}});
@@ -693,7 +794,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
-     * of openerp.web.View must use the provided view instead of any other one.
+     * of db.web.View must use the provided view instead of any other one.
      *
      * @param embedded_view A view.
      */
@@ -740,23 +841,23 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     },
     on_sidebar_manage_view: function() {
         if (this.fields_view && this.fields_view.arch) {
-            $('<xmp>' + openerp.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            $('<xmp>' + db.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         } else {
             this.notification.warn("Manage Views", "Could not find current view declaration");
         }
     },
     on_sidebar_edit_workflow: function() {
-        this.log('Todo');
+        console.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        this.log('Todo');
+        console.log('Todo');
     },
     on_sidebar_import: function() {
         var import_view = new openerp.web.DataImport(this, this.dataset);
         import_view.start();
     },
     on_sidebar_export: function() {
-        var export_view = new openerp.web.DataExport(this, this.dataset);
+        var export_view = new db.web.DataExport(this, this.dataset);
         export_view.start();
     },
     on_sidebar_translate: function() {
@@ -766,12 +867,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     }
 });
 
-/**
- * Registry for all the main views
- */
-openerp.web.views = new openerp.web.Registry();
-
-openerp.web.json_node_to_xml = function(node, single_quote, indent) {
+db.web.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
 
@@ -800,7 +896,7 @@ openerp.web.json_node_to_xml = function(node, single_quote, indent) {
         r += '>\n';
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {
-            childs.push(openerp.web.json_node_to_xml(node.children[i], single_quote, indent + 1));
+            childs.push(db.web.json_node_to_xml(node.children[i], single_quote, indent + 1));
         }
         r += childs.join('\n');
         r += '\n' + sindent + '</' + node.tag + '>';

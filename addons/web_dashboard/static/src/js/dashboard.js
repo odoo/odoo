@@ -223,7 +223,8 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             sidebar : false,
             views_switcher : false,
             action_buttons : false,
-            pager: false
+            pager: false,
+            low_profile: true
         };
         var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);
@@ -333,7 +334,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
                 });
             })
             .delegate('li:not(.oe-done)', 'click', function () {
-                self.widget_parent.widget_parent.widget_parent.execute_action({
+                self.widget_parent.widget_parent.widget_parent.do_execute_action({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,

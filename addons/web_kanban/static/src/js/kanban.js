@@ -78,7 +78,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        if (k.substr(0, qweb_prefix.length + 1) !== qweb_prefix + '-') {
+                        if (_.indexOf('icon,type,name,string,context,states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
                             delete(node.attrs[k]);
                         }
@@ -224,7 +224,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     on_execute_button_click: function (dataset, button_attrs, record_id) {
         var self = this;
-        this.execute_action(
+        this.do_execute_action(
             button_attrs, dataset,
             record_id, function () {
                 var count = 1;

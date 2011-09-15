@@ -296,7 +296,15 @@ class Session(openerpweb.Controller):
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
-            "context": ctx
+            "context": ctx,
+            "db": req.session._db
+        }
+    @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        return {
+            "uid": req.session._uid,
+            "context": req.session.get_context() if req.session._uid else False,
+            "db": req.session._db
         }
     @openerpweb.jsonrequest
     def change_password (self,req,fields):

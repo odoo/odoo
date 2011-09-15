@@ -2,6 +2,10 @@
  * OpenERP Web core
  *--------------------------------------------------------*/
 
+if (!console.debug) {
+    console.debug = console.log;
+}
+
 openerp.web.core = function(openerp) {
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
@@ -349,12 +353,10 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
         this.debug = (window.location.search.indexOf('?debug') !== -1);
-        this.db = "";
-        this.login = "";
-        this.password = "";
-        this.user_context= {};
-        this.uid = false;
         this.session_id = false;
+        this.uid = false;
+        this.user_context= {};
+        this.db = false;
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
@@ -474,58 +476,45 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     },
     session_login: function(db, login, password, success_callback) {
         var self = this;
-        this.db = db;
-        this.login = login;
-        this.password = password;
-        var params = { db: this.db, login: this.login, password: this.password };
+        var params = { db: db, login: login, password: password };
         this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;
+            self.db = result.db;
             self.session_save();
             self.on_session_valid();
             return true;
         }).then(success_callback);
     },
-    session_logout: function() {
-        this.uid = false;
-    },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
     session_restore: function () {
-        this.uid = this.get_cookie('uid');
+        var self = this;
         this.session_id = this.get_cookie('session_id');
-        this.db = this.get_cookie('db');
-        this.login = this.get_cookie('login');
-        this.user_context = this.get_cookie("user_context");
-        // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
-        // then call on_session_valid
-        if (this.uid)
-            this.on_session_valid();
-        else
-            this.on_session_invalid();
+        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+            self.uid = result.uid;
+            self.user_context = result.context;
+            self.db = result.db;
+            if (self.uid)
+                self.on_session_valid();
+            else
+                self.on_session_invalid();
+        });
     },
     /**
      * Saves the session id and uid locally
      */
     session_save: function () {
-        this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
-        this.set_cookie('db', this.db);
-        this.set_cookie('login', this.login);
-        this.set_cookie('user_context', this.user_context);
     },
     logout: function() {
-        delete this.uid;
-        delete this.session_id;
-        delete this.db;
-        delete this.login;
-        this.set_cookie('uid', '');
         this.set_cookie('session_id', '');
-        this.set_cookie('db', '');
-        this.set_cookie('login', '');
-        this.on_session_invalid(function() {});
+        this.reload_client();
+    },
+    reload_client: function() {
+        window.location.reload();
     },
     /**
      * Fetches a cookie stored by an openerp session
@@ -749,36 +738,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
      */
     rpc: function(url, data, success, error) {
         return this.session.rpc(url, data, success, error);
-    },
-    log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var caller = arguments.callee.caller;
-        // TODO add support for line number using
-        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
-        // args.unshift("" + caller.debug_name);
-        this.on_log.apply(this,args);
-    },
-    on_log: function() {
-        if(this.session.debug) {
-            var notify = false;
-            var body = false;
-            if(window.console) {
-                console.log(arguments);
-            } else {
-                body = true;
-            }
-            var a = Array.prototype.slice.call(arguments, 0);
-            for(var i = 0; i < a.length; i++) {
-                var v = a[i]==null ? "null" : a[i].toString();
-                if(i==0) {
-                    notify = v.match(/^not/);
-                    body = v.match(/^bod/);
-                }
-                if(body) {
-                    $('<pre></pre>').text(v).appendTo($('body'));
-                }
-            }
-        }
     }
 });
 
@@ -929,6 +888,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
+        console.log('Widget.do_action', action, on_finished);
         if (this.widget_parent) {
             return this.widget_parent.do_action(action, on_finished);
         }
