@@ -838,6 +838,14 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
+    def _get_uom_id(self, cr, uid, *args):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+    
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -877,6 +885,7 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
+        'product_uom' : _get_uom_id,
         'discount': 0.0,
         'delay': 0.0,
         'product_uom_qty': 1,
