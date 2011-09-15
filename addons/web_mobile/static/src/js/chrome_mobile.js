@@ -84,7 +84,19 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         });
     }
 });
-
+openerp.web_mobile.Notepage = openerp.web.Widget.extend({
+    init: function(session, element_id) {
+        this._super(session, element_id);
+        this.get_fields = this.widget_parent.get_fields;
+        this.page_fields = this.widget_parent.page_fields;
+        this.values = this.widget_parent.values;
+        this.til = this.widget_parent.til;
+    },
+    start: function() {
+        console.log(this.get_fields,this.page_fields,this.values,this.til,this.$element);
+        this.$element.html(QWeb.render("NotePage", {'get_fields1': this.get_fields,'fields1' : this.page_fields, 'values1' : this.values,'til1': this.til }));
+    }
+});
 openerp.web_mobile.Header =  openerp.web.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
