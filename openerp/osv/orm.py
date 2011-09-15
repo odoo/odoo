@@ -1690,32 +1690,53 @@ class orm_template(object):
         return arch, fields
 
     def _get_default_form_view(self, cr, user, context=None):
+        """ Generates a default single-line form view using all fields
+        of the current model except the m2m and o2m ones.
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a form view as an lxml document
+        :rtype: etree._Element
+        """
+        view = etree.Element('form', string=self._description)
         # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        res = self.fields_get(cr, user, context=context)
-        xml = '<?xml version="1.0" encoding="utf-8"?> ' \
-              '<form string="%s">' % (self._description,)
-        for x in res:
-            if res[x]['type'] not in ('one2many', 'many2many'):
-                xml += '<field name="%s"/>' % (x,)
-                if res[x]['type'] == 'text':
-                    xml += "<newline/>"
-        xml += "</form>"
-        return xml
+        for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
+            if descriptor['type'] in ('one2many', 'many2many'):
+                continue
+            etree.SubElement(view, 'field', name=field)
+            if descriptor['type'] == 'text':
+                etree.SubElement(view, 'newline')
+        return view
 
     def _get_default_tree_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
             _rec_name = self._columns.keys()[0]
-        xml = '<?xml version="1.0" encoding="utf-8"?>' \
-              '<tree string="%s"><field name="%s"/></tree>' \
-              % (self._description, _rec_name)
-        return xml
+
+        view = etree.Element('tree', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
 
     def _get_default_calendar_view(self, cr, user, context=None):
-        """Generate a default calendar view (For internal use only).
+        """ Generates a default calendar view by trying to infer
+        calendar fields from a number of pre-set attribute names
+        
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a calendar view
+        :rtype: etree._Element
         """
-        # TODO could return an etree instead of a string
-
         arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
                 '<calendar string="%s"') % (self._description)
 
@@ -1756,9 +1777,16 @@ class orm_template(object):
                  '  <field name="%s"/>\n'
                  '</calendar>') % (self._rec_name)
 
-        return arch
+        return etree.fromstring(arch.encode('utf-8'))
 
     def _get_default_search_view(self, cr, uid, context=None):
+        """
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: an lxml document of the view
+        :rtype: etree._Element
+        """
         form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
@@ -1783,7 +1811,7 @@ class orm_template(object):
             field_group.append(etree.Element("field", attrib={'name': field_name}))
 
         #TODO tostring can be removed as fromstring is call directly after...
-        return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
+        return search_view
 
     #
     # if view_id, view_type is not required
@@ -1986,14 +2014,14 @@ class orm_template(object):
         else:
             # otherwise, build some kind of default view
             try:
-                xml = getattr(self, '_get_default_%s_view' % view_type)(
+                view = getattr(self, '_get_default_%s_view' % view_type)(
                     cr, user, context)
             except AttributeError:
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
 
             result.update(
-                arch=etree.fromstring(encode(xml)),
+                arch=view,
                 name='default',
                 field_parent=False,
                 view_id=0)
