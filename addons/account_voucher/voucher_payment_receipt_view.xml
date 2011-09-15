@@ -280,7 +280,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors="{'proforma':'Blue'}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors="{'proforma':'blue'}"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
@@ -455,7 +455,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors="{'proforma':'Blue'}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors="{'proforma':'blue'}"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
