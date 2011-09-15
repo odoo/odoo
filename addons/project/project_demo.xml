@@ -221,26 +221,8 @@
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.uom_hour"></field>
         </record>
-
-        <!-- Task Types -->
-        <record id="project_tt_specification" model="project.task.type">
-            <field name="sequence">1</field>
-            <field name="name">Specification</field>
-        </record>
-        <record id="project_tt_development" model="project.task.type">
-            <field name="sequence">2</field>
-            <field name="name">Development</field>
-        </record>
-        <record id="project_tt_testing" model="project.task.type">
-            <field name="sequence">3</field>
-            <field name="name">Testing</field>
-        </record>
-        <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">4</field>
-            <field name="name">Merge</field>
-        </record>
-
         <!-- Projects -->
+
         <!-- <record id="all_projects_account" model="project.project">
             <field name="name">Projects</field>
             <field name="code">3</field>

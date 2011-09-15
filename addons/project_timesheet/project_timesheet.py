@@ -28,7 +28,18 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-    
+
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
+        if part and res and ('value' in res):
+            # set Invoice Task Work to 100%
+            data_obj = self.pool.get('ir.model.data')
+            data_id = data_obj._get_id(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
+            if data_id:
+                factor_id = data_obj.browse(cr, uid, data_id).res_id
+                res['value'].update({'to_invoice': factor_id})
+        return res
+
 project_project()
 
 class project_work(osv.osv):

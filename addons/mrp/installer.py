@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class mrp_installer(osv.osv_memory):
-    _name = 'mrp.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         # Manufacturing Resource Planning
