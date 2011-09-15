@@ -55,18 +55,6 @@ class purchase_line_invoice(osv.osv_memory):
             invoice_line_obj=self.pool.get('account.invoice.line')
             account_jrnl_obj=self.pool.get('account.journal')
 
-            def multiple_order_invoice_name(orders):
-                name = "PO";
-                for order in orders:
-                    name += "-%d" % order.id
-                return name
-
-            def multiple_order_invoice_reference(partner, orders):
-                reference = "P%dPO" % partner.id
-                for order in orders:
-                    reference += "-%d" % order.id
-                return reference
-
             def multiple_order_invoice_notes(orders):
                 notes = ""
                 for order in orders:
@@ -82,6 +70,7 @@ class purchase_line_invoice(osv.osv_memory):
                     @param orders : The set of orders to add in the invoice
                     @param lines : The list of line's id
                 """
+                name = orders and orders[0].name or ''
                 journal_id = account_jrnl_obj.search(cr, uid, [('type', '=', 'purchase')], context=None)
                 journal_id = journal_id and journal_id[0] or False
                 a = partner.property_account_payable.id
@@ -90,11 +79,11 @@ class purchase_line_invoice(osv.osv_memory):
                 else:
                     pay_term = False
                 inv = {
-                    'name': multiple_order_invoice_name(orders),
-                    'origin': multiple_order_invoice_name(orders),
+                    'name': name,
+                    'origin': name,
                     'type': 'in_invoice',
                     'journal_id':journal_id,
-                    'reference': multiple_order_invoice_reference(partner, orders),
+                    'reference' : partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
                     'address_invoice_id': orders[0].partner_address_id.id,

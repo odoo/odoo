@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-          <record model="board.note.type" id="note_crm_type">
-               <field name="name">CRM Configuration</field>
-          </record>
-
           <record model="ir.ui.view" id="view_crm_opportunity_user_graph1">
                <field name="name">crm.opportunity.user.graph1</field>
                <field name="model">crm.lead.report</field>
@@ -37,7 +33,7 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name" string="Opportunity"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Customer"/>
                     <field name="stage_id"/>
                     <button name="stage_previous" string="Previous Stage"
                         states="open,pending" type="object" icon="gtk-go-back" />
