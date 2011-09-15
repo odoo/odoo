@@ -270,43 +270,7 @@
                         <field name="credit_note"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Salary Computation" >
-                            <field name="line_ids" colspan="4" nolabel="1">
-                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
-                                    <field name="name"/>
-                                    <field name="code"/>
-                                    <field name="category_id"/>
-                                    <field name="sequence" invisible="1"/>
-                                    <field name="quantity" string="Quantity/Rate"/>
-                                    <field name="amount"/>
-                                    <field name="total"/>
-                                </tree>
-                                <form string="Payslip Line">
-                                    <group>
-                                        <field name="name" select="1"/>
-                                        <field name="code" select="1"/>
-                                        <field name="category_id"/>
-                                        <field name="sequence" groups="base.group_extended"/>
-                                        <field name="quantity" string="Quantity/Rate"/>
-                                        <field name="amount"/>
-                                        <field name="total"/>
-                                        <field name="salary_rule_id" groups="base.group_extended"/>
-                                    </group>
-                                </form>
-                            </field>
-                        </page>
-                        <page string="Details By Salary Rule Category">
-                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
-                                <tree string="Payslip Lines" colors="blue:total == 0">
-                                    <field name="category_id"/>
-                                    <field name="name"/>
-                                    <field name="code"/>
-                                    <field name="total"/>
-                                </tree>
-                            </field>
-                       </page>
-
-                       <page string="Worked Days &amp; Inputs">
+                        <page string="Worked Days &amp; Inputs">
                             <field name="worked_days_line_ids" colspan="4" nolabel="1">
                                 <tree string="Worked Days" editable="bottom">
                                     <field name="name"/>
@@ -347,8 +311,42 @@
                                     </group>
                                 </form>
                             </field>
+                        </page>
+                        <page string="Salary Computation" >
+                            <field name="line_ids" colspan="4" nolabel="1">
+                                <tree string="Salary Structure" editable="bottom" colors="blue:total == 0">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="category_id"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="quantity" string="Quantity/Rate"/>
+                                    <field name="amount"/>
+                                    <field name="total"/>
+                                </tree>
+                                <form string="Payslip Line">
+                                    <group>
+                                        <field name="name" select="1"/>
+                                        <field name="code" select="1"/>
+                                        <field name="category_id"/>
+                                        <field name="sequence" groups="base.group_extended"/>
+                                        <field name="quantity" string="Quantity/Rate"/>
+                                        <field name="amount"/>
+                                        <field name="total"/>
+                                        <field name="salary_rule_id" groups="base.group_extended"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Details By Salary Rule Category">
+                            <field name="details_by_salary_rule_category" context="{'group_by':'category_id'}" domain="[('appears_on_payslip', '=', True)]" nolabel="1">
+                                <tree string="Payslip Lines" colors="blue:total == 0">
+                                    <field name="category_id"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="total"/>
+                                </tree>
+                            </field>
                        </page>
-
                        <page string="Other Information">
                             <separator colspan="4" string="Other Information"/>
                             <group col="5" colspan="2">
@@ -735,7 +733,11 @@
             id="act_hr_employee_payslip_list"
             groups="base.group_hr_manager"/>
 
-        <act_window domain="[('slip_id', '=', active_id)]" context="{'search_default_register_id': 1}" id="act_payslip_lines" name="Payslip Lines" res_model="hr.payslip.line" src_model="hr.payslip"/>
+        <act_window name="Payslip Computation Details"
+        	domain="[('slip_id', '=', active_id)]"
+        	res_model="hr.payslip.line"
+        	src_model="hr.payslip"
+        	id="act_payslip_lines"/>
 
         <act_window name="Payslip Lines"
         	domain="[('register_id', '=', active_id)]"
