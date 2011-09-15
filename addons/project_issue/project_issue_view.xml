@@ -263,6 +263,81 @@
             </field>
         </record>
 
+
+	<!-- Project Issue Karban View-->
+
+	<record model="ir.ui.view" id="project_issue_kanban_view">
+        <field name="name">Project Issue Kanban</field>
+        <field name="model">project.issue</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="type_id">
+                <field name="priority"/>
+                <field name="name"/>
+ 				<field name="user_id"/>
+				<field name="version_id"/>
+				<field name="type_id"/>
+				<field name="color"/>
+				<field name="state"/>
+			<templates>
+ 				 <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_column_heading  oe_kanban_color_border oe_kanban_draghandle">
+                               	
+                                  <tr>
+                                    	<td class="oe_kanban_title3" align="left" valign="middle">
+                                    	    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                          		            <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        <field name="name"/></td>
+										<td valign="top" width="22"><img t-att-src="kanban_gravatar(record.name.value, 22)" class="oe_kanban_gravatar"/></td>
+                               	</tr>
+                              </table>
+
+  							<div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                    <div class="oe_kanban_right oe_kanban_small">
+                                        <field name="user_id"/>
+                                    </div>
+                                    <div>
+                                        <b><field name="partner_id"/></b>
+                                    </div>
+								    <div>
+                                        <b><field name="project_id"/></b>
+                                    </div>
+                                    <div>
+										 Version <field name="version_id"/>
+						           </div>
+                             </div>
+
+				  			 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                  	 <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'project.issue' }" icon="terp-document-new" type="action"/>
+   										<a string="Escalate" name="case_escalate"  icon="gtk-go-up" type="object"/>
+										<a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/> 					</div>
+									<div class="oe_kanban_right">
+                                       	<a name="case_open" string="Open" states="draft,pending" type="object" icon="lead-stage-won" />
+                                       	<a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
+                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="lead-stage-lost"/>
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+								</div>
+						   </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+
+
+
+
         # ------------------------------------------------------
         # Feature Requests
         # ------------------------------------------------------
