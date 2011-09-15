@@ -1954,14 +1954,13 @@ class orm_template(object):
 
         # if a view was found
         if sql_res:
-            result['type'] = sql_res['type']
-            result['view_id'] = sql_res['id']
-
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_view_inheritance(source, result['view_id'])
-
-            result['name'] = sql_res['name']
-            result['field_parent'] = sql_res['field_parent'] or False
+            result.update(
+                arch=apply_view_inheritance(source, sql_res['id']),
+                type=sql_res['type'],
+                view_id=sql_res['id'],
+                name=sql_res['name'],
+                field_parent=sql_res['field_parent'] or False)
         else:
 
             # otherwise, build some kind of default view
@@ -1994,10 +1993,11 @@ class orm_template(object):
             else:
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
-            result['arch'] = etree.fromstring(encode(xml))
-            result['name'] = 'default'
-            result['field_parent'] = False
-            result['view_id'] = 0
+            result.update(
+                arch=etree.fromstring(encode(xml)),
+                name='default',
+                field_parent=False,
+                view_id=0)
 
         if parent_view_model != self._name:
             ctx = context.copy()
