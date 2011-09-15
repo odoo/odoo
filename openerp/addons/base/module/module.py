@@ -440,9 +440,8 @@ class module(osv.osv):
             zip_content = urllib.urlopen(mod.url).read()
             fname = addons.get_module_path(str(mod.name)+'.zip', downloaded=True)
             try:
-                fp = file(fname, 'wb')
-                fp.write(zip_content)
-                fp.close()
+                with open(fname, 'wb') as fp:
+                    fp.write(zip_content)
             except Exception:
                 self.__logger.exception('Error when trying to create module '
                                         'file %s', fname)
