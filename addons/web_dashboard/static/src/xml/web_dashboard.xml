@@ -31,8 +31,6 @@
 <t t-name="DashBoard.action">
     <div t-att-data-id="action.attrs.name" class="oe-dashboard-action">
         <h2 class="oe-dashboard-action-header oe_view_title">
-            <t t-esc="action.attrs.string"/>
-            <!--<a href="#" class="oe-dashboard-action-rename"><img src="/web/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>-->
             <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
             <span class='ui-icon ui-icon-closethick'></span>
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>

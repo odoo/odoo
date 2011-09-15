@@ -5,6 +5,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+
 try:
     import openerp.wsgi
     import os
@@ -17,8 +18,7 @@ try:
     o.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions")
     o.addons_path = os.path.dirname(os.path.dirname(__file__))
     o.serve_static = True
-    o.server_host = '127.0.0.1'
-    o.server_port = 8069
+    o.backend = 'local'
 
     app = common.dispatch.Root(o)
     #import openerp.wsgi

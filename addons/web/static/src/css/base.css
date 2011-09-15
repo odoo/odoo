@@ -821,6 +821,7 @@ label.error {
 }
 .openerp td.oe_form_frame_cell {
     padding: 2px;
+    position: relative;
 }
 .openerp td.oe_form_frame_cell.oe_form_group {
     padding: 0;
@@ -841,8 +842,8 @@ label.error {
 .openerp label.oe_label_help {
     cursor: help;
 }
-.openerp label.oe_label,
-.openerp label.oe_label_help {
+
+.openerp .oe_form_field label.oe_label, .openerp .oe_form_field label.oe_label_help {
     text-align: right;
     margin: 3px 0 0 10px;
 }
@@ -887,12 +888,19 @@ label.error {
     position: relative;
     vertical-align: top;
 }
-.openerp img.ui-datepicker-trigger {
-    margin-left: -20px;
-    vertical-align: middle;
+.openerp .oe_input_icon {
+    position: absolute;
     cursor: pointer;
-    position: relative;
-    top: -1px;
+    right: 5px;
+    top: 5px;
+}
+.openerp .oe_input_icon_disabled {
+    position: absolute;
+    cursor: default;
+    opacity: 0.5;
+    filter:alpha(opacity=50);
+    right: 5px;
+    top: 5px;
 }
 .openerp img.oe_field_translate {
     margin-left: -21px;
@@ -987,7 +995,53 @@ label.error {
 
 .openerp .view-manager-main-content {
     width: 100%;
-    padding: 6px;
+}
+.openerp .oe-view-manager-header {
+    overflow: auto;
+}
+.openerp .oe-view-manager-header h2 {
+    float: left;
+}
+.openerp .oe-view-manager-header blockquote {
+    display: none;
+    font-size: 85%;
+    margin: 0;
+    background: #fff;
+    border-bottom: 1px solid #CECBCB;
+    padding: 1px 10px;
+    color: #4C4C4C;
+}
+.openerp .oe-view-manager-header blockquote p {
+    margin: 0;
+    padding: 6px 1px 4px;
+}
+.openerp .oe-view-manager-header blockquote div {
+    text-align: right;
+}
+.openerp .oe-view-manager-header blockquote div button {
+    border: none;
+    background: none;
+    padding: 0 4px;
+    margin: 0;
+    display: inline;
+    text-decoration: underline;
+    color: inherit;
+}
+.openerp .oe-view-manager-logs {
+    clear: both;
+    font-size: 85%;
+    margin: 0.25em 0;
+    background: #fff;
+    padding: 0 10px;
+    color: #4C4C4C;
+    list-style: none;
+}
+.openerp .oe-view-manager-logs li:before {
+    content: '→ ';
+}
+.openerp .oe-view-manager-logs a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .openerp .view-manager-main-sidebar {
