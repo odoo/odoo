@@ -174,5 +174,14 @@ class hr_contract(osv.osv):
     }
 hr_contract()
 
+class hr_payslip_run(osv.osv):
+
+    _inherit = 'hr.payslip.run'
+    _description = 'Payslip Run'
+    _columns = {
+        'journal_id': fields.many2one('account.journal', 'Expense Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
+    }
+
+hr_payslip_run()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

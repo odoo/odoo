@@ -663,8 +663,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslip Runs">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft runs"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done runs"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Runs"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Runs"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="date_start"/>
@@ -683,6 +683,7 @@
                     <field name="date_start"/>
                     <field name="date_end"/>
                     <field name="credit_note"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
