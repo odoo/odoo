@@ -211,7 +211,7 @@ class share_wizard(osv.osv_memory):
                 del new_context[key]
 
         dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut')
         shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
         action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, values, new_context)
         menu_data = {'name': values['name'],
