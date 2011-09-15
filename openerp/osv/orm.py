@@ -1214,7 +1214,7 @@ class orm_template(object):
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                return (-1, res, 'Line ' + str(position) +' : ' + str(e), '')
+                return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
 
             if config.get('import_partial', False) and filename and (not (position%100)):
                 data = pickle.load(file(config.get('import_partial')))
