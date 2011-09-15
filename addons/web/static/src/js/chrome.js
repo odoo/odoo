@@ -827,7 +827,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
 
         if (this.$secondary_menu.has($menu).length) {
             if ($menu.is('.submenu')) {
-                $menu.next().toggle();
+                $menu.toggleClass('opened').next().toggle();
                 return false;
             }
             return !$menu.is(".leaf");
