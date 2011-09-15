@@ -853,7 +853,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         console.log('Todo');
     },
     on_sidebar_import: function() {
-        var import_view = new openerp.web.DataImport(this, this.dataset);
+        var import_view = new db.web.DataImport(this, this.dataset);
         import_view.start();
     },
     on_sidebar_export: function() {
