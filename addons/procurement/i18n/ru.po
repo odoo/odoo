@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:50+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -43,23 +43,23 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать по ..."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr ""
+msgstr "Черновик закупки ТМЦ и положение точки заказа"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:288
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr "Для этого изделия/материала не задан поставщик!"
+msgstr "Не задан поставщик для ТМЦ!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
 msgid "Unit of Measure"
-msgstr "Ед. изм."
+msgstr "Единица измерения"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -67,10 +67,10 @@ msgid "Procurement Method"
 msgstr "Метод снабжения"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
-msgstr "Нет адрес поставщика"
+msgstr "Нет адреса поставщика"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
@@ -122,12 +122,12 @@ msgstr "Примечания"
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 msgid "on order"
-msgstr "в заказе"
+msgstr "по заказу"
 
 #. module: procurement
 #: help:procurement.order,message:0
 msgid "Exception occurred while computing procurement orders."
-msgstr "Исключительная ситуация во время создания заказа на снабжение."
+msgstr "Исключительная ситуация во время вычисления заказа на снабжение."
 
 #. module: procurement
 #: help:procurement.order,state:0
@@ -290,7 +290,7 @@ msgstr "Снабжение"
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr ""
+msgstr "Предел планировщика в днях"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -320,7 +320,7 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -381,7 +381,7 @@ msgstr "Заказы на снабжение"
 #. module: procurement
 #: view:procurement.order:0
 msgid "To Fix"
-msgstr ""
+msgstr "Исправить"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -458,7 +458,7 @@ msgid "plus"
 msgstr "плюс"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -473,6 +473,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Если поле \"Активно\" имеет значение \"Ложь\", это позволит скрыть точку "
+"заказа не удаляя её."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -630,7 +632,7 @@ msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr "Нельзя удалить заказ(ы) на снабжение в состоянии %s !"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Недостаточно данных !"
@@ -728,7 +730,7 @@ msgstr "Детали"
 #: model:ir.actions.act_window,name:procurement.procurement_exceptions
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
 msgid "Procurement Exceptions"
-msgstr "Исключитель"
+msgstr "Проблемы снабжения"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
@@ -814,6 +816,12 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Вы можете определить правило минимальных запасов так, что OpenERP будет "
+"автоматически создавать черновики заказов на производство или  закупку в "
+"соответствии с количеством запасов. Если минимальное количество ТМЦ (= "
+"остаток на складе минус все подтвержденные заказы и зарезервированное) "
+"меньше минимального количества, OpenERP будет генерировать запрос на "
+"снабжение для увеличения остатка до максимального количества."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -856,7 +864,7 @@ msgid "Product UoS"
 msgstr "Вторая ед. изм."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "со склада: ТМЦ определены."
@@ -933,50 +941,3 @@ msgstr "Детали снабжения"
 #, python-format
 msgid "SCHEDULER"
 msgstr "ПЛАНИРОВЩИК"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "Временные исключения снабжения"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "ПМР и Логистическое планирование"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Недопустимые аргументы"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#, python-format
-#~ msgid "Procurement "
-#~ msgstr "Снабжение "
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurements that are not between today and today+range "
-#~ "are skipped for futur computation."
-#~ msgstr ""
-#~ "Это временные рамки, обрабатываемые планировщиком при расчете снабжения. Все "
-#~ "снабжение, которое не находится между сегодня и сегодня+срок оставляется для "
-#~ "будущих расчетов."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the orderpoint "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Если значение активного поля \"истина\", то это позволит вам скрыть точку "
-#~ "заказа"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Для объектов osv_memory правила не поддерживаются !"

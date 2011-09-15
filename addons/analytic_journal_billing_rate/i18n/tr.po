@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:34+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:37+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
@@ -32,6 +32,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Bu modül verilen bir hesapta belirli bir yevmiye için varsayılan "
+"faturalama oranını tanımlar. Bu ençok bir kullanıcı zaman çizelgesi "
+"kodlarken kullanılır: Değerler alınır ve alanlar otomatik doldurulur... ama "
+"bu değerleri değiştirebilme olanağı henüz yoktur.\n"
+"\n"
+"    Açıkçası geçerli hesap için bilgi kayıt edilmemişse, varsayılan değer "
+"olağan şekilde hesap verisi tarafından verilir ki; bu da mbu modülün eski "
+"yapılandırmayla uyumlu olduğunu gösterir.\n"
+"\n"
+"    "
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
@@ -41,12 +53,12 @@ msgstr "Yevmiye Analizi"
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
 msgid "Billing Rate per Journal for this Analytic Account"
-msgstr ""
+msgstr "Bu Analiz Hesabına ait her yevmiyenin Ödem Oranı"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,account_id:0
@@ -57,12 +69,12 @@ msgstr "Analiz Hesabı"
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_analytic_journal_rate_grid
 msgid "Relation table between journals and billing rates"
-msgstr ""
+msgstr "Ödeme oranı ve yevmiyeler arası ilişki tablosu"
 
 #. module: analytic_journal_billing_rate
 #: field:account.analytic.account,journal_rate_ids:0
 msgid "Invoicing Rate per Journal"
-msgstr ""
+msgstr "Her yevmiye için faturalama oranı"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
@@ -70,28 +82,30 @@ msgid ""
 "Analytic Journal Billing Rate, Define the default invoicing rate for a "
 "specific journal"
 msgstr ""
+"Analitik Yevmiye Ödeme Oranı, belirli bir yevmiye için varsayılan faturalama "
+"oranı tanımlayın."
 
 #. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Hata! Para birimi seçilen firmanın para birimiyle aynı olmalı"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
 msgid "Invoicing Rate"
-msgstr ""
+msgstr "Faturalama Oranı"
 
 #. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Hata! Yinelenen analiz hesabı oluşturamazsınız."
 
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Zaman Çizelgesi Satırı"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

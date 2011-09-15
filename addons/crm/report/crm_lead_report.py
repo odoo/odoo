@@ -31,6 +31,21 @@ AVAILABLE_STATES = [
     ('pending','Pending')
 ]
 
+MONTHS = [
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December')
+]
+
 class crm_lead_report(osv.osv):
     """ CRM Lead Report """
     _name = "crm.lead.report"
@@ -42,15 +57,11 @@ class crm_lead_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'channel_id':fields.many2one('res.partner.canal', 'Channel', readonly=True),
+        'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'creation_month':fields.selection(MONTHS, 'Creation Date', readonly=True),
+        'deadline_month':fields.selection(MONTHS, 'Exp. Closing', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True),
@@ -63,7 +74,7 @@ class crm_lead_report(osv.osv):
         'probable_revenue': fields.float('Probable Revenue', digits=(16,2),readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="['|',('section_id','=',False),('section_id','=',section_id)]" , readonly=True),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('type', '=', 'lead')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('section_ids', '=', section_id)]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'opening_date': fields.date('Opening Date', readonly=True, select=True),
         'creation_date': fields.date('Creation Date', readonly=True, select=True),
@@ -88,8 +99,9 @@ class crm_lead_report(osv.osv):
                 SELECT
                     id,
                     to_char(c.date_deadline, 'YYYY') as name,
-                    to_char(c.date_deadline, 'MM') as month,
+                    to_char(c.date_deadline, 'MM') as deadline_month,
                     to_char(c.date_deadline, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'MM') as creation_month,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
@@ -109,7 +121,7 @@ class crm_lead_report(osv.osv):
                     c.planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
                     1 as nbr,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
+                    (SELECT count(id) FROM mail_message WHERE model='crm.lead' AND res_id=c.id AND email_from is not null) AS email,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,

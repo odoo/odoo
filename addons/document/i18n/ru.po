@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:37+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -44,7 +44,7 @@ msgstr "Узел процесса"
 #. module: document
 #: view:document.directory:0
 msgid "Search Document Directory"
-msgstr "Искать каталог документов"
+msgstr "Каталог поиска документов"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -52,6 +52,8 @@ msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
 msgstr ""
+"Поле, которое будет использоваться как имя ресурса каталогов. Если пусто, "
+"будет использоваться \"имя\"."
 
 #. module: document
 #: code:addons/document/document_directory.py:276
@@ -95,7 +97,7 @@ msgstr "Март"
 #. module: document
 #: view:document.configuration:0
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #. module: document
 #: view:document.directory:0
@@ -125,6 +127,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Выражение на языке Python, используемое для проверки этого поля.\n"
+"Можно использовать 'dir_id' для текущего каталога, 'res_id', 'res_model' в "
+"качестве обозначения текущей записи, в динамических каталогах."
 
 #. module: document
 #: view:report.document.user:0
@@ -155,6 +160,8 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
+"Если истинно, все вложения, подходящие этому ресурсу, будут обнаружены. Если "
+"ложно — только дочерние по отношению к этому."
 
 #. module: document
 #: view:document.directory:0
@@ -234,8 +241,8 @@ msgid "Document directory"
 msgstr "Каталог документов"
 
 #. module: document
-#: code:addons/document/document.py:154
-#: code:addons/document/document.py:222
+#: code:addons/document/document.py:226
+#: code:addons/document/document.py:294
 #: code:addons/document/document_directory.py:266
 #: code:addons/document/document_directory.py:271
 #: code:addons/document/document_directory.py:276
@@ -259,7 +266,7 @@ msgstr "Документы"
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr "Ошибка! Вы не можете созадавать вложенные Директории."
+msgstr "Ошибка! Нельзя создавать вложенные директории."
 
 #. module: document
 #: view:document.directory:0
@@ -300,6 +307,7 @@ msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
 msgstr ""
+"Выберите объект тут и там будет одна папка на одну запись этого ресурса."
 
 #. module: document
 #: help:document.directory,domain:0
@@ -415,7 +423,7 @@ msgstr "Документы по теме"
 #. module: document
 #: field:document.configuration,progress:0
 msgid "Configuration Progress"
-msgstr "Процесс настройки"
+msgstr "Выполнение настройки"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -492,6 +500,23 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"Это полноценная система управления документами:\n"
+"    * Аутентификация пользователей\n"
+"    * Индексация документов:- файлы .pptx и .docx не поддерживаются windows-"
+"платформой.\n"
+"    * Инфо-панель \"Документы\", включающая:\n"
+"        * Новые файлы (список)\n"
+"        * Файлы по типу ресурса (диаграмма)\n"
+"        * Файлы по контрагентам (диаграмма)\n"
+"        * Файлы помесячно (диаграмма)\n"
+"    ВНИМАНИЕ:\n"
+"    - При установке этого модуля в работающей компании, уже хранящей файлы "
+"PDF в базе данных,\n"
+"      файлы будут уничтожены.\n"
+"    - После установки этого модуля, PDF больше не будут храниться в базе "
+"данных,\n"
+"      они будут находиться в подкаталоге корня сервера, например "
+"/server/bin/filestore.\n"
 
 #. module: document
 #: help:document.storage,online:0
@@ -534,6 +559,8 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Отметьте, если требуется, чтобы название файла содержало название записи.\n"
+"Если установлено, каталог должен быть ресурсом."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -580,6 +607,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"Вместе с родительской моделью этот идентификатор прикладывает этот каталог к "
+"конкретной записи родительской модели."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -635,6 +664,10 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Если вы поместите объект сюда, то этот шаблон каталога будет появляться ниже "
+"всех этих объектов. Такие каталоги являются \"приложенными\" к конкретной "
+"модели или записи. Не помещайте родительский каталог если вы выбрали "
+"родительскую модель."
 
 #. module: document
 #: view:document.directory:0
@@ -675,7 +708,7 @@ msgstr "Интегрированная система управления до�
 #. module: document
 #: view:document.configuration:0
 msgid "Choose the following Resouces to auto directory configuration."
-msgstr ""
+msgstr "Выбрать следующие Ресурсы для автоматической конфигурации каталогов."
 
 #. module: document
 #: view:ir.attachment:0
@@ -734,7 +767,7 @@ msgstr "Префикс"
 #. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
-msgstr ""
+msgstr "Время последнего размещения"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -879,6 +912,8 @@ msgid ""
 "The name of the field. Note that the prefix \"dctx_\" will be prepended to "
 "what is typed here."
 msgstr ""
+"Название поля. Обратите внимание: написанное здесь будет префиксировано "
+"символами \"dctx_\""
 
 #. module: document
 #: view:report.document.user:0
@@ -973,6 +1008,8 @@ msgid ""
 "These groups, however, do NOT apply to children directories, which must "
 "define their own groups."
 msgstr ""
+"Однако, эти группы не применяются к вложенным директориям, для которых "
+"должны быть созданы собственные группы."
 
 #. module: document
 #: field:document.directory.content.type,mimetype:0
@@ -990,8 +1027,8 @@ msgid "Content Name"
 msgstr "Название содержимого"
 
 #. module: document
-#: code:addons/document/document.py:154
-#: code:addons/document/document.py:222
+#: code:addons/document/document.py:226
+#: code:addons/document/document.py:294
 #, python-format
 msgid "File name must be unique!"
 msgstr "Имя файла должно быть уникальным!"
@@ -1101,21 +1138,3 @@ msgstr "Тип документа"
 
 #~ msgid "Auto Configure"
 #~ msgstr "Авто настройка"
-
-#~ msgid "Files Per Month"
-#~ msgstr "Файлов в месяц"
-
-#~ msgid "All Months"
-#~ msgstr "Все месяцы"
-
-#~ msgid "My files"
-#~ msgstr "Мои файлы"
-
-#~ msgid "My files (All months)"
-#~ msgstr "Мои файлы (Все месяцы)"
-
-#~ msgid "My files (This months)"
-#~ msgstr "Мои файлы (Текущий месяц)"
-
-#~ msgid "All Users files (This month)"
-#~ msgstr "Файлы всех пользователей (Текущий месяц)"

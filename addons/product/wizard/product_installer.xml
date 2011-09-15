@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -7,8 +6,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="product.product_normal_form_view"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="product.product_product_tree_view"/>
             <field name="help">Create a product form for everything you buy or sell. Specify a supplier if the product can be purchased.</field>
         </record>
         
@@ -16,10 +15,7 @@
         <record id="config_wizard_res_product_installer" model="ir.actions.todo">
             <field name="action_id" ref="product_form_config_action"/>
             <field name="category_id" ref="base.category_sales_management_config"/>
-            <field name="target">current</field>
-            <field name="type">normal</field>
             <field name="sequence">20</field>
-            <field name="state">skip</field>
         </record>
         
     </data>
