@@ -19,53 +19,132 @@
 #
 ##############################################################################
 
-import wizard
-import netsvc
-import pooler
+from osv import fields, osv
 import tools
+from tools.translate import _
 
 relation_type=['one2many','many2one','many2many']
 char_type = ['char','text','selection']
 date_type = ['date','datetime']
 int_type = ['float','integer']
 remaining_type = ['binary','boolean','reference']
-
-
-select_field_form = """<?xml version="1.0"?>
-<form string="Select Field to filter">
-    <field name="field_id" nolabel="1">
-    </field>
-</form>
-"""
-select_field_fields = {
-                       "field_id":{'string':'Filter Field','type':'many2one', 'relation':'ir.model.fields','required':True}
-                       }
-set_value_form = """<?xml version="1.0"?>
-<form string="Set Filter Values">
-    <separator colspan="4" string="Filter Values" />
-    <field name="field_id" />
-    <field name="operator" />
-    <field name="value" colspan="4"/>
-    <field name="condition" />
-</form>
-"""
-
 mapping_fields = {'$': 'End With', 'not in': 'Not Contains', '<>': 'Not Equals', 'is': 'Is Empty', 'in': 'Contains', '>': 'Bigger', '=': 'Equals', '<': 'Smaller', 'is not': 'Is Not Empty', '^': 'Start With'}
 
-set_value_fields = {
-                    'field_id':{'type':'many2one', 'relation':'ir.model.fields','string':'Field Name','required':True,'readonly':True},
-                    'operator':{'type':'selection','selection':[],'string':'Operator'},
-                    'value':{'type':'char','string':'Values','size':256},
-                    'condition' : {'type':'selection','string':'Condition', 'selection':[('and','AND'),('or','OR')]}
-                }
-def _set_field_domain(self,cr,uid,data,context):
-    this_model = data.get('model')
-    this_pooler = pooler.get_pool(cr.dbname).get(this_model)
-    this_data = this_pooler.read(cr,uid,data.get('ids'),['model_ids'],context)[0]
-    select_field_fields['field_id']['domain'] = [('model_id','in',this_data.get('model_ids')),('ttype','<>','many2many'),('ttype','<>','one2many')]
-    return {'field_id':False}
+class set_filter_fields(osv.osv_memory):
 
-def set_field_operator(self,field_name,field_type,search_operator,search_value):
+    _name = "set.filter.fields"
+    _description = "Set Filter Fields"
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        res = super(set_filter_fields, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if context.get('active_model') == 'base_report_creator.report':
+            active_id = context.get('active_id')
+            active_model = self.pool.get(context.get('active_model'))
+            this_data = active_model.read(cr, uid, active_id, context=context)
+            res['fields']['field_id']['domain'] = [('model_id','in',this_data.get('model_ids')),('ttype','<>','many2many'),('ttype','<>','one2many')]
+        return res
+
+    def open_form(self, cr, uid, ids, context=None):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        obj_model = self.pool.get('ir.model.data')
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_wiz_set_filter_value_view')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        field_type = self.browse(cr, uid, ids, context=context)[0].field_id.ttype
+        operator = (field_type=='many2one') and 'in' or '='
+        return {
+             'name': _('Set Filter Values'),
+             'context': {
+                 'field_id':data['field_id'][0],
+                 'default_field_id': data['field_id'],
+                 'default_operator': operator,
+                 },
+             'view_type': 'form',
+             'view_mode': 'form',
+             'res_model': 'set.filter.value',
+             'views': [(resource_id, 'form')],
+             'type': 'ir.actions.act_window',
+             'target': 'new',
+             }
+
+    _columns = {
+        'field_id': fields.many2one('ir.model.fields', "Filter Field", required=True),
+   }
+
+set_filter_fields()
+
+class set_filter_value(osv.osv_memory):
+
+    _name = "set.filter.value"
+    _description = "Set Filter Values"
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:
+            context = {}
+        obj_ir_model_fields = self.pool.get('ir.model.fields')
+        res = super(set_filter_value, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        operator_select = []
+        field  = {}
+        if context.get('field_id', False):
+            field_data = obj_ir_model_fields.read(cr,uid,[context['field_id']], context=context)[0]
+            fields_dict = self.pool.get(field_data.get('model')).fields_get(cr,uid,fields=[field_data.get('name')])
+            value_field = res['fields']['value']
+            field_type = field_data.get('ttype',False)
+            for k,v in value_field.items():
+                if k in ('size','relation','type'):
+                    del value_field[k]
+                    
+            if field_type in ('one2many','many2many','many2one'):
+                value_field['type'] = 'many2many'
+                value_field['relation'] = field_data.get('relation')
+                for key, value in res['fields'].items():
+                    if key == 'value':
+                        field[key] = fields.many2many(field_data.get('relation'),'relation_table','first_id','second_id', value['string'])
+                        self._columns.update(field)
+            
+            else:
+                value_field['type'] = field_type
+                for key, value in res['fields'].items():
+                    if key == 'value':
+                        field[key] = fields.char(value['string'],size=256)
+                        self._columns.update(field)
+                if field_type == 'selection':
+                    selection_data = self.pool.get(field_data['model']).fields_get(cr,uid,[field_data['name']])
+                    print "selection_data", selection_data
+                    value_field['selection'] = selection_data.get(field_data['name']).get('selection')
+                    for key, value in res['fields'].items():
+                        if key == 'value':
+                            field[key] = fields.selection(value_field['selection'], value['string'])
+                            self._columns.update(field)
+                             
+            for field in res['fields']:
+                if field == 'operator':
+                    if field_type == 'many2one':
+                        operator_select = [('in', 'Equals'), ('in', 'Contains'),('not in', 'Not Contains'), ('is','Is Empty'), ('is not','Is Not Empty')]
+                    elif field_type in ('char', 'text'):
+                        operator_select = [('=','Equals'),('in','Contains'),('<>','Not Equals'),('not in','Not Contains'),('^','Start With'),('$','End With'),('is','Is Empty'),('is not','Is Not Empty')]
+                    elif field_type in ('date', 'datetime', 'integer', 'float'):                    
+                        operator_select = [('=','Equals'),('<>','Not Equals'), ('is','Is Empty'),('is not','Is Not Empty'), ('<','Smaller'), ('>','Bigger')]
+                    elif field_type in ('boolean', 'selection'):
+                        operator_select = [('=','Equals'),('<>','Not Equals')]
+                    res['fields'][field]['selection'] = operator_select
+              
+        return res
+
+    _columns = {
+        'field_id': fields.many2one('ir.model.fields', "Filter Name", required=True),
+        #'field_id': fields.many2one('ir.model.fields', "Filter Name", required=True, readonly=True), To do fix
+        'operator': fields.selection(selection=[], string='Operator'),
+        'value': fields.char('Values', size=256),
+        'condition' : fields.selection([('and','AND'),('or','OR')], 'Condition'),
+    }
+
+    _defaults = {
+         'condition': 'and',
+     }
+    
+    def set_field_operator(self, field_name, field_type, search_operator, search_value):
         field_search = [field_name,search_operator,search_value]
         if search_operator == '=':
             if field_type=='many2one':
@@ -112,110 +191,40 @@ def set_field_operator(self,field_name,field_type,search_operator,search_value):
             elif field_type not in int_type:
                 return False
         return field_search
-def _set_filter_value(self, cr, uid, data, context):
-    form_data = data['form']
-    value_data = form_data.get('value',False)
-    value_field = set_value_fields.get('value')
-    field_type = value_field.get('type',False)
-    field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[form_data.get('field_id')],fields=['ttype','relation','model_id','name','field_description'])[0]
-    model_name = pooler.get_pool(cr.dbname).get('ir.model').browse(cr, uid, field_data['model_id'][0]).model
-    model_pool = pooler.get_pool(cr.dbname).get(model_name)
-    table_name = model_pool._table
-    model_name = model_pool._description
-
-    if field_type:
-        if field_type == 'boolean':
-            if value_data == 1:
-                value_data = 'true'
+    
+    def set_filter_value(self, cr, uid, ids, context=None):
+        obj_ir_model_fields = self.pool.get('ir.model.fields')
+        obj_ir_model = self.pool.get('ir.model')
+        form_data = self.read(cr, uid, ids, [], context=context)[0]
+        value_data = form_data.get('value',False)
+        field_type = self.browse(cr, uid, ids, context=context)[0].field_id.ttype
+        field_data = obj_ir_model_fields.read(cr,uid,[form_data.get('field_id')[0]],fields=['ttype','relation','model_id','name', 'field_description'],context=context)[0]
+        model_name = obj_ir_model.browse(cr, uid, field_data['model_id'][0], context=context).model
+        model_pool = self.pool.get(model_name)
+        table_name = model_pool._table
+        model_name = model_pool._description
+        if field_type:
+            if field_type == 'boolean':
+                if value_data == 1:
+                    value_data = 'true'
+                else:
+                    value_data = 'false'
+    
+            if field_type in ['float','integer']:
+                value_data =  value_data or 0
+            if field_type == 'many2many' and value_data and len(value_data):
+                fields_list = self.set_field_operator(table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
             else:
-                value_data = 'false'
+                fields_list = self.set_field_operator(table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
+            if fields_list:
+                create_dict = {
+                               'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + tools.ustr(fields_list[2]) + " ",
+                               'expression':' '.join(map(tools.ustr,fields_list)),
+                               'report_id': context.get('active_id',False),
+                               'condition' : form_data['condition']
+                               }
+                self.pool.get('base_report_creator.report.filter').create(cr, uid, create_dict, context)
+        return {'type': 'ir.actions.act_window_close'}
 
-        if field_type in ['float','integer']:
-            value_data =  value_data or 0
-
-        if field_type == 'many2many' and value_data and len(value_data):
-            fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data[0][2])
-        else:
-            fields_list = set_field_operator(self,table_name+"."+field_data['name'],field_data['ttype'],form_data['operator'],value_data)
-        if fields_list:
-            create_dict = {
-                           'name':model_name + "/" +field_data['field_description'] +" "+ mapping_fields[form_data['operator']] + " " + tools.ustr(fields_list[2]) + " ",
-                           'expression':' '.join(map(tools.ustr,fields_list)),
-                           'report_id':data['id'],
-                           'condition' : form_data['condition']
-                           }
-            pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict,context)
-    return {'type': 'ir.actions.act_window_close'}
-
-def _set_form_value(self, cr, uid, data, context):
-    field_id = data['form']['field_id']
-    field_data = pooler.get_pool(cr.dbname).get('ir.model.fields').read(cr,uid,[field_id])[0]
-    fields_dict = pooler.get_pool(cr.dbname).get(field_data.get('model')).fields_get(cr,uid,fields=[field_data.get('name')])
-    value_field = set_value_fields.get('value')
-    for k,v in value_field.items():
-        if k in ('size','relation','type'):
-            del value_field[k]
-    field_type = field_data.get('ttype',False)
-    if field_type in ('one2many','many2many','many2one'):
-        value_field['type'] = 'many2many'
-        value_field['relation'] = field_data.get('relation')
-    else:
-        value_field['type'] = field_type
-        if field_type == 'selection':
-            selection_data = pooler.get_pool(cr.dbname).get(field_data['model']).fields_get(cr,uid,[field_data['name']])
-            value_field['selection'] = selection_data.get(field_data['name']).get('selection')
-    operator = (field_type=='many2one') and 'in' or '='
-    ret_dict={'field_id':field_id,'operator':operator, 'condition':'and','value':False}
-    return ret_dict
-
-def _set_operator(self, cr, uid, data, context):
-    field = pooler.get_pool(cr.dbname).get('ir.model.fields').browse(cr, uid, data['form']['field_id'])
-    operator = set_value_fields['operator']['selection']
-    while operator:
-        operator.pop(operator.__len__()-1)
-
-    if field.ttype == 'many2one':
-        operator.append(('in','Equals'))
-        operator.append(('in','Contains'))
-        operator.append(('not in','Not Contains'))
-        operator.append(('is','Is Empty'))
-        operator.append(('is not','Is Not Empty'))
-    elif field.ttype in ('char', 'text'):
-        operator.append(('=','Equals'))
-        operator.append(('in','Contains'))
-        operator.append(('<>','Not Equals'))
-        operator.append(('not in','Not Contains'))
-        operator.append(('^','Start With'))
-        operator.append(('$','End With'))
-        operator.append(('is','Is Empty'))
-        operator.append(('is not','Is Not Empty'))
-    elif field.ttype in ('date', 'datetime', 'integer', 'float'):
-        operator.append(('=','Equals'))
-        operator.append(('<>','Not Equals'))
-        operator.append(('is','Is Empty'))
-        operator.append(('is not','Is Not Empty'))
-        operator.append(('<','Smaller'))
-        operator.append(('>','Bigger'))
-    elif field.ttype in ('boolean', 'selection'):
-        operator.append(('=','Equals'))
-        operator.append(('<>','Not Equals'))
-    return {'type': 'ir.actions.act_window_close'}
-
-class set_filter_fields(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_set_field_domain],
-            'result': {'type':'form', 'arch':select_field_form, 'fields':select_field_fields, 'state':[('end','Cancel'),('set_value_select_field','Continue')]}
-        },
-        'set_value_select_field':{
-            'actions': [_set_form_value, _set_operator],
-            'result': {'type' : 'form', 'arch' : set_value_form, 'fields' : set_value_fields, 'state' : [('end', 'Cancel'),('set_value', 'Confirm Filter') ]}
-        },
-        'set_value':{
-            'actions': [_set_filter_value],
-            'result': {'type': 'state', 'state': 'end'}
-        }
-    }
-set_filter_fields("base_report_creator.report_filter.fields")
+set_filter_value()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
