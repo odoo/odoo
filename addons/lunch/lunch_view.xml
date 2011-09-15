@@ -49,7 +49,7 @@
             <field name="model">lunch.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirmed')" string="Order">
+                <tree colors="blue:state == 'draft';black:state == 'confirmed'" string="Order">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="product"/>

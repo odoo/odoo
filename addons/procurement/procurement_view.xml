@@ -11,7 +11,7 @@
             <field name="model">procurement.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -30,7 +30,7 @@
             <field name="type">tree</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
