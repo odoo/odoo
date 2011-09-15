@@ -382,5 +382,6 @@ class email_template(osv.osv):
             if context.has_key('default_type'):
                 del context['default_type']
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context))
+        return message_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

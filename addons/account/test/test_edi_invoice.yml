@@ -123,13 +123,12 @@
 -
   !python {model: account.invoice}: |
     
-    invoice_old = self.browse(cr, uid, ref("customer_invoice_test"))
-    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, invoice_old.company_id.name)
+    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, "Thomson pvt. ltd.")
     assert new_partner_id, 'Partner is not created of Supplier'
     ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',"SAJ/2011/002")])
     assert ids, 'Invoice does not have created of party'
     invoice_new = self.browse(cr, uid, ids[0])
-    assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"
+    assert invoice_new.reference == "SAJ/2011/002", "internal number is not stored in reference"
     assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected" 

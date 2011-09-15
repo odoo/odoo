@@ -3,11 +3,11 @@
 	<data>
 		<!--Export edi document  -->
 		<record id="ir_actions_server_edi_sale" model="ir.actions.server">
-			<field name="code">context.update({'edi_web_url_view': '%s/edi/view_edi?db=%s&amp;token=%s' %(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),cr.dbname, self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0])})
-if not object.partner_id.opt_out: self.pool.get('email.template').generate_mail(cr,
+			<field name="code">context.update({'edi_web_sale_url_view': '%s/edi/view_edi?db=%s&amp;token=%s' %(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),cr.dbname, self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0])})
+if not object.partner_id.opt_out: self.pool.get('email.template').send_email(cr,
                       uid,
                       self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')[1],
-                      [object.id],
+                      object.id,
                       context=context)</field>
 			<field eval="7" name="sequence"/>
 			<field name="state">code</field>
@@ -26,16 +26,18 @@ if not object.partner_id.opt_out: self.pool.get('email.template').generate_mail(
         
 		<!--Email template -->
 		<record id="email_template_edi_sale" model="email.template">
-			<field name="def_subject">${object.company_id.name} - Sale Order ${object.name}</field>
-			<field name="def_to">${object.partner_invoice_id.email}</field>
-			<field name="object_name" ref="sale.model_sale_order"/>
-            <field name="use_sign">True</field>
-			<field name="def_body_html">
+            <field name="name">Mail Template of Sale Order For EDI Document</field>
+			<field name="reply_to">${object.user_id.user_email or ''}</field>
+            <field name="email_from">${object.user_id.user_email or ''}</field>
+			<field name="subject">${object.company_id.name} - Sale Order ${object.name}</field>
+			<field name="email_to">${object.partner_invoice_id.email}</field>
+			<field name="model_id" ref="sale.model_sale_order"/>
+			<field name="body_html">
 &lt;div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); "&gt;
 
 &lt;p&gt;  Hello ${object.partner_invoice_id.name and ' ' or ''},&lt;/p&gt;  
 &lt;p&gt;  You can click on the following link to preview, print and pay invoice: &lt;br/&gt;
-    &lt;a href="${object._context.get('edi_web_url_view')}"&gt;${object._context.get('edi_web_url_view')} &lt;/a&gt;
+    &lt;a href="${object._context.get('edi_web_sale_url_view')}"&gt;${object._context.get('edi_web_sale_url_view')} &lt;/a&gt;
 &lt;/p&gt;  
 
 
@@ -45,12 +47,12 @@ ${object.company_id.paypal_account and "&lt;p&gt;It is possible to pay with Payp
 
 &lt;p&gt;  If you have any question, do not hesitate to reply directly to this e-mail.&lt;/p&gt;  &lt;p&gt;  Thank you for choosing OpenERP!&lt;br /&gt;  &lt;/p&gt;  &lt;div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-image: url(http://www.openerp.com/sites/default/files/red_gradient_bg.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; "&gt;  &lt;h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); "&gt;  &lt;strong&gt;${object.company_id.name}&lt;/strong&gt;&lt;/h3&gt;  &lt;/div&gt;  &lt;div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); "&gt;    &lt;div&gt;  Contact:&lt;a href="mailto:${object.user_id.user_email or ''}?subject=Order%20${object.name}"&gt;${object.user_id.name}&lt;/a&gt;&lt;/div&gt;  &lt;div&gt;  &lt;/div&gt;  &lt;/div&gt; &lt;/div&gt; &lt;p&gt;  &lt;/p&gt;
             </field>
-			<field name="def_body_text">
+			<field name="body_text">
 Hello ${object.partner_invoice_id.name and ' ' or ''}, 
 
 You can click on the following link to preview, print and pay invoice:
 
-    ${object._context.get('edi_web_url_view') or 'n/a'} 
+    ${object._context.get('edi_web_sale_url_view') or 'n/a'} 
 
 Order Number: *${object.name}* 
 Amount: *${object.amount_total}* 
@@ -67,10 +69,6 @@ Thank you for choosing our service!
 ${object.company_id.name}
 Contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
 			</field>
-			<field name="template_language">mako</field>
-			<field name="name">Mail Template of Sale Order For EDI Document</field>
-			<field name="model_int_name">sale.order</field>
-			<field name="reply_to">${object.user_id.user_email or ''}</field>
 		</record>
 	</data>
 </openerp>
