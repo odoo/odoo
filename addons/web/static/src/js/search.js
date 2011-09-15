@@ -2,6 +2,7 @@ openerp.web.search = function(openerp) {
 var QWeb = openerp.web.qweb;
 
 openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
+    template: "EmptyComponent",
     /**
      * @constructs openerp.web.SearchView
      * @extends openerp.web.Widget
@@ -12,8 +13,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param view_id
      * @param defaults
      */
-    init: function(parent, element_id, dataset, view_id, defaults) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, defaults) {
+        this._super(parent);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -28,6 +29,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.ready = $.Deferred();
     },
     start: function() {
+        this._super();
         this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
         return this.ready.promise();
     },
