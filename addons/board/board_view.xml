@@ -1,67 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-<!--Board Note Search View  -->
-        <record id="view_board_note_search" model="ir.ui.view">
-            <field name="name">board.note.search</field>
-            <field name="model">board.note</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Notes">
-                    <group col="10" colspan="4">
-                        <field name="name" string="Subject"/>
-                        <field name="type" string="Note Type"/>
-                        <field name="date" string="Date"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" colspan="4" string="Group By...">
-                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
 
-<!--Board Note Tree View  -->
-
-        <record id="view_board_note_tree" model="ir.ui.view">
-            <field name="name">board.note.tree</field>
-            <field name="model">board.note</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Notes">
-                    <field name="name"/>
-                    <field name="user_id"/>
-                </tree>
-            </field>
-        </record>
-
-<!--Board Note Form View  -->
-
-        <record id="view_board_note_form" model="ir.ui.view">
-            <field name="name">board.note.form</field>
-            <field name="model">board.note</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Note">
-                    <field name="name" select="1"/>
-                    <field name="type" select="1" required="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="date" select="1"/>
-                    <separator string="Notes"  colspan="4"/>
-                    <field colspan="4" name="note" nolabel="1"/>
-                </form>
-            </field>
-        </record>
-
-<!-- Action for Publish note Form -->
-
-        <record id="action_view_board_note_form" model="ir.actions.act_window">
-            <field name="name">Publish a note</field>
-            <field name="res_model">board.note</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="search_view_id" ref="view_board_note_search"/>
-        </record>
+      <record id="action_application_tiles" model="ir.actions.client">
+        <field name="name">Applications Tiles</field>
+        <field name="tag">board.home.applications</field>
+      </record>
+      <record id="action_res_widgets_tweets" model="ir.actions.client">
+        <field name="name">Tweets Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.openerp_favorites_twitter_widget')}"/>
+      </record>
+      <record id="action_res_widgets_events" model="ir.actions.client">
+        <field name="name">Events Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.events_widget')}"/>
+      </record>
+      <record id="action_res_widgets_facebook" model="ir.actions.client">
+        <field name="name">Facebook Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.facebook_widget')}"/>
+      </record>
+      <record id="action_res_widgets_note" model="ir.actions.client">
+        <field name="name">Note Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.note_widget')}"/>
+      </record>
+      <record id="action_res_widgets_map" model="ir.actions.client">
+        <field name="name">Google Maps Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.google_maps_widget')}"/>
+      </record>
+      <record id="action_res_widgets_currency_converter" model="ir.actions.client">
+        <field name="name">Currency Converter Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.currency_converter_widget')}"/>
+      </record>
+      <record id="view_board_homepage" model="ir.ui.view">
+        <field name="name">Homepage Board</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="">
+            <hpaned>
+              <child1>
+                <action name="%(action_application_tiles)d"/>
+              </child1>
+              <child2>
+                <action name="%(action_res_widgets_tweets)d"/>
+                <action name="%(action_res_widgets_events)d"/>
+              </child2>
+            </hpaned>
+          </form>
+        </field>
+      </record>
+      <record id="homepage_action" model="ir.actions.act_window">
+        <field name="name">Home Page</field>
+        <field name="res_model">board.board</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_board_homepage"/>
+      </record>
 
 <!--  Board Tree View  -->
 
@@ -85,11 +84,14 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                    <field name="name"/>
-                    <button colspan="2"
-                        name="%(action_board_menu_create)d"
-                        string="Create Menu" type="action"
-                        icon="gtk-justify-fill" />
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="view_id"/>
+                        <button colspan="2"
+                            name="%(action_board_menu_create)d"
+                            string="Create Menu" type="action"
+                            icon="gtk-justify-fill" />
+                    </group>
                     <field colspan="4" name="line_ids" nolabel="1">
                         <tree string="Dashboard View">
                             <field name="name"/>
@@ -136,11 +138,6 @@
         <menuitem
             action="action_view_board_list_form"
             id="menu_view_board_form" parent="base.reporting_menu" sequence="1"/>
-
-        <menuitem action="action_view_board_note_form"
-            id="menu_view_board_note_form"
-            parent="base.reporting_menu"
-            sequence="3" groups="base.group_system" />
 
         <act_window context="{'view': active_id}" id="dashboard_open"
             multi="True" name="Open Dashboard" res_model="board.board"

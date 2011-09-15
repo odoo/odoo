@@ -24,6 +24,7 @@
     'name': 'Display Warning Messages',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 Module to trigger warnings in OpenERP objects.
 ==============================================

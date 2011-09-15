@@ -10,7 +10,7 @@
             <field name="model">mrp.production.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-               <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('done','cancel') " string="Production">
+               <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('done','cancel') " string="Production">
                       <field name="date_planned"/>
                       <field name="bom_id" invisible="1"/>
                       <field name="product_id" invisible="1"/>

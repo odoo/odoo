@@ -101,15 +101,7 @@ class stock_change_product_qty(osv.osv_memory):
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
 
-        return {
-            'domain': "[('id','=', %s)]" % (inventory_id),
-            'name' : _('Physical Inventories'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'stock.inventory',
-            'context': context,
-            'type': 'ir.actions.act_window',
-        }
+        return {}
 
 stock_change_product_qty()
 

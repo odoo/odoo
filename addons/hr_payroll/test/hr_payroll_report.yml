@@ -1,13 +1,6 @@
 -
   In order to test the PDF reports defined on HR Payroll, we will print Employees' Salary Structure
 -
-  !python {model: hr.employee}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.salary.structure').create(cr, uid, [ref('hr_payroll.hr_employee_bonamy0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-salary_structure.'+format), 'wb+').write(data)
-
--
   Print HR Payslip
 -
   !python {model: hr.payslip}: |
@@ -15,27 +8,3 @@
     (data, format) = netsvc.LocalService('report.payslip.pdf').create(cr, uid, [ref('hr_payroll.hr_payslip_salaryslipofbonamyforjune0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip_report.'+format), 'wb+').write(data)
-
--
-  Print Employee Salary Statement through wizard
--
-  !python {model: hr.payslip}: |
-    import time
-    ctx={}
-    ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
-    data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_hr_payroll_employees_detail',wiz_data=data_dict, context=ctx, our_module='hr_payroll')
-
--
-  Print Salary Register through wizard
--
-  !python {model: hr.payslip}: |
-    import time
-    ctx={}
-    ctx.update({'model': 'hr.payslip','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')]})
-    data_dict = {'employee_ids': [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3'),ref('hr_payroll.hr_employee_bonamy0')])], 'date_from': time.strftime('%Y-01-01'), 'date_to': time.strftime('%Y-%m-%d')}
-    from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_hr_payroll_year_salary',wiz_data=data_dict, context=ctx, our_module='hr_payroll')
-
-

@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <openerp>
   <data>
 
@@ -21,16 +20,14 @@
               </xpath>
               <xpath expr="//button[@string='Install Modules']" position="replace">
                 <button colspan="1" icon="gtk-close" special="cancel" string="_Close" invisible="not context.get('menu',False)"/>
-                <button name="action_next" icon="gtk-go-forward"
-                        type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
+                <button name="action_next" icon="gtk-go-forward" type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
               </xpath>
               <xpath expr="//button[@string='Skip']" position="replace">
-                <button name="action_skip" icon="gtk-jump-to" special="cancel"
-                        type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
+                <button name="action_skip" icon="gtk-jump-to" special="cancel" type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
               </xpath>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                  <attribute name='string'></attribute>
-                  <attribute name='rowspan'>15</attribute>
+              <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                  <attribute name="string"/>
+                  <attribute name="rowspan">15</attribute>
                 </xpath>
                 <group colspan="8" position="replace">
               <group colspan="8" height="450" width="750">
@@ -56,8 +53,9 @@
 
     <record id="report_designer_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_report_designer_installer"/>
+        <field name="category_id" ref="base.category_tools_customization_config"/>
         <field name="sequence">3</field>
-        <field name="restart">always</field>
+        <field name="type">automatic</field>
     </record>
 
     <record id="action_report_designer_wizard" model="ir.actions.act_window">
@@ -71,11 +69,7 @@
       <field name="context">{'menu':True}</field> 
     </record>
 
-    <menuitem parent="base.reporting_menu" name="Report Designer"
-        action="action_report_designer_wizard"
-        id="menu_action_report_designer_wizard" sequence="70" />
+    <menuitem parent="base.reporting_menu" name="Report Designer" action="action_report_designer_wizard" id="menu_action_report_designer_wizard" sequence="70"/>
 
   </data>
 </openerp>
-
-

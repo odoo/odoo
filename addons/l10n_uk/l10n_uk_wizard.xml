@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -7,8 +6,8 @@
             <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
     This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
             <field name="action_id" ref="account.action_wizard_multi_chart"/>
-            <field name="state">open</field>
-            <field name="restart">onskip</field>
+            <field name="type">automatic</field>
+            <field name="category_id" ref="account.category_accounting_configuration"/>
         </record>
 
     </data>

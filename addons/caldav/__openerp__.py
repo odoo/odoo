@@ -23,6 +23,7 @@
 {
     "name" : "Share Calendar using CalDAV",
     "version" : "1.1",
+    'complexity': "normal",
     "depends" : [
                     "base",
                     "document_webdav",
