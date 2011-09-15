@@ -69,6 +69,7 @@ class project_scrum_email(osv.osv_memory):
         if context is None:
             context = {}
 
+        mail_message = self.pool.get('mail.message')
         active_id = context.get('active_id', False)
         scrum_meeting_pool = self.pool.get('project.scrum.meeting')
         user_pool = self.pool.get('res.users')
@@ -91,7 +92,7 @@ class project_scrum_email(osv.osv_memory):
         body += "\n%s\n" %_("Task for Today")
         body += "_______________________ \n"
         body += "\n%s\n" %(meeting.question_today or _('None'))
-        body += "\n%s\n" % _('Blocking points encountered:') 
+        body += "\n%s\n" % _('Blocking points encountered:')
         body += "_______________________ \n"
         body += "\n%s\n" %(meeting.question_blocks or _('None'))
         body += "\n%s\n%s" %(_('Thank you,'), user.name)
@@ -100,8 +101,7 @@ class project_scrum_email(osv.osv_memory):
         if data.scrum_master_email == data.product_owner_email:
             data.product_owner_email = False
         if data.scrum_master_email:
-            tools.email_send(user_email, [data.scrum_master_email], data.subject, body, reply_to=user_email)
+            mail_message.schedule_with_attach(cr, uid, user_email, [data.scrum_master_email], data.subject, body, reply_to=user_email, context=context)
         if data.product_owner_email:
-            tools.email_send(user_email, [data.product_owner_email], data.subject, body, reply_to=user_email)
+            mail_message.schedule_with_attach(cr, uid, user_email, [data.product_owner_email], data.subject, body, reply_to=user_email, context=context)
         return {'type': 'ir.actions.act_window_close'}
-project_scrum_email()

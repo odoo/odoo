@@ -7,7 +7,7 @@
             <field eval="&quot;&quot;&quot;ir.actions.server&quot;&quot;&quot;" name="type"/>
             <field name="model_id" ref="model_hr_timesheet_current_open"/>
             <field eval="[(6,0,[])]" name="child_ids"/>
-            <field eval="&quot;&quot;&quot;action = self.pool.get('hr.timesheet.current.open').open_timesheet(cr, uid, object.id, context)&quot;&quot;&quot;" name="code"/>
+            <field eval="&quot;&quot;&quot;action = pool.get('hr.timesheet.current.open').open_timesheet(cr, uid, None, context)&quot;&quot;&quot;" name="code"/>
             <field eval="&quot;&quot;&quot;True&quot;&quot;&quot;" name="condition"/>
             <field eval="&quot;&quot;&quot;My Timesheet&quot;&quot;&quot;" name="name"/>
         </record>
