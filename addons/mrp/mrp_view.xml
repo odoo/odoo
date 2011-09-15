@@ -229,7 +229,7 @@
                     <separator colspan="4" string="General Information"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence" select="1"/>
-                    <field name="workcenter_id" select="1" widget="selection"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr" widget="float_time"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -304,7 +304,7 @@
             <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help">Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
         </record>
-        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
+        <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="1"/>
 
         <!--
           Bill of Materials
@@ -660,7 +660,7 @@
 
                             <field colspan="2" name="move_lines" nolabel="1" widget="one2many_list"
                                 mode="tree,form" height="275" domain="[('state','&lt;&gt;', ('done', 'cancel'))]">
-                                <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
+                                <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
@@ -684,7 +684,7 @@
 
                             <field colspan="2" name="move_lines2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel') " string="Consumed Products" editable="bottom">
+                                   <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
@@ -731,7 +731,7 @@
 
                             <field colspan="2" name="move_created_ids2" nolabel="1"  domain="[('state','in', ('done', 'cancel'))]"
                                        widget="one2many_list" mode="tree,form" height="275">
-                                   <tree colors="red:scrapped==True;blue:state in('draft');black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
+                                   <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
@@ -972,6 +972,15 @@
                </data>
             </field>
         </record>
+        
+        <act_window
+            context="{'search_default_product_id': [active_id]}"
+            id="act_product_manufacturing_open"
+            name="Manufacturing Orders"
+            view_id="mrp_production_tree_view"
+            res_model="mrp.production"
+            src_model="product.product"/>
+            
         <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
@@ -1000,7 +1009,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help">Work Centers allow you to create and manage manufacturing units consisting of one or more persons and/or machines that can be considered as a unit for capacity and planning forecasting.</field>
+            <field name="help">Work Centers allow you to create and manage manufacturing units.  They consist of workers and/or machines, which are considered as units for capacity and planning forecast.  Keep in mind that the working time and resource leave are not taken into account in the time computation of the work center.</field>
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>

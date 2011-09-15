@@ -20,53 +20,11 @@
 ##############################################################################
 
 from xml.dom import minidom
-from osv.osv import osv_pool
 from osv import fields,osv
 import pooler
 import string
 import tools
 
-class recording_objects_proxy(osv_pool):
-    def execute(self, *args, **argv):
-        if args[3] == 'create':
-            _old_args = args[4].copy()
-        elif args[3] == 'write':
-            _old_args = args[5].copy()
-        elif len(args) >= 5 and isinstance(args[4], dict):
-            _old_args = args[4].copy()
-        elif len(args) > 5 and args[3] != 'write' and isinstance(args[5], dict):
-            _old_args = args[5].copy()
-        else:
-            _old_args = None
-        res = super(recording_objects_proxy, self).execute(*args, **argv)
-        pool = pooler.get_pool(args[0])
-        mod = pool.get('ir.module.record')
-
-        if mod and mod.recording:
-            if args[3] not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink'):
-                if _old_args is not None:
-                    if args[3] != 'write' and args[3] != 'create' and len(args) > 5 and isinstance(args[5], dict):
-                       args=list(args) 
-                       args[5]=_old_args
-                       args=tuple(args)
-                       mod.recording_data.append(('osv_memory_action', args, argv ,None))
-                    else:
-                       if args[3] == 'create':
-                           args[4].update(_old_args)
-                       elif args[3] == 'write':
-                           args[5].update(_old_args)
-                       mod.recording_data.append(('query', args, argv,res))
-        return res
-
-    def exec_workflow(self, *args, **argv):
-        res = super(recording_objects_proxy, self).exec_workflow(*args, **argv)
-        pool = pooler.get_pool(args[0])
-        mod = pool.get('ir.module.record')
-        if mod and mod.recording:
-            mod.recording_data.append(('workflow', args, argv))
-        return res
-
-recording_objects_proxy()
 
 class xElement(minidom.Element):
     """dom.Element with compact print

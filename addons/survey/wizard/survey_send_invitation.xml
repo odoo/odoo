@@ -3,7 +3,7 @@
 	<data>
 	
 		<!-- Survey send invitation Form View -->
-				 
+
 		<record id="view_survey_send_invitation" model="ir.ui.view">
 			<field name="name">Send Invitation</field>
 			<field name="model">survey.send.invitation</field>
@@ -11,21 +11,21 @@
 			<field name="arch" type="xml">
 				<form string="Send Invitation">
 				    <separator string="Select Partner" colspan="4"/>
-				    <field name="partner_ids" nolabel="1"  colspan="4"/> 
+				    <field name="partner_ids" nolabel="1"  colspan="4"/>
 				    <separator colspan="4" string="Send mail for new user"/>
 			        <field name="send_mail" nolabel="1"/>
 			        <field name="mail_subject" colspan="3"/>
 			        <separator colspan="4" string="Send reminder for existing user"/>
 			        <field name="send_mail_existing" nolabel="1"/>
-			        <field name="mail_subject_existing" colspan="3"/>    
+			        <field name="mail_subject_existing" colspan="3"/>
 				    <separator colspan="4"/>
 			        <field name="mail_from" colspan="4"/>
 				    <separator string="Message" colspan="4"/>
 				    <field name="mail" nolabel="1" colspan="4"/>
 					<separator colspan="4" />
 					<label align="0.0" colspan="2" string="" />
-					<button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-					<button colspan="1" icon="gtk-go-forward" name="action_send" string="Send" type="object"/>
+					<button colspan="1" icon="gtk-cancel" special="cancel" string="_Cancel"/>
+					<button colspan="1" icon="gtk-go-forward" name="action_send" string="_Send" type="object"/>
 				</form>
 			</field>
 		</record>
@@ -46,7 +46,7 @@
     		view_mode="form" target="new" view_type="form" />
 
 		<!-- Survey send invitation Display Log Form View -->
-				 
+
 		<record id="view_survey_send_invitation_log" model="ir.ui.view">
 			<field name="name">survey send invitation log</field>
 			<field name="model">survey.send.invitation.log</field>
@@ -58,7 +58,7 @@
     				<separator string="" colspan="4"/>
     				<group col="4" colspan="4">
 						<label align="0.0" colspan="3" string="" />
-						<button colspan="1" icon="gtk-ok" special="cancel" string="Ok"/>
+						<button colspan="1" icon="gtk-ok" special="cancel" string="_Ok"/>
 					</group>
 				</form>
 			</field>

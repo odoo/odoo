@@ -66,7 +66,7 @@ class account_analytic_account(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
-        'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
+        'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Reinvoice Costs',
             help="Fill this field if you plan to automatically generate invoices based " \

@@ -1,59 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
 
     <record id="view_hr_installer" model="ir.ui.view">
       <field name="name">hr.installer.view</field>
-      <field name="model">hr.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-            <form position="attributes">
-                <attribute name="string">Human Resources Application Configuration</attribute>
-            </form>
-            <separator string="title" position="attributes">
-                <attribute name="string">Configure Your Human Resources Application</attribute>
-            </separator>
-            <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                <attribute name='string'></attribute>
-            </xpath>
-            <xpath expr="//label[@string='description']" position="attributes">
-                <attribute name="string">You can enhance the base HR Application by installing few HR-related functionalities.</attribute>
-            </xpath>
-          <group colspan="8">
+           <xpath expr="//group[@name='hr']" position="replace">
+            <newline/>
+            <separator string="Human Resources Features" colspan="4"/>
             <field name="hr_holidays"/>
             <field name="hr_expense"/>
             <field name="hr_recruitment"/>
             <field name="hr_timesheet_sheet"/>
             <field name="hr_contract"/>
             <field name="hr_attendance"/>
-            <field name="hr_evaluation" groups="base.group_extended"/>
-            <field name="hr_payroll" groups="base.group_extended"/>
+            <field name="hr_evaluation"/>
+            <field name="hr_payroll"/>
             <field name="hr_payroll_account" groups="base.group_extended"/>
-          </group>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-              <attribute name="string">Configure</attribute>
-          </xpath>
+           </xpath>
         </data>
       </field>
     </record>
-
-    <record id="action_hr_installer" model="ir.actions.act_window">
-      <field name="name">Human Resources Application Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">hr.installer</field>
-      <field name="view_id" ref="view_hr_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
+    
+    <record id="category_hr_management_config" model="ir.actions.todo.category">
+        <field name="name">HR Management</field>
+        <field name="sequence">5</field>
     </record>
 
-    <record id="hr_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_hr_installer"/>
-      <field name="sequence">3</field>
-            <field name="restart">always</field>
+    <!-- employee configure  action -->
+    <record id="action_create_hr_employee_installer" model="ir.actions.act_window">
+        <field name="name">Create your employees</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_employee_form"/>
     </record>
+
+    <record id="config_wizard_action_create_hr_employee_installer" model="ir.actions.todo">
+        <field name="action_id" ref="action_create_hr_employee_installer"/>
+        <field name="category_id" ref="category_hr_management_config"/>
+    </record>            
 
   </data>
 </openerp>

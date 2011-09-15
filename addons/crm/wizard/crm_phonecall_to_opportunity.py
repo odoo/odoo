@@ -31,43 +31,14 @@ class crm_phonecall2opportunity(osv.osv_memory):
     def action_cancel(self, cr, uid, ids, context=None):
         """
         Closes Phonecall to Opportunity form
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity's IDs
-        @param context: A standard dictionary for contextual values
         """
 
         return {'type':'ir.actions.act_window_close'}
-
-    def view_init(self, cr, uid, fields, context=None):
-        """
-        This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        """
-        phonecall_obj = self.pool.get('crm.phonecall')
-        record_id = context and context.get('active_id', False) or False
-        case = phonecall_obj.browse(cr, uid, record_id, context=context)
-        if case.state in ['done', 'cancel']:
-                raise osv.except_osv(_("Warning"), _("Closed/Cancelled Phone \
-Call can not be converted into Opportunity"))
 
 
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts Phonecall to Opportunity and opens Phonecall view
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Opportunity form
         """
         record_id = context and context.get('active_id', False) or False
         if record_id:

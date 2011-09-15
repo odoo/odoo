@@ -171,7 +171,7 @@ class account_followup_print_all(osv.osv_memory):
             "SELECT * "\
             "FROM account_followup_followup_line "\
             "WHERE followup_id=%s "\
-            "ORDER BY sequence", (fup_id,))
+            "ORDER BY delay", (fup_id,))
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])
@@ -205,6 +205,7 @@ class account_followup_print_all(osv.osv_memory):
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
         line_obj = self.pool.get('account_followup.stat')
+        mail_message = self.pool.get('mail.message')
 
         if context is None:
             context = {}
@@ -277,7 +278,7 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        tools.email_send(src, dest, sub, body)
+                        mail_message.schedule_with_attach(cr, uid, src, dest, sub, body, context=context)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )

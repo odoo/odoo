@@ -37,8 +37,12 @@ class CompanyLDAP(osv.osv):
             ondelete='cascade'),
         'ldap_server': fields.char('LDAP Server address', size=64, required=True),
         'ldap_server_port': fields.integer('LDAP Server port', required=True),
-        'ldap_binddn': fields.char('LDAP binddn', size=64, required=True),
-        'ldap_password': fields.char('LDAP password', size=64, required=True),
+        'ldap_binddn': fields.char('LDAP binddn', size=64,
+            help=("The user account on the LDAP server that is used to query "
+                  "the directory. Leave empty to connect anonymously.")),
+        'ldap_password': fields.char('LDAP password', size=64,
+            help=("The password of the user account on the LDAP server that is "
+                  "used to query the directory.")),
         'ldap_filter': fields.char('LDAP filter', size=64, required=True),
         'ldap_base': fields.char('LDAP base', size=64, required=True),
         'user': fields.many2one('res.users', 'Model User',
@@ -66,6 +70,11 @@ res_company()
 class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
+
+        if not password:
+            # empty passwords are disallowed for obvious security reasons
+            return False
+
         ret = super(users,self).login(db, login, password)
         if ret:
             return ret
@@ -77,12 +86,15 @@ class users(osv.osv):
             SELECT id, company, ldap_server, ldap_server_port, ldap_binddn, ldap_password,
                    ldap_filter, ldap_base, "user", create_user
             FROM res_company_ldap
-            WHERE ldap_server != '' and ldap_binddn != '' ORDER BY sequence""")
+            WHERE ldap_server != '' ORDER BY sequence""")
         for res_company_ldap in cr.dictfetchall():
             logger.debug(res_company_ldap)
             try:
                 l = ldap.open(res_company_ldap['ldap_server'], res_company_ldap['ldap_server_port'])
-                if l.simple_bind_s(res_company_ldap['ldap_binddn'], res_company_ldap['ldap_password']):
+                # An empty binddn means anonymous auth, so it should be replaced w/ an empty string
+                # See LDAP RFC 4513, Section 5.1.1
+                if l.simple_bind_s(res_company_ldap['ldap_binddn'] or '',
+                                   res_company_ldap['ldap_password'] or ''):
                     base = res_company_ldap['ldap_base']
                     scope = ldap.SCOPE_SUBTREE
                     filter = filter_format(res_company_ldap['ldap_filter'], (login,))
@@ -150,8 +162,10 @@ class users(osv.osv):
             for res_company_ldap in user.company_id.ldaps:
                 try:
                     l = ldap.open(res_company_ldap.ldap_server, res_company_ldap.ldap_server_port)
-                    if l.simple_bind_s(res_company_ldap.ldap_binddn,
-                            res_company_ldap.ldap_password):
+                    # An empty binddn means anonymous auth, so it should be replaced w/ an empty string
+                    # See LDAP RFC 4513, Section 5.1.1
+                    if l.simple_bind_s(res_company_ldap.ldap_binddn or '',
+                                       res_company_ldap.ldap_password or ''):
                         base = res_company_ldap.ldap_base
                         scope = ldap.SCOPE_SUBTREE
                         filter = filter_format(res_company_ldap.ldap_filter, (user.login,))
