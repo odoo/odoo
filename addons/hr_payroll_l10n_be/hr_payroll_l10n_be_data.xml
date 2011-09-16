@@ -81,7 +81,7 @@
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.statut_fiscal=='with income')) and (employee.resident!=True))</field>
+        <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
     </record>
     <record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
@@ -92,7 +92,7 @@
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = ((employee.marital=='married' and employee.statut_fiscal=='without income') and (employee.resident!=True))</field>
+        <field name="condition_python">result = ((employee.marital=='married' and employee.spouse_fiscal_status=='without income') and (employee.resident_bool!=True))</field>
     </record>
     <record id="hr_payroll_rules_baremeIII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
@@ -102,7 +102,7 @@
         <field name="amount_select">fix</field>
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = employee.resident==True</field>
+        <field name="condition_python">result = employee.resident_bool==True</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_child_alw" model="hr.salary.rule">
@@ -147,7 +147,7 @@
                     the child that is established, regardless of age, that due to developments and recognized
                     before age 65</field>
                 <field name="condition_select">python</field>
-                <field name="condition_python">result = bool(employee.number_handicap)</field>
+                <field name="condition_python">result = bool(employee.disabled_children_number)</field>
     </record>
     <record id="hr_payroll_rules_spouse_handicap" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -157,7 +157,7 @@
         <field name="sequence">145</field>
         <field name="amount_fix">31</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = employee.handicap==True</field>
+        <field name="condition_python">result = employee.disabled_spouse_bool==True</field>
     </record>
     <record id="hr_payroll_rules_company_car_parent" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
