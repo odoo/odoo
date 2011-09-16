@@ -25,7 +25,6 @@ import decimal_precision as dp
 
 class hr_contract_be(osv.osv):
     _inherit = 'hr.contract'
-    _description = 'HR Contract'
 
     _columns = {
         'travel_reimbursement_amount':fields.float('Reimbursement of travel expenses', digits_compute=dp.get_precision('Payroll')),
@@ -44,7 +43,6 @@ hr_contract_be()
 
 class hr_employee_be(osv.osv):
     _inherit = 'hr.employee'
-    _description = 'Employee'
 
     _columns = {
         'spouse_fiscal_status':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
