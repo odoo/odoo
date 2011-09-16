@@ -402,7 +402,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
         } else {
-            console.debug(_.sprintf("The record #%s has been saved.", this.datarecord.id));
             if (success) {
                 success(r);
             }
