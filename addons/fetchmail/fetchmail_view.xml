@@ -32,15 +32,16 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Server &amp; Login">
-                            <group col="4" colspan="2">
+                            <group col="4" colspan="2" attrs="{'readonly' : [('type', '=', 'private_mta')]}">
                                 <separator string="Server Information" colspan="2"/>
-                                <field name="server" colspan="4"/>
-                                <field name="port" />
+                                <field name="server" colspan="4" attrs="{'required' : [('type', '!=', 'private_mta')]}" />
+                                <field name="port" required="1" attrs="{'required' : [('type', '!=', 'private_mta')]}" />
                                 <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Login Information" colspan="2"/>
-                                <field name="user" />
+                                <field name="user" attrs="{'required' : [('type', '!=', 'private_mta')], 'invisible' : [('type', '=', 'private_mta')]}"/>
+                                <field name="user_id" attrs="{'invisible' : [('type', '!=', 'private_mta')], 'required' : [('type', '=', 'private_mta')]}" />
                                 <field name="password" password="True" />
                             </group>
                             <group col="2" colspan="2">
@@ -50,6 +51,13 @@
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>
+                            <group attrs="{'invisible' : [('type', '!=', 'private_mta')]}" colspan="4">
+                                <separator string="Configuration" colspan="4" />
+                                <field name="configuration" colspan="4" />
+                                <button name="generate_configuration" type="object" string="Generate Configuration" colspan="4" />
+                                <field name="archive_filename" invisible="1" />
+                                <field name="archive" filename="archive_filename" />
+                            </group>
                         </page>
                         <page string="Advanced">
                             <group colspan="2" col="2">
