@@ -286,7 +286,7 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
         });
         this.$element.find("[data-role=content]").find('a').click(function(){
             $('#oe_login').empty();
-            window.location.replace('');
+            window.location.replace('/mobile');
         });
         $.mobile.changePage($("#oe_options"), "slide", true, true);
     }
