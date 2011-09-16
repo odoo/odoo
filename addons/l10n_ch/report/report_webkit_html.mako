@@ -9,7 +9,7 @@
        <% setLang(inv.partner_id.lang) %>
        <div id="inv_cont_${inv.id}" style="padding-left:20mm;padding-top:0;padding-bottom:10;border-width:0px;border-style:solid">
        <table class="dest_address">
-           <tr><td ><b>${inv.partner_id.title or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
+           <tr><td ><b>${inv.partner_id.title.name or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
            <tr><td>${inv.address_invoice_id.street or ''|entity}</td></tr>
            <tr><td>${inv.address_invoice_id.street2 or ''|entity}</td></tr>
            <tr><td>${inv.address_invoice_id.zip or ''|entity} ${inv.address_invoice_id.city or ''|entity}</td></tr>

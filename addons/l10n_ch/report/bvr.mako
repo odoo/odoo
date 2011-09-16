@@ -7,6 +7,17 @@
            	font-weight: normal;
            	src: url(${police_absolute_path('ocrbb.ttf')}) format("truetype");
            }
+           .ocrbb{
+             text-align:right;
+             font-family:bvrocrb;
+             font-size:${str(company.bvr_scan_line_font_size or '0.0').replace(',','.')}pt;
+             position:absolute;top:${str(company.bvr_scan_line_vert or '0.0').replace(',','.')}mm;
+             left:${str(company.bvr_scan_line_horz or '0.0').replace(',','.')}mm;
+             z-index:4;
+             letter-spacing:str(company.bvr_scan_line_letter_spacing or '0.0').replace(',','.')
+           }
+        ${css}
+    </style>
        </style>
 
    </head>
@@ -87,9 +98,41 @@
            
            }
        </script>
-       ${_check(objects)}
        %for inv in objects :
        <% setLang(inv.partner_id.lang) %>
+       <!--adresses + info block -->
+            <table class="dest_address"  style="position:absolute;top:6mm;left:15mm">
+               <tr><td ><b>${inv.partner_id.title.name or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
+               <tr><td>${inv.address_invoice_id.street or ''|entity}</td></tr>
+               <tr><td>${inv.address_invoice_id.street2 or ''|entity}</td></tr>
+               <tr><td>${inv.address_invoice_id.zip or ''|entity} ${inv.address_invoice_id.city or ''|entity}</td></tr>
+               %if inv.address_invoice_id.country_id :
+               <tr><td>${inv.address_invoice_id.country_id.name or ''|entity} </td></tr>
+               %endif
+               %if inv.address_invoice_id.phone :
+               <tr><td>${_("Tel") |entity}: ${inv.address_invoice_id.phone|entity}</td></tr>
+               %endif
+               %if inv.address_invoice_id.fax :
+               <tr><td>${_("Fax") |entity}: ${inv.address_invoice_id.fax|entity}</td></tr>
+               %endif
+               %if inv.address_invoice_id.email :
+               <tr><td>${_("E-mail") |entity}: ${inv.address_invoice_id.email|entity}</td></tr>
+               %endif
+               %if inv.partner_id.vat :
+               <tr><td>${_("VAT") |entity}: ${inv.partner_id.vat|entity}</td></tr>
+               %endif
+           </table>
+       
+       <div style="position:absolute;top:60mm; left:20mm">
+           ${_('Invoice')} - ${inv.number or ''|entity}
+           <br/>
+           <br/>
+           ${_('Here is the BVR to allow you to pay the invoice %s - %s') % (inv.name or '', inv.number or '',)}
+           <br/>
+           ${_('Regards')}
+       </div>
+       
+       <div colspan="2" class="ocrbb">${mod10r('01'+str('%.2f' % inv.amount_total).replace('.','').rjust(10,'0'))}&gt;${_get_ref(inv)}+${inv.partner_bank_id.post_number.split('-')[0]+(str(inv.partner_bank_id.post_number.split('-')[1])).rjust(6,'0')+inv.partner_bank_id.post_number.split('-')[2]}&gt;</div>
        <div id="cont_${inv.id}" style="padding-left:20mm;padding-top:0;padding-bottom:10;height:180mm">
         <!-- Your communication message here -->
        </div>
@@ -103,7 +146,7 @@
         <tr style="height:8.4666667mm;vertical-align:bottom;padding-bottom:0"> <td><table  style="width:100%" CELLPADDING="0" CELLSPACING="0"><td  style="width:4mm"></td><td style="width:40mm;text-align: right" >${_space(('%.2f' % inv.amount_total)[:-3], 1)}</td><td style="width:6mm"></td><td style="width:10mm;text-align: right">${ _space(('%.2f' % inv.amount_total)[-2:], 1)}</td><td style="width:3mm;text-align: right"></td></table></td><td><table  style="width:100%" CELLPADDING="0" CELLSPACING="0"><td  style="width:4mm"></td><td style="width:40mm;text-align: right" >${_space(('%.2f' % inv.amount_total)[:-3], 1)}</td><td style="width:6mm"></td><td style="width:10mm;text-align: right">${ _space(('%.2f' % inv.amount_total)[-2:], 1)}</td><td style="width:3mm;text-align: right"></td></table></td><td></td></tr>
         <tr style="height:21.166667mm"><td></td><td></td><td></td></tr>
         <tr style="height:8.4666667mm"> <td></td><td></td><td></td></tr>
-        <tr style="height:21.166667mm;vertical-align:top"><td></td><td colspan="2" style="text-align:right;padding-right:0.3in;font-family:bvrocrb;font-size:12pt">${mod10r('01'+str('%.2f' % inv.amount_total).replace('.','').rjust(10,'0'))}&gt;${_get_ref(inv)}+${inv.partner_bank_id.post_number.split('-')[0]+(str(inv.partner_bank_id.post_number.split('-')[1])).rjust(6,'0')+inv.partner_bank_id.post_number.split('-')[2]}&gt;</td></tr>
+        <tr style="height:21.166667mm;vertical-align:top"><td></td><td></td></tr>
     </table>
     %endfor
 </body>

@@ -73,7 +73,7 @@ class account_invoice(osv.osv):
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
-        'amount_to_pay': fields.function(_amount_to_pay,
+        'amount_to_pay': fields.function(_amount_to_pay, method=True,
             type='float', string='Amount to be paid',
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),
@@ -120,7 +120,7 @@ class account_invoice(osv.osv):
                         invoice.partner_bank_id.state in \
                         ('bvrbank', 'bvrpost') and \
                         invoice.reference_type != 'bvr':
-                            return False
+                    return False
         return True
 
     _constraints = [
@@ -143,16 +143,16 @@ class account_invoice(osv.osv):
     def onchange_partner_id(self, cr, uid, ids, type, partner_id,
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         """ Function that is call when the partner of the invoice is changed
-        it will retriev and set the good bank partner bank"""
+        it will retrieve and set the good bank partner bank"""
         res = super(account_invoice, self).onchange_partner_id(
                                                                 cr,
-                                                                 uid,
-                                                                 ids,
-                                                                 type,
-                                                                 partner_id,
-                                                                 date_invoice,
-                                                                 payment_term
-                                                            )
+                                                                uid,
+                                                                ids,
+                                                                type,
+                                                                partner_id,
+                                                                date_invoice,
+                                                                payment_term
+                                                              )
         bank_id = False
         if partner_id:
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)

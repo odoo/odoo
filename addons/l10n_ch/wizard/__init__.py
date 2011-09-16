@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-import create_dta
-import bvr_import
+from . import create_dta
+from . import bvr_import
+from . import unicode2ascii
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
