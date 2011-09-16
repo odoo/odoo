@@ -70,6 +70,7 @@ class stock_fill_inventory(osv.osv_memory):
         product_obj = self.pool.get('product.product')
         stock_location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get('product.uom')
         if ids and len(ids):
             ids = ids[0]
         else:
@@ -96,7 +97,7 @@ class stock_fill_inventory(osv.osv_memory):
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
-                qty = move.product_qty * (move.product_id.uom_id.factor / move.product_uom.factor)
+                qty = uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
 
                 if datas.get((prod_id, lot_id)):
                     qty += datas[(prod_id, lot_id)]['product_qty']
