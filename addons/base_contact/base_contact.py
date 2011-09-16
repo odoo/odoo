@@ -138,7 +138,7 @@ class res_partner_address(osv.osv):
                 res.append((r['id'], r['partner_id'][1]))
             else:
                 addr = r['name'] or ''
-                addr += "%s %s %s" % (r.get('street', '') or '', r.get('zip', '') \
+                addr += " %s %s %s" % (r.get('street', '') or '', r.get('zip', '') \
                                     or '', r.get('city', '') or '')
                 res.append((r['id'], addr.strip() or '/'))
         return res
