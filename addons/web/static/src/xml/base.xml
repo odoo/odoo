@@ -731,8 +731,8 @@
 </t>
 <t t-name="WidgetNotebook">
     <ul>
-        <li t-foreach="widget.pages" t-as="page" t-att-id="page.element_tab_id">
-            <a t-att-href="'#' + page.element_id">
+        <li t-foreach="widget.pages" t-as="page">
+            <a href="#">
                 <t t-esc="page.string"/>
             </a>
         </li>
@@ -742,7 +742,7 @@
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
-    <div t-att-id="widget.element_id">
+    <div>
         <t t-call="WidgetFrame"/>
     </div>
 </t>
