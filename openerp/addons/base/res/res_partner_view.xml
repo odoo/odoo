@@ -106,7 +106,7 @@
             </field>
         </record>
         
-        <record model="ir.ui.view" id="hr_kanban_view_employees">
+        <record model="ir.ui.view" id="contacts_kanban_view_employees">
         <field name="name">res.partner.address.kanban</field>
         <field name="model">res.partner.address</field>
         <field name="type">kanban</field>
@@ -143,9 +143,9 @@
                                             <b> <field name="title"/><t t-if="record.title.raw_value &amp;&amp; record.function.raw_value">,</t> <field name="function"/></b>
                                             <br class="oe_kanban_clear"/>
                                              <field name="partner_id"/><t t-if="record.partner_id.raw_value &amp;&amp; record.country_id.raw_value">,</t><field name="country_id"/><br/>
-                                            <b><font size="2"><field name="email"/>
+                                            <b><font size="2"><i><field name="email"/>
                                             <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
-                                            <field name="phone"/></font></b>
+                                            <field name="phone"/></i></font></b>
                                         </td>
                                     </tr>    
                                 </table>
