@@ -31,12 +31,13 @@ class account_treasury_report(osv.osv):
     def _compute_balances(self, cr, uid, ids, field_names, arg=None, context=None,
                   query='', query_params=()):
         all_treasury_lines = self.search(cr, uid, [], context=context)
-        current_sum = 0
+        all_companies = self.pool.get('res.company').search(cr, uid, [], context=context)
+        current_sum = dict((company, 0.0) for company in all_companies)
         res = dict((id, dict((fn, 0.0) for fn in field_names)) for id in all_treasury_lines)
         for record in self.browse(cr, uid, all_treasury_lines, context=context):
-            res[record.id]['starting_balance'] = current_sum 
-            current_sum += record.balance
-            res[record.id]['ending_balance'] = current_sum
+            res[record.id]['starting_balance'] = current_sum[record.company_id.id] 
+            current_sum[record.company_id.id] += record.balance
+            res[record.id]['ending_balance'] = current_sum[record.company_id.id]
         return res    
 
     _columns = {
@@ -46,8 +47,8 @@ class account_treasury_report(osv.osv):
         'credit': fields.float('Credit', readonly=True),
         'balance': fields.float('Balance', readonly=True),
         'date': fields.date('Beginning of Period Date', readonly=True),
-        'starting_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), method=True, string='Starting Balance', multi='balance'),
-        'ending_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), method=True, string='Ending Balance', multi='balance'),
+        'starting_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), string='Starting Balance', multi='balance'),
+        'ending_balance': fields.function(_compute_balances, digits_compute=dp.get_precision('Account'), string='Ending Balance', multi='balance'),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
 
