@@ -74,12 +74,13 @@ class sale_order(osv.osv):
             return res
         
         for id in ids:
-            res_sale[id] = {}
-            res_sale[id]['number_of_done'] = 0
-            res_sale[id]['percentage'] = 0.0
-            res_sale[id]['number_of_stockable'] = 0.0
-            res_sale[id]['total_no_task'] = 0
-            res_sale[id]['total'] = 0
+            res_sale[id] = {
+                'number_of_done': 0,
+                'percentage': 0.0,
+                'number_of_stockable': 0.0,
+                'total_no_task': 0,
+                'total': 0
+            }
 
         for item in sale_task_data:
             res_sale[item['sale_id']]['total_no_task'] += item['total']
@@ -87,7 +88,7 @@ class sale_order(osv.osv):
                 res_sale[item['sale_id']]['number_of_done'] += 1
             else: 
                 pass
-        for sale in self.browse(cr, uid, ids, context=None):
+        for sale in self.browse(cr, uid, ids, context=context):
             # Percent of service + other' Type product
             res_sale[sale.id]['percentage'] = res_sale[sale.id]['total_no_task'] and (float(res_sale[sale.id]['number_of_done']) / res_sale[sale.id]['total_no_task']) * 100
             res_sale[sale.id]['number_of_stockable'] = len(sale.order_line) - res_sale[sale.id]['total_no_task']
@@ -96,7 +97,7 @@ class sale_order(osv.osv):
             elif res_sale[sale.id]['number_of_stockable'] == 0:
                 res[sale.id] = (res_sale[sale.id]['percentage'])
             else:
-                res[sale.id] = round((res[sale.id] + res_sale[sale.id]['percentage']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task']), 2)
+                res[sale.id] = round((res[sale.id] + res_sale[sale.id]['percentage']) / (res_sale[sale.id]['total_no_task']), 2)
                 if res[sale.id] > 100:
                     res[sale.id] = 100
         return res
