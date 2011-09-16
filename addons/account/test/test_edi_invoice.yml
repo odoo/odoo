@@ -137,7 +137,7 @@
     invoice_new = invoice_pool.browse(cr, uid, invoice_id, context=context)
     assert invoice_id, 'Invoice is not imported'
 -
-  I Checking the out invoice become in invoice or not after import 
+  I Checking the out invoice become in invoice or not after import
 -
   !python {model: account.invoice}: |
     
@@ -151,13 +151,20 @@
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected"
     assert invoice_new.type == 'in_invoice', "Imported in voice is not supplier invoice"
-    assert invoice_new.amount_total == 1010.0, "Amount total is not same"
-    assert invoice_new.amount_tax == 1000.0, "Amount tax is not same"
-    assert invoice_new.amount_untaxes == 10.0, "Amount untaxed is not same"
-    product = ['Medium PC','Basic PC']
+    assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
-        assert inv_line.account_id.id, "account_id is not taken from product's default"
-        assert inv_line.product_id.name in ['Medium PC','Basic PC'], "product  is not in Invoice line"
+        if inv_line.name == 'basic pc':
+            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.price_unit == 10 , "price unit is not same"
+            assert inv_line.quantity == 1 , "product qty is not same"
+            assert inv_line.price_subtotal == 10, "price sub total is not same"
+        elif inv_line.name == 'medium pc':
+            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.price_unit == 100 , "price unit is not same"
+            assert inv_line.quantity == 5 , "product qty is not same"
+            assert inv_line.price_subtotal == 100, "price sub total is not same"
+        else:
+            assert 'wrong product imported in invoice lines'
     for inv_tax in invoice_new.tax_line:
         assert inv_tax.manual, "for tax line manual is not set to True"
         assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."

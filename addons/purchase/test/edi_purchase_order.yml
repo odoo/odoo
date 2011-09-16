@@ -25,7 +25,7 @@
       - product_id: product.product_product_pc3
         product_qty: 10.0
         product_uom: 1
-        price_unit: 200.0
+        price_unit: 20.0
         name: 'medium pc'
         date_planned: '2011-08-31'
 -
@@ -68,7 +68,7 @@
             "name": "medium pc", 
             "product_uom": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_uom_unit", "PCE"], 
             "sequence": 11, 
-            "price_unit": 200.0, 
+            "price_unit": 20.0, 
             "__last_update": False, 
             "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_line-LXEqeuI-SSP0", 
             "product_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_product_pc3", "[PC3] Medim PC"]
@@ -88,13 +88,13 @@
         "date_order": "2011-09-13", 
         "partner_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:sale.res_partner_test22", "Junjun wala"], 
         "__attachments": [], 
-        "__module": "sale", 
+        "__module": "purchase", 
         "amount_total": 350.0, 
         "amount_untaxed": 350.0, 
         "name": "SO008", 
-        "__model": "sale.order", 
+        "__model": "purchase.order", 
         "__last_update": False, 
-        "company_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_company", "OpenERP S.A."], 
+        "company_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_company", "Supplier S.A."], 
         "__version": [6, 1], 
         "pricelist_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.list0", "Public Pricelist (EUR)"]
     }
@@ -104,15 +104,23 @@
 -
   I Checking the sale order become purchase order or not after import
 -
-  !python {model: sale.order}: |
+  !python {model: purchase.order}: |
     
-    ids = self.search(cr, uid, [('partner_id','=','OpenERP S.A.')])
+    ids = self.search(cr, uid, [('partner_id','=','Supplier S.A.'), ('partner_ref', '=', 'SO008')])
     assert ids, 'Order does not have created of party'
     order_new = self.browse(cr, uid, ids[0])
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list is not imported"
     assert order_new.amount_total == 350, "Amount total is not same"
     assert order_new.amount_untaxed == 350, "untaxed amount is not same"
-    for sale_line in order_new.order_line:
-        assert sale_line.name in ['basic pc','medium pc'], "name of product is not in order"
-        assert sale_line.product_id.name in ['Basic PC','Medium PC'], "name of product is not in order"
-        assert sale_line.date_order == '2011-09-13' , "date of order is not same"
+    assert len(order_new.order_line) == 2, "Purchase lines are not same"
+    for purchase_line in order_new.order_line:
+        if purchase_line.name == 'basic pc':
+            assert purchase_line.product_uom.name == "PCE" , "uom is not same"
+            assert purchase_line.price_unit == 150 , "price unit is not same"
+            assert purchase_line.product_qty == 1 , "product qty is not same"
+        elif purchase_line.name == 'medium pc':
+            assert purchase_line.product_uom.name == "PCE" , "uom is not same"
+            assert purchase_line.price_unit == 20 , "price unit is not same"
+            assert purchase_line.product_qty == 10 , "product qty is not same"
+        else:
+            assert 'wrong product imported in purchase lines'

@@ -124,9 +124,6 @@ class purchase_order(osv.osv, ir_edi.edi):
         if context is None:
             context = {}
         
-        model = edi_document['__model']
-        assert model == 'sale.order', _('Could not import purchase order')
-        edi_document['__model'] = self._name
         #import company as a new partner
         partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
         
