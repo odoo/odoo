@@ -109,7 +109,7 @@ class sale_order(osv.osv):
         for item in cr.dictfetchall():
             if item['move_state'] == 'cancel':
                 continue
-           
+        
             if item['picking_type'] == 'in':#this is a returned picking
                 tmp[item['sale_order_id']]['total'] -= item['nbr'] or 0.0 # Deducting the return picking qty
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
@@ -118,13 +118,13 @@ class sale_order(osv.osv):
                 tmp[item['sale_order_id']]['total'] += item['nbr'] or 0.0
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
                     tmp[item['sale_order_id']]['picked'] += item['nbr'] or 0.0
-                
+
         for order in self.browse(cr, uid, ids, context=context):
             if order.shipped:
                 res[order.id] = 100.0
             else:
                 res[order.id] = tmp[order.id]['total'] and (100.0 * tmp[order.id]['picked'] / tmp[order.id]['total']) or 0.0
-        return res
+        return res        
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -728,6 +728,7 @@ class sale_order(osv.osv):
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
+                        'sale_line_id': line.id,
                     })
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
