@@ -4,7 +4,7 @@
 		<!--Export edi document  -->
 		<record id="ir_actions_server_edi_sale" model="ir.actions.server">
 			<field name="code">context.update({'edi_web_sale_url_view': '%s/web/view_edi?db=%s&amp;token=%s' %(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),cr.dbname, self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0])})
-if not object.partner_id.opt_out: self.pool.get('email.template').send_email(cr,
+if not object.partner_id.opt_out: self.pool.get('email.template').send_mail(cr,
                       uid,
                       self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'email_template_edi_sale')[1],
                       object.id,
