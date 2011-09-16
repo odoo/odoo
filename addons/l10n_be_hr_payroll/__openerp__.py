@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-    'name': 'hr_payroll_l10n_be',
+    'name': 'l10n_be_hr_payroll',
     'category': 'payroll',
     'init_xml':[],
     'author': 'OpenERP',
@@ -42,11 +42,11 @@ Belgian Payroll system.
 
     'active': False,
     'demo_xml': [
-     'hr_payroll_l10n_be_demo.xml',
+     'l10n_be_hr_payroll_demo.xml',
     ],
     'update_xml':[
-     'hr_payroll_l10n_be_view.xml',
-     'hr_payroll_l10n_be_data.xml',
+     'l10n_be_hr_payroll_view.xml',
+     'l10n_be_hr_payroll_data.xml',
      'data/hr.salary.rule.csv',
     ],
     'installable': True

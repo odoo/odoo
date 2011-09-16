@@ -18,6 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-import hr_payroll_l10n_be
+import l10n_be_hr_payroll
 import hr_contract
 import hr_payroll
