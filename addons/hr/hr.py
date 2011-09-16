@@ -149,7 +149,9 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
-        'passport_id':fields.char('Passport No', size=64)
+        'passport_id':fields.char('Passport No', size=64),
+        'color': fields.integer('Color Index'),
+        'city': fields.related('address_id', 'city', type='char', string='City'),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -198,6 +200,7 @@ class hr_employee(osv.osv):
         'active': 1,
         'photo': _get_photo,
         'marital': 'single',
+        'color': 0,
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
