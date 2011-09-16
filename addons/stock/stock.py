@@ -167,7 +167,7 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name"),
+        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name", store=True),
 
         'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),
