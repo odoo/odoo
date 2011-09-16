@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class report_designer_installer(osv.osv_memory):
-    _name = 'report_designer.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         # Reporting

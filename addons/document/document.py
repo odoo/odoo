@@ -117,7 +117,7 @@ class document_file(osv.osv):
         # If ir.attachment contained any data before document is installed, preserve
         # the data, don't drop the column!
         'db_datas': fields.binary('Data', oldname='datas'),
-        'datas': fields.function(_data_get, method=True, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
+        'datas': fields.function(_data_get, fnct_inv=_data_set, string='File Content', type="binary", nodrop=True),
 
         # Fields of document:
         'user_id': fields.many2one('res.users', 'Owner', select=1),
@@ -252,7 +252,7 @@ class document_file(osv.osv):
             ids = ids2
         if 'file_size' in vals: # only write that field using direct SQL calls
             del vals['file_size']
-        if len(ids) and len(vals):
+        if ids and vals:
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
         cr.commit() # ?
         return result

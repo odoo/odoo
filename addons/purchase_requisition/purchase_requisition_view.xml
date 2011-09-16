@@ -102,7 +102,7 @@
         <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree colors="grey:state in ('done');red:date_end&lt;current_date and state not in ('done','cancel');black:date_end&gt;=current_date;" string="Purchase Requisition">
+            <tree colors="grey:state == 'done';red:date_end&lt;current_date and state not in ('done','cancel');black:date_end&gt;=current_date;" string="Purchase Requisition">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="date_start"/>
