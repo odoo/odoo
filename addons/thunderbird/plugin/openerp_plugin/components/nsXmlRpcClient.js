@@ -46,6 +46,7 @@
 /*
  * Constants
  */
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 const XMLRPCCLIENT_CONTRACTID = '@mozilla.org/xml-rpc/client;1';
 const XMLRPCCLIENT_CID =
     Components.ID('{4d7d15c0-3747-4f7f-b6b3-792a5ea1a9aa}');
@@ -102,6 +103,10 @@ function nsXmlRpcClient() {}
 nsXmlRpcClient.prototype = {
     _serverUrl: null,
     _useAuth: false,
+
+    classDescription: "nsXmlRpcClient XPCOM component",
+    classID:          Components.ID("{4d7d15c0-3747-4f7f-b6b3-792a5ea1a9aa}"),
+    contractID:       "@mozilla.org/xml-rpc/client;1",
 
     init: function(serverURL) {
         this._serverUrl = serverURL;
@@ -712,6 +717,12 @@ nsXmlRpcClient.prototype = {
     }
 };
 
+if (XPCOMUtils.generateNSGetFactory)
+    var NSGetFactory = XPCOMUtils.generateNSGetFactory([nsXmlRpcClient]);
+else
+    var NSGetModule = XPCOMUtils.generateNSGetModule([nsXmlRpcClient]);
+ 
+
 /* The XMLWriter class constructor */
 function XMLWriter(encoding) {
     if (!encoding)
@@ -896,7 +907,6 @@ var nsXmlRpcFaultFactory = {
 /*
  * Functions
  */
-
 /* module initialisation */
 function NSGetModule(comMgr, fileSpec) { return nsXmlRpcClientModule; }
 

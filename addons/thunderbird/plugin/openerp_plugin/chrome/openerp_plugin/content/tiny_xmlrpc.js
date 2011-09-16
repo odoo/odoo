@@ -563,7 +563,7 @@ function getMessageBody(){
 
 //get the whole server path
 function getServerUrl(){
-    return getServer()+":"+getPort()+"/"+getServerService();
+    return getServer()+"/"+getServerService();
 }
 
 //get user id for the xmlrpc request
@@ -1383,7 +1383,6 @@ function getPartnerList(){
     strvalue.data = document.getElementById('txtselectpartner').value;
     xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
-
 
 //function to create the xmlrpc supported variables for xmlrpc request
 function dictcontact(a,b){
