@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_payslip_lines_contribution_register" model="ir.ui.view">
+            <field name="name">payslip.lines.contribution.register</field>
+            <field name="model">payslip.lines.contribution.register</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Contribution Register's Payslip Lines">
+                <group col="4" colspan="6">
+                    <field name="date_from"/>
+                    <newline/>
+                    <field name="date_to"/>
+                </group>
+                <separator colspan="4"/>
+                <group col="2" colspan="4">
+                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+                    <button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_payslip_lines_contribution_register" model="ir.actions.act_window">
+            <field name="name">PaySlip Lines</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payslip.lines.contribution.register</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="payslip_lines_contribution_register_value">
+            <field name="model_id" ref="model_hr_contribution_register" />
+            <field name="object" eval="1" />
+            <field name="name">PaySlip Lines</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_payslip_lines_contribution_register'))" />
+            <field name="key">action</field>
+            <field name="model">hr.contribution.register</field>
+        </record>
+
+    </data>
+</openerp>

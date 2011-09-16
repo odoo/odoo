@@ -25,6 +25,12 @@ from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
 
+    def _get_journal(self, cr, uid, context=None):
+        res = self._get_journal_id(cr, uid, context=context)
+        if res:
+            return res[0]
+        return False
+    
     def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -61,7 +67,6 @@ class stock_invoice_onshipping(osv.osv_memory):
                     vals.append(t1)
         return vals
 
-
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
 
@@ -70,7 +75,11 @@ class stock_invoice_onshipping(osv.osv_memory):
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
-
+    
+    _defaults = {
+        'journal_id' : _get_journal,
+    }
+    
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}

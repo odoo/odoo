@@ -24,6 +24,7 @@
     'name': 'Sales Order Dates',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 Add additional date information to the sales order.
 ===================================================

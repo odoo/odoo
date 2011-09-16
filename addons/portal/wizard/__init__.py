@@ -19,5 +19,6 @@
 #
 ##############################################################################
 
+import portal_wizard
 import share_wizard
-import groups_wizard
+

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:46+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -962,7 +962,7 @@ msgid "Close"
 msgstr "Zatvori"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr ""
@@ -1052,7 +1052,7 @@ msgid "Email Mailbox"
 msgstr "Postansko Sanduce"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1170,7 +1170,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Email-ovi"
 
@@ -1344,143 +1346,6 @@ msgstr "Ima Attachment"
 msgid "No Description"
 msgstr "Bez Opisa"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neispravno ime modela u definiciji akcijue."
-
-#, python-format
-#~ msgid "Mako templates not installed"
-#~ msgstr "Mako Obrazac nije instaliran"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Neispravni Argumenti"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Nevažeći XML za pregled arhitekture"
-
-#, python-format
-#~ msgid ""
-#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-#~ msgstr ""
-#~ "Preuzimanje datuma i vremena nije uspelo. Datum:Date:%s \\n \tGreska:%s"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
-
-#, python-format
-#~ msgid ""
-#~ "Error sending mail: %s\" % str(e)))\n"
-#~ "        \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "        if ids is None:\n"
-#~ "            ids = []\n"
-#~ "        if context is None:\n"
-#~ "            context = {}\n"
-#~ "        filters = [('folder', '=', 'outbox"
-#~ msgstr ""
-#~ "Greska slanja poruke: %s\" % str(e)))\n"
-#~ "         \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "if ids is None:\n"
-#~ "ids = []\n"
-#~ "if context is None:\n"
-#~ "context = {}\n"
-#~ "filters = [('folder', '=', 'outbox"
-
-#, python-format
-#~ msgid "Django templates not installed"
-#~ msgstr "Django Sabloni nisu instalirani"
-
 #, python-format
 #~ msgid "Copy of template "
 #~ msgstr "Kopija Sablona "
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
-
-#~ msgid "Email Data"
-#~ msgstr "Podaci Email-a"
-
-#~ msgid "My Accounts"
-#~ msgstr "Moji Nalozi"
-
-#~ msgid ""
-#~ "File name pattern can be specified with placeholders.eg. 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Ime fajla moze biti napisano i sa razmaknicama( donja crta) npr "
-#~ "2009_SO003.pdf"
-
-#~ msgid "Enter port number,eg:SMTP-587 "
-#~ msgstr "Upisi broj Port-a npr SMTP-587 "
-
-#~ msgid "E-MAIL Templates"
-#~ msgstr "E-MAIL Obrasci"
-
-#~ msgid "Download Full Mail"
-#~ msgstr "Download Celu poruku"
-
-#~ msgid "The default recipient of email.Placeholders can be used here."
-#~ msgstr ""
-#~ "Predlozeni primalac Email-a. Razmaknice se mogu koristiti ( donja crta)"
-
-#~ msgid "Mailboxes"
-#~ msgstr "Postanski Sanducici"
-
-#~ msgid "Track campaign items"
-#~ msgstr "Prati stavke Kampanje"
-
-#~ msgid "eg: yourname@yourdomain.com "
-#~ msgstr "npr: yourname@yourdomain.com "
-
-#~ msgid "SMTP Server"
-#~ msgstr "SMTP server"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "e-mail."
-#~ msgstr ""
-#~ "Ubaci ovde sve attachmente za dati dokument koji zelis da prikljucis poruci"
-
-#~ msgid "The default subject of email. Placeholders can be used here."
-#~ msgstr ""
-#~ "Podrazumevana Tema poruke. Razmaknice se mogu ovde koristiti ( donja crta)"
-
-#~ msgid "File Name Pattern"
-#~ msgstr "Ime fajla paterna"
-
-#~ msgid "SMTP Port "
-#~ msgstr "SMTP Port "
-
-#~ msgid "Personal Accounts"
-#~ msgstr "Licni Nalozi"
-
-#~ msgid "Company Mails"
-#~ msgstr "Poruke Preduzeca"
-
-#~ msgid "Enter name of outgoing server, eg:smtp.gmail.com "
-#~ msgstr "Upisi ime izlaznog servera, npr: smtp.gmail.com "
-
-#~ msgid "Default Subject"
-#~ msgstr "Predefinisana tema"
-
-#~ msgid ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here."
-#~ msgstr ""
-#~ "Blind Carbon Copy address(es), comma-separated. Placeholders can be used "
-#~ "here."
-
-#~ msgid ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here."
-#~ msgstr ""
-#~ "Carbon Copy address(es), comma-separated. Placeholders can be used here."
-
-#~ msgid ""
-#~ "Enable this if you want the outgoing e-mails to include a tracking marker "
-#~ "that makes it possible to identify the replies an link them back to the "
-#~ "campaign item"
-#~ msgstr ""
-#~ "Omogucava vam , ako zelite da vase izlazne poruke sadrze markera pratnje "
-#~ "koji vam daju mogucnost da kasnije identifikujete odgovore i posaljewte ih "
-#~ "npr stavci Kampanje."
