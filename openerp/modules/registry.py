@@ -22,6 +22,7 @@
 """ Models registries.
 
 """
+import threading
 
 import openerp.sql_db
 import openerp.osv.orm
@@ -86,7 +87,6 @@ class Registry(object):
         for model in self.models.itervalues():
             model.clear_caches()
 
-
 class RegistryManager(object):
     """ Model registries manager.
 
@@ -98,19 +98,20 @@ class RegistryManager(object):
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
+    registries_lock = threading.RLock()
 
 
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
         """ Return a registry for a given database name."""
-
-        if db_name in cls.registries:
-            registry = cls.registries[db_name]
-        else:
-            registry = cls.new(db_name, force_demo, status,
-                update_module, pooljobs)
-        return registry
+        with cls.registries_lock:
+            if db_name in cls.registries:
+                registry = cls.registries[db_name]
+            else:
+                registry = cls.new(db_name, force_demo, status,
+                                   update_module, pooljobs)
+            return registry
 
 
     @classmethod
@@ -121,42 +122,43 @@ class RegistryManager(object):
         The (possibly) previous registry for that database name is discarded.
 
         """
-
         import openerp.modules
-        registry = Registry(db_name)
+        with cls.registries_lock:
+            registry = Registry(db_name)
 
-        # Initializing a registry will call general code which will in turn
-        # call registries.get (this object) to obtain the registry being
-        # initialized. Make it available in the registries dictionary then
-        # remove it if an exception is raised.
-        cls.delete(db_name)
-        cls.registries[db_name] = registry
-        try:
-            # This should be a method on Registry
-            openerp.modules.load_modules(registry.db, force_demo, status, update_module)
-        except Exception:
-            del cls.registries[db_name]
-            raise
+            # Initializing a registry will call general code which will in turn
+            # call registries.get (this object) to obtain the registry being
+            # initialized. Make it available in the registries dictionary then
+            # remove it if an exception is raised.
+            cls.delete(db_name)
+            cls.registries[db_name] = registry
+            try:
+                # This should be a method on Registry
+                openerp.modules.load_modules(registry.db, force_demo, status, update_module)
+            except Exception:
+                del cls.registries[db_name]
+                raise
 
-        cr = registry.db.cursor()
-        try:
-            registry.do_parent_store(cr)
-            registry.get('ir.actions.report.xml').register_all(cr)
-            cr.commit()
-        finally:
-            cr.close()
+            cr = registry.db.cursor()
+            try:
+                registry.do_parent_store(cr)
+                registry.get('ir.actions.report.xml').register_all(cr)
+                cr.commit()
+            finally:
+                cr.close()
 
-        if pooljobs:
-            registry.get('ir.cron').restart(registry.db.dbname)
+            if pooljobs:
+                registry.get('ir.cron').restart(registry.db.dbname)
 
-        return registry
+            return registry
 
 
     @classmethod
     def delete(cls, db_name):
         """ Delete the registry linked to a given database. """
-        if db_name in cls.registries:
-            del cls.registries[db_name]
+        with cls.registries_lock:
+            if db_name in cls.registries:
+                del cls.registries[db_name]
 
 
     @classmethod
@@ -170,8 +172,9 @@ class RegistryManager(object):
         This method is given to spare you a ``RegistryManager.get(db_name)``
         that would loads the given database if it was not already loaded.
         """
-        if db_name in cls.registries:
-            cls.registries[db_name].clear_caches()
+        with cls.registries_lock:
+            if db_name in cls.registries:
+                cls.registries[db_name].clear_caches()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
