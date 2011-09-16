@@ -21,6 +21,7 @@
 
 import datetime
 import time
+import string
 
 from osv import fields, osv
 from report.interface import report_rml
@@ -243,7 +244,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,months_xml,date_xml, ustr(emp_xml))
+        ''' % (header_xml,months_xml,string.join(date_xml), ustr(emp_xml))
 
         return xml
 
