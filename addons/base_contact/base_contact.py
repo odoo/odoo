@@ -144,14 +144,13 @@ class res_partner_address(osv.osv):
         return res
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        ids = []
         if not args:
             args=[]
-        if not context:
-            context={}
+        jobs = self.pool.get('res.partner.job')
         if name:
-            ids = []
-            job_ids = self.pool.get('res.partner.job').search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
-            partner_ids = self.pool.get('res.partner.job').browse(cr, user, job_ids)
+            job_ids = jobs.search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
+            partner_ids = jobs.browse(cr, user, job_ids)
             partner_data = [(partner.name.name) for partner in partner_ids]
             for partner in partner_data:
                 ids += self.search(cr, user, [('partner_id',operator,partner)] + args, limit=limit, context=context)
