@@ -12,6 +12,12 @@
     company_id: base.main_company
     name: OpenERP Training Test
 -
+  I create project 'Functional Programme'.
+-
+  !record {model: project.project, id: project_project_1}:
+    company_id: base.main_company
+    name: Functional Test    
+-
   In order to test the PDF reports defined on a Project Scrum, we will print Project Scrum Sprint Burndown Report.
 -
   !python {model: project.scrum.sprint}: |
@@ -21,13 +27,35 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'project_scrum-project_scrum_sprint_burndown.'+format), 'wb+').write(data)
 -
-  I create a project.scrum.product.backlog record.
+  I create a project scrum product backlog record.
 -
   !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog0}:
     effective_hours: 0.0
     expected_hours: 0.0
     name: test
     project_id: project_project_0
+    sequence: 0.0
+    state: draft
+-
+  Now, I create another two project scrum product backlog record for the merging purpose.
+-
+  I create "Test_merge_bklg1" project scrum product backlog record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog1}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: test_merge_bklg1
+    project_id: project_project_0
+    sequence: 0.0
+    state: draft
+-
+  I create "Test_merge_bklg2" project scrum product backlog record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog2}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: test_merge_bklg2
+    project_id: project_project_1
     sequence: 0.0
     state: draft
 -
@@ -67,26 +95,6 @@
     except:
       pass
 -
-  I create a project.scrum.email record.
--
-  !record {model: project.scrum.email, id: project_scrum_email_0}:
-    subject: Subject
-    message: test message
--
-  Send project scrum email.
--
-  !python {model: project.scrum.email}: |
-    fields={
-           'subject': 'Subject',
-           'message': 'test message'
-           }
-    context.update({'active_ids':[ref('project_scrum_meeting_0')],'active_id':ref('project_scrum_meeting_0')})
-    self.default_get(cr, uid, fields, context)
-    try:
-      self.button_send_scrum_email(cr, uid, [ref("project_scrum_email_0")],context)
-    except:
-      pass
--
   I create first scrum backlog for merge the record.
 -
   !record {model: project.scrum.backlog.merge, id: project_scrum_backlog_merge1}:
@@ -95,17 +103,17 @@
   I create second scrum backlog for merge the record.
 -
   !record {model: project.scrum.backlog.merge, id: project_scrum_backlog_merge2}:
-    project_id: project_project_0
+    project_id: project_project_1
 -
   Set project scrum backlog merge.
 -
   !python {model: project.scrum.backlog.merge}: |
-    context['active_ids'] = [ref("project_scrum_backlog_merge1"),ref("project_scrum_backlog_merge2")]
-    context['active_id'] = [ref("project_scrum_backlog_merge1")]
-    try:
-        self.check_backlogs(cr, uid, [ref("project_scrum_backlog_merge2")],context)
-    except:
-        pass
+    context.update({
+                   'active_model': 'project.scrum.product.backlog',
+                   'active_ids': [ref("project_scrum_product_backlog1"),ref("project_scrum_product_backlog2")],
+                   'active_id': ref("project_scrum_product_backlog1")})
+    self.check_backlogs(cr, uid, [ref("project_scrum_product_backlog1"),ref("project_scrum_product_backlog2")],context)
+    self.do_merge(cr, uid, [ref('project_scrum_backlog_merge1'),ref('project_scrum_backlog_merge2')], context)
 -
   In order to test the project_scrum_backlog_create_task wizard.
 -

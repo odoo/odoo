@@ -1,15 +1,9 @@
 -
-   I create a mailgate message record.
--
-   !record {model: mailgate.message, id: project_mailgate_message1}:
-    partner_id: base.res_partner_asus
--
    I create a project task.
 -
    !record {model: project.task, id: project_task_mailgate1}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Technical Training
-    #message_ids: project_mailgate_message1
     user_id: base.user_root
     planned_hours: 30.0
     remaining_hours: 30.0
@@ -25,11 +19,6 @@
 -
    !python {model: project.task}: |
     self.do_open(cr, uid, [ref('project_task_mailgate1')], {'active_id':ref('project_task_mailgate1')})
--
-   Execute the message followers.
--
-   !python {model: project.task}: |
-    self.message_followers(cr, uid, [ref('project_task_mailgate1')], {'active_id':ref('project_task_mailgate1')})
 -
    Keep task in pending state.
 -

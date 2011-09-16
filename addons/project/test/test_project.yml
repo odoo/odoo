@@ -479,31 +479,7 @@
            }
     self.create(cr, uid, vals, context=None)
     self.unlink(cr, uid, [ref('account_analytic_account0')])
--
-  I close the project task.
--
-  !record {model: project.task.close, id: project_task_close_0}:
-    manager_warn : True
-    partner_warn : False
-    manager_email : 'info@mycustomer.com'
-    partner_email : 'info@myinfobid.com'
-    description : Description
--
-  I send Warn Message by Email to Manager and Customer.
--
-  !python {model: project.task.close}: |
-    fields = {
-        'manager_warn' : True,
-        'partner_warn' : False,
-        'manager_email' : 'info@mycustomer.com',
-        'partner_email' : 'info@myinfobid.com',
-        'description' : 'Description'
-        }
-    self.default_get(cr, uid, fields, context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
-    try:
-      self.send(cr, uid, [ref('project_task_close_0')], context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
-    except :
-      pass
+
 -
   I check for remaining hours.
 -
