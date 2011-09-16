@@ -252,7 +252,20 @@
                 </notebook>
             </field>
         </record>
-
+       
+       <!-- Rename address to contact and add job_ids into search form-->
+ 
+        <record model="ir.ui.view" id="view_res_partner_filter_base_contact">
+            <field name="name">res.partner.select</field>
+            <field name="type">search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <field name="address" position="replace">
+                	<field name="address" string="Contact" select="1" />
+                </field>
+            </field>
+        </record>
 
     <!-- Views for Addresses -->
 
@@ -422,3 +435,4 @@
 
 </data>
 </openerp>
+

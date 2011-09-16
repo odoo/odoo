@@ -131,7 +131,7 @@ class res_partner_address(osv.osv):
         if not len(ids):
             return []
         res = []
-        if context is None: 
+        if context is None:
             context = {}
         for r in self.read(cr, user, ids, ['zip', 'city', 'partner_id', 'street']):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
@@ -142,6 +142,22 @@ class res_partner_address(osv.osv):
                                     or '', r.get('city', '') or '')
                 res.append((r['id'], addr.strip() or '/'))
         return res
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        if name:
+            ids = []
+            job_ids = self.pool.get('res.partner.job').search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
+            partner_ids = self.pool.get('res.partner.job').browse(cr, user, job_ids)
+            partner_data = [(partner.name.name) for partner in partner_ids]
+            for partner in partner_data:
+                ids += self.search(cr, user, [('partner_id',operator,partner)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
 
     _name = 'res.partner.address'
     _inherit = 'res.partner.address'
