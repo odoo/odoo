@@ -501,6 +501,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 self.on_session_valid();
             else
                 self.on_session_invalid();
+        }, function() {
+            self.on_session_invalid();
         });
     },
     /**

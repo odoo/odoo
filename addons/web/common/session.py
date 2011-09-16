@@ -43,30 +43,30 @@ class OpenERPSession(object):
         
     def build_connection(self):
         return openerplib.get_connection(hostname=self._server, port=self._port,
-                                         database=self._db,
+                                         database=self._db, login=self._login,
                                          user_id=self._uid, password=self._password)
 
     def proxy(self, service):
         return self.build_connection().get_service(service)
 
-    def bind(self, db, uid, password):
+    def bind(self, db, uid, login, password):
         self._db = db
         self._uid = uid
+        self._login = login
         self._password = password
 
     def login(self, db, login, password):
         uid = self.proxy('common').login(db, login, password)
-        self.bind(db, uid, password)
-        self._login = login
+        self.bind(db, uid, login, password)
         
         if uid: self.get_context()
         return uid
 
-    def assert_valid(self):
+    def assert_valid(self, force=False):
         """
         Ensures this session is valid (logged into the openerp server)
         """
-        self.build_connection().check_login(False)
+        self.build_connection().check_login(force)
 
     def execute(self, model, func, *l, **d):
         self.assert_valid()
