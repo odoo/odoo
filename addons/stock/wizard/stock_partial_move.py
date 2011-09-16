@@ -32,6 +32,8 @@ class stock_partial_move_memory_out(osv.osv_memory):
         'quantity' : fields.float("Quantity", required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True),
         'move_id' : fields.many2one('stock.move', "Move"),
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
         'cost' : fields.float("Cost", help="Unit Cost for this product line"),
@@ -202,7 +204,7 @@ class stock_partial_move(osv.osv_memory):
             if not p_moves.get(move.id):
                 continue
             partial_datas['move%s' % (move.id)] = {
-                'product_id' : p_moves[move.id].id,
+                'product_id' : p_moves[move.id].product_id.id,
                 'product_qty' : p_moves[move.id].quantity,
                 'product_uom' :p_moves[move.id].product_uom.id,
                 'prodlot_id' : p_moves[move.id].prodlot_id.id,
