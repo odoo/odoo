@@ -82,7 +82,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.each(this.widgets, function(w) {
             w.start();
         });
-        this.$form_header = this.$element.find('#' + this.element_id + '_header');
+        this.$form_header = this.$element.find('.oe_form_header');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
@@ -196,7 +196,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     do_update_pager: function(hide_index) {
-        var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager');
+        var $pager = this.$form_header.find('div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
         $pager.find('span.oe_pager_index').html(index);
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
@@ -619,6 +619,7 @@ openerp.web.form.compute_domain = function(expr, fields) {
 
 openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
+    identifier_prefix: 'formview-widget-',
     /**
      * @constructs openerp.web.form.Widget
      * @extends openerp.web.Widget
@@ -632,11 +633,13 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
-        this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
+        this.element_class = [
+            'formview', this.view.view_id, this.element_name,
+            this.view.widgets_counter++].join("_");
 
-        this._super(view, this.element_id);
+        this._super(view);
 
-        this.view.widgets[this.element_id] = this;
+        this.view.widgets[this.element_class] = this;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1, 10);
         this.decrease_max_width = 0;
@@ -649,7 +652,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.width = this.node.attrs.width;
     },
     start: function() {
-        this.$element = $('#' + this.element_id);
+        this.$element = this.view.$element.find('.' + this.element_class);
     },
     stop: function() {
         if (this.$element) {
@@ -896,7 +899,7 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         var self = this;
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
-            console.log(widget.element_id , widget);
+            console.log(widget.element_class , widget);
             window.w = widget;
         });
     }
@@ -1932,9 +1935,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     validate: function() {
         this.invalid = false;
-        var self = this;
-        var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-        if (self.viewmanager.active_view === "form") {
+        var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+        if (this.viewmanager.active_view === "form") {
             for (var f in view.fields) {
                 f = view.fields[f];
                 if (!f.is_valid()) {
