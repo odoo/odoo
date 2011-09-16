@@ -32,10 +32,16 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         jQuery("#oe_header").children().remove();
+
         this.rpc("/web/database/get_list", {}, function(result) {
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
+            if(self.session.db!=""){
+                self.$element.find("#database").val(self.session.db);
+                self.$element.find("#login").val(self.session.login);
+                self.$element.find("#password").val(self.session.password);
+            }
             self.$element.find("#login_btn").click(self.on_login);
             $.mobile.initializePage();
         });
@@ -159,7 +165,6 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
     on_loaded: function(data) {
         var self = this;
         this.data = data;
-
         this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.header.start();
         this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
