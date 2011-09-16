@@ -5,7 +5,7 @@
     <record id="property_rule_holidays" model="ir.rule">
         <field name="name">Employee Holidays</field>
         <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="domain_force">['|', ('employee_id.user_id','=',user.id),('department_id.manager_id.user_id','=',user.id)]</field>
         <field name="groups" eval="[(6,0,[ref('base.group_hr_user')])]"/>
     </record>
     <record id="property_rule_holidays_manager" model="ir.rule">
