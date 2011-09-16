@@ -91,36 +91,27 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             }
         }
         this.do_check_req_field(results['req_field']);
-        var selected_fields;
-        this.$element.find("td #sel_field").click(function(){
-            selected_fields = _.map(self.$element.find("td #sel_field"), function(field){
-                return field.selectedIndex
-            });
-        });
-        this.on_change_check(selected_fields,results['req_field']);
+        this.on_change_check(results['req_field']);
         this.$element.find("td #sel_field").change(function(){
-            self.on_change_check(selected_fields,results['req_field']);
+            self.on_change_check(results['req_field']);
         });
     },
-    on_change_check:function(selected_fields,req_field){
+    on_change_check:function(req_field){
             var self = this;
             self.$element.find("#message, #msg").remove();
-            var duplicate_flds = self.$element.find("td #sel_field option:selected");
-            _.each(duplicate_flds,function(fld){
+            var selected_flds = self.$element.find("td #sel_field option:selected");
+            _.each(selected_flds,function(fld){
                 if (fld.index != 0){
                     var res = self.$element.find("td #sel_field option:selected[value='"+ fld.value +"']");
                     if (res.length == 1){
-                        res.parent().removeClass("duplicate_fld");
-                        res.parent().addClass("select_fld");
+                        res.parent().removeClass("duplicate_fld").addClass("select_fld");
                     }else if(res.length > 1){
-                        res.parent().removeClass("select_fld");
-                        res.parent().addClass("duplicate_fld");
+                        res.parent().removeClass("select_fld").addClass("duplicate_fld");
                         res.parent().focus();
                     }
                 }else{
                     var elem = self.$element.find("td #sel_field option:selected[value='"+ fld.value +"']");
-                    elem.parent().removeClass("duplicate_fld");
-                    elem.parent().addClass("select_fld");
+                    elem.parent().removeClass("duplicate_fld").addClass("select_fld");
                 }
             });
             if(self.$element.find(".duplicate_fld").length){
@@ -144,7 +135,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 return !_.contains(sel_fields, fld)
             });
             if (required_fields.length){
-                $("#result").before('<div id="message" style="color:red">*Required Fields are not selected which is '+required_fields+'.</div>');
+                $("#result").before('<div id="message" style="color:red">*Required Fields are not selected : '+required_fields+'.</div>');
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
             }else{
                 self.$element.find("#message").remove();
