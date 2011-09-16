@@ -55,13 +55,15 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var $record = $(ev.currentTarget);
         var self = this;
         id = $record.data('id');
+
+        head_title = $.trim($record.text());
         if(!$('#oe_form').html().length){
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action);
+            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action, head_title);
             this.formview.start();
         }else{
             $('#oe_form').remove();
             $('<div id="oe_form" data-role="page"> </div>').appendTo('#moe');
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action);
+            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action, head_title);
             this.formview.start();
         }
     }

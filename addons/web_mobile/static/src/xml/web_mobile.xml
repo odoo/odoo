@@ -7,7 +7,6 @@
     <div data-role="page" id="oe_login"></div>
     <div id="oe_header" />
     <div id="oe_footer" />
-    <div id="oe_notepage" />
     <div data-role="page" id="oe_sec_menu"></div>
     <div data-role="page" id="oe_sec_menu_new"></div>
     <div data-role="page" id="oe_list"></div>
@@ -139,142 +138,6 @@
     </div>
     <t t-call="Footer" />
 </t>
-<t t-name="NotePage">
-    <div id="oe_note" data-role="content">
-        <form>
-            <t t-foreach="get_fields1" t-as="field1">
-                <t t-esc="field1.attrs.name" />
-                <div data-role="fieldcontain">
-                    <t t-if="fields1[field1.attrs.name].type == 'char'">
-                        <label for="">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <t t-if="values1[field1.attrs.name]">
-                            <input type="text" id="" t-att-value="values1[field1.attrs.name]"/>
-                        </t>
-                        <t t-if="!(values1[field1.attrs.name])">
-                            <input type="text" value="" id=""/>
-                         </t>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'text'">
-                        <label for="">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <textarea name="" id=""></textarea>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'float'">
-                        <label for="">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <t t-if="values[field1.attrs.name]">
-                            <input id="" type="text" t-att-value="values1[field1.attrs.name]"/>
-                        </t>
-                        <t t-if="!(values1[field1.attrs.name])">
-                            <input id="" type="text" value=""/>
-                        </t>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'date'">
-                        <label for="">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <t t-if="values1[field1.attrs.name]">
-                            <input id="" type="text" t-att-value="values1[field1.attrs.name]"/>
-                        </t>
-                        <t t-if="!(values1[field1.attrs.name])">
-                            <input id="" type="text" value=""/>
-                        </t>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'datetime'">
-                        <label for="">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <t t-if="values1[field1.attrs.name]">
-                            <input id="" type="text" t-att-value="values1[field1.attrs.name]"/>
-                        </t>
-                        <t t-if="!(values1[field1.attrs.name])">
-                            <input id="" type="text" value=""/>
-                        </t>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'boolean'">
-                        <fieldset data-role="controlgroup">
-                            <t t-if="values1[field1.attrs.name]">
-                                <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes" class="custom"/>
-                            </t>
-                            <t t-if="!(values1[field1.attrs.name])">
-                                <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
-                            </t>
-                            <label for="checkbox-1"><t t-esc="fields1[field1.attrs.name].string" /></label>
-                        </fieldset>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'selection'">
-                        <label for="" class="select">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <select id="" data-native-menu="false">
-                            <t t-foreach="fields1[field1.attrs.name].selection" t-as="opt">
-                                <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
-                            </t>
-                        </select>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'many2one'">
-                        <label for="" class="select">
-                            <t t-if="!(field1.attrs.string)" t-esc="fields1[field1.attrs.name].string"></t>
-                            <t t-if="field1.attrs.string" t-esc="field1.attrs.string"></t>:
-                        </label>
-                        <select id="" data-native-menu="false">
-                            <t t-if="fields1[field1.attrs.name].selection">
-                                <t t-foreach="fields1[field1.attrs.name].selection" t-as="opt">
-                                    <t t-if="values1[field1.attrs.name]==opt[0]">
-                                        <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
-                                    </t>
-                                    <t t-if="values1[field1.attrs.name]!=opt[0]">
-                                        <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
-                                    </t>
-                                </t>
-                            </t>
-                        </select>
-                    </t>
-                    <t t-if="fields1[field1.attrs.name].type == 'one2many'">
-                        <ul data-role="listview" data-inset="true" data-theme="d">
-                            <li data-theme="c">
-                                <a href="#">
-                                    <t t-esc="til1"/>
-                                </a>
-                             </li>
-                         </ul>
-                     </t>
-                </div>
-            </t>
-           <!--  <t t-if="notebooks">
-                <div data-role="collapsible-set">
-                    <t t-foreach="notebooks.children" t-as="page">
-                        <t t-if="page.attrs.invisible">
-                            <div style="display:none;" data-collapsed="true" data-role="collapsible">
-                                <h3>
-                                        <t t-esc="page.attrs.string"></t>
-                                </h3>
-                                <p></p>
-                            </div>
-                        </t>
-                        <t t-if="!page.attrs.invisible">
-                            <div data-collapsed="true" data-role="collapsible">
-                                <h3>
-                                        <t t-esc="page.attrs.string"></t>
-                                </h3>
-                            </div>
-                        </t>
-                    </t>
-                </div>
-            </t>-->
-        </form>
-    </div>
-</t>
 <t t-name="FormView">
     <t t-if="temp_flag">
         <t t-call="Header" />
@@ -381,7 +244,7 @@
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'one2many'">
                         <ul data-role="listview" data-inset="true" data-theme="d">
-                            <li data-theme="c">
+                            <li data-theme="c" t-att-for="field.attrs.name">
                                 <a href="">
                                     <t t-esc="til"/>
                                 </a>
