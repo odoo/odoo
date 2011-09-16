@@ -38,7 +38,7 @@
           - classicals (varchar, integer, boolean, ...)
           - relations (one2many, many2one, many2many)
           - functions
- 
+
 """
 
 import calendar
@@ -165,7 +165,7 @@ def modifiers_tests():
     test_modifiers({}, '{}')
     test_modifiers({"invisible": True}, '{"invisible": true}')
     test_modifiers({"invisible": False}, '{}')
-    
+
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -252,7 +252,7 @@ class browse_null(object):
 #
 class browse_record_list(list):
     """ Collection of browse objects
-    
+
         Such an instance will be returned when doing a ``browse([ids..])``
         and will be iterable, yielding browse() objects
     """
@@ -267,9 +267,9 @@ class browse_record_list(list):
 class browse_record(object):
     """ An object that behaves like a row of an object's table.
         It has attributes after the columns of the corresponding object.
-        
+
         Examples::
-        
+
             uobj = pool.get('res.users')
             user_rec = uobj.browse(cr, uid, 104)
             name = user_rec.name
@@ -885,7 +885,7 @@ class orm_template(object):
             elif field_type == 'integer':
                 return 0
             elif field_type == 'boolean':
-                return False
+                return 'False'
             return ''
 
         def selection_field(in_field):
@@ -1102,7 +1102,7 @@ class orm_template(object):
                     if line[i] and skip:
                         return False
                     continue
-                
+
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
                     mode = False
@@ -1115,7 +1115,7 @@ class orm_template(object):
                     for db_id in line.split(config.get('csv_internal_sep')):
                         res.append(_get_id(relation, db_id, current_module, mode))
                     return [(6,0,res)]
-                    
+
                 # ID of the record using a XML ID
                 if field[len(prefix)]=='id':
                     try:
@@ -1139,9 +1139,9 @@ class orm_template(object):
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
-                    
+
                     res = many_ids(line[i], relation, current_module, mode)
-                    
+
                     first = 0
                     while pos < len(datas):
                         res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
@@ -1151,15 +1151,15 @@ class orm_template(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
-                        
+
                         if data_res_id2:
                             res.append((4, data_res_id2))
-                                
+
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-                        
+
 
                 elif fields_def[field[len(prefix)]]['type']=='many2one':
                     relation = fields_def[field[len(prefix)]]['relation']
@@ -1188,7 +1188,7 @@ class orm_template(object):
 
                 else:
                     res = line[i]
-                    
+
                 row[field[len(prefix)]] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
@@ -1202,7 +1202,7 @@ class orm_template(object):
         position = 0
         while position<len(datas):
             res = {}
-            
+
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
@@ -1569,7 +1569,7 @@ class orm_template(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
- 
+
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
