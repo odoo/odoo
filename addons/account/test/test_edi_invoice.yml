@@ -151,9 +151,6 @@
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected"
     assert invoice_new.type == 'in_invoice', "Imported in voice is not supplier invoice"
-    assert invoice_new.amount_total == 1010.0, "Amount total is not same"
-    assert invoice_new.amount_tax == 1000.0, "Amount tax is not same"
-    assert invoice_new.amount_untaxes == 10.0, "Amount untaxed is not same"
     product = ['Medium PC','Basic PC']
     for inv_line in invoice_new.invoice_line:
         assert inv_line.account_id.id, "account_id is not taken from product's default"

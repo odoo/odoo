@@ -56,19 +56,29 @@
         "order_line": [{
                 "name": "basic pc", 
                 "product_uom": ["5af1272e-dd26-11e0-b65e-701a04e25543:product.product_uom_unit", "PCE"], 
-                "date_planned": "2011-08-31", 
+                "date_planned": "2011-09-30", 
                 "price_unit": 150.0, 
                 "__last_update": False, 
                 "__id": "5af1272e-dd26-11e0-b65e-701a04e25543:purchase.purchase_order_line-AlhsVDZGoKvJ", 
                 "product_qty": 1.0, 
                 "product_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"]
+        },
+        {
+                "name": "medium pc", 
+                "product_uom": ["5af1272e-dd26-11e0-b65e-701a04e25543:product.product_uom_unit", "PCE"], 
+                "date_planned": "2011-09-15", 
+                "price_unit": 100.0, 
+                "__last_update": False, 
+                "__id": "5af1272e-dd26-11e0-b65e-701a04e25543:purchase.purchase_order_line-AlhsVDZGoKvJ", 
+                "product_qty": 2.0, 
+                "product_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:product.product_product_pc3", "[PC3] Medium PC"]
         }], 
         "partner_address_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:base.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
         "__id": "5af1272e-dd26-11e0-b65e-701a04e25543:purchase.purchase_order_test", 
         "date_order": "2011-09-12", 
         "partner_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:purchase.res_partner_test20", "jones white"], 
         "__attachments": [], 
-        "__module": "purchase", 
+        "__module": "sale", 
         "amount_total": 350.0, 
         "company_address": {
                 "phone": "(+32).81.81.37.00", 
@@ -81,9 +91,9 @@
         }, 
         "amount_untaxed": 350.0, 
         "name": "PO00011", 
-        "__model": "purchase.order", 
+        "__model": "sale.order", 
         "__last_update": False, 
-        "company_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:base.main_company", "OpenERP S.A."], 
+        "company_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:base.main_company", "Client S.A."], 
         "__version": [6, 1], 
         "pricelist_id": ["5af1272e-dd26-11e0-b65e-701a04e25543:product.list0", "Public Pricelist (EUR)"]
     }
@@ -93,15 +103,25 @@
 -
   I Checking the sale order become purchase order or not after import
 -
-  !python {model: purchase.order}: |
+  !python {model: sale.order}: |
     
-    ids = self.search(cr, uid, [('partner_id','=','OpenERP S.A.')])
+    ids = self.search(cr, uid, [('partner_id','=','Client S.A.'), ('client_order_ref', '=', 'PO00011')])
     assert ids, 'Order does not have created of party'
     order_new = self.browse(cr, uid, ids[0])
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list is not imported"
     assert order_new.amount_total == 350, "Amount total is not same"
     assert order_new.amount_untaxed == 350, "untaxed amount is not same"
-    for purchase_line in order_new.order_line:
-        assert purchase_line.name in ['basic pc','medium pc'], "name of product is not in order"
-        assert purchase_line.product_id.name in ['Basic PC','Medium PC'], "name of product is not in order"
-        assert purchase_line.date_planned == '2011-09-13' , "date of planned order is not same"
+    assert len(order_new.order_line) == 2, "sale lines are not same"
+    for sale_line in order_new.order_line:
+        if sale_line.name == 'basic pc':
+            assert sale_line.delay == 18 , "delay is not same"
+            assert sale_line.product_uom.name == "PCE" , "uom is not same"
+            assert sale_line.price_unit == 150 , "price unit is not same"
+            assert sale_line.product_uom_qty == 1 , "product qty is not same"
+        elif sale_line.name == 'medium pc':
+            assert sale_line.delay == 3 , "delay is not same"
+            assert sale_line.product_uom.name == "PCE" , "uom is not same"
+            assert sale_line.price_unit == 100 , "price unit is not same"
+            assert sale_line.product_uom_qty == 2 , "product qty is not same"
+        else:
+            assert 'wrong product imported in sale lines'

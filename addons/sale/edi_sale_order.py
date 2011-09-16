@@ -122,9 +122,6 @@ class sale_order(osv.osv, ir_edi.edi):
         if context is None:
             context = {}
         
-        model = edi_document['__model']
-        assert model == 'purchase.order', _('Could not import sale order')
-        edi_document['__model'] = self._name    
         #import company as a new partner
         partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
 
@@ -135,9 +132,11 @@ class sale_order(osv.osv, ir_edi.edi):
         order_lines = edi_document['order_line']
         for order_line in order_lines:
             order_line['product_uom_qty'] = order_line['product_qty']
-            date_order = datetime.strptime(date_order, "%Y-%m-%d")
-            date_planned = datetime.strptime(order_line['date_planned'], "%Y-%m-%d")
-            order_line['delay'] = (date_planned - date_order).days
+            date_planned = order_line['date_planned']
+            delay = 0
+            if date_order and date_planned:
+                delay = (datetime.strptime(date_planned, "%Y-%m-%d") - datetime.strptime(date_order, "%Y-%m-%d")).days
+            order_line['delay'] = delay
         return super(sale_order,self).edi_import(cr, uid, edi_document, context=context)
       
 sale_order()
