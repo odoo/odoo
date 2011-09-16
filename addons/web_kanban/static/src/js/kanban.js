@@ -19,6 +19,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.groups = [];
         this.qweb = new QWeb2.Engine();
         this.NO_OF_COLUMNS = 2;
+        this.DISPLAY_COLUMNS = 3;
         if (this.options.action_views_ids.form) {
             this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
             this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
@@ -151,6 +152,18 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
+        var column_width = 100 / (this.all_display_data).length;
+        var row_width = column_width * (this.all_display_data).length * this.DISPLAY_COLUMNS;
+        self.$element.find(".oe_table_column" ).css("width", column_width +"%");
+        self.$element.find(".oe_kanban_row" ).css("width", row_width +"%");
+        this.$element.find('#next-column').click(function(event) {
+            event.preventDefault();
+            self.$element.find('.oe_kanban_view').animate({"scrollLeft" : "+=" + self.$element.find('.oe_column').width()}, 'slow');
+        });
+        this.$element.find('#previous-column').click(function(event) {
+            event.preventDefault();
+            self.$element.find('.oe_kanban_view').animate({scrollLeft:'-=' + self.$element.find('.oe_column').width()  }, 'slow');
+        });
     },
     do_record_group: function() {
         if (this.NO_OF_COLUMNS) {

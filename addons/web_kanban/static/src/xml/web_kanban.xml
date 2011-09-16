@@ -1,26 +1,28 @@
 <template>
 <t t-name="KanbanView">
-    <table style="width:100%;" class="oe_kanban_view">
-    <tr>
-        <td>
+    <div>
+        <div>
             <div class="oe_form_header">
                 <button type="button" class="oe_kanban_button_new">New</button>
+                <a id="previous-column" href="#">Previous</a>
+                <a id="next-column" href="#">Next</a>
             </div>
-        </td>
-    </tr>
-    <tr>
-        <td t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
-            <t t-if="columns.value" t-esc="columns.header"/>
-        </td>
-    </tr>
-    <tr>
-        <td t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value" t-attf-style="width: #{Math.round(99 / data.length)}%">
-            <div class="oe_column" t-att-id="'column_' + columns.value">
-                <div t-foreach="columns.records" t-as="record" class="oe_kanban_record" t-att-id="'main_' + record.id"/>
+        </div>
+    </div>
+    <div style="width:100%;" class="oe_kanban_view">
+        <div  class="oe_kanban_row">
+            <div t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
+                <t t-if="columns.value" t-esc="columns.header"/>
             </div>
-        </td>
-    </tr>
-    </table>
+        </div>
+        <div  class="oe_kanban_row">
+            <div t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value">
+                <div class="oe_column" t-att-id="'column_' + columns.value">
+                    <div t-foreach="columns.records" t-as="record" class="oe_kanban_record" t-att-id="'main_' + record.id"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </t>
 <t t-name="KanbanColorPicker">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_kanban_color_picker">
