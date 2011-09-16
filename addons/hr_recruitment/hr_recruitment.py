@@ -441,6 +441,12 @@ class hr_applicant(crm.crm_case, osv.osv):
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'stage_id' in vals and vals['stage_id']:
+            stage_obj = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
+            text = _("Changed Stage to: %s") % stage_obj.name
+            self.message_append(cr, uid, ids, text, body_text=text, context=context)
+        return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
 hr_applicant()
 
