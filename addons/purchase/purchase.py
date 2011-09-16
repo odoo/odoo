@@ -461,6 +461,7 @@ class purchase_order(osv.osv):
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id,
+                        'address_id': order.dest_address_id.id or order.partner_address_id.id,
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
