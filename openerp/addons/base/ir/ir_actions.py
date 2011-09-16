@@ -535,7 +535,7 @@ class actions_server(osv.osv):
         'sequence': lambda *a: 5,
         'code': lambda *a: """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
-#  - object or obj: browse_record of the record on which the action is triggered
+#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
 #  - time: Python time module
 #  - cr: database cursor
