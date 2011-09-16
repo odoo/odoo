@@ -7,14 +7,22 @@
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
             <field name="type">form</field>
             <field name="arch" type="xml">
+                <field name="project_id" position="attributes">
+                    <attribute name="on_change">on_change_project(project_id)</attribute>
+                </field>
+                <xpath expr="/form/notebook" position="before">
+                    <field name="analytic_account_id"
+                        domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
+                        on_change='on_change_account_id(analytic_account_id)'
+                        groups="base.group_extended" />
+                </xpath>
                 <notebook colspan="4">
                     <page string="Worklogs">
-                        <field name="analytic_account_id" invisible="1" domain="[('parent_id','!=',False)]" groups="base.group_extended"/>
                         <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : user_id, 'default_account_id' : analytic_account_id}">
                             <tree editable="top" string="Timesheet">
-                              <field name="name"/>
-                              <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                              <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)"/>
+                                <field name="name"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)"/>
                                 <field name="date"/>
                                 <field name="user_id"/>
                                 <field invisible="1" name="journal_id"/>

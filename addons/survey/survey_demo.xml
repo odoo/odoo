@@ -3,20 +3,7 @@
     <data noupdate="1">
 
         <record id="base.user_demo" model="res.users">
-            <field eval="[(4, ref('base.group_tool_user')),(4, ref('group_survey_user'))]" name="groups_id"/>
-        </record>
-
-        <record model="survey.type" id="survey_type1">
-            <field name="name">Human Resources</field>
-            <field name="code">Human Resources</field>
-        </record>
-        <record model="survey.type" id="survey_type2">
-            <field name="name">Customer Feeback</field>
-            <field name="code">Customer Feeback</field>
-        </record>
-        <record model="survey.type" id="survey_type3">
-            <field name="name">Supplier Selection</field>
-            <field name="code">Supplier Selection</field>
+            <field eval="[(4, ref('base.group_tool_user')),(4, ref('base.group_survey_user'))]" name="groups_id"/>
         </record>
 
         <!--  Partner Feedback Demo data -->

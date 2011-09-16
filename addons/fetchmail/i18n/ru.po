@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:52+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: fetchmail
 #: constraint:email.server:0
@@ -23,6 +23,8 @@ msgid ""
 "Warning! Record for selected Model can not be created\n"
 "Please choose valid Model"
 msgstr ""
+"Внимание! Невозможно создать запись для выбранной модели\n"
+"Выберите верную модель"
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -53,7 +55,7 @@ msgstr "POP"
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Не подтверждено"
 
 #. module: fetchmail
 #: field:email.server,user:0
@@ -68,12 +70,12 @@ msgstr "Тип"
 #. module: fetchmail
 #: view:email.server:0
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "Сервера POP/IMAP"
 
 #. module: fetchmail
 #: model:ir.module.module,shortdesc:fetchmail.module_meta_information
 msgid "Fetchmail Server"
-msgstr ""
+msgstr "Сервер Fetchmail"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -87,6 +89,8 @@ msgid ""
 "OpenObject Model. Generates a record of this model.\n"
 "Select Object with message_new attrbutes."
 msgstr ""
+"Модель OpenObject. По этой модели генерируется запись.\n"
+"Выбрать объект с атрибутами message_new."
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -96,7 +100,7 @@ msgstr "Добавить вложение?"
 #. module: fetchmail
 #: view:email.server:0
 msgid "# of emails"
-msgstr ""
+msgstr "Кол-во писем"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -116,7 +120,7 @@ msgstr "Дата"
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Waiting for Verification"
-msgstr ""
+msgstr "Ожидание проверки"
 
 #. module: fetchmail
 #: field:email.server,password:0
@@ -124,6 +128,7 @@ msgid "Password"
 msgstr "Пароль"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr "Письма"
@@ -131,17 +136,17 @@ msgstr "Письма"
 #. module: fetchmail
 #: view:email.server:0
 msgid "Search Email Servers"
-msgstr ""
+msgstr "Поиск серверов электронной почты"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Server & Login"
-msgstr ""
+msgstr "Сервер и имя пользователя"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Auto Reply?"
-msgstr ""
+msgstr "Авто-ответ?"
 
 #. module: fetchmail
 #: field:email.server,name:0
@@ -151,7 +156,7 @@ msgstr "Название"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mailgate_message
 msgid "Mailgateway Message"
-msgstr ""
+msgstr "Соообщение почтового шлюза"
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
@@ -192,7 +197,7 @@ msgstr "Параметр процесса"
 #. module: fetchmail
 #: field:email.server,is_ssl:0
 msgid "SSL ?"
-msgstr ""
+msgstr "SSL?"
 
 #. module: fetchmail
 #: selection:email.server,type:0
@@ -214,12 +219,12 @@ msgstr "IMAP"
 #: view:email.server:0
 #: model:ir.model,name:fetchmail.model_email_server
 msgid "POP/IMAP Server"
-msgstr ""
+msgstr "Сервер POP/IMAP"
 
 #. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
-msgstr ""
+msgstr "Внимание! Нельзя использовать повторяющиеся конфигурации сервера!"
 
 #. module: fetchmail
 #: field:email.server,type:0
@@ -240,13 +245,13 @@ msgstr "Сведения о сервере"
 #. module: fetchmail
 #: help:email.server,attach:0
 msgid "Fetches mail with attachments if true."
-msgstr ""
+msgstr "Если в значении \"Истина\", получать письма с вложениями."
 
 #. module: fetchmail
 #: selection:email.server,type:0
 #: selection:mailgate.message,server_type:0
 msgid "POP Server"
-msgstr ""
+msgstr "Сервер POP"
 
 #. module: fetchmail
 #: field:email.server,port:0
@@ -264,11 +269,18 @@ msgid ""
 "    * Email based Records (Add, Update)\n"
 "    "
 msgstr ""
+"Fetchmail: \n"
+"    * Получение почты с серверов POP/IMAP\n"
+"    * Поддержка SSL\n"
+"    * Интеграция со всеми модулями\n"
+"    * Автоматическое получение почты\n"
+"    * Записи на основе писем (Добавление, Обновление)\n"
+"    "
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: fetchmail
 #: help:email.server,action_id:0
@@ -276,53 +288,34 @@ msgid ""
 "An Email Server Action. It will be run whenever an e-mail is fetched from "
 "server."
 msgstr ""
+"Действие для почтового сервера. Будет выполняться при получении каждого "
+"письма с сервера."
 
 #. module: fetchmail
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
-msgstr ""
+msgstr "Приоритет от 0 до 10, выбор определяет порядок обработки."
 
 #. module: fetchmail
 #: field:email.server,action_id:0
 msgid "Email Server Action"
-msgstr ""
+msgstr "Действие для почтового сервера"
 
 #. module: fetchmail
 #: field:email.server,priority:0
 msgid "Server Priority"
-msgstr ""
+msgstr "Приоритет сервера"
 
 #. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
-msgstr ""
+msgstr "Почтовый сервер"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Fetch Emails"
-msgstr ""
+msgstr "Получить эл. почту"
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Недопустимые аргументы"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Некорректный формат XML для структуры вида!"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным!"
+#~ msgid "Email Servers"
+#~ msgstr "Сервера электронной почты"

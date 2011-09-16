@@ -45,8 +45,7 @@
                         widget="selection" />
                     <group colspan="2" col="4" attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
                            <field name="recurrency"/>
-                           <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
-                                on_change="onchange_edit_all(rrule_type,edit_all)"/>
+                           <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}" />
                     </group>
                 </group>
                 <notebook colspan="4">
@@ -102,7 +101,7 @@
                             <tree string="Invitation details" editable="top">
                                 <field name="sent_by_uid" string="From"/>
                                 <field name="user_id" string="To"/>
-                                <field name="email" string="Mail TO"/>
+                                <field name="email" string="Mail To"/>
                                 <field name="role" select="1" />
                                 <field name="state" />
                                 <button name="do_tentative"
@@ -179,7 +178,7 @@
                                 <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
                                 <label string=" " colspan="2" />
                                 <newline />
-                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
+                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
                                 <newline />
                            
                       
@@ -313,11 +312,6 @@
                            </field>
                            <field name="user_id" select="1"/>
                        </group>
-                        <newline/>
-                        <group expand="0" string="Extended Filters...">
-                           <field name="class" select="1" string="Privacy"/>
-                           <field name="show_as" string="Show time as" select="1"/>
-                        </group>
                        <newline/>
                        <group expand="0" string="Group By...">
                             <filter string="Responsible" icon="terp-personal" domain="[]"

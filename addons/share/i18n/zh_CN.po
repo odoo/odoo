@@ -1,0 +1,498 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-07-08 03:38+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: share
+#: code:addons/share/web/editors.py:15
+#, python-format
+msgid "Sharing"
+msgstr "共享"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:462
+#, python-format
+msgid ""
+"This additional data has been automatically added to your current access.\n"
+msgstr "这数据已自动添加到当前帐户\n"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Existing External Users"
+msgstr "现有的外部用户"
+
+#. module: share
+#: help:res.groups,share:0
+msgid "Group created to set access rights for sharing data with some users."
+msgstr "为设置一些用户的共享数据访问权限所建立的用户组"
+
+#. module: share
+#: model:ir.module.module,shortdesc:share.module_meta_information
+msgid "Share Management"
+msgstr ""
+
+#. module: share
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "你不能同时登录两个用户！"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:76
+#, python-format
+msgid "Sharing Wizard - Step 1"
+msgstr "共享向导 - 步骤1"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.ui.menu,name:share.menu_action_share_wizard
+msgid "Share Access Rules"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:453
+#, python-format
+msgid ""
+"Dear,\n"
+"\n"
+"%s\n"
+"\n"
+msgstr ""
+
+#. module: share
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "选择的用户组不在这用允许的用户组"
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Next"
+msgstr "下一个"
+
+#. module: share
+#: help:share.wizard,action_id:0
+msgid ""
+"The action that opens the screen containing the data you wish to share."
+msgstr "这操作是打开包含要共享数据的视图。"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:68
+#, python-format
+msgid "Please specify \"share_root_url\" in context"
+msgstr "请在上下文注明“share_root_url”"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Congratulations, you have successfully setup a new shared access!"
+msgstr "恭喜，你已设置好新的共享权限！"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:275
+#, python-format
+msgid "(Copy for sharing)"
+msgstr "（共享复制）"
+
+#. module: share
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr "创建新的"
+
+#. module: share
+#: field:share.wizard,share_root_url:0
+msgid "Generic Share Access URL"
+msgstr "一般共享访问URL"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:457
+#, python-format
+msgid ""
+"You may use the following login and password to get access to this protected "
+"area:\n"
+msgstr ""
+
+#. module: share
+#: view:res.groups:0
+msgid "Regular groups only (no share groups"
+msgstr "只是普通组（不是共享组）"
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Read & Write"
+msgstr "读/写"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share wizard: step 2"
+msgstr "共享向导 - 步骤2"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share wizard: step 0"
+msgstr "共享向导 - 步骤0"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Share wizard: step 1"
+msgstr "共享向导 - 步骤·"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:458
+#: field:share.wizard.result.line,login:0
+#, python-format
+msgid "Username"
+msgstr "用户名"
+
+#. module: share
+#: field:res.users,share:0
+msgid "Share User"
+msgstr "共享用户"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:452
+#, python-format
+msgid "%s has shared OpenERP %s information with you"
+msgstr "%s 与你已共享系统的 %s"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Finish"
+msgstr "完成"
+
+#. module: share
+#: field:share.wizard,user_ids:0
+#: field:share.wizard.user,user_id:0
+msgid "Users"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:103
+#, python-format
+msgid ""
+"This username (%s) already exists, perhaps data has already been shared with "
+"this person.\n"
+"You may want to try selecting existing shared users instead."
+msgstr ""
+"这用户名（%s ）已存在。也许数据已和他共享。\n"
+"你需要再选择现有的用户与其共享。"
+
+#. module: share
+#: field:share.wizard,new_users:0
+msgid "New users"
+msgstr "新用户"
+
+#. module: share
+#: model:ir.model,name:share.model_res_groups
+msgid "res.groups"
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:149
+#, python-format
+msgid "%s (Shared)"
+msgstr "%s （已共享）"
+
+#. module: share
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "用户组名必须唯一！"
+
+#. module: share
+#: selection:share.wizard,user_type:0
+msgid "New users (emails required)"
+msgstr "新用户（需要一个电子邮件地址）"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:418
+#, python-format
+msgid "Sharing filter created by user %s (%s) for group %s"
+msgstr "创建用户 %s （%s ）的共享过滤器，在用户组 %s"
+
+#. module: share
+#: view:res.groups:0
+msgid "Groups"
+msgstr "用户组"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Select the desired shared access mode:"
+msgstr "选择共享访问的方式："
+
+#. module: share
+#: field:res.groups,share:0
+msgid "Share Group"
+msgstr "共享用户组"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:459
+#: field:share.wizard.result.line,password:0
+#, python-format
+msgid "Password"
+msgstr "密码"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Who would you want to share this data with?"
+msgstr "你想和谁共享这数据？"
+
+#. module: share
+#: model:ir.module.module,description:share.module_meta_information
+msgid ""
+"The goal is to implement a generic sharing mechanism, where user of OpenERP\n"
+"can share data from OpenERP to their colleagues, customers, or friends.\n"
+"The system will work by creating new users and groups on the fly, and by\n"
+"combining the appropriate access rights and ir.rules to ensure that the "
+"/shared\n"
+"users/ will only have access to the correct data.\n"
+"    "
+msgstr ""
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:102
+#, python-format
+msgid "User already exists"
+msgstr "用户已存在"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Send Email Notification(s)"
+msgstr "发送通知的电子邮件"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:463
+#, python-format
+msgid ""
+"You may use your existing login and password to view it. As a reminder, your "
+"login is %s.\n"
+msgstr "作为提醒，你现在使用的登录名是 %s\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:460
+#, python-format
+msgid "Database"
+msgstr "数据库"
+
+#. module: share
+#: model:ir.model,name:share.model_share_wizard_user
+msgid "share.wizard.user"
+msgstr ""
+
+#. module: share
+#: view:share.wizard:0
+msgid ""
+"Please select the action that opens the screen containing the data you want "
+"to share."
+msgstr "该操作是打开选择要包含哪些共享数据的视图"
+
+#. module: share
+#: selection:share.wizard,user_type:0
+msgid "Existing external users"
+msgstr "现有的外部用户"
+
+#. module: share
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
+msgid "Summary"
+msgstr "简述"
+
+#. module: share
+#: field:share.wizard,user_type:0
+msgid "Users to share with"
+msgstr "与用户共享"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:304
+#, python-format
+msgid "Indirect sharing filter created by user %s (%s) for group %s"
+msgstr "创建用户 %s  （%s ）间接共享过滤器，在用户组 %s"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:448
+#, python-format
+msgid "Email required"
+msgstr "需要一个电子邮件地址"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:240
+#, python-format
+msgid "Copied access for sharing"
+msgstr "共享的复制访问"
+
+#. module: share
+#: view:share.wizard:0
+msgid ""
+"Optionally, you may specify an additional domain restriction that will be "
+"applied to the shared data."
+msgstr "可选项，你可以为共享数据外加一个限制。"
+
+#. module: share
+#: view:share.wizard:0
+msgid "New Users (please provide one e-mail address per line below)"
+msgstr "新用户（请在每行下面提供一个电子邮件地址）"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:448
+#, python-format
+msgid ""
+"The current user must have an email address configured in User Preferences "
+"to be able to send outgoing emails."
+msgstr "当前用户必须有一个电子邮件地址，设置在用户首选项的电子邮件发送地址。"
+
+#. module: share
+#: view:res.users:0
+msgid "Regular users only (no share user)"
+msgstr "只是普通用户（不是共享用户）"
+
+#. module: share
+#: field:share.wizard.result.line,share_url:0
+msgid "Share URL"
+msgstr "共享URL"
+
+#. module: share
+#: field:share.wizard,domain:0
+msgid "Domain"
+msgstr "定义域"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:314
+#, python-format
+msgid ""
+"Sorry, the current screen and filter you are trying to share are not "
+"supported at the moment.\n"
+"You may want to try a simpler filter."
+msgstr "对不起，你当前的视图和过滤器试图访问当前不支持到的共享数据，你可能只是要一个简单的过滤器。"
+
+#. module: share
+#: field:share.wizard,access_mode:0
+msgid "Access Mode"
+msgstr "访问方式"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Access info"
+msgstr "访问信息"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:454
+#, python-format
+msgid ""
+"To access it, you can go to the following URL:\n"
+"    %s"
+msgstr "你可以用下面的URL访问它：%s"
+
+#. module: share
+#: field:share.wizard,action_id:0
+msgid "Action to share"
+msgstr "共享操作"
+
+#. module: share
+#: code:addons/share/web/editors.py:18
+#, python-format
+msgid "Share"
+msgstr "共享"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:434
+#, python-format
+msgid "Sharing Wizard - Step 2"
+msgstr "共享向导 - 步骤2"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Here is a summary of the access points you have just created:"
+msgstr "你刚建立的接入点简述："
+
+#. module: share
+#: model:ir.model,name:share.model_share_wizard_result_line
+msgid "share.wizard.result.line"
+msgstr "share.wizard.result.line"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:313
+#, python-format
+msgid "Sharing access could not be setup"
+msgstr "不能设置共享访问"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.actions.act_window,name:share.action_share_wizard_step1
+#: model:ir.model,name:share.model_share_wizard
+#: model:ir.ui.menu,name:share.menu_action_share_wizard
+#: field:share.wizard.result.line,share_wizard_id:0
+msgid "Share Wizard"
+msgstr "共享向导"
+
+#. module: share
+#: help:share.wizard,user_type:0
+msgid "Select the type of user(s) you would like to share data with."
+msgstr "选择你想共享数据的用户类型。"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: share
+#: view:share.wizard:0
+msgid "Close"
+msgstr "结束"
+
+#. module: share
+#: help:res.users,share:0
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "创建你只用来共享数据的有限访问外部用户。"
+
+#. module: share
+#: help:share.wizard,domain:0
+msgid "Optional domain for further data filtering"
+msgstr "更多数据的过滤器的可选择域"
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Read-only"
+msgstr "只读"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:323
+#, python-format
+msgid "*usual password*"
+msgstr "*通用密码*"
+
+#, python-format
+#~ msgid ""
+#~ "Dear,\n"
+#~ "\n"
+#~ msgstr ""
+#~ "尊敬的\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "You may use the following login and password to get access to this protected "
+#~ "area:"
+#~ msgstr "你可以用这个用户名和密码访问到这个受保护的区域："
+
+#~ msgid "Sharing Tools"
+#~ msgstr "共享工具"
+
+#~ msgid "Access Groups"
+#~ msgstr "访问用户组"

@@ -20,15 +20,12 @@
 ##############################################################################
 
 
-import pooler
 import time
 from report import report_sxw
-from osv import osv
 
 class seller_form_report(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(seller_form_report, self).__init__(cr, uid, name, context=context)
-        lot=self.pool.get('auction.lots').browse(cr, uid, uid)
 
         self.localcontext.update({
             'time': time,
@@ -52,7 +49,6 @@ class seller_form_report(report_sxw.rml_parse):
     def seller_info(self):
         objects = [object for object in self.localcontext.get('objects')]
         ret_dict = {}
-        ret_list = []
         for object in objects:
 
             partner = ret_dict.get(object.bord_vnd_id.partner_id.id,False)

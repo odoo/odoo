@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:57+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:55+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
 msgid "Auto Directory Configuration"
-msgstr "自动目录配置"
+msgstr "自动目录设置"
 
 #. module: document_ftp
 #: view:document.ftp.configuration:0
@@ -31,11 +31,13 @@ msgid ""
 "format is HOST:PORT and the default host (localhost) is only suitable for "
 "access from the server machine itself.."
 msgstr ""
+"输入你的最终用户用于连接你OpenERP服务器的网址。基于你的网络配置，会影响客户端显示的链接。格式是：主机:端口。注意localhost只是在服务器本机"
+"才有用的。"
 
 #. module: document_ftp
 #: field:document.ftp.configuration,progress:0
 msgid "Configuration Progress"
-msgstr "配置进度"
+msgstr "设置进度"
 
 #. module: document_ftp
 #: model:ir.actions.url,name:document_ftp.action_document_browse
@@ -50,7 +52,7 @@ msgstr "图像"
 #. module: document_ftp
 #: field:document.ftp.configuration,host:0
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -60,7 +62,7 @@ msgstr "FTP 服务器"
 #. module: document_ftp
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
-msgstr "FTP 服务器配置"
+msgstr "FTP 服务器设置"
 
 #. module: document_ftp
 #: model:ir.module.module,description:document_ftp.module_meta_information
@@ -71,7 +73,7 @@ msgid ""
 "    but you would also be able to connect with them through the file system "
 "using the\n"
 "    FTP client.\n"
-msgstr ""
+msgstr "此模块为文档管理增加了FTP支持。安装了这个模块你不仅可以在OpenERP里访问文档还能通过FTP客户端在文件系统上访问这些文件。\n"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -82,7 +84,7 @@ msgstr "浏览(_B)"
 #: help:document.ftp.configuration,host:0
 msgid ""
 "Server address or IP and port to which users should connect to for DMS access"
-msgstr ""
+msgstr "服务器地址或IP地址，以及端口。用于用户连接文档管理系统。"
 
 #. module: document_ftp
 #: model:ir.ui.menu,name:document_ftp.menu_document_browse
@@ -117,7 +119,7 @@ msgstr "文档 FTP 浏览"
 #. module: document_ftp
 #: view:document.ftp.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr "知识管理应用配置"
+msgstr "知识管理应用设置"
 
 #. module: document_ftp
 #: model:ir.actions.act_window,name:document_ftp.action_ftp_browse
@@ -132,4 +134,4 @@ msgstr "浏览文档"
 #. module: document_ftp
 #: view:document.ftp.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"

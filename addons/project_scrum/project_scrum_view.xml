@@ -33,7 +33,7 @@
             <field name="model">project.scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
+                <tree colors="grey:state in ('cancel','done');blue:state == 'pending'" string="Product Backlog">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="project_id"/>
@@ -63,7 +63,7 @@
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
      					<button name="%(action_postpone_wizard)d" string="Postpone" type="action"
 							help="Postpone backlog" colspan="2"
-                         icon="gtk-convert"  attrs="{'invisible':[('state','=','done')]}"/>
+                         icon="gtk-convert"  attrs="{'invisible':[('state','in',['done', 'cancel'])]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
                         <field name="create_date"/>
@@ -302,7 +302,7 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
-                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
                         			string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -396,7 +396,9 @@
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
-                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
+                        <button name="%(mail.action_email_compose_message_wizard)d"
+                                string="Send Email" type="action" icon="terp-mail-message-new"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
@@ -573,8 +575,8 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
-                        <filter icon="terp-check" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
-                        <filter icon="gtk-find" string="Current" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
+                        <filter icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                        <filter icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
                     </field>
                 </field>
             </field>

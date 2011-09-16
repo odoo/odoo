@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:32+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -90,7 +90,7 @@ msgid ""
 "for every employee"
 msgstr ""
 "El responsable de ausencias puede dejar este campo vacío si esta "
-"petición/asignación de ausencia es para cada empleado."
+"petición/asignación de ausencia es para todos los empleados."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -102,7 +102,7 @@ msgstr "Cambiar a borrador"
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Holidays"
-msgstr "Vacaciones"
+msgstr "Festivos"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -123,10 +123,10 @@ msgid ""
 "sickness, etc.) and manage allowances per type."
 msgstr ""
 "Las solicitudes de ausencias pueden ser creadas por los empleados y "
-"validadas por los responsables. Una vez la solicitud de ausencia es "
-"validada, aparecerá automáticamente en la agenda del empleado. Puede definir "
-"varios tipos de permisos (vacaciones pagadas, enfermedad, etc.) y gestionar "
-"los permisos por tipo."
+"validadas por sus responsables. Una vez validada la solicitud de ausencia, "
+"aparecerá automáticamente en la agenda del empleado. Puede definir varios "
+"tipos de permisos (vacaciones pagadas, enfermedad, etc.) y gestionar los "
+"permisos por tipo."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -150,7 +150,7 @@ msgstr "Rechazar"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
-"No puede validar las ausencias para el empleado %s: muy pocos días restantes "
+"No puede validar las ausencias para el empleado %s: le quedan muy pocos días "
 "(%s)"
 
 #. module: hr_holidays
@@ -181,9 +181,9 @@ msgid ""
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
-"Escoja 'petición de ausencia' si alguien quiere cogerse un día libre. \n"
-"Escoja 'petición de asignación' si quiere incrementar el número de ausencias "
-"disponible para alguien."
+"Seleccione 'petición de ausencia' si alguien quiere cogerse un día libre. \n"
+"Seleccione 'petición de asignación' si quiere incrementar el número de "
+"ausencias disponibles para alguien."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
@@ -198,7 +198,7 @@ msgstr "Color en informe"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Holidays Summary Report By Employee"
-msgstr "Informe resumen de festivos RH por empleado"
+msgstr "Informe de RRHH de resumen de ausencias por empleado"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -228,7 +228,7 @@ msgstr "Borrador"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
-msgstr "Violeta"
+msgstr "Magenta"
 
 #. module: hr_holidays
 #: help:hr.holidays,state:0
@@ -238,16 +238,17 @@ msgid ""
 "'Waiting Approval'.            If the admin accepts it, the state is "
 "'Approved'. If it is refused, the state is 'Refused'."
 msgstr ""
-"Cuando la petición de vacaciones se crea el estado es 'borrador'.\n"
-" Si se confirma y es enviada al responsable, el estado es 'esperando "
-"aprobación'. Si el responsable la acepta, el estado es 'aprobada'. Si es "
-"rechazada, el estado es 'rechazada'."
+"El estado de una petición de ausencia en el momento de crearse es "
+"'Borrador'.\n"
+" Cuando el usuario la confirma, se envía al responsable y su estado cambia a "
+"'Esperando aprobación'. Si el responsable la autoriza, el estado cambia a "
+"'Aprobada', pero si la rechaza su estado cambia a 'Rechazada'."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "You have to select at least 1 Department. And try again"
-msgstr "Debe selccionar al menos 1 departamento. E inténtelo de nuevo"
+msgstr "Debe seleccionar al menos 1 departamento. E inténtelo de nuevo"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -259,7 +260,7 @@ msgstr "Confirmado"
 #: field:hr.holidays.summary.dept,date_from:0
 #: field:hr.holidays.summary.employee,date_from:0
 msgid "From"
-msgstr "Desde"
+msgstr "desde"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -307,40 +308,42 @@ msgid ""
 "            for example, you maybe will do it for the user 'admin'\n"
 "            .\n"
 msgstr ""
-"Recursos humanos: Gestión de vacaciones y flujo de trabajo\n"
+"Recursos humanos: Gestión de ausencias y flujo de trabajo\n"
 "\n"
 "    Este módulo le permite gestionar las ausencias y las peticiones de "
-"ausencias.\n"
-"    Implementa un tablero para gestión de recursos humanos que incluye:\n"
+"ausencias de los empleados.\n"
+"    Implementa un panel para gestión de recursos humanos que incluye:\n"
 "        * Mis ausencias\n"
 "        * Mis gastos\n"
 "    Tenga en cuenta que:\n"
-"    - Puede sincronizar con una agenda interna (uso del módulo CRM): para "
-"crear un caso automáticamente cuando una solicitud de vacaciones es "
-"aceptada, tiene que enlazar el estado de las vacaciones con una sección de "
-"caso. Puede configurar esta opción y su color en\n"
-"                RH / Configuración / Estados de vacaciones\n"
-"    - Un empleado puede pedir más días libres haciendo una nueva asignación. "
-"Incrementará su total disponible de ese tipo de ausencia (si se acepta la "
-"petición)\n"
-"    - Hay dos formas de imprimir las vacaciones de los empleados:\n"
+"\n"
+"    - Es posible la sincronización con la agenda interna (del módulo CRM): "
+"Con el fin de crear automáticamente un caso cuando se acepta una solicitud "
+"de ausencia, debe vincular el estado de ausencia a una sección de caso. "
+"Puede configurar esta información y sus preferencias de color en:\n"
+"                Recursos Humanos / Configuración / Ausencias / Tipos de "
+"ausencia\n"
+"    - Un empleado puede solicitar más días libres mediante una nueva "
+"asignación. Esto incrementará el total de días disponible de ese tipo de "
+"ausencia (si se acepta la petición).\n"
+"    - Hay dos formas de imprimir las ausencias de los empleados:\n"
 "        * La primera le permitirá escoger empleados por departamento y se "
-"usa pinchando la opción de menú:\n"
-"                RH / Peticiones de vacaciones / Imprimir resumen de "
-"vacaciones\n"
-"        * La segunda le permitirá elegir el informe de vacaciones para "
-"empleados específicos. Vaya a:\n"
-"                RH / Empleados / Empleados\n"
-"            y seleccione aquellos que quiera, pulse sobre el icono imprimir "
-"y seleccione la opción\n"
-"                'Imprimir resumen de vacaciones de empleados'\n"
-"    - El asistente le permite escoger si quiere imprimir las confirmadas y "
-"validadas o sólo las validadas.\n"
-"Estos estados deben ser configurados por un usuario del grupo 'RH'. Puede "
-"definir estas opciones en la pestaña seguridad de los datos del usuario\n"
+"usa haciendo clic en la opción de menú:\n"
+"                Recursos Humanos / Informe / Ausencias / Ausencias por "
+"departamento\n"
+"        * La segunda le permitirá elegir el informe de ausencias para "
+"empleados específicos a través de:\n"
+"                Recursos Humanos / Informe / Ausencias / Análisis de "
+"ausencia\n"
+"           Seleccione aquellos empleados de los que quiera el informe y "
+"pulse sobre el icono imprimir.\n"
+"    - El asistente le permite escoger si quiere imprimir las ausencias "
+"confirmadas, las validadas o ambas.\n"
+"Estos estados deben ser configurados por un usuario del grupo 'Recursos "
+"Humanos'. Puede definir estas opciones en la pestaña seguridad de los datos "
+"del usuario:\n"
 "                Administración / Usuarios / Usuarios\n"
-"            por ejemplo, puede hacerlo para el usuario 'admin'\n"
-"            .\n"
+"           Por ejemplo, puede hacerlo para el usuario 'Administrador'.\n"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -356,7 +359,7 @@ msgstr "Estado"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr "Total festivos por tipo"
+msgstr "Total ausencias por tipo"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -388,7 +391,7 @@ msgstr "Salmón claro"
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
-msgstr "Trigo"
+msgstr "Amarillo"
 
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
@@ -472,7 +475,7 @@ msgstr "Permite sobrepasar límite"
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 msgid "Employee's Holidays"
-msgstr "Vacaciones del empleado"
+msgstr "Ausencias del empleado"
 
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
@@ -485,7 +488,7 @@ msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
 msgstr ""
-"Este valor es la suma de todas la peticiones de vacaciones con un valor "
+"Este valor es la suma de todas la peticiones de ausencias con un valor "
 "positivo."
 
 #. module: hr_holidays
@@ -502,7 +505,7 @@ msgstr "Coral claro"
 #: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 msgid "Holidays by Department"
-msgstr "Vacaciones por departamento"
+msgstr "Ausencias por departamento"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -512,7 +515,7 @@ msgstr "Negro"
 #. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
-msgstr "Fiesta"
+msgstr "Ausencias"
 
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
@@ -529,12 +532,12 @@ msgstr "Marfil"
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Validated and Confirmed"
-msgstr "Validadas y Confirmadas"
+msgstr "Validades y confirmadas"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,leaves_taken:0
 msgid "Leaves Already Taken"
-msgstr "Vacaciones realizadas"
+msgstr "Vacaciones ya realizadas"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -717,7 +720,7 @@ msgstr "Buscar ausencia"
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Holiday Type"
-msgstr "Seleccionar un tipo de vacaciones"
+msgstr "Seleccionar tipo de vacaciones"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
@@ -727,7 +730,7 @@ msgstr "Ausencias restantes"
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
-msgstr "Departamento(s)"
+msgstr "Departmento(s)"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -759,8 +762,8 @@ msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
 msgstr ""
-"Este valor se calcula sumando todas las peticiones de vacaciones con un "
-"valor negativo."
+"Este valor se calcula sumando todas las peticiones de ausencias con un valor "
+"negativo."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -785,12 +788,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
 msgid "Human Resources: Holidays management"
-msgstr "Recursos humanos: Gestión de vacaciones"
+msgstr "Gestión de vacaciones"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Holidays Summary Report By Department"
-msgstr "Informe RH resumen de vacaciones por departamento"
+msgstr "Informe de RRHH de resumen de ausencias por departamento"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
@@ -839,523 +842,3 @@ msgstr "Para confirmar"
 #: view:hr.holidays:0
 msgid "To Approve"
 msgstr "Para aprobar"
-
-#~ msgid "Notification"
-#~ msgstr "Notificación"
-
-#~ msgid "My Available Holidays"
-#~ msgstr "Mis vacaciones disponibles"
-
-#~ msgid "My Awaiting Confirmation Holidays Requests"
-#~ msgstr "Mis peticiones de vacaciones esperando confirmación"
-
-#~ msgid "Requests Awaiting for Validation"
-#~ msgstr "Peticiones esperando validación"
-
-#~ msgid "Maximum Leaves Allowed"
-#~ msgstr "Máximo de vacaciones permitidas"
-
-#~ msgid "Holidays Allowed"
-#~ msgstr "Vacaciones permitidas"
-
-#~ msgid "My Holidays Request"
-#~ msgstr "Mis peticiones de vacaciones"
-
-#~ msgid "draft"
-#~ msgstr "Borrador"
-
-#~ msgid "Notes"
-#~ msgstr "Notas"
-
-#~ msgid "Report Options"
-#~ msgstr "Opciones del informe"
-
-#~ msgid "Case"
-#~ msgstr "Caso"
-
-#~ msgid "Ok"
-#~ msgstr "Ok"
-
-#~ msgid "My Holidays Requests"
-#~ msgstr "Mis peticiones de vacaciones"
-
-#~ msgid "My Holidays Request Waiting confirmation"
-#~ msgstr "Mis peticiones de vacaciones esperando confirmación"
-
-#~ msgid "Summary Of Holidays"
-#~ msgstr "Resumen de las vacaciones"
-
-#~ msgid "Holidays Per Employee"
-#~ msgstr "Vacaciones por empleado"
-
-#~ msgid "Holidays Request"
-#~ msgstr "Petición de vacaciones"
-
-#~ msgid "You have to select at least 1 Employee. Try again."
-#~ msgstr "Selecciona por lo menos un empleado. Prueba otra vez."
-
-#~ msgid "Holidays Requests Awaiting for Validation"
-#~ msgstr "Peticiones esperando validación"
-
-#~ msgid "My Validated Holidays Requests"
-#~ msgstr "Mis peticiones de vacaciones validadas"
-
-#~ msgid "All Holidays Requests"
-#~ msgstr "Todas las peticiones de vacaciones"
-
-#~ msgid "Off-Days' Summary"
-#~ msgstr "Resumen días de ausencia"
-
-#~ msgid "Section"
-#~ msgstr "Sección"
-
-#~ msgid "Analyze from"
-#~ msgstr "Análisis desde"
-
-#~ msgid "Status"
-#~ msgstr "Estado"
-
-#~ msgid "to"
-#~ msgstr "hasta"
-
-#~ msgid "Holidays Per User"
-#~ msgstr "Vacaciones por usuario"
-
-#~ msgid "of the"
-#~ msgstr "del"
-
-#~ msgid "Define holiday status"
-#~ msgstr "Definir Estado Vacaciones"
-
-#~ msgid "Holiday status"
-#~ msgstr "Estado Vacaciones"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid "Request is refused."
-#~ msgstr "Petición es rechazada."
-
-#~ msgid "Refused Request"
-#~ msgstr "Petición rechazada"
-
-#~ msgid "Legal Declaration Document to declare new employee"
-#~ msgstr "Documento de declaración oficial para declarar nuevo empleado"
-
-#~ msgid "Holidays Management"
-#~ msgstr "Gestión de vacaciones"
-
-#~ msgid "Holiday is set in the calendar."
-#~ msgstr "Las vacaciones son fijadas en el calendario."
-
-#~ msgid "New Holidays Request"
-#~ msgstr "Nueva petición de vacaciones"
-
-#~ msgid "His manager approves the request"
-#~ msgstr "Su responsable aprueba la petición"
-
-#~ msgid "Encoding of annual available holidays."
-#~ msgstr "Codificación de vacaciones disponibles anuales."
-
-#~ msgid "Set Holiday"
-#~ msgstr "Fijar vacaciones"
-
-#~ msgid "The holiday is set in the calendar"
-#~ msgstr "Las vacaciones son fijadas en el calendario"
-
-#~ msgid "Employee get holidays"
-#~ msgstr "Empleado obtiene vacaciones"
-
-#~ msgid "Employee fills in a request for holidays"
-#~ msgstr "Empleado rellena una petición de vacaciones"
-
-#~ msgid "Calendar"
-#~ msgstr "Calendario"
-
-#~ msgid "Allow to override Limit"
-#~ msgstr "Permite superar el límite"
-
-#~ msgid "If holidays available, employee can take it and fill it."
-#~ msgstr ""
-#~ "Si hay vacaciones disponibles, el empleado puede cogerla y rellenarla."
-
-#~ msgid "Approved Request"
-#~ msgstr "Petición aprobada"
-
-#~ msgid "Holidays def Request"
-#~ msgstr "Petición define vacaciones"
-
-#~ msgid "Holidays Definition"
-#~ msgstr "Definición vacaciones"
-
-#~ msgid "Encode number of available holidays"
-#~ msgstr "Codifica número de vacaciones disponibles"
-
-#~ msgid "Secretariat Social"
-#~ msgstr "Secretaría social"
-
-#~ msgid "Document for employee"
-#~ msgstr "Documento para empleado"
-
-#~ msgid "Reufse"
-#~ msgstr "Rechazar"
-
-#~ msgid "His manager refuses the request"
-#~ msgstr "Su responsable rechaza la petición"
-
-#~ msgid "You have to select at least 1 Department. Try again."
-#~ msgstr "Debe seleccionar por lo menos 1 departamento. Inténtelo de nuevo."
-
-#~ msgid "Holiday manager"
-#~ msgstr "Responsable de vacaciones"
-
-#~ msgid "Both"
-#~ msgstr "Ambas"
-
-#~ msgid "Log Holidays"
-#~ msgstr "Registro de vacaciones"
-
-#, python-format
-#~ msgid ""
-#~ "You can not cancel this holiday request. first You have to make its case in "
-#~ "draft state."
-#~ msgstr ""
-#~ "No puede cancelar esta petición de vacaciones. Debe convertir su caso en "
-#~ "estado borrador."
-
-#~ msgid "General Information"
-#~ msgstr "Información general"
-
-#~ msgid "History"
-#~ msgstr "Historial"
-
-#~ msgid "Holidays user"
-#~ msgstr "Usuario de vacaciones"
-
-#~ msgid "hr.holidays.log"
-#~ msgstr "hr.holidays.log"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "¡Atención!"
-
-#~ msgid "Number of Holidays Requested"
-#~ msgstr "Número de vacaciones solicitadas"
-
-#~ msgid "Date"
-#~ msgstr "Fecha"
-
-#~ msgid "Holiday Request ID"
-#~ msgstr "ID solicitud de vacaciones"
-
-#~ msgid "Holidays Process"
-#~ msgstr "Proceso de vacaciones"
-
-#~ msgid "Validate"
-#~ msgstr "Validar"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de la acción"
-
-#~ msgid "Employee Holidays"
-#~ msgstr "Vacaciones de empleado"
-
-#~ msgid "Employee Declaration"
-#~ msgstr "Declaración de empleado"
-
-#~ msgid "Holiday's Status"
-#~ msgstr "Estado de vacaciones"
-
-#~ msgid "Employee_id"
-#~ msgstr "Empleado"
-
-#~ msgid "My Holiday Requests"
-#~ msgstr "Mis peticiones"
-
-#~ msgid "Number of Days in this Holiday Request"
-#~ msgstr "Número de días solicitados en esta petición"
-
-#~ msgid "Print Summary of Employee's Holidays"
-#~ msgstr "Imprimir resumen de vacaciones"
-
-#~ msgid "My Draft Holidays Requests"
-#~ msgstr "Mis peticiones en borrador"
-
-#~ msgid "My Refused Holidays Requests"
-#~ msgstr "Mis peticiones rechazadas"
-
-#~ msgid "holidays."
-#~ msgstr "Vacaciones."
-
-#~ msgid "My Holidays Request Refused"
-#~ msgstr "Mis peticiones rechazadas"
-
-#~ msgid "Print Summary of Holidays"
-#~ msgstr "Imprimir resumen de vacaciones"
-
-#~ msgid "Request is approved."
-#~ msgstr "Petición aprobada."
-
-#~ msgid "My Holidays Request Validated"
-#~ msgstr "Mis peticiones validadas"
-
-#~ msgid "Waiting Validation"
-#~ msgstr "Esperando validación"
-
-#~ msgid "Holidays Status"
-#~ msgstr "Estado de vacaciones"
-
-#~ msgid "Vacation end day"
-#~ msgstr "Fecha fin vacaciones"
-
-#~ msgid "Holiday per user"
-#~ msgstr "Vacaciones por usuario"
-
-#~ msgid "My Holidays Request Draft"
-#~ msgstr "Mis peticiones en borrador"
-
-#~ msgid "Color of the status"
-#~ msgstr "Color del estado"
-
-#~ msgid "Vacation start day"
-#~ msgstr "Fecha inicio de vacaciones"
-
-#~ msgid "Holiday Status"
-#~ msgstr "Estado vacaciones"
-
-#~ msgid ""
-#~ "Human Ressources: Holidays tracking and workflow\n"
-#~ "\n"
-#~ "    This module allows you to manage holidays and holidays requests. For "
-#~ "each employee, you can also define a number of available holidays per "
-#~ "holiday status.\n"
-#~ "\n"
-#~ "    Note that:\n"
-#~ "    - A synchronisation with an internal agenda (use of the CRM module) is "
-#~ "possible: in order to automatically create a case when an holiday request is "
-#~ "accepted, you have to link the holidays status to a case section. You can "
-#~ "set up this info and your colour preferences in\n"
-#~ "                HR / Configuration / Holidays Status\n"
-#~ "    - An employee can make a negative holiday request (holiday request of -2 "
-#~ "days for example), this is considered by the system as an ask for more off-"
-#~ "days. It will increase his total of that holiday status available (if the "
-#~ "request is accepted).\n"
-#~ "    - There are two ways to print the employee's holidays:\n"
-#~ "        * The first will allow to choose employees by department and is used "
-#~ "by clicking the menu item located in\n"
-#~ "                HR / Holidays Request / Print Summary of Holidays\n"
-#~ "        * The second will allow you to choose the holidays report for "
-#~ "specific employees. Go on the list\n"
-#~ "                HR / Employees / Employees\n"
-#~ "            then select the ones you want to choose, click on the print icon "
-#~ "and select the option\n"
-#~ "                'Print Summary of Employee's Holidays'\n"
-#~ "    - The wizard allows you to choose if you want to print either the "
-#~ "Confirmed & Validated holidays or only the Validated ones. These states must "
-#~ "be set up by a user from the group 'HR' and with the role 'holidays'. You "
-#~ "can define these features in the security tab from the user data in\n"
-#~ "                Administration / Users / Users\n"
-#~ "            for example, you maybe will do it for the user 'admin'.\n"
-#~ msgstr ""
-#~ "Recursos Humanos: Registro y seguimiento de Vacaciones\n"
-#~ "    Este módulo permite administrar las vacaciones y peticiones de "
-#~ "vacaciones. Para cada empleado se puede definir un numero de vacaciones "
-#~ "disponibles.\n"
-#~ "    Además:\n"
-#~ "    - Es posible sincronizar con la agenda (usando el módulo de CRM): Para "
-#~ "poder automatizar la creación de casos cuando una petición es aceptada, "
-#~ "tiene que relacionar un estado de vacaciones con una sección de casos. Puede "
-#~ "configurar esta información y también el color preferido en RRHH / "
-#~ "Configuración / Estado de vacaciones.\n"
-#~ "    - Un empleado puede crear peticiones negativas (pedir -2 días por "
-#~ "ejemplo). Esto el sistema lo considera como una petición de más días de "
-#~ "ausencia. Incrementará su total de vacaciones disponibles de este tipo (si "
-#~ "la petición es aceptada).\n"
-#~ "    - Hay 2 maneras de imprimir las vacaciones:\n"
-#~ "        * La primera permite seleccionar empleados por departamento y está "
-#~ "disponible desde el menú\n"
-#~ "              RRHH / Petición de vacaciones / Imprimir resumen de "
-#~ "vacaciones\n"
-#~ "        * La segunda permite seleccionar el informe de vacaciones para "
-#~ "ciertos empleados. Desde la lista\n"
-#~ "              RRHH / Empleados / Empleados\n"
-#~ "          seleccione los empleados que desee, haga clic en el icono de "
-#~ "imprimir y seleccione la opción\n"
-#~ "              'Imprimir resumen de vacaciones de los empleados'\n"
-#~ "    - El asistente permite elegir si quiere imprimir las vacaciones "
-#~ "confirmadas y validadas o sólo las validadas. Estos estados deben "
-#~ "configurarse por un usuario del grupo 'HR' con el rol de 'holidays'. Puede "
-#~ "definirlo en la pestaña de seguridad en la ficha de usuario en el menú\n"
-#~ "              Administración / Usuarios / Usuarios\n"
-#~ "      por ejemplo, quizá quiere hacerlo para el usuario 'admin'.\n"
-
-#~ msgid "Category Of employee"
-#~ msgstr "Categoría de empleado"
-
-#~ msgid "March"
-#~ msgstr "Marzo"
-
-#~ msgid "Category's Name"
-#~ msgstr "Nombre de la categoría"
-
-#~ msgid "Validation User"
-#~ msgstr "Validación usuario"
-
-#~ msgid "Company Allocation"
-#~ msgstr "Asignación de compañía"
-
-#~ msgid "Taken Leaves"
-#~ msgstr "Ausencias cogidas"
-
-#~ msgid " Month "
-#~ msgstr " Mes "
-
-#~ msgid "Allocated Leaves"
-#~ msgstr "Ausencias asignadas"
-
-#~ msgid "Leaves By Month"
-#~ msgstr "Ausencias por mes"
-
-#~ msgid "July"
-#~ msgstr "Julio"
-
-#~ msgid "Remaining Leave by Type and User"
-#~ msgstr "Ausencias disponibles por tipo y usuario"
-
-#~ msgid ""
-#~ "If you link this type of leave with a category in the CRM, it will "
-#~ "synchronize each leave asked with a case in this category, to display it in "
-#~ "the company shared calendar for example."
-#~ msgstr ""
-#~ "Si enlaza este tipo de ausencia con una categoría del CRM, sincronizará cada "
-#~ "petición de ausencia con un caso en esta categoría para mostrarlo en un "
-#~ "calendario compartido por ejemplo."
-
-#~ msgid "September"
-#~ msgstr "Septiembre"
-
-#~ msgid "December"
-#~ msgstr "Diciembre"
-
-#~ msgid "Remaining Leaves by User"
-#~ msgstr "Ausencias disponibles por usuario"
-
-#~ msgid "Month"
-#~ msgstr "Mes"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot validate leaves for employee %s while there are too few remaining "
-#~ "leave days."
-#~ msgstr ""
-#~ "No puede validar ausencias para el empleado %s mientras no haya suficientes "
-#~ "días disponibles."
-
-#~ msgid " Year "
-#~ msgstr " Año "
-
-#~ msgid "August"
-#~ msgstr "Agosto"
-
-#~ msgid "Available Holidays"
-#~ msgstr "Vacaciones disponibles"
-
-#~ msgid "January"
-#~ msgstr "Enero"
-
-#~ msgid "Employee Request"
-#~ msgstr "Petición de empleado"
-
-#~ msgid "October"
-#~ msgstr "Octubre"
-
-#~ msgid "November"
-#~ msgstr "Noviembre"
-
-#~ msgid "June"
-#~ msgstr "Junio"
-
-#~ msgid "Day"
-#~ msgstr "Día"
-
-#~ msgid "May"
-#~ msgstr "Mayo"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Nombre del empleado"
-
-#~ msgid "April"
-#~ msgstr "Abril"
-
-#~ msgid "Leaves by Month"
-#~ msgstr "Ausencias por mes"
-
-#~ msgid "February"
-#~ msgstr "Febrero"
-
-#, python-format
-#~ msgid "Wrong leave definition."
-#~ msgstr "Definición de ausencia errónea"
-
-#, python-format
-#~ msgid ""
-#~ "You Cannot Validate leaves while available leaves are less than asked leaves."
-#~ msgstr ""
-#~ "No puede validar ausencias mientras haya menos ausencias disponibles que "
-#~ "peticiones."
-
-#~ msgid "Year"
-#~ msgstr "Año"
-
-#~ msgid ""
-#~ "This field is only for informative purposes, to depict if the leave "
-#~ "request/allocation comes from an employee or from the company"
-#~ msgstr ""
-#~ "Este campo es sólo para fines informativos, para indicar si la petición "
-#~ "/asignación de ausencia viene de un empleado o de la compañía"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot validate leaves for category %s while there are too few remaining "
-#~ "leave days."
-#~ msgstr ""
-#~ "No puede validar ausencias de la categoría %s mientras el número de días "
-#~ "disponibles sea insuficiente."
-
-#, python-format
-#~ msgid "No user related to the selected employee."
-#~ msgstr "El empleado seleccionado no tiene un usuario asociado"
-
-#~ msgid ""
-#~ "Leaves requests can be recorded by employees and validated by their "
-#~ "managers. Once a leave request is validated it appears automatically in the "
-#~ "agenda of the employee. You can define several allowance types (paid "
-#~ "holidays, sickness, etc) and manage allowances per type."
-#~ msgstr ""
-#~ "Las peticiones de ausencia pueden ser introducidas por los empleados y "
-#~ "validadas por sus responsables. Una vez que una petición es validada aparece "
-#~ "automáticamente en la agenda del empleado. Puede definir varios tipos de "
-#~ "permisos (vacaciones pagadas, enfermedad, etc) y gestionar los permisos por "
-#~ "tipo."
-
-#~ msgid ""
-#~ "Start date should not be larger than end date!\n"
-#~ "Number of Days should be greater than 1!"
-#~ msgstr ""
-#~ "¡La fecha de inicio no debe ser mayor que la de fin!\n"
-#~ "¡El número de días debe ser mayor que 1!"
-
-#~ msgid "available.holidays.report"
-#~ msgstr "disponibilidad.vacaciones.informe"
-
-#~ msgid "Meeting Category"
-#~ msgstr "Categoría de reunión"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Mes-1    "

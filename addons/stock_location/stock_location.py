@@ -20,9 +20,6 @@
 ##############################################################################
 
 from osv import fields,osv
-import tools
-import ir
-import pooler
 
 class stock_location_path(osv.osv):
     _name = "stock.location.path"

@@ -33,7 +33,7 @@
                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                       <field name="partner_id"/>
                       <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]" />
+                      <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -69,17 +69,17 @@
                             domain="[]"
                             context="{'group_by':'company_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="Partner Date" icon="terp-go-today"
+                        <filter string="Assign Date" icon="terp-go-today"
                             domain="[]"
                             name="group_partner_date"
-                            context="{'group_by':'partner_date'}"/>
+                            context="{'group_by':'date_assign'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today"
                             domain="[]" context="{'group_by':'day'}"/>
                         <filter string="Month" icon="terp-go-month"
                             domain="[]" context="{'group_by':'month'}" />
                         <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" />
+                            domain="[]" context="{'group_by':'year'}" />
                   </group>
 
                </search>
@@ -107,9 +107,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Opportunities Assignment Analysis">
-                <field name="name" invisible="1"/>
+                <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
-                <field name="partner_date" invisible="1"/>
+                <field name="date_assign" invisible="1"/>
                 <field name="section_id" invisible="1" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="grade_id" invisible="1" widget="selection"/>

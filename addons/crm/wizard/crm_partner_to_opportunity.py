@@ -67,8 +67,12 @@ class crm_partner2opportunity(osv.osv_memory):
 
         data = context and context.get('active_ids', []) or []
         make_opportunity = self.pool.get('crm.partner2opportunity')
+        data_obj = self.pool.get('ir.model.data')
+        part_obj = self.pool.get('res.partner')
+        categ_obj = self.pool.get('crm.case.categ')
+        case_obj = self.pool.get('crm.lead')
+        
         for make_opportunity_obj in make_opportunity.browse(cr, uid, ids, context=context):
-            data_obj = self.pool.get('ir.model.data')
             result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
             res = data_obj.read(cr, uid, result, ['res_id'])
 
@@ -79,14 +83,9 @@ class crm_partner2opportunity(osv.osv_memory):
             if id3:
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
-            part_obj = self.pool.get('res.partner')
             address = part_obj.address_get(cr, uid, data)
-
-
-            categ_obj = self.pool.get('crm.case.categ')
             categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
 
-            case_obj = self.pool.get('crm.lead')
             opp_id = case_obj.create(cr, uid, {
                 'name' : make_opportunity_obj.name,
                 'planned_revenue' : make_opportunity_obj.planned_revenue,

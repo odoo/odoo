@@ -281,7 +281,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -310,7 +310,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -347,16 +347,16 @@
     <blockTable colWidths="82.0,82.0,82.0,128.0,82.0,82.0" style="Table1">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Chart of Account</para>
+          <para style="terp_tblheader_General_Centre">Chart of Accounts</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Journal</para>
+          <para style="terp_tblheader_General_Centre">Journals</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
+          <para style="terp_tblheader_General_Centre">Filters By [[ data['form']['filter'] not in ('filter_no','unreconciled') and get_filter(data) ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Partner's</para>
@@ -378,7 +378,7 @@
           <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">[[ data['form']['filter'] in ('filter_no','unreconciled') and get_filter(data) or removeParentNode('para') ]]</para>
           <blockTable colWidths="58.0,58.0" style="Table7">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
@@ -441,7 +441,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -546,7 +546,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>

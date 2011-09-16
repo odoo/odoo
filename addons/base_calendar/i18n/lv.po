@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:55+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:52+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -143,6 +143,7 @@ msgid "March"
 msgstr "Marts"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -260,7 +261,7 @@ msgid "Invitation Detail"
 msgstr "Sīkāka informācija par ielūgumu"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -369,8 +370,8 @@ msgstr "Termiņš"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Uzmanību!"
@@ -830,7 +831,7 @@ msgid "Hours"
 msgstr "Stundas"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -880,7 +881,6 @@ msgstr "Atgādinājums"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -1062,7 +1062,7 @@ msgid "Wednesday"
 msgstr "Trešdiena"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr ""
@@ -1660,18 +1660,3 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr ""
-
-#~ msgid "Repeat max that times"
-#~ msgstr "Atkārtot maksimums tik reižu"
-
-#~ msgid "Exclude range"
-#~ msgstr "Izņemot periodu"
-
-#~ msgid "Repeat every x"
-#~ msgstr "Atkārtot katru"
-
-#~ msgid "Seconds"
-#~ msgstr "Sekundes"
-
-#~ msgid "Custom"
-#~ msgstr "Pielāgots"

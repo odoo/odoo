@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:58+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:21+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -2231,9 +2231,6 @@ msgstr "An"
 msgid "Invoice Based on Deliveries"
 msgstr "Factură bazată pe livrări"
 
-#~ msgid "Shop name"
-#~ msgstr "Nume magazin"
-
 #~ msgid "Origin"
 #~ msgstr "Origine"
 
@@ -2242,9 +2239,6 @@ msgstr "Factură bazată pe livrări"
 
 #~ msgid "Sales orders"
 #~ msgstr "Comenzi vânzare"
-
-#~ msgid "In progress"
-#~ msgstr "În progres"
 
 #~ msgid "Draft Invoice"
 #~ msgstr "Factură ciornă"
@@ -2264,17 +2258,11 @@ msgstr "Factură bazată pe livrări"
 #~ msgid "Outgoing Products"
 #~ msgstr "Produse ieşite"
 
-#~ msgid "Number packages"
-#~ msgstr "Numărul de pachete"
-
 #~ msgid "Order Ref"
 #~ msgstr "Ref. Comanda"
 
 #~ msgid "Invoice Corrected"
 #~ msgstr "Factura corectata"
-
-#~ msgid "Invoice from the packings"
-#~ msgstr "Factura din lista de livrare"
 
 #~ msgid "Manual Designation"
 #~ msgstr "Desemnare manuala"
@@ -2284,9 +2272,6 @@ msgstr "Factură bazată pe livrări"
 
 #~ msgid "Delivery, from the warehouse to the customer."
 #~ msgstr "Livrare - din depozit către client."
-
-#~ msgid "Customer Ref."
-#~ msgstr "Referinţă client"
 
 #~ msgid ""
 #~ "The sale order will automatically create the invoice proposition (draft "
@@ -2328,63 +2313,9 @@ msgstr "Factură bazată pe livrări"
 #~ msgstr ""
 #~ "Trebuie mai întâi să anulaţi toate facturile ataşate acestei comenzi."
 
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all packing lists have been finished.\n"
-#~ "  - The 'Invoice from the packings' choice is used to create an invoice "
-#~ "during the packing process."
-#~ msgstr ""
-#~ "\"Metoda de livrare\" este utilizată pentru a sincroniza opeaţiunile de "
-#~ "facturare cu cele de livrare.\n"
-#~ "  - opţiunea ”Plata înainte de livrare” - va genera mai întâi factura, iar "
-#~ "după confirmarea plăţii facturii se va genera ordinul de împachetare pentru "
-#~ "livrare.\n"
-#~ "  - opţiunea ”Livrare şi facturare manuală” va crea direct ordinul de "
-#~ "împachetare pentru livrare şi va aştepta ca utilizatorul să confirme pentru "
-#~ "a genera o factura-ciornă.\n"
-#~ "  - opţiunea ”Facturare după livrare” va genera o factură-ciornă pe baza "
-#~ "comenzii primite după ce vor fi confirmate ca livrate toate ordinele de "
-#~ "împachetare.\n"
-#~ "  - opţiunea ”Factură pe măsura livrării”  este utilizat pentru a genera o "
-#~ "factură în timpul procesului de împachetare şi livrare  - conform produselor "
-#~ "ce vor fi livrate, indiferent de comanda iniţială."
-
-#~ msgid "Related Packings"
-#~ msgstr "Pachete comune unei singure  livrări"
-
-#~ msgid "Product UOS"
-#~ msgstr "Unitatea de împachetare şi livrare a produsului"
-
 #, python-format
 #~ msgid "Could not cancel this sale order !"
 #~ msgstr "Nu se poate anula această comandă!"
-
-#, python-format
-#~ msgid "You can not cancel a sale order line that has already been invoiced !"
-#~ msgstr "Nu puteţi anula o comandă care a fost deja facturată!"
-
-#~ msgid ""
-#~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice validation "
-#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
-#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
-#~ "for the scheduler to be on the date 'Date Ordered'."
-#~ msgstr ""
-#~ "Oferă starea în care se află o ofertă sau o comandă. Starea de excepţie este "
-#~ "atribuită automat atunci cînd intervine o anulare în validarea facturii "
-#~ "(Excepţie la facturare) sau în procesarea listei de împachetare (Excepţie la "
-#~ "livrare). Starea ”Programare în aşteptare” este atribuită atunci când "
-#~ "factura este confirmată, dar aşteaptă să ajungă la data stabilită  în "
-#~ "comandă pentru livrare."
-
-#~ msgid "Manual in progress"
-#~ msgstr "Comandă procesată manual - în curs"
 
 #~ msgid ""
 #~ "This Configuration step use to set default picking policy when make sale "
@@ -2393,24 +2324,8 @@ msgstr "Factură bazată pe livrări"
 #~ "Acest pas în configurare stabileşte valoare implicită pentru ”Metoda de "
 #~ "livrare” pentru atunci când se lansează o comandă."
 
-#~ msgid "Quantity (UOS)"
-#~ msgstr "Cantitate (UOS) (unitate de împachetare)"
-
 #~ msgid "Our Salesman"
 #~ msgstr "Agentul nostru de vânzări"
-
-#~ msgid ""
-#~ "If you don't have enough stock available to deliver all at once, do you "
-#~ "accept partial shippings or not."
-#~ msgstr ""
-#~ "Dacă nu aveţi stoc suficient pentru a face livrarea într-o singură tranşă, "
-#~ "acceptaţi livrări parţiale sau nu?"
-
-#, python-format
-#~ msgid "You must first cancel all packings attached to this sale order."
-#~ msgstr ""
-#~ "Trebuie mai întâi să anulaţi toate ordinele de împachetare ataşate acestei "
-#~ "comenzi."
 
 #~ msgid "Sales order"
 #~ msgstr "Comenzi"
@@ -2458,27 +2373,6 @@ msgstr "Factură bazată pe livrări"
 
 #~ msgid "Reference"
 #~ msgstr "Referinta"
-
-#~ msgid "Report of Created Sale Order"
-#~ msgstr "Raport de comenzi create"
-
-#~ msgid "Turnover Per Product"
-#~ msgstr "Venitul pe produs"
-
-#~ msgid "Created Sale Orders"
-#~ msgstr "Comenzi create"
-
-#~ msgid "Turnover Per Month"
-#~ msgstr "Venitul lunar"
-
-#~ msgid "Total Turnover"
-#~ msgstr "Venitul total"
-
-#~ msgid "Create Date"
-#~ msgstr "Data Creării"
-
-#~ msgid "Created Sales orders"
-#~ msgstr "Comenzi create"
 
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr ""

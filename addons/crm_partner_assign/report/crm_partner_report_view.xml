@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--     Opportunity tree view  -->
+        <record id="view_report_crm_partner_assign_filter" model="ir.ui.view">
+            <field name="name">crm.partner.report.assign.select</field>
+            <field name="model">crm.partner.report.assign</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Partner assigned Analysis">
+                    <group col="20" colspan="8">
+                        <field name="country_id" />
+                        <field name="grade_id"/>
+                        <field name="user_id"/>
+                        <field name="section_id"/>
+                   </group>
+                   <newline/>
+                   <group  expand="1" string="Group By...">
+                       <filter string="Salesman" name="user" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
+                       <filter string="Country" icon="terp-go-home" name="group_country" context="{'group_by':'country_id'}" />
+                        <separator orientation="vertical" />
+                        <filter string="Section" icon="terp-personal+"
+                            domain="[]"
+                            context="{'group_by':'section_id'}" />
+                        <filter string="Grade" name="group_grade" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'grade_id'}" />
+                        <filter string="Name" name="" icon="terp-stock_symbol-selection"
+                            domain="[]" context="{'group_by':'name'}" />
+                        <separator orientation="vertical" />
+                  </group>
+               </search>
+            </field>
+        </record>
+
+<!-- Crm Lead Assign report Graph View -->
+
+       <record id="view_report_crm_partner_assign_tree" model="ir.ui.view">
+            <field name="name">crm.partner.assign.report.tree</field>
+            <field name="model">crm.partner.report.assign</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Opportunities Assignment Analysis">
+                <field name="name" invisible="1"/>
+                <field name="country_id" invisible="1"/>
+                <field name="grade_id" invisible="1"/>
+                <field name="section_id" invisible="1" groups="base.group_extended"/>
+                <field name="user_id" invisible="1"/>
+                <field name="nbr" string="#Partner" sum="#Partner"/>
+                <field name="opp"/>
+             </tree>
+            </field>
+       </record>
+
+       <!-- Leads by user and section Action -->
+
+       <record id="action_report_crm_partner_assign" model="ir.actions.act_window">
+            <field name="name">Partnership Analysis</field>
+            <field name="res_model">crm.partner.report.assign</field>
+            <field name="context">{'search_default_group_country': 1, 'search_default_group_grade': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_mode">tree</field>
+            <field name="domain">[('grade_id', '!=', False)]</field>
+        </record>
+
+       <menuitem id="menu_report_crm_partner_assign_tree"
+           groups="base.group_extended"
+           parent="base.next_id_64" action="action_report_crm_partner_assign" sequence="5"/>
+
+    </data>
+</openerp>

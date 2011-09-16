@@ -14,19 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:46+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr "De salida"
+msgstr "Envío mercancías"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr "Caminos arrastrados"
+msgstr "Rutas arrastradas"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
@@ -49,7 +49,6 @@ msgid "Parameters"
 msgstr "Parámetros"
 
 #. module: stock_location
-#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "Ubicación origen"
@@ -75,7 +74,7 @@ msgstr "Debe asignar un lote de producción para este producto"
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr "Ubicación utilizada por la ubicación de destino para suministar."
+msgstr "Ubicación usada como ubicación destino al abastecer."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -130,7 +129,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr "Caminos en las ubicaciones de almacén"
+msgstr "Rutas en las ubicaciones de almacén"
 
 #. module: stock_location
 #: view:product.product:0
@@ -313,6 +312,90 @@ msgid ""
 "from Gate A\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo complementa la aplicación Almacén, añadiendo soporte para cada "
+"producto,\n"
+"ruta de ubicación, aplicación efectiva de flujos de inventario de Entrada y "
+"Salida.\n"
+"\n"
+"Normalmente, esto se podría utilizar para:\n"
+"* Gestión de las cadenas de fabricación de productos\n"
+"* Gestionar ubicaciones predeterminadas por producto\n"
+"* Definir las rutas dentro de su almacén de acuerdo a las necesidades "
+"empresariales, tales como:\n"
+"   - Control de Calidad\n"
+"   - Después de Servicios de Ventas\n"
+"   - Proveedor Devoluciones\n"
+"* Gestión de Ayuda a la rentabilidad, mediante la generación de movimientos "
+"automáticos para productos alquilados\n"
+"\n"
+"Una vez que este módulo está instalado, aparecerá una ficha adicional en la "
+"pestaña del producto, donde se puede añadir\n"
+"las especificaciones del flujo de Entrada y de Salida. Los datos de "
+"demostración del producto CPU1 para esos flujos de entrada/salida:\n"
+"\n"
+"Flujos de Entrada\n"
+"----------\n"
+"Los flujos de entrada son útiles cuando la llegada de determinados productos "
+"a un lugar determinado siempre\n"
+"va seguida de un movimiento que corresponde a otra ubicación, opcionalmente "
+"después de un cierto retraso.\n"
+"La aplicación Almacén original ya soporta tales especificaciones del flujo "
+"de entrada en sus Ubicaciones, pero estas no pueden ser refinadas por "
+"producto.\n"
+"\n"
+"Una especificación de flujo de entrada indica qué ubicación está encadenada "
+"con qué ubicación, y con\n"
+"qué parámetros. Tan pronto como una cantidad determinada de productos se "
+"mueve de la ubicación de origen,\n"
+"un movimiento encadenado de forma automática configurado de acuerdo con los "
+"parámetros establecidos en la especificación del flujo\n"
+"(lugar de destino, demora, tipo de movimiento, diarios, etc) se dispara. El "
+"nuevo movimiento puede ser automáticamente\n"
+"procesado, o requerir una confirmación manual, dependiendo de los "
+"parámetros.\n"
+"\n"
+"Flujos de Salida\n"
+"----------\n"
+"Los flujos de salida son un poco diferentes de los flujos de entrada, en el "
+"sentido de que no están relacionados con\n"
+"la tramitación de movimientos de productos, sino más bien con el tratamiento "
+"de los pedidos de venta.\n"
+"Lo que se saca es una necesidad, no directamente los productos.\n"
+"Un ejemplo clásico de flujo de salida es cuando usted tiene una empresa de "
+"Outlet, con una empresa padre\n"
+"que es la responsable de los suministros del Outlet.\n"
+"\n"
+"  [cliente] <- A - [Outlet] <- B - [Suministrador] <~ C ~ [Proveedor]\n"
+"\n"
+"Cuando una nueva orden de compra (A, procedente de la confirmación de una "
+"orden de venta por ejemplo) llega al Outlet, se convierte en otra compra (B, "
+"a través de un flujo de entrada del tipo 'mover')\n"
+"solicitada desde el socio. Cuando el orden de compa para B es procesado por "
+"la empresa socia, y\n"
+"si el producto está agotado, puede convertirse en una Orden de Compra (C) "
+"del Proveedor\n"
+"(flujo de Entrada de tipo Compra). El resultado es que el orden de "
+"adquisición, la necesidad, se traslada automáticamente del Cliente al "
+"Proveedor.\n"
+"\n"
+"Técnicamente, los flujos de Salida permiten procesar los pedidos de "
+"adquisición de otra manera, no sólo en función del producto considerado, "
+"sino también en función de qué ubicación tiene la \"necesidad\" de qué\n"
+"producto (es decir, la ubicación de destino de esa orden de compra).\n"
+"\n"
+"Caso de Uso\n"
+"---------------\n"
+"\n"
+"Puede utilizar los datos de demostración de la siguiente manera:\n"
+"  CPU1: Venta de algunas CPU1 en la tienda 1 y ejecutar el planificador\n"
+"     - Almacén: órden de entrega, Tienda 1: Recepción\n"
+"  CPU3:\n"
+"     - Al recibir el producto, va al Control de Calidad y se almacena en la "
+"plataforma 2.\n"
+"     - Cuando se entrega al cliente: Lista de Selección -> Embalaje -> Orden "
+"de Entrega desde la puerta A\n"
+"    "
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -439,7 +522,6 @@ msgid "Procurement"
 msgstr "Abastecimiento"
 
 #. module: stock_location
-#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "Ubicación destino"
@@ -454,7 +536,7 @@ msgstr "Movimiento automático"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr "De entrada"
+msgstr "Recepción mercancías"
 
 #. module: stock_location
 #: view:product.product:0
@@ -485,6 +567,8 @@ msgid "Operation"
 msgstr "Operación"
 
 #. module: stock_location
+#: view:product.product:0
+#: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
 msgstr "Rutas de ubicaciones"
@@ -523,28 +607,4 @@ msgstr "Facturado"
 #~ msgstr "stock.ubicacion.ruta"
 
 #~ msgid "Procurement & Locations"
-#~ msgstr "Abastecimiento y Ubicaciones"
-
-#~ msgid "Logistic Flow"
-#~ msgstr "Flujo logística"
-
-#~ msgid "Not from Picking"
-#~ msgstr "No desde albarán"
-
-#~ msgid "Location Source"
-#~ msgstr "Ubicación original"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "¡El nombre del módulo debe ser único!"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#~ msgid "Qty Multiple must be greater than zero."
-#~ msgstr "El múltiplo de la cantidad debe ser más grande que cero."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#~ msgid "Logistics Flow"
-#~ msgstr "Flujo de logística"
+#~ msgstr "Abastecimiento & Ubicaciones"

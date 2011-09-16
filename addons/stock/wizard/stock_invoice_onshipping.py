@@ -25,6 +25,12 @@ from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
 
+    def _get_journal(self, cr, uid, context=None):
+        res = self._get_journal_id(cr, uid, context=context)
+        if res:
+            return res[0]
+        return False
+    
     def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -34,41 +40,46 @@ class stock_invoice_onshipping(osv.osv_memory):
             return []
 
         model_pool = self.pool.get(model)
-        acct_obj = self.pool.get('account.journal')
+        journal_obj = self.pool.get('account.journal')
         res_ids = context and context.get('active_ids', [])
-        vals=[]
-        pick_types = list(set(map(lambda x: x.type, model_pool.browse(cr, uid, res_ids, context=context))))
-        for type in pick_types:
-            if type == 'out':
-               value = acct_obj.search(cr, uid, [('type', 'in',('sale','purchase_refund') )])
-               for jr_type in acct_obj.browse(cr, uid, value, context=context):
-                   t1 = jr_type.id,jr_type.name
-                   vals.append(t1)
-
-            elif type == 'in':
-               value = acct_obj.search(cr, uid, [('type', 'in',('purchase','sale_refund') )])
-               for jr_type in acct_obj.browse(cr, uid, value, context=context):
-                   t1 = jr_type.id,jr_type.name
-                   vals.append(t1)
+        vals = []
+        browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
+        
+        for pick in browse_picking:
+            src_usage = pick.move_lines[0].location_id.usage
+            dest_usage = pick.move_lines[0].location_dest_id.usage
+            type = pick.type
+            if type == 'out' and dest_usage == 'supplier':
+                journal_type = 'purchase_refund'
+            elif type == 'out' and dest_usage == 'customer':
+                journal_type = 'sale'
+            elif type == 'in' and src_usage == 'supplier':
+                journal_type = 'purchase'
+            elif type == 'in' and src_usage == 'customer':
+                journal_type = 'sale_refund'
             else:
-               value = acct_obj.search(cr, uid, [('type', 'in',('cash','bank','general','situation') )])
-               for jr_type in acct_obj.browse(cr, uid, value, context=context):
-                   t1 = jr_type.id,jr_type.name
-                   vals.append(t1)
+                journal_type = 'sale'
+                
+            value = journal_obj.search(cr, uid, [('type', '=',journal_type )])
+            for jr_type in journal_obj.browse(cr, uid, value, context=context):
+                t1 = jr_type.id,jr_type.name
+                if t1 not in vals:
+                    vals.append(t1)
         return vals
-
 
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
-
 
     _columns = {
         'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
-
-
+    
+    _defaults = {
+        'journal_id' : _get_journal,
+    }
+    
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}

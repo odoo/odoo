@@ -13,48 +13,48 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:14+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:09+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
 msgid "Title"
-msgstr "Заглавие"
+msgstr "Обръщение"
 
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "# of Contacts"
-msgstr ""
+msgstr "# контакти"
 
 #. module: base_contact
 #: field:res.partner.job,fax:0
 msgid "Fax"
-msgstr ""
+msgstr "Факс"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "title"
-msgstr ""
+msgstr "обръщение"
 
 #. module: base_contact
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
-msgstr ""
+msgstr "Дата на постъпване на работа"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Select the Option for Addresses Migration"
-msgstr ""
+msgstr "Изберете опция за мигриране на адреси"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
 msgid "Function of this contact with this partner"
-msgstr ""
+msgstr "Длъжностна контакта при този партньор"
 
 #. module: base_contact
 #: help:res.partner.job,state:0
 msgid "Status of Address"
-msgstr ""
+msgstr "Състояние на адрес"
 
 #. module: base_contact
 #: help:res.partner.job,name:0
@@ -62,11 +62,12 @@ msgid ""
 "You may                     enter Address first,Partner will be linked "
 "automatically if any."
 msgstr ""
+"Може първо да въведете адрес, ако има партньор, ще бъде добавен автоматично."
 
 #. module: base_contact
 #: help:res.partner.job,fax:0
 msgid "Job FAX no."
-msgstr ""
+msgstr "Служ. факс"
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
@@ -77,28 +78,28 @@ msgstr "Мобилен"
 #: view:res.partner.contact:0
 #: field:res.partner.contact,comment:0
 msgid "Notes"
-msgstr ""
+msgstr "Бележки"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0
 msgid "People you work with."
-msgstr ""
+msgstr "Хора, с които работите"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_functiontoaddress0
 msgid "Define functions and address."
-msgstr ""
+msgstr "Определяне на длъжност и адрес"
 
 #. module: base_contact
 #: help:res.partner.job,date_stop:0
 msgid "Last date of job"
-msgstr ""
+msgstr "Последен работен ден"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 #: field:base.contact.installer,migrate:0
 msgid "Migrate"
-msgstr ""
+msgstr "Мигриране"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -109,7 +110,7 @@ msgstr "Партньор"
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_function0
 msgid "Jobs at a same partner address."
-msgstr ""
+msgstr "Длъжности на същия партньорски адрес"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_partners0
@@ -119,7 +120,7 @@ msgstr "Партньори"
 #. module: base_contact
 #: field:res.partner.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Област"
 
 #. module: base_contact
 #: help:res.partner.contact,active:0
@@ -127,6 +128,8 @@ msgid ""
 "If the active field is set to False,                 it will allow you to "
 "hide the partner contact without removing it."
 msgstr ""
+"Ако полето е настроено на невярно, то се скрива връзка с партньор, без да я "
+"премахва."
 
 #. module: base_contact
 #: model:ir.module.module,description:base_contact.module_meta_information
@@ -151,22 +154,40 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"        Този модул ви позволява да управлявате контактите си напълно.\n"
+"\n"
+"Позволява да определит:\n"
+"* контактите не са свързани с партньор,\n"
+"* контакти, работещи в няколко адреса (вероятно за различнит партньори),\n"
+"* контакти с възможно различни длъности за всеки един от адресите си на "
+"работа\n"
+"\n"
+"Той също така добавя нови елементи от менюто, разположени в\n"
+"Партньори \\ Контакти\n"
+"Партньори \\ Длъжности\n"
+"\n"
+"Обърнете внимание, че този модул преобразува съществуващите адреси в "
+"\"адреси + контакти \". Това означава, че някои области от адресите ще "
+"липсват (като името на контакта), тъй като те се очаква да бъдат определени "
+"в един друг обект.\n"
+"    "
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
 #: model:process.process,name:base_contact.process_process_basecontactprocess0
 msgid "Base Contact"
-msgstr ""
+msgstr "База контакт"
 
 #. module: base_contact
 #: field:res.partner.job,date_stop:0
 msgid "Date Stop"
-msgstr ""
+msgstr "Дата на спиране"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_res_partner_job
 msgid "Contact's Jobs"
-msgstr ""
+msgstr "Контакти на работни места"
 
 #. module: base_contact
 #: view:res.partner:0
@@ -179,27 +200,29 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
+"Определение на значението на тази длъжност в списъка на длъжността на "
+"свързан партньор"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
 msgid "Extension"
-msgstr ""
+msgstr "Разширение"
 
 #. module: base_contact
 #: help:res.partner.job,extension:0
 msgid "Internal/External extension phone number"
-msgstr ""
+msgstr "Вътрешни / Външни допълнителни телефонни номера"
 
 #. module: base_contact
 #: help:res.partner.job,phone:0
 msgid "Job Phone no."
-msgstr ""
+msgstr "Служебен тел. номер"
 
 #. module: base_contact
 #: view:res.partner.contact:0
 #: field:res.partner.contact,job_ids:0
 msgid "Functions and Addresses"
-msgstr ""
+msgstr "Длъжности и адреси"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_contact
@@ -210,22 +233,22 @@ msgstr "Контакт"
 #. module: base_contact
 #: help:res.partner.job,email:0
 msgid "Job E-Mail"
-msgstr ""
+msgstr "Служебен имейл"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_partner:0
 msgid "Partner Seq."
-msgstr ""
+msgstr "Партньор последов."
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_functiontoaddress0
 msgid "Function to address"
-msgstr ""
+msgstr "Длъжност за адрес"
 
 #. module: base_contact
 #: field:base.contact.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Прогрес на настройките"
 
 #. module: base_contact
 #: field:res.partner.contact,name:0
@@ -236,38 +259,38 @@ msgstr "Фамилия"
 #: view:res.partner:0
 #: view:res.partner.contact:0
 msgid "Communication"
-msgstr ""
+msgstr "Комуникация"
 
 #. module: base_contact
 #: field:base.contact.installer,config_logo:0
 #: field:res.partner.contact,photo:0
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
 msgid "Past"
-msgstr ""
+msgstr "Предишен"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
-msgstr ""
+msgstr "Адрес на партньора"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Address's Migration to Contacts"
-msgstr ""
+msgstr "Адрес на преселване за контакти"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
 msgid "Contact Seq."
-msgstr ""
+msgstr "Кантакт последов."
 
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Търсене на контакт"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
@@ -285,57 +308,60 @@ msgid ""
 "Due to changes in Address and Partner's relation, some of the details from "
 "address are needed to be migrated into contact information."
 msgstr ""
+"Поради промени във връзката Адрес и Партньори, някои от данните от адреса е "
+"необходими за да себъдат прехвърлени в контакт."
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
 msgid "Working and private addresses."
-msgstr ""
+msgstr "Работни и домашни адреси"
 
 #. module: base_contact
 #: help:res.partner.job,address_id:0
 msgid "Address which is linked to the Partner"
-msgstr ""
+msgstr "Адрес, свързан с партньора"
 
 #. module: base_contact
 #: field:res.partner.job,function:0
 msgid "Partner Function"
-msgstr "Функция ня партньора"
+msgstr "Длъжност на партньора"
 
 #. module: base_contact
 #: help:res.partner.job,other:0
 msgid "Additional phone field"
-msgstr ""
+msgstr "Допълнително поле за телефон"
 
 #. module: base_contact
 #: field:res.partner.contact,website:0
 msgid "Website"
-msgstr "Уеб-страница"
+msgstr "Уеб сайт"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Otherwise these details will not be visible from address/contact."
 msgstr ""
+"В противен случай тези данни няма да бъдат видими чрез адрес / контакт."
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Настройване"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
 #: field:res.partner.job,email:0
 msgid "E-Mail"
-msgstr "ел. поща"
+msgstr "Имейл"
 
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
+msgstr "base.contact.installer"
 
 #. module: base_contact
 #: view:res.partner.job:0
 msgid "Contact Functions"
-msgstr ""
+msgstr "Длъжност на контакта"
 
 #. module: base_contact
 #: field:res.partner.job,phone:0
@@ -345,7 +371,7 @@ msgstr "Телефон"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr ""
+msgstr "Искате ли да преместите адресните данни в данни за контакт?"
 
 #. module: base_contact
 #: field:res.partner.contact,active:0
@@ -355,17 +381,17 @@ msgstr "Активен"
 #. module: base_contact
 #: field:res.partner.contact,function:0
 msgid "Main Function"
-msgstr ""
+msgstr "Основна длъжност"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_partnertoaddress0
 msgid "Define partners and their addresses."
-msgstr ""
+msgstr "Задаване на партньори и техните адреси."
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Seq."
-msgstr ""
+msgstr "Посл."
 
 #. module: base_contact
 #: field:res.partner.contact,lang_id:0
@@ -380,12 +406,12 @@ msgstr "Допълнителна информация"
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_partners0
 msgid "Companies you work with."
-msgstr ""
+msgstr "Фирми с които работите."
 
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Partner Contact"
-msgstr ""
+msgstr "Контакт на партньор"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -395,7 +421,7 @@ msgstr "Общ"
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Photo"
-msgstr ""
+msgstr "Снимка"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
@@ -405,7 +431,7 @@ msgstr "Дата на раждане"
 #. module: base_contact
 #: help:base.contact.installer,migrate:0
 msgid "If you select this, all addresses will be migrated."
-msgstr ""
+msgstr "Ако изберете това, всички адреси ще се прехвърлят."
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -420,7 +446,7 @@ msgstr "Собствено Име"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_job
 msgid "Contact Partner Function"
-msgstr ""
+msgstr "Длъжност на контакта в партньора"
 
 #. module: base_contact
 #: field:res.partner.job,other:0
@@ -430,23 +456,23 @@ msgstr "Друго"
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_function0
 msgid "Function"
-msgstr "Функция"
+msgstr "Длъжност"
 
 #. module: base_contact
 #: field:res.partner.address,job_id:0
 #: field:res.partner.contact,job_id:0
 msgid "Main Job"
-msgstr ""
+msgstr "Основна работа"
 
 #. module: base_contact
 #: model:process.transition,note:base_contact.process_transition_contacttofunction0
 msgid "Defines contacts and functions."
-msgstr ""
+msgstr "Определяне на контакти и длъности"
 
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_contacttofunction0
 msgid "Contact to function"
-msgstr ""
+msgstr "Контакт за длъжност"
 
 #. module: base_contact
 #: view:res.partner:0
@@ -457,37 +483,37 @@ msgstr "Адрес"
 #. module: base_contact
 #: field:res.partner.contact,country_id:0
 msgid "Nationality"
-msgstr "Nationality"
+msgstr "Националност"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Open Jobs"
-msgstr ""
+msgstr "Отворете работни мяста"
 
 #. module: base_contact
 #: field:base.contact.installer,name:0
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
+msgstr "Можете да преместите адреса на  партньора за контакта."
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
 msgid "Main Employer"
-msgstr ""
+msgstr "Основен работодател"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
 msgid "Address Migration"
-msgstr ""
+msgstr "Адрес на преместване"
 
 #. module: base_contact
 #: view:res.partner:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Пощенски адрес"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
@@ -498,12 +524,12 @@ msgstr "Адреси"
 #. module: base_contact
 #: model:process.transition,name:base_contact.process_transition_partnertoaddress0
 msgid "Partner to address"
-msgstr ""
+msgstr "Партньор на адрес"
 
 #. module: base_contact
 #: field:res.partner.job,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Начална дата"
 
 #. module: base_contact
 #: help:res.partner.job,sequence_contact:0
@@ -511,6 +537,8 @@ msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
 msgstr ""
+"Определение на значението на този адрес в списъка с адреси на свързаните "
+"контакти"
 
 #~ msgid "res.partner.contact"
 #~ msgstr "res.partner.contact"

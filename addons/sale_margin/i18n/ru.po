@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-21 04:40+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:46+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
@@ -23,11 +23,19 @@ msgid "Category"
 msgstr "Категория"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Customer Refund"
 msgstr "Возврат денег клиенту"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Customer Invoice"
 msgstr "Счета клиентам"
@@ -48,7 +56,10 @@ msgid "Group By..."
 msgstr "Объединять по..."
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: field:report.account.invoice,state:0
+#: field:report.account.invoice.category,state:0
+#: field:report.account.invoice.partner,state:0
+#: field:report.account.invoice.partner.product,state:0
 #: field:report.account.invoice.product,state:0
 msgid "State"
 msgstr "Состояние"
@@ -68,12 +79,19 @@ msgstr ""
 "    "
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Draft"
 msgstr "Черновик"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Paid"
 msgstr "Оплачено"
@@ -92,7 +110,12 @@ msgstr ""
 "Прибыль определяется как разница между ценой продажи и ценой закупки."
 
 #. module: sale_margin
+#: field:report.account.invoice,type:0
+#: field:report.account.invoice.category,type:0
+#: field:report.account.invoice.partner,type:0
+#: field:report.account.invoice.partner.product,type:0
 #: field:report.account.invoice.product,type:0
+#: wizard_field:stock.invoice_onshipping,init,type:0
 msgid "Type"
 msgstr "Тип"
 
@@ -102,7 +125,7 @@ msgid "Invoice Statistics"
 msgstr "Статистика по счетам"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: field:report.account.invoice.partner.product,product_id:0
 #: field:report.account.invoice.product,product_id:0
 msgid "Product"
 msgstr "Продукция"
@@ -123,7 +146,10 @@ msgid "August"
 msgstr "Август"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Pro-forma"
 msgstr "Проформа"
@@ -174,7 +200,7 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_this_month_product
 msgid "This Month"
 msgstr "Этот месяц"
 
@@ -185,12 +211,16 @@ msgid "Day"
 msgstr "День"
 
 #. module: sale_margin
-#: field:report.account.invoice.product,categ_id:0
+#: field:report.account.invoice.category,categ_id:0
 msgid "Categories"
 msgstr "Категории"
 
 #. module: sale_margin
 #: field:account.invoice.line,cost_price:0
+#: field:report.account.invoice,cost_price:0
+#: field:report.account.invoice.category,cost_price:0
+#: field:report.account.invoice.partner,cost_price:0
+#: field:report.account.invoice.partner.product,cost_price:0
 #: field:report.account.invoice.product,cost_price:0
 #: field:sale.order.line,purchase_price:0
 msgid "Cost Price"
@@ -223,11 +253,19 @@ msgid "April"
 msgstr "Апрель"
 
 #. module: sale_margin
+#: field:report.account.invoice,amount:0
+#: field:report.account.invoice.category,amount:0
+#: field:report.account.invoice.partner,amount:0
+#: field:report.account.invoice.partner.product,amount:0
 #: field:report.account.invoice.product,amount:0
 msgid "Amount"
 msgstr "Количество"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Supplier Refund"
 msgstr "Возврат средств от поставщика"
@@ -238,6 +276,10 @@ msgid "March"
 msgstr "Март"
 
 #. module: sale_margin
+#: field:report.account.invoice,margin:0
+#: field:report.account.invoice.category,margin:0
+#: field:report.account.invoice.partner,margin:0
+#: field:report.account.invoice.partner.product,margin:0
 #: field:report.account.invoice.product,margin:0
 #: field:sale.order,margin:0
 #: field:sale.order.line,margin:0
@@ -250,6 +292,10 @@ msgid "November"
 msgstr "Ноябрь"
 
 #. module: sale_margin
+#: field:report.account.invoice,quantity:0
+#: field:report.account.invoice.category,quantity:0
+#: field:report.account.invoice.partner,quantity:0
+#: field:report.account.invoice.partner.product,quantity:0
 #: field:report.account.invoice.product,quantity:0
 msgid "Quantity"
 msgstr "Количество"
@@ -260,11 +306,19 @@ msgid "Invoices by product"
 msgstr "Счета по продукции"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Supplier Invoice"
 msgstr "Счета поставщиков"
 
 #. module: sale_margin
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_invoices
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_invoices
+#: view:report.account.invoice:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_ids:0
 msgid "Invoices"
 msgstr "Счета"
@@ -280,12 +334,19 @@ msgid "Invoice Line"
 msgstr "Позиция счета"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,month:0
+#: field:report.account.invoice,name:0
+#: field:report.account.invoice.category,name:0
+#: field:report.account.invoice.partner,name:0
+#: field:report.account.invoice.partner.product,name:0
+#: field:report.account.invoice.product,name:0
 msgid "Month"
 msgstr "Месяц"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Canceled"
 msgstr "Отменено"
@@ -312,7 +373,7 @@ msgid "Done"
 msgstr "Сделано"
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_reoirt
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
 msgid "Invoice"
 msgstr "Счет"
 
@@ -322,8 +383,8 @@ msgid "Customer Invoices"
 msgstr "Счета заказчика"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,partner_id:0
+#: field:report.account.invoice.partner,partner_id:0
+#: field:report.account.invoice.partner.product,partner_id:0
 msgid "Partner"
 msgstr "Партнер"
 
@@ -333,6 +394,10 @@ msgid "Sales Order"
 msgstr "Заказ на продажу"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Open"
 msgstr "Открыть"
@@ -379,18 +444,3 @@ msgstr "Позиция заказа на продажу"
 
 #~ msgid "Cancel"
 #~ msgstr "Отмена"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Позиция заказа на продажу"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "Sale Order"
-#~ msgstr "Заказ на продажу"
-
-#~ msgid ""
-#~ "It gives profitability by calculating the difference between the Unit Price "
-#~ "and Cost Price"
-#~ msgstr ""
-#~ "Дает рентабельность, вычисляется разница между ценой продажи и закупки."

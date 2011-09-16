@@ -1,0 +1,77 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-06-22 08:19+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: base_crypt
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "你不能同时登录两个用户！"
+
+#. module: base_crypt
+#: model:ir.model,name:base_crypt.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: base_crypt
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "用户无权操作所选择公司数据"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Please specify the password !"
+msgstr "请指定密码！"
+
+#. module: base_crypt
+#: model:ir.module.module,shortdesc:base_crypt.module_meta_information
+msgid "Base - Password Encryption"
+msgstr "Base - Password Encryption"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Error"
+msgstr "错误"
+
+#. module: base_crypt
+#: model:ir.module.module,description:base_crypt.module_meta_information
+msgid ""
+"This module replaces the cleartext password in the database with a password "
+"hash,\n"
+"preventing anyone from reading the original password.\n"
+"For your existing user base, the removal of the cleartext passwords occurs "
+"the first time\n"
+"a user logs into the database, after installing base_crypt.\n"
+"After installing this module it won't be possible to recover a forgotten "
+"password for your\n"
+"users, the only solution is for an admin to set a new password.\n"
+"\n"
+"Note: installing this module does not mean you can ignore basic security "
+"measures,\n"
+"as the password is still transmitted unencrypted on the network (by the "
+"client),\n"
+"unless you are using a secure protocol such as XML-RPCS.\n"
+"                    "
+msgstr ""
+"这个模块在数据库里用密码散列代替原来的明文密码，防止任何人读取到原密码。\n"
+"对于已存在在数据，当安装了base_crypt后，明文密码会在用户第一次登陆数据库的时候清除。\n"
+"在安装了这个模块后将不能恢复已遗忘的用户密码，唯一的解决办法是通过管理员输入一个新密码。\n"
+"注意：安装这个模块并不意味着你可以忽略基本安全措施，\n"
+"除非你用了一个安全协议例如XML-RPCS，否则密码在网络仍然以非加密的形式传输（通过客户端）\n"
+"                    "

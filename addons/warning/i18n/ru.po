@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:47+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -55,13 +55,13 @@ msgstr "Предупреждение при покупке этого товар
 #. module: warning
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
-msgstr "Продукция"
+msgstr "ТМЦ"
 
 #. module: warning
 #: sql_constraint:purchase.order:0
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Номер заказа должен быть уникальным!"
 
 #. module: warning
 #: view:product.product:0
@@ -173,7 +173,7 @@ msgstr ""
 #: code:addons/warning/warning.py:246
 #, python-format
 msgid "Alert for %s !"
-msgstr ""
+msgstr "Сигнал о %s !"
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
@@ -214,7 +214,7 @@ msgstr "Предупреждение при заказе на продажу"
 #. module: warning
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
+msgstr "Ошибка: Неверный штрих-код"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -224,32 +224,17 @@ msgstr "Сообщение для комплектования запасов"
 #. module: warning
 #: model:ir.model,name:warning.model_res_partner
 msgid "Partner"
-msgstr "Партнёр"
+msgstr "Контрагент"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Заказ на продажу"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Позиция заказа на продажу"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"

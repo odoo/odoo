@@ -21,7 +21,6 @@
 
 from osv import osv
 from osv import fields
-from tools.translate import _
 
 class survey_browse_answer(osv.osv_memory):
     _name = 'survey.browse.answer'
@@ -64,7 +63,7 @@ class survey_browse_answer(osv.osv_memory):
         record = self.read(cr, uid, ids, [])
         record = record and record[0] or {} 
         if record['response_id']:
-            res_id = [(record['response_id'])]
+            res_id = [(record.get('response_id') and record['response_id'][0])]
         else:
             sur_response_obj = self.pool.get('survey.response')
             res_id = sur_response_obj.search(cr, uid, [('survey_id', '=',int(record['survey_id']))])

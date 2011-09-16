@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-08-03 06:34+0000\n"
-"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-08-17 23:05+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:46+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:09+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -24,13 +24,13 @@ msgstr "Client"
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
-msgstr ""
+msgstr "Converteix a pressupost"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:108
 #, python-format
 msgid "Opportunity  '%s' is converted to Quotation."
-msgstr ""
+msgstr "Oportunitat de '%s' es converteix en cotització"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:89
@@ -47,7 +47,7 @@ msgstr "El client no té definides adreces!"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_make_sale
 msgid "Make sales"
-msgstr ""
+msgstr "Crea vendes"
 
 #. module: sale_crm
 #: model:ir.module.module,description:sale_crm.module_meta_information
@@ -65,22 +65,37 @@ msgid ""
 "crm modules.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul afegeix un accés directe a un o diversos casos d'oportunitats "
+"en el CRM.\n"
+"Aquest accés directe us permet generar una comanda de venda a partir del cas "
+"seleccionat.\n"
+"Si estan oberts diferents casos (una llista), genera una comanda de venda "
+"per\n"
+"cas.\n"
+"El cas es tanca i és enllaçat a la comanda de vendes generada.\n"
+"\n"
+"Us suggerim que instal·leu aquest mòdul si heu instal·lat tots dos mòduls, "
+"sale i crm.\n"
+"    "
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
-msgstr ""
+msgstr "_Crea"
 
 #. module: sale_crm
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "La referència de la comanda ha de ser única!"
 
 #. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
 "Check this to close the opportunity after having created the sale order."
 msgstr ""
+"Marqueu aquesta opció per tancar l'oportunitat després d'haver creat la "
+"comanda de venda."
 
 #. module: sale_crm
 #: view:crm.lead:0
@@ -91,29 +106,29 @@ msgstr "Converteix a pressupost"
 #: view:account.invoice.report:0
 #: view:board.board:0
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "Volum mensual"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:110
 #, python-format
 msgid "Converted to Sales Quotation(id: %s)."
-msgstr ""
+msgstr "Convertit a pressupost de venda (id: %s)."
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Opportunity: %s"
-msgstr ""
+msgstr "Oportunitat: %s"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
 msgid "Creates Sales order from Opportunity"
-msgstr ""
+msgstr "Crea comanda de venda des d'oportunitat"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_quotation_for_sale_crm
 msgid "Quotations"
-msgstr ""
+msgstr "Pressuposts"
 
 #. module: sale_crm
 #: field:crm.make.sale,shop_id:0
@@ -123,23 +138,23 @@ msgstr "Tenda"
 #. module: sale_crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "Oportunitats per etapa"
 
 #. module: sale_crm
 #: view:board.board:0
 msgid "My Quotations"
-msgstr ""
+msgstr "Els meus pressuposts"
 
 #. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Close Opportunity"
-msgstr ""
+msgstr "Tanca oportunitat"
 
 #. module: sale_crm
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
-msgstr ""
+msgstr "Equip de vendes"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -154,7 +169,7 @@ msgstr "Cancel·la"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Comanda de venda"
 
 #~ msgid "All at once"
 #~ msgstr "Tot junt"
@@ -253,3 +268,11 @@ msgstr ""
 
 #~ msgid "Sale CRM Stuff"
 #~ msgstr "Eines de CRM per a vendes"
+
+#, python-format
+#~ msgid "is converted to Quotation."
+#~ msgstr "s'ha convertit a pressupost."
+
+#, python-format
+#~ msgid "Opportunity "
+#~ msgstr "Oportunitat "

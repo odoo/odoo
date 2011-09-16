@@ -59,8 +59,7 @@ if __name__<>"package":
     database="test"
 
 class ServerParameter( unohelper.Base, XJobExecutor ):
-    def __init__(self,ctx):
-        self.ctx     = ctx
+    def __init__(self, aVal= None, sURL=""):
         self.module  = "openerp_report"
         self.version = "0.1"
         desktop=getDesktop()
@@ -69,19 +68,12 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         doc = desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
         self.win=DBModalDialog(60, 50, 160, 108, "Server Connection Parameter")
-
         self.win.addFixedText("lblVariable", 2, 12, 35, 15, "Server URL")
         if docinfo.getUserFieldValue(0)=="":
-            docinfo.setUserFieldValue(0,"http://localhost:8069")
-        self.win.addEdit("txtHost",-34,9,91,15,docinfo.getUserFieldValue(0))
-        self.win.addButton('btnChange',-2 ,9,30,15,'Change', actionListenerProc = self.btnChange_clicked )
-
+           docinfo.setUserFieldValue(0,"http://localhost:8069")
+        self.win.addFixedText("txtHost",-20,12,105,15,sURL)
         self.win.addFixedText("lblDatabaseName", 6, 31, 31, 15, "Database")
-        #self.win.addFixedText("lblMsg", -2,28,123,15)
-#        self.win.addComboListBox("lstDatabase", -2,28,123,15, True)
-#        self.lstDatabase = self.win.getControl( "lstDatabase" )
-        #self.win.selectListBoxItem( "lstDatabase", docinfo.getUserFieldValue(2), True )
-        #self.win.setEnabled("lblMsg",False)
+
 
         self.win.addFixedText("lblLoginName", 17, 51, 20, 15, "Login")
         self.win.addEdit("txtLoginName",-2,48,123,15,docinfo.getUserFieldValue(1))
@@ -92,8 +84,9 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 
 
         self.win.addButton('btnOK',-2 ,-5, 60,15,'Connect' ,actionListenerProc = self.btnOk_clicked )
-
-        self.win.addButton('btnCancel',-2 - 60 - 5 ,-5, 35,15,'Cancel' ,actionListenerProc = self.btnCancel_clicked )
+        self.win.addButton('btnPrevious',15 -80 ,-5,50,15,'Previous',actionListenerProc = self.btnPrevious_clicked)
+        self.win.addButton('btnCancel',-2 - 110 - 5 ,-5, 35,15,'Cancel' ,actionListenerProc = self.btnCancel_clicked )
+ 
         sValue=""
         if docinfo.getUserFieldValue(0)<>"":
             global url
@@ -125,7 +118,6 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 
     def btnOk_clicked(self,oActionEvent):
 
-
         sLogin=self.win.getEditText("txtLoginName")
         sPassword=self.win.getEditText("txtPassword")
         global url
@@ -136,20 +128,14 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             sDatabase=self.win.getListBoxSelectedItem("lstDatabase")
         self.sock=RPCSession(url)
         UID = self.sock.login(sDatabase,sLogin,sPassword)
-        if not UID :
+        if not UID or UID==-1 :
             ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
-            self.win.endExecute()
-        try:
-            ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
-        except :
-            import traceback,sys
-            info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            self.logobj.log_write('ServerParameter', LOG_ERROR, info)
-
+          #  self.win.endExecute()
+        ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(ids_module):
             ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
             self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
-            self.win.endExecute()
+            #self.win.endExecute()
         else:
             desktop=getDesktop()
             doc = desktop.getCurrentComponent()
@@ -171,27 +157,15 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             self.logobj.log_write('successful login',LOG_INFO, ':successful login from %s  using database %s' % (sLogin, sDatabase))
             self.win.endExecute()
 
+      
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()
 
-    def btnChange_clicked(self,oActionEvent):
-        aVal=[]
-        url= self.win.getEditText("txtHost")
-        Change(aVal,url)
-        if aVal[1]== -1:
-           self.win.getEditText("lstDatabase")
-           self.win.removeListBoxItems("lstDatabase", 0, self.win.getListBoxItemCount("lstDatabase"))
-           self.win.setEditText("txtHost",aVal[0])
-           for i in range(len(aVal[1])):
-                self.lstDatabase.addItem(aVal[1][i],i)
-        elif aVal[1]==0:
-            ErrorDialog(aVal[0],"")
-        else:
-            self.win.setEditText("txtHost",aVal[0])
-            self.win.removeListBoxItems("lstDatabase", 0, self.win.getListBoxItemCount("lstDatabase"))
-            for i in range(len(aVal[1])):
-                self.lstDatabase.addItem(aVal[1][i],i)
-
+    def btnPrevious_clicked(self,oActionEvent):
+        self.win.endExecute()
+        Change(None)
+        self.win.endExecute()
+        
 
 if __name__<>"package" and __name__=="__main__":
     ServerParameter(None)

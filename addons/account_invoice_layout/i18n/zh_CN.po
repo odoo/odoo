@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-09-29 11:14+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:27+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -25,7 +25,7 @@ msgstr "小计"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
+msgstr "备注："
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -92,18 +92,27 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    此模块增加了一些发票格式增强的功能。\n"
+"可以：\n"
+"- 对发票的所有行排序\n"
+"- 增加标题、说明、小计行\n"
+"- 划横线或分页\n"
+"而且，你可以选中多个发票并在打印时在发票下方输出一段特殊的话。常用于年底的祝福或者提醒客户及时付款。\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "增值税:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "电话："
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -140,7 +149,7 @@ msgstr "描述"
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
-msgstr ""
+msgstr "按序列显示发票明细"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -152,7 +161,7 @@ msgstr "价格"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "发票日期"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -173,7 +182,7 @@ msgstr "写信息"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Base"
-msgstr "基于"
+msgstr "基数"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -184,12 +193,12 @@ msgstr "分页符"
 #: view:notify.message:0
 #: field:notify.message,msg:0
 msgid "Special Message"
-msgstr "特别消息"
+msgstr "指定消息"
 
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "信息打印在报表底部"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -207,12 +216,12 @@ msgstr "红字发票"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "传真："
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Total:"
-msgstr ""
+msgstr "合计:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -244,17 +253,17 @@ msgstr "金额"
 #. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "ERP & CRM Solutions..."
-msgstr ""
+msgstr "ERP & CRM 解决非方案..."
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Net Total :"
-msgstr ""
+msgstr "净合计:"
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Total :"
-msgstr ""
+msgstr "合计:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -265,18 +274,18 @@ msgstr "发票草稿"
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr "序列号码"
+msgstr "序列号"
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
 msgid "Account Invoice Special Message"
-msgstr ""
+msgstr "发票科目的特别消息"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "源"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -292,12 +301,12 @@ msgstr "分隔线"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "您的单号"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "改善发票布局"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -319,12 +328,12 @@ msgstr "税"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "发票明细"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Net Total:"
-msgstr ""
+msgstr "不含税合计:"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -357,7 +366,7 @@ msgstr "信息"
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Taxes :"
-msgstr ""
+msgstr "税："
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
@@ -366,9 +375,6 @@ msgstr "所有通知信息"
 
 #~ msgid "Invoice Date:"
 #~ msgstr "发票日期:"
-
-#~ msgid "(Incl. taxes):"
-#~ msgstr "含税:"
 
 #~ msgid "Fax :"
 #~ msgstr "传真:"
@@ -379,43 +385,8 @@ msgstr "所有通知信息"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效XML视图结构!"
 
-#~ msgid "Description/Taxes"
-#~ msgstr "说明 / 税"
-
 #~ msgid "VAT :"
 #~ msgstr "增值税"
-
-#~ msgid "Note :"
-#~ msgstr "备注:"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module provides some features to improve the layout of the "
-#~ "invoices.\n"
-#~ "\n"
-#~ "    It gives you the possibility to\n"
-#~ "        * order all the lines of an invoice\n"
-#~ "        * add titles, comment lines, sub total lines\n"
-#~ "        * draw horizontal lines and put page breaks\n"
-#~ "\n"
-#~ "    Moreover, there is one option which allow you to print all the selected "
-#~ "invoices with a given special message at the bottom of it. This feature can "
-#~ "be very useful for printing your invoices with end-of-year wishes, special "
-#~ "punctual conditions...\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这模块允许你改进发票的格式\n"
-#~ "\n"
-#~ "    它给出以下的可能:\n"
-#~ "\t    * 所有的发票明细\n"
-#~ "\t    * 增加标题,注释行,子行标题\n"
-#~ "\t    * 画水平线和加入分页符\n"
-#~ "\t\n"
-#~ "此外,还有一个选择项,让你打印所有选择发票时在底部有一个提别的信息,这功能对年终发票特别是要求准时支付提醒时有用\n"
-#~ "\n"
-#~ "    "
 
 #~ msgid "Total"
 #~ msgstr "合计"
@@ -433,20 +404,11 @@ msgstr "所有通知信息"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
-#~ msgid ")"
-#~ msgstr ")"
-
-#~ msgid "/ ("
-#~ msgstr "/ ("
-
 #~ msgid "Document:"
 #~ msgstr "文档："
 
 #~ msgid "account_invoice_layout"
 #~ msgstr "发票式样"
-
-#~ msgid "Total (Excl. taxes):"
-#~ msgstr "合计(不含税):"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "关联客户:"

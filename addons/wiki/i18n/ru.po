@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-12 17:12+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-04-15 20:00+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:44+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:38+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -30,7 +30,7 @@ msgstr "Wiki страницы"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
+msgstr "Метод вывода"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -57,7 +57,7 @@ msgstr "Секция"
 #. module: wiki
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
-msgstr ""
+msgstr "Показывает имеется ли содержание на этой странице"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -68,7 +68,7 @@ msgstr "История Wiki"
 #. module: wiki
 #: field:wiki.wiki,minor_edit:0
 msgid "Minor edit"
-msgstr ""
+msgstr "Малозначимое изменение"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -79,18 +79,18 @@ msgstr "Содержание"
 #. module: wiki
 #: field:wiki.wiki,child_ids:0
 msgid "Child Pages"
-msgstr ""
+msgstr "Подчиненные страницы"
 
 #. module: wiki
 #: field:wiki.wiki,parent_id:0
 msgid "Parent Page"
-msgstr ""
+msgstr "Главная страница"
 
 #. module: wiki
 #: view:wiki.wiki:0
 #: field:wiki.wiki,write_uid:0
 msgid "Last Contributor"
-msgstr ""
+msgstr "Последний корректор"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_parent_id:0
@@ -100,7 +100,7 @@ msgstr "Родительское меню"
 #. module: wiki
 #: help:wiki.wiki,group_id:0
 msgid "Topic, also called Wiki Group"
-msgstr ""
+msgstr "Тема, которая также называется Вики группа"
 
 #. module: wiki
 #: field:wiki.groups,name:0
@@ -117,12 +117,12 @@ msgstr "Заголовок"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_create_menu
 msgid "Wizard Create Menu"
-msgstr ""
+msgstr "Помощник создания меню"
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
-msgstr ""
+msgstr "Строки истории"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -139,12 +139,12 @@ msgstr "Внимание!"
 #: code:addons/wiki/wiki.py:236
 #, python-format
 msgid "There are no changes in revisions"
-msgstr ""
+msgstr "Нет изменений"
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
-msgstr ""
+msgstr "Управление документами - Вики"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_name:0
@@ -159,7 +159,7 @@ msgstr "Описание"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Needs Review"
-msgstr ""
+msgstr "Нуждается в проверке"
 
 #. module: wiki
 #: help:wiki.wiki,review:0
@@ -167,6 +167,8 @@ msgid ""
 "Indicates that this page should be reviewed, raising the attention of other "
 "contributors"
 msgstr ""
+"Указывает, что эта страница должна быть проверена, привлекает внимание "
+"других участников"
 
 #. module: wiki
 #: view:wiki.create.menu:0
@@ -177,7 +179,7 @@ msgstr "Информация меню"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "Page History"
-msgstr ""
+msgstr "История страницы"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -202,6 +204,11 @@ msgid ""
 "(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
 "There is a basic wiki editing for text format."
 msgstr ""
+"С помощью вики-страниц вы можете поделиться своими идеями и вопросами с "
+"коллегами. Вы можете создать новый документ, который может быть связан с "
+"одним или несколькими приложениями (CRM, продаж и т.д.). Вы можете "
+"использовать ключевые слова, чтобы облегчить доступ к вики-страницам. Есть "
+"простое редактирование вики для текстового формата."
 
 #. module: wiki
 #: code:addons/wiki/wizard/wiki_show_diff.py:54
@@ -244,12 +251,12 @@ msgstr "Описание группы"
 #. module: wiki
 #: help:wiki.wiki,section:0
 msgid "Use page section code like 1.2.1"
-msgstr ""
+msgstr "Используйте код выбора страницы, например: 1.2.1"
 
 #. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
-msgstr ""
+msgstr "Хотите открыть вики ? "
 
 #. module: wiki
 #: field:wiki.groups,section:0
@@ -275,6 +282,11 @@ msgid ""
 "keep track for the wiki groups, pages, and history\n"
 "    "
 msgstr ""
+"\n"
+"Базовый модуль для управления документацией (вики)\n"
+"\n"
+"отслеживание вики групп, страниц и истории\n"
+"    "
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -286,6 +298,7 @@ msgstr "Заметки"
 #: help:wiki.groups,home:0
 msgid "Required to select home page if display method is Home Page"
 msgstr ""
+"Необходимо выбрать домашнюю страницу если метод вывода \"Домашняя страница\""
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -311,12 +324,12 @@ msgstr "История всех страниц"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: help:wiki.groups,method:0
 msgid "Define the default behaviour of the menu created on this group"
-msgstr ""
+msgstr "Определить поведение по умолчанию для меню, созданного на эту группу"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
@@ -342,12 +355,12 @@ msgstr "Главная страница"
 #. module: wiki
 #: help:wiki.wiki,parent_id:0
 msgid "Allows you to link with the other page with in the current topic"
-msgstr ""
+msgstr "Позволяет сделать ссылку на другую страницу в текущем разделе"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
-msgstr ""
+msgstr "Информация об изменениях"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration
@@ -395,7 +408,7 @@ msgstr "Создать меню"
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
 msgid "This is a major edit ?"
-msgstr ""
+msgstr "Это существенные изменения ?"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
@@ -404,7 +417,7 @@ msgstr ""
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
 #: view:wiki.groups:0
 msgid "Wiki Groups"
-msgstr ""
+msgstr "Вики группы"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -414,7 +427,7 @@ msgstr "Тема"
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
 msgid "Modify By"
-msgstr ""
+msgstr "Изменено"
 
 #. module: wiki
 #: code:addons/wiki/web/widgets/wikimarkup/__init__.py:1981
@@ -427,7 +440,7 @@ msgstr "Содержание"
 #: view:wiki.groups:0
 #: view:wiki.wiki.page.open:0
 msgid "Open Wiki Page"
-msgstr ""
+msgstr "Открыть вики-страницу"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_page_open
@@ -454,7 +467,7 @@ msgstr "Необходима Проверка"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_review
 msgid "Pages Waiting Review"
-msgstr ""
+msgstr "Страницы ожидающие проверки"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
@@ -503,14 +516,5 @@ msgstr "Страница поиска"
 #~ msgid "Group Home Page"
 #~ msgstr "Домашняя Страница Группы"
 
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля не может быть меньше 1 !"
+#~ msgid "Child Groups"
+#~ msgstr "Подчиненные группы"

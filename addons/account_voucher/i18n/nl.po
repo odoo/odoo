@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:43+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:37+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "Niet-afgeletterde transacties"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:242
+#: code:addons/account_voucher/account_voucher.py:247
 #, python-format
 msgid "Write-Off"
 msgstr "Boek af"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Groepeer op.."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -98,7 +98,7 @@ msgid "Bill Payment"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -402,7 +402,7 @@ msgid "Voucher Entries"
 msgstr "Boekingen bonnen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Error !"
 msgstr "Fout!"
@@ -430,7 +430,7 @@ msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Invalid action !"
 msgstr "Ongeldige actie!"
@@ -464,7 +464,7 @@ msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -523,6 +523,7 @@ msgstr "december"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Bonregels"
@@ -707,7 +708,7 @@ msgid "Credit"
 msgstr "Credit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr ""
@@ -1033,11 +1034,6 @@ msgstr "Totaal"
 #~ msgid "Other Info"
 #~ msgstr "Overige informatie"
 
-#, python-format
-#~ msgid "Cannot delete invoice(s) which are already opened or paid !"
-#~ msgstr ""
-#~ "Facturen die geopend of al betaald zijn kunnen niet worden verwijderd!"
-
 #~ msgid "Cash Receipt"
 #~ msgstr "Kassabon"
 
@@ -1055,9 +1051,6 @@ msgstr "Totaal"
 
 #~ msgid "Name"
 #~ msgstr "Naam"
-
-#~ msgid "Entry"
-#~ msgstr "Boeking"
 
 #~ msgid "None"
 #~ msgstr "Geen"
@@ -1128,26 +1121,17 @@ msgstr "Totaal"
 #~ msgid "Authorised Signatory"
 #~ msgstr "Geautoriseerde ondertekening"
 
-#~ msgid "Difference of Opening Bal."
-#~ msgstr "Verschil in openingsbalans"
-
 #~ msgid "Journal Purchase Voucher"
 #~ msgstr "Inkoopdagboek bonnen"
 
 #~ msgid "Dr/Cr"
 #~ msgstr "Db/Cr"
 
-#~ msgid "Draf Cash Receipt"
-#~ msgstr "Concept kassabon"
-
 #~ msgid "Payment Vouchers"
 #~ msgstr "Betalingsbonnen"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Pro-forma Cash Receipt"
-#~ msgstr "Pro forma ontvangstbewijs"
 
 #~ msgid "New Cash Receipt"
 #~ msgstr "Nieuw ontvangstbewijs"
@@ -1165,9 +1149,6 @@ msgstr "Totaal"
 
 #~ msgid "Reference Type"
 #~ msgstr "Soort referentie"
-
-#~ msgid "Posted Cash Receipt"
-#~ msgstr "Geboekte kassabon"
 
 #~ msgid "New Bank Receipt"
 #~ msgstr "Nieuw bankafschrift"
@@ -1228,21 +1209,3 @@ msgstr "Totaal"
 
 #~ msgid "Cash Receipt Voucher"
 #~ msgstr "Contante ontvangstbon"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "U kunt geen boekingsregel creëren op een debiteuren/crediteuren account "
-#~ "zonder een relatie aan te geven."
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Bedrijf moet hetzelfde zijn voor de betreffende account en periode."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "U kunt geen boekingsregel creëren op een zichtaccount"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Verkeerde debet of credit waarde in boekingsregel!"

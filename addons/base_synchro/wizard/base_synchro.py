@@ -103,6 +103,11 @@ class base_synchro(osv.osv_memory):
             if object.model_id.model=='crm.case.history':
                 fields = ['email','description','log_id']
             value = pool_src.get(object.model_id.model).read(cr, uid, [id], fields)[0]
+            if 'create_date' in value:
+                del value['create_date']
+            for key ,val in value.iteritems():
+                if type(val)==tuple:
+                    value.update({key:val[0]})
             value = self.data_transform(cr, uid, pool_src, pool_dest, object.model_id.model, value, action, context=context)
             id2 = self.get_id(cr, uid, object.id, id, action, context)
             #
@@ -165,7 +170,7 @@ class base_synchro(osv.osv_memory):
             #
             # If not synchronized, try to find it with name_get/name_search
             #
-            names = pool_src.get(object).name_get(cr, uid, [id], context)[0][1]
+            names = pool_src.get(object).name_get(cr, uid, [id])[0][1]
             res = pool_dest.get(object).name_search(cr, uid, names, [], 'like')
             if res:
                 result = res[0][0]
@@ -184,7 +189,7 @@ class base_synchro(osv.osv_memory):
     def data_transform(self, cr, uid, pool_src, pool_dest, object, data, action='u', context=None):
         self.meta.setdefault(pool_src, {})
         if not object in self.meta[pool_src]:
-            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid, context)
+            self.meta[pool_src][object] = pool_src.get(object).fields_get(cr, uid)
         fields = self.meta[pool_src][object]
 
         for f in fields:

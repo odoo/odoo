@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-09-29 09:13+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"PO-Revision-Date: 2011-07-01 10:20+0000\n"
+"Last-Translator: digitalsatori <digisatori@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:36+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:29+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -27,39 +27,39 @@ msgid ""
 "select a partner which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
-msgstr ""
+msgstr "给合作伙伴指定一个辅助核算项用于分析"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr "辅助核算规则"
+msgstr "分析规则"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "辅助核算项"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr ""
+msgstr "当前的"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "分析帐户的默认结束日期"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "装箱单"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -72,12 +72,12 @@ msgid ""
 "select a company which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
-msgstr ""
+msgstr "给公司指定一个辅助核算项用于分析"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "辅助核算项的默认开始日期"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -88,7 +88,7 @@ msgstr "产品"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "辅助核算分摊"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -105,7 +105,7 @@ msgstr "用户"
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
 msgid "Entries"
-msgstr "凭证"
+msgstr "条目"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
@@ -116,14 +116,14 @@ msgstr "结束日期"
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
-msgstr ""
+msgstr "选择一个用户指定的默认辅助核算项"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr "默认辅助核算项目"
+msgstr "默认辅助核算项"
 
 #. module: account_analytic_default
 #: model:ir.module.module,description:account_analytic_default.module_meta_information
@@ -137,6 +137,14 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"允许根据准则自动选辅助核算项：\n"
+"  *产品\n"
+"  *业务伙伴\n"
+"  *用户\n"
+"  *公司\n"
+"  *日期\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -144,7 +152,7 @@ msgid ""
 "select a product which will use analytical account specified in analytic "
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
-msgstr ""
+msgstr "给指定产品指定一个辅助核算项用于分析.（如创建新的发票或销售订单，如果我们选择这个产品，它会自动采取此辅助核算项）"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -154,18 +162,18 @@ msgstr "序列"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "发票行"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项目"
+msgstr "辅助核算项"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Accounts"
-msgstr ""
+msgstr "项"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -182,12 +190,12 @@ msgstr "开始日期"
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "按序列显示辅助核算方案"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "销售订单明细"
 
 #~ msgid "Analytic Distributions"
 #~ msgstr "辅助核算分配"

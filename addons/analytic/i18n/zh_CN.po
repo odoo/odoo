@@ -9,13 +9,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-08-03 00:16+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -106,7 +106,7 @@ msgstr "模板"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Pending"
-msgstr "悬而未决"
+msgstr "待处理"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -122,7 +122,7 @@ msgstr "说明"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Normal"
-msgstr "正常"
+msgstr "一般"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -153,7 +153,7 @@ msgstr "日期"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Account currency"
-msgstr "辅助核算项货币"
+msgstr "币别"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -166,7 +166,7 @@ msgstr "数量"
 msgid ""
 "Calculated by multiplying the quantity and the price given in the Product's "
 "cost price. Always expressed in the company main currency."
-msgstr ""
+msgstr "计算公式是数量乘以产品成本价。币别是公司本位币。"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -186,14 +186,14 @@ msgstr "金额"
 #. module: analytic
 #: field:account.analytic.account,contact_id:0
 msgid "Contact"
-msgstr "联系方式"
+msgstr "联系"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "错误！此币别必须是选定公司的默认币别。"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -208,14 +208,14 @@ msgstr "差额"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "错误! 你不能创建递归的辅助核算项"
 
 #. module: analytic
 #: help:account.analytic.account,type:0
 msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
-msgstr ""
+msgstr "如果选择了 视图 类型，则你不能在这个辅助核算项上创建辅助核算凭证"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -230,7 +230,7 @@ msgstr "辅助核算项代码"
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr "所有项目名称"
+msgstr "所有项名称"
 
 #. module: analytic
 #: field:account.analytic.line,account_id:0
@@ -247,7 +247,7 @@ msgstr "视图"
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
@@ -262,30 +262,4 @@ msgstr "待处理"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr "辅助核算记录"
-
-#~ msgid ""
-#~ "The amount expressed in the related account currency if not equal to the "
-#~ "company one."
-#~ msgstr "如果不是同一公司, 这金额表示相关项的货币"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须以x_开头并且不能包含特殊字符"
-
-#~ msgid "The related account currency if not equal to the company one."
-#~ msgstr "如果不是同一公司, 这相关项的货币"
-
-#~ msgid ""
-#~ "Calculated by multiplying the quantity and the price given in the Product's "
-#~ "cost price."
-#~ msgstr "乘与数量和价格, 提供产品的成本价格"
-
-#~ msgid "Currency"
-#~ msgstr "货币"
-
-#~ msgid "Associated Partner"
-#~ msgstr "相关业务伙伴"
-
-#~ msgid "Amount currency"
-#~ msgstr "货币金额"
+msgstr "辅助核算条目"

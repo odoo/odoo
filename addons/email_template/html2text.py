@@ -444,11 +444,11 @@ if __name__ == "__main__":
             encoding = 'utf8'
             if len(sys.argv) > 2:
                 encoding = sys.argv[2]
-	    f = open(arg, 'r')
-	    try:
-		    data = f.read().decode(encoding)
-	    finally:
-		    f.close()
+            f = open(arg, 'r')
+            try:
+                    data = f.read().decode(encoding)
+            finally:
+                    f.close()
     else:
         data = sys.stdin.read().decode('utf8')
     wrapwrite(html2text(data, baseurl))

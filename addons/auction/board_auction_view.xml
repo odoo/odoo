@@ -1,17 +1,15 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <record model="board.note.type" id="note_auction_type1">
-            <field name="name">Auction DashBoard</field>
-        </record>
-
         <record model="ir.actions.act_window" id="action_report_latest_objects_tree">
+            <field name="name">Latest objects</field>
             <field name="res_model">auction.lots</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <record model="ir.actions.act_window" id="action_report_latest_doposit_tree">
+            <field name="name">Latest Deposits</field>
             <field name="res_model">auction.deposit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -38,7 +36,7 @@
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Min est/Adj/Max est" orientation="vertical" type="bar">
-                <field name="lot_type" select="1"/>
+                <field name="lot_type"/>
                 <field name="lot_est1" operator="+"/>
                 <field name="obj_price" operator="+"/>
                 <field name="lot_est2" operator="+"/>
@@ -110,7 +108,7 @@
             action="open_board_auction"
             sequence="1"
             id="menu_board_auction_open"  icon="terp-graph" parent="menu_board_auction"/>
-        
+
         <menuitem name="Auction" id="auction.auction_menu_root" icon="terp-purchase" sequence="26" action="open_board_auction"/>
 
     </data>

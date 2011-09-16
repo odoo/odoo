@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:56+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:53+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
 msgid "Long Term Project Management"
-msgstr ""
+msgstr "Pitkäaikaisten projektien hallinta"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
 msgid "Compute Scheduling of Phases"
-msgstr ""
+msgstr "Laske vaiheiden ajoitus"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -47,7 +47,7 @@ msgstr "Vaiheet"
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittely.."
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -55,19 +55,20 @@ msgid "Error! project start-date must be lower then project end-date."
 msgstr "Virhe: projektin alkupäivä tulee olla aikaisempi kuin loppupäivä."
 
 #. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: view:project.resource.allocation:0
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Resurssien allokointi"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Displaying settings"
-msgstr ""
+msgstr "Näyttöasetukset"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Schedule"
-msgstr ""
+msgstr "Ajastus"
 
 #. module: project_long_term
 #: model:ir.module.module,description:project_long_term.module_meta_information
@@ -94,51 +95,50 @@ msgstr ""
 #. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 msgid "Resource Allocations"
-msgstr ""
+msgstr "Resurssien allokoinnit"
 
 #. module: project_long_term
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Virhe! Et voi asettaa eskalointia samalle projektille!"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:133
+#: code:addons/project_long_term/project_long_term.py:128
 #, python-format
 msgid "Day"
-msgstr ""
+msgstr "Päivä"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Tehtävä"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Laske yksittäinen projekti"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Aikaisemmat vaiheet"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "Mittayksikkö (UoM) on keston mittayksikkö"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
-msgstr ""
+msgstr " Se lasketaan ajastimella alkupäivän ja keston mukaan."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -150,64 +150,64 @@ msgstr ""
 #: field:project.resource.allocation,project_id:0
 #: view:project.task:0
 msgid "Project"
-msgstr ""
+msgstr "Projekti"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Virhe!"
 
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Peruttu"
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Lopetuspäivämäärä"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Planning"
-msgstr ""
+msgstr "Suunnittelu"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr ""
+msgstr "Määräaika"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Peru"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 msgid "Compute Phase Scheduling"
-msgstr ""
+msgstr "Laske vaiheen ajoitus"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:195
+#: code:addons/project_long_term/project_long_term.py:190
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (kopio)"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,useability:0
 msgid "Availability"
-msgstr ""
+msgstr "Saatavuus"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -218,35 +218,35 @@ msgstr ""
 #. module: project_long_term
 #: view:project.compute.phases:0
 msgid "Compute Scheduling of phases for all or specified project"
-msgstr ""
+msgstr "Laske vaiheiden ajoitus kaikille tai valituille projekteille"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration UoM"
-msgstr ""
+msgstr "Keston mittayksikkö"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 msgid "Compute Task Scheduling"
-msgstr ""
+msgstr "Laske tehtävän ajoitus"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Minimi aloituspäivä"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_resource_allocation
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 msgid "Project Resource Allocation"
-msgstr ""
+msgstr "Projektin resurssien allokointi"
 
 #. module: project_long_term
 #: view:project.compute.tasks:0
 msgid "Compute Scheduling of Task"
-msgstr ""
+msgstr "Laske tehtävän ajoitus"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_resource
@@ -254,7 +254,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 #: view:project.resource.allocation:0
 msgid "Resources"
-msgstr ""
+msgstr "Resurssit"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
@@ -267,38 +267,39 @@ msgstr ""
 #. module: project_long_term
 #: help:project.resource.allocation,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Aloituspäivämäärä"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Related Tasks"
-msgstr ""
+msgstr "Liittyvät tehtävät"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Dates"
-msgstr ""
+msgstr "Päivämäärät"
 
 #. module: project_long_term
 #: help:project.resource.allocation,useability:0
 msgid ""
 "Availability of this resource for this project phase in percentage (=50%)"
 msgstr ""
+"Tämän resurssin saatavuus tälle projektin vaiheelle prosentteina (=50%)"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "Pakota vaihe alkamaan tämän päivän jälkeen"
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projektin tehtävät"
 
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
 msgid "Project Resources"
-msgstr ""
+msgstr "Projektin resurssit"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -308,7 +309,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Schedule and Display info"
-msgstr ""
+msgstr "Ajoita ja näytä tiedot"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -316,16 +317,18 @@ msgid ""
 "It's computed by the scheduler according the project date or the end date of "
 "the previous phase."
 msgstr ""
+"Lasketaan ajastimen avulla käyttäen projektin kestoa ja edellisen vaiheen "
+"loppupäivää."
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
-msgstr ""
+msgstr "Kuukausi"
 
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
-msgstr ""
+msgstr "Vaiheen alkupäivän tulee olla aikaisempi kuin loppupäivä."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -347,64 +350,64 @@ msgstr ""
 #: field:project.phase,date_start:0
 #: field:project.resource.allocation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Aloituspvm"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Resource Allocation"
-msgstr ""
+msgstr "Resurssien allokointi"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
+msgstr "pakota vaihe valmistumaan ennen tätä päivää"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Luonnos"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Odottava"
 
 #. module: project_long_term
 #: field:project.resource.allocation,name:0
 msgid "unknown"
-msgstr ""
+msgstr "Tuntematon"
 
 #. module: project_long_term
 #: field:project.resource.allocation,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Käyttäjä"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Task Detail"
-msgstr ""
+msgstr "Tehtävän yksityiskohdat"
 
 #. module: project_long_term
 #: help:project.project,resource_calendar_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
-msgstr ""
+msgstr "Aikatauluta työtunnit säätääkseksi gantt diagrammin raporttia"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Laske projektin tehtävät"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Rajoitukset"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Antaa järjestyksen näytettäessä listaa vaiheista."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -414,77 +417,78 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Projektin vaiheet"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Käynnissä"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Jäljelläolevat tunnit"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,responsible_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Vastuuhenkilö"
 
 #. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 #: field:project.project,resource_calendar_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "Työaika"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Current"
-msgstr ""
+msgstr "Nykyinen"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Käynnistä vaihe"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Please Specify Project to be schedule"
-msgstr ""
+msgstr "Ole hyvä ja määrittele ajoitettava projekti"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Tunnit yhteensä"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
 msgid "Task Scheduling completed successfully."
-msgstr ""
+msgstr "Tehtävien ajoitus tehty onnistuneesti."
 
 #. module: project_long_term
 #: view:project.compute.tasks:0
 msgid "Compute Scheduling of Task for specified project."
-msgstr ""
+msgstr "Laske tehtävän ajoitus määritellylle projektille."
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
 msgid "Phase"
-msgstr ""
+msgstr "Vaihe"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -500,23 +504,23 @@ msgstr ""
 #: field:project.phase,date_end:0
 #: field:project.resource.allocation,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Loppupvm"
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurssi"
 
 #. module: project_long_term
 #: field:project.phase,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Tehtävän yksityiskohdat"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
@@ -526,12 +530,12 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Resurssin yksityiskohdat"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
+msgstr "Aikataulutus"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -540,51 +544,51 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,phase_id:0
 msgid "Project Phase"
-msgstr ""
+msgstr "Projektin vaihe"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Laske projektin vaiheet"
 
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
 msgid "Message"
-msgstr ""
+msgstr "Viesti"
 
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "Vaiheissa ei sallita luuppeja"
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvenssi"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All Projects"
-msgstr ""
+msgstr "Laske kaikki projektit"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Resurssin lomat"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
 #: view:project.phase:0
 #: view:project.schedule.tasks:0
 msgid "Schedule Tasks"
-msgstr ""
+msgstr "Ajoita tehtävät"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Oletuksena päivissä"
 
 #. module: project_long_term
 #: field:project.phase,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Kesto"

@@ -8,23 +8,23 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-03-20 09:52+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:48+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:42+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_retro_planning
 #: model:ir.model,name:project_retro_planning.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "项目"
 
 #. module: project_retro_planning
 #: model:ir.module.module,shortdesc:project_retro_planning.module_meta_information
 msgid "Project Retro planning"
-msgstr "项目补充计划"
+msgstr "项目计划反推"
 
 #. module: project_retro_planning
 #: model:ir.module.module,description:project_retro_planning.module_meta_information
@@ -34,21 +34,16 @@ msgid ""
 "          then the deadline date and start date for all the tasks will "
 "change accordingly  "
 msgstr ""
+"\n"
+"        - 如果项目的结束日期发生了变化\n"
+"          项目中所有任务的开始日期和结束日期也会自动变化  "
 
 #. module: project_retro_planning
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #. module: project_retro_planning
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "        - Stop date of project is change will change all the tasks of that "
-#~ "project to same number of days "
-#~ msgstr ""
-#~ "\n"
-#~ "        项目的停止日期将改变项目所有的任务日期 "
+msgstr "不能升级到相同的项目"

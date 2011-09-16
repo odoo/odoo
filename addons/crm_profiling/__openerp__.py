@@ -24,6 +24,7 @@
     'name': 'CRM Profiling Management - To Perform Segmentation within Partners',
     'version': '1.3',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 This module allows users to perform segmentation within partners.
 =================================================================

@@ -83,7 +83,7 @@ class partner_vat_intra(osv.osv_memory):
         else:
             data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
-        company_vat = data_cmpny.partner_id.vat
+        company_vat = data_cmpny.partner_id.vat.replace(' ','').upper()
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
 
@@ -123,13 +123,14 @@ class partner_vat_intra(osv.osv_memory):
 
         if not data['period_ids']:
             raise osv.except_osv(_('Data Insufficient!'),_('Please select at least one Period.'))
+        codes = ('44', '46L', '46T')
         cursor.execute('''SELECT p.name As partner_name, l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount
                       FROM account_move_line l
                       LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id)
                       LEFT JOIN res_partner p ON (l.partner_id = p.id)
-                      WHERE t.code IN ('44a','44b','88')
+                      WHERE t.code IN %s
                        AND l.period_id IN %s
-                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (tuple(data['period_ids']), ))
+                      GROUP BY p.name, l.partner_id, p.vat, t.code''', (codes, tuple(data['period_ids'])))            
         for row in cursor.dictfetchall():
             if not row['vat']:
                 p_list += str(row['partner_name']) + ', '
@@ -138,8 +139,9 @@ class partner_vat_intra(osv.osv_memory):
             amt = row['amount'] or 0
             amt = int(round(amt * 100))
             amount_sum += amt
-            intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
-            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:] +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
+            intra_code = row['intra_code'] == '44' and 'S' or (row['intra_code'] == '46L' and 'L' or (row['intra_code'] == '46T' and 'T' or ''))
+#            intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
+            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:].replace(' ','').upper() +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
         data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'

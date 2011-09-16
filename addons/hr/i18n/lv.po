@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:41+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:34+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -26,7 +26,7 @@ msgstr "Openerp Lietotājs"
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Prasības"
 
 #. module: hr
 #: constraint:hr.department:0
@@ -36,7 +36,7 @@ msgstr "Kļūda! Nevar veidot rekursīvus departamentus."
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Piesaistīt Darbinieku attiecīgajai informācijai"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -56,7 +56,7 @@ msgstr "Personāla Vadība"
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupēt pēc..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -67,6 +67,10 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Amati tiek izmantoti, lai definētu veicamos darbus un prasības to izpildei. "
+"Iespējams uzskaitīt cik darbinieku ir attiecīgajā amatā un cik būs turpmāk. "
+"Amatam var piesaistīt aptaujas lapas, kuras var tikt izmantotas pieņemot "
+"citus darbiniekus darbā."
 
 #. module: hr
 #: view:hr.employee:0
@@ -80,27 +84,27 @@ msgstr "Departaments"
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Vienkāršo darbinieku ierašanās darbā laika uzskaiti."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Atzīmēt kā Vecu"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Darbi"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "Pieņemti Darbā"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "saīsinājums"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -113,22 +117,22 @@ msgstr "Uzņēmums"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Tiek gatavots pieņemšanai Darbā"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Brīvdienas"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
-msgstr ""
+msgstr "Seko darbinieku atlaišanām, pieprasījumu sadalei un plānošanai."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Darbinieka Ģimenes Stāvoklis"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -136,42 +140,45 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Ar attiecīgo Darbinieku saistītais Uzņēmums. Darbinieka grāmatvedības "
+"ieraksti attiecas uz saistīto Uzņēmumu."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Saistīt sistēmas lietotāju ar Darbinieku."
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Darbinieku Darba Līgumi"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Algu pamatsistēma."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Manas Nodaļas Darbinieks"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Precējies"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Kļūda! Nevar izvēlēties nodaļu, kurai darbinieks pats ir nodaļas vadītājs."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Darbinieka Pases Dati"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -180,11 +187,14 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Ar Uzņēmuma Nodaļas Struktūras palīdzību tiek organizēti visi attiecīgo "
+"nodaļu darbinieku dokument: avansa norēķini, darba tabeļu apstiprināšana, "
+"darbā pieņemšana un atlaišana."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Amats"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
@@ -197,22 +207,24 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Saistītā lietotāja lauks nodrošina OpenERP lietotāja tiesību piešķiršanu "
+"izvēlētajam darbiniekam."
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "Tiek Pieņemts Darbā"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Identifikācijas kods"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "Darbinieka Nr."
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -224,16 +236,18 @@ msgstr "Sieviete"
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
+"Uzskaita un palīdz lietotājiem ievadīt un apstiprināt darba laika uzskaites "
+"tabulas un apmeklējumu."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Periodiska Novērtēšana"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Darba uzkaites Tabeles"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -248,7 +262,7 @@ msgstr "Soc. apdr. ID"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Attiecīgā Amata darbinieku skaits"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -265,7 +279,7 @@ msgstr "Apakškategorijas"
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Darba Apraksts"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -283,12 +297,12 @@ msgstr "Darbinieks"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Cita Informācija"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Darba e-pasts"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -299,7 +313,7 @@ msgstr "Nosaukums"
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Dzimšanas datums"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
@@ -309,19 +323,19 @@ msgstr "Atskaites"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Personāla Vadības Instrumentu Panelis"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Amats"
 
 #. module: hr
 #: view:hr.department:0
@@ -340,21 +354,23 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Iespējams papildināt Personāla Vadības funkcionalitāti instalējot papildus "
+"saistītos moduļus."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategorijas"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Gaidāmie Darbinieki"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Socialās Apdrošināšanas Numurs"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
@@ -369,7 +385,7 @@ msgstr "Virskategorija"
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Kļūda! Nevar izveidot rekursīvas Kategorijas"
 
 #. module: hr
 #: view:hr.department:0
@@ -388,7 +404,7 @@ msgstr "Darbinieka Kontakts"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Mans Panelis"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -398,7 +414,7 @@ msgstr "Vīrietis"
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Konfigurācijas Progress"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -415,12 +431,12 @@ msgstr "Darbinieka Kategorija"
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Attēls"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Darbinieka Darba Līgums"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -428,6 +444,7 @@ msgid ""
 "Lets you create and manage the periodic evaluation and performance review of "
 "employees."
 msgstr ""
+"Ļauj periodiski veikt darbinieku novērtējumu un efektivitātes uzskaiti."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
@@ -437,12 +454,12 @@ msgstr "hr.department"
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "Saistīts ar Nodaļas vadītāju"
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Darbā pieņemšanas Process"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
@@ -464,11 +481,20 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Šeit iespējams vadīt darbaspēku, izveidojot darbiniekus un piešķirot tiem "
+"specifiskus parametrus sistēmā. Uzskaitīt visu ar darbiniekiem saistīto "
+"informāciju, kā arī veikt izmaiņas tajā. Personālās Informācijas cilnis ļauj "
+"reģistrēt personīgos datus. Kategoriju cilnis ļauj piešķirt darbiniekus "
+"attiecīgajām kategorijām atkarībā no darbinieku amatiem un aktivitātēm "
+"uzņēmumā. Kategorija var būt arī darba stāžs uzņēmumā vai nodaļā. Darba "
+"Uzskaites Tabeles cilnis ļauj piešķirt darbiniekam specifisku tabeli vai "
+"analītisko žurnālu, kuros tiek ievadīti laika uzskaites dati. Piezīmju "
+"cilnis paredzēts tekstuālām piezīmēm par attiecīgo darbinieku."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Darbinieka Algas Konts"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -478,7 +504,7 @@ msgstr "Piezīmes"
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Izvēlēta kompānija nav atļauto kompāniju sarakstā šim lietotājam"
 
 #. module: hr
 #: view:hr.employee:0
@@ -493,7 +519,7 @@ msgstr "Darbavietas Adrese"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Personāla Vadītāja Rīku Panelis"
 
 #. module: hr
 #: view:hr.employee:0
@@ -503,7 +529,7 @@ msgstr "Stāvoklis"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurēt"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -514,17 +540,17 @@ msgstr "Kategoriju Struktūra"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "nezināms"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Atvaļinājumu / Atlaišanu vadība"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "Soc. apdr. tīkla No"
 
 #. module: hr
 #: view:hr.employee:0
@@ -552,6 +578,12 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Personāla Vadības modulis. Ar to iespējams organizēt:\n"
+"    * Darbiniekus, to hierarhiju\n"
+"    * Uzņēmuma Nodaļas\n"
+"    * Amatus\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -559,32 +591,34 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"Darbinieka formā tiek attēlota dažāda veida informācija, kā, piemēram, "
+"kontaktinformācija."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "Darba veikšanai nepieciešamais darbinieku skaits."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Veca"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Statusa Apraksts"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Nevar būt divi lietotāji ar vienādu pieteikuma vārdu!"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Statuss"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -598,27 +632,27 @@ msgstr "Ģimenes stāvoklis"
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "Nodrošina un uzlabo darbinieku pieņemšanas darbā procesu."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Darbinieka forma un struktūra"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Algu Grāmatvedība"
 
 #. module: hr
 #: view:hr.employee:0
@@ -628,12 +662,12 @@ msgstr "Personīgā Informācija"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Pases Nr."
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Pašreizējās Aktivitātes"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
@@ -641,11 +675,13 @@ msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
 msgstr ""
+"Uzskaita un vada darbinieku avansa norēķinus, iespējams automātiski "
+"piestādīt rēķinu par izdevumiem, ja tie ir attiecināmi uz projektu."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Pašreizējais"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -666,44 +702,44 @@ msgstr "Mājas Adrese"
 #: field:hr.installer,hr_attendance:0
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
-msgstr ""
+msgstr "Apmeklējumi"
 
 #. module: hr
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Apraksts"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
+msgstr "Paplašina darbinieku profilus darba līgumu organizācijas vajadzībām."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Alga"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Neprecējies/-usies"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Amata Nosaukums"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "Amatā"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilais tālr."
 
 #. module: hr
 #: view:hr.department:0
@@ -725,23 +761,23 @@ msgstr "Piezīmes"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Personāla Vadītāja Pārvaldes rīki"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurss"
 
 #. module: hr
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "Personāla Vadības Programmas Konfigurācija"
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -762,7 +798,7 @@ msgstr "Darbinieki"
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankas Konts"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -772,12 +808,12 @@ msgstr "Nodaļas Nosaukums"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Sociālās apdrošināšanas nr."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "OpenERP lietotāja izveide"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -788,23 +824,23 @@ msgstr "Apakšnodaļas"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Pieejamie Amati"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Skolotājs"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Konfigurēt Personāla Vadības Programmu"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Avansa Norēķini"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -816,12 +852,12 @@ msgstr "Vadītājs"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Atraitnis/-ne"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Algu Pamatsistēma Integrēta Grāmatvedības sistēmā."
 
 #. module: hr
 #: field:hr.employee,child_ids:0

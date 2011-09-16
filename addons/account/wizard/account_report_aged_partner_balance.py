@@ -31,7 +31,7 @@ class account_aged_trial_balance(osv.osv_memory):
     _description = 'Account Aged Trial balance Report'
 
     _columns = {
-        'period_length':fields.integer('Period length (days)', required=True),
+        'period_length':fields.integer('Period Length (days)', required=True),
         'direction_selection': fields.selection([('past','Past'),
                                                  ('future','Future')],
                                                  'Analysis Direction', required=True),

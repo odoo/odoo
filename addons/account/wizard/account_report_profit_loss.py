@@ -33,7 +33,7 @@ class account_pl_report(osv.osv_memory):
     }
 
     _defaults = {
-        'display_type': True,
+        'display_type': False,
         'journal_ids': [],
         'target_move': False
     }

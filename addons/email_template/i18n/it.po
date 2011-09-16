@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:59+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -239,7 +239,7 @@ msgstr "Rispondi a"
 #. module: email_template
 #: view:email.template:0
 msgid "Delete Action"
-msgstr ""
+msgstr "Elimina Azione"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -602,7 +602,7 @@ msgstr "Firma"
 #. module: email_template
 #: field:email.template,sub_object:0
 msgid "Sub-model"
-msgstr ""
+msgstr "Sotto-modello"
 
 #. module: email_template
 #: view:email.template:0
@@ -882,13 +882,13 @@ msgstr "Invia/Ricevi"
 #. module: email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Personal Mails"
-msgstr ""
+msgstr "Mail personali"
 
 #. module: email_template
 #: view:email_template.account:0
 #: selection:email_template.account,state:0
 msgid "Suspended"
-msgstr ""
+msgstr "Sospeso"
 
 #. module: email_template
 #: help:email.template,allowed_groups:0
@@ -967,7 +967,7 @@ msgid "Close"
 msgstr "Chiudi"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Errore inviando l'email: %s"
@@ -1059,7 +1059,7 @@ msgid "Email Mailbox"
 msgstr "Email Mailbox"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1175,7 +1175,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Email"
 
@@ -1349,52 +1351,6 @@ msgstr "Presenta allegati"
 #, python-format
 msgid "No Description"
 msgstr "Nessuna descrizione"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#, python-format
-#~ msgid "Mako templates not installed"
-#~ msgstr "Template MAKO non installati"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "L'ID certificato del modulo deve essere unico!"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Argomenti non validi"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per la struttura della vista!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
-
-#, python-format
-#~ msgid "Django templates not installed"
-#~ msgstr "Template DJANGO non installati"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Il nome del modulo deve essere unico!"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per “x_” e non contenere alcun carattere "
-#~ "speciale!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it based on specific customer "
-#~ "profile fields so that their names or other partner related information can "
-#~ "be automatically inserted in it."
-#~ msgstr ""
-#~ "Un \"template email\" è un documento email che viene spedito come parte di "
-#~ "una campagna marketing. E' possibile personalizzarlo basandosi su uno "
-#~ "specifico campo del profilo cliente, così facendo i loro nomi, o altre "
-#~ "informazioni ad essi relativi, possono essere automaticamente inseriti."
 
 #, python-format
 #~ msgid "Copy of template "

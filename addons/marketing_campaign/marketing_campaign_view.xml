@@ -26,6 +26,7 @@
                         <separator string="Resource" colspan="2" />
                         <field name="object_id"/>
                         <field name="partner_field_id"/>
+                        <field name="unique_field_id"/>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Cost" colspan="2" />
@@ -50,7 +51,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Campaigns">
+            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
@@ -175,7 +176,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Segments">
+            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -266,7 +267,7 @@
                     <field name="type"/>
                     <group colspan='2' col='1'>
                         <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
-                               context="{'default_object_name':object_id}" />
+                               context="{'default_model_id':object_id}" />
                         <group attrs="{'invisible':[('type','!=','report')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','report')]}" />
@@ -333,7 +334,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="red:state in ('exception');black:state in ('todo');gray:state in ('cancelled')" string="Marketing Campaign Activities">
+            <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id" />

@@ -233,7 +233,7 @@
             <field name="model">survey</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="gray:state in ('close')" string="Survey">
+                <tree colors="gray:state == 'close'" string="Survey">
                     <field name="title" select="1"/>
                     <field name="type" select="1"/>
                     <field name="responsible_id"/>
@@ -499,6 +499,7 @@
             <field name="name">survey_page_wizard_test</field>
             <field name="model">survey.page</field>
             <field name="type">form</field>
+            <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Survey Pages">
                     <field name="title" colspan="4" select="1"/>
@@ -701,6 +702,7 @@
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
+            <field name="priority">20</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">

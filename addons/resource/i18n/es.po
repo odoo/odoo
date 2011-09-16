@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -46,9 +46,10 @@ msgstr "Detalle ausencia"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr "Ausencias recursos"
+msgstr "Ausencias de recursos"
 
 #. module: resource
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
@@ -220,7 +221,6 @@ msgid "Wednesday"
 msgstr "Miércoles"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 #: field:resource.resource,calendar_id:0
@@ -254,17 +254,17 @@ msgstr "Calendario del recurso"
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
-msgstr "Usuario relacionado con el recurso para gestionar su acceso"
+msgstr "Usuario relacionado con el recurso para gestionar su acceso."
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr "Definir el horario del recurso"
+msgstr "Define el horario del recurso."
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr "Trabaja desde"
+msgstr "Trabajar desde"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -279,7 +279,7 @@ msgstr "Lunes"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr "Trabaja hasta"
+msgstr "Trabajar hasta"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -308,7 +308,7 @@ msgstr "Tiempo de trabajo"
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Ausencias recursos"
+msgstr "Ausencias de recursos"
 
 #. module: resource
 #: view:resource.resource:0
@@ -335,7 +335,7 @@ msgstr "Inactivo"
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr "(vacaciones)"
+msgstr "(ausencia)"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
@@ -355,7 +355,7 @@ msgstr "Detalle del trabajo"
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
-msgstr "Fecha inicio"
+msgstr "Fecha inicial"
 
 #. module: resource
 #: code:addons/resource/resource.py:246
@@ -367,40 +367,3 @@ msgstr " (copia)"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Sábado"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML no válido para la definición de la vista!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de la acción."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "¡El Idientificador del certificado del módulo debe ser único!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "¡Error! No puede crear menús recursivos."
-
-#~ msgid ""
-#~ "Resources allows you to create and manage resources that should be involved "
-#~ "in a specific project phase. It also allows you to set their efficiency "
-#~ "level and workload based on their weekly working hours"
-#~ msgstr ""
-#~ "Los recursos le permiten crear y gestionar recursos que deberían ser "
-#~ "implicadas en una fase específica de un proyecto. También le permite "
-#~ "establecer su nivel de eficiencia y carga de trabajo en base a sus horas "
-#~ "trabajadas durante la semana"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "¡El nombre del módulo debe ser único!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#~ msgid "Search Working Period"
-#~ msgstr "Buscar periodo de trabajo"

@@ -12,15 +12,17 @@
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
-                   <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
+                   <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
+                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
                    <separator orientation="vertical"/>
                    <field name="default_code"/>
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                   <group expand="0" string="Context..." groups="base.group_extended">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                       <separator orientation="vertical" groups="base.group_multi_company" />
+                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
@@ -29,6 +31,8 @@
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <separator orientation="vertical" groups="base.group_multi_company"/>
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
                    </group>
 
                 </search>
@@ -54,6 +58,7 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="standard_price"/>
                     <field name="state" groups="base.group_extended"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -195,16 +200,26 @@
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
+        <record id="product_normal_action_sell" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="context">{"search_default_filter_to_sell":1}</field>
+            <field name="view_id" ref="product_product_tree_view"/>  
+            <field name="search_view_id" ref="product_search_form_view"/>            
+            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
+        </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="domain">[('purchase_ok','=',1)]</field>
+            <field name="context">{"search_default_filter_to_purchase":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
@@ -280,8 +295,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('categ_id','child_of',[active_id])]</field>
-            <field name="context">{'categ_id':active_id}</field>
+            <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
