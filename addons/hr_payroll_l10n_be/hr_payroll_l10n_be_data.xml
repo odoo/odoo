@@ -175,9 +175,9 @@
         <field name="code">CAR 1</field>
         <field name="sequence">15</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.company_car_wkr)</field>
+        <field name="condition_python">result = bool(contract.car_employee_deduction)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.company_car_wkr</field>
+        <field name="amount_python_compute">result = contract.car_employee_deduction</field>
     </record>
     <record id="hr_payroll_rules_company_car_2" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -186,9 +186,9 @@
         <field name="code">CAR 2</field>
         <field name="sequence">160</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = contract.company_car_wkr</field>
+        <field name="condition_python">result = contract.car_employee_deduction</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -contract.company_car_wkr</field>
+        <field name="amount_python_compute">result = -contract.car_employee_deduction</field>
     </record>
     <record id="hr_payroll_rules_company_car_emp" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.COMP"/>
@@ -197,9 +197,9 @@
         <field name="code">CAR 3</field>
         <field name="sequence">160</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.company_car_emp)</field>
+        <field name="condition_python">result = bool(contract.car_company_amount)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -contract.company_car_emp</field>
+        <field name="amount_python_compute">result = -contract.car_company_amount</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_parent_ch" model="hr.salary.rule">
@@ -219,9 +219,9 @@
         <field name="amount_select">fix</field>
         <field name="sequence">165</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = -(contract.ch_value - contract.ch_worker) * worked_days.WORK100.number_of_days</field>
+        <field name="amount_python_compute">result = -(contract.meal_voucher_amount - contract.meal_voucher_employee_deduction) * worked_days.WORK100.number_of_days</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.ch_value)</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_amount)</field>
         <field name="appears_on_payslip" eval="False"/>
     </record>
     <record id="hr_payroll_rules_ch_worker" model="hr.salary.rule">
@@ -231,10 +231,10 @@
         <field name="code">Meal Check</field>
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.ch_worker)</field>
+        <field name="condition_python">result = bool(contract.meal_voucher_employee_deduction)</field>
         <field name="amount_select">percentage</field>
         <field name="amount_percentage">-100.0</field>
-        <field name="amount_percentage_base">contract.ch_worker</field>
+        <field name="amount_percentage_base">contract.meal_voucher_employee_deduction</field>
         <field name="quantity">worked_days.WORK100.number_of_days</field>
         <field name="appears_on_payslip" eval="True"/>
     </record>
@@ -245,8 +245,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">65</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.reim_travel)</field>
-        <field name="amount_python_compute">result = contract.reim_travel</field>
+        <field name="condition_python">result = bool(contract.travel_reimbursement_amount)</field>
+        <field name="amount_python_compute">result = contract.travel_reimbursement_amount</field>
     </record>
     <record id="hr_payroll_rules_mis_ex_onss" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.DED"/>
@@ -255,8 +255,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.mis_ex_onss)</field>
-        <field name="amount_python_compute">result = -contract.mis_ex_onss</field>
+        <field name="condition_python">result = bool(contract.misc_onss_deduction)</field>
+        <field name="amount_python_compute">result = -contract.misc_onss_deduction</field>
     </record>
     <record id="hr_payroll_rules_insurance" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.DED"/>
@@ -265,8 +265,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.insurance)</field>
-        <field name="amount_pyton_compute">result = -contract.insurance</field>
+        <field name="condition_python">result = bool(contract.insurance_employee_deduction)</field>
+        <field name="amount_pyton_compute">result = -contract.insurance_employee_deduction</field>
     </record>
     <record id="hr_payroll_rules_advantage" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll.ALW"/>
@@ -275,8 +275,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">10</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.advantage)</field>
-        <field name="amount_python_compute">result = contract.advantage</field>
+        <field name="condition_python">result = bool(contract.misc_advantage_amount)</field>
+        <field name="amount_python_compute">result = contract.misc_advantage_amount</field>
     </record>
     <record id="hr_payroll_rules_suppl_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -285,8 +285,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">185</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.suppl_net)</field>
-        <field name="amount_python_compute">result = contract.suppl_net</field>
+        <field name="condition_python">result = bool(contract.additional_net_amount)</field>
+        <field name="amount_python_compute">result = contract.additional_net_amount</field>
     </record>
     <record id="hr_payroll_rules_retained_net" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_net"/>
@@ -295,8 +295,8 @@
         <field name="amount_select">code</field>
         <field name="sequence">190</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = bool(contract.retained_net)</field>
-        <field name="amount_python_compute">result = -contract.retained_net</field>
+        <field name="condition_python">result = bool(contract.retained_net_amount)</field>
+        <field name="amount_python_compute">result = -contract.retained_net_amount</field>
     </record>
     <record id="hr_payroll_salary_structure_employee" model="hr.payroll.structure">
         <field name="code">C.P.218</field>
