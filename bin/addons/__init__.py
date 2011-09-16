@@ -769,7 +769,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
                 cr.commit()
                 # Update translations for all installed languages
-                modobj.update_translations(cr, 1, [mid], None)
+                modobj.update_translations(cr, 1, [mid], None, {'overwrite': True})
                 cr.commit()
 
             package.state = 'installed'
