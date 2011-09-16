@@ -284,13 +284,13 @@
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_column_heading  oe_kanban_color_border oe_kanban_draghandle">
-                               	
-                                  <tr>
+                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_column_heading oe_kanban_color_border oe_kanban_draghandle">
+                               	  <tr>
                                     	<td class="oe_kanban_title3" align="left" valign="middle">
                                     	    <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
                           		            <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                        <field name="name"/></td>
+                                        	<b><font size="3"><field name="name"/></font></b>
+                                        </td>
 										<td valign="top" width="22"><img t-att-src="kanban_gravatar(record.name.value, 22)" class="oe_kanban_gravatar"/></td>
                                	</tr>
                               </table>
@@ -306,7 +306,7 @@
                                         <b><field name="project_id"/></b>
                                     </div>
                                     <div>
-										 Version <field name="version_id"/>
+										<i> Version <field name="version_id"/></i>
 						           </div>
                              </div>
 
