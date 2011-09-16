@@ -85,8 +85,8 @@ class res_company(osv.osv):
         for company in records:
             edi_doc = {}
             company_address = False
-            res = partner_pool.address_get(cr, uid, [company.partner_id.id], ['contact', 'invoice'])
-            addr_id = res['invoice'] or res['contact']
+            res = partner_pool.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
+            addr_id = res['invoice'] or res['contact'] or res['default']
             if addr_id:
                 address = partner_address_pool.browse(cr, uid, addr_id, context=context)
                 ctx = context.copy()
