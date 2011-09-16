@@ -420,6 +420,12 @@ class edi(object):
             openobject = model.browse(cr, uid, data.res_id, context=context)
         return openobject
 
+    def edi_create_relation(self, cr, uid, relation_model, relation_value, context=None):
+        relation_model = self.pool.get(relation_model)
+        values = {} #relation_model.default_get(cr, uid, fields, context=context)
+        values[relation_model._rec_name] = relation_value            
+        return relation_model.create(cr, uid, values, context=context)
+
     def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
         relation = False
         if xml_id:
@@ -427,10 +433,7 @@ class edi(object):
         if not relation:
             relation = self.edi_get_object_by_name(cr, uid, relation_value, relation_model, context=context)
         if not relation:
-            relation_model = self.pool.get(relation_model)
-            values = {} #relation_model.default_get(cr, uid, fields, context=context)
-            values[relation_model._rec_name] = relation_value            
-            relation_id = relation_model.create(cr, uid, values, context=context)
+            relation_id = self.edi_create_relation(cr, uid, relation_model, relation_value, context=context)
             relation = relation_model.browse(cr, uid, relation_id, context=context)
 
         record_xml = self.record_xml_id(cr, uid, relation, context=context)

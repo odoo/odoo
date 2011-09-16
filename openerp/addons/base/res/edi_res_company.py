@@ -54,13 +54,29 @@ class res_company(osv.osv):
         """
         if values is None:
             values = {}
-        partner_pool = self.pool.get('res.partner')
+        partner_model = 'res.partner'
+        partner_pool = self.pool.get(partner_model)
+        xml_id = edi_document['company_id'][0]
+        company_address = edi_document.get('company_address', False)
+        partner_name = edi_document['company_id'][1]
+        partner = partner_pool.edi_get_object(cr, uid, xml_id, partner_model, context=context)
+        if not partner:
+            partner = partner_pool.edi_get_object_by_name(cr, uid, partner_name, partner_model, context=context)
+
+        if partner:
+            record_xml = partner_pool.record_xml_id(cr, uid, partner, context=context)
+            if record_xml:
+                module, xml_id = record_xml
+                xml_id = '%s.%s' % (module, xml_id)
+
         edi_document_partner = {
-            '__model': 'res.partner',
-            '__id' : edi_document['company_id'][0],
-            'name' : edi_document['company_id'][1],
-            'address': [edi_document['company_address']]
+            '__model': partner_model,
+            '__id' : xml_id,
+            'name' : partner_name,
         }
+        if company_address:
+            edi_document_partner['address'] = [company_address]
+
         edi_document_partner.update(values)
         return partner_pool.edi_import(cr, uid, edi_document_partner, context=context)
 
