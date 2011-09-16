@@ -44,8 +44,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     
                 },
                 "Edit": function(){
-                    self.xml_id=0;
-                    self.edit_view();
+                    self.xml_id = 0 ;
+                    self.get_data();
+                    
                 },
                 "Close": function(){
                  $(this).dialog('destroy');
@@ -58,10 +59,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
        action_manager.appendTo(this.dialog);
        action_manager.do_action(action);
     },
-    check_attr:function(xml,tag){
+
+    check_attr:function(xml,tag,level){
         var obj = new Object();
         obj.child_id = [];
         obj.id = this.xml_id++;
+        obj.level = level;
         var att_list = [];
         var name1 = "<" + tag;
         $(xml).each(function() {
@@ -75,6 +78,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         obj.name = name1;
         return obj;
     },
+
     save_object : function(val,parent_list,child_obj_list){
         var self = this;
         var check_id = parent_list[0];
@@ -94,14 +98,16 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             val.child_id = child_obj_list;
         }
     },
+
     children_function : function(xml,root,parent_list,parent_id,main_object){
         var self = this;
         var child_obj_list = [];
         var parent_list = parent_list;
         var main_object = main_object;
         var children_list = $(xml).filter(root).children();
+        var parents = $(children_list[0]).parents().get();
         _.each(children_list, function(child_node){
-            var string = self.check_attr(child_node,child_node.tagName.toLowerCase());
+            var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
             child_obj_list.push(string);
         });
         if(children_list.length != 0){
@@ -115,42 +121,47 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         for(var i=0;i<children_list.length;i++){
             self.children_function
-(children_list[i],children_list[i].tagName.toLowerCase(),parent_list,child_obj_list[i].id,main_object);
+                (children_list[i],children_list[i].tagName.toLowerCase(),parent_list,child_obj_list[i].id,main_object);
         }
         return main_object;
     },
-    edit_view : function(){
+    get_data : function(){
             var self = this;
-            var all_list =[];
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
-            ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch) {
-            var arch = arch[0].arch;
-            var root = $(arch).filter(":first")[0];
-            var tag = root.tagName.toLowerCase();
-            var root_object = self.check_attr(root,tag);
-            one_object = self.children_function(arch,tag,[],0,[root_object]);
-            //render here
-            });
+            ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch){
+                    var arch = arch[0].arch;
+                    var root = $(arch).filter(":first")[0];
+                    var tag = root.tagName.toLowerCase();
+                    var root_object = self.check_attr(root,tag,0);
+                    var one_object = self.children_function(arch,tag,[],0,[root_object]);
+                    return self.edit_view(one_object);
+                });
+    },
+    edit_view : function(o){
+        var self = this;
             this.dialog = new openerp.web.Dialog(this,{
-            modal: true,
-            title: 'Edit Xml',
-            width: 750,
-            height: 500,
-            buttons: {
-                "Inherited View": function(){
-                    
-                },
-                "Preview": function(){
-                    
-                },
-                "Close": function(){
-                    $(this).dialog('destroy');
-                }
-            },
+                modal: true,
+                title: 'Edit Xml',
+                width: 750,
+                height: 500,
+                buttons: {
+                        "Inherited View": function(){
+                            
+                        },
+                        "Preview": function(){
+                            
+                        },
+                        "Close": function(){
+                            $(this).dialog('destroy');
+                        }
+                    }
+            });
 
-        });
-         
+            this.dialog.start().open();
+            this.dialog.$element.html(QWeb.render('view_editor', {
+            'data': o,
+            }));
     }
         
 });

@@ -1243,6 +1243,28 @@
             .unwrap();
     </t>
 </t>
+<t t-name="view_editor">
+    <table align="left" width= "100%">
+        <t t-call="view_editor.row"/>
+    </table>
+</t>
+<t t-name="view_editor.row">
+    
+    <t t-foreach="data" t-as="rec">
+        <tr >
+            <td class= "view_editor"
+            t-att-style="'background-position: ' + 30*rec.level + 'px; padding-left: ' + 30*rec.level + 'px'">
+                <img t-if="rec.child_id.length" src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                <t t-esc="rec.name"/>
+            </td>
+        </tr >
+        <t t-if="rec.child_id.length">
+            <t t-set="data" t-value="rec.child_id"/>
+            <t t-call="view_editor.row"/>
+        </t>
+    </t>
+    
+</t>
 
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
@@ -1294,6 +1316,7 @@
         </td>
     </tr>
 </table>
+
 
 <table t-name="ExportTreeView-Secondary"
        id="field-tree-structure" class="oe_export_fields_selector_export"
