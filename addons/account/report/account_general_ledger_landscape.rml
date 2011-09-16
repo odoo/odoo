@@ -361,7 +361,7 @@
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company' or removeParentNode('para') ]]</para>
-          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Accounts' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
@@ -395,7 +395,7 @@
           <para style="terp_default_Centre_7">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_7">[[ (data['form']['display_account']=='bal_all' and 'All') or (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para>
+          <para style="terp_default_Centre_7">[[ (data['form']['display_account']=='all' and 'All') or (data['form']['display_account']=='movement' and 'With movements') or 'With balance is not equal to 0']]</para>
         </td>
         <td>
           <para style="terp_default_Centre_7">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]]</para>

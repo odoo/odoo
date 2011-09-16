@@ -57,7 +57,7 @@
   !python {model: crm.meeting}: |
      import time
      from datetime import datetime, date, timedelta
-     ids = self.search(cr, uid, [('date', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('date', '<=', (datetime.now()+timedelta(31)).strftime('%Y-%m-%d 00:00:00')), ('name', '=', 'Regarding Presentation')] )
+     ids = self.search(cr, uid, [('date', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('date', '<=', (datetime.now()+timedelta(31)).strftime('%Y-%m-%d 00:00:00')), ('name', '=', 'Regarding Presentation')], context={'virtual_id': True})
      assert len(ids) == 10      
 
 - |

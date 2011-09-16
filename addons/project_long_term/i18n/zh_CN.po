@@ -1,0 +1,599 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-06-30 06:07+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:54+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: project_long_term
+#: model:ir.module.module,shortdesc:project_long_term.module_meta_information
+msgid "Long Term Project Management"
+msgstr "长期项目管理"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+msgid "Compute Scheduling of Phases"
+msgstr "项目周期计算"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,next_phase_ids:0
+msgid "Next Phases"
+msgstr "下一阶段"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Project's Tasks"
+msgstr "项目任务"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phases
+msgid "Phases"
+msgstr "阶段"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: view:project.resource.allocation:0
+msgid "Group By..."
+msgstr "分组..."
+
+#. module: project_long_term
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "错误！项目的开始日期必须小于项目的结束日期"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: view:project.resource.allocation:0
+msgid "Resources Allocation"
+msgstr "资源分配"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Displaying settings"
+msgstr "显示设置"
+
+#. module: project_long_term
+#: field:project.compute.phases,target_project:0
+msgid "Schedule"
+msgstr "日程"
+
+#. module: project_long_term
+#: model:ir.module.module,description:project_long_term.module_meta_information
+msgid ""
+"\n"
+"\n"
+"        Long Term Project management module that tracks planning, "
+"scheduling, resources allocation.\n"
+"        Mainly used with Big project management.\n"
+"            - Project Phases will be maintained by Manager of the project\n"
+"            - Compute Phase Scheduling: Compute start date and end date of "
+"the phases which are in draft,open and pending state of the project given.\n"
+"                                        If no project given then all the "
+"draft,open and pending state phases will be taken\n"
+"            - Compute Task Scheduling: This works same as the scheduler "
+"button on project.phase. It takes the project as argument and computes all "
+"the open,draft and pending tasks\n"
+"            - Schedule Tasks: All the tasks which are in draft,pending and "
+"open state are scheduled with taking the phase's start date\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: project_long_term
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "错误！不能创建循环引用的任务"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+msgid "Resource Allocations"
+msgstr "资源分配"
+
+#. module: project_long_term
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr "不能升级到相同的项目"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:128
+#, python-format
+msgid "Day"
+msgstr "天"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_task
+msgid "Task"
+msgstr "任务"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute a Single Project"
+msgstr "计算单个项目"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,previous_phase_ids:0
+msgid "Previous Phases"
+msgstr "上一阶段"
+
+#. module: project_long_term
+#: help:project.phase,product_uom:0
+msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
+msgstr "某个周期的计量单位"
+
+#. module: project_long_term
+#: help:project.phase,date_end:0
+msgid ""
+" It's computed by the scheduler according to the start date and the duration."
+msgstr " 这个日期是由开始日期和计划日数根据日历计算出来的。"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_project
+#: field:project.compute.phases,project_id:0
+#: field:project.compute.tasks,project_id:0
+#: view:project.phase:0
+#: field:project.phase,project_id:0
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,project_id:0
+#: view:project.task:0
+msgid "Project"
+msgstr "项目"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#, python-format
+msgid "Error!"
+msgstr "错误！"
+
+#. module: project_long_term
+#: selection:project.phase,state:0
+msgid "Cancelled"
+msgstr "已取消"
+
+#. module: project_long_term
+#: help:project.resource.allocation,date_end:0
+msgid "Ending Date"
+msgstr "结束日期"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Planning"
+msgstr "计划"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_end:0
+msgid "Deadline"
+msgstr "截止日期"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "_Cancel"
+msgstr "取消(_C)"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+msgid "Compute Phase Scheduling"
+msgstr "计算阶段日程"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:190
+#, python-format
+msgid " (copy)"
+msgstr " (copy)"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,useability:0
+msgid "Availability"
+msgstr "可用"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,state:0
+msgid "State"
+msgstr "状态"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "C_ompute"
+msgstr "计算（_O）"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+msgid "Compute Scheduling of phases for all or specified project"
+msgstr "针对所有或特定的一个项目计算阶段周期"
+
+#. module: project_long_term
+#: field:project.phase,product_uom:0
+msgid "Duration UoM"
+msgstr "时间段计量单位"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+msgid "Compute Task Scheduling"
+msgstr "计算项目日程"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_start:0
+msgid "Minimum Start Date"
+msgstr "最早开始时间"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_resource_allocation
+#: view:project.phase:0
+#: view:project.resource.allocation:0
+msgid "Project Resource Allocation"
+msgstr "项目资源分配"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task"
+msgstr "计算任务日程"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_resource
+#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource
+#: view:project.resource.allocation:0
+msgid "Resources"
+msgstr "资源"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"\t           "
+msgstr ""
+"某个或所有项目的阶段日程。会显示一个甘特图。\n"
+"\t           "
+
+#. module: project_long_term
+#: help:project.resource.allocation,date_start:0
+msgid "Starting Date"
+msgstr "开始日期"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+msgid "Related Tasks"
+msgstr "相关任务"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Dates"
+msgstr "日期"
+
+#. module: project_long_term
+#: help:project.resource.allocation,useability:0
+msgid ""
+"Availability of this resource for this project phase in percentage (=50%)"
+msgstr "这个资源在此项目阶段的可用性，用百分数表示"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_start:0
+msgid "force the phase to start after this date"
+msgstr "强制项目在此日期之后开始"
+
+#. module: project_long_term
+#: field:project.phase,task_ids:0
+msgid "Project Tasks"
+msgstr "项目任务列表"
+
+#. module: project_long_term
+#: field:project.phase,resource_ids:0
+msgid "Project Resources"
+msgstr "项目资源"
+
+#. module: project_long_term
+#: view:project.schedule.tasks:0
+msgid "_Ok"
+msgstr "确定(_O)"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Schedule and Display info"
+msgstr "日程和显示信息"
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr "这个日期根据项目的开始日期或前一个阶段的结束日期结算而来"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Month"
+msgstr "月份"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Phase start-date must be lower than phase end-date."
+msgstr "阶段的开始日期必须早于项目的结束日期"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_schedule_tasks
+msgid "project.schedule.tasks"
+msgstr "project.schedule.tasks"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your resources allocation, describe different tasks and link your "
+"phase to previous and next phases, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"human resources, convert your phases into a series of tasks when you start "
+"working on the project."
+msgstr ""
+"项目能分成不同的阶段。可以为每个阶段分配资源，定义不同的任务并可以把各个阶段连起来，按日历自动计算计划日期。使用长期计划可以在项目的开始阶段管理人员可用性"
+"、划分每阶段的任务。"
+
+#. module: project_long_term
+#: field:project.phase,date_start:0
+#: field:project.resource.allocation,date_start:0
+msgid "Start Date"
+msgstr "开始日期"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Resource Allocation"
+msgstr "资源分配"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_end:0
+msgid "force the phase to finish before this date"
+msgstr "强制该阶段在此日期前完成"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Pending"
+msgstr "等待中"
+
+#. module: project_long_term
+#: field:project.resource.allocation,name:0
+msgid "unknown"
+msgstr "未知的"
+
+#. module: project_long_term
+#: field:project.resource.allocation,user_id:0
+msgid "User"
+msgstr "用户"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Task Detail"
+msgstr "任务细节"
+
+#. module: project_long_term
+#: help:project.project,resource_calendar_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr "从时间表的工作时间来调整甘特图报表"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_tasks
+msgid "Project Compute Tasks"
+msgstr "计算任务计划"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Constraints"
+msgstr "限制"
+
+#. module: project_long_term
+#: help:project.phase,sequence:0
+msgid "Gives the sequence order when displaying a list of phases."
+msgstr "输入序号用于阶段列表排序"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
+#: view:project.phase:0
+#: field:project.project,phase_ids:0
+msgid "Project Phases"
+msgstr "项目阶段"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Done"
+msgstr "已完成"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Cancel"
+msgstr "取消(&C)"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "In Progress"
+msgstr "进行中"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Remaining Hours"
+msgstr "剩余小时数"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,responsible_id:0
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
+#: field:project.project,resource_calendar_id:0
+msgid "Working Time"
+msgstr "工作的时间"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Current"
+msgstr "当前的"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Phase"
+msgstr "阶段开始"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:50
+#, python-format
+msgid "Please Specify Project to be schedule"
+msgstr "请输入要排计划的项目"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,total_hours:0
+msgid "Total Hours"
+msgstr "总小时数"
+
+#. module: project_long_term
+#: view:project.schedule.tasks:0
+msgid "Task Scheduling completed successfully."
+msgstr "任务日程排列完毕"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task for specified project."
+msgstr "为某个特定的项目计算日程"
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+msgid "Phase"
+msgstr "阶段"
+
+#. module: project_long_term
+#: help:project.phase,state:0
+msgid ""
+"If the phase is created the state 'Draft'.\n"
+" If the phase is started, the state becomes 'In Progress'.\n"
+" If review is needed the phase is in 'Pending' state.                        "
+"          \n"
+" If the phase is over, the states is set to 'Done'."
+msgstr ""
+"新建的阶段状态是草稿\n"
+"开始后的阶段状态是正在进行中\n"
+"如果需要复核则状态为等待中\n"
+"已结束的阶段状态是完成"
+
+#. module: project_long_term
+#: field:project.phase,date_end:0
+#: field:project.resource.allocation,date_end:0
+msgid "End Date"
+msgstr "结束日期"
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,resource_id:0
+msgid "Resource"
+msgstr "资源"
+
+#. module: project_long_term
+#: field:project.phase,name:0
+msgid "Name"
+msgstr "名称"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Tasks Details"
+msgstr "任务详情"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
+msgid "Working Period"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_resource_resource
+msgid "Resource Detail"
+msgstr "资源明细"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+msgid "Scheduling"
+msgstr "调度"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_phase
+#: view:project.phase:0
+#: field:project.resource.allocation,phase_id:0
+#: view:project.task:0
+#: field:project.task,phase_id:0
+msgid "Project Phase"
+msgstr "项目阶段"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_phases
+msgid "Project Compute Phases"
+msgstr "计算项目阶段"
+
+#. module: project_long_term
+#: field:project.schedule.tasks,msg:0
+msgid "Message"
+msgstr "消息"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Loops in phases not allowed"
+msgstr "阶段间不能递归引用"
+
+#. module: project_long_term
+#: field:project.phase,sequence:0
+msgid "Sequence"
+msgstr "序号"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All Projects"
+msgstr "计算所有项目"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
+msgid "Resource Leaves"
+msgstr "成员请假"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
+#: view:project.phase:0
+#: view:project.schedule.tasks:0
+msgid "Schedule Tasks"
+msgstr "任务日程"
+
+#. module: project_long_term
+#: help:project.phase,duration:0
+msgid "By default in days"
+msgstr "默认按天"
+
+#. module: project_long_term
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "时长"

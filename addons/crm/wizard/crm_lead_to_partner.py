@@ -149,7 +149,6 @@ class crm_lead2partner(osv.osv_memory):
         contact_obj = self.pool.get('res.partner.address')
         partner_ids = []
         partner_id = False
-        contact_id = False
         rec_ids = context and context.get('active_ids', [])
 
         for data in self.browse(cr, uid, ids, context=context):
@@ -160,7 +159,7 @@ class crm_lead2partner(osv.osv_memory):
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
-                    contact_id = contact_obj.create(cr, uid, {
+                    contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
                         'name': lead.contact_name,
                         'phone': lead.phone,
@@ -180,7 +179,6 @@ class crm_lead2partner(osv.osv_memory):
                 else:
                     if data.partner_id:
                         partner_id = data.partner_id.id
-                        contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
                 self.assign_partner(cr, uid, lead.id, partner_id)
                 partner_ids.append(partner_id)
         return partner_ids

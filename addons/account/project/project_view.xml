@@ -17,6 +17,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -44,6 +45,7 @@
                         <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Parent" icon="terp-folder-orange" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="State" icon="terp-folder-green" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -55,7 +57,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                <tree colors="blue:type == 'view';red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -213,12 +215,6 @@
                         <field name="user_id">
                             <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
                         </field>
-                    </group>
-					<newline/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="journal_id" widget="selection"/>
-                        <field name="product_id" widget="selection"/>
-                        <field name="amount" select="1"/>
                     </group>
                     <newline/>
                     <group string="Group By..." expand="0">

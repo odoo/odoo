@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-03-20 10:28+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"PO-Revision-Date: 2011-08-16 03:16+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:54+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:03+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project_scrum
 #: help:project.scrum.email,scrum_master_email:0
 msgid "Email Id of Scrum Master"
-msgstr ""
+msgstr "Scrum主管的邮件地址"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.assign.sprint:0
 msgid "_Assign"
-msgstr ""
+msgstr "指派(_A)"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,name:0
@@ -34,13 +34,13 @@ msgstr "会议名称"
 #. module: project_scrum
 #: model:process.transition,note:project_scrum.process_transition_backlogtask0
 msgid "From backlog create task."
-msgstr "从Backlog创建任务"
+msgstr "从需求创建任务"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 #: field:project.scrum.product.backlog,user_id:0
 msgid "Author"
-msgstr ""
+msgstr "建立者"
 
 #. module: project_scrum
 #: model:ir.module.module,description:project_scrum.module_meta_information
@@ -68,12 +68,28 @@ msgid ""
 "    * http://controlchaos.com\n"
 "    "
 msgstr ""
+"\n"
+"    这个模块实现了IT公司使用的SCRUM项目管理方法中的所有概念：\n"
+"  项目包含产品负责人、Scrum主管\n"
+"  冲刺有验收、每日会议、总结等\n"
+"  产品需求列表\n"
+"  冲刺的需求列表\n"
+"  为项目管理模块增加了一些概念：\n"
+"    中长期路线图\n"
+"    客户业务需求和技术需求\n"
+"\n"
+"此模块还新增一个报告：\n"
+"  燃尽图\n"
+"  SCRUM的项目和任务都是基于传统的项目和任务的，所以 你可以继续关注你自己的任务列表（其中包括SCRUM项目的任务）\n"
+"\n"
+"更多该方法的信息请参照 http://controlchaos.com\n"
+"    "
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "What did you do since the last meeting?"
-msgstr ""
+msgstr "你昨天做了什么？"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,help:project_scrum.action_sprint_all_tree
@@ -83,18 +99,20 @@ msgid ""
 "which the team implements a list of product backlogs. The sprint review is "
 "organized when the team presents its work to the customer and product owner."
 msgstr ""
+"叫做SCRUM的敏捷方法用于软件开发项目。在这个理论中，冲刺是一个固定长度的期间（比如一个月），在这个期间内开发团队完成产品的一部分功能。冲刺验收会议用于"
+"向客户和产品经理演示开发成果。"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.product.backlog:0
 #: view:project.scrum.sprint:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: project_scrum
 #: model:process.node,note:project_scrum.process_node_productbacklog0
 msgid "Create task from backlogs"
-msgstr "从backlogs创建任务"
+msgstr "从需求创建任务"
 
 #. module: project_scrum
 #: model:ir.module.module,shortdesc:project_scrum.module_meta_information
@@ -104,7 +122,7 @@ msgstr "Scrum敏捷开发方法"
 #. module: project_scrum
 #: field:project.scrum.product.backlog,progress:0
 msgid "Progress"
-msgstr "进行"
+msgstr "进度"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,user_id:0
@@ -117,18 +135,18 @@ msgstr "Scrum主管"
 #: code:addons/project_scrum/project_scrum.py:83
 #, python-format
 msgid "The sprint '%s' has been opened."
-msgstr ""
+msgstr "冲刺'%s' 已开始"
 
 #. module: project_scrum
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Are your Sprint Backlog estimate accurate ?"
-msgstr "你的Sprint Backlob是否估计准确?"
+msgstr "你的冲刺需求是否估计准确?"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -138,75 +156,75 @@ msgstr "回顾"
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 msgid "Send Email"
-msgstr ""
+msgstr "发送邮件"
 
 #. module: project_scrum
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "错误！不能创建循环引用的任务"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.dblc_proj
 msgid "View project's backlog"
-msgstr "项目Backlog视图"
+msgstr "项目需求视图"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 #: view:project.scrum.sprint:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "设为草稿"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_merge
 msgid "Merge Product Backlogs"
-msgstr ""
+msgstr "合并产品需求"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_merge
 #: view:project.scrum.backlog.merge:0
 msgid "Merge Backlogs"
-msgstr ""
+msgstr "合并需求"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_email.py:53
 #, python-format
 msgid "Scrum Meeting : %s"
-msgstr ""
+msgstr "早会: %s"
 
 #. module: project_scrum
 #: view:project.task:0
 msgid "Backlog"
-msgstr ""
+msgstr "需求"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_email
 msgid "project.scrum.email"
-msgstr ""
+msgstr "project.scrum.email"
 
 #. module: project_scrum
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "不能升级到相同的项目"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,name:0
 msgid "Sprint Name"
-msgstr "Sprint名称"
+msgstr "冲刺名称"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "任务"
 
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Ok"
-msgstr ""
+msgstr "确定"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Spent hours"
-msgstr ""
+msgstr "花费工时"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,help:project_scrum.action_meeting_form
@@ -214,19 +232,19 @@ msgid ""
 "The scrum agile methodology is used in software development projects. In "
 "this methodology, a daily meeting is organized by the scrum master with his "
 "team in order to detect the difficulties the team faced/will face."
-msgstr ""
+msgstr "SCRUM敏捷方法用于软件开发项目。在这个方法中，Scrum主管组织所有项目成员参加早会以便发现团队正在或将要面临的问题。"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:316
 #, python-format
 msgid "Please provide email address for product owner defined on sprint."
-msgstr ""
+msgstr "请输入这个冲刺的产品负责人的邮件地址"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:327
 #, python-format
 msgid "Scrum Meeting of %s"
-msgstr ""
+msgstr "早会：%s"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
@@ -238,7 +256,7 @@ msgstr ""
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:62
 #, python-format
 msgid "Product Backlog '%s' is assigned sprint:%s"
-msgstr ""
+msgstr "产品需求'%s' 分配的冲刺:%s"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
@@ -248,7 +266,7 @@ msgstr ""
 #: field:project.task,product_backlog_id:0
 #, python-format
 msgid "Product Backlog"
-msgstr ""
+msgstr "产品需求"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_project
@@ -264,7 +282,7 @@ msgstr "项目"
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Start Task"
-msgstr ""
+msgstr "启动任务"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_email.py:90
@@ -272,17 +290,17 @@ msgstr ""
 #: code:addons/project_scrum/wizard/project_scrum_email.py:96
 #, python-format
 msgid "None"
-msgstr ""
+msgstr "无"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Change Stage"
-msgstr ""
+msgstr "修改阶段"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Sprint Info"
-msgstr "Sprint信息"
+msgstr "冲刺信息"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,date_stop:0
@@ -293,28 +311,28 @@ msgstr "终止日期"
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Links"
-msgstr ""
+msgstr "链接"
 
 #. module: project_scrum
 #: help:project.scrum.sprint,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr "任务工作完成的合计"
+msgstr "任务完成的工作时间合计"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_email.py:91
 #, python-format
 msgid "Task for Today"
-msgstr ""
+msgstr "今日任务"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,state_open:0
 msgid "Open Backlog"
-msgstr ""
+msgstr "待实现的需求"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Total Spent Hours"
-msgstr ""
+msgstr "累计工时"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,date_start:0
@@ -325,24 +343,24 @@ msgstr "开始日期"
 #: code:addons/project_scrum/wizard/project_scrum_email.py:94
 #, python-format
 msgid "Blocking points encountered:"
-msgstr ""
+msgstr "估算点数"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Planning"
-msgstr ""
+msgstr "正在计划"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.assign.sprint:0
 #: view:project.scrum.backlog.create.task:0
 #: view:project.scrum.email:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: project_scrum
 #: help:project.scrum.sprint,scrum_master_id:0
 msgid "The person who is maintains the processes for the product"
-msgstr ""
+msgstr "管理产品开发流程的人"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -354,7 +372,7 @@ msgstr "计划时间"
 #. module: project_scrum
 #: field:project.scrum.email,subject:0
 msgid "Subject"
-msgstr ""
+msgstr "主题"
 
 #. module: project_scrum
 #: view:board.board:0
@@ -364,28 +382,28 @@ msgstr ""
 #: view:project.scrum.product.backlog:0
 #: view:project.scrum.sprint:0
 msgid "Sprints"
-msgstr ""
+msgstr "冲刺"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:314
 #, python-format
 msgid "Email notification could not be sent to the product owner %s"
-msgstr ""
+msgstr "提醒邮件无法发送给产品负责人 %s"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,convert_to_task:0
 msgid "Convert To Task"
-msgstr ""
+msgstr "转为任务"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Are you sure you want to merge these Backlogs?"
-msgstr ""
+msgstr "您确认要合并这些需求？"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.create.task,user_id:0
 msgid "Responsible user who can work on task"
-msgstr ""
+msgstr "任务的负责人"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -398,7 +416,7 @@ msgstr "状态"
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_sprint_task_open
 msgid "View sprint Tasks"
-msgstr "Sprint任务视图"
+msgstr "查看冲刺任务列表"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,meeting_ids:0
@@ -408,14 +426,14 @@ msgstr "每日Scrum"
 #. module: project_scrum
 #: view:project.scrum.backlog.create.task:0
 msgid "C_onvert"
-msgstr ""
+msgstr "转换(_O)"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_product_backlog_form
 #: model:ir.ui.menu,name:project_scrum.menu_action_product_backlog_form
 #: view:project.scrum.product.backlog:0
 msgid "Product Backlogs"
-msgstr ""
+msgstr "产品需求"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:301
@@ -424,23 +442,23 @@ msgstr ""
 #: code:addons/project_scrum/project_scrum.py:316
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "错误！"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,create_date:0
 msgid "Creation Date"
-msgstr ""
+msgstr "创建日期"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Are there anything blocking you?"
-msgstr ""
+msgstr "有什么问题和困难么？"
 
 #. module: project_scrum
 #: model:ir.ui.menu,name:project_scrum.menu_scrum
 msgid "Scrum"
-msgstr ""
+msgstr "SCRUM"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_today:0
@@ -459,32 +477,32 @@ msgstr "昨天到现在的任务"
 #: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:71
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_assign_sprint
 msgid "Assign sprint to backlogs"
-msgstr ""
+msgstr "为需求分配冲刺"
 
 #. module: project_scrum
 #: help:project.scrum.sprint,expected_hours:0
 msgid "Estimated time to do the task."
-msgstr ""
+msgstr "估算任务的工时"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,task_hours:0
 msgid "Task Hours"
-msgstr ""
+msgstr "任务工时"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Dates"
-msgstr ""
+msgstr "日期"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Send to Scrum Master"
-msgstr ""
+msgstr "发送给Scrum主管"
 
 #. module: project_scrum
 #: selection:project.scrum.product.backlog,state:0
@@ -504,38 +522,40 @@ msgid ""
 "Hello  , \n"
 "I am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
 msgstr ""
+"您好，\n"
+"现将 %s 的早会报告（'%s'项目的冲刺'%s'）发给你。"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 msgid "Daily"
-msgstr ""
+msgstr "每天"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,backlog_ids:0
 msgid "Sprint Backlog"
-msgstr ""
+msgstr "冲刺的需求"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Delegate"
-msgstr ""
+msgstr "委派"
 
 #. module: project_scrum
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "我的控制台"
 
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Postpone Backlog"
-msgstr ""
+msgstr "需求延期"
 
 #. module: project_scrum
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project_scrum.action_view_task_progress_graph
 #: view:project.task:0
 msgid "Task Progress"
-msgstr ""
+msgstr "任务进度"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,date:0
@@ -554,67 +574,67 @@ msgstr "任务"
 #. module: project_scrum
 #: field:project.scrum.email,product_owner_email:0
 msgid "Product Owner Email"
-msgstr ""
+msgstr "产品负责人邮件"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
 msgid "_Send"
-msgstr ""
+msgstr "发送(_S)"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,sprint_id:0
 msgid "Select Sprint to assign backlog."
-msgstr ""
+msgstr "选择冲刺这个需求"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,progress:0
 #: help:project.scrum.sprint,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr "计算:花费的时间/总时间"
+msgstr "计算方式：花费时间 / 总时间"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_blocks:0
 msgid "Blocks encountered"
-msgstr ""
+msgstr "已统计的需求"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,state_open:0
 msgid "Change the state of product backlogs to open if its in draft state"
-msgstr ""
+msgstr "将草稿状态的需求设为待实现"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
 #: field:project.scrum.email,message:0
 msgid "Message"
-msgstr ""
+msgstr "消息"
 
 #. module: project_scrum
 #: field:project.scrum.email,scrum_master_email:0
 msgid "Scrum Master Email"
-msgstr ""
+msgstr "Scrum主管邮件"
 
 #. module: project_scrum
 #: help:project.project,product_owner_id:0
 #: help:project.scrum.sprint,product_owner_id:0
 msgid "The person who is responsible for the product"
-msgstr ""
+msgstr "谁去负责这个产品"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Scrum Sprint"
-msgstr ""
+msgstr "SCRUM冲刺"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Product owner"
-msgstr ""
+msgstr "产品负责人"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -624,7 +644,7 @@ msgstr "复审"
 #. module: project_scrum
 #: field:project.scrum.sprint,retrospective:0
 msgid "Sprint Retrospective"
-msgstr "Sprint回顾"
+msgstr "冲刺回顾"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,note:0
@@ -641,20 +661,20 @@ msgstr "草稿"
 #: help:project.task,product_backlog_id:0
 msgid ""
 "Related product backlog that contains this task. Used in SCRUM methodology"
-msgstr ""
+msgstr "这个任务相关的产品需求。用于SCRUM方法"
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "What do you plan to do till the next meeting?"
-msgstr ""
+msgstr "今天你计划做什么"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_postpone_wizard
 #: view:postpone.wizard:0
 #: view:project.scrum.product.backlog:0
 msgid "Postpone"
-msgstr ""
+msgstr "推迟"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -668,17 +688,17 @@ msgstr "未决"
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Optional Info"
-msgstr ""
+msgstr "可选信息"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_create_task
 msgid "Create Tasks from Product Backlogs"
-msgstr ""
+msgstr "根据需求创建任务"
 
 #. module: project_scrum
 #: help:project.project,sprint_size:0
 msgid "Number of days allocated for sprint"
-msgstr ""
+msgstr "冲刺的天数"
 
 #. module: project_scrum
 #: field:project.project,product_owner_id:0
@@ -689,18 +709,18 @@ msgstr "产品负责人"
 #. module: project_scrum
 #: help:project.scrum.product.backlog,sequence:0
 msgid "Gives the sequence order when displaying a list of product backlog."
-msgstr ""
+msgstr "输入序号用于对需求列表排序"
 
 #. module: project_scrum
 #: model:process.node,name:project_scrum.process_node_productbacklog0
 #: view:project.scrum.product.backlog:0
 msgid "Product backlog"
-msgstr ""
+msgstr "产品需求"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.act_scrum_sprint_2_product_backlog
 msgid "Backlogs"
-msgstr ""
+msgstr "需求"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:326
@@ -711,7 +731,7 @@ msgstr ""
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,convert_to_task:0
 msgid "Create Task for Product Backlog"
-msgstr ""
+msgstr "根据需求创建任务"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,active:0
@@ -722,39 +742,39 @@ msgstr "有效"
 #: model:ir.actions.act_window,name:project_scrum.action_meeting_form
 #: model:ir.ui.menu,name:project_scrum.menu_action_meeting_form
 msgid "Scrum Meetings"
-msgstr ""
+msgstr "早会"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,expected_hours:0
 msgid "Estimated total time to do the Backlog"
-msgstr ""
+msgstr "实现需求的估算工时"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.merge,project_id:0
 msgid "Select project for the new product backlog"
-msgstr ""
+msgstr "选择需求所属项目"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Merge"
-msgstr ""
+msgstr "合并"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_sprint_backlog_open
 msgid "View sprint backlog"
-msgstr "Sprint Backlog视图"
+msgstr "冲刺需求的视图"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_backlog:0
 msgid "Backlog Accurate"
-msgstr "Blacklog正确"
+msgstr "需求正确"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_to_task
 #: view:project.scrum.backlog.create.task:0
 #: view:project.scrum.product.backlog:0
 msgid "Convert to Task"
-msgstr ""
+msgstr "转为任务"
 
 #. module: project_scrum
 #: help:project.scrum.sprint,project_id:0
@@ -771,20 +791,20 @@ msgstr "序列"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Send to Product Owner"
-msgstr ""
+msgstr "发送给产品负责人"
 
 #. module: project_scrum
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project_scrum.action_view_backlog_progress_graph
 #: view:project.scrum.product.backlog:0
 msgid "Backlog Progress"
-msgstr ""
+msgstr "需求进展"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:301
 #, python-format
 msgid "Email notification could not be sent to the scrum master %s"
-msgstr ""
+msgstr "提醒邮件无法发送给Scrum主管 %s"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -804,7 +824,7 @@ msgstr "取消"
 #: view:project.scrum.product.backlog:0
 #: view:project.scrum.sprint:0
 msgid "Close"
-msgstr ""
+msgstr "结束"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -833,7 +853,7 @@ msgstr "剩余时间"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,name:0
@@ -846,17 +866,17 @@ msgstr "特征"
 #: view:project.scrum.sprint:0
 #: view:project.task:0
 msgid "Current"
-msgstr ""
+msgstr "当前的"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "My Backlogs"
-msgstr ""
+msgstr "我的需求列表"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
 msgid "Send Email for Scrum Meeting Details"
-msgstr ""
+msgstr "发送早会的信息"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,help:project_scrum.action_product_backlog_form
@@ -866,11 +886,13 @@ msgid ""
 "can be planified in a development sprint and may be split into several "
 "tasks. The product backlog is managed by the product owner of the project."
 msgstr ""
+"SCRUM敏捷开发方法用于软件开发项目。产品需求是一个要实现的功能列表。一个需求会被划分给某个冲刺来实现，可能会被分成多个任务。需求列表由项目中的产品负责"
+"人统一维护。"
 
 #. module: project_scrum
 #: model:process.transition,name:project_scrum.process_transition_backlogtask0
 msgid "Backlog Task"
-msgstr "Backlog任务"
+msgstr "需求任务"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -885,13 +907,13 @@ msgstr "计划时间"
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Scrum Meeting"
-msgstr "Scrum会议"
+msgstr "早会"
 
 #. module: project_scrum
 #: model:ir.actions.report.xml,name:project_scrum.report_scrum_sprint_burndown_chart
 #: view:project.scrum.sprint:0
 msgid "Burndown Chart"
-msgstr ""
+msgstr "燃尽图"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -901,17 +923,17 @@ msgstr "每日会议"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Expected hours"
-msgstr ""
+msgstr "预计工时"
 
 #. module: project_scrum
 #: field:project.project,sprint_size:0
 msgid "Sprint Days"
-msgstr ""
+msgstr "冲刺天数"
 
 #. module: project_scrum
 #: help:project.scrum.email,product_owner_email:0
 msgid "Email Id of Product Owner"
-msgstr ""
+msgstr "产品负责人的邮件地址"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,progress:0
@@ -926,6 +948,9 @@ msgid ""
 " \n"
 "I am sending you Daily Meeting Details of date %s for the Sprint %s\n"
 msgstr ""
+"您好 %s\n"
+"\n"
+"我发给您 %s 每天会议的详情对冲刺 %s\n"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:325
@@ -940,18 +965,26 @@ msgid ""
 "*Blocks encountered:\n"
 "_______________________ %s"
 msgstr ""
+"\n"
+"*任务从昨天:\n"
+"_______________________%s\n"
+"*任务到今天:\n"
+"_______________________ %s\n"
+"\n"
+"*遇到的困难:\n"
+"_______________________ %s"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,active:0
 msgid ""
 "If Active field is set to true, it will allow you to hide the product "
 "backlog without removing it."
-msgstr ""
+msgstr "如果启用的勾去掉，可以不需要删除就隐藏需求"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,task_hours:0
 msgid "Estimated time of the total hours of the tasks"
-msgstr ""
+msgstr "估算任务工时"
 
 #. module: project_scrum
 #: view:project.project:0
@@ -961,12 +994,12 @@ msgstr "Scrum数据"
 #. module: project_scrum
 #: field:project.project,scrum:0
 msgid "Is a Scrum Project"
-msgstr ""
+msgstr "该项目使用SCRUM方法管理"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,tasks_id:0
@@ -976,86 +1009,86 @@ msgstr "任务详情"
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_postpone_wizard
 msgid "postpone.wizard"
-msgstr ""
+msgstr "postpone.wizard"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Total Planned Hours"
-msgstr ""
+msgstr "计划时间合计"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid ""
 "This wizard merge backlogs and create one new backlog with draft state (Old "
 "backlogs Will be deleted). And it also merge old tasks from backlogs"
-msgstr ""
+msgstr "本向导合并所选需求并创建一个草稿状态的需求（旧需求将被删除）。旧需求相关的任务也会合并。"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:303
 #, python-format
 msgid "Please provide email address for scrum master defined on sprint."
-msgstr ""
+msgstr "请输入该冲刺的Scrum主管邮件地址"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Select the project for merged backlogs"
-msgstr ""
+msgstr "选择合并后的需求所属的项目"
 
 #. module: project_scrum
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project_scrum.action_view_my_scrum_sprint_tree
 msgid "My Sprint"
-msgstr ""
+msgstr "我的冲刺"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,effective_hours:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "花费时间"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,effective_hours:0
 msgid "Computed using the sum of the time spent on every related tasks"
-msgstr ""
+msgstr "是需求相关的任务工时的合计"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.open_board_project_scrum
 #: model:ir.ui.menu,name:project_scrum.menu_deshboard_scurm
 msgid "Scrum Dashboard"
-msgstr ""
+msgstr "SCRUM控制台"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_sprint
 msgid "Project Scrum Sprint"
-msgstr ""
+msgstr "项目SCRUM冲刺"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "Feature Description"
-msgstr ""
+msgstr "功能描述"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:71
 #, python-format
 msgid "Please select any Project."
-msgstr ""
+msgstr "请选择一个项目"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_email.py:97
 #, python-format
 msgid "Thank you,"
-msgstr ""
+msgstr "感谢您，"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:90
 #, python-format
 msgid "The sprint '%s' has been closed."
-msgstr ""
+msgstr "冲刺 '%s' 已结束"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_to_sprint
 #: view:project.scrum.backlog.assign.sprint:0
 msgid "Assign Sprint"
-msgstr ""
+msgstr "分配冲刺"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.create.task,user_id:0
@@ -1065,7 +1098,7 @@ msgstr "分配给"
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Are you sure to postpone Backlog ?"
-msgstr ""
+msgstr "确实要推迟需求"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,sprint_id:0
@@ -1076,18 +1109,18 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,sprint_id:0
 msgid "Sprint"
-msgstr ""
+msgstr "冲刺"
 
 #. module: project_scrum
 #: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:39
 #, python-format
 msgid "Please select at least two product Backlogs"
-msgstr ""
+msgstr "请至少选择两个需求"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,review:0
 msgid "Sprint Review"
-msgstr "Sprint复审"
+msgstr "冲刺复审"
 
 #~ msgid "All Tasks"
 #~ msgstr "所有任务"

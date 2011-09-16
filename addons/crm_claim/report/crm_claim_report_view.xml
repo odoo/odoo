@@ -20,7 +20,6 @@
                     <field name="nbr" string="#Claim" sum="#Claim"/>
                     <field name="email" sum="# Mails"/>
                     <field name="delay_close" avg="Avg Closing Delay"/>
-                    <field name="probability" widget="progressbar"/>
                     <field name="delay_expected"/>
                     <field name="state" invisible="1"/>
                     <field name="stage_id" invisible="1"/>
@@ -110,7 +109,7 @@
                         <separator orientation="vertical"/>
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'claim')]"/>
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
                         <separator orientation="vertical"/>
                         <field name="priority" />
