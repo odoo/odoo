@@ -32,6 +32,8 @@ class sale_order(osv.osv, ir_edi.edi):
         edi_struct = {
             'company_id': True, # -> to be changed into partner
             'name': True,
+            'client_order_ref': True,
+            'origin': True,
             'date_order': True,
             'partner_id': True,
             'partner_order_id': True, #only one address needed
@@ -50,8 +52,8 @@ class sale_order(osv.osv, ir_edi.edi):
                         #PO: No
                 'name': True,
                 'delay': True,
-                        #SO: 'delay' : 'date_approve' - 'date_planned'
-                        #PO: 'date_planned': 'date_approve' + 'delay'
+                        #SO: 'delay' : 'date_order' - 'date_planned'
+                        #PO: 'date_planned': 'date_order' + 'delay'
 
                 'product_id': True,
                 'product_uom': True,
@@ -59,7 +61,7 @@ class sale_order(osv.osv, ir_edi.edi):
                 'product_uom_qty': True,
                         #SO: 'product_uom_qty'
                         #PO: 'product_qty'
-
+                'price_subtotal': True,
                 'discount': True,
                         #SO: yes
                         #PO: No

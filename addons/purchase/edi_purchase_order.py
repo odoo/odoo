@@ -32,7 +32,8 @@ class purchase_order(osv.osv, ir_edi.edi):
         edi_struct = {
             'company_id': True, # -> to be changed into partner
             'name': True,
-           
+            'partner_ref': True,
+            'origin': True,
             'date_order': True,
             'partner_id': True,
             'partner_address_id': True, #only one address needed
@@ -50,12 +51,13 @@ class purchase_order(osv.osv, ir_edi.edi):
             'order_line': {
                 'name': True,
                 'date_planned': True,
-                        #SO: 'delay' : 'date_approve' - 'date_planned'
-                        #PO: 'date_planned': 'date_approve' + 'delay'
+                        #SO: 'delay' : 'date_order' - 'date_planned'
+                        #PO: 'date_planned': 'date_order' + 'delay'
 
                 'product_id': True,
                 'product_uom': True,
                 'price_unit': True,
+                'price_subtotal': True,
                 'product_qty': True,
                         #SO: 'product_uom_qty'
                         #PO: 'product_qty'
