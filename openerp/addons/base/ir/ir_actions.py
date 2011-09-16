@@ -457,7 +457,7 @@ class actions_server(osv.osv):
         return [(r['model'], r['name']) for r in res] +  [('','')]
 
     def change_object(self, cr, uid, ids, copy_object, state, context=None):
-        if state == 'object_copy':
+        if state == 'object_copy' and copy_object:
             if context is None:
                 context = {}
             model_pool = self.pool.get('ir.model')
