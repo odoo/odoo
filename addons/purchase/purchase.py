@@ -801,7 +801,7 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-            warehouse_id = wharehouse_obj.search(cr, uid, [('company_id','=',procurement.company_id.id or company.id or '')], context=context)
+            warehouse_id = wharehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id or '')], context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
