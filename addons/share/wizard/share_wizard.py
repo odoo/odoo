@@ -211,7 +211,7 @@ class share_wizard(osv.osv_memory):
                 del new_context[key]
 
         dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut')
         shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
         action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, values, new_context)
         menu_data = {'name': values['name'],
@@ -692,6 +692,7 @@ class share_wizard(osv.osv_memory):
 
     def send_emails(self, cr, uid, wizard_data, context=None):
         self._logger.info('Sending share notifications by email...')
+        mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.user_email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
@@ -726,7 +727,12 @@ class share_wizard(osv.osv_memory):
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
 
-            if tools.email_send(user.user_email, [email_to], subject, body):
+            if mail_message.schedule_with_attach(cr, uid,
+                                                 user.user_email,
+                                                 [email_to],
+                                                 subject,
+                                                 body,
+                                                 model='share.wizard'):
                 emails_sent += 1
             else:
                 self._logger.warning('Failed to send share notification from %s to %s, ignored', user.user_email, email_to)

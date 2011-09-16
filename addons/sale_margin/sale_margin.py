@@ -51,7 +51,7 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
+        'margin': fields.function(_product_margin, string='Margin', store=True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
@@ -69,7 +69,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
+        'margin': fields.function(_product_margin, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()
