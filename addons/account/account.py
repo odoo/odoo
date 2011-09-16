@@ -431,9 +431,16 @@ class account_account(osv.osv):
                 return False
         return True
 
+    def _check_account_type(self, cr, uid, ids, context=None):
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.type in ('receivable', 'payable') and account.user_type.close_method != 'unreconciled':
+                return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
+        (_check_account_type, 'Configuration Error! \nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
