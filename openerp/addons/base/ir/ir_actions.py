@@ -458,12 +458,14 @@ class actions_server(osv.osv):
 
     def change_object(self, cr, uid, ids, copy_object, state, context=None):
         if state == 'object_copy':
+            if context is None:
+                context = {}
             model_pool = self.pool.get('ir.model')
             model = copy_object.split(',')[0]
             mid = model_pool.search(cr, uid, [('model','=',model)])
             return {
-                'value':{'srcmodel_id':mid[0]},
-                'context':context
+                'value': {'srcmodel_id': mid[0]},
+                'context': context
             }
         else:
             return {}
