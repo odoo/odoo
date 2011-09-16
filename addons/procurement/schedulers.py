@@ -155,7 +155,7 @@ class procurement_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_id = product_obj.search(cr, uid, [('active', '=', True), ('purchase_ok', '=', True)], order='id', context=context)
+        products_id = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
@@ -237,7 +237,7 @@ class procurement_order(osv.osv):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
                             pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context)
+                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context, order='product_qty desc')
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
