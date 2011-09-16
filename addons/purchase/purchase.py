@@ -188,7 +188,7 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Reception')], 'Invoicing Control', required=True,
+        'invoice_method': fields.selection([('manual','From PO/PO lines'),('order','Draft invoices pre-generated'),('picking','From receptions')], 'Invoicing Control', required=True,
             help="From Order: a draft invoice will be generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
                 "From Reception: a draft invoice will be generated based on validated receptions.\n" \
@@ -461,6 +461,7 @@ class purchase_order(osv.osv):
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id,
+                        'address_id': order.dest_address_id.id or order.partner_address_id.id,
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
@@ -612,6 +613,14 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
+    def _get_uom_id(self, cr, uid, context=None):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+    
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
@@ -639,6 +648,7 @@ class purchase_order_line(osv.osv):
 
     }
     _defaults = {
+        'product_uom' : _get_uom_id,
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,

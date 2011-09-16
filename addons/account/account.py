@@ -431,9 +431,16 @@ class account_account(osv.osv):
                 return False
         return True
 
+    def _check_account_type(self, cr, uid, ids, context=None):
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.type in ('receivable', 'payable') and account.user_type.close_method != 'unreconciled':
+                return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
+        (_check_account_type, 'Configuration Error! \nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -623,7 +630,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
+        'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {

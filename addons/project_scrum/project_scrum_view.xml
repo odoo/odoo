@@ -302,7 +302,7 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
-                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
                         			string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -396,7 +396,9 @@
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
-                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
+                        <button name="%(mail.action_email_compose_message_wizard)d"
+                                string="Send Email" type="action" icon="terp-mail-message-new"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">

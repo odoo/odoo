@@ -590,11 +590,12 @@ class task(osv.osv):
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'project.task.close',
+                'res_model': 'mail.compose.message',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True,
-                'context': {'active_id': task.id}
+                'context': {'active_id': task.id,
+                            'active_model': 'project.task'}
            }
         return res
 
