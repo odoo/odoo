@@ -496,6 +496,24 @@ class pos_order(osv.osv):
                     })
         return clone_list
 
+    def invoice_action_done(self, cr, uid, ids, context = None):
+        "create invoice for a paid order"
+        for order in self.browse(cr, uid, ids, context):
+            if order.state == 'paid':
+                assert (not order.invoice_id), "Order already has an invoice"
+                inv_ids = self.action_invoice(cr, uid, ids, context)
+                amount = 0.0
+                assert order.payments, "Paid order with no payment"
+                for pay in order.payments:
+                    amount += pay.amount
+                inv_obj = self.pool.get('account.invoice')
+                inv = inv_obj.browse(cr, uid, inv_ids, context)[0]
+                inv_obj.pay_and_reconcile(cr, uid, inv_ids, amount,
+                    pay.journal_id.default_credit_account_id.id, inv.period_id.id,
+                    pay.journal_id.id, pay.journal_id.default_debit_account_id.id,
+                    inv.period_id.id, pay.journal_id.id, context, pay.name)
+        return True
+
     def action_invoice(self, cr, uid, ids, context={}):
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')

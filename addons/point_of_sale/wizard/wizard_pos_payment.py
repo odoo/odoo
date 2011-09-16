@@ -169,11 +169,7 @@ def create_invoice(self, cr, uid, data, context):
     order_obj = pool.get('pos.order')
     order = order_obj.browse(cr, uid, data['id'], context)
     if not order.invoice_id:
-        inv_id = order_obj.action_invoice(cr, uid, [data['id']])
-        #raise wizard.except_wizard(_('Error !'), _('Please create an invoice for this sale.'))
-#    wf_service = netsvc.LocalService("workflow")
-#    for i in data['ids']:
-#        wf_service.trg_validate(uid, 'pos.order', i, 'invoice', cr)
+        order_obj.invoice_action_done(cr, uid, [data['id']])
     return {}
 
 
