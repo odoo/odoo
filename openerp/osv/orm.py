@@ -678,6 +678,7 @@ class orm_template(object):
                 'selectable': (f.selectable and 1) or 0,
                 'translate': (f.translate and 1) or 0,
                 'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
+                'serialization_field': 'serialization_field' in dir(f) and f.serialization_field or "",
             }
             # When its a custom field,it does not contain f.select
             if context.get('field_state', 'base') == 'manual':
@@ -693,13 +694,13 @@ class orm_template(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate
+                    relation,view_load,state,select_level,relation_field, translate, serialization_field
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                      vals['relation'], bool(vals['view_load']), 'base',
-                    vals['select_level'], vals['relation_field'], bool(vals['translate'])
+                    vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field']
                 ))
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
@@ -716,12 +717,12 @@ class orm_template(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field'], vals['model'], vals['name']
                             ))
                         break
         cr.commit()
@@ -3290,7 +3291,12 @@ class orm(orm_template):
                     #'select': int(field['select_level'])
                 }
 
-                if field['ttype'] == 'selection':
+                if field['serialization_field']:
+                    attrs.update({'serialization_field': field['serialization_field']})
+                    if field['ttype'] in ['many2one', 'one2many', 'many2many']:
+                        attrs.update({'relation': field['relation']})
+                    self._columns[field['name']] = fields.sparse(**attrs)
+                elif field['ttype'] == 'selection':
                     self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'reference':
                     self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)

@@ -202,6 +202,7 @@ class ir_model_fields(osv.osv):
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
+        'serialization_field': fields.char('Serialization Field', size=64),
     }
     _rec_name='field_description'
     _defaults = {
@@ -279,11 +280,14 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
                  raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
+            if vals.get('serialization_field',False) and not self.search(cr, user, [('model','=',vals['model']), ('name', '=', vals['serialization_field'])]):
+                 raise except_orm(_('Error'), _("The field %s does not exist!") % vals['serialization_field'])
+            
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = context.copy()
-                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
+                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True, 'serialization_field': vals.get('serialization_field',False)})
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
         return res
@@ -294,6 +298,13 @@ class ir_model_fields(osv.osv):
         if context and context.get('manual',False):
             vals['state'] = 'manual'
 
+        if vals['serialization_field'] or vals['name']:
+            for field in self.browse(cr, user, ids, context=context):
+                if field.serialization_field and field.serialization_field != vals['serialization_field'] or (not field.serialization_field and vals['serialization_field']):
+                    raise except_orm(_('Error!'),  _('Changing the storing system for the field "%s" is not allowed.'%field.name))
+                elif field.serialization_field and (field.name != vals['name']):
+                    raise except_orm(_('Error!'),  _('Renaming the sparse field "%s" is not allowed'%field.name))           
+                
         column_rename = None # if set, *one* column can be renamed here
         obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
