@@ -661,6 +661,7 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.picking").create(
@@ -1558,10 +1559,18 @@ class stock_move(osv.osv):
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
     }
+    def _check_location(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context or {}):
+            if state=='done' and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
+                return False
+        return True
+
     _constraints = [
         (_check_tracking,
             'You must assign a production lot for this product',
             ['prodlot_id']),
+        (_check_location, 'You can not move products from or to a location of the type view.',
+            ['location_id','location_dest_id']),
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
