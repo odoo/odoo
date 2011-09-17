@@ -189,6 +189,7 @@ Remarks:
    can be unpredictable. The same applies to Forecasts lines.
 """,
     "data": [
+        "security/stock_planning_security.xml",
         "security/ir.model.access.csv",
         "stock_planning_view.xml",
         "wizard/stock_planning_create_periods_view.xml",
