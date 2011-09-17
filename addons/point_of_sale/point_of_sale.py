@@ -217,7 +217,8 @@ class pos_order(osv.osv):
             'picking_id': False,
             'statement_ids': [],
             'nb_print': 0,
-            'pickings': []
+            'pickings': [],
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         })
         return super(pos_order, self).copy(cr, uid, id, default, context=context)
 
@@ -1178,6 +1179,15 @@ class pos_order_line(osv.osv):
         if 'product_id' in values and not values['product_id']:
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context=context)
+    
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'prodlot_id': False,
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order.line')
+        })
+        return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def _scan_product(self, cr, uid, ean, qty, order):
         # search pricelist_id
