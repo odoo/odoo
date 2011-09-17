@@ -1256,7 +1256,7 @@ class account_move_line(osv.osv):
                 vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
-            raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
+            raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal, check the tab \'Entry Controls\' on the related journal !'))
 
         if vals.get('analytic_account_id',False):
             if journal.analytic_journal_id:
