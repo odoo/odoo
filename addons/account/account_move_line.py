@@ -650,14 +650,15 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = journal_obj.browse(cr, uid, journal).type
-                #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
-                # will not be same id payment then payable, and if receipt then receivable
-                #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
-                elif jt in ('purchase', 'sale_refund', 'expense', 'bank', 'cash'):
+                elif jt in ('purchase', 'sale_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
+                elif jt in ('general', 'bank', 'cash'):
+                    if part.customer:
+                        val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
+                    elif part.supplier:
+                        val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
