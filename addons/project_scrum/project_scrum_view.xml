@@ -129,7 +129,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter
                             icon="terp-check"
                             string="Current"
@@ -163,7 +163,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
@@ -319,7 +319,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sprints">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
@@ -331,7 +331,7 @@
                         <field name="date_start"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Product owner" icon="terp-personal" domain="[]" context="{'group_by':'product_owner_id'}"/>
                         <filter string="Scrum Master" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
                         <separator orientation="vertical"/>
@@ -429,7 +429,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
@@ -438,7 +438,7 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Meeting Date"/>

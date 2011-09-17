@@ -293,24 +293,24 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
                 <search string="Search Meetings">
-                       <group col="12" colspan="4">
+                       <group>
                            <filter icon="terp-check" name="current" string="Current"
                                 domain="[('state','in',('draft', 'open'))]"
                 groups="base.group_extended"
                                 help="Current Meetings"/>
                            <separator orientation="vertical"/>
-                           <field name="name" select="1" string="Subject"/>
-                           <field name="categ_id" select="1"
+                           <field name="name" string="Subject"/>
+                           <field name="categ_id"
                                string="Meeting Type" widget="selection"
                                domain="[('object_id.model', '=', 'crm.meeting')]" />
                            <separator orientation="vertical"/>
-                           <field name="partner_id" select="1" />
-                           <field name="section_id" select="1" widget="selection">
+                           <field name="partner_id"/>
+                           <field name="section_id" widget="selection">
                                <filter icon="terp-personal+" groups="base.group_extended"
                                    domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                    help="My Sales Team(s)" />
                            </field>
-                           <field name="user_id" select="1"/>
+                           <field name="user_id"/>
                        </group>
                        <newline/>
                        <group expand="0" string="Group By...">

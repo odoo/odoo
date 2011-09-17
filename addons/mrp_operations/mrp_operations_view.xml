@@ -131,7 +131,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
             <search string="Search Work Orders">
-                        <group col='9' colspan='4'>
+                        <group>
 	                       <filter icon="terp-document-new" string="Draft"
 	                           domain="[('state','=','draft')]"/>
 	                       <filter icon="terp-check" string="In Progress" name="Current"
@@ -150,7 +150,7 @@
 	                		<field name="date_planned"/>
 	                	</group>
                 	<newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <separator orientation="vertical"/>

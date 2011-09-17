@@ -46,7 +46,7 @@
             <field name="model">payment.mode</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Payment Mode">
+                <search string="Payment Mode">
                     <field name="name"/>
                     <field name="journal" widget='selection'/>
                     <field name="company_id" widget='selection' groups="base.group_multi_company"/>
@@ -54,7 +54,7 @@
                     <group expand="0" string="Group By...">
                       <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
-                </form>
+                </search>
             </field>
         </record>
 
@@ -201,7 +201,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
                         <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>

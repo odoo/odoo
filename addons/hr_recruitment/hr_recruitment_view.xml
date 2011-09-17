@@ -244,10 +244,10 @@
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>

@@ -47,7 +47,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="6">
+                  <group>
 	                    <filter icon="terp-go-year" string="Year"
 	                    	    domain="[('year','=',time.strftime('%%Y'))]"
 	                    	    help="Production performed during current year"/>
@@ -57,7 +57,6 @@
 	                    		help="Production performed during current month"/>
 		                <filter icon="terp-go-week"
 	                            string="Month -1"
-	                            separator="1"
 	                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>

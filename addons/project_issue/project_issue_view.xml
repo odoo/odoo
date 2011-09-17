@@ -216,7 +216,7 @@
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="user_id">
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                         </field>
                         <field name="project_id"/>
                         <field name="id"/>
@@ -298,17 +298,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <filter icon="terp-go-today" string="Today" separator="1"
+                    <filter icon="terp-go-today" string="Today" 
                         domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's features"/>
                     <separator orientation="vertical"/>
                     <group>
-                        <field name="name" select='1' string="Feature description"/>
-                        <field name="user_id" select="1"/>
-                        <field name="state" select="1">
+                        <field name="name" string="Feature description"/>
+                        <field name="user_id"/>
+                        <field name="state">
                             <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" string="Project"/>
+                        <field name="project_id" string="Project"/>
                     </group>
                 </search>
             </field>
