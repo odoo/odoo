@@ -207,7 +207,7 @@ class sale_order(osv.osv):
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True, help="Givwizard = self.browse(cr, uid, ids)[0]es the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
-        'create_date': fields.date('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
