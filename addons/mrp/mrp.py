@@ -301,7 +301,7 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0):
+    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0, routing_id=False):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
@@ -311,6 +311,7 @@ class mrp_bom(osv.osv):
         @return: result: List of dictionaries containing product details.
                  result2: List of dictionaries containing Work Center details.
         """
+        routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
         if factor < bom.product_rounding:
@@ -338,8 +339,9 @@ class mrp_bom(osv.osv):
                     'product_uos_qty': bom.product_uos and bom.product_uos_qty * factor or False,
                     'product_uos': bom.product_uos and bom.product_uos.id or False,
                 })
-            if bom.routing_id:
-                for wc_use in bom.routing_id.workcenter_lines:
+            routing = (routing_id and routing_obj.browse(cr, uid, routing_id)) or bom.routing_id or False
+            if routing:
+                for wc_use in routing.workcenter_lines:
                     wc = wc_use.workcenter_id
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
@@ -612,9 +614,8 @@ class mrp_production(osv.osv):
 
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
-
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
             results = res[0]
             results2 = res[1]
             for line in results:
