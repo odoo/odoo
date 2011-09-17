@@ -190,9 +190,6 @@ class hr_salary_rule_category(osv.osv):
                 self.pool.get('res.users').browse(cr, uid, uid,
                     context=context).company_id.id,
     }
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)', 'The code of salary rule category must be unique!'),
-    ]
 
 hr_salary_rule_category()
 
@@ -827,10 +824,6 @@ result = rules.NET > categories.NET * 0.10''',
         'quantity': '1.0',
      }
     
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)', 'The code of salary rule must be unique!'),
-    ]
-
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record
