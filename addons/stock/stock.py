@@ -1561,7 +1561,7 @@ class stock_move(osv.osv):
     }
     def _check_location(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context or {}):
-            if state=='done' and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
+            if (record.state=='done') and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
                 return False
         return True
 
