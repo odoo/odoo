@@ -882,13 +882,22 @@ class account_voucher(osv.osv):
                 diff = currency_pool.compute(cr, uid, voucher_currency, company_currency, voucher.writeoff_amount, context=context_multi_currency)
                 account_id = False
                 write_off_name = ''
+
                 if voucher.payment_option == 'with_writeoff':
                     account_id = voucher.writeoff_acc_id.id
                     write_off_name = voucher.comment
                 elif voucher.type in ('sale', 'receipt'):
-                    account_id = voucher.partner_id.property_account_receivable.id
+                    if not voucher.partner_id:
+                        account_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=',False)])
+                    else:
+                        account_id = voucher.partner_id.property_account_receivable.id
                 else:
-                    account_id = voucher.partner_id.property_account_payable.id
+                    if not voucher.partner_id:
+                        account_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=',False)])
+                    else:
+                        account_id = voucher.partner_id.property_account_payable.id
+                if not account_id:
+                    raise osv.except_osv(_('Error !'), _('No receivable/payable account defined in properties!'))
                 move_line = {
                     'name': write_off_name or name,
                     'account_id': account_id,
