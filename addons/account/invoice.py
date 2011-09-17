@@ -860,10 +860,10 @@ class account_invoice(osv.osv):
             if totlines:
                 res_amount_currency = total_currency
                 i = 0
+                ctx.update({'date': inv.date_invoice})
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
-                        amount_currency = cur_obj.compute(cr, uid,
-                                company_currency, inv.currency_id.id, t[1])
+                        amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
                     else:
                         amount_currency = False
 
@@ -1241,6 +1241,7 @@ class account_invoice(osv.osv):
 account_invoice()
 
 class account_invoice_line(osv.osv):
+
     def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         tax_obj = self.pool.get('account.tax')
