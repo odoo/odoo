@@ -769,7 +769,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -960,7 +960,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1180,7 +1180,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1446,7 +1446,7 @@
                         <separator string="Dates" colspan="2" />
                         <field name="create_date" groups="base.group_extended"/>
                         <field name="date" groups="base.group_extended"/>
-                        <field name="date_expected"/>
+                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1635,7 +1635,7 @@
                         <separator string="Dates" colspan="2" />
                         <field name="create_date" groups="base.group_extended"/>
                         <field name="date" groups="base.group_extended"/>
-                        <field name="date_expected"/>
+                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
                     <group colspan="2" col="4" groups="base.group_extended">
