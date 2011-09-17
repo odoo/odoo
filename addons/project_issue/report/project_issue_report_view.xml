@@ -88,39 +88,14 @@
 
                            </field>
                               <field name="project_id"/>
-<<<<<<< TREE
                           <field name="user_id"  select="1" widget="selection" filter_domain="[('user_id','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
                    </group>
                    <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">                        
-                        <filter string="Assigned to" name="Responsible" icon="terp-personal"
-=======
-                          <field name="user_id"  widget="selection"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="partner_id"/>
-                       <field name="assigned_to" widget="selection"/>
-                       <separator orientation="vertical"/>
-                       <field name="priority" />
-                       <separator orientation="vertical"/>
-                       <field name="version_id" widget="selection" />
-                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                       <field name="type_id" widget="selection"/>
-                       <separator orientation="vertical"/>
-                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                       <newline/>
-                       <field name="creation_date"/>
-                       <field name="opening_date"/>
-                       <field name="date_closed" string="Date Closed"/>
-                   </group>
-                   <newline/>
                    <group  expand="1" string="Group By...">
-                           <filter name="User" string="Responsible" icon="terp-personal"
->>>>>>> MERGE-SOURCE
-                        domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Assigned to" name="Responsible" icon="terp-personal"
+                            domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Sale Team" icon="terp-personal+"
