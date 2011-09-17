@@ -1347,7 +1347,7 @@ class account_move(osv.osv):
 
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        currency_obj = self.pool.get('res.currency') 
+        currency_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
 
@@ -1609,7 +1609,7 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
-        res2 = {} 
+        res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
@@ -2723,7 +2723,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
