@@ -145,6 +145,16 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def _check_paid(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            ok = True
+            for line in voucher.move_ids:
+                if (line.account_id.type, 'in', ('receivable', 'payable')) and not line.reconcile_id:
+                    ok = False
+            res[voucher.id] = ok
+        return res
+
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=None):
         if context is None:
             context = {}
@@ -286,8 +296,13 @@ class account_voucher(osv.osv):
         'writeoff_acc_id': fields.many2one('account.account', 'Write-Off account', readonly=True, states={'draft': [('readonly', False)]}),
         'comment': fields.char('Write-Off Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
+<<<<<<< TREE
         'writeoff_amount': fields.function(_get_writeoff_amount, string='Write-Off Amount', type='float', readonly=True, multi="writeoff"),
         'currency_rate_difference': fields.function(_get_writeoff_amount, string="Currency Rate Difference", type='float', multi="writeoff"),
+=======
+        'writeoff_amount': fields.function(_get_writeoff_amount, string='Write-Off Amount', type='float', readonly=True),
+        'paid': fields.function(_check_paid, string='Paid', type='boolean', help="The Voucher has been totally paid."),
+>>>>>>> MERGE-SOURCE
     }
     _defaults = {
         'period_id': _get_period,
