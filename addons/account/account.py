@@ -2133,7 +2133,11 @@ class account_model(osv.osv):
         period_id = period_id[0]
 
         for model in self.browse(cr, uid, ids, context=context):
-            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
+            try:
+                entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
+            except:
+                raise osv.except_osv(_('Wrong model !'), _('You have a wrong expression "%(...)s" in your model !'))
+                
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
@@ -2205,8 +2209,8 @@ class account_model_line(osv.osv):
     }
     _order = 'sequence'
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model (Credit Or Debit Must Be "0")!'),
-        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model (Credit + Debit Must Be greater "0")!'),
+        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model, they must be positive!'),
+        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model, they must be positive!'),
     ]
 account_model_line()
 
