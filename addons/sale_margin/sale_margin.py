@@ -29,8 +29,10 @@ class sale_order_line(osv.osv):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
+        if not pricelist:
+            return res
         frm_cur = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        to_cur = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist.currency_id.id
+        to_cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist])[0].currency_id.id
         if product:
             purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
             price = self.pool.get('res.currency').compute(cr, uid, frm_cur, to_cur, purchase_price, round=False)
