@@ -1024,7 +1024,7 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
-        lang = lang or ('lang' in context and context['lang'])
+        lang = lang or context.get('lang',False)
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
@@ -1032,9 +1032,10 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
+        context = {'lang': lang, 'partner_id': partner_id}
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
-        context = {'lang': lang, 'partner_id': partner_id}
+        context_partner = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1087,7 +1088,7 @@ class sale_order_line(osv.osv):
             result.update({'type': product_obj.procure_method})
 
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
