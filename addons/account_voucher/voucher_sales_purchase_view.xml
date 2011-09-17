@@ -54,16 +54,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-<<<<<<< TREE
-=======
-                    <newline/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
->>>>>>> MERGE-SOURCE
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
