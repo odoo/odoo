@@ -44,7 +44,7 @@
                                         <separator colspan="4" string="Manual Description" />
                                         <field name="layout_type" on_change="onchange_sale_order_line_view(layout_type)"/>
                                         <field name="sequence" string="Seq."/>
-                                        <field colspan="4" name="name" select="2" attrs="{'readonly':[('layout_type','in',('line','break'))] }"/>
+                                        <field colspan="4" name="name" required="0" select="2" attrs="{'readonly':[('layout_type','in',('line','break'))], 'required':[('layout_type','not in',['line','break'])]}"/>
                                         <field name="price_unit" select="2" attrs="{'readonly':[('layout_type','!=','article')],'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"/>
                                         <field name="discount" attrs="{'readonly':[('layout_type','!=','article')]}"/>
                                         <field name="type" attrs="{'readonly':[('layout_type','!=','article')]}"/>
