@@ -543,8 +543,13 @@ class account_account(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
+
         if context is None:
             context = {}
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
 
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
