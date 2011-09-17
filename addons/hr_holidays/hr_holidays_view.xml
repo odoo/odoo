@@ -77,9 +77,10 @@
                             <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="number_of_days_temp"/>
+                            <field name="double_validation" invisible="1"/>
                             <newline/>
                             <field name="manager_id"/>
-                            <field name="manager_id2"/>
+                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <newline/>
@@ -89,7 +90,7 @@
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                                <button string="Set to Draft" name="set_to_draft" states="refuse,validate,validate1" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                                <button string="Set to Draft" name="set_to_draft" states="refuse,validate" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                             </group>
                         </page>
                     </notebook>
@@ -119,19 +120,20 @@
                         <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
                         <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}"/>
                         <field name="number_of_days_temp"/>
+                        <field name="double_validation" invisible="1"/>
                         <newline/>
                         <field name="manager_id"/>
-                        <field name="manager_id2"/>
+                        <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                         <separator string="Reasons" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
                         <newline/>
                         <field name="state" colspan="2"/>
                         <group colspan="2" col="6">
-                            <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
+                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,validate1,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
                     </page>
                 </notebook>
@@ -387,7 +389,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_holidays_status_search" model="ir.ui.view">
             <field name="name">hr.holidays.status.search</field>
             <field name="model">hr.holidays.status</field>
@@ -399,7 +401,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="open_view_holiday_status" model="ir.actions.act_window">
             <field name="name">Leave Type</field>
             <field name="type">ir.actions.act_window</field>
@@ -409,9 +411,8 @@
             <field name="view_id" eval="view_holiday_status_normal_tree"/>
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
-        
+
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        
         <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_open_view_attendance_reason_config"/>
 
     <!-- holiday on resource leave -->
