@@ -114,3 +114,4 @@
      phase3=self.browse(cr, uid, ref('project_phase_testyaml0'))
      assert phase3.date_start>=phase2.date_end, 'Error, the phase Testing should start after the end of the Development phase'
      assert phase3.date_start<phase3.date_end, 'Error, the phase Testing should start before ending'
+
