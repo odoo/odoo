@@ -2279,7 +2279,7 @@ class stock_move(osv.osv):
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
+                self.log(cr, uid, move.id, "%s x %s %s" % (quantity, name, _("were scrapped")))
 
         self.action_done(cr, uid, res)
         return res
