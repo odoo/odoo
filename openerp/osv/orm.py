@@ -1900,7 +1900,7 @@ class orm_template(object):
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
             return source
 
-        def apply_view_inheritance(source, inherit_id):
+        def apply_view_inheritance(cr, user, source, inherit_id):
             """ Apply all the (directly and indirectly) inheriting views.
 
             :param source: a parent architecture to modify (with parent
@@ -1910,12 +1910,11 @@ class orm_template(object):
                 are applied
 
             """
-            # get all views which inherit from (ie modify) this view
-            cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
-            sql_inherit = cr.fetchall()
+
+            sql_inherit = self.pool.get('ir.ui.view').get_inherit_views(cr, user, inherit_id, self._name)
             for (inherit, id) in sql_inherit:
                 source = apply_inheritance_specs(source, inherit, id)
-                source = apply_view_inheritance(source, id)
+                source = apply_view_inheritance(cr, user, source, id)
             return source
 
         result = {'type': view_type, 'model': self._name}
@@ -1958,7 +1957,7 @@ class orm_template(object):
             result['view_id'] = sql_res['id']
 
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_view_inheritance(source, result['view_id'])
+            result['arch'] = apply_view_inheritance(cr, user, source, result['view_id'])
 
             result['name'] = sql_res['name']
             result['field_parent'] = sql_res['field_parent'] or False

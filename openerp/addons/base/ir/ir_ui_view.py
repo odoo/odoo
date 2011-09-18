@@ -96,6 +96,19 @@ class view(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
 
+    def get_inherit_views(self, cr, uid, id, model, context=None):
+        """
+        Get all views which inherit from (ie modify) this view
+
+        :param cr: database cursor
+        :param user: current user id
+        :param id: id of the view
+        :return: list of tuple which contain of the view arch and the id
+        """
+        
+        cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (id, model))
+        return cr.fetchall()
+
     def write(self, cr, uid, ids, vals, context={}):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
