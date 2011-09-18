@@ -294,16 +294,7 @@
         <field name="arch" type="xml">
                 <search string="Search Meetings">
                        <group>
-                           <filter icon="terp-check" name="current" string="Current"
-                                domain="[('state','in',('draft', 'open'))]"
-                groups="base.group_extended"
-                                help="Current Meetings"/>
-                           <separator orientation="vertical"/>
                            <field name="name" string="Subject"/>
-                           <field name="categ_id"
-                               string="Meeting Type" widget="selection"
-                               domain="[('object_id.model', '=', 'crm.meeting')]" />
-                           <separator orientation="vertical"/>
                            <field name="partner_id"/>
                            <field name="section_id" widget="selection">
                                <filter icon="terp-personal+" groups="base.group_extended"
@@ -312,26 +303,6 @@
                            </field>
                            <field name="user_id"/>
                        </group>
-                       <newline/>
-                       <group expand="0" string="Group By...">
-                            <filter string="Responsible" icon="terp-personal" domain="[]"
-                                context="{'group_by':'user_id'}" />
-                            <filter string="Partner" icon="terp-partner" domain="[]"
-                                context="{'group_by':'partner_id'}" />
-                            <separator orientation="vertical" />
-                            <filter string="Type" help="Meeting Type"
-                                icon="terp-stock_symbol-selection" domain="[]"
-                                context="{'group_by':'categ_id'}" />
-                            <filter string="Privacy" icon="terp-locked"
-                                domain="[]" context="{'group_by':'class'}" />
-                            <filter string="Show time as" icon="terp-project"
-                                domain="[]" context="{'group_by':'show_as'}" />
-                            <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"
-                                context="{'group_by':'state'}" />
-                            <separator orientation="vertical" />
-                            <filter string="Date" icon="terp-go-month" help="Meeting date"
-                                domain="[]" context="{'group_by':'date'}" />
-                        </group>
                 </search>
             </field>
         </record>
