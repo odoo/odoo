@@ -381,7 +381,7 @@ class account_bank_statement(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 

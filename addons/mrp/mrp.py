@@ -502,7 +502,7 @@ class mrp_production(osv.osv):
         return True
 
     _constraints = [
-        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+        (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -512,7 +512,7 @@ class mrp_production(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!') % s['state'])
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in the state \'%s\'!') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

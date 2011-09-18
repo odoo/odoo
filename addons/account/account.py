@@ -439,8 +439,8 @@ class account_account(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
-        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
-        (_check_account_type, 'Configuration Error! \nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
+        (_check_type, 'Configuration Error! \nYou can not define children to an account with internal type different of "View"! ', ['type']),
+        (_check_account_type, 'Configuration Error! \nYou can not select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -516,14 +516,14 @@ class account_account(osv.osv):
 
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
-                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
+                raise osv.except_osv(_('Error !'), _('You can not desactivate an account that contains some journal items.'))
             elif method == 'unlink':
-                raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+                raise osv.except_osv(_('Error !'), _('You can not remove an account containing journal items!. '))
         #Checking whether the account is set as a property to any Partner or not
         value = 'account.account,' + str(ids[0])
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
         if partner_prop_acc:
-            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner.'))
+            raise osv.except_osv(_('Warning !'), _('You can not remove/desactivate an account which is set on a customer or supplier.'))
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
@@ -536,10 +536,10 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains journal items!"))
                 #Check for change From group1 to group2 and vice versa
                 if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains journal items!") % (old_type,new_type,))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -668,7 +668,7 @@ class account_journal(osv.osv):
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
                 if move_lines:
-                    raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+                    raise osv.except_osv(_('Warning !'), _('You can not modify the company of this journal as its related record exist in journal items'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
@@ -814,8 +814,8 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The duration of the Fiscal Year is invalid. ', ['date_stop']),
-        (_check_fiscal_year, 'Error! You cannot define overlapping fiscal years',['date_start', 'date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop']),
+        (_check_fiscal_year, 'Error! You can not define overlapping fiscal years for the same company.',['date_start', 'date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -969,7 +969,7 @@ class account_period(osv.osv):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as its related record exist in Entry Lines'))
+                raise osv.except_osv(_('Warning !'), _('You can not modify company of this period as some journal items exists.'))
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
@@ -1197,10 +1197,10 @@ class account_move(osv.osv):
 
     _constraints = [
         (_check_centralisation,
-            'You cannot create more than one move per period on centralized journal',
+            'You can not create more than one move per period on centralized journal',
             ['journal_id']),
         (_check_period_journal,
-            'You cannot create entries on different periods/journals in the same move',
+            'You can not create journal items on different periods/journals in the same journal entry',
             ['line_id']),
     ]
 
@@ -1211,7 +1211,7 @@ class account_move(osv.osv):
         valid_moves = self.validate(cr, uid, ids, context)
 
         if not valid_moves:
-            raise osv.except_osv(_('Integrity Error !'), _('You cannot validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
+            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured payment terms properly !\nThe latest payment term line should be of the type "Balance" !'))
         obj_sequence = self.pool.get('ir.sequence')
         for move in self.browse(cr, uid, valid_moves, context=context):
             if move.name =='/':
@@ -1247,7 +1247,7 @@ class account_move(osv.osv):
                 if not top:
                     top = account2.id
                 elif top<>account2.id:
-                    raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
+                    raise osv.except_osv(_('Error !'), _('You can not validate a journal entry unless all journal items belongs to the same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1334,7 +1334,7 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('UserError'),
-                        _('You can not delete posted movement: "%s"!') % \
+                        _('You can not delete a posted journal entry "%s"!') % \
                                 move['name'])
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
@@ -2389,7 +2389,7 @@ class account_account_template(osv.osv):
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
+        (_check_type, 'Configuration Error!\nYou can not define children to an account with internal type different of "View"! ', ['type']),
 
     ]
 
@@ -2422,7 +2422,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]], ['code'])
         res = None
         if not ptids or not ptids[0]['code']:
-            raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
+            raise osv.except_osv(_('Error !'), _('I can not locate a parent code for the template account!'))
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
         return res and res[0] or False
 

@@ -142,7 +142,7 @@ class stock_sale_forecast(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Validated Sale Forecasts !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a validated sales forecast!'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 

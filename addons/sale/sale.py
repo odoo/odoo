@@ -291,7 +291,8 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sales Order(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before ! To cancel a sale order, you must first cancel related picking or delivery orders.'))
+
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_shop_id(self, cr, uid, ids, shop_id):
@@ -977,7 +978,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sales order line that has already been invoiced !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced!'))
             for move_line in line.move_ids:
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
@@ -1178,7 +1179,7 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is %s !') %(rec.state,))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is in state \'%s\'!') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 sale_order_line()

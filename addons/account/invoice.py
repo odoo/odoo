@@ -375,7 +375,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete invoice(s) that are already opened(or been in opened state ever) or paid!'))
+                raise osv.except_osv(_('Invalid action !'), _('You can not delete an invoice which is open or paid. We suggest you to refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -828,7 +828,7 @@ class account_invoice(osv.osv):
                         total_percent += line.value_amount
                 total_fixed = (total_fixed * 100) / (inv.amount_total or 1.0)
                 if (total_fixed + total_percent) > 100:
-                    raise osv.except_osv(_('Error !'), _("Cannot create the invoice !\nThe payment term defined gives a computed amount greater than the total invoiced amount."))
+                    raise osv.except_osv(_('Error !'), _("Can not create the invoice !\nThe related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount."))
 
             # one move line per tax line
             iml += ait_obj.move_line_get(cr, uid, inv.id)
@@ -910,7 +910,7 @@ class account_invoice(osv.osv):
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id)
             if journal.centralisation:
                 raise osv.except_osv(_('UserError'),
-                        _('Cannot create invoice move on centralised journal'))
+                        _('You cannot create an invoice on a centralised journal. Uncheck the centralised counterpart box in the related journal from the configuration menu.'))
 
             line = self.finalize_invoice_move_lines(cr, uid, inv, line)
 
@@ -1019,7 +1019,7 @@ class account_invoice(osv.osv):
                 pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
                 for move_line in pay_ids:
                     if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
-                        raise osv.except_osv(_('Error !'), _('You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!'))
+                        raise osv.except_osv(_('Error !'), _('You can not cancel an invoice which is partially paid! You need to unreconcile related payment entries first!'))
 
         # First, set the invoices as cancelled and detach the move ids
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})

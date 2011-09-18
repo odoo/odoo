@@ -167,33 +167,33 @@ class hr_timesheet_sheet(osv.osv):
         ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
 
         if len(ids_signin) != len(ids_signout):
-            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!'))
+            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain an equal number of sign ins and sign outs!'))
         return True
 
     def copy(self, cr, uid, ids, *args, **argv):
-        raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet !'))
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet!'))
 
     def create(self, cr, uid, vals, *args, **argv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign it to a user!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal, like \'Timesheet\'!'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign it to a user!'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
-                raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
+                raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must link the employee to a product!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal!'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -377,9 +377,9 @@ class hr_timesheet_sheet(osv.osv):
         sheets = self.read(cr, uid, ids, ['state','total_attendance'], context=context)
         for sheet in sheets:
             if sheet['state'] in ('confirm', 'done'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete a timesheet which is already confirmed!'))
             elif sheet['total_attendance'] <> 0.00:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete a timesheet which have attendance entries!'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
 hr_timesheet_sheet()
@@ -612,7 +612,7 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'], context=context)
             if ts.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet!'))
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
             if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:

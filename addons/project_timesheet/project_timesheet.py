@@ -228,7 +228,7 @@ class res_partner(osv.osv):
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
-            raise osv.except_osv(_('Invalid action !'), _('Cannot delete Partner which is Assigned to project  !'))            
+            raise osv.except_osv(_('Invalid action !'), _('You can not delete a partner which is assigned to project, we suggest you to uncheck the active box!'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 res_partner()
