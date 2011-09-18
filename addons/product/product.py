@@ -121,8 +121,7 @@ class product_uom(osv.osv):
     }
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('factor_category_id_uniq', 'unique (category_id, factor)', 'You can not have more than one UOM with same factor for same UOM category'),
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -230,7 +229,7 @@ class product_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
     def child_get(self, cr, uid, ids):
         return [ids]

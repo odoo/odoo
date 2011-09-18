@@ -207,7 +207,7 @@ class account_cash_statement(osv.osv):
         ]
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
-            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal'))
+            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal!'))
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)

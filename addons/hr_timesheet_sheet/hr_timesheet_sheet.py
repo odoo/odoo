@@ -189,7 +189,7 @@ class hr_timesheet_sheet(osv.osv):
             if not new_user_id:
                 raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign it to a user!'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
-                raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
+                raise osv.except_osv(_('Error !'), _('You cannot have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must link the employee to a product!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
@@ -355,7 +355,7 @@ class hr_timesheet_sheet(osv.osv):
 
 
     _constraints = [
-        (_sheet_date, 'You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
+        (_sheet_date, 'You cannot have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
         (_date_current_check, 'You must select a Current date which is in the timesheet dates !', ['date_current']),
     ]
 
@@ -490,7 +490,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
+        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !.', ['state']),
     ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):

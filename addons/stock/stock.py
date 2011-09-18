@@ -2636,7 +2636,7 @@ class stock_inventory(osv.osv):
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
                              raise osv.except_osv(_('UserError'),
-                                                  _('You can not cancel inventory which has any account move with posted state.'))
+                                                  _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True

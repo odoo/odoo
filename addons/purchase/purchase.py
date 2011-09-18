@@ -289,7 +289,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a purchase order without any lines.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
