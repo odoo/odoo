@@ -229,7 +229,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group>
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                        <filter icon="terp-check" string="New" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -475,7 +475,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
+                        <filter icon="terp-check" string="New" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
