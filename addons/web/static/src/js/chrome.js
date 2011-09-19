@@ -842,7 +842,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         $secondary.addClass('active');
 
         if (!(this.folded && manual)) {
-            this.do_show_secondary($secondary, $menu, manual);
+            this.do_show_secondary($secondary, $parent, manual);
         }
 
         if (this.$secondary_menu.has($menu).length) {
