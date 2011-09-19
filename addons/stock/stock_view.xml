@@ -1675,10 +1675,9 @@
             <field name="arch" type="xml">
                 <search string="Stock Moves">
                     <group>
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do Done" domain="[('state','in',('confirmed','assigned','done'))]" help="Stock to be received or done"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
-                        <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
