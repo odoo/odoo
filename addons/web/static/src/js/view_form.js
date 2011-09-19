@@ -816,9 +816,9 @@ openerp.web.form.WidgetNotebookPage = openerp.web.form.WidgetFrame.extend({
 });
 
 openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
+    template: 'WidgetSeparator',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetSeparator";
         this.orientation = node.attrs.orientation || 'horizontal';
         if (this.orientation === 'vertical') {
             this.width = '1';
@@ -828,9 +828,9 @@ openerp.web.form.WidgetSeparator = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
+    template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetButton";
         if (this.string) {
             // We don't have button key bindings in the webclient
             this.string = this.string.replace(/_/g, '');
@@ -881,6 +881,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
 });
 
 openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
+    template: 'WidgetLabel',
     init: function(view, node) {
         this.element_name = 'label_' + node.attrs.name;
 
@@ -891,7 +892,6 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
         } else {
-            this.template = "WidgetLabel";
             this.colspan = 1;
             this.width = '1%';
             this.decrease_max_width = 1;
@@ -1049,10 +1049,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
 });
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldChar";
-    },
+    template: 'FieldChar',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input').change(this.on_ui_change);
@@ -1085,10 +1082,7 @@ openerp.web.form.FieldChar = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldEmail";
-    },
+    template: 'FieldEmail',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1107,10 +1101,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldUrl";
-    },
+    template: 'FieldUrl',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('button').click(this.on_button_clicked);
@@ -1136,9 +1127,9 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
+    template: 'FieldDate',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldDate";
         this.jqueryui_object = 'datetimepicker';
     },
     start: function() {
@@ -1229,10 +1220,7 @@ openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
 });
 
 openerp.web.form.FieldText = openerp.web.form.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldText";
-    },
+    template: 'FieldText',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('textarea').change(this.on_ui_change);
@@ -1265,10 +1253,7 @@ openerp.web.form.FieldText = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldBoolean";
-    },
+    template: 'FieldBoolean',
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
@@ -1299,10 +1284,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldProgressBar = openerp.web.form.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldProgressBar";
-    },
+    template: 'FieldProgressBar',
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('div').progressbar({
@@ -1325,10 +1307,10 @@ openerp.web.form.FieldTextXml = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
+    template: 'FieldSelection',
     init: function(view, node) {
         var self = this;
         this._super(view, node);
-        this.template = "FieldSelection";
         this.values = this.field.selection;
         _.each(this.values, function(v, i) {
             if (v[0] === false && v[1] === '') {
@@ -1435,9 +1417,9 @@ openerp.web.form.dialog = function(content, options) {
 };
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
+    template: 'FieldMany2One',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldMany2One";
         this.limit = 7;
         this.value = null;
         this.cm_id = _.uniqueId('m2o_cm_');
@@ -1762,10 +1744,10 @@ var commands = {
     }
 };
 openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
+    template: 'FieldOne2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
         this.form_last_update = $.Deferred();
         this.disable_utility_classes = true;
@@ -2020,10 +2002,10 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
 });
 
 openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
+    template: 'FieldMany2Many',
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
         this.is_started = $.Deferred();
     },
@@ -2365,9 +2347,9 @@ openerp.web.form.FormOpenDataset = openerp.web.ReadOnlyDataSetSearch.extend({
 });
 
 openerp.web.form.FieldReference = openerp.web.form.Field.extend({
+    template: 'FieldReference',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldReference";
         this.fields_view = {
             fields: {
                 selection: {
@@ -2502,10 +2484,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
 });
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldBinaryFile";
-    },
+    template: 'FieldBinaryFile',
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = (value != null && value !== false) ? value : '';
@@ -2533,10 +2512,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldBinaryImage";
-    },
+    template: 'FieldBinaryImage',
     start: function() {
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
