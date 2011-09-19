@@ -36,8 +36,12 @@ class res_currency(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
         date = date or time.strftime('%Y-%m-%d')
+        # Convert False values to None ...
+        currency_rate_type = context.get('currency_rate_type_id') or None
+        # ... and use 'is NULL' instead of '= some-id'.
+        operator = '=' if currency_rate_type else 'is'
         for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s ORDER BY name desc LIMIT 1" ,(id, date))
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
             if cr.rowcount:
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
@@ -63,18 +67,17 @@ class res_currency(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
     }
     _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        currency_rate_obj = self.pool.get('res.currency.rate')
         for r in res:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:
-                    currency_rate_obj=  self.pool.get('res.currency.rate')
-                    currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
+                    currency_date = currency_rate_obj.read(cr, user, rates[0], ['name'])['name']
                     r['date'] = currency_date
         return res
 
@@ -100,9 +103,16 @@ class res_currency(osv.osv):
     def _get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
         if context is None:
             context = {}
-        if from_currency['rate'] == 0 or to_currency['rate'] == 0:
+        ctx = context.copy()
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from')})
+        from_currency = self.browse(cr, uid, from_currency.id, context=ctx)
+
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to')})
+        to_currency = self.browse(cr, uid, to_currency.id, context=ctx)
+
+        if from_currency.rate == 0 or to_currency.rate == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
-            if from_currency['rate'] == 0:
+            if from_currency.rate == 0:
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
@@ -111,7 +121,10 @@ class res_currency(osv.osv):
                     'at the date: %s') % (currency_symbol, date))
         return to_currency.rate/from_currency.rate
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
+                round=True, currency_rate_type_from=False, currency_rate_type_to=False, context=None):
+        if not context:
+            context = {}
         if not from_currency_id:
             from_currency_id = to_currency_id
         if not to_currency_id:
@@ -119,12 +132,13 @@ class res_currency(osv.osv):
         xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
-        if to_currency_id == from_currency_id:
+        if (to_currency_id == from_currency_id) and (currency_rate_type_from == currency_rate_type_to):
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
             else:
                 return from_amount
         else:
+            context.update({'currency_rate_type_from': currency_rate_type_from, 'currency_rate_type_to': currency_rate_type_to})
             rate = self._get_conversion_rate(cr, uid, from_currency, to_currency, context=context)
             if round:
                 return self.round(cr, uid, to_currency, from_amount * rate)
@@ -133,19 +147,31 @@ class res_currency(osv.osv):
 
 res_currency()
 
+class res_currency_rate_type(osv.osv):
+    _name = "res.currency.rate.type"
+    _description = "Used to define the type of Currency Rates"
+    _columns = {
+        'name': fields.char('Name', size=64, required=True, translate=True),
+    }
+
+res_currency_rate_type()
+
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
+
     _columns = {
         'name': fields.date('Date', required=True, select=True),
         'rate': fields.float('Rate', digits=(12,6), required=True,
             help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like 'Average' or 'Year to Date'. Leave empty if you simply want to use the normal 'spot' rate type"),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "name desc"
+
 res_currency_rate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

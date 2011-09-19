@@ -70,9 +70,6 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
-# Mapping between openerp module names and their osv classes.
-module_class_list = {}
-
 # Super-user identifier (aka Administrator aka root)
 ROOT_USER_ID = 1
 
@@ -329,9 +326,12 @@ class browse_record(object):
                 col = self._table._inherit_fields[name][2]
             elif hasattr(self._table, str(name)):
                 attr = getattr(self._table, name)
-
                 if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
-                    return lambda *args, **argv: attr(self._cr, self._uid, [self._id], *args, **argv)
+                    def function_proxy(*args, **kwargs):
+                        if 'context' not in kwargs and self._context:
+                            kwargs.update(context=self._context)
+                        return attr(self._cr, self._uid, [self._id], *args, **kwargs)
+                    return function_proxy
                 else:
                     return attr
             else:
@@ -478,6 +478,16 @@ class browse_record(object):
 
     __repr__ = __str__
 
+    def refresh(self):
+        """Force refreshing this browse_record's data and all the data of the
+           records that belong to the same cache, by emptying the cache completely,
+           preserving only the record identifiers (for prefetching optimizations).
+        """
+        for model, model_cache in self._cache.iteritems():
+            # only preserve the ids of the records that were in the cache
+            cached_ids = dict([(i, {'id': i}) for i in model_cache.keys()])
+            self._cache[model].clear()
+            self._cache[model].update(cached_ids)
 
 def get_pg_type(f):
     """
@@ -590,17 +600,26 @@ class orm_template(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # structure:
+    #  { 'parent_model': 'm2o_field', ... }
     _inherits = {}
+
     # Mapping from inherits'd field name to triple (m, r, f)
     # where m is the model from which it is inherits'd,
     # r is the (local) field towards m,
     # and f is the _column object itself.
+    # example:
+    #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent' ,
+    #                   field_column_obj), ... }
     _inherit_fields = {}
+
     # Mapping field name/column_info object
     # This is similar to _inherit_fields but:
     # 1. includes self fields,
     # 2. uses column_info instead of a triple.
     _all_columns = {}
+
     _table = None
     _invalids = set()
     _log_create = False
@@ -773,7 +792,7 @@ class orm_template(object):
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
@@ -806,23 +825,21 @@ class orm_template(object):
         return obj
 
     def __new__(cls):
-        """ Register this model.
+        """Register this model.
 
         This doesn't create an instance but simply register the model
         as being part of the module where it is defined.
-
-        TODO make it possible to not even have to call the constructor
-        to be registered.
-
         """
-
         # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
             cls._module = module
 
-        # Remember which models to instanciate for this module.
-        module_class_list.setdefault(cls._module, []).append(cls)
+        # Record this class in the list of models to instantiate for this module,
+        # managed by the metaclass.
+        module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
+        if cls not in module_model_list:
+            module_model_list.append(cls)
 
         # Since we don't return an instance here, the __init__
         # method won't be called.
@@ -877,7 +894,7 @@ class orm_template(object):
             elif field_type == 'integer':
                 return 0
             elif field_type == 'boolean':
-                return False
+                return 'False'
             return ''
 
         def selection_field(in_field):
@@ -989,9 +1006,10 @@ class orm_template(object):
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        def fsplit(x):
-            if x=='.id': return [x]
-            return x.replace(':id','/id').replace('.id','/.id').split('/')
+        def fsplit(fieldname):
+            fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
+            fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
+            return fixed_external_id.split('/')
         fields_to_export = map(fsplit, fields_to_export)
         datas = []
         for row in self.browse(cr, uid, ids, context):
@@ -1205,7 +1223,7 @@ class orm_template(object):
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                return (-1, res, 'Line ' + str(position) +' : ' + str(e), '')
+                return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
 
             if config.get('import_partial', False) and filename and (not (position%100)):
                 data = pickle.load(file(config.get('import_partial')))
@@ -1264,7 +1282,7 @@ class orm_template(object):
                     else:
                         translated_msg = tmp_msg
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -2101,19 +2119,15 @@ class orm_template(object):
         raise NotImplementedError(_('The search method is not implemented on this object !'))
 
     def name_get(self, cr, user, ids, context=None):
-        """
+        """Returns the preferred display value (text representation) for the records with the
+           given ``ids``. By default this will be the value of the ``name`` column, unless
+           the model implements a custom behavior.
+           Can sometimes be seen as the inverse function of :meth:`~.name_search`, but it is not
+           guaranteed to be.
 
-        :param cr: database cursor
-        :param user: current user id
-        :type user: integer
-        :param ids: list of ids
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :return: tuples with the text representation of requested objects for to-many relationships
-
+           :rtype: list(tuple)
+           :return: list of pairs ``(id,text_repr)`` for all records with the given ``ids``.
         """
-        if not context:
-            context = {}
         if not ids:
             return []
         if isinstance(ids, (int, long)):
@@ -2122,38 +2136,39 @@ class orm_template(object):
             [self._rec_name], context, load='_classic_write')]
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
-        """
-        Search for records and their display names according to a search domain.
+        """Search for records that have a display name matching the given ``name`` pattern if compared
+           with the given ``operator``, while also matching the optional search domain (``args``).
+           This is used for example to provide suggestions based on a partial value for a relational
+           field.
+           Sometimes be seen as the inverse function of :meth:`~.name_get`, but it is not
+           guaranteed to be.
 
-        :param cr: database cursor
-        :param user: current user id
-        :param name: object name to search
-        :param args: list of tuples specifying search criteria [('field_name', 'operator', 'value'), ...]
-        :param operator: operator for search criterion
-        :param context: context arguments, like lang, time zone
-        :type context: dictionary
-        :param limit: optional max number of records to return
-        :return: list of object names matching the search criteria, used to provide completion for to-many relationships
+           This method is equivalent to calling :meth:`~.search` with a search domain based on ``name``
+           and then :meth:`~.name_get` on the result of the search.
 
-        This method is equivalent of :py:meth:`~osv.osv.osv.search` on **name** + :py:meth:`~osv.osv.osv.name_get` on the result.
-        See :py:meth:`~osv.osv.osv.search` for an explanation of the possible values for the search domain specified in **args**.
-
+           :param list args: optional search domain (see :meth:`~.search` for syntax),
+                             specifying further restrictions
+           :param str operator: domain operator for matching the ``name`` pattern, such as ``'like'``
+                                or ``'='``.
+           :param int limit: optional max number of records to return
+           :rtype: list
+           :return: list of pairs ``(id,text_repr)`` for all matching records. 
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
     def name_create(self, cr, uid, name, context=None):
-        """
-        Creates a new record by calling :py:meth:`~osv.osv.osv.create` with only one
-        value provided: the name of the new record (``_rec_name`` field).
-        The new record will also be initialized with any default values applicable
-        to this model, or provided through the context. The usual behavior of
-        :py:meth:`~osv.osv.osv.create` applies.
-        Similarly, this method may raise an exception if the model has multiple
-        required fields and some do not have default values.
+        """Creates a new record by calling :meth:`~.create` with only one
+           value provided: the name of the new record (``_rec_name`` field).
+           The new record will also be initialized with any default values applicable
+           to this model, or provided through the context. The usual behavior of
+           :meth:`~.create` applies.
+           Similarly, this method may raise an exception if the model has multiple
+           required fields and some do not have default values.
 
-        :param name: name of the record to create
+           :param name: name of the record to create
 
-        :return: the :py:meth:`~osv.osv.osv.name_get` value for the newly-created record.
+           :rtype: tuple
+           :return: the :meth:`~.name_get` pair value for the newly-created record.
         """
         rec_id = self.create(cr, uid, {self._rec_name: name}, context);
         return self.name_get(cr, uid, [rec_id], context)[0]
@@ -2176,13 +2191,25 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
-    def exists(self, cr, uid, id, context=None):
+    def exists(self, cr, uid, ids, context=None):
+        """Checks whether the given id or ids exist in this model,
+           and return the list of ids that do. This is simple to use for
+           a truth test on a browse_record::
+
+               if record.exists():
+                   pass
+
+           :param ids: id or list of ids to check for existence
+           :type ids: int or [int]
+           :return: the list of ids that currently exist, out of
+                    the given `ids`
+        """
         raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2206,7 +2233,7 @@ class orm_template(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2250,6 +2277,28 @@ class orm_template(object):
             defaults.update(values)
             values = defaults
         return values
+
+    def clear_caches(self):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi``.
+        """
+        try:
+            getattr(self, '_ormcache')
+            self._ormcache = {}
+        except AttributeError:
+            pass
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to ir.rules.
+
+           :param operation: one of ``write``, ``unlink``
+           :raise except_orm: * if current ir.rules do not permit this operation.
+           :return: None if the operation is allowed
+        """
+        raise NotImplementedError(_('The check_access_rule method is not implemented on this object !'))
 
 class orm_memory(orm_template):
 
@@ -2480,8 +2529,16 @@ class orm_memory(orm_template):
         # nothing to check in memory...
         pass
 
-    def exists(self, cr, uid, id, context=None):
-        return id in self.datas
+    def exists(self, cr, uid, ids, context=None):
+        if isinstance(ids, (long,int)):
+            ids = [ids]
+        return [id for id in ids if id in self.datas]
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        # ir.rules do not currently apply for orm.memory instances, 
+        # only the implicit visibility=owner one.
+        for id in ids:
+            self._check_access(uid, id, operation)
 
 class orm(orm_template):
     _sql_constraints = []
@@ -2516,7 +2573,7 @@ class orm(orm_template):
 
         """
         context = context or {}
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
         if not fields:
             fields = self._columns.keys()
 
@@ -3257,7 +3314,7 @@ class orm(orm_template):
                         if f == order:
                             ok = False
                 if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
+                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
                     self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
@@ -3400,14 +3457,14 @@ class orm(orm_template):
 
         """
         ira = self.pool.get('ir.model.access')
-        write_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
-                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
+        write_access = ira.check(cr, user, self._name, 'write', False) or \
+                       ira.check(cr, user, self._name, 'create', False)
         return super(orm, self).fields_get(cr, user, fields, context, write_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3693,7 +3750,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
@@ -3830,7 +3887,7 @@ class orm(orm_template):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4039,7 +4096,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
         vals = self._add_missing_default_values(cr, user, vals, context)
 
@@ -4200,44 +4257,52 @@ class orm(orm_template):
 
            :return: [(priority, model_name, [record_ids,], [function_fields,])]
         """
-        # FIXME: rewrite, cleanup, use real variable names
-        # e.g.: http://pastie.org/1222060
-        result = {}
-        fncts = self.pool._store_function.get(self._name, [])
-        for fnct in range(len(fncts)):
-            if fncts[fnct][3]:
-                ok = False
-                if not fields:
-                    ok = True
-                for f in (fields or []):
-                    if f in fncts[fnct][3]:
-                        ok = True
-                        break
-                if not ok:
-                    continue
+        if fields is None: fields = []
+        stored_functions = self.pool._store_function.get(self._name, [])
 
-            result.setdefault(fncts[fnct][0], {})
+        # use indexed names for the details of the stored_functions:
+        model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
 
+        # only keep functions that should be triggered for the ``fields``
+        # being written to.
+        to_compute = [f for f in stored_functions \
+                if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
+
+        mapping = {}
+        for function in to_compute:
             # use admin user for accessing objects having rules defined on store fields
-            ids2 = fncts[fnct][2](self, cr, ROOT_USER_ID, ids, context)
-            for id in filter(None, ids2):
-                result[fncts[fnct][0]].setdefault(id, [])
-                result[fncts[fnct][0]][id].append(fnct)
-        dict = {}
-        for object in result:
-            k2 = {}
-            for id, fnct in result[object].items():
-                k2.setdefault(tuple(fnct), [])
-                k2[tuple(fnct)].append(id)
-            for fnct, id in k2.items():
-                dict.setdefault(fncts[fnct[0]][4], [])
-                dict[fncts[fnct[0]][4]].append((fncts[fnct[0]][4], object, id, map(lambda x: fncts[x][1], fnct)))
-        result2 = []
-        tmp = dict.keys()
-        tmp.sort()
-        for k in tmp:
-            result2 += dict[k]
-        return result2
+            target_ids = [id for id in function[id_mapping_fnct_](self, cr, ROOT_USER_ID, ids, context) if id]
+
+            # the compound key must consider the priority and model name
+            key = (function[priority_], function[model_name_])
+            for target_id in target_ids:
+                mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+
+        # Here mapping looks like:
+        # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
+        #   (20, 'model_a') : { target_id2: [ (function_3_tuple, function_4_tuple) ], ... }
+        #   (99, 'model_a') : { target_id1: [ (function_5_tuple, function_6_tuple) ], ... }
+        # }
+
+        # Now we need to generate the batch function calls list
+        # call_map =
+        #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
+        call_map = {}
+        for ((priority,model), id_map) in mapping.iteritems():
+            functions_ids_maps = {}
+            # function_ids_maps =
+            #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
+            for id, functions in id_map.iteritems():
+                functions_ids_maps.setdefault(tuple(functions), []).append(id)
+            for functions, ids in functions_ids_maps.iteritems():
+                call_map.setdefault((priority,model),[]).append((priority, model, ids,
+                                                                 [f[func_field_to_compute_] for f in functions]))
+        ordered_keys = call_map.keys()
+        ordered_keys.sort()
+        result = []
+        if ordered_keys:
+            result = reduce(operator.add, (call_map[k] for k in ordered_keys))
+        return result
 
     def _store_set_values(self, cr, uid, ids, fields, context):
         """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
@@ -4495,7 +4560,7 @@ class orm(orm_template):
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)
@@ -4687,9 +4752,9 @@ class orm(orm_template):
     def exists(self, cr, uid, ids, context=None):
         if type(ids) in (int, long):
             ids = [ids]
-        query = 'SELECT count(1) FROM "%s"' % (self._table)
+        query = 'SELECT id FROM "%s"' % (self._table)
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
-        return cr.fetchone()[0] == len(ids)
+        return [x[0] for x in cr.fetchall()]
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \

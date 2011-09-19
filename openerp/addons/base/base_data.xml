@@ -1604,7 +1604,14 @@
            <field name="rate">691.3153</field>
            <field name="currency_id" ref="CRC"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
-       </record>
+        </record>
+
+        <record id="ir_mail_server_localhost0" model="ir.mail_server">
+            <field name="name">localhost</field>
+            <field name="smtp_host">localhost</field>
+            <field eval="25" name="smtp_port"/>
+            <field eval="10" name="priority"/>
+	    </record>
 
         <record id="MUR" model="res.currency">
             <field name="name">MUR</field>

@@ -19,10 +19,24 @@
 #
 ##############################################################################
 
-import partner_sms_send
-import partner_wizard_spam
-import partner_clear_ids
-import partner_wizard_ean_check
+import time
+from osv import osv
+from osv import fields
+
+class res_partner_event(osv.osv):
+    _name = "res.partner.event"
+    _columns = {
+        'name': fields.char('Events', size=64, required=True),
+        'description': fields.text('Description'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=True),
+        'date': fields.datetime('Date', size=16),
+        'user_id': fields.many2one('res.users', 'User'),
+    }
+    _order = 'date desc'
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id': lambda self, cr, uid, context: uid,
+    }
+res_partner_event()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

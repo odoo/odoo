@@ -68,6 +68,9 @@ rml2sxw = {
     'para': 'p',
 }
 
+def get_date_length(date_format=DT_FORMAT):
+    return len((datetime.now()).strftime(date_format))
+
 class _format(object):
     def set_value(self, cr, uid, name, object, field, lang_obj):
         self.object = object
@@ -106,7 +109,7 @@ class _date_format(str, _format):
     def __str__(self):
         if self.val:
             if getattr(self,'name', None):
-                date = datetime.strptime(self.name, DT_FORMAT)
+                date = datetime.strptime(self.name[:get_date_length()], DT_FORMAT)
                 return date.strftime(str(self.lang_obj.date_format))
         return self.val
 
@@ -296,7 +299,7 @@ class rml_parse(object):
                 date_format = date_format + " " + self.lang_dict['time_format']
                 parse_format = DHM_FORMAT
             if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value, parse_format))
+                return time.strftime(date_format, time.strptime(value[:get_date_length(parse_format)], parse_format))
 
             else:
                 date = datetime(*value.timetuple()[:6])
