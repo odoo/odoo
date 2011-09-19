@@ -852,7 +852,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
             });
         } else {
             if (this.node.attrs.confirm) {
-                var dialog = $('<div>' + this.node.attrs.confirm + '</div>').dialog({
+                $('<div>' + this.node.attrs.confirm + '</div>').dialog({
                     title: 'Confirm',
                     modal: true,
                     buttons: {
