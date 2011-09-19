@@ -88,7 +88,7 @@
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Funds raised in last month"/>
                         <separator orientation="vertical" />
-                        <filter icon="terp-check"
+                        <filter icon="terp-document-new"
                             string="New"
                             domain="[('state','=','draft')]"/>
                         <filter icon="terp-camera_test"
