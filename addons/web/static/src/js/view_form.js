@@ -94,6 +94,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
         this.$form_header.find('button.oe_form_button_toggle').click(function () {
+            self.translatable_fields = [];
+            self.widgets = {};
+            self.fields = {};
+            self.$form_header.find('button').unbind('click');
             self.registry = self.registry === openerp.web.form.widgets
                     ? openerp.web.form.readonly
                     : openerp.web.form.widgets;
