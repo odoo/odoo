@@ -304,9 +304,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
-                self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                var keys = _.keys(self.fields_view.fields);
+                if (keys.length) {
+                    self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                        def.resolve();
+                    });
+                } else {
+                    self.on_record_loaded({});
                     def.resolve();
-                });
+                }
             }
         });
         return def.promise();
