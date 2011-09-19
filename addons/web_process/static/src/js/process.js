@@ -2,77 +2,69 @@
 openerp.web_process = function (openerp) {
 var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_process/static/src/xml/web_process.xml');
-	openerp.web.ViewManagerAction.include({
-		on_mode_switch: function (view_type) {
+	openerp.web.ViewManager.include({
+		start: function() {
+			this._super();
 	        var self = this;
+	        
+	        this.process_check();
+		},
+		process_check: function() {
+			var self = this,
+			grandparent = this.widget_parent && this.widget_parent.widget_parent,
+	        view = this.views[this.views_src[0].view_type],
+	        $process_view = this.$element.find('.oe-process-view');
+	        
 	        this.process_model = this.model;
-	        return $.when(
-	            this._super(view_type),
-	            this.process_check(this.views[view_type])).then(function () {
-	        });
-    	},
-    	process_check: function(view) {
-    		var self = this;
-            var grandparent = this.widget_parent && this.widget_parent.widget_parent;
-            // display shortcuts if on the first view for the action
-            var $process_toggle = this.$element.find('.oe-process-toggle');
-            if (!(grandparent instanceof openerp.web.WebClient) ||
+	        if (!(grandparent instanceof openerp.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
-            	$process_toggle.hide();
+	        	$process_view.hide();
                 return;
             }
-            $process_toggle.show();
-            $process_toggle
-            	.unbind("click")
-            	.click(function(){
-            		$.when(self.load_process()).then(self.get_process_id());
-            	});
-    	},
-    	
-    	load_process: function() {
-//    		this.widget_parent.$element.html(QWeb.render("ProcessView",this));
-    		this.$element.html(QWeb.render("ProcessView",this));
-    	},
-    	
-    	get_process_id: function() {
-    		var self = this;
-    		this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
-    		this.process_dataset
-    			.call(
-    					"search_by_model",
-    					[self.process_model,self.session.context],
-    					function(res) {
-    						self.renderer(res);
-						}
-				);
-    	},
-    	
-    	renderer: function(res) {
+	        $process_view.click(function() {
+        		$.when(self.load_process()).then(self.get_process_id());
+	        });
+		},
+		
+		load_process: function() {
+			this.$element.html(QWeb.render("ProcessView",this));
+		},
+		
+		get_process_id: function() {
+			var self = this;
+			this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
+			this.process_dataset
+				.call(
+						"search_by_model",
+						[self.process_model,self.session.context],
+						function(res) {self.process_renderer(res)}
+					);
+		},
+		
+		process_renderer: function(res) {
 			var self = this;
 			if(!res.length) {
 				this.process_model = false;
 				this.get_process_id();
 			} else {
-				
 				if(res.length > 1) {
 					this.selection = res;
-					$.when(this.load_process()).then(function() {
-						self.widget_parent.$element.find('#change_process').click(function(){
-							
-							self.p_id = self.widget_parent.$element.find('#select_process').val();
-							$.when(self.load_process()).then(self.render_process_view());
-							
+					$.when(this.load_process())
+						.then(function(){
+							var $parent = self.widget_parent.$element; 
+							$parent.find('#change_process').click(function() {
+								self.selection = false;
+								self.p_id = $parent.find('#select_process').val();
+								$.when(self.load_process()).then(self.render_process_view());
+							});
 						});
-					});
-				}
-				else {
+				} else {
 					this.p_id = res[0][0];
 					$.when(this.load_process()).then(this.render_process_view());
 				}
 			}
 		},
-		
 		render_process_view: function() {
 			var self = this;
 			this.p_id = parseInt(this.p_id, 10);
@@ -150,7 +142,7 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            	.push(process_node)
 	            	.push(process_node_text)
 	            	.push(process_node_desc);
-	            process_node.mousedown(function(){
+	            process_node.mousedown(function() {
 	            	return false;
 	            })
 	            return process_set;
@@ -189,7 +181,6 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 						}
 				);
 		}
-    	
 	});
 };
 

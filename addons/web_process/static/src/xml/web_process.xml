@@ -1,73 +1,67 @@
 <template>
 	<t t-extend="ViewManager" t-name="ViewManagerAction">
 		<t t-jquery=".oe_view_title" t-operation="append">
-			<img class="oe-process-toggle" src="/web/static/src/img/icons/gtk-help.png" title="ProcessView"/>
+			<img class="oe-process-view" src="/web/static/src/img/icons/gtk-help.png" title="ProcessView"/>
 		</t>
 	</t>
-<!--<t t-extend="SearchView">
-    <t t-jquery="h2" t-operation="append">
-        <img id="ProcessView" src="/web_process/static/src/img/iconset-a-help.gif"/>
-    </t>
-</t> -->
-
-<t t-name="ProcessView">
-    <table class="view" border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
-        <tr>
-            <td width="75%" valign="top" class="fields collapsed" style="padding-top:10px;">
-                <h1 class="process_h1">
-                	<t t-esc="action.name"/> (<t t-esc="model"/>)
-                </h1>
-                <p class="process-links">
-                    <a class="cta-a" target="_blank" href="#">
-                        <span>
-                            <strong>Documentation</strong>
-                            Read Documentation Online
-                        </span>
-
-                    </a>
-                    <a class="cta-a" target="_blank" href="http://www.openerp.com/forum/">
-                        <span>
-                            <strong>Forum</strong>
-                            Community Discussion
-                        </span>
-                    </a>
-                    <a class="cta-a" target="_blank" href="http://www.openerp.com/services/books">
-                        <span>
-                            <strong>Books</strong>
-                            Get the book on Amazon
-                        </span>
-                    </a>
-                    <a class="cta-a" target="_blank" href="http://www.openerp.com/services/subscribe-onsite">
-                        <span>
-                            <strong>Support / Publisher Warranty</strong>
-                            Get the OpenERP Warranty
-                        </span>
-                    </a>
-                </p>
-            </td>
-        </tr>
-		<tr t-if="selection">
-        	<td>
-        		<fieldset>
-        			<legend>
-        				Select Process
-        			</legend>
-	        		<select id="select_process">
-	        			<t t-foreach="selection" t-as="prc">
-	        				<option t-att-value="prc[0]">
-	        					<t t-esc="prc[1]"/>
-	        				</option>
-	        			</t>
-	    			</select>
-					<button id="change_process">Select</button>
-				</fieldset>
-    		</td>
-    	</tr>
-		<tr t-if="p_id">
-			<td>
-				<div id="process_canvas" style="overflow: auto;"></div>
-			</td>
-		</tr>
-    </table>
-</t>
+	<t t-name="ProcessView">
+	    <table class="view" border="0" width="100%" height="100%" cellpadding="0" cellspacing="0">
+	        <tr>
+	            <td width="75%" valign="top" class="fields collapsed" style="padding-top:10px;">
+	                <h1 class="process_h1">
+	                	<t t-esc="action.name"/> (<t t-esc="model"/>)
+	                </h1>
+	                <p class="process-links">
+	                    <a class="cta-a" target="_blank" href="#">
+	                        <span>
+	                            <strong>Documentation</strong>
+	                            Read Documentation Online
+	                        </span>
+	
+	                    </a>
+	                    <a class="cta-a" target="_blank" href="http://www.openerp.com/forum/">
+	                        <span>
+	                            <strong>Forum</strong>
+	                            Community Discussion
+	                        </span>
+	                    </a>
+	                    <a class="cta-a" target="_blank" href="http://www.openerp.com/services/books">
+	                        <span>
+	                            <strong>Books</strong>
+	                            Get the book on Amazon
+	                        </span>
+	                    </a>
+	                    <a class="cta-a" target="_blank" href="http://www.openerp.com/services/subscribe-onsite">
+	                        <span>
+	                            <strong>Support / Publisher Warranty</strong>
+	                            Get the OpenERP Warranty
+	                        </span>
+	                    </a>
+	                </p>
+	            </td>
+	        </tr>
+			<tr t-if="selection">
+	        	<td>
+	        		<fieldset>
+	        			<legend>
+	        				Select Process
+	        			</legend>
+		        		<select id="select_process">
+		        			<t t-foreach="selection" t-as="prc">
+		        				<option t-att-value="prc[0]">
+		        					<t t-esc="prc[1]"/>
+		        				</option>
+		        			</t>
+		    			</select>
+						<button id="change_process">Select</button>
+					</fieldset>
+	    		</td>
+	    	</tr>
+			<tr t-if="p_id">
+				<td>
+					<div id="process_canvas" style="overflow: auto;"></div>
+				</td>
+			</tr>
+	    </table>
+	</t>
 </template>
