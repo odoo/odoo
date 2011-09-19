@@ -831,7 +831,7 @@ class procurement_order(osv.osv):
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
             }
-            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO:%s') %procurement.name
+            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             po_vals = {
                 'name': name,
                 'origin': procurement.origin,
