@@ -4,8 +4,8 @@ var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_kanban/static/src/xml/web_kanban.xml');
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
-    init: function (parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function (parent, dataset, view_id, options) {
+        this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -24,6 +24,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     start: function() {
+        this._super();
         return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "kanban"}, this.on_loaded);
     },
     on_loaded: function(data) {
