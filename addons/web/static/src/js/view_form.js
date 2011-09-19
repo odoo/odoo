@@ -93,6 +93,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
+        this.$form_header.find('button.oe_form_button_toggle').click(function () {
+            self.registry = self.registry === openerp.web.form.widgets
+                    ? openerp.web.form.readonly
+                    : openerp.web.form.widgets;
+            self.on_loaded(self.fields_view);
+            self.reload();
+        });
 
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
