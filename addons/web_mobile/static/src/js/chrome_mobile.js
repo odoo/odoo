@@ -138,7 +138,6 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         $shortcut = $(ev.currentTarget);
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
-
         if(!$('#oe_list').html().length){
             this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
              this.listview.start();

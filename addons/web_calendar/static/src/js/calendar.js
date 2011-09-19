@@ -8,8 +8,8 @@ QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
 // Dhtmlx scheduler ?
-    init: function(parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -30,6 +30,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.color_map = {};
     },
     start: function() {
+        this._super();
         this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
@@ -344,11 +345,11 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     },
     start: function() {
         this._super();
-        this.form = new openerp.web.FormView(this, this.element_id, this.dataset, this.view_id, {
+        this.form = new openerp.web.FormView(this, this.dataset, this.view_id, {
             sidebar: false,
             pager: false
         });
-        this.form.start();
+        this.form.appendTo(this.$element);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
     },

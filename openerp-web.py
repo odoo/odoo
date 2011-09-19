@@ -37,11 +37,15 @@ optparser.add_option("--log-level", dest="log_level",
                      default='debug', help="Log level", metavar="LOG_LEVEL")
 optparser.add_option("--log-config", dest="log_config",
                      default='', help="Log config file", metavar="LOG_CONFIG")
+optparser.add_option('--multi-threaded', dest='threaded',
+                     default=False, action='store_true',
+                     help="Use multiple threads to handle requests")
 
 import web.common.dispatch
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
+    options.backend =  'rpc'
 
     os.environ["TZ"] = "UTC"
 
@@ -54,5 +58,5 @@ if __name__ == "__main__":
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
-        use_reloader=options.reloader, threaded=True)
+        use_reloader=options.reloader, threaded=options.threaded)
 

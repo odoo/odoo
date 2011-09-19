@@ -19,13 +19,12 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
      * @extends openerp.web.View
      *
      * @param parent
-     * @param element_id
      * @param dataset
      * @param view_id
      * @param options
      */
-    init: function(parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
