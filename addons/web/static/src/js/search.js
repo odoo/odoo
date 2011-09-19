@@ -730,7 +730,11 @@ openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @len
 openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.FloatField# */{
     error_message: "not a valid number",
     parse: function (value) {
-        return parseFloat(value);
+        try {
+            return openerp.web.parse_value(value, {'widget': 'float'});
+        } catch (e) {
+            return NaN;
+        }
     }
 });
 /**
@@ -1168,11 +1172,11 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.OldWidget.ext
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        var value = parseFloat(this.$element.val());
-        if(value != 0 && !value) {
+        try {
+            return Math.round(openerp.web.parse_value(this.$element.val(), {'widget': 'float'}));
+        } catch (e) {
             return "";
         }
-        return Math.round(value);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Float = openerp.web.OldWidget.extend({
@@ -1187,11 +1191,11 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.OldWidget.exten
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        var value = parseFloat(this.$element.val());
-        if(value != 0 && !value) {
+        try {
+            return openerp.web.parse_value(this.$element.val(), {'widget': 'float'});
+        } catch (e) {
             return "";
         }
-        return value;
     }
 });
 openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.OldWidget.extend({
