@@ -8,8 +8,8 @@ QWeb.add_template('/web_diagram/static/src/xml/base_diagram.xml');
 openerp.web.views.add('diagram', 'openerp.web.DiagramView');
 openerp.web.DiagramView = openerp.web.View.extend({
     searchable: false,
-    init: function(parent, element_id, dataset, view_id, options) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, view_id, options) {
+        this._super(parent);
         this.set_default_options(options);
         this.view_manager = parent;
         this.dataset = dataset;
@@ -20,6 +20,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         this.ids = this.dataset.ids;
     },
     start: function() {
+        this._super();
         return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
 
