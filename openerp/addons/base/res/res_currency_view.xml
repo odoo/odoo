@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
-                    <field name="company_id" select="2" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                      <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
@@ -26,9 +26,9 @@
             <field name="arch" type="xml">
                 <form string="Currency">
                     <group col="6" colspan="6">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="rate"/>
-                        <field name="company_id" select="2" groups="base.group_multi_company" />
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="symbol"/>
                     </group>
 

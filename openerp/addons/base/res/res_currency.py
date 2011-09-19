@@ -68,7 +68,26 @@ class res_currency(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
     }
+    _sql_constraints = [
+        # this constraint does not cover all cases due to SQL NULL handling for company_id,
+        # so it is complemented with a unique index (see below). The constraint and index
+        # share the same prefix so that IntegrityError triggered by the index will be caught
+        # and reported to the user with the constraint's error message.
+        ('unique_name_company_id', 'unique (name, company_id)', 'The currency code must be unique per company!'),
+    ]
     _order = "name"
+
+    def init(self, cr):
+        # CONSTRAINT/UNIQUE INDEX on (name,company_id) 
+        # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
+        # only support field names in constraint definitions, and we need a function here:
+        # we need to special-case company_id to treat all NULL company_id as equal, otherwise
+        # we would allow duplicate "global" currencies (all having company_id == NULL) 
+        cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'res_currency_unique_name_company_id_idx'""")
+        if not cr.fetchone():
+            cr.execute("""CREATE UNIQUE INDEX res_currency_unique_name_company_id_idx
+                          ON res_currency
+                          (name, (COALESCE(company_id,-1)))""")
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
