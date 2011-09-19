@@ -28,7 +28,7 @@ class accounting_report(osv.osv_memory):
 
     _columns = {
         'enable_filter': fields.boolean('Enable Comparison'),
-        'account_report_id': fields.many2one('account.low.level.report', 'Account Reports', required=True),
+        'account_report_id': fields.many2one('account.financial.report', 'Account Reports', required=True),
         'label_filter': fields.char('Column Label', size=32, help="This label will be displayed on report to show the balance computed for the given comparison filter."),
         'fiscalyear_id_cmp': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
         'filter_cmp': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
@@ -42,7 +42,7 @@ class accounting_report(osv.osv_memory):
             'filter_cmp': 'filter_no',
             'target_move': 'posted',
     }
-    
+
     def _build_contexts_low(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
@@ -59,10 +59,10 @@ class accounting_report(osv.osv_memory):
             result['period_from'] = data['form']['period_from_cmp']
             result['period_to'] = data['form']['period_to_cmp']
         return result
-    
+
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
-            context = {} 
+            context = {}
         res = super(accounting_report, self).check_report(cr, uid, ids, context=context)
         data = {}
         data['form'] = self.read(cr, uid, ids, ['account_report_id', 'date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'journal_ids', 'period_from_cmp', 'period_to_cmp',  'filter_cmp',  'chart_account_id', 'target_move'], context=context)[0]
@@ -80,7 +80,7 @@ class accounting_report(osv.osv_memory):
         data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'account.low.level.report',
+            'report_name': 'account.financial.report',
             'datas': data,
         }
 
