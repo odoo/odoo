@@ -153,8 +153,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
-        var column_width = 100 / (this.all_display_data).length;
-        var row_width = column_width * (this.all_display_data).length * this.DISPLAY_COLUMNS;
+        var row_width = 100, column_width = 100;
+        if ((this.all_display_data).length > 1){
+            row_width = (100 / this.DISPLAY_COLUMNS) * (this.all_display_data).length;
+            column_width = 100 / (this.all_display_data).length
+        }
         self.$element.find(".oe_table_column" ).css("width", column_width +"%");
         self.$element.find(".oe_kanban_row" ).css("width", row_width +"%");
         this.$element.find('#next-column').click(function(event) {
