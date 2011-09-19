@@ -18,8 +18,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.all_display_data = false;
         this.groups = [];
         this.qweb = new QWeb2.Engine();
-        this.NO_OF_COLUMNS = 2;
-        this.DISPLAY_COLUMNS = 3;
+        this.NO_OF_COLUMNS = 3;
         if (this.options.action_views_ids.form) {
             this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
             this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
@@ -155,7 +154,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         var row_width = 100, column_width = 100;
         if ((this.all_display_data).length > 1){
-            row_width = (100 / this.DISPLAY_COLUMNS) * (this.all_display_data).length;
+            row_width = (100 / this.NO_OF_COLUMNS) * (this.all_display_data).length;
             column_width = 100 / (this.all_display_data).length
         }
         self.$element.find(".oe_table_column" ).css("width", column_width +"%");
