@@ -294,7 +294,6 @@ label.error {
     border-left: 1px solid #282828;
     width: 21px;
     height: 21px;
-    left: 177px;
     z-index: 10;
     background: transparent;
     color: white;
@@ -302,9 +301,10 @@ label.error {
     text-align: center;
     font-size: 18px;
     line-height: 14px;
+    right: 0;
 }
 .openerp .secondary_menu.oe_folded .oe_toggle_secondary_menu {
-    position: initial;
+    position: static;
     border-left: none;
     border-bottom: 1px solid #282828;
     width: 21px;
@@ -324,10 +324,12 @@ label.error {
     background: #5A5858;
     vertical-align: top;
     height: 100%;
+    position: relative;
 }
 .openerp .secondary_menu.oe_folded {
     width: 20px;
     min-width: 20px;
+    position: static;
 }
 .openerp .secondary_menu.oe_folded .oe_secondary_menu.active {
     position: absolute;

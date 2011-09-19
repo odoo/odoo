@@ -872,7 +872,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             }
             return !this.leaf_clicked;
         } else {
-            $sub_menu.find('.oe_secondary_submenu').hide().eq(0).show();
             return false;
         }
     },
