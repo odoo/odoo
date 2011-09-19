@@ -124,43 +124,56 @@
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                         <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                        <div class="oe_kanban_box oe_kanban_color_border">
-                            <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_draghandle">
-                                <tr class="oe_kanban_color_border">
-                                    <td class="oe_kanban_title2" align="left" valign="middle"><field name="name"/></td>
-                                    <td valign="top" width="22">
-                                        <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                <table class="oe_kanban_table oe_kanban_box_content">
-                                    <tr class="oe_kanban_color_border">
-                                        <td valign="top" width="30">
-                                            <img t-att-src="kanban_gravatar(record.email.value, 30)" width="40" height="40" class="oe_kanban_gravatar"/>
-                                        </td>
-                                        <td style="padding-left:5px;">
-                                            <b> <field name="title"/><t t-if="record.title.raw_value &amp;&amp; record.function.raw_value">,</t> <field name="function"/></b>
-                                            <br class="oe_kanban_clear"/>
-                                             <span style="letter-spacing:2px;"><field name="partner_id"/><t t-if="record.partner_id.raw_value &amp;&amp; record.country_id.raw_value">,</t><field name="country_id"/></span><br/>
-                                            <font size="2"><i><field name="email"/>
-                                            <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
-                                            <field name="phone"/></i></font>
-                                        </td>
-                                    </tr>    
-                                </table>
-                            </div>
-                            <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                <div class="oe_kanban_left">
-                                    <a string="Edit" icon="gtk-edit" type="edit"/>                                    
-                                    <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                    <a title="Mail"   t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
-                                            <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                    </a>
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <field name="name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <br class="oe_kanban_clear"/>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td valign="top" width="22" align="left">
+                                                <img src="/web/static/src/img/personnes.png"/>
+                                            </td>
+                                            <td valign="top" align="left">
+                                                <div class="oe_kanban_title2">
+                                                    <field name="title"/>
+                                                    <t t-if="record.title.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                    <field name="function"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="partner_id"/>
+                                                    <t t-if="record.partner_id.raw_value &amp;&amp; record.country_id.raw_value">,</t>
+                                                    <field name="country_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="email"/>
+                                                    <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                    <field name="phone"/></i>
+                                                </div>
+                                            </td>
+                                         </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                            <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
+                                        </a>
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
                             </div>
-                        </div>
                         </div>
                     </t>
                 </templates>
