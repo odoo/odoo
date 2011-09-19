@@ -120,10 +120,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     sort_group: function (first, second) {
-        first = first.header.toLowerCase();
-        second = second.header.toLowerCase();
-        if (first > second) return 1;
-        else if (first < second) return -1;
+        if (first.header && second.header)
+        {
+            first = first.header.toLowerCase();
+            second = second.header.toLowerCase();
+            if (first > second) return 1;
+            else if (first < second) return -1;
+            else return 0;
+        }
         else return 0;
     },
     on_show_data: function() {
