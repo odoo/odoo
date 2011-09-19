@@ -52,7 +52,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="8">
+                  <group>
                            <filter string="Year" icon="terp-go-year" help="Current Year"
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         />
@@ -60,7 +60,7 @@
                        <filter string="Month" icon="terp-go-month" name="This Month"
                         domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         />
-                       <filter icon="terp-go-week" string="Month-1" separator="1" help="Previous Month"
+                       <filter icon="terp-go-week" string="Month-1"  help="Previous Month"
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                         />
 
@@ -93,9 +93,9 @@
                           <field name="version_id" widget="selection" />
                    </group>
                    <newline/>
-                   <group  expand="1" string="Group By..." colspan="4" col="8">                        
+                   <group  expand="1" string="Group By...">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal"
-                        domain="[]" context="{'group_by':'user_id'}" />
+                            domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Sale Team" icon="terp-personal+"

@@ -145,6 +145,16 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
+    def _check_paid(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            ok = True
+            for line in voucher.move_ids:
+                if (line.account_id.type, 'in', ('receivable', 'payable')) and not line.reconcile_id:
+                    ok = False
+            res[voucher.id] = ok
+        return res
+
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=None):
         if context is None:
             context = {}
@@ -288,6 +298,7 @@ class account_voucher(osv.osv):
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_amount': fields.function(_get_writeoff_amount, string='Write-Off Amount', type='float', readonly=True, multi="writeoff"),
         'currency_rate_difference': fields.function(_get_writeoff_amount, string="Currency Rate Difference", type='float', multi="writeoff"),
+        'paid': fields.function(_check_paid, string='Paid', type='boolean', help="The Voucher has been totally paid."),
     }
     _defaults = {
         'period_id': _get_period,
@@ -696,7 +707,7 @@ class account_voucher(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for t in self.read(cr, uid, ids, ['state'], context=context):
             if t['state'] not in ('draft', 'cancel'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Voucher(s) which are already opened or paid !'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a voucher, you must cancel it!'))
         return super(account_voucher, self).unlink(cr, uid, ids, context=context)
 
     def onchange_payment(self, cr, uid, ids, pay_now, journal_id, partner_id, ttype='sale'):
@@ -871,13 +882,22 @@ class account_voucher(osv.osv):
                 diff = currency_pool.compute(cr, uid, voucher_currency, company_currency, voucher.writeoff_amount, context=context_multi_currency)
                 account_id = False
                 write_off_name = ''
+
                 if voucher.payment_option == 'with_writeoff':
                     account_id = voucher.writeoff_acc_id.id
                     write_off_name = voucher.comment
                 elif voucher.type in ('sale', 'receipt'):
-                    account_id = voucher.partner_id.property_account_receivable.id
+                    if not voucher.partner_id:
+                        account_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=',False)])
+                    else:
+                        account_id = voucher.partner_id.property_account_receivable.id
                 else:
-                    account_id = voucher.partner_id.property_account_payable.id
+                    if not voucher.partner_id:
+                        account_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=',False)])
+                    else:
+                        account_id = voucher.partner_id.property_account_payable.id
+                if not account_id:
+                    raise osv.except_osv(_('Error !'), _('No receivable/payable account defined in properties!'))
                 move_line = {
                     'name': write_off_name or name,
                     'account_id': account_id,

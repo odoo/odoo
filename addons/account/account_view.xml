@@ -202,7 +202,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
                         <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
                         <separator orientation="vertical"/>
@@ -387,7 +387,7 @@
             <field name="model">account.journal</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <tree string="Search Account Journal">
+                <search string="Search Account Journal">
                     <group>
                     <filter domain="['|', ('type', '=', 'sale'), ('type', '=', 'sale_refund')]" string="Sale" icon="terp-camera_test"/>
                     <filter domain="['|', ('type', '=', 'purchase'), ('type', '=', 'purchase_refund')]" string="Purchase" icon="terp-purchase"/>
@@ -404,7 +404,7 @@
                     <separator orientation="vertical"/>
                     <filter string="Type" context="{'group_by':'type'}" icon="terp-stock_symbol-selection"/>
                     </group>
-                </tree>
+                </search>
             </field>
         </record>
         <record id="view_account_journal_form" model="ir.ui.view">
@@ -482,7 +482,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
@@ -526,7 +526,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bank Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
@@ -907,7 +907,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Taxes">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="description"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -1102,7 +1102,7 @@
                             <separator string="Internal Note" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                         </page>
                     </notebook>
@@ -1149,7 +1149,7 @@
                             <field name="reconcile_partial_id"/>
                             <field name="state"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                             <field colspan="4" name="analytic_lines" nolabel="1" />
                         </page>
                     </notebook>
@@ -1176,7 +1176,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
-                    <group col='10' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-document-new" string="Unposted" domain="[('move_id.state','=','draft')]" help="Unposted Journal Items"/>
@@ -1188,20 +1188,20 @@
                             domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help="Unreconciled Journal Items"
                             name="unreconciled"/>
                         <separator orientation="vertical"/>
-                        <field name="move_id" select="1" string="Number (Move)"/>
-                        <field name="date" select='1'/>
-                        <field name="account_id" select='1'/>
-                        <field name="partner_id" select='1'>
+                        <field name="move_id" string="Number (Move)"/>
+                        <field name="date"/>
+                        <field name="account_id"/>
+                        <field name="partner_id">
                             <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
                     </group>
                     <newline/>
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id':self, 'visible_id':self, 'normal_view':False}"/>
                         <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1390,7 +1390,7 @@
                                             <separator string="Internal Note" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
                                         </page>
-                                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                                         </page>
                                     </notebook>
@@ -1433,7 +1433,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Move">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Unposted" domain="[('state','=','draft')]" help="Unposted Journal Entries"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Journal Entries"/>
                         <separator orientation="vertical"/>
@@ -1445,12 +1445,12 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection"/>
                         <field name="period_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="12" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1832,7 +1832,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Entry Subscription">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Subscription"/>
                         <filter icon="terp-camera_test" string="Running" domain="[('state','=','running')]" help="Running Subscription"/>
                         <separator orientation="vertical"/>
@@ -2278,7 +2278,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Tax Templates">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-sale" string="Sale" domain="[('type_tax_use','=','sale')]" help="Taxes used in Sales"/>
                         <filter icon="terp-purchase" string="Purchase" domain="[('type_tax_use','=','purchase')]" help="Taxes used in Purchases"/>
                         <separator orientation="vertical"/>

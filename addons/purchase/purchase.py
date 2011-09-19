@@ -241,7 +241,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!')  % _(dict(purchase_order.STATE_SELECTION).get(s['state'])))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a purchase order, it must be cancelled first!'))
 
         # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
@@ -289,7 +289,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a purchase order without any lines.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
@@ -406,16 +406,16 @@ class purchase_order(osv.osv):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel purchase order !'),
-                        _('You must first cancel all picking attached to this purchase order.'))
+                        _('Unable to cancel this purchase order!'),
+                        _('You must first cancel all receptions related to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
-                        _('Could not cancel this purchase order !'),
-                        _('You must first cancel all invoices attached to this purchase order.'))
+                        _('Unable to cancel this purchase order!'),
+                        _('You must first cancel all invoices related to this purchase order.'))
                 if inv:
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
@@ -707,7 +707,7 @@ class purchase_order_line(osv.osv):
                 temp_qty = s.min_qty # supplier _qty assigned to temp
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
-                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you cannot purchase less.') % qty}})
+                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you should not purchase less.') % qty}})
         qty_in_product_uom = product_uom_pool._compute_qty(cr, uid, uom, qty, to_uom_id=prod.uom_id.id)
         price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                     product, qty_in_product_uom or 1.0, partner_id, {
