@@ -777,6 +777,9 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
         this.folded = false;
+        if (window.localStorage) {
+            this.folded = localStorage.getItem('oe_menu_folded') === 'true';
+        }
     },
     start: function() {
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
@@ -797,6 +800,9 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             this.$secondary_menu.find('.oe_secondary_menu').hide();
         }
         this.folded = !this.folded;
+        if (window.localStorage) {
+            localStorage.setItem('oe_menu_folded', this.folded.toString());
+        }
     },
     do_show_secondary: function($sub_menu, $main_menu) {
         if (this.folded) {
@@ -808,7 +814,8 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     },
     on_menu_click: function(ev, id) {
         id = id || 0;
-        var $clicked_menu, $main_menu, $sub_menu, manual = false;
+        var $clicked_menu, $main_menu, $sub_menu,
+            manual = main_clicked = leaf_clicked = false;
 
         if (id) {
             // We can manually activate a menu with it's id (for hash url mapping)
@@ -821,6 +828,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $clicked_menu = $(ev.currentTarget);
             id = $clicked_menu.data('menu');
         }
+        this.leaf_clicked = $clicked_menu.is(".leaf");
 
         if (this.$secondary_menu.has($clicked_menu).length) {
             $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
@@ -828,11 +836,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         } else {
             $sub_menu = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
             $main_menu = $clicked_menu;
+            main_clicked = true;
         }
 
         this.$secondary_menu.find('.oe_secondary_menu').hide().removeClass('active');
 
-        if (id) {
+        if (id && !(this.folded && main_clicked)) {
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id},
                     this.on_menu_action_loaded);
@@ -853,7 +862,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
                 $clicked_menu.toggleClass('opened').next().toggle();
                 return false;
             }
-            return !$clicked_menu.is(".leaf");
+            return !this.leaf_clicked;
         } else {
             $sub_menu.find('.oe_secondary_submenu').hide().eq(0).show();
             return false;
