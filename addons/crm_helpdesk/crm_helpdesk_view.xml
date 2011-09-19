@@ -232,7 +232,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
-					<filter icon="terp-check" string="New" name="current"
+					<filter icon="terp-check" string="New" 
+					    name="current"
                         domain="[('state','in',('draft', 'open'))]"
                         help="Draft and Open Helpdesk Request" />
                     <filter icon="terp-camera_test"
@@ -245,10 +246,7 @@
                         domain="[('state','=','pending')]"
                         help="All pending Helpdesk Request"
                     />
-                    
                     <separator orientation="vertical"/>
-                    
-                    
                     <filter icon="terp-go-today" string="Today"
                         domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                         help="Todays's Helpdesk Requests"
