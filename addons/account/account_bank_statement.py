@@ -57,18 +57,19 @@ class account_bank_statement(osv.osv):
             res[statement.id] = statement.balance_start
             currency_id = statement.currency.id
             for line in statement.move_line_ids:
-                if line.debit > 0:
-                    if line.account_id.id == \
-                            statement.journal_id.default_debit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.debit, context=context)
+                if currency_id == company_currency_id:
+                    if line.debit > 0:
+                        if line.account_id.id == \
+                                statement.journal_id.default_debit_account_id.id:
+                            res[statement.id] += line.debit
+                    else:
+                        if line.account_id.id == \
+                                statement.journal_id.default_credit_account_id.id:
+                            res[statement.id] -= line.credit
                 else:
-                    if line.account_id.id == \
-                            statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] -= res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.credit, context=context)
+                    if line.amount_currency > 0:
+                        res[statement.id] += line.amount_currency
+
             if statement.state == 'draft':
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
