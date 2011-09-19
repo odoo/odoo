@@ -82,7 +82,12 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
     }
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
-            var tmp = Number(value);
+            var tmp;
+            do {
+                tmp = value;
+                value = value.replace(openerp.web._t.database.parameters.thousands_sep, "");
+            } while(tmp !== value);
+            tmp = Number(value);
             if (isNaN(tmp))
                 throw value + " is not a correct integer";
             return tmp;

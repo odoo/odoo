@@ -720,7 +720,11 @@ openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends open
 openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.IntegerField# */{
     error_message: "not a valid integer",
     parse: function (value) {
-        return parseInt(value, 10);
+        try {
+            return openerp.web.parse_value(value, {'widget': 'integer'});
+        } catch (e) {
+            return NaN;
+        }
     }
 });
 /**
@@ -1173,7 +1177,7 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.OldWidget.ext
     ],
     get_value: function() {
         try {
-            return Math.round(openerp.web.parse_value(this.$element.val(), {'widget': 'float'}));
+            return openerp.web.parse_value(this.$element.val(), {'widget': 'integer'});
         } catch (e) {
             return "";
         }
