@@ -232,12 +232,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
-					<filter icon="terp-check" string="New" 
+                    <filter icon="terp-check" string="New" 
 					    name="current"
                         domain="[('state','in',('draft', 'open'))]"
                         help="Draft and Open Helpdesk Request" />
                     <filter icon="terp-camera_test"
-                        string="In Progress"
+                        string="Open"
                         domain="[('state','=','open')]"
                         help="In Progress Helpdesk Request"
                     />
