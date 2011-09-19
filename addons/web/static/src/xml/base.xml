@@ -375,7 +375,7 @@
 <t t-name="Menu">
     <table align="center">
     <tr>
-        <td t-foreach="data.children" t-as="menu">
+        <td t-foreach="widget.data.data.children" t-as="menu">
             <a href="#" t-att-data-menu="menu.id">
                 <t t-esc="menu.name"/>
             </a>
@@ -384,7 +384,11 @@
     </table>
 </t>
 <t t-name="Menu.secondary">
-    <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
+    <div t-attf-class="oe_toggle_secondary_menu #{widget.folded ? 'folded' : 'unfolded'}">
+        <span class="oe_menu_fold" title="Fold menu">&amp;laquo;</span>
+        <span class="oe_menu_unfold" title="Unfold menu">&amp;raquo;</span>
+    </div>
+    <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
             <t t-set="classname">oe_secondary_menu_item</t>
             <t t-set="level" t-value="0"/>
@@ -394,8 +398,8 @@
 </t>
 <t t-name="Menu.secondary.children">
     <t t-set="level" t-value="level + 1"/>
-    <a href="#" t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf')" t-att-data-menu="menu.children.length ? undefined : menu.id">
-        <span t-attf-style="padding-left: #{level - 1}em"> <t t-esc="menu.name"/></span>
+    <a href="#" t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf') + ' oe_menu_level_#{level}'" t-att-data-menu="menu.children.length ? undefined : menu.id">
+        <span t-attf-style="padding-left: #{(level - 2) * 20}px"> <t t-esc="menu.name"/></span>
     </a>
     <div t-attf-class="oe_secondary_submenu oe_secondary_submenu_level_#{level}" t-if="menu.children.length" style="display: none">
         <t t-foreach="menu.children" t-as="menu">

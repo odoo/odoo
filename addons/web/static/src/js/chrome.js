@@ -776,19 +776,25 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.secondary_menu_id = secondary_menu_id;
         this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
+        this.folded = false;
     },
     start: function() {
         this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.data = data;
-        this.$element.html(QWeb.render("Menu", this.data));
-        for (var i = 0; i < this.data.data.children.length; i++) {
-            var v = { menu : this.data.data.children[i] };
-            this.$secondary_menu.append(QWeb.render("Menu.secondary", v));
-        }
-
+        this.$element.html(QWeb.render("Menu", { widget : this }));
+        this.$secondary_menu.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
+        this.$secondary_menu.find('.oe_toggle_secondary_menu').click(this.on_toggle_fold);
+    },
+    on_toggle_fold: function() {
+        if (this.folded) {
+            this.$secondary_menu.find('.oe_secondary_menu.active').show();
+        } else {
+            this.$secondary_menu.find('.oe_secondary_menu').hide();
+        }
+        this.folded = !this.folded;
     },
     on_menu_click: function(ev, id) {
         id = id || 0;
@@ -812,7 +818,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $secondary = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $menu.attr('data-menu') + ']');
         }
 
-        this.$secondary_menu.find('.oe_secondary_menu').hide();
+        this.$secondary_menu.find('.oe_secondary_menu').hide().removeClass('active');
         $secondary.show();
 
         if (id) {
@@ -824,9 +830,11 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
         $parent.addClass('active');
         $menu.addClass('active');
+        $secondary.addClass('active');
 
         if (this.$secondary_menu.has($menu).length) {
             if ($menu.is('.submenu')) {
+                //this.$secondary_menu.find('.submenu').removeClass('opened').next().hide();
                 $menu.toggleClass('opened').next().toggle();
                 return false;
             }

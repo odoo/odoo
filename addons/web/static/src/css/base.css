@@ -288,6 +288,28 @@ label.error {
     color: #fff;
 }
 /* Secondary Menu */
+.openerp .oe_toggle_secondary_menu {
+    position: absolute;
+    cursor: pointer;
+    border-left: 1px solid #282828;
+    border-bottom: 1px solid #282828;
+    width: 21px;
+    height: 21px;
+    left: 177px;
+    z-index: 10;
+    background: transparent;
+    color: white;
+    text-shadow: 0 1px 0 #333;
+    text-align: center;
+    font-size: 18px;
+    line-height: 14px;
+}
+.openerp .oe_toggle_secondary_menu.folded span.oe_menu_fold {
+    display: none;
+}
+.openerp .oe_toggle_secondary_menu.unfolded span.oe_menu_unfold {
+    display: none;
+}
 .openerp .secondary_menu {
     width: 200px;
     min-width: 200px;
