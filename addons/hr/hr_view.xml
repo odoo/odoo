@@ -158,7 +158,7 @@
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.photo.value, 22)" class="oe_kanban_gravatar"/>
+                                                <img t-att-src="'data:image/png;base64,'+record.photo.raw_value" width='48' height='48'/>
                                             </td>
                                             <td>
                                                 <div class="oe_kanban_title2"><field name="job_id"/></div>
