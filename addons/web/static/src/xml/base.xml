@@ -730,29 +730,27 @@
     </table>
 </t>
 <t t-name="WidgetNotebook">
-    <t t-if="widget.view.readonly">
-        <t t-foreach="widget.pages" t-as="page">
-            <h3><t t-esc="page.string"/></h3>
-            <t t-raw="page.render()"/>
-        </t>
-    </t>
-    <t t-if="!widget.view.readonly">
-        <ul>
-            <li t-foreach="widget.pages" t-as="page">
-                <a href="#">
-                    <t t-esc="page.string"/>
-                </a>
-            </li>
-        </ul>
-        <t t-foreach="widget.pages" t-as="page">
-            <t t-raw="page.render()"/>
-        </t>
+    <ul>
+        <li t-foreach="widget.pages" t-as="page">
+            <a href="#">
+                <t t-esc="page.string"/>
+            </a>
+        </li>
+    </ul>
+    <t t-foreach="widget.pages" t-as="page">
+        <t t-raw="page.render()"/>
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
     <div>
         <t t-call="WidgetFrame"/>
     </div>
+</t>
+<t t-name="WidgetNotebook.readonly">
+    <t t-foreach="widget.pages" t-as="page">
+        <h3><t t-esc="page.string"/></h3>
+        <t t-raw="page.render()"/>
+    </t>
 </t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
@@ -772,15 +770,7 @@
     <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
-    <div
-        t-if="widget.view.readonly"
-        t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
-        
-    </div>
     <input type="text" size="1"
-        t-if="!widget.view.readonly"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type} #{widget.element_class}"
@@ -788,14 +778,23 @@
     />
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
+<t t-name="FieldChar.readonly">
+    <div
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
+    </div>
+</t>
+<t t-name="FieldURI.readonly">
+    <a href="#">#</a>
+</t>
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
         <td width="100%">
-            <t t-call="FieldChar" t-if="!widget.view.readonly"/>
-            <a href="mailto:#" t-if="widget.view.readonly">#</a>
+            <t t-call="FieldChar"/>
         </td>
-        <td width="16" t-if="!widget.view.readonly">
+        <td width="16">
             <button type="button" class="button" title="Send an e-mail with your default e-mail client">
                 <img src="/web/static/src/img/icons/terp-mail-message-new.png"/>
             </button>
@@ -807,10 +806,9 @@
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
         <td width="100%">
-            <t t-call="FieldChar" t-if="!widget.view.readonly"/>
-            <a href="mailto:#" t-if="widget.view.readonly">#</a>
+            <t t-call="FieldChar"/>
         </td>
-        <td width="16" t-if="!widget.view.readonly">
+        <td width="16">
             <button type="button" class="button" title="Open this resource">
                 <img src="/web/static/src/img/icons/gtk-ok.png"/>
             </button>
@@ -819,14 +817,7 @@
     </table>
 </t>
 <t t-name="FieldText">
-    <div
-        t-if="widget.view.readonly"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"></div>
     <textarea rows="6"
-        t-if="!widget.view.readonly"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type} #{widget.element_class}"
@@ -836,26 +827,17 @@
 </t>
 <t t-name="FieldDate">
     <t t-call="FieldChar"/>
-    <img t-if="!widget.view.readonly"
+    <img
          class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
          title="Select date" width="16" height="16" border="0"/>
-    <div t-if="!widget.view.readonly"
+    <div
          class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
         <div class="oe_datepicker_container"/>
         <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
     </div>
 </t>
 <t t-name="FieldSelection">
-    <div
-        t-if="widget.view.readonly"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
-        style="width: 100%">
-
-    </div>
     <select
-        t-if="!widget.view.readonly"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-attf-class="field_#{widget.type} #{widget.element_class}"
@@ -866,11 +848,7 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div t-if="widget.view.readonly" class="oe-m2o">
-        
-    </div>
-    <div t-if="!widget.view.readonly"
-         t-att-class="widget.element_class" class="oe-m2o">
+    <div t-att-class="widget.element_class" class="oe-m2o">
         <input type="text" size="1" style="width: 100%;"/>
         <span class="oe-m2o-drop-down-button">
             <img src="/web/static/src/img/down-arrow.png" /></span>
@@ -912,15 +890,7 @@
     </table>
 </t>
 <t t-name="FieldBoolean">
-    <span
-        t-if="widget.view.readonly"
-        t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}">
-
-    </span>
     <input type="checkbox"
-        t-if="!widget.view.readonly"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-attf-class="field_#{widget.type} #{widget.element_class}"/>
