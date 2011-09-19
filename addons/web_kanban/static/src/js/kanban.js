@@ -303,8 +303,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             return false;
         }
         // TODO fme: check what was this sequence
-        if (self.fields_view.fields.sequence && (self.source_index.index >= 0 && self.source_index.index != from) ||
-                (self.source_index.column && self.source_index.column != ui.item.parent().attr('id'))) {
+        if (self.fields_view.fields.sequence != undefined && ((self.source_index.index >= 0 && self.source_index.index != from) ||
+                (self.source_index.column && self.source_index.column != ui.item.parent().attr('id')))) {
             var child_record = ui.item.parent().children();
             var data, sequence = 1, index = to;
             child_record.splice(0, to);
@@ -345,7 +345,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             });
         }
         if (self.group_by.length > 0 && self.source_index.column && self.source_index.column != ui.item.parent().attr('id')) {
-            var value = ui.item.closest("td").attr("id");
+            var value = ui.item.closest("div").attr("id");
             if (value) {
                 var data_val = {};
                 var wirte_id = parseInt(ui.item.attr("id").split("_")[1]);
@@ -499,17 +499,21 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     }
 });
 
-/*openerp.web_kanban.KanbanRecord = openerp.web.Class.extend({
+openerp.web_kanban.KanbanRecord = openerp.web.Class.extend({
     init: function (dataset, record_id, options) {
         this.dataset = dataset;
         this.record_id = record_id;
         this.options = options;
     },
-
     on_render: function () {
-
     },
-});*/
+    on_update: function (values) {
+    },
+    on_delete: function () {
+    },
+    on_reload: function () {
+    },
+});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
