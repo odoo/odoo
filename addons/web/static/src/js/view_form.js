@@ -960,7 +960,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         return !this.invalid;
     },
     is_dirty: function() {
-        return this.dirty;
+        return this.dirty && !this.readonly;
     },
     get_on_change_value: function() {
         return this.get_value();
