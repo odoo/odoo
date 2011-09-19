@@ -64,11 +64,11 @@
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in last month"/>
                         <separator orientation="vertical" />
-                        <filter string="Current" icon="terp-check"
-                        domain="[('state','in',('open','draft'))]" />
-                        <filter string="Won" icon="terp-check"
-                        domain="[('state','=','done')]" />
-                        <filter string="Lost" icon="terp-dialog-close"
+                        <filter string="New" icon="terp-check"
+                        domain="[('state','=','draft')]" />
+                        <filter string="Open" icon="terp-camera_test"
+                        domain="[('state','=','open')]" />
+                        <filter string="Closed" icon="terp-dialog-close"
                         domain="[('state','=','cancel')]" />
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"

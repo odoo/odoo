@@ -73,11 +73,13 @@
                 <search string="Leads Analysis">
                     <group>
                         <filter icon="terp-personal"
+                        	name="lead"
                             string="Lead"
                             domain="[('type','=', 'lead')]"
                             help="Show only lead"/>
                         <filter icon="terp-personal+"
                             string="Opportunity"
+                            name="opportunity"
                             domain="[('type','=','opportunity')]"
                             help="Show only opportunity"/>
                         <separator orientation="vertical" />
@@ -93,9 +95,13 @@
 
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
-                            string="Active"
+                            string="New"
+                            domain="[('state','=','draft')]"
+                            help="Leads/Opportunities which are in draft state"/>
+						<filter icon="terp-camera_test"
+                            string="Open"
                             domain="[('state','in',('draft','open'))]"
-                            help="Leads/Opportunities which are in draft and open state"/>
+                            help="Leads/Opportunities which are in draft and open state"/>                            
                         <filter icon="gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"
@@ -209,7 +215,7 @@
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.lead.report</field>
            <field name="view_type">form</field>
-           <field name="context">{'search_default_filter_lead': 1, "search_default_user":1, "search_default_this_month":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
+           <field name="context">{'search_default_filter_lead': 1, "search_default_lead":1, "search_default_user":1, "search_default_this_month":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
            <field name="view_mode">tree,graph</field>
            <field name="domain">[]</field>
            <field name="help">Leads Analysis allows you to check different CRM related information. Check for treatment delays, number of responses given and emails sent. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
@@ -231,7 +237,7 @@
             <field name="name">Opportunities Analysis</field>
             <field name="res_model">crm.lead.report</field>
             <field name="view_type">form</field>
-            <field name="context">{"search_default_filter_opportunity":1, "search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{"search_default_filter_opportunity":1, "search_default_opportunity":1,"search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
