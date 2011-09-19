@@ -301,6 +301,7 @@ class Session(openerpweb.Controller):
         }
     @openerpweb.jsonrequest
     def get_session_info(self, req):
+        req.session.assert_valid(force=True)
         return {
             "uid": req.session._uid,
             "context": req.session.get_context() if req.session._uid else False,

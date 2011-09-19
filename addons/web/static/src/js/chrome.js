@@ -839,7 +839,11 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         $menu.addClass('active');
         $menu.parent('h4').addClass('active');
 
-        return !$menu.is(".leaf");
+        if (this.$secondary_menu.has($menu).length) {
+            return !$menu.is(".leaf");
+        } else {
+            return false;
+        }
     },
     on_menu_action_loaded: function(data) {
         var self = this;
@@ -878,7 +882,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.web.Widget.prototype.notification = new openerp.web.Notification(this, "oe_notification");
 
-        
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this, "oe_login");
         this.header.on_logout.add(this.login.on_logout);
@@ -891,6 +894,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this.menu = new openerp.web.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
+
+        this.url_internal_hashchange = false;
+        this.url_external_hashchange = false;
+        jQuery(window).bind('hashchange', this.on_url_hashchange);
+
     },
     start: function() {
         this.header.appendTo($("#oe_header"));
@@ -904,6 +912,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             this.action_manager.stop();
         this.action_manager = new openerp.web.ActionManager(this);
         this.action_manager.appendTo($("#oe_app"));
+        this.action_manager.do_url_set_hash.add_last(this.do_url_set_hash);
 
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
@@ -930,7 +939,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     load_url_state: function () {
         var self = this;
         // TODO: add actual loading if there is url state to unpack, test on window.location.hash
-
         // not logged in
         if (!this.session.uid) { return; }
         var ds = new openerp.web.DataSetSearch(this, 'res.users');
@@ -965,6 +973,25 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             });
             self.action_manager.do_action(action);
         });
+    },
+    do_url_set_hash: function(url) {
+        if(!this.url_external_hashchange) {
+            console.log("url set #hash to",url);
+            this.url_internal_hashchange = true;
+            jQuery.bbq.pushState(url);
+        }
+    },
+    on_url_hashchange: function() {
+        if(this.url_internal_hashchange) {
+            this.url_internal_hashchange = false;
+            console.log("url jump to FLAG OFF");
+        } else {
+            var url = jQuery.deparam.fragment();
+            console.log("url jump to",url);
+            this.url_external_hashchange = true;
+            this.action_manager.on_url_hashchange(url);
+            this.url_external_hashchange = false;
+        }
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);

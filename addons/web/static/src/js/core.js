@@ -501,6 +501,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 self.on_session_valid();
             else
                 self.on_session_invalid();
+        }, function() {
+            self.on_session_invalid();
         });
     },
     /**
@@ -742,6 +744,59 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
     }
 });
 
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ *
+ * Widget also extends SessionAware for ease of use.
+ *
+ * Guide to create implementations of the Widget class:
+ * ==============================================
+ *
+ * Here is a sample child class:
+ *
+ * MyWidget = openerp.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *     // identifier prefix, it is useful to put an obvious one for debugging
+ *     identifier_prefix: 'my-id-prefix-',
+ *
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         this._super();
+ *         // stuff you want to make after the rendering, `this.$element` holds a correct value
+ *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ *
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ *
+ * Now this class can simply be used with the following syntax:
+ *
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ *
+ * And of course, when you don't need that widget anymore, just do:
+ *
+ * my_widget.stop();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
 openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
@@ -889,6 +944,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
+        console.log('Widget.do_action', action, on_finished);
         if (this.widget_parent) {
             return this.widget_parent.do_action(action, on_finished);
         }

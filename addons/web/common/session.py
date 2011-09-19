@@ -2,28 +2,12 @@
 import datetime
 import dateutil.relativedelta
 import time
-import xmlrpclib
+import openerplib
 
 import nonliterals
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
-class OpenERPUnboundException(Exception):
-    pass
-
-class OpenERPConnector(object):
-    pass
-
-class OpenERPAuth(object):
-    pass
-
-class OpenERPModel(object):
-    def __init__(self, session, model):
-        self._session = session
-        self._model = model
-
-    def __getattr__(self, name):
-        return lambda *l:self._session.execute(self._model, name, *l)
 
 class OpenERPSession(object):
     """
@@ -42,14 +26,13 @@ class OpenERPSession(object):
         Used to store references to non-literal domains which need to be
         round-tripped to the client browser.
     """
-    def __init__(self, server='127.0.0.1', port=8069, model_factory=OpenERPModel):
+    def __init__(self, server='127.0.0.1', port=8069):
         self._server = server
         self._port = port
         self._db = False
         self._uid = False
         self._login = False
         self._password = False
-        self.model_factory = model_factory
         self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
@@ -57,34 +40,38 @@ class OpenERPSession(object):
         self._lang = {}
         self.remote_timezone = 'utc'
         self.client_timezone = False
+        
+    def build_connection(self):
+        return openerplib.get_connection(hostname=self._server, port=self._port,
+                                         database=self._db, login=self._login,
+                                         user_id=self._uid, password=self._password)
 
     def proxy(self, service):
-        s = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service))
-        return s
+        return self.build_connection().get_service(service)
 
-    def bind(self, db, uid, password):
+    def bind(self, db, uid, login, password):
         self._db = db
         self._uid = uid
+        self._login = login
         self._password = password
 
     def login(self, db, login, password):
         uid = self.proxy('common').login(db, login, password)
-        self.bind(db, uid, password)
-        self._login = login
+        self.bind(db, uid, login, password)
         
         if uid: self.get_context()
         return uid
 
-    def assert_valid(self):
+    def assert_valid(self, force=False):
         """
         Ensures this session is valid (logged into the openerp server)
         """
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.build_connection().check_login(force)
 
     def execute(self, model, func, *l, **d):
         self.assert_valid()
-        r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
+        model = self.build_connection().get_model(model)
+        r = getattr(model, func)(*l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
@@ -97,9 +84,9 @@ class OpenERPSession(object):
 
         :param model: an OpenERP model name
         :type model: str
-        :rtype: :class:`openerpweb.openerpweb.OpenERPModel`
+        :rtype: a model object
         """
-        return self.model_factory(self, model)
+        return self.build_connection().get_model(model)
 
     def get_context(self):
         """ Re-initializes the current user's session context (based on
