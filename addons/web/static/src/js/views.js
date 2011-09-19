@@ -850,7 +850,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     on_sidebar_manage_view: function() {
         if (this.fields_view && this.fields_view.arch) {
-            var view_editor = new openerp.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
+            var view_editor = new db.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
             view_editor.start();
         } else {
             this.notification.warn("Manage Views", "Could not find current view declaration");
