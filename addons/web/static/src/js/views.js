@@ -133,11 +133,19 @@ db.web.ActionManager = db.web.Widget.extend({
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
+        var self = this;
         $.blockUI();
-        this.session.get_file({
-            url: '/web/report',
-            data: {action: JSON.stringify(action)},
-            complete: $.unblockUI
+        self.rpc("/web/session/eval_domain_and_context", {
+            contexts: [action.context],
+            domains: []
+        }).then(function(res) {
+            action = _.clone(action);
+            action.context = res.context;
+            self.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: $.unblockUI
+            });
         });
     }
 });
@@ -212,8 +220,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
-            var controller = new controllerclass(this, this.element_id + '_view_' + view_type,
-                this.dataset, view.view_id, view.options);
+            var controller = new controllerclass(this, this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
@@ -232,7 +239,8 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
                     unique: true
                 });
             }
-            view_promise = controller.start();
+            var container = $("#" + this.element_id + '_view_' + view_type);
+            view_promise = controller.appendTo(container);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
             });
@@ -285,14 +293,14 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             this.searchview.stop();
         }
         this.searchview = new db.web.SearchView(
-                this, this.element_id + "_search", this.dataset,
+                this, this.dataset,
                 view_id, search_defaults);
 
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             var controller = self.views[self.active_view].controller;
             controller.do_search.call(controller, domains, contexts, groupbys);
         });
-        return this.searchview.start();
+        return this.searchview.appendTo($("#" + this.element_id + "_search"));
     },
     /**
      * Called when one of the view want to execute an action
@@ -729,6 +737,7 @@ db.web.TranslateDialog = db.web.Dialog.extend({
 });
 
 db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
+    template: "EmptyComponent",
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {

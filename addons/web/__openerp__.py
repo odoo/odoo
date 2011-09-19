@@ -47,5 +47,5 @@
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
     ],
-    'wsgi' : 'app',
+    'post_load' : 'wsgi_postload',
 }

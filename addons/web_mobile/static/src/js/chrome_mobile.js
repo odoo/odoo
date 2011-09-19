@@ -131,9 +131,9 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
 //        this.header = new openerp.web_mobile.Header(this, "oe_header");
-        this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
+        this.listview = new openerp.web_mobile.ListView(this, res_id);
 //        this.header.start();
-        this.listview.start();
+        this.listview.appendTo($("#oe_list"));
         jQuery("#oe_header").find("h1").html($shortcut.data('name'));
     }
 });
@@ -252,8 +252,8 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
         var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
         if (id) {
-            this.listview = new openerp.web_mobile.ListView(this, "oe_list", id);
-            this.listview.start();
+            this.listview = new openerp.web_mobile.ListView(this, id);
+            this.listview.appendTo("#oe_list");
         }
         jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
