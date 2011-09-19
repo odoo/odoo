@@ -7,6 +7,7 @@ import logging
 import logging.config
 
 import werkzeug.serving
+import werkzeug.contrib.fixers
 
 path_root = os.path.dirname(os.path.abspath(__file__))
 path_addons = os.path.join(path_root, 'addons')
@@ -40,6 +41,9 @@ optparser.add_option("--log-config", dest="log_config",
 optparser.add_option('--multi-threaded', dest='threaded',
                      default=False, action='store_true',
                      help="Use multiple threads to handle requests")
+optparser.add_option('--proxy-mode', dest='proxy_mode',
+                     default=False, action='store_true',
+                     help="Enable correct behavior when behind a reverse Proxy")
 
 import web.common.dispatch
 
@@ -55,6 +59,9 @@ if __name__ == "__main__":
         logging.config.fileConfig(options.log_config)
 
     app = web.common.dispatch.Root(options)
+
+    if options.proxy_mode:
+        app = werkzeug.contrib.fixers.ProxyFix(app)
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
