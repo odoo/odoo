@@ -288,11 +288,10 @@ label.error {
     color: #fff;
 }
 /* Secondary Menu */
-.openerp .oe_toggle_secondary_menu {
+.openerp .secondary_menu .oe_toggle_secondary_menu {
     position: absolute;
     cursor: pointer;
     border-left: 1px solid #282828;
-    border-bottom: 1px solid #282828;
     width: 21px;
     height: 21px;
     left: 177px;
@@ -304,10 +303,17 @@ label.error {
     font-size: 18px;
     line-height: 14px;
 }
-.openerp .oe_toggle_secondary_menu.folded span.oe_menu_fold {
+.openerp .secondary_menu.oe_folded .oe_toggle_secondary_menu {
+    position: initial;
+    border-left: none;
+    border-bottom: 1px solid #282828;
+    width: 21px;
+    height: 21px;
+}
+.openerp .secondary_menu.oe_folded .oe_toggle_secondary_menu span.oe_menu_fold {
     display: none;
 }
-.openerp .oe_toggle_secondary_menu.unfolded span.oe_menu_unfold {
+.openerp .secondary_menu.oe_unfolded .oe_toggle_secondary_menu span.oe_menu_unfold {
     display: none;
 }
 .openerp .secondary_menu {
@@ -318,6 +324,17 @@ label.error {
     background: #5A5858;
     vertical-align: top;
     height: 100%;
+}
+.openerp .secondary_menu.oe_folded {
+    width: 20px;
+    min-width: 20px;
+}
+.openerp .secondary_menu.oe_folded .oe_secondary_menu.active {
+    position: absolute;
+    background: #5A5858;
+    z-index: 100;
+    border: 2px solid white;
+    border-radius: 5px;
 }
 .openerp .secondary_menu a {
     display: block;

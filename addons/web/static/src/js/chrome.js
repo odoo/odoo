@@ -779,6 +779,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.folded = false;
     },
     start: function() {
+        this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
         this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
@@ -789,6 +790,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.$secondary_menu.find('.oe_toggle_secondary_menu').click(this.on_toggle_fold);
     },
     on_toggle_fold: function() {
+        this.$secondary_menu.toggleClass('oe_folded').toggleClass('oe_unfolded');
         if (this.folded) {
             this.$secondary_menu.find('.oe_secondary_menu.active').show();
         } else {
@@ -796,12 +798,20 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
         this.folded = !this.folded;
     },
+    do_show_secondary: function($secondary, $menu) {
+        if (this.folded) {
+            var css = $menu.position();
+            $secondary.css(css);
+        }
+        $secondary.show();
+    },
     on_menu_click: function(ev, id) {
         id = id || 0;
-        var $menu, $parent, $secondary;
+        var $menu, $parent, $secondary, manual = false;
 
         if (id) {
             // We can manually activate a menu with it's id (for hash url mapping)
+            manual = true;
             $menu = this.$element.find('a[data-menu=' + id + ']');
             if (!$menu.length) {
                 $menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
@@ -819,7 +829,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         }
 
         this.$secondary_menu.find('.oe_secondary_menu').hide().removeClass('active');
-        $secondary.show();
 
         if (id) {
             this.session.active_id = id;
@@ -831,6 +840,10 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         $parent.addClass('active');
         $menu.addClass('active');
         $secondary.addClass('active');
+
+        if (!(this.folded && manual)) {
+            this.do_show_secondary($secondary, $menu, manual);
+        }
 
         if (this.$secondary_menu.has($menu).length) {
             if ($menu.is('.submenu')) {

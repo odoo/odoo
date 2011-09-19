@@ -38,11 +38,17 @@
         </td>
     </tr>
     <tr>
-        <td valign="top" id="oe_secondary_menu" class="secondary_menu">
-        </td>
-        <td valign="top" class="oe-application-container">
-            <div id="oe_app" class="oe-application">
-            </div>
+        <td colspan="2" valign="top" height="100%">
+            <table cellspacing="0" cellpadding="0" border="0" height="100%">
+            <tr>
+                <td valign="top" id="oe_secondary_menu" class="secondary_menu">
+                </td>
+                <td valign="top" class="oe-application-container">
+                    <div id="oe_app" class="oe-application">
+                    </div>
+                </td>
+            </tr>
+            </table>
         </td>
     </tr>
     <tr>
@@ -384,7 +390,7 @@
     </table>
 </t>
 <t t-name="Menu.secondary">
-    <div t-attf-class="oe_toggle_secondary_menu #{widget.folded ? 'folded' : 'unfolded'}">
+    <div t-attf-class="oe_toggle_secondary_menu">
         <span class="oe_menu_fold" title="Fold menu">&amp;laquo;</span>
         <span class="oe_menu_unfold" title="Unfold menu">&amp;raquo;</span>
     </div>
