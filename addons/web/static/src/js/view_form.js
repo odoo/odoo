@@ -368,7 +368,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             first_invalid_field.focus();
             this.on_invalid();
             return false;
-        } else if (form_dirty) {
+        } else {
             console.log("About to save", values);
             if (!this.datarecord.id) {
                 return this.dataset.create(values, function(r) {
@@ -379,11 +379,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     self.on_saved(r, success);
                 });
             }
-        } else {
-            setTimeout(function() {
-                self.on_saved({ result: true }, success);
-            });
-            return true;
         }
     },
     do_save_edit: function() {
