@@ -2650,7 +2650,10 @@ class account_financial_report(osv.osv):
                     balance += a.balance
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
-                balance = report.account_report_id.balance
+                res2 = self._get_balance(cr, uid, [report.account_report_id.id], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
             elif report.type == 'sum':
                 # it's the sum of balance of the children of this account.report
                 #for child in report.children_ids:
