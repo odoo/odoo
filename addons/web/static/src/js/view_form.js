@@ -2622,7 +2622,7 @@ openerp.web.form.FieldUrlReadonly = openerp.web.form.FieldURIReadonly.extend({
 });
 openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.extend({
     set_value: function (value) {
-        this._super(value ? '✔' : '✘');
+        this._super(value ? '\u2714' : '\u2718');
     }
 });
 openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend({
