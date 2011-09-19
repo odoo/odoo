@@ -2625,7 +2625,8 @@ openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.exten
         this._super(value ? '✔' : '✘');
     }
 });
-openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldCharReadonly.extend({
+openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend({
+    template: 'FieldChar.readonly',
     init: function(view, node) {
         // lifted straight from r/w version
         var self = this;
@@ -2643,7 +2644,8 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldCharReadonly.ext
         value = value instanceof Array ? value[0] : value;
         var option = _(this.values)
             .detect(function (record) { return record[0] === value; });
-        this._super(option ? option[1] : this.values[0][1]);
+        this._super(value);
+        this.$element.find('div').text(option ? option[1] : this.values[0][1]);
     }
 });
 openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.extend({
