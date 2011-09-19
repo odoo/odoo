@@ -156,29 +156,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
-        var row_width = 100, column_width = 100;
-        if ((this.all_display_data).length >= this.NO_OF_COLUMNS) {
-            row_width = (100 / this.NO_OF_COLUMNS) * (this.all_display_data).length;
-        }
-        column_width = 100 / (this.all_display_data).length
-        if ((this.all_display_data).length <= this.NO_OF_COLUMNS) {
-            this.$element.find('#next-column').hide();
-            this.$element.find('#previous-column').hide();
-        }
-        else{
-            this.$element.find('#next-column').show();
-            this.$element.find('#previous-column').show();
-        }
-        this.$element.find(".oe_table_column" ).css("width", column_width +"%");
-        this.$element.find(".oe_kanban_row" ).css("width", row_width +"%");
-        this.$element.find('#next-column').click(function(event) {
-            event.preventDefault();
-            self.$element.find('.oe_kanban_view').animate({"scrollLeft" : "+=" + self.$element.find('.oe_column').width()}, 'slow');
-        });
-        this.$element.find('#previous-column').click(function(event) {
-            event.preventDefault();
-            self.$element.find('.oe_kanban_view').animate({scrollLeft:'-=' + self.$element.find('.oe_column').width()  }, 'slow');
-        });
     },
     do_record_group: function() {
         if (this.NO_OF_COLUMNS) {
@@ -345,7 +322,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             });
         }
         if (self.group_by.length > 0 && self.source_index.column && self.source_index.column != ui.item.parent().attr('id')) {
-            var value = ui.item.closest("div").attr("id");
+            var value = ui.item.closest("td").attr("id");
             if (value) {
                 var data_val = {};
                 var wirte_id = parseInt(ui.item.attr("id").split("_")[1]);
@@ -497,22 +474,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     do_hide: function () {
         this.$element.hide();
     }
-});
-
-openerp.web_kanban.KanbanRecord = openerp.web.Class.extend({
-    init: function (dataset, record_id, options) {
-        this.dataset = dataset;
-        this.record_id = record_id;
-        this.options = options;
-    },
-    on_render: function () {
-    },
-    on_update: function (values) {
-    },
-    on_delete: function () {
-    },
-    on_reload: function () {
-    },
 });
 };
 
