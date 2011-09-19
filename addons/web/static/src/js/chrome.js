@@ -806,8 +806,16 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     },
     do_show_secondary: function($sub_menu, $main_menu) {
         if (this.folded) {
-            var css = $main_menu.position();
+            var css = $main_menu.position(),
+                fold_width = this.$secondary_menu.width() + 2,
+                window_width = $(window).width();
             css.top += 33;
+            css.left -= Math.round(($sub_menu.width() - $main_menu.width()) / 2);
+            css.left = css.left < fold_width ? fold_width : css.left;
+            if ((css.left + $sub_menu.width()) > window_width) {
+                delete(css.left);
+                css.right = 1;
+            }
             $sub_menu.css(css);
         }
         $sub_menu.show();
