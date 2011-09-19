@@ -36,30 +36,28 @@ if not object.partner_id.opt_out: self.pool.get('email.template').send_mail(cr,
 &lt;div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); "&gt;
 
 &lt;p&gt;  Hello ${object.partner_address_id.name and ' ' or ''},&lt;/p&gt;  
-&lt;p&gt;  You can click on the following link to preview, print and pay invoice: &lt;br/&gt;
+&lt;p&gt;  You can click on the following link to preview purchase order: &lt;br/&gt;
     &lt;a href="${object._context.get('edi_web_purchase_url_view')}"&gt;${object._context.get('edi_web_purchase_url_view')} &lt;/a&gt;
 &lt;/p&gt;  
 
 
-&lt;p style="border-left: 1px solid #8e0000; margin-left: 30px;"&gt;  &lt;strong&gt;REFERENCES&lt;/strong&gt;&lt;br /&gt;   Order number: &lt;strong&gt;${object.name}&lt;/strong&gt;&lt;br /&gt;   Order amount: &lt;strong&gt;${object.amount_total} &lt;/strong&gt;&lt;br /&gt;   Confirm date: ${object.date_approve or 'n/a'}&lt;br /&gt;   Your contact: &lt;a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}"&gt;${object.validator.name}&lt;/a&gt;&lt;/p&gt;  
+&lt;p style="border-left: 1px solid #8e0000; margin-left: 30px;"&gt;  &lt;strong&gt;REFERENCES&lt;/strong&gt;&lt;br /&gt;   Order number: &lt;strong&gt;${object.name}&lt;/strong&gt;&lt;br /&gt;   Order amount: &lt;strong&gt;${object.amount_total} &lt;/strong&gt;&lt;br /&gt;   Order date: ${object.date_order or 'n/a'}&lt;br /&gt;   Your contact: &lt;a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}"&gt;${object.validator.name}&lt;/a&gt;&lt;/p&gt;  
 
-${object.company_id.paypal_account and "&lt;p&gt;It is possible to pay with Paypal: &lt;br/&gt;  &lt;a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s\"&gt;&lt;img src=\"https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif\" style=\"margin-left: 100px; border: 0px; padding: 1px; text-decoration: none;\"/&gt;&lt;/a&gt; &lt;/p&gt;"%(object.company_id.paypal_account, object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total) or ''}
 
 &lt;p&gt;  If you have any question, do not hesitate to reply directly to this e-mail.&lt;/p&gt;  &lt;p&gt;  Thank you for choosing OpenERP!&lt;br /&gt;  &lt;/p&gt;  &lt;div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-image: url(http://www.openerp.com/sites/default/files/red_gradient_bg.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; "&gt;  &lt;h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); "&gt;  &lt;strong&gt;${object.company_id.name}&lt;/strong&gt;&lt;/h3&gt;  &lt;/div&gt;  &lt;div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); "&gt;    &lt;div&gt;  Contact:&lt;a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}"&gt;${object.validator.name}&lt;/a&gt;&lt;/div&gt;  &lt;div&gt;  &lt;/div&gt;  &lt;/div&gt; &lt;/div&gt; &lt;p&gt;  &lt;/p&gt;
             </field>
 			<field name="body_text">
 Hello ${object.partner_address_id.name and ' ' or ''}, 
 
-You can click on the following link to preview, print and pay invoice:
+You can click on the following link to preview Purchase Order:
 
     ${object._context.get('edi_web_purchase_url_view') or 'n/a'} 
 
 Order Number: *${object.name}* 
 Amount: *${object.amount_total}* 
-Approve date: ${object.date_approve or 'n/a'} 
+Order date: ${object.date_order or 'n/a'} 
 Your contact: ${object.validator.name} ${object.validator.user_email and '&lt;%s&gt;'%(object.validator.user_email) or ''}
 
-${object.company_id.paypal_account and "It is possible to pay with Paypal: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s"%(object.company_id.paypal_account, object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total) or ''}
 
 If you have any question, do not hesitate to reply directly to this e-mail. 
 
