@@ -74,13 +74,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Resources Allocation">
-                    <group colspan="4" col="20">
+                    <group>
                         <field name="resource_id"/>
                         <field name="phase_id"/>
                         <field name="project_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter name="resource" string="Resource" icon="terp-personal" domain="[]" context="{'group_by':'resource_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
@@ -220,7 +220,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancelled','done');blue:state in ('pending')" string="Project Phases">
+                <tree colors="grey:state in ('cancelled','done');blue:state == 'pending'" string="Project Phases">
                     <field name="name"/>
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
@@ -266,8 +266,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Project Phases">
-                    <group colspan="4" col="20">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
+                    <group>
+                        <filter string="Current" domain="[('state','in',('open','draft','pending'))]"  name="current" help="Draft, In Progress and Pending Phases" icon="terp-check"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -280,7 +280,7 @@
                         <field name="date_end"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}" name="project"/>

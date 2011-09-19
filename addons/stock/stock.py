@@ -167,7 +167,7 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name"),
+        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name", store=True),
 
         'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
         'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),
@@ -309,7 +309,7 @@ class stock_location(osv.osv):
 
                     # Compute based on pricetype
                     # Choose the right filed standard_price to read
-                    amount_unit = product.price_get('standard_price', context)[product.id]
+                    amount_unit = product.price_get('standard_price', context=context)[product.id]
                     price = qty[product_id] * amount_unit
 
                     total_price += price
@@ -661,6 +661,7 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.picking").create(
@@ -891,7 +892,7 @@ class stock_picking(osv.osv):
         if type in ('in_invoice', 'in_refund'):
             # Take the user company and pricetype
             context['currency_id'] = move_line.company_id.currency_id.id
-            amount_unit = move_line.product_id.price_get('standard_price', context)[move_line.product_id.id]
+            amount_unit = move_line.product_id.price_get('standard_price', context=context)[move_line.product_id.id]
             return amount_unit
         else:
             return move_line.product_id.list_price
@@ -1205,7 +1206,7 @@ class stock_picking(osv.osv):
                             new_std_price = new_price
                         else:
                             # Get the standard price
-                            amount_unit = product.price_get('standard_price', context)[product.id]
+                            amount_unit = product.price_get('standard_price', context=context)[product.id]
                             new_std_price = ((amount_unit * product_avail[product.id])\
                                 + (new_price * qty))/(product_avail[product.id] + qty)
                         # Write the field according to price type field
@@ -1521,7 +1522,7 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
-        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
+        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
@@ -1558,10 +1559,18 @@ class stock_move(osv.osv):
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
     }
+    def _check_location(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context or {}):
+            if (record.state=='done') and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
+                return False
+        return True
+
     _constraints = [
         (_check_tracking,
             'You must assign a production lot for this product',
             ['prodlot_id']),
+        (_check_location, 'You can not move products from or to a location of the type view.',
+            ['location_id','location_dest_id']),
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
@@ -1756,6 +1765,16 @@ class stock_move(osv.osv):
         if loc_dest_id:
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
+
+    def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
+        """ On change of Scheduled Date gives a Move date.
+        @param date_expected: Scheduled Date 
+        @param date: Move Date
+        @return: Move Date
+        """
+        if not date_expected:
+            date_expected = time.strftime('%Y-%m-%d %H:%M:%S')
+        return {'value':{'date': date_expected}}
 
     def _chain_compute(self, cr, uid, moves, context=None):
         """ Finds whether the location has chained location type or not.
@@ -2057,7 +2076,7 @@ class stock_move(osv.osv):
             if context is None:
                 context = {}
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-            amount_unit = move.product_id.price_get('standard_price', currency_ctx)[move.product_id.id]
+            amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
             reference_amount = amount_unit * qty or 1.0
 
         return reference_amount, reference_currency_id
@@ -2260,7 +2279,7 @@ class stock_move(osv.osv):
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
+                self.log(cr, uid, move.id, "%s x %s %s" % (quantity, name, _("were scrapped")))
 
         self.action_done(cr, uid, res)
         return res
@@ -2443,7 +2462,7 @@ class stock_move(osv.osv):
                         new_std_price = new_price
                     else:
                         # Get the standard price
-                        amount_unit = product.price_get('standard_price', context)[product.id]
+                        amount_unit = product.price_get('standard_price', context=context)[product.id]
                         new_std_price = ((amount_unit * product.qty_available)\
                             + (new_price * qty))/(product.qty_available + qty)
 
@@ -2617,7 +2636,7 @@ class stock_inventory(osv.osv):
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
                              raise osv.except_osv(_('UserError'),
-                                                  _('You can not cancel inventory which has any account move with posted state.'))
+                                                  _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True

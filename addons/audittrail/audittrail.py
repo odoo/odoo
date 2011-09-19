@@ -58,7 +58,7 @@ class audittrail_rule(osv.osv):
     }
 
     _sql_constraints = [
-        ('model_uniq', 'unique (object_id)', """There is a rule defined on this object\n You can not define other on the same!""")
+        ('model_uniq', 'unique (object_id)', """There is a rule defined on this object\n You cannot define another one the same object!""")
     ]
     __functions = {}
 

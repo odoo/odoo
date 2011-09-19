@@ -744,7 +744,7 @@ class survey_request(osv.osv):
         if user_id:
             user_obj = self.pool.get('res.users')
             user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.address_id.email}}
+            return {'value': {'email': user.user_email}}
         return {}
 
 survey_request()

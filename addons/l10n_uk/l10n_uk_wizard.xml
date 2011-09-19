@@ -2,14 +2,40 @@
 <openerp>
     <data>
 
-        <record id="config_call_account_template_uk_minimal" model="ir.actions.todo">
+        <record id="view_wizard_multi_chart_uk" model="ir.ui.view">
             <field name="name">Generate Chart of Accounts from a Chart Template</field>
-            <field name="note">Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.
-    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template.</field>
-            <field name="action_id" ref="account.action_wizard_multi_chart"/>
+            <field name="model">wizard.multi.charts.accounts</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
+            <field name="arch" type="xml">
+              <data>
+                    <xpath expr="//form/group/group/separator" position="attributes">
+                        <attribute name="string">
+                        Generate Your UK Accounting Chart from a Chart Template
+                        </attribute>
+                    </xpath>
+                    <xpath expr="//form/group/group/label" position="attributes">
+                        <attribute name="string">SELECT 4 DIGIT ACCOUNTS.  This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/ Financial Accounts/Generate Chart of Accounts from a Chart Template.</attribute>
+                    </xpath>
+              </data>
+            </field>
+        </record>
+
+        <record id="action_wizard_multi_chart_uk" model="ir.actions.act_window">
+            <field name="name">Generate UK Chart of Accounts from a Chart Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.multi.charts.accounts</field>
+            <field name="view_id" ref="view_wizard_multi_chart_uk"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="l10n_uk_latest_wizard_id" model="ir.actions.todo">
+            <field name="action_id" ref="action_wizard_multi_chart_uk"/>
+            <field name="sequence">10</field>
+            <field name="restart">onskip</field>
             <field name="state">open</field>
-            <field name="type">special</field>
-            <field name="category_id" ref="account.category_accounting_configuration"/>
         </record>
 
     </data>

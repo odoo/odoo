@@ -40,7 +40,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group col="10" colspan="12">
+                    <group>
                         <filter icon="terp-go-year" string=" Year "
                             name="year"
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"

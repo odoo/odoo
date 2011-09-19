@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <openerp>
 <data>
 
@@ -14,29 +13,29 @@
             <form string="Asset category">
                 <field name="name"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                <separator string="Accounting information" colspan="4" />
+                <separator string="Accounting information" colspan="4"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
                 <group colspan="2" col="2">
-                    <separator string="Depreciation Dates" colspan="2" />
+                    <separator string="Depreciation Dates" colspan="2"/>
                     <field name="method_time"/>
                     <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
                     <field name="method_period"/>
                     <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                 </group>
                 <group colspan="2" col="2">
-                    <separator string="Depreciation Method" colspan="2" />
+                    <separator string="Depreciation Method" colspan="2"/>
                     <field name="method"/>
                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                    <field name="prorata" attrs="{'invisible':[('method','&lt;&gt;','linear')]}"/>
+                    <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
         	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
-        	    <separator string="Analytic information" colspan="4" />
+        	    <separator string="Analytic information" colspan="4"/>
         	    <newline/>
-        	    <field name="account_analytic_id" />
+        	    <field name="account_analytic_id"/>
         	</group>
                 <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
@@ -100,28 +99,22 @@
                     <field name="purchase_date"/>
                     <newline/>
                     <group colspan="2" col="2">
-                        <separator string="Depreciation Dates" colspan="2" />
+                        <separator string="Depreciation Dates" colspan="2"/>
                         <field name="method_time" on_change="onchange_method_time(method_time)"/>
                         <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
                         <field name="method_period"/>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                         <newline/>
-                        <button 
-                             name="%(action_asset_modify)d" 
-                             states="open" 
-                             string="Change Duration" 
-                             type="action"
-                             icon="terp-stock_effects-object-colorize" 
-                             colspan="2"/> 
+                        <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" colspan="2"/> 
                     </group>
                     <group colspan="2" col="2">
-                        <separator string="Depreciation Method" colspan="2" />
-                        <field name="method" on_change="onchange_method_time(method)"/>
+                        <separator string="Depreciation Method" colspan="2"/>
+                        <field name="method"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                        <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
+                        <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
                     </group>
                     <newline/>
-                    <separator string="" colspan="4" />
+                    <separator string="" colspan="4"/>
                     <field name="state" readonly="1" colspan="2"/>
                     <group colspan="2" col="2">
                        <button name="validate" states="draft" string="Confirm Asset" type="object" icon="terp-camera_test"/>
@@ -129,7 +122,7 @@
                     </group>
                  </page>
                  <page string="Depreciation board">
-                    <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph" >
+                    <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph">
                        <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
                           <field name="sequence" invisible="1"/>
@@ -235,7 +228,7 @@
                 <field name="user_id"/>
               </group>
               <group col="2" colspan="2">
-                <separator string="Depreciation Dates" colspan="2" />
+                <separator string="Depreciation Dates" colspan="2"/>
                 <field name="method_time"/>
                 <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
                 <field name="method_period"/>
@@ -297,10 +290,7 @@
     </record>
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
-    <menuitem
-        parent="menu_finance_assets"
-        id="menu_action_account_asset_asset_tree"
-        action="action_account_asset_asset_tree"/>
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_tree" action="action_account_asset_asset_tree"/>
       <record model="ir.actions.act_window" id="action_account_asset_asset_form">
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
@@ -309,17 +299,9 @@
         <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
-    <menuitem
-        parent="menu_finance_assets"
-        id="menu_action_account_asset_asset_form"
-        action="action_account_asset_asset_form"/>
+    <menuitem parent="menu_finance_assets" id="menu_action_account_asset_asset_form" action="action_account_asset_asset_form"/>
     
-    <act_window
-        id="act_entries_open"
-        name="Entries"
-        res_model="account.move.line"
-        src_model="account.asset.asset"
-        context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
+    <act_window id="act_entries_open" name="Entries" res_model="account.move.line" src_model="account.asset.asset" context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
     <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
@@ -329,10 +311,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-        parent="menu_finance_config_assets"
-        id="menu_action_account_asset_asset_list_normal"
-        action="action_account_asset_asset_list_normal"/>
+    <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
     
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_normal">
         <field name="name">Asset Categories</field>
@@ -345,10 +324,7 @@
         <field name="action_id" ref="action_account_asset_asset_form_normal"/>
         <field name="category_id" ref="account.category_accounting_configuration"/>
         <field name="sequence">3</field>
-        <field name="type">normal</field>
-        <field name="state">skip</field>
     </record>
     
 </data>
 </openerp>
-

@@ -21,23 +21,6 @@
         <menuitem action="crm_claim_categ_action" name="Categories"
             id="menu_crm_case_claim-act" parent="menu_config_claim" />
 
-        <!-- Claim Stage Search view -->
-
-        <record id="claim_stage_search" model="ir.ui.view">
-            <field name="name">Claim Stage - Search</field>
-            <field name="model">crm.case.stage</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="crm.crm_lead_stage_search"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='name']" position="before">
-                        <filter icon="terp-personal-" name="claim"
-                            string="Claim" domain="[('type', '=', 'claim')]" context="{'type' : 'claim'}"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <!-- Claim Stages -->
 
         <record id="crm_claim_stage_act" model="ir.actions.act_window">
@@ -45,13 +28,9 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="search_view_id" ref="claim_stage_search"/>
             <field name="context">{'search_default_claim':1}</field>
             <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
-
-         <menuitem action="crm_claim_stage_act" name="Stages"
-                id="menu_crm_claim_stage_act" parent="menu_config_claim" />
 
         <!-- Claims    -->
 
@@ -91,19 +70,14 @@
                     <group>
                         <field name="name" />
                         <field name="date"/>
-
-
                     </group>
-
                     <group colspan="4" col="6">
-
                         <field name="user_id"/>
                         <field name="section_id" widget="selection" />
-
                         <group colspan="2" col="4">
-                            <field name="stage_id" domain="[('type','=','claim')]"/>
+                            <field name="stage_id" domain="[('section_ids','=',section_id)]"/>
                             <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
-                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
+                            <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
                         </group>
                         <newline />
                         <field name="priority"/>
@@ -180,12 +154,12 @@
                                 <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                     <tree string="History">
                                         <field name="display_text" string="History Information"/>
-                                        <field name="history" invisible="1"/>
-                                        <button
-                                            string="Reply"
-                                            name="%(crm.action_crm_send_mail)d"
-                                            context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
-                                            icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
+                                        <field name="email_from" invisible="1"/>
+			                            <button
+			                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+			                                name="%(mail.action_email_compose_message_wizard)d"
+			                                context="{'mail.compose.message.mode':'reply'}"
+			                                icon="terp-mail-replied" type="action" />
                                     </tree>
                                     <form string="Communication &amp; History">
                                         <group col="4" colspan="4">
@@ -193,20 +167,18 @@
                                             <field name="date"/>
                                             <field name="email_to" widget="char" size="512"/>
                                             <field name="email_cc" widget="char" size="512"/>
-                                            <field name="name" colspan="4" widget="char" size="512"/>
-                                            <field name="history" invisible="1"/>
+                                            <field name="subject" colspan="4" widget="char" size="512"/>
                                         </group>
                                         <notebook colspan="4">
                                             <page string="Details">
-                                                <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                    <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                    <button colspan="4"
-                                                        string="Reply"
-                                                        name="%(crm.action_crm_send_mail)d"
-                                                        context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
-                                                        icon="terp-mail-replied" type="action" />
+                                                <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                                    <field name="body_text" colspan="4" nolabel="1" height="250"/>
+			                                        <button colspan="4" string="Reply"
+			                                            name="%(mail.action_email_compose_message_wizard)d"
+			                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+			                                            icon="terp-mail-replied" type="action"/>
                                                 </group>
-                                                <group attrs="{'invisible': [('history', '=', True)]}">
+                                                <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                     <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                                 </group>
                                             </page>
@@ -220,10 +192,9 @@
                                     name="%(crm.action_crm_add_note)d"
                                     context="{'model': 'crm.lead' }"
                                     icon="terp-document-new" type="action" />
-                                <button string="Send New Email"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'new', 'model': 'crm.claim'}"
-                                    icon="terp-mail-message-new" type="action" />
+			                    <button string="Send New Email"
+			                        name="%(mail.action_email_compose_message_wizard)d"
+			                        icon="terp-mail-message-new" type="action"/>
                             </page>
                         </notebook>
                     </group>
@@ -256,21 +227,21 @@
                 <search string="Search Claims">
                     <filter icon="terp-check" string="Current" name="current"
                         domain="[('state','in',('draft', 'open'))]"
-                        separator="1" help="Draft and Open Claims" />
+                        help="Draft and Open Claims" />
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"
-                        separator="1" help="In Progress Claims"
+                        help="In Progress Claims"
                     />
                     <filter icon="terp-gtk-media-pause"
                         string="Pending"
                         domain="[('state','=','pending')]"
-                        separator="1" help="All pending Claims"
+                        help="All pending Claims"
                     />
                     <separator orientation="vertical"/>
-                    <field name="name" select='1'/>
-                    <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id" widget="selection">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Claims" />

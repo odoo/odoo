@@ -39,7 +39,11 @@ Allows to automatically select analytic accounts based on criterions:
     'images'   : ['images/analytic_defaults.jpeg'],
     'depends'   : ['sale'],
     'init_xml'  : [],
-    'update_xml': ['security/ir.model.access.csv', 'account_analytic_default_view.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv', 
+        'security/account_analytic_default_security.xml', 
+        'account_analytic_default_view.xml'
+    ],
     'demo_xml'  : [],
     'installable': True,
     'active': False,

@@ -2,10 +2,6 @@
 <openerp>
     <data>
 
-        <record id="note_project_manager_type" model="board.note.type">
-            <field name="name">Project</field>
-        </record>
-
         <!-- My task -->
         <record id="view_task_tree" model="ir.ui.view">
             <field name="name">project.task.tree</field>
@@ -79,13 +75,6 @@
             <field name="view_id" ref="view_task_tree"/>
         </record>
 
-        <record id="action_view_board_note_tree" model="ir.actions.act_window">
-            <field name="name">Public Notes</field>
-            <field name="res_model">board.note</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','Project')]</field>
-        </record>
         <record id="board_project_form" model="ir.ui.view">
             <field name="name">board.project.form</field>
             <field name="model">board.board</field>
