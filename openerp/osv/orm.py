@@ -2930,7 +2930,7 @@ class orm(orm_template):
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                                    cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
+                                    cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
                                     self.__schema.debug("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !",
                                         self._table, k, f_pg_type, f._type, newname)
 
@@ -3017,7 +3017,7 @@ class orm(orm_template):
                         if not isinstance(f, fields.function) or f.store:
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                            cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
+                            cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
                             self.__schema.debug("Table '%s': added column '%s' with definition=%s",
                                 self._table, k, get_pg_type(f)[1])
 
@@ -3100,7 +3100,7 @@ class orm(orm_template):
 
     def _create_table(self, cr):
         cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
-        cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
+        cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
         self.__schema.debug("Table '%s': created", self._table)
 
 
@@ -3501,7 +3501,7 @@ class orm(orm_template):
         res = []
         if len(fields_pre):
             def convert_field(f):
-                f_qual = "%s.%s" % (self._table, f) # need fully-qualified references in case len(tables) > 1
+                f_qual = '%s."%s"' % (self._table, f) # need fully-qualified references in case len(tables) > 1
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
