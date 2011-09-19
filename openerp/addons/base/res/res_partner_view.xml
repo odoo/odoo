@@ -369,61 +369,66 @@
                     <field name="function"/>
                     <field name="email"/>
                     <field name="phone"/>
-                        <templates>
-                            <t t-name="kanban-box">
-                                <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
-                                <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-                                    <div class="oe_kanban_box oe_kanban_color_border">
-                                        <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
                                             <tr>
                                                 <td class="oe_kanban_title1" align="left" valign="middle">
                                                     <field name="name"/>
                                                 </td>
                                                 <td valign="top" width="22">
-                                                    <img t-att-src="kanban_gravatar(record.name.value, 22)" class="oe_kanban_gravatar"/>
+                                                    <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
                                                 </td>
                                             </tr>
                                         </table>
-                                        <!--  Middale part -->
-                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                            <div class="oe_kanban_title2">
-                                                <field name="title"/>
-                                                <t t-if="record.title.raw_value &amp;&amp; record.country.raw_value">,</t>
-                                                <field name="country"/>
-                                            </div>
-                                            <div>
-                                                <field name="subname"/>
-                                                <t t-if="record.subname.raw_value &amp;&amp; record.function.raw_value">,</t>
-                                                <field name="function"/>
-                                            </div>
-                                            <div class="oe_kanban_small">
-                                                <i>
-                                                <field name="email"/>
-                                                <t t-if="record.email.raw_value &amp;&amp; record.phone.raw_value">,</t>
-                                                <field name="phone"/>
-                                                </i>
-                                            </div>
-                                        </div>
-                                        <!-- Middale part over -->
-                                        <!-- last pannle -->
-                                        <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                            <div class="oe_kanban_left">
-                                                <a string="Edit" icon="gtk-edit" type="edit" />
-                                                <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                                <a string="Send An Email" t-att-href="'mailto:'+record.email.value">
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" width="22" align="left">
+                                                    <img src="/web/static/src/img/persons.png"/>
+                                                </td>
+                                                <td valign="top" align="left">
+                                                    <div class="oe_kanban_title2">
+                                                        <field name="title"/>
+                                                        <t t-if="record.title.raw_value &amp;&amp; record.country.raw_value">,</t>
+                                                        <field name="country"/>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <field name="subname"/>
+                                                        <t t-if="record.subname.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                        <field name="function"/>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <i><field name="email"/>
+                                                        <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                        <field name="phone"/></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
                                                 <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
-                                                </a>
-                                            </div>                                            
-                                            <br class="oe_kanban_clear"/>
+                                            </a>
                                         </div>
-                                        <!-- last pannle over -->
+                                        <br class="oe_kanban_clear"/>
                                     </div>
                                 </div>
-                            </t>
-                        </templates>
-                    </kanban>
-                </field>
-            </record>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
