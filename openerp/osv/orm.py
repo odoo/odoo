@@ -600,17 +600,26 @@ class orm_template(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # structure:
+    #  { 'parent_model': 'm2o_field', ... }
     _inherits = {}
+
     # Mapping from inherits'd field name to triple (m, r, f)
     # where m is the model from which it is inherits'd,
     # r is the (local) field towards m,
     # and f is the _column object itself.
+    # example:
+    #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent' ,
+    #                   field_column_obj), ... }
     _inherit_fields = {}
+
     # Mapping field name/column_info object
     # This is similar to _inherit_fields but:
     # 1. includes self fields,
     # 2. uses column_info instead of a triple.
     _all_columns = {}
+
     _table = None
     _invalids = set()
     _log_create = False
@@ -3303,7 +3312,7 @@ class orm(orm_template):
                         if f == order:
                             ok = False
                 if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
+                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
                     self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
@@ -4246,44 +4255,52 @@ class orm(orm_template):
 
            :return: [(priority, model_name, [record_ids,], [function_fields,])]
         """
-        # FIXME: rewrite, cleanup, use real variable names
-        # e.g.: http://pastie.org/1222060
-        result = {}
-        fncts = self.pool._store_function.get(self._name, [])
-        for fnct in range(len(fncts)):
-            if fncts[fnct][3]:
-                ok = False
-                if not fields:
-                    ok = True
-                for f in (fields or []):
-                    if f in fncts[fnct][3]:
-                        ok = True
-                        break
-                if not ok:
-                    continue
+        if fields is None: fields = []
+        stored_functions = self.pool._store_function.get(self._name, [])
 
-            result.setdefault(fncts[fnct][0], {})
+        # use indexed names for the details of the stored_functions:
+        model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
 
+        # only keep functions that should be triggered for the ``fields``
+        # being written to.
+        to_compute = [f for f in stored_functions \
+                if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
+
+        mapping = {}
+        for function in to_compute:
             # use admin user for accessing objects having rules defined on store fields
-            ids2 = fncts[fnct][2](self, cr, ROOT_USER_ID, ids, context)
-            for id in filter(None, ids2):
-                result[fncts[fnct][0]].setdefault(id, [])
-                result[fncts[fnct][0]][id].append(fnct)
-        dict = {}
-        for object in result:
-            k2 = {}
-            for id, fnct in result[object].items():
-                k2.setdefault(tuple(fnct), [])
-                k2[tuple(fnct)].append(id)
-            for fnct, id in k2.items():
-                dict.setdefault(fncts[fnct[0]][4], [])
-                dict[fncts[fnct[0]][4]].append((fncts[fnct[0]][4], object, id, map(lambda x: fncts[x][1], fnct)))
-        result2 = []
-        tmp = dict.keys()
-        tmp.sort()
-        for k in tmp:
-            result2 += dict[k]
-        return result2
+            target_ids = [id for id in function[id_mapping_fnct_](self, cr, ROOT_USER_ID, ids, context) if id]
+
+            # the compound key must consider the priority and model name
+            key = (function[priority_], function[model_name_])
+            for target_id in target_ids:
+                mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+
+        # Here mapping looks like:
+        # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
+        #   (20, 'model_a') : { target_id2: [ (function_3_tuple, function_4_tuple) ], ... }
+        #   (99, 'model_a') : { target_id1: [ (function_5_tuple, function_6_tuple) ], ... }
+        # }
+
+        # Now we need to generate the batch function calls list
+        # call_map =
+        #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
+        call_map = {}
+        for ((priority,model), id_map) in mapping.iteritems():
+            functions_ids_maps = {}
+            # function_ids_maps =
+            #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
+            for id, functions in id_map.iteritems():
+                functions_ids_maps.setdefault(tuple(functions), []).append(id)
+            for functions, ids in functions_ids_maps.iteritems():
+                call_map.setdefault((priority,model),[]).append((priority, model, ids,
+                                                                 [f[func_field_to_compute_] for f in functions]))
+        ordered_keys = call_map.keys()
+        ordered_keys.sort()
+        result = []
+        if ordered_keys:
+            result = reduce(operator.add, (call_map[k] for k in ordered_keys))
+        return result
 
     def _store_set_values(self, cr, uid, ids, fields, context):
         """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
