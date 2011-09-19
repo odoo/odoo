@@ -21,7 +21,8 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@string='Not Invoiced']" position="after">
+            <xpath expr="/search/group/filter[@string='Not invoices']" position="after">
+             <separator orientation="vertical"/>
              <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
