@@ -157,12 +157,20 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         var row_width = 100, column_width = 100;
-        if ((this.all_display_data).length > 1){
+        if ((this.all_display_data).length >= this.NO_OF_COLUMNS) {
             row_width = (100 / this.NO_OF_COLUMNS) * (this.all_display_data).length;
-            column_width = 100 / (this.all_display_data).length
         }
-        self.$element.find(".oe_table_column" ).css("width", column_width +"%");
-        self.$element.find(".oe_kanban_row" ).css("width", row_width +"%");
+        column_width = 100 / (this.all_display_data).length
+        if ((this.all_display_data).length <= this.NO_OF_COLUMNS) {
+            this.$element.find('#next-column').hide();
+            this.$element.find('#previous-column').hide();
+        }
+        else{
+            this.$element.find('#next-column').show();
+            this.$element.find('#previous-column').show();
+        }
+        this.$element.find(".oe_table_column" ).css("width", column_width +"%");
+        this.$element.find(".oe_kanban_row" ).css("width", row_width +"%");
         this.$element.find('#next-column').click(function(event) {
             event.preventDefault();
             self.$element.find('.oe_kanban_view').animate({"scrollLeft" : "+=" + self.$element.find('.oe_column').width()}, 'slow');
