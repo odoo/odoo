@@ -121,11 +121,12 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id" />
                     <field name="exclusive" />
