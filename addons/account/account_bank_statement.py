@@ -55,23 +55,21 @@ class account_bank_statement(osv.osv):
         statements = self.browse(cursor, user, ids, context=context)
         for statement in statements:
             res[statement.id] = statement.balance_start
-            currency_id = statement.currency.id
+            stmt_currency_id = statement.currency.id
+            stmt_account_ids = (statement.journal_id.default_debit_account_id.id,
+                                statement.journal_id.default_credit_account_id.id)
+            # add debits and credits of move lines related to the statement's journal
             for line in statement.move_line_ids:
-                if line.debit > 0:
-                    if line.account_id.id == \
-                            statement.journal_id.default_debit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.debit, context=context)
-                else:
-                    if line.account_id.id == \
-                            statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] -= res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.credit, context=context)
+                if line.account_id.id in stmt_account_ids:
+                    if stmt_currency_id == company_currency_id:
+                        res[statement.id] += line.debit - line.credit
+                    else:
+                        res[statement.id] += line.amount_currency
+            # add amounts of statement lines with no corresponding move lines
             if statement.state == 'draft':
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
+        
         for r in res:
             res[r] = round(res[r], 2)
         return res
