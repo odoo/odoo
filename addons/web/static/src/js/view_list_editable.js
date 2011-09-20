@@ -184,8 +184,10 @@ openerp.web.list_editable = function (openerp) {
                     form_template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets
                 });
-                self.edition_form.appendTo($("#" + $new_row.attr('id')));
+                self.edition_form.appendTo($new_row);
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
+                    // remove shitty intermediate inserted by EmptyComponent
+                    $new_row.children().children().unwrap();
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('td')
                           .addClass('oe-field-cell')
