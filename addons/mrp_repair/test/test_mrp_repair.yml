@@ -145,3 +145,63 @@
 -
   !python {model: mrp.repair}: |
     self.onchange_product_id(cr, uid, [ref('mrp_repair_rma0')], product_id=False)
+- |
+  Cancels repair order.
+-
+  !python {model: mrp.repair}: |
+    self.action_cancel(cr, uid, [ref('mrp_repair_rma0')], context=None)
+- |
+  Cancels repair order when it is in 'Draft' state
+-
+  !python {model: mrp.repair}: |
+    self.action_cancel_draft(cr, uid, [ref('mrp_repair_rma0')])
+- |
+  Writes repair order state to 'Ready'.
+-
+  !python {model: mrp.repair}: |
+    self.action_repair_ready(cr, uid, [ref('mrp_repair_rma0')], context=None)
+- |
+  Writes repair order state to 'Exception in invoice'
+-
+  !python {model: mrp.repair}: |
+    self.action_invoice_cancel(cr, uid, [ref('mrp_repair_rma0')], context=None)
+- |
+  Writes repair order state to 'Ready' if invoice method is Before repair.
+-
+  !python {model: mrp.repair}: |
+    self.action_invoice_end(cr, uid, [ref('mrp_repair_rma0')], context=None)
+- |
+  Creates stock move and picking for repair order
+-
+  !python {model: mrp.repair}: |
+    self.wkf_repair_done(cr, uid, [ref('mrp_repair_rma0')])
+- |
+  On change of move id sets values of guarantee limit, source location, destination location, partner and partner address.
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    prod_id=False
+    move_id=repair_id.move_id
+    self.onchange_move_id(cr, uid, [ref('mrp_repair_rma0')], prod_id, move_id)
+- |
+  On change of operation type it sets source location, destination location and to invoice field
+-
+  !python {model: mrp.repair.line}: |
+    guarantee_limit=False
+    self.onchange_operation_type(cr, uid, [ref('mrp_repair_rma0')], type, guarantee_limit)
+- |
+  On change of partner sets the values of partner address, partner invoice address and pricelist.
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    part=False
+    address_id=False
+    self.onchange_partner_id(cr, uid, [ref('mrp_repair_rma0')], part, address_id)
+- |
+  On change of production lot sets the values of source location, destination location, move and guarantee limit
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    lot=False
+    product_id=repair_id.product_id
+    self.onchange_lot_id(cr, uid, [ref('mrp_repair_rma0')], lot, product_id)
