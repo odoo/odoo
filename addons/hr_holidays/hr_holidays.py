@@ -204,14 +204,16 @@ class hr_holidays(osv.osv):
 
     def onchange_sec_id(self, cr, uid, ids, status, context=None):
         warning = {}
+        obj_holiday_status = self.pool.get('hr.holidays.status')
         if status:
-            brows_obj = self.pool.get('hr.holidays.status').browse(cr, uid, status, context=context)
-            if brows_obj.categ_id and brows_obj.categ_id.section_id and not brows_obj.categ_id.section_id.allow_unlink:
+            holiday_status = obj_holiday_status.browse(cr, uid, status, context=context)
+            double_validation = holiday_status.double_validation
+            if holiday_status.categ_id and holiday_status.categ_id.section_id and not holiday_status.categ_id.section_id.allow_unlink:
                 warning = {
                     'title': "Warning for ",
                     'message': "You won\'t be able to cancel this leave request because the CRM Sales Team of the leave type disallows."
                 }
-        return {'warning': warning}
+        return {'warning': warning, 'value': {'double_validation': double_validation}}
 
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
