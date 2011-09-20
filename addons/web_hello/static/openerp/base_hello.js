@@ -13,6 +13,13 @@ openerp.web.SearchView = openerp.web.SearchView.extend({
 
 // here you may tweak globals object, if any, and play with on_* or do_* callbacks on them
 
+openerp.web.Login = openerp.web.Login.extend({
+    start: function() {
+        console.log('Hello there');
+        this._super.apply(this,arguments);
+    }
+});
+
 };
 
 // vim:et fdc=0 fdl=0:

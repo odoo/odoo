@@ -2,6 +2,7 @@
     "name" : "web",
     "depends" : [],
     'active': True,
+    'web_auto_load': True,
     'js' : [
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
