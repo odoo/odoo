@@ -783,6 +783,9 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     },
     start: function() {
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
+        this.reload();
+    },
+    reload: function() {
         this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
