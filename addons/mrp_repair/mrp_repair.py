@@ -105,8 +105,6 @@ class mrp_repair(osv.osv):
         return res
 
     def _get_lines(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for line in self.pool.get('mrp.repair.line').browse(cr, uid, ids, context=context):
             result[line.repair_id.id] = True

@@ -14,6 +14,7 @@
     product_qty: 5.0
     product_uom: product.product_uom_unit
     product_uos_qty: 5.0
+    allow_reorder: True
 -
   I am computing the data.
 -
@@ -126,13 +127,6 @@
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
-    assert order_id, _('Work order not started yet!')
--
-  I check that the related work order is in progress state.
--
-  !python {model: mrp.production.workcenter.line}: |
-    from tools.translate import _
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
@@ -163,3 +157,8 @@
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','done')])
     assert order_id, _('Work order not done yet!')
+-
+  Calculates start date for stock moves finding interval from resource calendar.
+-
+  !python {model: mrp.production}: |
+    self._move_pass(cr, uid, [ref('mrp_production_mo0')], context=None)
