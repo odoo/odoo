@@ -129,6 +129,19 @@
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
     assert order_id, _('Work order not started yet!')
 -
+  I check that the related work order is in progress state.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
+    order_data = self.browse(cr, uid, order_id[0])
+    if order_data:
+      wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_data.id, 'button_start_working', cr)
+    else:
+      assert order_id, _('Work order not started yet!')
+-
   I am creating a mrp.product.produce record.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce_0}:
