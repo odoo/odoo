@@ -105,7 +105,11 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            bg = n.node.gray ? bg + "-gray" : bg;
 	            img_src = '/web_process/static/src/img/'+ bg + '.png';
 	            
-	            r['image'](img_src, n.node.x, n.node.y,150, 100).attr({"clip-rect": clip_rect});
+	            r['image'](img_src, n.node.x, n.node.y,150, 100)
+	            		.attr({"clip-rect": clip_rect})
+	            		.mousedown(function(){
+	            			return false;
+	            		});
 	            
 	            //Node
 	            process_node = r['rect'](n.node.x, n.node.y, 150, 100);
@@ -143,9 +147,9 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            	.push(process_node)
 	            	.push(process_node_text)
 	            	.push(process_node_desc);
-	            process_node.mousedown(function() {
+	            process_set.mousedown(function() {
 	            	return false;
-	            })
+	            });
 	            return process_set;
 			};
 			
