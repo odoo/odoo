@@ -2637,6 +2637,79 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
+class account_financial_report(osv.osv):
+    _name = "account.financial.report"
+    _description = "Account Report"
+
+    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            level = 0
+            if report.parent_id:
+                level = report.parent_id.level + 1
+            res[report.id] = level
+        return res
+
+    def _get_children_by_order(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            res.append(id)
+            ids2 = self.search(cr, uid, [('parent_id', '=', id)], order='sequence ASC', context=context)
+            res += self._get_children_by_order(cr, uid, ids2, context=context)
+        return res
+
+    def _get_balance(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        res_all = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            balance = 0.0
+            if report.id in res_all:
+                balance = res_all[report.id]
+            elif report.type == 'accounts':
+                # it's the sum of balance of the linked accounts
+                for a in report.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_report' and report.account_report_id:
+                # it's the amount of the linked report
+                res2 = self._get_balance(cr, uid, [report.account_report_id.id], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            elif report.type == 'sum':
+                # it's the sum of balance of the children of this account.report
+                #for child in report.children_ids:
+                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            res[report.id] = balance
+            res_all[report.id] = balance
+        return res
+
+    _columns = {
+        'name': fields.char('Report Name', size=128, required=True),
+        'parent_id': fields.many2one('account.financial.report', 'Parent'),
+        'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
+        'sequence': fields.integer('Sequence'),
+        'type': fields.selection([
+            ('sum','Sum'),
+            ('accounts','Accounts'),
+            ('account_report','Account Report'),
+            ],'Type'),
+        'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
+        'note': fields.text('Notes'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Account Report'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'display_detail': fields.boolean('Display the account list'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+    }
+
+    _defaults = {
+        'type': 'sum',
+    }
+
+account_financial_report()
+
     # Multi charts of Accounts wizard
 
 class wizard_multi_charts_accounts(osv.osv_memory):
