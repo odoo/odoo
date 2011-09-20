@@ -25,7 +25,7 @@
       - product_id: product.product_product_pc3
         product_qty: 10.0
         product_uom: 1
-        price_unit: 200.0
+        price_unit: 20.0
         name: 'medium pc'
         date_planned: '2011-08-31'
 -
@@ -112,7 +112,15 @@
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list is not imported"
     assert order_new.amount_total == 350, "Amount total is not same"
     assert order_new.amount_untaxed == 350, "untaxed amount is not same"
+    assert len(order_new.order_line) == 2, "Purchase lines are not same"
     for purchase_line in order_new.order_line:
-        assert purchase_line.name in ['basic pc','medium pc'], "name of product is not in order"
-        assert purchase_line.product_id.name in ['Basic PC','Medium PC'], "name of product is not in order"
-        assert purchase_line.date_order == '2011-09-13' , "date of order is not same"
+        if purchase_line.name == 'basic pc':
+            assert purchase_line.product_uom.name == "PCE" , "uom is not same"
+            assert purchase_line.price_unit == 150 , "price unit is not same"
+            assert purchase_line.product_qty == 1 , "product qty is not same"
+        elif purchase_line.name == 'medium pc':
+            assert purchase_line.product_uom.name == "PCE" , "uom is not same"
+            assert purchase_line.price_unit == 20 , "price unit is not same"
+            assert purchase_line.product_qty == 10 , "product qty is not same"
+        else:
+            assert 'wrong product imported in purchase lines'
