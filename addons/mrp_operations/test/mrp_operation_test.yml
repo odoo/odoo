@@ -15,19 +15,6 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 5.0
 -
-  I create a production order.
--
-  !record {model: mrp.production, id: mrp_production_mo2}:
-    company_id: base.main_company
-    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
-    location_src_id: stock.stock_location_stock
-    name: MO/012345678
-    product_id: product.product_product_pc1
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 5.0
--
   I am computing the data.
 -
   !python {model: mrp.production}: |
@@ -36,21 +23,9 @@
       [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
       })
 -
-  I am computing the data.
--
-  !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo2")], {"lang": "en_US", "tz":
-      False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
-      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
-      })
--
   Now I confirm my production order.
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
--
-  Now I confirm my production order.
--
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo2}
 -
   I check that there is one Work order generated related to my production order.
 -
@@ -84,64 +59,3 @@
   Then I cancel The Manufacturing order.
 -
   !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
--
-  I check that there is one Work order generated related to my production order.
--
-  !python {model: mrp.production.workcenter.line}: |
-    from tools.translate import _
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo2')),('state','=','draft')])
-    assert order_id, _('No Work order!')
--
-  The scheduler runs.
--
-  !function {model: procurement.order, name: run_scheduler}:
-    - model: procurement.order
-      search: "[('state','=','confirmed')]"
--
-  I check that my production order and its related work order is in done state.
--
-  !python {model: mrp.production.workcenter.line}: |
-    from tools.translate import _
-    prod_obj = self.pool.get('mrp.production')
-    prod_order_ids = prod_obj.search(cr, uid, [('origin','like','%MO/0123456')])
-    assert prod_order_ids, _('Workorder not found')
-    workorder_id = self.search(cr, uid, [('production_id','=', prod_order_ids[0])])
-    workorder_bro = self.browse(cr, uid, workorder_id[0])
-    assert workorder_bro.state == 'done', _('Work order is not done! It is %s') % workorder_bro.state
--
-  Now I check my original production order is now ready.
--
-  !python {model: mrp.production}: |
-    from tools.translate import _
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    prod_ids = self.search(cr, uid, [('id','=',ref('mrp_production_mo2')),('state','=','ready')])
-    order_data = self.browse(cr, uid, prod_ids[0])
-    if order_data:
-      wf_service.trg_validate(uid, 'mrp.production', order_data.id, 'button_produce', cr)
-    else:
-      assert prod_ids, _('Production order is not ready!')
--
-  I check that both internal pickings are done.
--
-  !python {model: stock.picking}: |
-    from tools.translate import _
-    pick_ids = self.search(cr, uid, [('state','=','done'),('type','=','internal')])
-    assert pick_ids, _('Internal pickings are not done!')
--
-  Now I start my first production order.
--
-  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
--
-  I check that the related work order is in progress state.
--
-  !python {model: mrp.production.workcenter.line}: |
-    from tools.translate import _
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo2')),('state','=','startworking')])
-    order_data = self.browse(cr, uid, order_id[0])
-    if order_data:
-      wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order_data.id, 'button_pause', cr)
-    else:
-      assert order_id, _('Work order not started yet!')
