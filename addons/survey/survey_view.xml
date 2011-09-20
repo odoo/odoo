@@ -261,7 +261,8 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
-                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                        <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
+                        <filter icon="terp-gtk-go-back-rtl" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
                         <separator orientation="vertical"/>
                         <field name="title"/>
                         <field name="type" widget="selection"/>
