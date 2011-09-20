@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-09-13 10:07+0000\n"
-"Last-Translator: Quentin THEURET <Unknown>\n"
+"PO-Revision-Date: 2011-09-16 09:22+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-14 05:01+0000\n"
-"X-Generator: Launchpad (build 13921)\n"
+"X-Launchpad-Export-Date: 2011-09-17 05:23+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -1103,10 +1103,11 @@ msgstr ""
 "* \"Inventaire\": emplacement virtuel servant de contrepartie aux mouvements "
 "servant à corriger les niveaux des stocks lors des inventaires physiques\n"
 "                       \n"
-"* \"Besoin\" : emplacement virtuel servant de contrepartie temporaire pour "
-"les besoins de stock lorsque l'emplacement d'origine (fournisseur ou "
-"production interne) n'est pas connu à l'avance. Cet emplacement est "
-"normalement vide lorsque le planificateur termine son exécution\n"
+"* \"Approvisionnement\" : emplacement virtuel servant de contrepartie "
+"temporaire pour les besoins de stock lorsque l'emplacement d'origine "
+"(fournisseur ou production interne) n'est pas connu à l'avance. Cet "
+"emplacement est normalement vide lorsque le planificateur termine son "
+"exécution\n"
 "                       \n"
 "* \"Fabrication\" : emplacement virtuel servant de contrepartie pour les "
 "opérations de fabrication : les matières premières y sont consommées et les "
@@ -2605,7 +2606,7 @@ msgstr "Journal de stock"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Besoin"
+msgstr "Approvisionnement"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -3850,7 +3851,7 @@ msgid ""
 msgstr ""
 "Pour le produit actuel, cet emplacement sera utilisé à la place de "
 "l'emplacement par défaut comme emplacement d'origine des mouvements de stock "
-"générés par les besoins de stock."
+"générés par les approvisionnements."
 
 #. module: stock
 #: code:addons/stock/stock.py:1316
