@@ -70,9 +70,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         $(xml).each(function() {
             att_list = this.attributes;
             att_list = _.select(att_list, function(attrs){
-                if(attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index"){
-                    name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';} 
-                });
+                if (tag != 'button'){
+                   if(attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index"){
+                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';} 
+                }else{
+                    if(attrs.nodeName == "name"){
+                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';} 
+                }
+                });                
                 name1+= ">";
          });  
         obj.name = name1;
@@ -138,7 +143,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     return self.edit_view(one_object);
                 });
     },
-    edit_view : function(o){
+    edit_view : function(one_object){
         var self = this;
             this.dialog = new openerp.web.Dialog(this,{
                 modal: true,
@@ -160,9 +165,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 
             this.dialog.start().open();
             this.dialog.$element.html(QWeb.render('view_editor', {
-            'data': o,
+            'data': one_object,
             }));
+
+            $("tr[id^='viewedit-']").click(function() {
+                $("tr[id^='viewedit-']").removeClass('ui-selected');
+                $(this).addClass('ui-selected');
+            });
+
+            $("img[id^='parentimg-']").click(function() {
+                if ($(this).attr('src') == '/web/static/src/img/collapse.gif'){
+                    $(this).attr('src', '/web/static/src/img/expand.gif');
+                }else{
+                    $(this).attr('src', '/web/static/src/img/collapse.gif');
+                }
+            });
     }
+
         
 });
 };
