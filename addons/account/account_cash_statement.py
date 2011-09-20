@@ -119,39 +119,6 @@ class account_cash_statement(osv.osv):
             res2[statement.id] = encoding_total
         return res2
 
-    def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-        res = {}
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        statements = self.browse(cursor, user, ids, context=context)
-        for statement in statements:
-            res[statement.id] = statement.balance_start
-            currency_id = statement.currency.id
-            for line in statement.move_line_ids:
-                if line.debit > 0:
-                    if line.account_id.id == \
-                            statement.journal_id.default_debit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.debit, context=context)
-                else:
-                    if line.account_id.id == \
-                            statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] -= res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.credit, context=context)
-
-            if statement.state in ('draft', 'open'):
-                for line in statement.line_ids:
-                    res[statement.id] += line.amount
-        for r in res:
-            res[r] = round(res[r], 2)
-        return res
-
     def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')
@@ -218,18 +185,11 @@ class account_cash_statement(osv.osv):
         return res
 
     _columns = {
-        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm': [('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
-        'state': fields.selection(
-            [('draft', 'Draft'),
-            ('confirm', 'Closed'),
-            ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
         'total_entry_encoding': fields.function(_get_sum_entry_encoding, store=True, string="Cash Transaction", help="Total cash transactions"),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, store=True, string='Balance', help="Closing balance based on Starting Balance and Cash Transactions"),
         'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
-        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
     }
     _defaults = {
@@ -247,7 +207,7 @@ class account_cash_statement(osv.osv):
         ]
         open_jrnl = self.search(cr, uid, sql)
         if open_jrnl:
-            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal'))
+            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal!'))
 
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)

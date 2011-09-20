@@ -8,12 +8,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas Categories">
-                <group col="10" colspan="4">
+                <group>
                     <field name="name" string="Category"/>
                     <field name="parent_id" widget="selection"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="14">
+                <group expand="0" string="Group By...">
                     <filter string="Parent Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'parent_id'}"/>
                 </group>
             </search>
@@ -169,12 +169,12 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas vote">
-                <group col="10" colspan="4">
+                <group>
                     <field name="idea_id" widget="selection"/>
                     <field name="user_id" string="User"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="14">
+                <group expand="0" string="Group By...">
                     <filter string="User" name="user" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Idea" icon="terp-idea" domain="[]" context="{'group_by':'idea_id'}"/>
@@ -263,7 +263,7 @@
         <field name="model">idea.idea</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-        <tree colors="blue:state in ('draft');black:state in ('open','close');gray:state in('cancel')" string="Ideas">
+        <tree colors="blue:state == 'draft';black:state in ('open','close');gray:state == 'cancel'" string="Ideas">
             <field name="name"/>
             <field name="category_id"/>
             <field name="user_id"/>
@@ -288,17 +288,17 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Ideas">
-                <group col="10" colspan="4">
+                <group>
                     <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
                     <filter icon="terp-camera_test" string="Accepted"
                         domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
-                    <field name="name" select="1"/>
-                    <field name="category_id" select="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="user_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="12" col="10">
+                <group expand="0" string="Group By...">
                     <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-stock_symbol-selection" string="Category" help="By Idea Category" context="{'group_by':'category_id'}"/>

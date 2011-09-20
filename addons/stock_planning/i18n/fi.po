@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-16 04:39+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:51+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -33,6 +33,8 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Valitse laskeaksesi varatopaikat vain valitussa varastossa. Jos ei valittu, "
+"laskenta tehdään tuleville, varasto ja lähtöpaikoille varastossa."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -70,6 +72,8 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Suunnitellut lähtömäärät jaksoilla ennen laskentaa. Jakso nykyisen jakson "
+"alkupäivän ja laskettu päivämäärä -1 pv välillä."
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
@@ -185,6 +189,8 @@ msgid ""
 "Chect to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Valitse tehdäksesi hankinta valitun varaston varastopaikalle. Jos ei valittu "
+"hankinta tehdään varaston sisääntulopaikale."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -202,6 +208,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warhouse'."
 msgstr ""
+"Varasto jota käytetään lähteenä toimituskeräilyssä joka luodaan "
+"vaihtoehdolla 'Toimita toisesta varastosta'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
@@ -530,33 +538,33 @@ msgstr "Maksimimäärä asetettu minimivarasto säännöissä tälle varastolle"
 #: code:addons/stock_planning/stock_planning.py:665
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "Sinun pitää määritellä lähdevarasto !"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
-msgstr ""
+msgstr "Luo suunnittelurivit valitulle kaudelle ja varastolle"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
-msgstr ""
+msgstr "Käyttäjän jakso 4"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Note: Doesn't duplicate existing lines created by you."
-msgstr ""
+msgstr "Huom! Ei kopioi itse luomiasi aikaisempia rivejä"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Stock and Sales Period"
-msgstr ""
+msgstr "Varasto ja myyntijakso"
 
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr ""
+msgstr "Yrityksen ennuste"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -565,60 +573,63 @@ msgid ""
 "Unit of Measure used to show the quanities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Mittayksikkö jolla varastolaskelmat näytetään. Voit käyttää joko "
+"oletuskategorian yksiköitä tai toisen kategorian yksiköitä "
+"(mittayksikkökategoria)."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per User :"
-msgstr ""
+msgstr "Käyttäjää kohti :"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr ""
+msgstr "Myyntiennusteet"
 
 #. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "Jakson nimi"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
 msgid "Created/Validated by"
-msgstr ""
+msgstr "Luonut/Tarkistanut"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr ""
+msgstr "Sisäinen toimitus"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "Yrityksen jakso 4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr ""
+msgstr "Yrityksen jakso 5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr ""
+msgstr "Yrityksen jakso 2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr ""
+msgstr "Yrityksen jakso 3"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Alkupäivä"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -628,11 +639,13 @@ msgid ""
 "\n"
 " Already Out: "
 msgstr ""
+"\n"
+" Jo Lähtenyt: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr ""
+msgstr "Tarkistetut ennusteet"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -640,39 +653,41 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"Suunnittelut luodaan tuotteille tähän kenttään valitusta tuotekategoriasta. "
+"Tämä kenttä ohitetaan jos valitset ruudun \"Kaikki ennustetut tuotteet\""
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
-msgstr ""
+msgstr "Suunniteltu lähtö"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Department :"
-msgstr ""
+msgstr "Osastoittain :"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr ""
+msgstr "Ennuste"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
 #: selection:stock.sale.forecast,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Luonnos"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Suljettu"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
-msgstr ""
+msgstr "Varasto "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
@@ -682,11 +697,13 @@ msgid ""
 "\n"
 " Expected Out: "
 msgstr ""
+"\n"
+" Odotettu lähtö: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create periods for Stock and Sales Planning"
-msgstr ""
+msgstr "Luo jaksot varasto ja myyntisuunnittelua vaten"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -695,6 +712,9 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Syötä ennustettu lähtevä määrä valitusta varastosta valitulla jaksolla "
+"valitulle tuotteelle. Tämän arvon suunnittelua varten katso vahvistettuja "
+"lähtöjä tai myyntiennusteita."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -933,7 +953,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr ""
+msgstr "Ei voi poistaa hyväksyttyjä myyntiennusteita !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -943,6 +963,8 @@ msgid ""
 "\n"
 " Planned Out: "
 msgstr ""
+"\n"
+" Suunnitellut lähdöt: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:667
@@ -951,17 +973,19 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"Sinun pitää määritellä lähtövarasto joka on jokin muu kuin laskettu (kohde) "
+"varasto !"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr ""
+msgstr "Luo myyntiennusteet"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Creates forecast lines for selected warehouse and period."
-msgstr ""
+msgstr "Luo ennusterivit valitulle varastolle ja jaksolle."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:656
@@ -973,7 +997,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
-msgstr ""
+msgstr "Pyyntö ("
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -982,120 +1006,123 @@ msgid ""
 "Planned Out and Confirmed Out. For current period Already Out is also "
 "calculated"
 msgstr ""
+"Määrä jonka odotetaan lähtevän valitun jakson aikana. Erotus suunniteltujen "
+"lähtöjen ja vahvistettujen lähtöjen välillä. Nykyiselle jaksolle myös jo "
+"lähteneet lasketaan"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
-msgstr ""
+msgstr "Jakso 4"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
 #: code:addons/stock_planning/stock_planning.py:684
 #, python-format
 msgid "    Already In: "
-msgstr ""
+msgstr "    Jo saapuneet: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr ""
+msgstr "Jakso 2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
 msgid "Period3"
-msgstr ""
+msgstr "Jakso 3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_id:0
 msgid "Period1"
-msgstr ""
+msgstr "Jakso 1"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
 #: code:addons/stock_planning/stock_planning.py:689
 #, python-format
 msgid "    Minimum stock: "
-msgstr ""
+msgstr "    Minimivarasto: "
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
 #: field:stock.sale.forecast,active_uom:0
 msgid "Active UoM"
-msgstr ""
+msgstr "Aktiivinen mittayksikkö"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Luo varastosuunnittelun rivit"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr ""
+msgstr "Yleiset tiedot"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr ""
+msgstr "Myyntiennuste"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Suunnittelu ja tilanne lasketulle jaksolle"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
 msgid "This Warehouse Period1"
-msgstr ""
+msgstr "Tämän varaston jakso 1"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_forecast:0
 msgid "Warehouse Forecast"
-msgstr ""
+msgstr "Varaston ennuste"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:643
 #: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid "    Confirmed In: "
-msgstr ""
+msgstr "    Vahvistetut saapumiset: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Sales history"
-msgstr ""
+msgstr "Myyntihistoria"
 
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr ""
+msgstr "Lähdevarasto"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecasted quantity."
-msgstr ""
+msgstr "Ennustettumäärä"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock"
-msgstr ""
+msgstr "Varasto"
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr ""
+msgstr "Varastotoimituksen paikka"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Suunnittelujakson loppupäivä"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
 msgid "This User Period2"
-msgstr ""
+msgstr "Käyttäjän jakso 2"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -1103,70 +1130,72 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Valitse tämä laatikko luodaksesi suunnitelmat kaikille tuotteille joilla on "
+"ennuste valitulle varastolle ja jaksolle. Tuotekategoria kenttä ohitetaan."
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "Jo saapuneet"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr ""
+msgstr "Tuotteen mittayksikkökategoria"
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr ""
+msgstr "Vahvistetut saapumiset"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
 msgid "Past/Future"
-msgstr ""
+msgstr "Mennyt/Tuleva"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "Tuotteen Varastokategoria"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Tuotteen kappalemäärä"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "Kopioi viimeinen ennuste"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Näyttää mitä tuotetta tämä ennuste koskee"
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr ""
+msgstr "Valmis"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr ""
+msgstr "Jaksot"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
 #: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid " according to state:"
-msgstr ""
+msgstr " tilan mukaan:"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1174,89 +1203,89 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Vahvistettu"
 
 #. module: stock_planning
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr ""
+msgstr "Avoin"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "Kopioi määrät edellisestä varasto ja myyntiennusteesta"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "Osaston jakso 1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "Osaston jakso 3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "Osaston jakso 2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "Osaston jakso 5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "Osaston jakso 4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "Varaston jakso 2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "Varaston jakso 3"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Vahvistettu lähtö"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "Vastuuhenkilö"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Oletusmittayksikkö"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr ""
+msgstr "Varaston jakso 4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr ""
+msgstr "Varaston jakso 5"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr ""
+msgstr "Nykyinen"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1269,11 +1298,14 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Näyttää mitä varastoa ennuste koskee. Jos varastosuunnittelun aikana "
+"tarvitset myyntiennustetta kaikille varastoille, valitse mikä tahansa "
+"varasto nyt."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Varasto jota suunnittelu koskee."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -1283,6 +1315,8 @@ msgid ""
 "\n"
 " Stock Simulation: "
 msgstr ""
+"\n"
+" Varastosimulaatio: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1291,26 +1325,29 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Syötä määrä joka (suunnitelman mukaan) tulisi saapua. Muuta tätä arvoa ja "
+"seuraa varastosimulaatiota. Tämän arvon tulisi olla yhtä suuri tai suurempi "
+"kuin vahvistettu saapuminen."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Jakso jota suunnittelu koskee"
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "Jo lähtenyt"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Tuote jolle suunnittelu on luotu."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Warehouse :"
-msgstr ""
+msgstr "Varastoittain :"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:639
@@ -1320,28 +1357,30 @@ msgid ""
 "\n"
 " Warehouse Forecast: "
 msgstr ""
+"\n"
+" Varastoennuste: "
 
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr ""
+msgstr "Hankintahistoria"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "Suunnittelujakson alkupäivä."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
 #: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid "    Planned In: "
-msgstr ""
+msgstr "    Suunnitellut saapumiset: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr ""
+msgstr "Yrityksittäin"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1350,17 +1389,21 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Määrä joka on jäljellä saapuvasta määrästä. Tämä lasketaan erotuksena "
+"suunnitellun ja vahvistetutn saapumisen välillä. Nykyiselle jaksolle myös jo "
+"saapuneet lasketaan. Tätä arvoa käytetään luomaan hankinnat puuttuvalle "
+"määrälle."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
-msgstr ""
+msgstr "Kaikkien saapuvien siirtojen määrä lasketulle jaksolle."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "Loppupvm"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1369,31 +1412,34 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
 msgstr ""
+"Valitse toimittaaksesi toimitusvaraston varastopaikasta. Jos ei valittu "
+"toimitus tehdään toimitusvaraston lähtöpaikasta. Käytetään \"toimita "
+"toisesta varastosta\" toimitusvaraston yhteydessä."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "Ei pyyntöä"
 
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr ""
+msgstr "Minimimäärä asetettu  minimivarastosäännössä tälle varastolle"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Näyttää mitä jaksoa tämä ennuste koskee."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr ""
+msgstr "Laske jakson simulaatio"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1401,7 +1447,7 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: field:stock.sale.forecast,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Tuote"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
@@ -1411,11 +1457,13 @@ msgid ""
 "\n"
 "For period: "
 msgstr ""
+"\n"
+"Jaksolle: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "Tuotteen mittayksikkö"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
@@ -1454,29 +1502,29 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Hanki varastopaikalle"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr ""
+msgstr "Hyväksy"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
 msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
-msgstr ""
+msgstr "Tämän suunnittelun jakso. Pyyntö luodaan tämän jakson alkuun."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr ""
+msgstr "Laske myyntihistoria"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
-msgstr ""
+msgstr "Tuotteiden määrä"
 
 #. module: stock_planning
 #: help:stock.planning,confirmed_forecasts_only:0
@@ -1484,21 +1532,23 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Valitse ottaaaksesi mukaan vain vahvistetut ennusteet, jos ei valittu "
+"järjestelmä ottaa huomioon vahvisteut ja luonnos tilassa olevat ennusteet"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr ""
+msgstr "Jakso 5"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
 msgid "Stock and Sales Planning Periods"
-msgstr ""
+msgstr "Varasto ja myyntiennuksteiden jaksot"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_warehouse_id:0
 msgid "This Warehouse"
-msgstr ""
+msgstr "Tämä varasto"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
@@ -1507,12 +1557,12 @@ msgstr ""
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock and Sales Periods"
-msgstr ""
+msgstr "Varasto ja myyntijaksot"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Näyttää kuka luo tämän ennusteen tai kuka vahvisti."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
@@ -1522,11 +1572,13 @@ msgid ""
 "\n"
 " Planned Out Before: "
 msgstr ""
+"\n"
+" Suunnitellut lähdöt ennen: "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
-msgstr ""
+msgstr "Alkuvarasto"
 
 #, python-format
 #~ msgid "Pick List "
@@ -1539,3 +1591,18 @@ msgstr ""
 #, python-format
 #~ msgid "Procurement created in MPS by user: "
 #~ msgstr "Hankinta luotu MPS:ssä käyttäjän toimesta: "
+
+#, python-format
+#~ msgid "Pick created from MPS by user: "
+#~ msgstr "Keräilyn luonut MPS:ssä käyttäjä: "
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objektin nimi täytyy alkaa X_ eikä se saa sisältää mitää erikoismerkkejä!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Virheellinen XML näkymä-arkkitehtuurille!"

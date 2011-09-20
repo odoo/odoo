@@ -112,6 +112,12 @@ class account_asset_asset(osv.osv):
                         amount = (amount_to_depr / asset.method_number) / total_days * (total_days - days)
             elif asset.method == 'degressive':
                 amount = residual_amount * asset.method_progress_factor
+                if asset.prorata:
+                    days = total_days - float(depreciation_date.strftime('%j'))
+                    if i == 1:
+                        amount = (residual_amount * asset.method_progress_factor) / total_days * days
+                    elif i == undone_dotation_number:
+                        amount = (residual_amount * asset.method_progress_factor) / total_days * (total_days - days)
         return amount
 
     def _compute_board_undone_dotation_nb(self, cr, uid, asset, depreciation_date, total_days, context=None):
@@ -242,13 +248,13 @@ class account_asset_asset(osv.osv):
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
-            if asset.prorata and (asset.method != 'linear' or asset.method_time != 'number'):
+            if asset.prorata and asset.method_time != 'number':
                 return False
         return True
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive assets.', ['parent_id']),
-        (_check_prorata, 'Prorata temporis can be applied only for computation method "linear" and time method "number of depreciations".', ['prorata']),
+        (_check_prorata, 'Prorata temporis can be applied only for time method "number of depreciations".', ['prorata']),
     ]
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
@@ -267,9 +273,9 @@ class account_asset_asset(osv.osv):
             }
         return res
 
-    def onchange_method_time(self, cr, uid, ids, method='linear', method_time='number', context=None):
+    def onchange_method_time(self, cr, uid, ids, method_time='number', context=None):
         res = {'value': {}}
-        if method != 'linear' or method_time != 'number':
+        if method_time != 'number':
             res['value'] = {'prorata': False}
         return res
 
