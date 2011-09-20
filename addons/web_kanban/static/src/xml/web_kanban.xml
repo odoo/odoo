@@ -11,6 +11,9 @@
     <tr>
         <td t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
             <t t-if="columns.value" t-esc="columns.header"/>
+            <t t-if="columns.aggregates">
+                <br/><t t-esc="columns.aggregates"/>
+            </t>
         </td>
     </tr>
     <tr>

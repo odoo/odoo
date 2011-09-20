@@ -18,6 +18,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.all_display_data = false;
         this.groups = [];
         this.qweb = new QWeb2.Engine();
+        this.aggregates = {};
         this.NO_OF_COLUMNS = 3;
         if (this.options.action_views_ids.form) {
             this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
@@ -37,8 +38,17 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     add_qweb_template: function() {
+        var group_operator = ["avg", "max", "min", "sum", "count"]
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
+            if (child.tag === "field") {
+                for(j=0, jj=group_operator.length; j < jj;  j++) {
+                    if (child.attrs[group_operator[j]]) {
+                        this.aggregates[child.attrs.name] = child.attrs[group_operator[j]];
+                        break;
+                    }
+                }
+            }
             if (child.tag === "templates") {
                 this.transform_qweb_template(child);
                 this.qweb.add_template(openerp.web.json_node_to_xml(child));
@@ -459,8 +469,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 group_name = group.value[1];
                 group_value = group.value[0];
             }
+            var group_aggregates = '';
+            _.each(self.aggregates, function(value, key) {
+                if (group.aggregates[key]) {
+                    group_aggregates += value + ": " + group.aggregates[key];
+                }
+            });
             self.dataset.read_slice([], {}, function(records) {
-                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids});
+                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids, 'aggregates': group_aggregates});
                 if (datagroups.length == self.all_display_data.length) {
                     self.$element.find(".oe_kanban_view").remove();
                     self.on_show_data();
