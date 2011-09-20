@@ -814,7 +814,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
 
         if (id) {
             // We can manually activate a menu with it's id (for hash url mapping)
-            manudal = true;
+            manual = true;
             $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
             if (!$clicked_menu.length) {
                 $clicked_menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
@@ -824,14 +824,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             id = $clicked_menu.data('menu');
         }
 
-        //if (launch_actionid && !(this.folded && main_clicked)) {
-        if (this.do_menu_click($clicked_menu, manual)) {
+        if (this.do_menu_click($clicked_menu, manual) && id) {
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
-            return true;
-        } else {
-            return false;
         }
+        ev.stopPropagation();
+        return false;
     },
     do_menu_click: function($clicked_menu, manual) {
         var $sub_menu, $main_menu,
@@ -859,7 +857,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         if ($main_menu != $clicked_menu) {
             if ($clicked_menu.is('.submenu')) {
                 $sub_menu.find('.submenu.opened').each(function() {
-                    if (!$(this).next().has($clicked_menu).length) {
+                    if (!$(this).next().has($clicked_menu).length && !$(this).is($clicked_menu)) {
                         $(this).removeClass('opened').next().hide();
                     }
                 });
@@ -895,7 +893,11 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $sub_menu.mouseenter(function() {
                 clearTimeout($sub_menu.data('timeoutId'));
             }).mouseleave(function(evt) {
-                var timeoutId = setTimeout(function() { $sub_menu.hide() }, self.float_timeout);
+                var timeoutId = setTimeout(function() {
+                    if (self.folded) {
+                        $sub_menu.hide();
+                    }
+                }, self.float_timeout);
                 $sub_menu.data('timeoutId', timeoutId);
             });
         }

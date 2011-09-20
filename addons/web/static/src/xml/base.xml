@@ -404,7 +404,9 @@
 </t>
 <t t-name="Menu.secondary.children">
     <t t-set="level" t-value="level + 1"/>
-    <a href="#" t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf') + (menu_first and level == 1 ? ' opened' : '')" t-att-data-menu="menu.children.length ? undefined : menu.id">
+    <a href="#" t-att-id="menu.children.length ? 'menu_' + menu.id : undefined"
+        t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf') + (menu_first and level == 1 ? ' opened' : '')"
+        t-att-data-menu="menu.children.length ? undefined : menu.id">
         <span t-attf-style="padding-left: #{(level - 2) * 20}px"> <t t-esc="menu.name"/></span>
     </a>
     <div t-attf-class="oe_secondary_submenu" t-if="menu.children.length" t-att-style="menu_first and level == 1 ? undefined : 'display: none'">
