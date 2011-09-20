@@ -327,7 +327,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
-        $('.filter_label').removeClass('enabled');
+        this.$element.find('.filter_label').removeClass('enabled');
+        this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
         _.each(string, function(str){
             $(str).closest('div.searchview_group').removeClass("expanded").addClass('folded');
