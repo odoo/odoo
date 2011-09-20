@@ -50,7 +50,8 @@ _ref_vat = {
     'pt': 'PT123456789', 'ro': 'RO1234567897',
     'se': 'SE123456789701', 'si': 'SI12345679',
     'sk': 'SK0012345675', 'el': 'EL12345670',
-    'mx': 'MXABC123456T1B', 'no': 'NO123456785'
+    'mx': 'MXABC123456T1B', 'no': 'NO123456785',
+    'hr': 'HR01234567896', # Croatia, contributed by Milan Tribuson 
 }
 
 class res_partner(osv.osv):
