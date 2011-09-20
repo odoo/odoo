@@ -319,9 +319,8 @@
             <field name="arch" type="xml">
                 <search string="Sprints">
                     <group>
-                        <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
+                        <filter name="terp-check" icon="terp-check" string="New" domain="[('state','=','draft')]" help="New Sprints"/>
+                        <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Sprints"/>
                         <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
