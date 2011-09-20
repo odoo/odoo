@@ -102,8 +102,14 @@
 -
   !python {model: mrp.production}: |
     from tools.translate import _
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
     prod_ids = self.search(cr, uid, [('id','=',ref('mrp_production_mo0')),('state','=','ready')])
-    assert prod_ids, _('Production order is not ready!')
+    order_data = self.browse(cr, uid, prod_ids[0])
+    if order_data:
+      wf_service.trg_validate(uid, 'mrp.production', order_data.id, 'button_produce', cr)
+    else:
+      assert prod_ids, _('Production order is not ready!')
 -
   I check that both internal pickings are done.
 -
@@ -122,19 +128,6 @@
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
     assert order_id, _('Work order not started yet!')
--
-  Modifies production order state if work order state is changed.
--
-  !python {model: mrp.production.workcenter.line}: |
-    from tools.translate import _
-    prod_obj = self.pool.get('mrp.production')
-    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0'))])
-    order_data = self.browse(cr, uid, order_id[0])
-    if order_data.production_id.state=='confirmed':
-      prod_obj.force_production(cr, uid, [order_data.id])
-      wf_service.trg_validate(uid, 'mrp.production', order_data.id, 'button_produce', cr)
-    elif order_data.production_id.state=='ready':
-      wf_service.trg_validate(uid, 'mrp.production', order_data.id, 'button_produce', cr)
 -
   I am creating a mrp.product.produce record.
 -
