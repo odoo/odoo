@@ -81,7 +81,7 @@ class _format(object):
 class _float_format(float, _format):
     def __init__(self,value):
         super(_float_format, self).__init__()
-        self.val = value
+        self.val = value or 0.0
 
     def __str__(self):
         digits = 2
@@ -89,17 +89,17 @@ class _float_format(float, _format):
             digits = self._field.digits[1]
         if hasattr(self, 'lang_obj'):
             return self.lang_obj.format('%.' + str(digits) + 'f', self.name, True)
-        return self.val
+        return str(self.val)
 
 class _int_format(int, _format):
     def __init__(self,value):
         super(_int_format, self).__init__()
-        self.val = value and str(value) or str(0)
+        self.val = value or 0
 
     def __str__(self):
         if hasattr(self,'lang_obj'):
             return self.lang_obj.format('%.d', self.name, True)
-        return self.val
+        return str(self.val)
 
 class _date_format(str, _format):
     def __init__(self,value):
