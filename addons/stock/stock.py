@@ -1560,7 +1560,7 @@ class stock_move(osv.osv):
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
     }
     def _check_location(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context or {}):
+        for record in self.browse(cr, uid, ids, context=context):
             if (record.state=='done') and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
                 return False
         return True

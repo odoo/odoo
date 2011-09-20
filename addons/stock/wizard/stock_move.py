@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 import decimal_precision as dp
 
@@ -186,7 +185,6 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
         if context.get('active_id'):
             move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -198,6 +196,8 @@ class split_in_production_lot(osv.osv_memory):
                 res.update({'qty': move.product_qty})
             if 'use_exist' in fields:
                 res.update({'use_exist': (move.picking_id and move.picking_id.type=='out' and True) or False})
+            if 'location_id' in fields:
+                res.update({'location_id': move.location_id.id})
         return res
 
     _columns = {
@@ -207,6 +207,7 @@ class split_in_production_lot(osv.osv_memory):
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -281,6 +282,7 @@ class split_in_production_lot(osv.osv_memory):
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
+
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
 
                     update_val = {}
@@ -306,25 +308,11 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _defaults = {
         'quantity': 1.0,
     }
-    
-    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_id=False, 
-                        product_qty=False, uom_id=False, context=None):
-        if not prodlot_id or not product_id:
-            return {}
-        prodlot_obj = self.pool.get('stock.production.lot')
-        product_obj = self.pool.get('product.product')
-        uom_obj = self.pool.get('product.uom')
-        uom = uom_obj.browse(cr, uid, uom_id, context=context)
-        product_uom = product_obj.browse(cr, uid, product_id, context=context).uom_id
-        warning = {}
-        lot_avail_qty = prodlot_obj.browse(cr, uid, prodlot_id, context=context)
-        quantity = uom_obj._compute_qty_obj(cr, uid, product_uom, lot_avail_qty.stock_available, uom, context=context)
-        if product_qty > quantity:
-            warning = {
-                'title': _('Wrong lot number !'),
-                'message': _('You are moving %.2f %s products but only %.2f %s are available in this lot.') % (product_qty, uom.name, quantity, uom.name)
-            }
-        return {'warning': warning}
+
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
+                        loc_id=False, product_id=False, uom_id=False):
+        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
+                        loc_id, product_id, uom_id)
 
 stock_move_split_lines_exist()
 

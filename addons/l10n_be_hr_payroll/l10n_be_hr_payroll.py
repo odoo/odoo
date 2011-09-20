@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    d$
+#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>). All Rights Reserved
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -20,18 +19,7 @@
 #
 ##############################################################################
 
-import time
-from datetime import date
-from datetime import datetime
-from datetime import timedelta
-
-import netsvc
 from osv import fields, osv
-import tools
-from tools.translate import _
-import decimal_precision as dp
-
-
 
 class hr_contract_be(osv.osv):
     _inherit = 'hr.contract'
