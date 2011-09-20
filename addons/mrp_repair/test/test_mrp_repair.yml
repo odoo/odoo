@@ -241,10 +241,9 @@
 -
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma2}
 -
-    Cancel Repair order using wizard.
+  Cancel Repair order using wizard.
 -
-    !python {model: mrp.repair.cancel}: |
-      context = {"lang": 'en_US', "active_model":
-      "mrp.repair", "active_ids": [ref("mrp_repair_rma2")], "tz": False, "active_id":ref('mrp_repair_rma2')}
-      self.fields_view_get(cr, uid, False, "form", context)
-      self.cancel_repair(cr, uid, [ref("mrp_repair_rma2")], context=context)
+  !python {model: mrp.repair.cancel}: |
+    context = {"lang": 'en_US', "active_model":"mrp.repair", "active_ids": [ref("mrp_repair_rma2")], "tz": False, "active_id":ref('mrp_repair_rma2')}
+    self.fields_view_get(cr, uid, False, "form", context)
+    self.cancel_repair(cr, uid, [ref("mrp_repair_rma2")], context=context)

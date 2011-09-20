@@ -143,3 +143,15 @@
   Then I Cancel the production order and related stock moves.
 -
   !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo2}
+-
+  I am set the product quantity.
+-
+  !record {model: change.production.qty, id: mrp_production_qty}:
+    product_qty: 5.0
+-
+  Changes the Quantity of Product.
+-
+  !python {model: change.production.qty}: |
+    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_qty")], "tz": False, "active_id":ref('mrp_production_qty')}
+    self.default_get(cr, uid, ["product_qty"], context)
+    self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
