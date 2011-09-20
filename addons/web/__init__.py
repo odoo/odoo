@@ -5,8 +5,7 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-
-try:
+def wsgi_postload():
     import openerp.wsgi
     import os
     import tempfile
@@ -23,9 +22,6 @@ try:
     app = common.dispatch.Root(o)
     #import openerp.wsgi
     openerp.wsgi.register_wsgi_handler(app)
-
-except ImportError:
-    _logger.info("standalone mode")
 
 # TODO
 # if we detect that we are imported from the openerp server register common.Root() as a wsgi entry point

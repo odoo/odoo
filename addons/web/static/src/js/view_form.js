@@ -26,7 +26,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
-        this.view_id = view_id;
+        this.view_id = view_id || false;
         this.fields_view = {};
         this.widgets = {};
         this.widgets_counter = 0;
@@ -315,9 +315,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
-                self.dataset.default_get(_.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                var keys = _.keys(self.fields_view.fields);
+                if (keys.length) {
+                    self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                        def.resolve();
+                    });
+                } else {
+                    self.on_record_loaded({});
                     def.resolve();
-                });
+                }
             }
         });
         return def.promise();
@@ -373,7 +379,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             first_invalid_field.focus();
             this.on_invalid();
             return false;
-        } else if (form_dirty) {
+        } else {
             console.log("About to save", values);
             if (!this.datarecord.id) {
                 return this.dataset.create(values, function(r) {
@@ -384,11 +390,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     self.on_saved(r, success);
                 });
             }
-        } else {
-            setTimeout(function() {
-                self.on_saved({ result: true }, success);
-            });
-            return true;
         }
     },
     do_save_edit: function() {
@@ -413,7 +414,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
         } else {
-            console.debug(_.sprintf("The record #%s has been saved.", this.datarecord.id));
             if (success) {
                 success(r);
             }
@@ -986,7 +986,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         return !this.invalid;
     },
     is_dirty: function() {
-        return this.dirty;
+        return this.dirty && !this.readonly;
     },
     get_on_change_value: function() {
         return this.get_value();
@@ -2551,7 +2551,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
 });
 
 openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
-    template: "FieldStatus",
+    template: "EmptyComponent",
     start: function() {
         this._super();
         this.selected_value = null;

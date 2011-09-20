@@ -133,11 +133,19 @@ db.web.ActionManager = db.web.Widget.extend({
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
+        var self = this;
         $.blockUI();
-        this.session.get_file({
-            url: '/web/report',
-            data: {action: JSON.stringify(action)},
-            complete: $.unblockUI
+        self.rpc("/web/session/eval_domain_and_context", {
+            contexts: [action.context],
+            domains: []
+        }).then(function(res) {
+            action = _.clone(action);
+            action.context = res.context;
+            self.session.get_file({
+                url: '/web/report',
+                data: {action: JSON.stringify(action)},
+                complete: $.unblockUI
+            });
         });
     }
 });
