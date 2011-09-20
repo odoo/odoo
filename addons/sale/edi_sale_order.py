@@ -77,12 +77,12 @@ class sale_order(osv.osv, ir_edi.edi):
             if not edi_doc:
                 continue
             edi_doc = edi_doc[0]
-
+            currency = order.company_id.currency_id
             # Add company info and address
             edi_company_document = company_pool.edi_export_address(cr, uid, [order.company_id], context=context)[order.company_id.id]
             edi_doc.update({
                     'company_address': edi_company_document['company_address'],
-                    'currency_id': edi_company_document['currency_id'],
+                    'currency_id': currency and self.edi_m2o(cr, uid, currency, context=context) or False,
                     #'company_logo': edi_company_document['company_logo'],#TODO
             })
             edi_doc_list.append(edi_doc)
