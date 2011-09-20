@@ -780,6 +780,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         if (window.localStorage) {
             this.folded = localStorage.getItem('oe_menu_folded') === 'true';
         }
+        this.float_timeout = 700;
     },
     start: function() {
         this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
@@ -878,6 +879,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         return false;
     },
     do_show_secondary: function($sub_menu, $main_menu) {
+        var self = this;
         if (this.folded) {
             var css = $main_menu.position(),
                 fold_width = this.$secondary_menu.width() + 2,
@@ -890,6 +892,12 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
                 css.right = 1;
             }
             $sub_menu.css(css);
+            $sub_menu.mouseenter(function() {
+                clearTimeout($sub_menu.data('timeoutId'));
+            }).mouseleave(function(evt) {
+                var timeoutId = setTimeout(function() { $sub_menu.hide() }, self.float_timeout);
+                $sub_menu.data('timeoutId', timeoutId);
+            });
         }
         $sub_menu.show();
     },
