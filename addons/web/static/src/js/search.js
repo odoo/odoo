@@ -542,6 +542,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         var domains = _(this.filters).chain()
             .filter(function (filter) { return filter.is_enabled(); })
             .map(function (filter) { return filter.attrs.domain; })
+            .compact()
             .value();
 
         if (!domains.length) { return; }
