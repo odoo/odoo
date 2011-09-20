@@ -204,6 +204,7 @@ class hr_holidays(osv.osv):
 
     def onchange_sec_id(self, cr, uid, ids, status, context=None):
         warning = {}
+        double_validation = False
         obj_holiday_status = self.pool.get('hr.holidays.status')
         if status:
             holiday_status = obj_holiday_status.browse(cr, uid, status, context=context)
