@@ -162,3 +162,11 @@
 -
   !python {model: mrp.production}: |
     self._move_pass(cr, uid, [ref('mrp_production_mo0')], context=None)
+-
+  Calculates planned end date of production order.
+-
+  !python {model: mrp.production}: |
+    mo = self.browse(cr, uid, ref("mrp_production_mo0"))
+    prop=mo.date_planned
+    unknow_none=False
+    self._production_date_end(cr, uid, [ref("mrp_production_mo0")], prop, unknow_none, context=None)
