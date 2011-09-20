@@ -504,12 +504,12 @@ class survey_question(osv.osv):
 
     def data_get(self, cr, uid, data, context):
         if data and context:
-            if context.get('line_order',False) and data.get('sequence',0):
+            if context.get('line_order', False):
                 lines =  context.get('line_order')
-                seq = data['sequence']
+                seq = data.get('sequence', 0)
                 for line in  lines:
                     seq = seq + 1
-                data.update({'sequence': str(seq)})
+                data.update({'sequence': seq})
         return data
 
     def default_get(self, cr, uid, fields, context=None):
