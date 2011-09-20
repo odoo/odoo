@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2011 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,19 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 {
-    'name': 'hr_payroll_l10n_be',
+    'name': 'Belgian Payroll Rules',
     'category': 'payroll',
-    'init_xml':[],
-    'author': 'OpenERP',
+    'author': 'OpenERP SA',
     'depends': ['hr_payroll','hr_contract'],
     'version': '1.0',
     'description': """
-Belgian Payroll system.
-=======================
+Belgian Payroll Rules
+=====================
 
     * Employee Details
     * Employee Contracts
@@ -41,12 +40,12 @@ Belgian Payroll system.
     """,
 
     'active': False,
-    'demo_xml': [
-     'hr_payroll_l10n_be_demo.xml',
+    'demo': [
+     'l10n_be_hr_payroll_demo.xml',
     ],
-    'update_xml':[
-     'hr_payroll_l10n_be_view.xml',
-     'hr_payroll_l10n_be_data.xml',
+    'data':[
+     'l10n_be_hr_payroll_view.xml',
+     'l10n_be_hr_payroll_data.xml',
      'data/hr.salary.rule.csv',
     ],
     'installable': True
