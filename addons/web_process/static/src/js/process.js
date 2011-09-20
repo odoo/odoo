@@ -83,6 +83,7 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 		},
 		
 		draw_process_graph: function(res) {
+			var self = this;
 			var process_graph = new Graph();
 			
 			var process_renderer = function(r, n) {
