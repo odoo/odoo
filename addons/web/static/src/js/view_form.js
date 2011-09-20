@@ -26,7 +26,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
-        this.view_id = view_id;
+        this.view_id = view_id || false;
         this.fields_view = {};
         this.widgets = {};
         this.widgets_counter = 0;
