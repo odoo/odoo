@@ -43,7 +43,6 @@ the Administration / Customization / Reporting menu.
         'security/ir.model.access.csv',
         'wizard/wiz_set_filter_fields_view.xml',
         'wizard/report_menu_create_view.xml',
-        'base_report_creator_wizard.xml',
         'base_report_creator_view.xml'
     ],
     'demo_xml': [],
