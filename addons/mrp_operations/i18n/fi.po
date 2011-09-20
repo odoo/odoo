@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:31+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:35+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -29,7 +29,7 @@ msgstr "Työtilaukset"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 msgid "Cancel the operation."
-msgstr ""
+msgstr "Peruuta toiminto"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
@@ -51,7 +51,7 @@ msgstr "Ryhmittele"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr ""
+msgstr "Tiedot reitityksen määrittelystä"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -69,7 +69,7 @@ msgstr "Työpisteet"
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
-msgstr ""
+msgstr "Jatka"
 
 #. module: mrp_operations
 #: report:mrp.code.barcode:0
@@ -94,7 +94,7 @@ msgstr "Vapaa sarjoitus"
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
-msgstr ""
+msgstr "MRP toiminnot"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -110,7 +110,7 @@ msgstr "Valmistustilaus"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Poikkeus keräilyssä"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
@@ -118,10 +118,10 @@ msgid "Creation of the work order"
 msgstr "Työtilauksen luonti"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:463
 #, python-format
 msgid "You cannot Pause the Operation other then Start/Resume state !"
-msgstr ""
+msgstr "Et voi pysäyttää toimintoa paitsi käynnistä/jatka tilassa!"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -137,10 +137,10 @@ msgstr "Työtilaukset on tehty valmistustilausten perusteella."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:133
-#: code:addons/mrp_operations/mrp_operations.py:461
-#: code:addons/mrp_operations/mrp_operations.py:465
-#: code:addons/mrp_operations/mrp_operations.py:477
-#: code:addons/mrp_operations/mrp_operations.py:480
+#: code:addons/mrp_operations/mrp_operations.py:463
+#: code:addons/mrp_operations/mrp_operations.py:467
+#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Error!"
 msgstr "Virhe!"
@@ -161,7 +161,7 @@ msgstr "Vahvistetut työmääräykset"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:0
 msgid "Operations"
-msgstr ""
+msgstr "Toiminnot"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
@@ -171,7 +171,7 @@ msgstr "Varastosiirto"
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Rivien lukumäärä"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -192,7 +192,7 @@ msgstr "Tuotannossa"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,state:0
 msgid "State"
-msgstr ""
+msgstr "Tila"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
@@ -206,11 +206,13 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
+"Joka työpisteelle on 1 työtilaus. Tiedot toistokertojen lukumäärästä tai "
+"kierron ajasta."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Month -1"
-msgstr ""
+msgstr "edellinen kk"
 
 #. module: mrp_operations
 #: help:mrp.production.workcenter.line,state:0
@@ -225,21 +227,23 @@ msgid ""
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:472
 #, python-format
 msgid "You cannot finish the operation without Starting/Resuming it !"
 msgstr ""
+"Et voi merkitä toimintoa valmiiksi ennenkuin sen tila on "
+"käynnistetty/jatkettu !"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Suunniteltu päivämäärä"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:477
+#: code:addons/mrp_operations/mrp_operations.py:479
 #, python-format
 msgid "There is no Operation to be cancelled !"
-msgstr ""
+msgstr "Peruutettavaa toimintoa ei ole !"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -260,7 +264,7 @@ msgstr "Toiminnon nimi"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,start_stop:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
@@ -271,6 +275,11 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
+"Valmistaaksesti tai kokoonpannaksesi tuotteita sekä käyttääksesi raaka-"
+"aineita ja lopputuotteita sinun pitää hoitaa myös tuotannolliset toiminnot. "
+"Tuotannolliset toiminnot ovat työtilauksia. Eri toimenpiteillä on erilaisia "
+"vaikutuksia valmistuskustannuksiin ja suunnitteluun riippuen käytettävissä "
+"olevasta kuormituksesta."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -283,7 +292,7 @@ msgid "Future Work Orders"
 msgstr "Tulevat työmääräykset"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:457
+#: code:addons/mrp_operations/mrp_operations.py:459
 #, python-format
 msgid ""
 "Operation has already started !You  can either Pause /Finish/Cancel the "
@@ -337,7 +346,7 @@ msgstr "Alkupäivä"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr ""
+msgstr "Odottaa tuotteita"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -353,7 +362,7 @@ msgstr "Tauko"
 #: selection:mrp.production.workcenter.line,state:0
 #: selection:mrp.workorder,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Käynnissä"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_production
@@ -365,7 +374,7 @@ msgstr "Valmistustilaus"
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Start"
-msgstr ""
+msgstr "Aloita"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
@@ -377,7 +386,7 @@ msgstr "Kalenterinäkymä"
 msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
-msgstr ""
+msgstr "Kun toiminto tulee peruuttaa, voit tehdä sen tuötilaus lomakkeella."
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -389,12 +398,12 @@ msgstr "Aseta luonnos"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,total_cycles:0
 msgid "Total Cycles"
-msgstr ""
+msgstr "Kierrot yhteensä"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Pending"
-msgstr ""
+msgstr "Odottava"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
@@ -402,10 +411,10 @@ msgid "Production Operation Code"
 msgstr "Tuotannontoiminto koodi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:467
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
-msgstr ""
+msgstr " Et voi jatkaa toimintoa jonka tila on joku muu kuin pysäytetty !"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -456,7 +465,7 @@ msgid "June"
 msgstr "Kesäkuu"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:480
+#: code:addons/mrp_operations/mrp_operations.py:482
 #, python-format
 msgid "Operation is already finished !"
 msgstr "Vaihe on jo päätetty!"
@@ -480,7 +489,7 @@ msgstr "Työmääräysten suunnittelu"
 #: view:mrp.production.workcenter.line:0
 #: field:mrp.workorder,date:0
 msgid "Date"
-msgstr ""
+msgstr "Päiväys"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -495,7 +504,7 @@ msgstr "Tämä on vaiheen läpimenaika tässä työpisteessä"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "Search"
-msgstr ""
+msgstr "Hae"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -510,10 +519,10 @@ msgstr "Tammikuu"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
-msgstr ""
+msgstr "Toiminto on valmis."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:450
+#: code:addons/mrp_operations/mrp_operations.py:452
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "Vaihetta ei ole vielä aloitettu!"
@@ -521,16 +530,16 @@ msgstr "Vaihetta ei ole vielä aloitettu!"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
 msgid "Information from the production order."
-msgstr ""
+msgstr "Tiedot tuotantotilaukselta"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:450
-#: code:addons/mrp_operations/mrp_operations.py:457
-#: code:addons/mrp_operations/mrp_operations.py:470
-#: code:addons/mrp_operations/mrp_operations.py:473
+#: code:addons/mrp_operations/mrp_operations.py:452
+#: code:addons/mrp_operations/mrp_operations.py:459
+#: code:addons/mrp_operations/mrp_operations.py:472
+#: code:addons/mrp_operations/mrp_operations.py:475
 #, python-format
 msgid "Sorry!"
-msgstr ""
+msgstr "Anteeksi!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -541,10 +550,10 @@ msgstr "Nykyinen"
 #: field:mrp_operations.operation,code_id:0
 #: field:mrp_operations.operation.code,code:0
 msgid "Code"
-msgstr ""
+msgstr "Koodi"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:473
+#: code:addons/mrp_operations/mrp_operations.py:475
 #, python-format
 msgid "Operation is Already Cancelled  !"
 msgstr "Vaihe on jo peruttu!"
@@ -552,12 +561,12 @@ msgstr "Vaihe on jo peruttu!"
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
-msgstr ""
+msgstr "Työpisteen tuotannon työnvirtauksen alku ja loppu"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr ""
+msgstr "Toimintokoodit"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -596,6 +605,11 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Työtilaukset ovat luettelo jokaiselle tuotantotilaukselle tehtävistä "
+"toiminnoista. Kun käynnistät ensimmäisen työtilauksen valmistustilaukselta, "
+"valmistustilauksen tila muuttu automaattisesti käynnissä olevaksi. Kun "
+"merkitset valmistustilauksen viimeisen toiminnon valmiiksi, valmistustila "
+"muuttuu automaattisesti valmiiksi"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -605,7 +619,7 @@ msgstr "Käynnistä toiminto"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Information"
-msgstr ""
+msgstr "Tiedot"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
@@ -620,12 +634,12 @@ msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Late"
-msgstr ""
+msgstr "Myöhässä"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
 msgid "Delay"
-msgstr ""
+msgstr "Viive"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -649,12 +663,12 @@ msgstr "Työkeskus"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Real"
-msgstr ""
+msgstr "Todellinen"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Suunniteltu päivämäärä"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,product:0
@@ -686,7 +700,7 @@ msgstr ")"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr ""
+msgstr "Työtilauksen analyysi"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -699,7 +713,7 @@ msgstr "Valmis"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "UOM"
-msgstr ""
+msgstr "Mittayksikkö"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -726,7 +740,7 @@ msgstr "Helmikuu"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
-msgstr ""
+msgstr "Toiminto peruttu"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_startoperation0
@@ -746,7 +760,7 @@ msgstr "Vaihe on valmis"
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "#Line Orders"
-msgstr ""
+msgstr "Tilausrivien määrä"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
@@ -763,12 +777,12 @@ msgstr "Toukokuu"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
 msgid "Details of the work order"
-msgstr ""
+msgstr "Työtilauksen yksityiskohdat"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production State"
-msgstr ""
+msgstr "Valmistuksen tila"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -784,12 +798,12 @@ msgstr "Kesto"
 #. module: mrp_operations
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Tilattu määrä ei voi olle negatiivinen tai nolla !"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Erä ei ole samaa tuotetta"
 
 #~ msgid "Start Cancel Operation"
 #~ msgstr "Aloita Peruutus -toiminto"
@@ -817,9 +831,6 @@ msgstr ""
 
 #~ msgid "From production order, create the workorder"
 #~ msgstr "Luo tuotantomääräyksestä työmääräys"
-
-#~ msgid "Hours by Workcenter"
-#~ msgstr "Tunnit työkeskuksittain"
 
 #~ msgid "Production order for any products"
 #~ msgstr "Tuotantomääräys mille tahansa tuotteelle"

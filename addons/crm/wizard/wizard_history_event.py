@@ -32,7 +32,7 @@ def _open_history_event(self, cr, uid, data, context=None):
     if id2:
         id2 = data_obj.browse(cr, uid, id2, context=context).res_id 
     res = ''    
-    if data.get('model',False) and data.get('ids',False):           
+    if data.get('model') and data.get('ids'):
         model_obj = pooler.get_pool(cr.dbname).get(data['model'])
         res = model_obj.browse(cr, uid, data['ids'], context=context)
         if len(res):

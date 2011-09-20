@@ -42,10 +42,8 @@
     <record model="workflow.activity" id="act_refuse">
         <field name="wkf_id" ref="wkf_holidays" />
         <field name="name">refuse</field>
-        <field name="kind">function</field>
         <field name="flow_stop">True</field>
         <field name="kind">stopall</field>
-        <field name="action">holidays_refuse()</field>
     </record>
 
     <!--
@@ -70,6 +68,7 @@
         <field name="act_from" ref="act_confirm" />
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
+        <field name="condition">holidays_refuse('first_approval')</field>
         <field name="group_id" ref="base.group_hr_user"/>
     </record>
 
@@ -77,21 +76,14 @@
         <field name="act_from" ref="act_validate" />
         <field name="act_to" ref="act_refuse" />
         <field name="signal">refuse</field>
+        <field name="condition">holidays_refuse('second_approval')</field>
         <field name="group_id" ref="base.group_hr_user"/>
     </record>
 
     <record model="workflow.transition" id="t8">
         <field name="act_from" ref="act_validate" />
         <field name="act_to" ref="act_validate1" />
-        <field name="group_id" ref="base.group_hr_user"/>
         <field name="signal">second_validate</field>
-        <field name="group_id" ref="base.group_hr_user"/>
-    </record>
-
-    <record model="workflow.transition" id="t10">
-        <field name="act_from" ref="act_validate1" />
-        <field name="act_to" ref="act_refuse" />
-        <field name="signal">refuse</field>
         <field name="group_id" ref="base.group_hr_user"/>
     </record>
 

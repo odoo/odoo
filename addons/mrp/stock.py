@@ -112,6 +112,7 @@ class StockMove(osv.osv):
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids):
+            move.action_confirm(context)
             new_moves = super(StockMove, self).action_consume(cr, uid, [move.id], product_qty, location_id, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod in production_obj.browse(cr, uid, production_ids, context=context):

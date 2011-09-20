@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:05+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-17 04:55+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -505,8 +505,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1148,6 +1146,7 @@ msgstr "# от транзакция"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1335,6 +1334,16 @@ msgstr "Не може да използвате главна сметка за �
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "С баланс различен от 0"
 
@@ -2120,6 +2129,8 @@ msgstr "Счетоводни свойства"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Записи подредени по"
 
@@ -2141,11 +2152,16 @@ msgstr "Шаблон за продукт"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2471,6 +2487,7 @@ msgstr "Отстъпка (%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2720,6 +2737,8 @@ msgstr "Финансово счетоводство"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr "Печалба и загуби"
 
@@ -2994,7 +3013,6 @@ msgstr "Запазете празно за да изпозвате сметка�
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -3008,6 +3026,17 @@ msgstr "Запазете празно за да изпозвате сметка�
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Дневници"
 
@@ -3221,6 +3250,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr "Съконтрагент"
 
@@ -3279,6 +3309,16 @@ msgstr "ДДС :"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Диаграма на сметки"
 
@@ -3724,11 +3764,10 @@ msgid "Analytic Balance"
 msgstr "Аналитичен баланс"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr "Нетна загуба"
 
@@ -4546,7 +4585,6 @@ msgid "Analytic Balance -"
 msgstr "Аналитичен баланс -"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4559,10 +4597,8 @@ msgstr "Аналитичен баланс -"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4572,6 +4608,16 @@ msgstr "Аналитичен баланс -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Целеви движения"
 
@@ -4689,6 +4735,8 @@ msgstr "Резултат от изравняване"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr "Баланс"
 
@@ -5405,6 +5453,19 @@ msgstr "Главен дневник на сметка"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Без филтър"
@@ -6326,6 +6387,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7250,6 +7312,7 @@ msgstr "Сума (словом):"
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7504,6 +7567,19 @@ msgstr "Счетоводство и финанси"
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Период"
@@ -7587,14 +7663,6 @@ msgstr "Тел. :"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Валута на компанията"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr "Сметкоплан"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7710,6 +7778,12 @@ msgstr "Дневник за обещетения"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr "Филтриране по"
 
@@ -7949,6 +8023,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8236,12 +8311,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr "Начало на период"
 
@@ -8359,7 +8439,12 @@ msgstr "Запазете празно за да изпозвате сметка�
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8378,6 +8463,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr "Показване на сметка"
 
@@ -8595,12 +8689,17 @@ msgstr "Баланс на аналитична сметка"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr "Краен период"
 
@@ -8805,6 +8904,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8886,6 +8986,18 @@ msgstr "Общ"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9095,13 +9207,10 @@ msgid "Tax Source"
 msgstr "Източник на данък"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr "Нетна печалба"
 
@@ -9125,8 +9234,8 @@ msgstr "Няма зададена приходна сметка за проду�
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "Журнал"
+msgid "JRNL"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9333,6 +9442,7 @@ msgstr "Фактура за доставчик"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9406,6 +9516,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "С движения"
 
@@ -9777,11 +9897,17 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Оставете празно за да бъде изпозван периода на проверка на дадата."
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
 
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Грешка! Не може да създавате рекурсивна сметка."
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
 
 #, python-format
 #~ msgid "Account move line \"%s\" is not valid"
@@ -9811,18 +9937,6 @@ msgstr ""
 #~ msgid "Total entries"
 #~ msgstr "Общо записи"
 
-#~ msgid "Disc. (%)"
-#~ msgstr "Отстъка (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Ако искате ли плащането да бъде извършено след като изпратите този email, "
-#~ "моля считайте този като нулев. Не се притеснявайте да се обадите на "
-#~ "търговския ни отдел на ..............."
-
 #~ msgid "Unpaid Supplier Refunds"
 #~ msgstr "Неплатени обезщетения на доставчици"
 
@@ -9834,9 +9948,6 @@ msgstr ""
 
 #~ msgid "Account Entry Reconcile"
 #~ msgstr "Обединяване на записи от сметка"
-
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
 
 #~ msgid "Sign for parent"
 #~ msgstr "Знак за родител"
@@ -10027,9 +10138,6 @@ msgstr ""
 #~ msgid "Select Period and Journal for Validation"
 #~ msgstr "Иберете период и дневник за проверка"
 
-#~ msgid "Partner ID"
-#~ msgstr "Идентификатор на партньор"
-
 #~ msgid "New Customer Invoice"
 #~ msgstr "Нова клиентска фактура"
 
@@ -10060,14 +10168,8 @@ msgstr ""
 #~ msgid "Document"
 #~ msgstr "Документ"
 
-#~ msgid "Move name"
-#~ msgstr "Име на движение"
-
 #~ msgid "Cancel selected invoices"
 #~ msgstr "Отказа на избраните фактури"
-
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
 
 #~ msgid "Financial Management"
 #~ msgstr "Управление на финанси"
@@ -10104,9 +10206,6 @@ msgstr ""
 #~ msgid "Pay and reconcile"
 #~ msgstr "Плащане и приравняване"
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Баланс пренесен напред"
-
 #~ msgid "New Supplier Refund"
 #~ msgstr "Ново обещетение за доставчик"
 
@@ -10121,9 +10220,6 @@ msgstr ""
 
 #~ msgid "Entry encoding"
 #~ msgstr "Кодиране на ред"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Период за отписване"
 
 #~ msgid "Other"
 #~ msgstr "Друго"
@@ -10265,9 +10361,6 @@ msgstr ""
 #~ msgid "Full Payment"
 #~ msgstr "Пълно плащане"
 
-#~ msgid "All account entries"
-#~ msgstr "Всични записи на сметката"
-
 #~ msgid "Unpaid Customer Refunds"
 #~ msgstr "Неплатени обезщетения на клиент"
 
@@ -10336,27 +10429,13 @@ msgstr ""
 #~ msgstr "Разписка за дневник"
 
 #, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Не може да проверявате небалансиран запис !"
-
-#, python-format
 #~ msgid ""
 #~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
 #~ msgstr "Очаквания баланс (%.2f) е различен от изчисления. (%.2f)"
 
-#~ msgid "Crédit"
-#~ msgstr "Кредит"
-
-#~ msgid "Débit"
-#~ msgstr "Дебит"
-
 #, python-format
 #~ msgid "The statement balance is incorrect !\n"
 #~ msgstr "Баланса на отчета не е правилен !\n"
-
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Грешка при конфигурация !"
 
 #, python-format
 #~ msgid "Your journal must have a default credit and debit account."
@@ -10401,27 +10480,12 @@ msgstr ""
 #~ msgstr "Няма намерен данък за вашия избор"
 
 #, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Тази сметка не е предвидена за приравняване !"
-
-#, python-format
 #~ msgid "The journal must have centralised counterpart"
 #~ msgstr "Дневника трябва да има централно копие"
 
 #, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "Старата финансова година няма записи за приравняване!"
-
-#~ msgid "Partner name"
-#~ msgstr "Име на партньор"
-
-#, python-format
 #~ msgid "Can not pay draft/proforma/cancel invoice."
 #~ msgstr "Не може да бъде платена  проект/проформа/отказана фактура."
-
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr "Не може да деактивирате сметка която съдържа движения по сметка."
 
 #, python-format
 #~ msgid "Date not in a defined fiscal year"
@@ -10465,15 +10529,6 @@ msgstr ""
 
 #~ msgid "Error ! The duration of the Fiscal Year is invalid. "
 #~ msgstr "Грешка ! Продължителността на фискалната година е невалидна. "
-
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Ако използвате \"усовия за плащане\",  датата на падежа ще бъде изчислена "
-#~ "автоматично при създаването на счетоводни записи. Ако оставите условията за "
-#~ "плащане и падежната дата празни, това означава директно плащане."
 
 #~ msgid "Asset"
 #~ msgstr "Актив"
@@ -10523,3 +10578,9 @@ msgstr ""
 #, python-format
 #~ msgid "is validated."
 #~ msgstr "е валидирано."
+
+#~ msgid "Chart of Account"
+#~ msgstr "Сметкоплан"
+
+#~ msgid "JNRL"
+#~ msgstr "Журнал"
