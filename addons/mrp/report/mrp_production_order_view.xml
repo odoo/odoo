@@ -60,6 +60,7 @@
 	                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>
+                        <filter string="New" icon="terp-document-new" domain="[('state','in',('open','draft'))]"/>
                         <filter icon="terp-check" string="Ready In production" domain="[('state','=','in_production')]"/>
                         <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
                       <separator orientation="vertical"/>
