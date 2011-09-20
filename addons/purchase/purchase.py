@@ -362,9 +362,13 @@ class purchase_order(osv.osv):
                     if not a:
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
-                    a = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category').id
+                    acc_id = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    a = acc_id and acc_id.id or False
                 fpos = o.fiscal_position or False
                 a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
+                if not a:
+                    raise osv.except_osv(_('Error !'),
+                        _('There is no expense account defined in default Properties for Product Category or Fiscal Position is not defined !'))
                 il.append(self.inv_line_create(cr, uid, a, ol))
 
             a = o.partner_id.property_account_payable.id
