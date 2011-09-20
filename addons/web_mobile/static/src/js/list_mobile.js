@@ -23,7 +23,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
     on_search_data: function(ev){
         var self = this;
         var dataset = new openerp.web.DataSetStatic(this, this.action.res_model, this.action.context);
-        dataset.name_search('', [], 'ilike',false ,function(result){
+        dataset.name_search('', this.action.domain, 'ilike', false, function(result){
             self.$element.html(QWeb.render("ListView", {'records' : result}));
             self.$element.find("[data-role=header]").find('h1').html(self.action.name);
             self.$element.find("[data-role=header]").find('#home').click(function(){
