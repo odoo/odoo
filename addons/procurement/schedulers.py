@@ -254,6 +254,7 @@ class procurement_order(osv.osv):
                             'date_planned': newdate.strftime('%Y-%m-%d'),
                             'product_id': op.product_id.id,
                             'product_qty': qty,
+                            'company_id': op.company_id.id,
                             'product_uom': op.product_uom.id,
                             'location_id': op.location_id.id,
                             'procure_method': 'make_to_order',
