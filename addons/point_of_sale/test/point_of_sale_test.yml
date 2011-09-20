@@ -39,7 +39,7 @@
   I create Minimal Chart Account.
 -
   !record {model: account.account, id: account_pos_account_minimalchart}:
-    code: '0'
+    code: 'x_0'
     company_id: base.main_company
     currency_mode: current
     name: Minimal Chart
@@ -115,14 +115,14 @@
     type: other
     user_type: account_account_type_income0
 -
-  I create Purchase Journal.
+  I create Purchase Journal - (test).
 -
   !record {model: account.journal, id: account_pos_account_journal_purchasejournal}:
     code: PUJ
     company_id: base.main_company
     default_credit_account_id: account_pos_account_purchases
     default_debit_account_id: account_pos_account_purchases
-    name: Purchase Journal
+    name: Purchase Journal - (test)
     sequence_id: account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_view
@@ -130,7 +130,7 @@
   I create Sale Journal.
 -
   !record {model: account.journal, id: account_pos_account_journal_salejournal}:
-    code: SAJ
+    code: SJ
     company_id: base.main_company
     default_credit_account_id: account_pos_account_sales
     default_debit_account_id: account_pos_account_sales
@@ -227,29 +227,14 @@
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 -
-  I create product template .
+  I create product Samsung Mobile.
 -
-  !record {model: product.template, id: product_template_lgviewtysmart0}:
+  !record {model: product.product, id: product_product_samsungmobile0}:
     categ_id: product_category_allproductssellable0
     cost_method: standard
     list_price: 170.0
     mes_type: fixed
-    name: LG Viewty Smart
-    procure_method: make_to_order
-    standard_price: 160.0
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I create product  LG Viewty Smart.
--
-  !record {model: product.product, id: product_product_lgviewtysmart0}:
-    categ_id: product_category_allproductssellable0
-    cost_method: standard
-    list_price: 170.0
-    mes_type: fixed
-    name: LG Viewty Smart
+    name: Samsung Mobile
     procure_method: make_to_order
     property_account_expense: account_pos_account_payable
     property_account_income: account_pos_account_receivable
@@ -285,7 +270,7 @@
     property_account_expense: account_pos_account_payable
     property_account_income: account_pos_account_receivable
 -
-  I create New Order by adding the details of Salesman and  "Product" as LG Viewty Smart Quantity as 10.
+  I create New Order by adding the details of Salesman and  "Product" as Samsung Mobile Quantity as 10.
 -
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
@@ -295,7 +280,7 @@
       - company_id: base.main_company
         name: Order Line/01
         notice: No Discount
-        product_id: product_product_lgviewtysmart0
+        product_id: product_product_samsungmobile0
         qty: 10.0
         qty_rfd: 0.0
     partner_id: base.res_partner_agrolait

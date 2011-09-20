@@ -8,7 +8,7 @@
             <field name="model">report.event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm');gray:state in('done','cancel')" string="Events Analysis">
+                <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state in('done','cancel')" string="Events Analysis">
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="speaker_id" invisible="1"/>
@@ -52,7 +52,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
-                    <group col="8" colspan="4">
+                    <group>
                     <filter icon="terp-go-year" string="Last 365 Days" name="365day"
                         domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                         help="Events with beginning date in last 365 days"/>
@@ -62,7 +62,6 @@
                         help="Events with beginning date in last 30 days"/>
                     <filter icon="terp-go-week"
                          string="Last 7 Days"
-                         separator="1"
                          domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                          help="Events with beginning date in last 7 days"/>
                     <separator orientation="vertical"/>
@@ -94,7 +93,7 @@
                     </group>
                     <newline/>
 
-                    <group expand="1" string="Group By..." colspan="4" col="12">
+                    <group expand="1" string="Group By...">
                         <filter string="Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}"/>
                         <filter string="Sale Team"  icon="terp-personal" context="{'group_by': 'section_id'}"/>

@@ -27,7 +27,7 @@ class hr_so_project(osv.osv_memory):
     _name = 'hr.sign.out.project'
     _description = 'Sign Out By Project'
     _columns = {
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', domain=[('type','=','normal')]),
+        'account_id': fields.many2one('account.analytic.account', 'Project / Analytic Account', domain=[('type','=','normal')]),
         'info': fields.char('Work Description', size=256, required=True),
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),

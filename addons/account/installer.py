@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import logging
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -33,6 +34,7 @@ import tools
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
+    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -98,7 +100,7 @@ class account_installer(osv.osv_memory):
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
@@ -232,9 +234,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_DEBUG,
-            'Installing chart of accounts %s'%chart)
+        self.__logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()

@@ -25,7 +25,7 @@
                     <field name="planned_cost"/>
                     <field name="state" invisible="1"/>
                     <field name="day" invisible="1"/>
-                    <field name="canal_id" invisible="1"/>
+                    <field name="channel_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -53,14 +53,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <group col="16" colspan="9">
+                    <group>
                         <filter string="  Year  " icon="terp-go-year"
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Helpdesk requests occurred in current year"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
                             domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in current month"/>
-                        <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                        <filter icon="terp-go-month" string="    Month-1    " 
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in last month"/>
                         <separator orientation="vertical" />
@@ -106,9 +106,7 @@
                             domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="Channel" icon="terp-call-start"
-                            domain="[]"
-                        context="{'group_by':'canal_id'}" />
+                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />

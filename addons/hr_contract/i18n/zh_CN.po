@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:27+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:31+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -34,7 +34,7 @@ msgstr "试用期"
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr "使用期开始日期"
+msgstr "试用期开始日期"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -74,7 +74,7 @@ msgstr "每小时成本系数"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Overpassed"
-msgstr "Overpassed"
+msgstr "已终止"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -89,7 +89,7 @@ msgstr "部门"
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
 msgid "Basic"
-msgstr "基本信息"
+msgstr "基本"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -101,7 +101,7 @@ msgstr "员工"
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
 msgid "Net"
-msgstr "净值"
+msgstr "净额"
 
 #. module: hr_contract
 #: model:ir.module.module,shortdesc:hr_contract.module_meta_information
@@ -111,12 +111,12 @@ msgstr "人力资源合同"
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,factor_days:0
 msgid "Hours in the period"
-msgstr "周期的小时数"
+msgstr "这周期的小时数"
 
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
 msgid "Home-Work Distance"
-msgstr "通勤距离"
+msgstr "家与工作地点的距离"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -135,7 +135,7 @@ msgstr "个人信息"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
-msgstr "工作"
+msgstr "职务"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -145,12 +145,12 @@ msgstr "搜索合同"
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
 msgid "Latest contract of the employee"
-msgstr "该雇员最近的合同"
+msgstr "该员工最近的合同"
 
 #. module: hr_contract
 #: field:hr.contract,advantages_net:0
 msgid "Deductions"
-msgstr "扣除"
+msgstr "扣减"
 
 #. module: hr_contract
 #: model:ir.module.module,description:hr_contract.module_meta_information
@@ -163,17 +163,24 @@ msgid ""
 "    You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"    在管理合同里添加这员工的所有信息：\n"
+"    * 婚姻状况\n"
+"    * 社保号\n"
+"    * 籍贯，出生日期。。。\n"
+"    您可以为员工签订几份合同。\n"
+"    "
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
-msgstr "优点"
+msgstr "薪酬"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Valid for"
-msgstr "生效于"
+msgstr "有效期"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -218,12 +225,12 @@ msgstr "工资"
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Reference"
-msgstr "合同引用"
+msgstr "合同编码"
 
 #. module: hr_contract
 #: help:hr.employee,vehicle_distance:0
 msgid "In kilometers"
-msgstr "单位：千米"
+msgstr "公里"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -235,7 +242,7 @@ msgstr "备注"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr "错误！您不能选择该雇员担任经理的部门。"
+msgstr "错误！您不用为他选择一部门因为他是总经理(CEO)。"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -257,7 +264,7 @@ msgstr "合同类型"
 #. module: hr_contract
 #: view:hr.contract.wage.type.period:0
 msgid "Search Wage Period"
-msgstr "搜索工资期"
+msgstr "搜索工资周期"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -268,7 +275,7 @@ msgstr "工作安排"
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Job Info"
-msgstr "招聘信息"
+msgstr "职务信息"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
@@ -280,12 +287,12 @@ msgstr "工资周期"
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
-msgstr "职位"
+msgstr "职务名称"
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
 msgid "Is a Manager"
-msgstr "是否是经理"
+msgstr "是经理"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -300,7 +307,7 @@ msgstr "错误！合同开始日期必须小于结束日期。"
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
 msgid "Search Wage Type"
-msgstr "搜索薪酬类型"
+msgstr "搜索工资类型"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -310,13 +317,13 @@ msgstr "类型"
 #. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
-msgstr "试用期截至日期"
+msgstr "试用期结束日期"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.contract.wage.type:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -345,12 +352,12 @@ msgstr "工资周期"
 msgid ""
 "This field is used by the timesheet system to compute the price of an hour "
 "of work wased on the contract of the employee"
-msgstr "这字段使用时间表系统来计算合同员工的每小时工价"
+msgstr "这字段用于计工单，系统用来计算合同员工的每小时工价"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Duration"
-msgstr "期间"
+msgstr "有效期"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -360,12 +367,12 @@ msgstr "体检日期"
 #. module: hr_contract
 #: field:hr.contract,advantages_gross:0
 msgid "Allowances"
-msgstr "津贴"
+msgstr "补贴"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Main Data"
-msgstr "主数据"
+msgstr "主要数据"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
@@ -396,25 +403,6 @@ msgstr "搜索合同类型"
 
 #~ msgid "Number of children"
 #~ msgstr "下级数"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Add all information on the employee form to manage contracts:\n"
-#~ "    * Martial status,\n"
-#~ "    * Security number,\n"
-#~ "    * Place of birth, birth date, ...\n"
-#~ "\n"
-#~ "    You can assign several contracts per employee.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    增加员工管理合同的所有信息:\n"
-#~ "    * 婚姻状况\n"
-#~ "    * 社保号\n"
-#~ "    * 出生地点和出生日期\n"
-#~ "    \n"
-#~ "    你可以为每个员工签几个合同\n"
-#~ "    "
 
 #~ msgid "Medical examination date"
 #~ msgstr "体检日期"
@@ -448,21 +436,3 @@ msgstr "搜索合同类型"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "Calculations"
-#~ msgstr "计算"
-
-#~ msgid "Description"
-#~ msgstr "描述"
-
-#~ msgid "Contract Details"
-#~ msgstr "合同明细"
-
-#~ msgid "Salary Structure"
-#~ msgstr "薪酬结构"
-
-#~ msgid "Company contribution"
-#~ msgstr "公司贡献"
-
-#~ msgid "Salary Computation"
-#~ msgstr "薪酬计算"

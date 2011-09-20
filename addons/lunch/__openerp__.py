@@ -22,6 +22,7 @@
 {
     "name": "Lunch Module",
     "author": "OpenERP SA",
+    'complexity': "easy",
     "Description": """
     The lunch module is for keeping a record of the order placed and payment of the orders.
     =======================================================================================

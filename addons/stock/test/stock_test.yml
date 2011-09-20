@@ -4,51 +4,6 @@
   create physical inventory ,fill inventory lines from location,split inventory line into production lot
 
 -
-  I create Asset Account Type.
--
-  !record {model: account.account.type, id: account_account_type_asset0}:
-    close_method: balance
-    code: asset
-    name: Asset
-    sign: 1
-
--
-   I create Income Account Type.
--
-  !record {model: account.account.type, id: account_account_type_income0}:
-    close_method: unreconciled
-    code: income
-    name: Income
-    sign: 1
-
-
--
-  I create Expense Account Type.
--
-  !record {model: account.account.type, id: account_account_type_expense0}:
-    close_method: unreconciled
-    code: expense
-    name: Expense
-    sign: 1
--
-  I create Cash Account Type.
--
-  !record {model: account.account.type, id: account_account_type_cash0}:
-    close_method: balance
-    code: cash
-    name: Cash
-    sign: 1
-
-
--
-  I create Receivable Account Type.
--
-  !record {model: account.account.type, id: account_account_type_receivable0}:
-    close_method: balance
-    code: receivable
-    name: Receivable
-    sign: 1
--
 
   I create Receivable Account .
 -
@@ -60,7 +15,7 @@
     parent_left: 1
     parent_right: 2
     type: receivable
-    user_type: account_account_type_receivable0
+    user_type: account.account_type_receivable
 -
   I create Payable Account.
 -
@@ -72,14 +27,14 @@
     parent_left: 3
     parent_right: 4
     type: payable
-    user_type: account_account_type_expense0
+    user_type: account.account_type_payable
 -
-  I create Purchase Journal.
+  I create Purchase Journal - (test).
 -
   !record {model: account.journal, id: account_journal_purchasejournal0}:
     code: pur
     company_id: base.main_company
-    name: Purchase Journal
+    name: Purchase Journal - (test)
     sequence_id:  account.sequence_purchase_journal
     type: purchase
     view_id: account.account_journal_bank_view
@@ -106,7 +61,7 @@
     parent_left: 5
     parent_right: 6
     type: consolidation
-    user_type: account_account_type_asset0
+    user_type: account.account_type_expense
 -
   I create Product Sale Account.
 -
@@ -116,7 +71,7 @@
     currency_mode: current
     name: Product Sale
     type: other
-    user_type: stock.account_account_type_income0
+    user_type: account.account_type_income
 
 
 -
@@ -128,7 +83,7 @@
     currency_mode: current
     name: Product Purchase
     type: other
-    user_type: account_account_type_expense0
+    user_type: account.account_type_expense
 
 -
   I create partner.

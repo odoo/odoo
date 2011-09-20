@@ -60,7 +60,7 @@
   !record {model: sale.order, id: sale_order_so0}:
     date_order: !eval time.strftime('%Y-07-20')
     invoice_quantity: order
-    name: SO006
+    name: TESTSO006
     order_line:
       - name: '[PC1] Basic PC'
         price_unit: 450.0
@@ -96,7 +96,7 @@
   !python {model: stock.sale.forecast}: |
     forecast_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_pc1'))])
     write_dict = {'product_qty': 30.0,
-    'analyzed_dept_id': ref("hr.dep_sales"),
+    'analyzed_section_id': ref("crm.section_sales_department"),
     'analyzed_period1_id': ref("stock_period_03"),
     'analyzed_user_id': ref("base.user_root"),
     'analyzed_warehouse_id': ref("stock.warehouse0")}

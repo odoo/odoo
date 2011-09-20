@@ -121,8 +121,7 @@ class product_uom(osv.osv):
     }
 
     _sql_constraints = [
-        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('factor_category_id_uniq', 'unique (category_id, factor)', 'You can not have more than one UOM with same factor for same UOM category'),
+        ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
@@ -230,7 +229,7 @@ class product_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (_check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
     def child_get(self, cr, uid, ids):
         return [ids]
@@ -266,7 +265,7 @@ class product_template(osv.osv):
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumables are stockable products with infinite stock, or for use when you have no inventory management in the system."),
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
         'supply_method': fields.selection([('produce','Produce'),('buy','Buy')], 'Supply method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
@@ -276,8 +275,8 @@ class product_template(osv.osv):
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Sale Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
         'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Purchase Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price."),
         'volume': fields.float('Volume', help="The volume in m3."),
-        'weight': fields.float('Gross weight', help="The gross weight in Kg."),
-        'weight_net': fields.float('Net weight', help="The net weight in Kg."),
+        'weight': fields.float('Gross weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
+        'weight_net': fields.float('Net weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty (months)'),
@@ -469,8 +468,8 @@ class product_product(osv.osv):
     _inherits = {'product.template': 'product_tmpl_id'}
     _order = 'default_code,name_template'
     _columns = {
-        'qty_available': fields.function(_product_qty_available, type='float', string='Real Stock'),
-        'virtual_available': fields.function(_product_virtual_available, type='float', string='Virtual Stock'),
+        'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
+        'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity Available'),
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),

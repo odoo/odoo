@@ -1,10 +1,9 @@
-<?xml version="1.0"?>
 <openerp>
     <data>
 	 <record model="ir.actions.act_window" id="view_email_server_form_installer">
-	        <field name="name">Setup Your Mail server</field>
+	        <field name="name">Setup Incoming Mail Server (fetchmail)</field>
 	        <field name="type">ir.actions.act_window</field>
-	        <field name="res_model">email.server</field>
+	        <field name="res_model">fetchmail.server</field>
 	        <field name="view_type">form</field>
 	        <field name="view_mode">tree,form</field>
 	        <field name="view_id" ref="fetchmail.view_email_server_form"/>
@@ -14,8 +13,6 @@
 	        <field name="action_id" ref="view_email_server_form_installer"/>
 	        <field name="category_id" ref="base.category_sales_management_config"/>
 	        <field name="sequence">4</field>
-	        <field name="type">normal</field>
-	        <field name="state">skip</field>
-	    </record>
+        </record>
     </data>
 </openerp>

@@ -22,7 +22,7 @@
 from crm import crm
 from osv import fields, osv
 import time
-import binascii
+from crm import wizard
 import tools
 from tools.translate import _
 
@@ -32,44 +32,44 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
+wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
+
 class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
-    _inherit = ['mailgate.thread']
+    _inherit = ['mail.thread']
     _columns = {
-            'id': fields.integer('ID', readonly=True), 
-            'name': fields.char('Name', size=128, required=True), 
-            'active': fields.boolean('Active', required=False), 
-            'date_action_last': fields.datetime('Last Action', readonly=1), 
-            'date_action_next': fields.datetime('Next Action', readonly=1), 
-            'description': fields.text('Description'), 
-            'create_date': fields.datetime('Creation Date' , readonly=True), 
-            'write_date': fields.datetime('Update Date' , readonly=True), 
-            'date_deadline': fields.date('Deadline'), 
-            'user_id': fields.many2one('res.users', 'Responsible'), 
+            'id': fields.integer('ID', readonly=True),
+            'name': fields.char('Name', size=128, required=True),
+            'active': fields.boolean('Active', required=False),
+            'date_action_last': fields.datetime('Last Action', readonly=1),
+            'date_action_next': fields.datetime('Next Action', readonly=1),
+            'description': fields.text('Description'),
+            'create_date': fields.datetime('Creation Date' , readonly=True),
+            'write_date': fields.datetime('Update Date' , readonly=True),
+            'date_deadline': fields.date('Deadline'),
+            'user_id': fields.many2one('res.users', 'Responsible'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                             select=True, help='Sales team to which Case belongs to.\
-                                 Define Responsible user and Email account for mail gateway.'), 
-            'company_id': fields.many2one('res.company', 'Company'), 
-            'date_closed': fields.datetime('Closed', readonly=True), 
-            'partner_id': fields.many2one('res.partner', 'Partner'), 
+                                 Define Responsible user and Email account for mail gateway.'),
+            'company_id': fields.many2one('res.company', 'Company'),
+            'date_closed': fields.datetime('Closed', readonly=True),
+            'partner_id': fields.many2one('res.partner', 'Partner'),
             'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]"), 
-            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
-            'email_from': fields.char('Email', size=128, help="These people will receive email."), 
-            'date': fields.datetime('Date'), 
-            'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
-            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128), 
-            'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                            help="The channels represent the different communication \
- modes available with the customer."), 
-            'planned_revenue': fields.float('Planned Revenue'), 
-            'planned_cost': fields.float('Planned Costs'), 
-            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
-            'probability': fields.float('Probability (%)'), 
+                                 domain="[('partner_id','=',partner_id)]"),
+            'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+            'email_from': fields.char('Email', size=128, help="These people will receive email."),
+            'date': fields.datetime('Date'),
+            'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
+            'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
+            'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
+            'planned_revenue': fields.float('Planned Revenue'),
+            'planned_cost': fields.float('Planned Costs'),
+            'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
+            'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"), 
@@ -79,75 +79,44 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
-        'active': lambda *a: 1, 
-        'user_id': crm.crm_case._get_default_user, 
-        'partner_id': crm.crm_case._get_default_partner, 
-        'partner_address_id': crm.crm_case._get_default_partner_address, 
-        'email_from': crm.crm_case. _get_default_email, 
-        'state': lambda *a: 'draft', 
+        'active': lambda *a: 1,
+        'user_id': crm.crm_case._get_default_user,
+        'partner_id': crm.crm_case._get_default_partner,
+        'partner_address_id': crm.crm_case._get_default_partner_address,
+        'email_from': crm.crm_case. _get_default_email,
+        'state': lambda *a: 'draft',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'section_id': crm.crm_case. _get_section, 
-        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c), 
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0], 
+        'section_id': crm.crm_case. _get_section,
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
+        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        """
-        mailgate_pool = self.pool.get('email.server.tools')
-
-        subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-
+    def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
+        subject = msg_dict.get('subject')  or _("No Subject")
+        body = msg_dict.get('body_text')
+        msg_from = msg_dict.get('from')
         vals = {
             'name': subject,
             'email_from': msg_from,
-            'email_cc': msg.get('cc'),
+            'email_cc': msg_dict.get('cc'),
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
-            vals['priority'] = priority
+        vals.update(self.message_partner_by_email(cr, uid, msg_from))
+        self.write(cr, uid, [res_id], vals, context)
+        return res_id
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
-        if res:
-            vals.update(res)
-
-        res = self.create(cr, uid, vals, context)
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-        return res
-
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs 
-        """
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
+
+        super(crm_helpdesk,self).message_update(cr, uid, ids, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
@@ -158,7 +127,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'probability':'probability'
         }
         vls = {}
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -175,20 +144,6 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-
-        """ Send The Message
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of email’s IDs
-            @param *args: Return Tuple Value
-            @param **args: Return Dictionary of Keyword Value
-        """
-        return True
-
-crm_helpdesk()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

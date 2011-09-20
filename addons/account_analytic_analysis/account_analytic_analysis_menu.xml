@@ -11,7 +11,7 @@
             <field name="domain">[('invoice_id','=',False)]</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
         </record>
-        <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="menu_invoicing" groups="base.group_extended"/>
+        <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="menu_invoicing" groups="analytic.group_analytic_accounting"/>
 
         <record id="action_account_analytic_managed_overpassed" model="ir.actions.act_window">
             <field name="name">Overpassed Accounts</field>
@@ -20,6 +20,6 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('state','=','open')]</field>
         </record>
-        <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" sequence="50" parent="menu_invoicing" groups="base.group_extended"/>
+        <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" sequence="50" parent="menu_invoicing" groups="analytic.group_analytic_accounting"/>
     </data>
 </openerp>

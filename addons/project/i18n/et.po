@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:43+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:53+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
@@ -59,7 +59,7 @@ msgid "Deadlines"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Toiming pole lubatud!"
@@ -247,7 +247,7 @@ msgid "Day"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr ""
@@ -438,7 +438,7 @@ msgid "Reactivate Project"
 msgstr "Reaktiveeri projekt"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr ""
@@ -488,8 +488,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -629,7 +629,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -722,7 +722,7 @@ msgid "Starting Date"
 msgstr "Alguskuupäev"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -747,7 +747,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -1149,7 +1149,6 @@ msgstr "Projekti töölaud"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Ülemprojekt"
 
@@ -1179,7 +1178,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1227,7 +1226,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Kui ülesanne on lõpetatud siis see muutub valmis olekusse."
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1364,7 +1363,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr ""
@@ -1416,7 +1415,7 @@ msgid "Open"
 msgstr "Ava"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1743,7 +1742,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1820,7 +1819,7 @@ msgid "Validation State"
 msgstr "Kinnitamise olek"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr ""
@@ -1848,7 +1847,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -2198,108 +2197,3 @@ msgstr ""
 
 #~ msgid "Date Stop: %(date_stop)s"
 #~ msgstr "Lõppkuupäev: %(date_stop)s"
-
-#~ msgid "My project's planning"
-#~ msgstr "Minu projektide planeerimine"
-
-#~ msgid "Board for project users"
-#~ msgstr "Töölaud projekti kasutajatele"
-
-#~ msgid "Pipeline of tasks"
-#~ msgstr "Ülesannete ootel tööd"
-
-#~ msgid "My Planning"
-#~ msgstr "Minu planeerimine"
-
-#~ msgid "Project Manager Dashboard"
-#~ msgstr "Projektijuhi töölaud"
-
-#~ msgid "My Deadlines"
-#~ msgstr "Minu tähtajad"
-
-#~ msgid "User's timesheets"
-#~ msgstr "Kasutaja tööajalehed"
-
-#~ msgid "Project manager board"
-#~ msgstr "Projektijuhi laud"
-
-#~ msgid "My tasks board"
-#~ msgstr "Minu ülesannete laud"
-
-#~ msgid "My user's pipeline"
-#~ msgstr "Minu kasutaja ootel tööd"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Minu tööajaleht"
-
-#~ msgid "Tasks finished by project (this month)"
-#~ msgstr "Ülesanded lõpetatud projektijärgi (käesoleval kuul)"
-
-#~ msgid "Tasks Closed by Project and User"
-#~ msgstr "Ülesanded suletud Kategooria ja Kasutajajärgi"
-
-#~ msgid "Tasks finished by project and user (this month)"
-#~ msgstr "Ülesanded lõpetatud projekt ja kasutajajärgi (käesoleval kuul)"
-
-#~ msgid "Task Closed"
-#~ msgstr "Ülesanne suletud"
-
-#~ msgid "Tasks by Project"
-#~ msgstr "Ülesanded Projektijärgi"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "Müügihaldus - Aruandlus"
-
-#~ msgid "User"
-#~ msgstr "Kasutaja"
-
-#~ msgid "Tasks by Project and User"
-#~ msgstr "Ülesanded Projekti ja Kasutajajärgi"
-
-#~ msgid "This Month"
-#~ msgstr "Käesolev kuu"
-
-#~ msgid "Tasks by projects and users"
-#~ msgstr "Ülesanded projektide ja kasutajatejärgi"
-
-#~ msgid "Avg Closing Delay"
-#~ msgstr "Keskmine sulgemise viivitus"
-
-#~ msgid "Tasks by project"
-#~ msgstr "Ülesanded projektijärgi"
-
-#~ msgid "Tasks Closed by Project"
-#~ msgstr "Ülesanded Suletud Projektijärgi"
-
-#~ msgid "Tasks by User"
-#~ msgstr "Ülesanded kasutaja järgi"
-
-#~ msgid "No Task"
-#~ msgstr "Ülesanne puudub"
-
-#~ msgid "Timesheet / Task Hours Per Month"
-#~ msgstr "Tööajaleht / Ülesannete tunnid kuu kaupa"
-
-#~ msgid "Reporting"
-#~ msgstr "Aruandlus"
-
-#~ msgid "Task Closed Within Past 15 Days"
-#~ msgstr "Viimase 15 päeva jooksul suletud ülesanded"
-
-#~ msgid "Task Hours"
-#~ msgstr "Ülesande tunnid"
-
-#~ msgid "Task Number"
-#~ msgstr "Tegumi number"
-
-#~ msgid "Task Progress"
-#~ msgstr "Ülesande edenemine"
-
-#~ msgid "Closed Task Report"
-#~ msgstr "Suletud ttegumi aruanne"
-
-#~ msgid "Timesheet Hours"
-#~ msgstr "Töögraafiku tunnid"
-
-#~ msgid "Closed Tasks"
-#~ msgstr "Suletud tegumid"

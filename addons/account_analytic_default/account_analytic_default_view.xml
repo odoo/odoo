@@ -44,7 +44,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Accounts">
-                    <group col="10" colspan="4">
+                    <group>
                     <filter icon="terp-go-month" string="Current" name = "current" help="Analytical defaults whose end date is greater than today or None" domain = "['|', ('date_stop', '&gt;', datetime.date.today().strftime('%%Y-%%m-%%d')), ('date_stop', '=', False)]" />
                     <separator orientation="vertical"/>
                     <field name="analytic_id" groups="analytic.group_analytic_accounting"/>

@@ -24,6 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
 Module for human resource management.
