@@ -135,7 +135,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group>
-                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
+                    <filter icon="terp-document-new" name="New" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
                     <separator orientation="vertical"/>
@@ -166,7 +166,7 @@
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{"search_default_create_uid":uid,'search_default_draft': 1}</field>
+        <field name="context">{"search_default_create_uid":uid,'search_default_New': 1}</field>
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help">A purchase requisition is the step before a request for quotation. In a purchase requisition (or purchase tender), you can record the products you need to buy and trigger the creation of RfQs to suppliers. After the negotiation, once you have reviewed all the supplier's offers, you can validate some and cancel others.</field>
     </record>
