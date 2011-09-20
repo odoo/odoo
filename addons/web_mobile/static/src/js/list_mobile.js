@@ -48,7 +48,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                 }
             });
             self.$element.find("a#list-id").click(self.on_list_click);
-            $.mobile.changePage("#oe_list", "slide", true, true);
+            $.mobile.changePage("#"+self.element_id, "slide", true, true);
         });
     },
     on_list_click: function(ev) {

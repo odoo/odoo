@@ -7,9 +7,6 @@
     <div data-role="page" id="oe_login"></div>
     <div id="oe_header" />
     <div id="oe_footer" />
-    <div data-role="page" id="oe_sec_menu"></div>
-    <div data-role="page" id="oe_sec_menu_new"></div>
-    <div data-role="page" id="oe_list"></div>
     <div data-role="page" id="oe_form"></div>
     <div data-role="page" id="oe_shortcuts"></div>
     <div data-role="page" id="oe_menu"></div>
@@ -158,6 +155,9 @@
                         <t t-if="!(values[field.attrs.name])">
                             <input type="text" value="" id=""/>
                          </t>
+                         <t t-if="(field.attrs.name == 'email' or field.attrs.name == 'email_from') and values[field.attrs.name]">
+                            <a t-att-href="'mailto:'+values[field.attrs.name]"><img src="/web/static/src/img/icons/terp-mail-message-new.png" /></a>
+                          </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'text'">
                         <label for="">
@@ -203,15 +203,19 @@
                         </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'boolean'">
-                        <fieldset data-role="controlgroup">
-                            <t t-if="values[field.attrs.name]">
-                                <input type="checkbox" name="checkbox-1" id="checkbox-1" checked="yes" class="custom"/>
-                            </t>
-                            <t t-if="!(values[field.attrs.name])">
-                                <input type="checkbox" name="checkbox-1" id="checkbox-1" class="custom" />
-                            </t>
-                            <label for="checkbox-1"><t t-esc="fields[field.attrs.name].string" /></label>
-                        </fieldset>
+                        <div data-role="fieldcontain">
+                            <label for="slider"><t t-esc="fields[field.attrs.name].string" /> :</label>
+                            <select name="slider" id="slider" data-role="slider">
+                                <t t-if="values[field.attrs.name]">
+                                    <option value="on" selected="true">On</option>
+                                    <option value="off">Off</option>
+                                </t>
+                                <t t-if="!values[field.attrs.name]">
+                                    <option value="on">On</option>
+                                    <option value="off" selected="true">Off</option>
+                                </t>
+                            </select>
+                        </div>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'selection'">
                         <label for="" class="select">
@@ -278,7 +282,7 @@
         </form>
     </div>
     <t t-if="temp_flag">
-    <t t-call="Footer" />
+        <t t-call="Footer" />
     </t>
 </t>
 </templates>

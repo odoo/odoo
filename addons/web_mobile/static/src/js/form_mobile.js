@@ -87,6 +87,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
 
                             if(notebook){
                                 $(this).find('p').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
+                                $(this).find('p').find('[data-role=content]').css('padding','0px 0px 0px 0px');
                             }else{
                                 $(this).find('p').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
                             }
