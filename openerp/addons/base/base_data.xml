@@ -1086,16 +1086,17 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
-        <record id="VEB" model="res.currency">
-            <field name="name">VEB</field>
-            <field name="symbol">Bs</field>
-            <field name="rounding">2.95</field>
+        <!-- VEF was previously VEB -->
+        <record id="VEF" model="res.currency">
+            <field name="name">VEF</field>
+            <field name="symbol">Bs.F</field>
+            <field name="rounding">0.0001</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
         </record>
-        <record id="rateVEB" model="res.currency.rate">
-            <field name="rate">2768.45</field>
-            <field name="currency_id" ref="VEB"/>
+        <record id="rateVEF" model="res.currency.rate">
+            <field name="rate">5.864</field>
+            <field name="currency_id" ref="VEF"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
