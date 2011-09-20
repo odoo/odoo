@@ -44,7 +44,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
 
                     self.$element.find("[data-role=header]").find('h1').html(self.head_title);
                     self.$element.find("[data-role=header]").find('#home').click(function(){
-                        $.mobile.changePage($("#oe_menu"), "slide", true, true);
+                        $.mobile.changePage("#oe_menu", "slide", true, true);
                     });
                     self.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
                         if(!$('#oe_shortcuts').html().length){
@@ -52,7 +52,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             this.shortcuts.start();
                         }
                         else{
-                            $.mobile.changePage($("#oe_shortcuts"), "slide", true, true);
+                            $.mobile.changePage("#oe_shortcuts", "slide", true, true);
                         }
                     });
                     self.$element.find("[data-role=footer]").find('#preference').click(function(){
@@ -61,7 +61,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             this.options.start();
                         }
                         else{
-                            $.mobile.changePage($("#oe_options"), "slide", true, true);
+                            $.mobile.changePage("#oe_options", "slide", true, true);
                         }
                     });
                     self.$element.find('select').change(function(ev){
@@ -121,7 +121,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                     $('#oe_list').html(QWeb.render("ListView", {'records' : res}));
                                     $('#oe_list').find("[data-role=header]").find('h1').html(head);
                                     $('#oe_list').find("[data-role=header]").find('#home').click(function(){
-                                        $.mobile.changePage($("#oe_menu"), "slide", true, true);
+                                        $.mobile.changePage("#oe_menu", "slide", true, true);
                                     });
                                     $('#oe_list').find("[data-role=footer]").find('#shrotcuts').click(function(){
                                         if(!$('#oe_shortcuts').html().length){
@@ -129,7 +129,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             this.shortcuts.start();
                                         }
                                         else{
-                                            $.mobile.changePage($("#oe_shortcuts"), "slide", true, true);
+                                            $.mobile.changePage("#oe_shortcuts", "slide", true, true);
                                         }
                                     });
                                     $('#oe_list').find("[data-role=footer]").find('#preference').click(function(){
@@ -138,7 +138,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             this.options.start();
                                         }
                                         else{
-                                            $.mobile.changePage($("#oe_options"), "slide", true, true);
+                                            $.mobile.changePage("#oe_options", "slide", true, true);
                                         }
                                     });
                                     $('#oe_list').find("a#list-id").click(function(ev){
@@ -174,7 +174,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                 });
                                                 $('#oe_form').find("[data-role=header]").find('h1').html(head_title);
                                                 $('#oe_form').find("[data-role=header]").find('#home').click(function(){
-                                                    $.mobile.changePage($("#oe_menu"), "slide", true, true);
+                                                    $.mobile.changePage("#oe_menu", "slide", true, true);
                                                 });
                                                 $('#oe_form').find("[data-role=footer]").find('#shrotcuts').click(function(){
                                                     if(!$('#oe_shortcuts').html().length){
@@ -182,7 +182,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                         this.shortcuts.start();
                                                     }
                                                     else{
-                                                        $.mobile.changePage($("#oe_shortcuts"), "slide", true, true);
+                                                        $.mobile.changePage("#oe_shortcuts", "slide", true, true);
                                                     }
                                                 });
                                                 $('#oe_form').find("[data-role=footer]").find('#preference').click(function(){
@@ -191,19 +191,19 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                         this.options.start();
                                                     }
                                                     else{
-                                                        $.mobile.changePage($("#oe_options"), "slide", true, true);
+                                                        $.mobile.changePage("#oe_options", "slide", true, true);
                                                     }
                                                 });
-                                                $.mobile.changePage($("#oe_form"), "slide", true, true);
+                                                $.mobile.changePage("#oe_form", "slide", true, true);
                                             }
                                         });
                                     });
-                                    $.mobile.changePage($("#oe_list"), "slide", true, true);
+                                    $.mobile.changePage("#oe_list", "slide", true, true);
                                 }
                             });
                         }
                     });
-                    $.mobile.changePage($("#oe_form"), "slide", true, true);
+                    $.mobile.changePage("#oe_form", "slide", true, true);
                 });
         });
     },

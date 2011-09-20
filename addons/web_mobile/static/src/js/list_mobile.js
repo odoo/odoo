@@ -27,7 +27,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
             self.$element.html(QWeb.render("ListView", {'records' : result}));
             self.$element.find("[data-role=header]").find('h1').html(self.action.name);
             self.$element.find("[data-role=header]").find('#home').click(function(){
-                $.mobile.changePage($("#oe_menu"), "slide", true, true);
+                $.mobile.changePage("#oe_menu", "slide", true, true);
             });
             self.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
                 if(!$('#oe_shortcuts').html().length){
@@ -35,7 +35,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                     this.shortcuts.start();
                 }
                 else{
-                    $.mobile.changePage($("#oe_shortcuts"), "slide", true, true);
+                    $.mobile.changePage("#oe_shortcuts", "slide", true, true);
                 }
             });
             self.$element.find("[data-role=footer]").find('#preference').click(function(){
@@ -44,11 +44,11 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                     this.options.start();
                 }
                 else{
-                    $.mobile.changePage($("#oe_options"), "slide", true, true);
+                    $.mobile.changePage("#oe_options", "slide", true, true);
                 }
             });
             self.$element.find("a#list-id").click(self.on_list_click);
-            $.mobile.changePage($("#oe_list"), "slide", true, true);
+            $.mobile.changePage("#oe_list", "slide", true, true);
         });
     },
     on_list_click: function(ev) {
