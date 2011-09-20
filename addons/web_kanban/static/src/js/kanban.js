@@ -148,6 +148,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         self.all_display_data.sort(this.sort_group);
         this.$element.html(QWeb.render("KanbanView", {"data": self.all_display_data}));
         this.on_reload_kanban();
+        this.$element.find(".oe_vertical_text").hide();
         var drag_handel = false;
         if (this.$element.find(".oe_kanban_draghandle").length > 0) {
             drag_handel = ".oe_kanban_draghandle";
@@ -166,6 +167,26 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
+        this.$element.find(".fold-columns-icon").click(function(event) {
+            self.do_fold_unfold_columns(event, this.id);
+        });
+    },
+    do_fold_unfold_columns: function(event, element_id) {
+      var column_id = "column_" + element_id;
+      var column_element = this.$element.find("#" + column_id + ".oe_fold_column");
+      if (column_element.is(":hidden")) {
+          this.$element.find("#" + column_id).find("img.fold-columns-icon").attr('src', '/web_kanban/static/src/img/minus-icon.png');
+          column_element.show();
+          this.$element.find("#" + column_id + ".oe_table_column").css("width",Math.round(99 / this.all_display_data.length) + "%");
+          this.$element.find("#" + column_id + ".oe_vertical_text").hide();
+      }
+      else{
+          this.$element.find("#" + column_id).find("img.fold-columns-icon").attr('src', '/web_kanban/static/src/img/plus-icon.png');
+          column_element.hide();
+          this.$element.find("#" + column_id + ".oe_table_column").css("width","0.5%");
+          this.$element.find("#" + column_id + ".oe_vertical_text").show();
+      }
+
     },
     do_record_group: function() {
         if (this.NO_OF_COLUMNS) {
