@@ -346,9 +346,6 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <filter icon="terp-check" domain="[('state','in',('open','recruit'))]" string="Current"
-                        name="Current" help="Open and in recruitment positions"/>
-                    <separator orientation="vertical"/>
                     <filter icon="terp-personal+"  
                             domain="[('state','=','open')]" 
                             string="In Position"
