@@ -1361,7 +1361,7 @@ class account_invoice_line(osv.osv):
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
-        result['note'] = res.description
+        result['note'] = res.description_sale
         if result['uos_id']:
             res2 = res.uom_id.category_id.id
             if res2:
