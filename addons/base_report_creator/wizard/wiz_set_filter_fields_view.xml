@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_wiz_set_filter_fields_form" model="ir.ui.view">
+            <field name="name">wiz.set.filter.fields.form</field>
+            <field name="model">set.filter.fields</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Select Field to Filter">
+                    <field name="field_id" nolabel="1"/>
+                    <newline/>
+                    <group>
+                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                        <button name="open_form" string="Continue" type="object" icon="gtk-go-forward"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wiz_set_filter_fields" model="ir.actions.act_window">
+            <field name="name">Filter</field>
+            <field name="res_model">set.filter.fields</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_wiz_set_filter_fields_form"/>
+        </record>
+
+        <record id="view_wiz_set_filter_value_view" model="ir.ui.view">
+            <field name="name">wiz_set_filter_vlaue</field>
+            <field name="model">set.filter.value</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Set Filter Values">
+                    <separator colspan="4" string="Filter Values" />
+                    <field name="field_id"/>
+                    <field name="operator" />
+                    <field name="value" colspan="4"/>
+                    <field name="condition" />
+                    <separator colspan="4"/>
+                    <group colspan="4" col="2">
+	                    <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+	                    <button name="set_filter_value" string="Confirm Filter" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>
