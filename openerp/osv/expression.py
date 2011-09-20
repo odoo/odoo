@@ -425,11 +425,10 @@ class expression(object):
                     self.__exp[i] = tuple(self.__exp[i])
 
                 if field.translate:
+                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
-
-                    operator = operator == '=like' and 'like' or operator
-
+                        
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
@@ -522,8 +521,9 @@ class expression(object):
                     query = '%s.id %s %%s' % (table._table, operator)
                     params = right
                 else:
+                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     like = operator in ('like', 'ilike', 'not like', 'not ilike')
-
+                    
                     op = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if left in table._columns:
                         format = like and '%s' or table._columns[left]._symbol_set[0]
