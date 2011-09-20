@@ -807,6 +807,76 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             localStorage.setItem('oe_menu_folded', this.folded.toString());
         }
     },
+    on_menu_click: function(ev, id) {
+        id = id || 0;
+        var $clicked_menu, manual = false;
+
+        if (id) {
+            // We can manually activate a menu with it's id (for hash url mapping)
+            manudal = true;
+            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
+            if (!$clicked_menu.length) {
+                $clicked_menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
+            }
+        } else {
+            $clicked_menu = $(ev.currentTarget);
+            id = $clicked_menu.data('menu');
+        }
+
+        //if (launch_actionid && !(this.folded && main_clicked)) {
+        if (this.do_menu_click($clicked_menu, manual)) {
+            this.session.active_id = id;
+            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+            return true;
+        } else {
+            return false;
+        }
+    },
+    do_menu_click: function($clicked_menu, manual) {
+        var $sub_menu, $main_menu,
+            active = $clicked_menu.is('.active'),
+            sub_menu_visible = false;
+
+        if (this.$secondary_menu.has($clicked_menu).length) {
+            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
+            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
+        } else {
+            $sub_menu = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
+            $main_menu = $clicked_menu;
+        }
+
+        sub_menu_visible = $sub_menu.is(':visible');
+        this.$secondary_menu.find('.oe_secondary_menu').hide();
+
+        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
+        $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
+
+        if (!(this.folded && manual)) {
+            this.do_show_secondary($sub_menu, $main_menu);
+        }
+
+        if ($main_menu != $clicked_menu) {
+            if ($clicked_menu.is('.submenu')) {
+                $sub_menu.find('.submenu.opened').each(function() {
+                    if (!$(this).next().has($clicked_menu).length) {
+                        $(this).removeClass('opened').next().hide();
+                    }
+                });
+                $clicked_menu.toggleClass('opened').next().toggle();
+            } else if ($clicked_menu.is('.leaf')) {
+                $sub_menu.toggle(!this.folded);
+                return true;
+            }
+        } else if (this.folded) {
+            if (active && sub_menu_visible) {
+                $sub_menu.hide();
+                return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
+    },
     do_show_secondary: function($sub_menu, $main_menu) {
         if (this.folded) {
             var css = $main_menu.position(),
@@ -822,61 +892,6 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             $sub_menu.css(css);
         }
         $sub_menu.show();
-    },
-    on_menu_click: function(ev, id) {
-        id = id || 0;
-        var $clicked_menu, $main_menu, $sub_menu,
-            manual = main_clicked = leaf_clicked = false;
-
-        if (id) {
-            // We can manually activate a menu with it's id (for hash url mapping)
-            manual = true;
-            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
-            if (!$clicked_menu.length) {
-                $clicked_menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
-            }
-        } else {
-            $clicked_menu = $(ev.currentTarget);
-            id = $clicked_menu.data('menu');
-        }
-        this.leaf_clicked = $clicked_menu.is(".leaf");
-
-        if (this.$secondary_menu.has($clicked_menu).length) {
-            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
-            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
-        } else {
-            $sub_menu = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
-            $main_menu = $clicked_menu;
-            main_clicked = true;
-        }
-
-        this.$secondary_menu.find('.oe_secondary_menu').hide().removeClass('active');
-
-        if (id && !(this.folded && main_clicked)) {
-            this.session.active_id = id;
-            this.rpc('/web/menu/action', {'menu_id': id},
-                    this.on_menu_action_loaded);
-        }
-
-        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
-        $main_menu.addClass('active');
-        $clicked_menu.addClass('active');
-        $sub_menu.addClass('active');
-
-        if (!(this.folded && manual)) {
-            this.do_show_secondary($sub_menu, $main_menu, manual);
-        }
-
-        if (this.$secondary_menu.has($clicked_menu).length) {
-            if ($clicked_menu.is('.submenu')) {
-                //this.$secondary_menu.find('.submenu').removeClass('opened').next().hide();
-                $clicked_menu.toggleClass('opened').next().toggle();
-                return false;
-            }
-            return !this.leaf_clicked;
-        } else {
-            return false;
-        }
     },
     on_menu_action_loaded: function(data) {
         var self = this;
