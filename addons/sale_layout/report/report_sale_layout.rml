@@ -277,9 +277,7 @@
       <blockTable colWidths="6.0,193.0,85.0,71.0,57.0,57.0,71.0" style="Table1">
         <tr>
           <td>
-            <para style="terp_default_8">
-              <font face="Helvetica" size="9.0">[[ a['layout_type'] in ('text','break') and removeParentNode('blockTable')]]</font>
-            </para>
+              <para style="terp_default_9">[[ a['layout_type'] in ['text','break'] and removeParentNode('blockTable')]]</para>
           </td>
           <td>
             <para style="terp_default_9"><font face="Helvetica" size="8.0">[[ (a['layout_type']=='title' or a['layout_type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'})) or removeParentNode('font') ]] </font>[[ a['name'] ]]</para>
@@ -297,7 +295,7 @@
             <para style="terp_default_Centre_9"><font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['discount'], digits=get_digits(dp='Sale Price')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['price_subtotal'], digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica" size="8.0">[[ a['layout_type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font> [[ formatLang(a['price_subtotal'], digits=get_digits(dp='Sale Price')) ]] [[ a['layout_type']=='article' and o.pricelist_id.currency_id.symbol ]]</para>
           </td>
         </tr>
         <tr>
@@ -398,6 +396,6 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-  </pto>
+   </pto>
   </story>
 </document>
