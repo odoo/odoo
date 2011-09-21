@@ -415,8 +415,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     do_search: function (domains, contexts, groupbys) {
         return this.rpc('/web/session/eval_domain_and_context', {
-            domains: [this.dataset.get_domain()].concat(domains),
-            contexts: [this.dataset.get_context()].concat(contexts),
+            domains: _([this.dataset.get_domain()].concat(domains)).compact(),
+            contexts: _([this.dataset.get_context()].concat(contexts)).compact(),
             group_by_seq: groupbys
         }, $.proxy(this, 'do_actual_search'));
     },
