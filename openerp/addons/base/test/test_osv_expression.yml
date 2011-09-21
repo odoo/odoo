@@ -202,8 +202,6 @@
             if x.website:
                 with_website.append(x.id)
         with_website.sort()
-        print "with_parent", with_parent
-        print "without_parent", without_parent
 
         # We treat null values differently than in SQL. For instance in SQL:
         #   SELECT id FROM res_partner WHERE parent_id NOT IN (0)
@@ -367,22 +365,31 @@
         # Search the company via its one2many (the one2many must point back at the company).
         company = self.browse(cr, uid, ref('ymltest_company3'))
         max_currency_id = max(self.pool.get('res.currency').search(cr, uid, []))
-        currency_ids = self.pool.get('res.currency').search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
-        currency_ids = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
-        currency_ids = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [])])
+        currency_ids1 = self.pool.get('res.currency').search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        currency_ids2 = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
+        currency_ids3 = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [])])
+        assert currency_ids1 == currency_ids2 == currency_ids3, 'All 3 results should have be the same: all currencies'
         default_company = self.browse(cr, uid, 1)
         # one2many towards same model
-        res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])])
-        res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])])
+        res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])]) # any company having a child of company3 as child
+        res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])]) # any company having the first child of company3 as child
         # one2many towards another model
-        res_3 = self.search(cr, uid, [('currency_ids', 'in', [x.id for x in default_company.currency_ids])])
-        res_4 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].id])])
-        res_5 = self.search(cr, uid, [('currency_ids', 'in', default_company.currency_ids[0].id)])
+        res_3 = self.search(cr, uid, [('currency_ids', 'in', [x.id for x in default_company.currency_ids])]) # companies having a currency of main company
+        res_4 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].id])]) # companies having first currency of main company
+        res_5 = self.search(cr, uid, [('currency_ids', 'in', default_company.currency_ids[0].id)]) # companies having first currency of main company
         # res_6 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].name])]) # TODO
         res_7 = self.search(cr, uid, [('currency_ids', '=', default_company.currency_ids[0].name)])
         res_8 = self.search(cr, uid, [('currency_ids', 'like', default_company.currency_ids[0].name)])
         res_9 = self.search(cr, uid, [('currency_ids', 'like', 'probably_unexisting_name')])
         # self.search(cr, uid, [('currency_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
+        assert res_1 == [ref('ymltest_company3')]
+        assert res_2 == [ref('ymltest_company3')]
+        assert res_3 == [1]
+        assert res_4 == [1]
+        assert res_5 == [1]
+        assert res_7 == [1]
+        assert res_8 == [1]
+        assert res_9 == []
 
         # get the companies referenced by some currency (this is normally the main company)
         res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
@@ -393,15 +400,7 @@
         res_11.sort()
         res_12.sort()
         res_13.sort()
-        assert res_1 == [ref('ymltest_company3')]
-        assert res_2 == [ref('ymltest_company3')]
-        assert res_3 == [1]
-        assert res_4 == [1]
-        assert res_5 == [1]
-        assert res_7 == [1]
-        assert res_8 == [1]
-        assert res_9 == []
-        print ">>> 10:", res_10
+
         print ">>> 11:", res_11
         #assert res_10 == res_11
         assert res_10 == res_12

@@ -75,10 +75,16 @@ domain is not a valid second-level operand.
 Unaccent - Accent-insensitive search
 
 OpenERP will use the SQL function 'unaccent' when available for the 'ilike' and
-'not ilike' operators. Normally the 'unaccent' function is obtained from the
-PostgreSQL 'unaccent' contrib module[0]. The steps to install the module might
-differ on specific PostgreSQL versions. We give here some instruction for
-PostgreSQL 9.x on a Ubuntu system.
+'not ilike' operators, and enabled in the configuration.
+Normally the 'unaccent' function is obtained from the PostgreSQL 'unaccent'
+contrib module[0]. 
+
+
+..todo: The following explanation should be moved in some external installation
+        guide 
+
+The steps to install the module might differ on specific PostgreSQL versions.
+We give here some instruction for PostgreSQL 9.x on a Ubuntu system.
 
 Ubuntu doesn't come yet with PostgreSQL 9.x, so an alternive package source
 is used. We use Martin Pitt's PPA available at ppa:pitti/postgresql[1]. See
@@ -127,6 +133,7 @@ import openerp.modules
 NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
+DOMAIN_OPERATORS = (NOT_OPERATOR, OR_OPERATOR, AND_OPERATOR)
 
 # List of available term operators. It is also possible to use the '<>'
 # operator, which is strictly the same as '!='; the later should be prefered
@@ -135,13 +142,15 @@ AND_OPERATOR = '&'
 # only one representation).
 # An internal (i.e. not available to the user) 'inselect' operator is also
 # used. In this case its right operand has the form (subselect, params).
-OPS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+TERM_OPERATORS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike',
+                  'like', 'not like', 'ilike', 'not ilike', 'in', 'not in',
+                  'child_of')
 
 # A subset of the above operators, with a 'negative' semantic. When the
-# expressions 'in NEGATIVE_OPS' or 'not in NEGATIVE_OPS' are used in the code
-# below, this doesn't necessarily mean that any of those NEGATIVE_OPS is
+# expressions 'in NEGATIVE_TERM_OPERATORS' or 'not in NEGATIVE_TERM_OPERATORS' are used in the code
+# below, this doesn't necessarily mean that any of those NEGATIVE_TERM_OPERATORS is
 # legal in the processed term.
-NEGATIVE_OPS = ('!=', 'not like', 'not ilike', 'not in')
+NEGATIVE_TERM_OPERATORS = ('!=', 'not like', 'not ilike', 'not in')
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
@@ -164,7 +173,7 @@ def normalize(domain):
     op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
     for token in domain:
         if expected == 0:                   # more than expected, like in [A, B]
-            result[0:0] = ['&']             # put an extra '&' in front
+            result[0:0] = [AND_OPERATOR]             # put an extra '&' in front
             expected = 1
         result.append(token)
         if isinstance(token, (list, tuple)): # domain term
@@ -205,16 +214,16 @@ def combine(operator, unit, zero, domains):
     return result
 
 def AND(domains):
-    """ AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
+    """AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
     return combine(AND_OPERATOR, TRUE_DOMAIN, FALSE_DOMAIN, domains)
 
 def OR(domains):
-    """ OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
+    """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
     return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
 
 def is_operator(element):
-    """ Test whether an object is a valid domain operator. """
-    return isinstance(element, (str, unicode)) and element in [AND_OPERATOR, OR_OPERATOR, NOT_OPERATOR]
+    """Test whether an object is a valid domain operator. """
+    return isinstance(element, basestring) and element in DOMAIN_OPERATORS
 
 # TODO change the share wizard to use this function.
 def is_leaf(element, internal=False):
@@ -222,12 +231,11 @@ def is_leaf(element, internal=False):
 
     :param internal: allow or not the 'inselect' internal operator in the term.
     This normally should be always left to False.
-
     """
-    INTERNAL_OPS = OPS + ('inselect',)
+    INTERNAL_OPS = TERM_OPERATORS + ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
        and len(element) == 3 \
-       and (((not internal) and element[1] in OPS + ('<>',)) \
+       and (((not internal) and element[1] in TERM_OPERATORS + ('<>',)) \
             or (internal and element[1] in INTERNAL_OPS + ('<>',)))
 
 def normalize_leaf(left, operator, right):
@@ -247,7 +255,7 @@ def normalize_leaf(left, operator, right):
     return left, operator, right
 
 def distribute_not(domain):
-    """ Distribute the '!' operator on a normalized domain.
+    """ Distribute any '!' domain operators found inside a normalized domain.
 
     Because we don't use SQL semantic for processing a 'left not in right'
     query (i.e. our 'not in' is not simply translated to a SQL 'not in'),
@@ -256,11 +264,17 @@ def distribute_not(domain):
     the result with 'not (...)', as it would result in a 'not in' at the SQL
     level.
 
-    This function is thus responsible for pushing the '!' operator inside the
-    terms.
+    This function is thus responsible for pushing any '!' domain operators
+    inside the terms themselves. For example::
+
+         ['!','&',('user_id','=',4),('partner_id','in',[1,2])]
+            will be turned into:
+         ['|',('user_id','!=',4),('partner_id','not in',[1,2])]
 
     """
     def negate(leaf):
+        """Negates and returns a single domain leaf term,
+        using the opposite operator if possible"""
         left, operator, right = leaf
         mapping = {
             '<': '>=',
@@ -279,44 +293,50 @@ def distribute_not(domain):
         if operator in mapping:
             operator = mapping[operator]
             return [(left, operator, right)]
-        return ['!', (left, operator, right)]
-    def distribute(domain):
+        return [NOT_OPERATOR, (left, operator, right)]
+    def distribute_negate(domain):
+        """Negate the domain ``subtree`` rooted at domain[0],
+        leaving the rest of the domain intact, and return
+        (negated_subtree, untouched_domain_rest)
+        """
         if is_leaf(domain[0]):
             return negate(domain[0]), domain[1:]
-        if domain[0] == '&':
-            done1, todo1 = distribute(domain[1:])
-            done2, todo2 = distribute(todo1)
-            return ['|'] + done1 + done2, todo2
-        if domain[0] == '|':
-            done1, todo1 = distribute(domain[1:])
-            done2, todo2 = distribute(todo1)
-            return ['&'] + done1 + done2, todo2
+        if domain[0] == AND_OPERATOR:
+            done1, todo1 = distribute_negate(domain[1:])
+            done2, todo2 = distribute_negate(todo1)
+            return [OR_OPERATOR] + done1 + done2, todo2
+        if domain[0] == OR_OPERATOR:
+            done1, todo1 = distribute_negate(domain[1:])
+            done2, todo2 = distribute_negate(todo1)
+            return [AND_OPERATOR] + done1 + done2, todo2
     if not domain:
         return []
-    if domain[0] != '!':
+    if domain[0] != NOT_OPERATOR:
         return [domain[0]] + distribute_not(domain[1:])
-    if domain[0] == '!':
-        done, todo = distribute(domain[1:])
+    if domain[0] == NOT_OPERATOR:
+        done, todo = distribute_negate(domain[1:])
         return done + distribute_not(todo)
 
-def select_from_where(cr, s, f, w, ids, op):
+def select_from_where(cr, select_field, from_table, where_field, where_ids, where_operator):
     # todo: merge into parent query as sub-query
     res = []
-    if ids:
-        if op in ['<','>','>=','<=']:
+    if where_ids:
+        if where_operator in ['<','>','>=','<=']:
             cr.execute('SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % \
-                (s, f, w, op), (ids[0],)) # TODO shouldn't this be min/max(ids) ?
+                (select_field, from_table, where_field, where_operator),
+                (where_ids[0],)) # TODO shouldn't this be min/max(where_ids) ?
             res = [r[0] for r in cr.fetchall()]
-        else: # TODO op is supposed to be 'in'? It is called with child_of...
-            for i in range(0, len(ids), cr.IN_MAX):
-                subids = ids[i:i+cr.IN_MAX]
+        else: # TODO where_operator is supposed to be 'in'? It is called with child_of...
+            for i in range(0, len(where_ids), cr.IN_MAX):
+                subids = where_ids[i:i+cr.IN_MAX]
                 cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (s, f, w), (tuple(subids),))
+                    (select_field, from_table, where_field), (tuple(subids),))
                 res.extend([r[0] for r in cr.fetchall()])
     return res
 
-def select_distinct_from_where_not_null(cr, s, f):
-    cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (s, f, s))
+def select_distinct_from_where_not_null(cr, select_field, from_table):
+    cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % \
+               (select_field, from_table, select_field))
     return [r[0] for r in cr.fetchall()]
 
 class expression(object):
@@ -342,34 +362,35 @@ class expression(object):
         return self.__exp[:]
 
     def parse(self, cr, uid, exp, table, context):
-        """ transform the leafs of the expression """
+        """ transform the leaves of the expression """
         self.__exp = exp
         self.__main_table = table
         self.__all_tables.add(table)
 
-        def child_of_domain(left, right, table, parent=None, prefix=''):
-            ids = right
-            if table._parent_store and (not table.pool._init):
-# TODO: Improve where joins are implemented for many with '.', replace by:
-# doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
+        def child_of_domain(left, ids, left_model, parent=None, prefix=''):
+            """Returns a domain implementing the child_of operator for [(left,child_of,ids)],
+            either as a range using the parent_left/right tree lookup fields (when available),
+            or as an expanded [(left,in,child_ids)]"""
+            if left_model._parent_store and (not left_model.pool._init):
+                # TODO: Improve where joins are implemented for many with '.', replace by:
+                # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
                 doms = []
-                for o in table.browse(cr, uid, ids, context=context):
+                for o in left_model.browse(cr, uid, ids, context=context):
                     if doms:
                         doms.insert(0, OR_OPERATOR)
                     doms += [AND_OPERATOR, ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
                 if prefix:
-                    return [(left, 'in', table.search(cr, uid, doms, context=context))]
+                    return [(left, 'in', left_model.search(cr, uid, doms, context=context))]
                 return doms
             else:
-                def rg(ids, table, parent):
+                def recursive_children(ids, model, parent_field):
                     if not ids:
                         return []
-                    ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
-                    return ids + rg(ids2, table, parent)
-                return [(left, 'in', rg(ids, table, parent or table._parent_name))]
+                    ids2 = model.search(cr, uid, [(parent_field, 'in', ids)], context=context)
+                    return ids + recursive_children(ids2, model, parent_field)
+                return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
 
-        # TODO rename this function as it is not strictly for 'child_of', but also for 'in'...
-        def child_of_right_to_ids(value, field_obj):
+        def to_ids(value, field_obj):
             """ Normalize a single id, or a string, or a list of ids to a list of ids.
             """
             if isinstance(value, basestring):
@@ -417,7 +438,7 @@ class expression(object):
 
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    ids2 = child_of_right_to_ids(right, table)
+                    ids2 = to_ids(right, table)
                     dom = child_of_domain(left, ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
@@ -458,11 +479,10 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
+                    ids2 = to_ids(right, field_obj)
                     if field._obj != working_table._name:
-                        ids2 = child_of_right_to_ids(right, field_obj)
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
-                        ids2 = child_of_right_to_ids(right, field_obj)
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
 
@@ -486,11 +506,11 @@ class expression(object):
                                 self.__exp[i] = FALSE_LEAF
                         else:
                             call_null = False
-                            o2m_op = 'not in' if operator in NEGATIVE_OPS else 'in'
+                            o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                             self.__exp[i] = ('id', o2m_op, select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator))
 
                     if call_null:
-                        o2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
+                        o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                         self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table))
 
             elif field._type == 'many2many':
@@ -501,7 +521,7 @@ class expression(object):
                             return ids
                         return select_from_where(cr, field._id1, field._rel, field._id2, ids, operator)
 
-                    ids2 = child_of_right_to_ids(right, field_obj)
+                    ids2 = to_ids(right, field_obj)
                     dom = child_of_domain('id', ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
@@ -526,16 +546,16 @@ class expression(object):
                                 operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            m2m_op = 'not in' if operator in NEGATIVE_OPS else 'in'
+                            m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
                             self.__exp[i] = ('id', m2m_op, select_from_where(cr, field._id1, field._rel, field._id2, res_ids, operator) or [0])
 
                     if call_null_m2m:
-                        m2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
+                        m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
                         self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel))
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    ids2 = child_of_right_to_ids(right, field_obj)
+                    ids2 = to_ids(right, field_obj)
                     if field._obj != working_table._name:
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
@@ -558,7 +578,7 @@ class expression(object):
                         elif isinstance(right, list) and operator in ['!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
-                        if operator in NEGATIVE_OPS:
+                        if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False) # TODO this should not be appended if False was in 'right'
                         return (left, 'in', res_ids)
 
