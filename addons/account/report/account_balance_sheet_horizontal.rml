@@ -218,7 +218,7 @@
         <td>
           <para style="terp_default_9">
             <font color="white">[[ '. '*(a['level']-1) ]]</font>
-            <font>[[ (a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) and a['name']!='Net Profit') or removeParentNode('font') ]][[ a['name'] ]]</font>
+            <font>[[ ( a['level']&lt;4 or a['name']=='Net Profit') and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]][[ a['name'] ]]</font>
           </para>
         </td>
         <td>
