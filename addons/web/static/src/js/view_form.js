@@ -1146,6 +1146,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
             self.$element.find('.oe_datepicker').hide();
         });
         this.set_readonly(false);
+        this.value = false;
     },
     picker: function() {
         return $.fn[this.jqueryui_object].apply(this.$element.find('.oe_datepicker_container'), arguments);
@@ -1155,12 +1156,11 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         this.$element.find('input').val(date ? this.format_client(date) : '').change();
     },
     set_value: function(value) {
-        value = this.parse(value);
         this.value = value;
         this.$element.find('input').val(value ? this.format_client(value) : '');
     },
     get_value: function() {
-        return this.format(this.value);
+        return this.value;
     },
     set_value_from_ui: function() {
         var value = this.$element.find('input').val() || false;
@@ -1187,12 +1187,8 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
     focus: function() {
         this.$element.find('input').focus();
     },
-    parse: openerp.web.auto_str_to_date,
     parse_client: function(v) {
         return openerp.web.parse_value(v, {"widget": this.type_of_date});
-    },
-    format: function(val) {
-        return openerp.web.auto_date_to_str(val, this.type_of_date);
     },
     format_client: function(v) {
         return openerp.web.format_value(v, {"widget": this.type_of_date});
