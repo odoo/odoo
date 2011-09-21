@@ -147,25 +147,16 @@ class users(osv.osv):
         return cr.fetchall()
 
     def send_welcome_email(self, cr, uid, id, context=None):
-        logger= netsvc.Logger()
-        user = self.pool.get('res.users').read(cr, uid, id, context=context)
-        if not user.get('email'):
-            return False
-        if not tools.config.get('smtp_server'):
-            logger.notifyChannel('mails', netsvc.LOG_WARNING,
-                _('"smtp_server" needs to be set to send mails to users'))
-            return False
-        if not tools.config.get('email_from'):
-            logger.notifyChannel("mails", netsvc.LOG_WARNING,
-                _('"email_from" needs to be set to send welcome mails '
-                  'to users'))
-            return False
+        if isinstance(id,list): id = id[0]
+        user = self.read(cr, uid, id, ['email','login','name', 'user_email'], context=context)
+        email = user['email'] or user['user_email']
 
-        return tools.email_send(email_from=None, email_to=[user['email']],
-                                subject=self.get_welcome_mail_subject(
-                                    cr, uid, context=context),
-                                body=self.get_welcome_mail_body(
-                                    cr, uid, context=context) % user)
+        ir_mail_server = self.pool.get('ir.mail_server')
+        msg = ir_mail_server.build_email(email_from=None, # take config default
+                                         email_to=[email],
+                                         subject=self.get_welcome_mail_subject(cr, uid, context=context),
+                                         body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
+        return ir_mail_server.send_email(cr, uid, msg, context=context)
 
     def _set_interface_type(self, cr, uid, ids, name, value, arg, context=None):
         """Implementation of 'view' function field setter, sets the type of interface of the users.
@@ -221,8 +212,8 @@ class users(osv.osv):
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
-                                string='Change password', help="Only specify a value if you want to change the user password. "
-                                "This user will have to logout and login again!"),
+                                string='Set password', help="Specify a value only when creating a user or if you're changing the user's password, "
+                                                            "otherwise leave empty. After a change of password, the user has to login again."),
         'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
         'active': fields.boolean('Active'),
@@ -263,7 +254,7 @@ class users(osv.osv):
                 o['password'] = '********'
             return o
         result = super(users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, float)):
                 result = override_password(result)
@@ -346,12 +337,8 @@ class users(osv.osv):
         'menu_tips':True
     }
 
-    @tools.cache()
-    def company_get(self, cr, uid, uid2, context=None):
-        return self._get_company(cr, uid, context=context, uid2=uid2)
-
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -369,7 +356,6 @@ class users(osv.osv):
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
-        self.company_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)

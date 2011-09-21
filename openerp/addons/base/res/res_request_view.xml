@@ -8,7 +8,7 @@
             <field name="model">res.request</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Requests" colors="blue:state in ('waiting');gray:state in ('closed')">
+                <tree string="Requests" colors="blue:state == 'waiting';gray:state == 'closed'">
                     <field name="create_date"/>
                     <field name="act_from"/>
                     <field name="act_to"/>

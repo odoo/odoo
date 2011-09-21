@@ -408,7 +408,7 @@ class expression(object):
                         break
                     next_table = working_table.pool.get(working_table._inherit_fields[fargs[0]][0])
                     if next_table not in self.__all_tables:
-                        self.__joins.append('%s.%s=%s.%s' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
+                        self.__joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
                         self.__all_tables.add(next_table)
                     working_table = next_table
             # Or (try to) directly extract the field.
@@ -594,10 +594,9 @@ class expression(object):
                     self.__exp[i] = tuple(self.__exp[i])
 
                 if field.translate:
+                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if operator in ('like', 'ilike', 'not like', 'not ilike'):
                         right = '%%%s%%' % right
-
-                    operator = operator == '=like' and 'like' or operator
 
                     subselect = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
@@ -641,7 +640,7 @@ class expression(object):
             params = []
 
         elif operator == 'inselect':
-            query = '(%s.%s in (%s))' % (table._table, left, right[0])
+            query = '(%s."%s" in (%s))' % (table._table, left, right[0])
             params = right[1]
 
         elif operator in ['in', 'not in']:
@@ -653,7 +652,7 @@ class expression(object):
                     r = 'NOT NULL' if right else 'NULL'
                 else:
                     r = 'NULL' if right else 'NOT NULL'
-                query = '(%s.%s IS %s)' % (table._table, left, r)
+                query = '(%s."%s" IS %s)' % (table._table, left, r)
                 params = []
             elif isinstance(right, (list, tuple)):
                 params = right[:]
@@ -668,34 +667,34 @@ class expression(object):
                         instr = ','.join(['%s'] * len(params))
                     else:
                         instr = ','.join([table._columns[left]._symbol_set[0]] * len(params))
-                    query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
+                    query = '(%s."%s" %s (%s))' % (table._table, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
                     query = 'FALSE' if operator == 'in' else 'TRUE'
 
                 if check_nulls and operator == 'in':
-                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                    query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
                 elif not check_nulls and operator == 'not in':
-                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                    query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
                 elif check_nulls and operator == 'not in':
-                    query = '(%s AND %s.%s IS NOT NULL)' % (query, table._table, left) # needed only for TRUE.
+                    query = '(%s AND %s."%s" IS NOT NULL)' % (query, table._table, left) # needed only for TRUE.
             else: # Must not happen.
                 pass
 
         elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '='):
-            query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)
+            query = '(%s."%s" IS NULL or %s."%s" = false )' % (table._table, left, table._table, left)
             params = []
 
         elif (right is False or right is None) and (operator == '='):
-            query = '%s.%s IS NULL ' % (table._table, left)
+            query = '%s."%s" IS NULL ' % (table._table, left)
             params = []
 
         elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '!='):
-            query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
+            query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table._table, left, table._table, left)
             params = []
 
         elif (right is False or right is None) and (operator == '!='):
-            query = '%s.%s IS NOT NULL' % (table._table, left)
+            query = '%s."%s" IS NOT NULL' % (table._table, left)
             params = []
 
         elif (operator == '=?'):
@@ -704,10 +703,10 @@ class expression(object):
                 params = []
             elif left in table._columns:
                 format = table._columns[left]._symbol_set[0]
-                query = '(%s.%s = %s)' % (table._table, left, format)
+                query = '(%s."%s" = %s)' % (table._table, left, format)
                 params = table._columns[left]._symbol_set[1](right)
             else:
-                query = "(%s.%s = '%%s')" % (table._table, left)
+                query = "(%s.\"%s\" = '%%s')" % (table._table, left)
                 params = right
 
         elif left == 'id':
@@ -721,14 +720,14 @@ class expression(object):
             if left in table._columns:
                 format = like and '%s' or table._columns[left]._symbol_set[0]
                 if self.has_unaccent and op in ('ilike', 'not ilike'):
-                    query = '(unaccent(%s.%s) %s unaccent(%s))' % (table._table, left, op, format)
+                    query = '(unaccent(%s."%s") %s unaccent(%s))' % (table._table, left, op, format)
                 else:
-                    query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                    query = '(%s."%s" %s %s)' % (table._table, left, op, format)
             else:
                 if self.has_unaccent and op in ('ilike', 'not ilike'):
-                    query = "(unaccent(%s.%s) %s unaccent('%s'))" % (table._table, left, op, right)
+                    query = "(unaccent(%s.\"%s\") %s unaccent('%s'))" % (table._table, left, op, right)
                 else:
-                    query = "(%s.%s %s '%s')" % (table._table, left, op, right)
+                    query = "(%s.\"%s\" %s '%s')" % (table._table, left, op, right)
 
             add_null = False
             if like:
@@ -744,7 +743,7 @@ class expression(object):
                 params = table._columns[left]._symbol_set[1](right)
 
             if add_null:
-                query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
 
         if isinstance(params, basestring):
             params = [params]

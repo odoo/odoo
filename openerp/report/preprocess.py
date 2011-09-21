@@ -65,7 +65,10 @@ class report(object):
                     if type =='html2html':
                         match = html_parents
                     if txt.group(3):
-                        match = [txt.group(3)]
+                        group_3 = txt.group(3)
+                        if group_3.startswith("'") or group_3.startswith('"'):
+                            group_3 = group_3[1:-1]
+                        match = [group_3]
                     n = node
                     while n.tag not in match:
                         n = n.getparent()

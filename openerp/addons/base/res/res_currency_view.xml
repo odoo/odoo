@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
-                    <field name="company_id" select="2" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                      <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
@@ -26,9 +26,9 @@
             <field name="arch" type="xml">
                 <form string="Currency">
                     <group col="6" colspan="6">
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="rate"/>
-                        <field name="company_id" select="2" groups="base.group_multi_company" />
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="symbol"/>
                     </group>
 
@@ -65,6 +65,39 @@
         </record>
 
         <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3"/>
+
+        <!-- 
+            Currency Rate Type
+        -->
+        <record id="view_currency_rate_type_form" model="ir.ui.view">
+            <field name="name">res.currency.rate.type.form</field>
+            <field name="model">res.currency.rate.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Currency Rate Type">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_currency_rate_type_form" model="ir.actions.act_window">
+            <field name="name">Currency Rate Type</field>
+            <field name="res_model">res.currency.rate.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_currency_rate_type_search" model="ir.ui.view">
+            <field name="name">res.currency.rate.type.search</field>
+            <field name="model">res.currency.rate.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Currency Rate Type">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

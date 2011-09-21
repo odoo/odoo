@@ -453,5 +453,19 @@
             assert ref('ymltest_unaccent_company') not in ids
             ids = self.search(cr, uid, [('name','not ilike','hélène')], {})
             assert ref('ymltest_unaccent_company') not in ids
-
-
+-
+    Check that =like/=ilike expressions are working with an untranslated field.
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [('name', '=like', 'Ax')])
+        assert len(all_ids) == 1, "It should have 1 record !"
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'Ax')])
+        assert len(all_ids) == 2, "It should have 2 records !"
+-
+    Check that =like/=ilike expressions are working with a translated field.
+-
+    !python {model: res.country }: |
+        all_ids = self.search(cr, uid, [('name', '=like', 'Ind')])
+        assert len(all_ids) == 3, "It should have 3 records !"
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'Ind')])
+        assert len(all_ids) == 3, "It should have 3 records !"

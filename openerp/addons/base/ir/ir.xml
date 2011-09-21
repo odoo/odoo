@@ -28,7 +28,7 @@
                     <group col="2" colspan="2">
                         <separator string="Values for Event Type" colspan="2"/>
                         <label string="client_action_multi, client_action_relate" colspan="2"/>
-                        <label string="tree_but_action, client_print_multi"  colspan="2"/>
+                        <label string="tree_but_open, client_print_multi"  colspan="2"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator colspan="2" string="Value"/>
@@ -241,7 +241,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences" parent="base.menu_config"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
         <!-- Sequences Types -->
@@ -535,7 +535,7 @@
                         <field name="type" readonly="1"/>
                         <field name="src_model" select="2"/>
                         <field name="usage"/>
-                        <field name="menus"/>
+                        <field name="target"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Settings">
@@ -1221,7 +1221,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Object Identifiers">
+                <form string="External Identifiers">
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
@@ -1239,7 +1239,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Object Identifiers">
+                <tree string="External Identifiers">
                     <field name="module"/>
                     <field name="name"/>
                     <field name="model"/>
@@ -1253,7 +1253,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Object Identifiers">
+                <search string="External Identifiers">
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
@@ -1274,7 +1274,7 @@
 
 
         <record id="action_model_model" model="ir.actions.act_window">
-            <field name="name">Objects</field>
+            <field name="name">Models</field>
             <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
             <field name="context">{'manual':True}</field>
@@ -1293,7 +1293,7 @@
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <record id="action_model_data" model="ir.actions.act_window">
-            <field name="name">Object Identifiers</field>
+            <field name="name">External Identifiers</field>
             <field name="res_model">ir.model.data</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_model_data_list"/>
@@ -1740,7 +1740,7 @@
             <field name="name">Property multi-company</field>
             <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 
         <!--server action view-->
@@ -1766,7 +1766,9 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_obj_id" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_obj_id" context="{'key':''}" 
+                                   domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
+                                   attrs="{'required':[('state','=','trigger')]}"/>
                             <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
@@ -1995,5 +1997,76 @@
             <field name="sequence">5</field>
         </record>         
 
+        <!-- ir.mail.server -->
+        <record model="ir.ui.view" id="ir_mail_server_form">
+            <field name="name">ir.mail.server.form</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Outgoing Mail Servers">
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Configuration">
+                            <group col="2" colspan="4">
+                                <separator string="Connection Information" colspan="4"/>
+                                <field name="smtp_host"/>
+                                <field name="smtp_port"/>
+                                <field name="smtp_debug"/>
+                             </group>
+                             <group col="2" colspan="4">
+                                <separator string="Security and Authentication" colspan="2"/>
+                                <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                                <field name="smtp_user"/>
+                                <field name="smtp_pass" password="True"/>
+                                <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="ir_mail_server_list">
+            <field name="name">ir.mail.server.list</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Outgoing Mail Servers">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="smtp_host"/>
+                    <field name="smtp_user"/>
+                    <field name="smtp_encryption"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_ir_mail_server_search" model="ir.ui.view">
+            <field name="name">ir.mail.server.search</field>
+            <field name="model">ir.mail_server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Outgoing Mail Servers">
+                    <field name="name"/>
+                    <field name="smtp_host"/>
+                    <field name="smtp_user"/>
+                    <field name="smtp_encryption"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_ir_mail_server_list">
+            <field name="name">Outgoing Mail Servers</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="ir_mail_server_list" />
+            <field name="search_view_id" ref="view_ir_mail_server_search"/>
+        </record>
+        <menuitem id="next_id_15" name="Parameters" parent="base.menu_config" groups="base.group_extended" />
+        <menuitem id="menu_mail_servers" parent="base.next_id_15" action="action_ir_mail_server_list" sequence="15"/>
     </data>
 </openerp>
