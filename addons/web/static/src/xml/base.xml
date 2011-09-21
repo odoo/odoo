@@ -800,13 +800,15 @@
     ></textarea>
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
-<t t-name="FieldDate">
-    <t t-call="FieldChar"/>
-    <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
-         title="Select date" width="16" height="16" border="0"/>
-    <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
-        <div class="oe_datepicker_container"/>
-        <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
+<t t-name="web.datetimepicker">
+    <div class="oe_datepicker">
+        <input type="text" size="1" style="width: 100%"/>
+        <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
+             title="Select date" width="16" height="16" border="0"/>
+        <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
+            <div class="oe_datepicker_container"/>
+            <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
+        </div>
     </div>
 </t>
 <t t-name="FieldSelection">
@@ -1051,6 +1053,18 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
+<t t-name="SearchView.date">
+    <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
+           t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">?</span>
+    </label>
+    <div style="white-space: nowrap;">
+        <span t-att-id="element_id"></span>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
+</t>
 <t t-name="SearchView.field.selection">
     <label t-att-title="attrs.help"
            t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
@@ -1142,11 +1156,8 @@
 <t t-name="SearchView.extended_search.proposition.char">
     <input t-att-id="element_id" class="field_char"/>
 </t>
-<t t-name="SearchView.extended_search.proposition.datetime">
-    <input t-att-id="element_id" class="field_datetime"/>
-</t>
-<t t-name="SearchView.extended_search.proposition.date">
-    <input t-att-id="element_id" class="field_date"/>
+<t t-name="SearchView.extended_search.proposition.empty">
+    <span t-att-id="element_id"></span>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
     <input type="number" t-att-id="element_id" class="field_integer" step="1"/>
