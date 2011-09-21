@@ -120,7 +120,7 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            
 	            if(n.node.subflow) {
 	            	process_node_text.click(function() {
-	            		self.p_id = n.node.id;
+	            		self.p_id = n.node.subflow[0];
 	            		$.when(self.load_process()).then(self.render_process_view());
 	            	});
 	            }
