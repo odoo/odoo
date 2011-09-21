@@ -49,7 +49,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.operator = [];
         this.group_field = [];
         this.orientation = this.fields_view.arch.attrs.orientation || '';
-        this.elem_id = this.$element[0]['id'];
+        this.elem_id = this.view_manager.element_id;
 
         _.each(this.fields_view.arch.children, function (field) {
             if (field.attrs.operator) {
