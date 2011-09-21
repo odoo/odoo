@@ -1,6 +1,19 @@
 -
   In order to test account invoice I create a new customer invoice
 -
+  I will create bank detail
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    state: bank
+    company_id: base.main_company
+    partner_id: base.main_partner
+    acc_number: 123456789
+    footer: True
+    bank: base.res_bank_1
+    bank_name: Reserve
+-
+  I will create a customer invoice
+-
   !record {model: account.invoice, id: account_invoice_customer0}:
     account_id: account.a_recv
     address_contact_id: base.res_partner_address_zen
@@ -8,6 +21,8 @@
     company_id: base.main_company
     currency_id: base.EUR
     date_invoice: !eval time.strftime('%Y-%m-%d')
+    payment_term: account.account_payment_term_advance
+    partner_bank_id: res_partner_bank_0
     invoice_line:
       - account_id: account.a_sale
         name: '[PC3] Medium PC'
@@ -18,6 +33,7 @@
     journal_id: account.sales_journal
     partner_id: base.res_partner_3
     reference_type: none
+
 -
   I check that Initially customer invoice is in the "Draft" state
 -
