@@ -132,13 +132,6 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="department_id">
-                <field name="name"/>
-                <field name="color"/>
-                <field name="department_id"/>
-                <field name="job_id"/>
-                <field name="user_id"/>
-                <field name="photo"/>
-                <field name="city"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
