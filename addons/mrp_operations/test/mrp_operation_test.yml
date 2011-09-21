@@ -1,7 +1,5 @@
 -
-  In order to test mrp_operations module in OpenERP I will put a Production order
-  and check its effects on Work orders.
--
+  In order to test mrp_operations module in OpenERP,
   I create a production order.
 -
   !record {model: mrp.production, id: mrp_production_mo1}:
@@ -15,24 +13,16 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 5.0
 -
-  I am computing the data.
--
-  !python {model: mrp.production}: |
-    self.action_compute(cr, uid, [ref("mrp_production_mo1")], {"lang": "en_US", "tz":
-      False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
-      [ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),
-      })
--
-  Now I confirm my production order.
+  Now I confirm the production order.
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
 -
-  I check that there is one Work order generated related to my production order.
+  I check that there is one Work order generated related to the production order.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','draft')])
-    assert order_id, _('No Work order!')
+    assert order_id, _('No Work order define for this production order!')
 -
   The scheduler runs.
 -
@@ -44,10 +34,10 @@
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal')])
+    pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal'),('origin','like','%MO/01234567')])
     assert pick_ids, _('No Internal Pickings!')
 -
-  In order to cancel the MO, I first cancel its picking
+  In order to cancel the MO, first cancel its picking
 -
   !python {model: stock.picking}: |
     mrp_obj = self.pool.get('mrp.production')
@@ -56,6 +46,6 @@
     if picking_id:
       self.action_cancel(cr, uid, picking_id, context=None)
 -
-  Then I cancel The Manufacturing order.
+  Then cancel The Manufacturing order.
 -
   !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}

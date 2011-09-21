@@ -11,6 +11,7 @@
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     product_id: product.product_product_pc1
+    name: MO/0123
     product_qty: 5.0
     product_uom: product.product_uom_unit
     product_uos_qty: 0.0
@@ -62,7 +63,7 @@
   !python {model: stock.picking}: |
     mrp_obj = self.pool.get('mrp.production')
     mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
-    picking_id = self.search(cr, uid, [])
+    picking_id = self.search(cr, uid, [('origin','like','%MO/0123')])
     if picking_id:
       self.action_cancel(cr, uid, picking_id, context=None)
 -
@@ -105,18 +106,10 @@
     product_qty: 5.00
     mode: 'consume_produce'
 -
-  Finally my production order is done.
--
-  !python {model: mrp.product.produce}: |
-    from tools.translate import _
-    prod_obj = self.pool.get('mrp.production')
-    prod_ids = prod_obj.search(cr, uid, [('product_id.default_code','=','PC1')])
-    self.do_produce(cr, uid, [ref('mrp_product_produce1')], context={'active_ids': prod_ids})
--
-  I am set the product quantity.
+  I create record for producing products with quantity 8.00
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
-    product_qty: 5.0
+    product_qty: 8.0
 -
   Changes the Quantity of Product.
 -
@@ -124,3 +117,12 @@
     context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_qty")], "tz": False, "active_id":ref('mrp_production_qty')}
     self.default_get(cr, uid, ["product_qty"], context)
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
+-
+  Finally my production order is done.
+-
+  !python {model: mrp.product.produce}: |
+    from tools.translate import _
+    prod_obj = self.pool.get('mrp.production')
+    prod_ids = prod_obj.search(cr, uid, [('product_id.default_code','=','PC1')])
+    self.do_produce(cr, uid, [ref('mrp_product_produce1')], context={'active_ids': prod_ids})
+
