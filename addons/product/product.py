@@ -21,7 +21,7 @@
 
 from osv import osv, fields
 import decimal_precision as dp
-import addons
+
 import math
 from _common import rounding
 import re

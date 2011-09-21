@@ -202,17 +202,6 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="type">
-                    <field name="name"/>
-                    <field name="color"/>
-                    <field name="default_code"/>
-                    <field name="type"/>
-                    <field name="product_manager"/>
-                    <field name="product_image"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
-                    <field name="lst_price"/>
-                    <field name="standard_price"/>
-                    <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
