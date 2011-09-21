@@ -127,17 +127,6 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="type">
-                    <field name="name"/>
-                    <field name="color"/>
-                    <field name="default_code"/>
-                    <field name="type"/>
-                    <field name="product_manager"/>
-                    <field name="product_image"/>
-                    <field name="qty_available"/>
-                    <field name="virtual_available"/>
-                    <field name="lst_price"/>
-                    <field name="standard_price"/>
-                    <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
@@ -158,7 +147,12 @@
                                         <table class="oe_kanban_table">
                                             <tr>
                                                 <td valign="top" width="22">
+                                                    <t t-if="record.product_image.raw_value">
                                                         <img t-att-src="'data:image/png;base64,'+record.product_image.raw_value" width='48' height='48'/>
+                                                    </t>
+                                                    <t t-if="!record.product_image.raw_value">
+                                                        <img src="/web/static/src/img/product_default.png"/>
+                                                    </t> 
                                                 </td>
                                                 <td>
                                                     <div class="oe_kanban_title2">
@@ -176,8 +170,7 @@
                                         <div class="oe_kanban_left">
                                             <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                            <a string="Update Stock" name="%(stock.action_view_change_product_quantity)d" icon="gtk-execute" type="action"/> 
-                                        </div>
+                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>
                                 </div>
