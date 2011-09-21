@@ -581,7 +581,6 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         this._super(parent);
         this.qs = "?" + jQuery.param.querystring();
         this.$content = $();
-        console.debug("initializing header with id", this.element_id);
         this.update_promise = $.Deferred().resolve();
     },
     start: function() {
@@ -963,7 +962,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session.start();
         this.login.start();
         this.menu.start();
-        console.debug("The openerp client has been initialized.");
     },
     on_logged: function() {
         if(this.action_manager)
