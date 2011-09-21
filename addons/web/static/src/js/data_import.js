@@ -37,23 +37,25 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             width: '70%',
             height: 'auto',
             position: 'top',
-            buttons: {
-                "Close": function() {
-                    self.stop();
-                },
-                "Import File": function() {
-                    self.do_import();
-                }
-            },
+            buttons: [
+                {text: "Close", click: function() { self.stop(); }},
+                {text: "Import File", click: function() { self.do_import(); }, 'class': 'oe-dialog-import-button'}
+            ],
             close: function(event, ui) {
                 self.stop();
             }
         });
+        this.toggle_import_button(false);
         this.$element.find('#csvfile').change(this.on_autodetect_data);
         this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.find('fieldset legend').click(function() {
             $(this).next().toggle();
         });
+    },
+    toggle_import_button: function (newstate) {
+        this.$dialog.dialog('widget')
+                .find('.oe-dialog-import-button')
+                .button('option', 'disabled', !newstate);
     },
     do_import: function() {
         if(!this.$element.find('#csvfile').val()) { return; }
@@ -73,7 +75,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     },
     on_import_results: function(results) {
         this.$element.find('#result, #success').empty();
-        var result_node = $("#result");
+        var result_node = this.$element.find("#result");
         var records = {};
 
         if (results['records']) {
@@ -113,11 +115,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             }
         });
         if (self.$element.find(".duplicate_fld").length) {
-            $("#result").before('<div id="msg" style="color:red">*Selected column should not be same.</div>');
-            $(".ui-button-text:contains('Import File')").parent().attr("disabled", true);
+            this.$element.find("#result").before('<div id="msg" style="color:red">*Selected column should not be same.</div>');
+            this.toggle_import_button(false);
         } else {
             self.$element.find("#msg").remove();
-            $(".ui-button-text:contains('Import File')").parent().attr("disabled", false);
+            this.toggle_import_button(true);
         }
         self.do_check_req_field(req_field);
     },
@@ -132,11 +134,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             return !_.contains(sel_fields, fld)
         });
         if (required_fields.length) {
-            $("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + required_fields + '.</div>');
-            $(".ui-button-text:contains('Import File')").parent().attr("disabled", true);
+            this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + required_fields + '.</div>');
+            this.toggle_import_button(false);
         } else {
             this.$element.find("#message").remove();
-            $(".ui-button-text:contains('Import File')").parent().attr("disabled", false);
+            this.toggle_import_button(true);
         }
     },
     stop: function() {
