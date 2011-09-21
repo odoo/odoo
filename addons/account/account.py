@@ -2707,7 +2707,7 @@ class account_financial_report(osv.osv):
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
         'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
         'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
-        'account_type_id':  fields.many2one('account.account.type', 'Account Type'),
+        'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
     }
 
     _defaults = {

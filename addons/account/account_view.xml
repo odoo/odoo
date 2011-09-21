@@ -2727,7 +2727,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <newline/>
                             <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
                             <newline/>
-                            <field name="account_type_id" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
+                            <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
                             <newline/>
                         </page>
                         <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
