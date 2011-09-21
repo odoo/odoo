@@ -48,23 +48,23 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                 }
             });
             self.$element.find("a#list-id").click(self.on_list_click);
-            $.mobile.changePage("#oe_list", "slide", true, true);
+            $.mobile.changePage("#"+self.element_id, "slide", true, true);
         });
     },
     on_list_click: function(ev) {
         var $record = $(ev.currentTarget);
         var self = this;
+        ev.preventDefault();
+        ev.stopPropagation();
         id = $record.data('id');
-
         head_title = $.trim($record.text());
-        if(!$('#oe_form').html().length){
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action, head_title);
+
+        if(!$('[id^="oe_form_'+id+'"]').html()){
+            $('<div id="oe_form_'+id+'" data-role="page" data-url="oe_form_'+id+'"> </div>').appendTo('#moe');
+            this.formview = new openerp.web_mobile.FormView(this, "oe_form_"+id, id, this.action, head_title);
             this.formview.start();
         }else{
-            $('#oe_form').remove();
-            $('<div id="oe_form" data-role="page"> </div>').appendTo('#moe');
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action, head_title);
-            this.formview.start();
+            $.mobile.changePage('#oe_form_'+id, "slide", true, true);
         }
     }
  });

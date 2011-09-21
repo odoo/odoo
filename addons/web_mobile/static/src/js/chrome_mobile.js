@@ -135,18 +135,21 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         });
     },
     on_clicked: function(ev) {
+        var self = this;
+        ev.preventDefault();
+        ev.stopPropagation();
         $shortcut = $(ev.currentTarget);
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
-        if(!$('#oe_list').html().length){
-            this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
-             this.listview.start();
+        if(!$('[id^="oe_list_'+res_id+'"]').html()){
+            $('<div id="oe_list_'+res_id+'" data-role="page" data-url="oe_list_'+res_id+'"> </div>').appendTo('#moe');
+            this.listview = new openerp.web_mobile.ListView(self, "oe_list_"+res_id, res_id);
+            this.listview.start();
         }else{
-             $('#oe_list').remove();
-             $('<div id="oe_list" data-role="page"> </div>').appendTo('#moe');
-             this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
-             this.listview.start();
+            $.mobile.changePage($('#oe_list_'+res_id), "slide", true, true);
         }
+        ev.preventDefault();
+        ev.stopPropagation();
         jQuery("#oe_header").find("h1").html($shortcut.data('name'));
     }
 });
@@ -195,6 +198,8 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
     on_menu_click: function(ev, id) {
         var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
+        ev.preventDefault();
+        ev.stopPropagation();
         for (var i = 0; i < this.data.data.children.length; i++) {
             if (this.data.data.children[i].id == id) {
                 this.children = this.data.data.children[i];
@@ -204,14 +209,12 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
             .removeClass("login_valid")
             .addClass("secondary_menu");
 
-        if(!$('#oe_sec_menu').html().length){
-            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu", this.children);
-            this.secondary.start();
-        }else{
-             $('#oe_sec_menu').remove();
-             $('<div id="oe_sec_menu" data-role="page"> </div>').appendTo('#moe');
-             this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu", this.children);
+        if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
+            $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
+            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
              this.secondary.start();
+        }else{
+            $.mobile.changePage('#oe_sec_menu_'+id, "slide", true, true);
         }
     }
 });
@@ -250,21 +253,19 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
             $.mobile.changePage("#oe_menu", "slide", true, true);
         });
 
-        $.mobile.changePage("#oe_sec_menu", "slide", true, true);
+        $.mobile.changePage("#"+this.element_id, "slide", true, true);
     },
     on_menu_click: function(ev, id) {
         var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
-        if (id) {
-            if(!$('#oe_list').html().length){
-                this.listview = new openerp.web_mobile.ListView(this, "oe_list", id);
-                this.listview.start();
-            }else{
-                $('#oe_list').remove();
-                $('<div id="oe_list" data-role="page"> </div>').appendTo('#moe');
-                this.listview = new openerp.web_mobile.ListView(this, "oe_list", id);
-                this.listview.start();
-            }
+        ev.preventDefault();
+        ev.stopPropagation();
+        if(!$('[id^="oe_list_'+id+'"]').html()){
+            $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
+            this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
+            this.listview.start();
+        }else{
+            $.mobile.changePage('#oe_list_'+id, "slide", true, true);
         }
         jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
