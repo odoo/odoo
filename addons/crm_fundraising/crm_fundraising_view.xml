@@ -245,8 +245,8 @@
                     <search string="Search Funds">
                         <group>
                             <filter icon="terp-check" string="New"
-                                domain="[('state','in',('draft', 'open'))]" name="current"
-                                help="New and Open Funds" />
+                                domain="[('state','=','draft')]" name="current"
+                                help="New Funds" />
                             <filter icon="terp-camera_test" string="Open"
                                 domain="[('state','=','open')]"
                                 help="Open Funds" />

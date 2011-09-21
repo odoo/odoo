@@ -373,8 +373,8 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="New"
-                    name="current" help="New,Open and Pending Leads"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    name="current" help="New Leads"
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
                     domain="[('state','=','open')]"/>
@@ -675,9 +675,9 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <filter icon="terp-check"
-                    string="New"  help="New,Open and Pending Opportunities"
+                    string="New"  help="New Opportunities"
                     name="current"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
                     domain="[('state','=','open')]"/>

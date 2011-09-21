@@ -226,8 +226,8 @@
             <field name="arch" type="xml">
                 <search string="Search Claims">
                     <filter icon="terp-check" string="New" name="current"
-                        domain="[('state','in',('draft', 'open'))]"
-                        help="New and Open Claims" />
+                        domain="[('state','=','draft')]"
+                        help="New Claims" />
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"

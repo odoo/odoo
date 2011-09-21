@@ -234,8 +234,8 @@
                 <search string="Search Helpdesk">
                     <filter icon="terp-check" string="New" 
 					    name="current"
-                        domain="[('state','in',('draft', 'open'))]"
-                        help="New and Open Helpdesk Request" />
+                        domain="[('state','=','draft')]"
+                        help="New Helpdesk Request" />
                     <filter icon="terp-camera_test"
                         string="Open"
                         domain="[('state','=','open')]"
