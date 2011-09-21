@@ -27,28 +27,28 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
     dialog_title: "Import Data",
     init: function(parent, dataset){
-        this._super(parent);
+        this._super(parent, {});
     },
     start: function() {
         var self = this;
-        self._super(false);
-        self.template = 'ImportDataView';
-        self.dialog_title = "Import Data"
-        self.open({
-                    modal: true,
-                    width: '70%',
-                    height: 'auto',
-                    position: 'top',
-                    buttons : {
-                        "Close" : function() {
-                            self.stop();
-                          },
-                        "Import File" : function() {
-                                self.do_import();
-                          }
-                       },
-                    close: function(event, ui){ self.stop();}
-                   });
+        this._super();
+        this.open({
+            modal:true,
+            width:'70%',
+            height:'auto',
+            position:'top',
+            buttons:{
+                "Close":function() {
+                    self.stop();
+                },
+                "Import File":function() {
+                    self.do_import();
+                }
+            },
+            close:function(event, ui) {
+                self.stop();
+            }
+        });
         this.$element.find('#csvfile').change(this.on_autodetect_data);
         this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.find('fieldset legend').click(function () {
