@@ -22,7 +22,8 @@ import ast
 import nonliterals
 import http
 # import backendlocal as backend
-import backendrpc as backend
+import session as backend
+import openerplib
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -166,7 +167,7 @@ class JsonRequest(WebRequest):
                 _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
-        except backend.OpenERPUnboundException:
+        except openerplib.AuthenticationError:
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",

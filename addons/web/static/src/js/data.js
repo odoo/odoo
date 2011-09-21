@@ -356,7 +356,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * @returns {$.Deferred}
      */
     write: function (id, data, options, callback, error_callback) {
-        var options = options || {};
+        options = options || {};
         return this.rpc('/web/dataset/save', {
             model: this.model,
             id: id,
