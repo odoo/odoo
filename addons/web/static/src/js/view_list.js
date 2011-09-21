@@ -541,6 +541,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (_.isEmpty(records)) {
             records = this.groups.get_records();
         }
+        records = _(records).compact();
 
         var count = 0, sums = {};
         _(columns).each(function (column) {
@@ -1235,6 +1236,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
+            if (!this.datagroup.length) {
+                return;
+            }
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
