@@ -66,8 +66,7 @@
   !python {model: project.task}: |
     context.update({'project_id': ref('project_task_functionaltraining0')})
     self._default_project(cr, uid,context)
-    self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
-    self.action_close
+    #self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
 -
   I click on Draft button.
 -

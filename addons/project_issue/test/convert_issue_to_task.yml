@@ -1,4 +1,9 @@
 -
+  I create project 'OpenERP Training Programme'.
+-
+  !record {model: project.project, id: project_issue_0}:
+    name: project issue training programme
+-
   I create task 'Training' for this project.
 -
   !record {model: project.task, id: project_task_training0}:
@@ -6,9 +11,9 @@
     name: Technical Training
     user_id: base.user_root
     planned_hours: 30.0
-    project_id: project.project_project_22
     remaining_hours: 30.0
     state: draft
+    project_id: project_issue_0
 -
    I create a project issue.
 -
@@ -16,7 +21,7 @@
     categ_id: project_issue.bug_categ
     date_open: !eval time.strftime('%Y-%m-%d')
     name: on_change event does not pass context to the method
-    project_id: project.project_project_22
+    project_id: project_issue_0
     task_id: project_task_training0
     working_hours_close: 0.0
     working_hours_open: 0.0
@@ -35,7 +40,7 @@
              'categ_id': ref('project_issue.bug_categ'),
              'date_open': time.strftime('%Y-%m-%d'),
              'name': 'on_change event does not pass context to the method',
-             'project_id': ref('project.project_project_22'),
+             'project_id': ref('project_issue_0'),
              'task_id': ref('project_task_training0'),
              'working_hours_close': 0.0,
              'working_hours_open': 0.0,
@@ -66,7 +71,7 @@
    Get project issue's task work.
 -
    !python {model: project.issue}: |
-    context.update({'project_id':ref('project.project_project_22')})
+    context.update({'project_id':ref('project_issue_0')})
     self._get_project(cr, uid, context)
 -
    I creat some changes on project.
@@ -111,7 +116,7 @@
   !python {model: project.issue}: |
     msg = {
        'subject': 'test_email',
-       'body': 'Testing Project Issue',
+       'body_text': 'Testing Project Issue',
        'from': 'Administrator <admin@openerp.com>',
       }
     self.message_new(cr, uid,msg,context)
@@ -119,17 +124,12 @@
   I update this messages.
 -
   !python {model: project.issue}: |
-    vals = {}
     msg = {
        'subject': 'test_email',
-       'body': 'Testing Project Issue',
+       'body_text': 'Testing Project Issue',
        'from': 'Administrator <admin@openerp.com>',
       }
     context = None
     default_act = 'pending'
-    self.message_update(cr, uid, [ref('project_issue_onchangeevent0')], vals, msg, default_act, context)    
--
-  I send created and update the messages.
--
-  !python {model: project.issue}: |
-    self.msg_send(cr, uid, [ref('project_issue_onchangeevent0')])
+    self.message_update(cr, uid, [ref('project_issue_onchangeevent0')], msg,context)
+
