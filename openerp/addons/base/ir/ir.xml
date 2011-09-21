@@ -1740,7 +1740,7 @@
             <field name="name">Property multi-company</field>
             <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 
         <!--server action view-->
