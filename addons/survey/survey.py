@@ -58,7 +58,7 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'state': fields.selection([('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
@@ -70,16 +70,12 @@ class survey(osv.osv):
         'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
-        'state': lambda * a: "draft",
+        'state': lambda * a: "open",
         'tot_start_survey': lambda * a: 0,
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
         'response_user': lambda * a:1,
     }
-
-    def survey_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'draft'})
-        return True
 
     def survey_open(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
