@@ -1007,19 +1007,18 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
      * the fields'context with the action's context.
      */
     build_context: function() {
-        // I previously belevied contexts should be herrited, but now I doubt it
-        //var a_context = this.view.dataset.get_context() || {};
         var f_context = this.field.context || null;
         // maybe the default_get should only be used when we do a default_get?
-        var v_context1 = this.node.attrs.default_get || {};
-        var v_context2 = this.node.attrs.context || {};
-        var v_context = new openerp.web.CompoundContext(v_context1, v_context2);
-        if (v_context1.__ref || v_context2.__ref || true) { //TODO niv: remove || true
+        var v_contexts = _.compact([this.node.attrs.default_get || null,
+            this.node.attrs.context || null]);
+        var v_context = new openerp.web.CompoundContext();
+        _.each(v_contexts, function(x) {v_context.add(x);});
+        if (_.detect(v_contexts, function(x) {return !!x.__ref;})) {
             var fields_values = this._build_view_fields_values();
             v_context.set_eval_context(fields_values);
         }
         // if there is a context on the node, overrides the model's context
-        var ctx = f_context || v_context;
+        var ctx = v_contexts.length > 0 ? v_context : f_context;
         return ctx;
     },
     build_domain: function() {
