@@ -49,39 +49,6 @@
     product_id: product.product_product_pc1
 
 - |
-  I start by creating new Repair order for "Basic Pc" product and Invoice Type b4repair.
-
--
-  !record {model: mrp.repair, id: mrp_repair_rma1}:
-    address_id: base.res_partner_address_1
-    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
-    invoice_method: 'b4repair'
-    partner_invoice_id: base.res_partner_address_1
-    location_dest_id: stock.stock_location_14
-    location_id: stock.stock_location_14
-    move_id: 'stock_move_pcbasicpc0'
-    name: RMA00005
-    operations:
-      - location_dest_id: stock.location_production
-        location_id: stock.stock_location_stock
-        name: '[HDD1] HDD Seagate 7200.8 80GB'
-        price_unit: 50.0
-        product_id: product.product_product_hdd1
-        product_uom: product.product_uom_unit
-        product_uom_qty: 1.0
-        state: draft
-        to_invoice: 1
-        type: add
-    fees_lines:
-      - name: 'HDD1 Seagate repair fees'
-        product_id: product.product_product_hdd1
-        product_uom_qty: 1.0
-        product_uom: product.product_uom_unit
-        price_unit: 50.0
-    partner_id: base.res_partner_9
-    product_id: product.product_product_pc1
-
-- |
   I check that Repair order is in "Draft" state.
 -
   !assert {model: mrp.repair, id: mrp_repair_rma0}:
@@ -93,17 +60,9 @@
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma0}
 
 - |
-  I confirm This Repair order For Invoice Type b4repair.
--
-  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma1}
-- |
   I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
 -
   !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma0}
-- |
-  I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
--
-  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma1}
 
 - |
   I check that state is "Under Repair".
@@ -114,10 +73,7 @@
   Repairing Process for product is Done and I End Repair process by click on "End Repair" button.
 -
   !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma0}
-- |
-  Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
--
-  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma1}
+
 - |
   I select invoiced after repair option in this "RMA00004" Repair order.
   so I create Invoice by click on "Make Invoice" wizard.
@@ -205,45 +161,3 @@
     lot=False
     product_id=repair_id.product_id
     self.onchange_lot_id(cr, uid, [ref('mrp_repair_rma0')], lot, product_id)
--
-  I start by creating new Repair order for "Basic Pc" product and Invoice Type None.
--
-  !record {model: mrp.repair, id: mrp_repair_rma2}:
-    address_id: base.res_partner_address_1
-    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
-    invoice_method: 'none'
-    partner_invoice_id: base.res_partner_address_1
-    location_dest_id: stock.stock_location_14
-    location_id: stock.stock_location_14
-    move_id: 'stock_move_pcbasicpc0'
-    name: RMA000055
-    operations:
-      - location_dest_id: stock.location_production
-        location_id: stock.stock_location_stock
-        name: '[HDD1] HDD Seagate 7200.8 80GB'
-        price_unit: 50.0
-        product_id: product.product_product_hdd1
-        product_uom: product.product_uom_unit
-        product_uom_qty: 1.0
-        state: draft
-        to_invoice: 1
-        type: add
-    fees_lines:
-      - name: 'HDD1 Seagate repair fees'
-        product_id: product.product_product_hdd1
-        product_uom_qty: 1.0
-        product_uom: product.product_uom_unit
-        price_unit: 50.0
-    partner_id: base.res_partner_9
-    product_id: product.product_product_pc1
--
-  I confirm This Repair order.
--
-  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma2}
--
-  Cancel Repair order using wizard.
--
-  !python {model: mrp.repair.cancel}: |
-    context = {"lang": 'en_US', "active_model":"mrp.repair", "active_ids": [ref("mrp_repair_rma2")], "tz": False, "active_id":ref('mrp_repair_rma2')}
-    self.fields_view_get(cr, uid, False, "form", context)
-    self.cancel_repair(cr, uid, [ref("mrp_repair_rma2")], context=context)
