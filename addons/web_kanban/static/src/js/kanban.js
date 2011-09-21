@@ -173,7 +173,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     do_fold_unfold_columns: function(event, element_id) {
       var column_id = "column_" + element_id;
-      var column_element = this.$element.find("#" + column_id + ".oe_fold_column");
+      var column_element = this.$element.find("#" + column_id + " .oe_fold_column");
       if (column_element.is(":hidden")) {
           this.$element.find("#" + column_id).find("img.fold-columns-icon").attr('src', '/web_kanban/static/src/img/minus-icon.png');
           column_element.show();
@@ -399,9 +399,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                         kanban_gravatar: self.kanban_gravatar
                     }));
                 });
-            } else {
-                self.$element.find("#column_" + data.value).remove();
-                self.all_display_data.splice(index, 1);
             }
         });
         this.$element.find('.oe_kanban_action').click(this.on_action_clicked);
