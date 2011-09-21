@@ -139,7 +139,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'report_type':fields.selection([
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
