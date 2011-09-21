@@ -685,48 +685,43 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
      'product_uom_qty': lambda *a: 1,
     }
 
-    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit, context = None):
+    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit, context=None):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
         @param product: Changed operation type.
         @param guarantee_limit: Guarantee limit of current record.
         @return: Dictionary of values.
         """
-        if context is None:
-            context = {}
-        warehouse_obj = self.pool.get('stock.warehouse')
-        location_obj = self.pool.get('stock.location')
         if not type:
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
-                }
-            }
-            
-        if ids:
-            company_id = self.browse(cr, uid, ids[0], context=context).repair_id.company_id.id
-            product_id = location_obj.search(cr, uid, [('usage','=','production'), ('company_id','=',company_id)], context=context)
-            if product_id:
-                product_id = product_id[0]
-            else:
-                product_id = False
-            
-            if type != 'add':
-                return {'value': {
-                    'to_invoice': False,
-                    'location_id': product_id,
-                    'location_dest_id': False
-                    }
-                }
-            stock_id = warehouse_obj.browse(cr, uid, company_id, context=context).lot_input_id.id
-            to_invoice = (guarantee_limit and
-                          datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+                }}
+
+        warehouse_obj = self.pool.get('stock.warehouse')
+        location_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)
+        location_id = location_id and location_id[0] or False
+
+        if type == 'add':
+            # TOCHECK: Find stock location for user's company warehouse or 
+            # repair order's company's warehouse (company_id field is added in fix of lp:831583)
+            company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context)
+            warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
+            if warehouse_ids:
+                stock_id = warehouse_obj.browse(cr, uid, warehouse_ids[0], context=context).lot_stock_id.id
+            to_invoice = (guarantee_limit and datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+
             return {'value': {
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
-                'location_dest_id': product_id
-                }
-        }
+                'location_dest_id': location_id
+                }}
+
+        return {'value': {
+                'to_invoice': False,
+                'location_id': location_id,
+                'location_dest_id': False
+                }}
 
 mrp_repair_line()
 
