@@ -463,12 +463,14 @@ class mrp_repair(osv.osv):
             self.write(cr, uid, [repair.id], {'state': 'ready'})
         return True
 
-    def action_invoice_cancel(self, cr, uid, ids, context=None):
-        """ Writes repair order state to 'Exception in invoice'
-        @return: True
-        """
-        self.write(cr, uid, ids, {'state': 'invoice_except'})
-        return True
+#Remove this method because not use any where
+
+#    def action_invoice_cancel(self, cr, uid, ids, context=None):
+#        """ Writes repair order state to 'Exception in invoice'
+#        @return: True
+#        """
+#        self.write(cr, uid, ids, {'state': 'invoice_except'})
+#        return True
 
     def action_repair_start(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Under Repair'

@@ -117,11 +117,6 @@
   !python {model: mrp.repair}: |
     self.action_repair_ready(cr, uid, [ref('mrp_repair_rma0')], context=None)
 - |
-  Writes repair order state to 'Exception in invoice'
--
-  !python {model: mrp.repair}: |
-    self.action_invoice_cancel(cr, uid, [ref('mrp_repair_rma0')], context=None)
-- |
   Creates stock move and picking for repair order
 -
   !python {model: mrp.repair}: |
