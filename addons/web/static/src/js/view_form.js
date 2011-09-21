@@ -1121,16 +1121,13 @@ openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
     }
 });
 
-openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "FieldDate";
-        this.jqueryui_object = 'datetimepicker';
-    },
+openerp.web.DateTimeWidget = openerp.web.Widget.extend({
+    template: "web.datetimepicker",
+    jqueryui_object: 'datetimepicker',
+    type_of_date: "datetime",
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
-        this.$element.find('input').change(this.on_ui_change);
+        this.$element.find('input').change(this.on_change);
         this.picker({
             onSelect: this.on_picker_select,
             changeMonth: true,
@@ -1158,7 +1155,7 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
     },
     set_value: function(value) {
         value = this.parse(value);
-        this._super(value);
+        this.value = value;
         this.$element.find('input').val(value ? this.format_client(value) : '');
     },
     get_value: function() {
@@ -1167,24 +1164,22 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
     set_value_from_ui: function() {
         var value = this.$element.find('input').val() || false;
         this.value = this.parse_client(value);
-        this._super();
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
+    set_readonly: function(readonly) {
+        this.readonly = readonly;
         this.$element.find('input').attr('disabled', this.readonly);
-        this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', this.readonly);
+        this.$element.find('img.oe_datepicker_trigger').toggleClass('oe_input_icon_disabled', readonly);
     },
-    validate: function() {
-        this.invalid = false;
+    is_valid: function(required) {
         var value = this.$element.find('input').val();
         if (value === "") {
-            this.invalid = this.required;
+            return !required;
         } else {
             try {
                 this.parse_client(value);
-                this.invalid = false;
+                return true;
             } catch(e) {
-                this.invalid = true;
+                return false;
             }
         }
     },
@@ -1193,24 +1188,64 @@ openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
     },
     parse: openerp.web.auto_str_to_date,
     parse_client: function(v) {
-        return openerp.web.parse_value(v, this.field);
+        return openerp.web.parse_value(v, {"widget": this.type_of_date});
     },
     format: function(val) {
-        return openerp.web.auto_date_to_str(val, this.field.type);
+        return openerp.web.auto_date_to_str(val, this.type_of_date);
     },
     format_client: function(v) {
-        return openerp.web.format_value(v, this.field);
+        return openerp.web.format_value(v, {"widget": this.type_of_date});
+    },
+    on_change: function() {
+        if (this.is_valid()) {
+            this.set_value_from_ui();
+        }
+    }
+});
+
+openerp.web.DateWidget = openerp.web.DateTimeWidget.extend({
+    jqueryui_object: 'datepicker',
+    type_of_date: "date",
+    on_picker_select: function(text, instance) {
+        this._super(text, instance);
+        this.$element.find('.oe_datepicker').hide();
+    }
+});
+
+openerp.web.form.FieldDatetime = openerp.web.form.Field.extend({
+    template: "EmptyComponent",
+    build_widget: function() {
+        return new openerp.web.DateTimeWidget(this);
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.datewidget = this.build_widget();
+        this.datewidget.on_change.add(this.on_ui_change);
+        this.datewidget.appendTo(this.$element);
+    },
+    set_value: function(value) {
+        this._super(value);
+        this.datewidget.set_value(value);
+    },
+    get_value: function() {
+        return this.datewidget.get_value();
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.datewidget.set_readonly(this.readonly);
+    },
+    validate: function() {
+        this.invalid = !this.datewidget.is_valid(this.required);
+    },
+    focus: function() {
+        this.datewidget.focus();
     }
 });
 
 openerp.web.form.FieldDate = openerp.web.form.FieldDatetime.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.jqueryui_object = 'datepicker';
-    },
-    on_picker_select: function(text, instance) {
-        this._super(text, instance);
-        this.$element.find('.oe_datepicker').hide();
+    build_widget: function() {
+        return new openerp.web.DateWidget(this);
     }
 });
 

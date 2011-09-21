@@ -800,13 +800,16 @@
     ></textarea>
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
-<t t-name="FieldDate">
-    <t t-call="FieldChar"/>
-    <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
-         title="Select date" width="16" height="16" border="0"/>
-    <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
-        <div class="oe_datepicker_container"/>
-        <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
+<t t-name="web.datetimepicker">
+       <!-- t-att-class="'field_' + widget.type"-->
+    <div>
+        <input type="text" size="1" style="width: 100%"/>
+        <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
+             title="Select date" width="16" height="16" border="0"/>
+        <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
+            <div class="oe_datepicker_container"/>
+            <button type="button" class="oe_datepicker_close ui-state-default ui-priority-primary ui-corner-all" style="float: right;">Done</button>
+        </div>
     </div>
 </t>
 <t t-name="FieldSelection">
