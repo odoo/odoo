@@ -158,7 +158,12 @@
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td valign="top" width="22">
-                                                <img t-att-src="'data:image/png;base64,'+record.photo.raw_value" width='48' height='48'/>
+                                                <t t-if="record.photo.raw_value">
+                                                    <img t-att-src="'data:image/png;base64,'+record.photo.raw_value" width='48' height='48'/>
+                                                </t>
+                                                <t t-if="!record.photo.raw_value">
+                                                    <img src="/web/static/src/img/employee.png"/>
+                                                </t> 
                                             </td>
                                             <td>
                                                 <div class="oe_kanban_title2"><field name="job_id"/></div>
