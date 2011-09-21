@@ -382,7 +382,7 @@
                 </group>
                 <separator string="" colspan="4"/>
                 <group colspan="4" col="11">
-                    <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors="{'exception':'red'}"/>
+                    <field name="state" readonly="True" widget="statusbar" statusbar_visible="todo,done" statusbar_colors='{"exception":"red"}'/>
                     <button string="Cancel" states="todo,exception" name="button_cancel" type="object" icon="terp-gtk-stop"/>
                     <button string="Reset" states="exception,cancelled" name="button_draft" type="object" icon="gtk-undo"/>
                     <button string="Process" states="todo" name="process" type="object" icon="terp-gtk-go-back-rtl"/>
