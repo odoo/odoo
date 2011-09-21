@@ -61,7 +61,7 @@
    I Create a Purchase Order for the supplier 'Axelor'.
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
-    partner_address_id: base.res_partner_address_7
+    partner_address_id: base.res_partner_address_3000
     partner_id: base.res_partner_desertic_hispafuentes
 - 
   I create Quotations For supplier 'Axelor'.
@@ -111,13 +111,13 @@
         product_uom_id: product.product_uom_unit
     name: TE000010
 - 
-   I Create a First Purchase Order for the supplier 'DistriPC'.
+   I Create a First Purchase Order for the supplier 'Distrib PC'.
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_1}:
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
 - 
-  I create Quotations For supplier 'DistriPC'.
+  I create Quotations For supplier 'Distrib PC'.
 - 
   !python {model: purchase.requisition.partner}: |
     self.create_order(cr, uid, [ref("purchase_requisition_partner_1")], {"active_model": "purchase.requisition",
@@ -126,7 +126,7 @@
    I Create a Second Purchase Order for the supplier ASUStek.
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_2}:
-    partner_address_id: base.res_partner_address_7
+    partner_address_id: base.res_partner_address_tang
     partner_id: base.res_partner_asus
 - 
   I create Quotations For supplier 'ASUStek'.
@@ -140,26 +140,20 @@
   !assert {model: purchase.requisition, id: purchase_requisition_ex1}:
     - state == 'draft'  
 -
-  I confirm the Second purchase order of ASUStek.
+  I confirm the Second purchase order of ASUStek, than check that Quotation is Approved.
 -
   !python {model: purchase.order}: |
-    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
-    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','=',ref("purchase_requisition_ex1"))])
+    purchase_id= self.search(cr, uid, [('partner_id','=',ref("base.res_partner_asus")),('requisition_id','=',ref("purchase_requisition_ex1"))])
     import netsvc
     wf_service = netsvc.LocalService("workflow")   
     if purchase_id:
       wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_confirm', cr)
       wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_approve', cr)
+    state=self.browse(cr,uid,purchase_id[0]).state
+    assert (state=='approved')
+    
 -
-  I check that Quotation of ASUStek is Approved.
--        
-  !python {model: purchase.order}: |
-   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
-   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','=',ref("purchase_requisition_ex1"))])[0]
-   state=self.browse(cr,uid,purchase_id).state
-   assert (state=='approved')
--
-  I check that Quotation of DistriPC is cancelled.
+  I check that Quotation of Distrib PC is cancelled.
 -        
   !python {model: purchase.order}: |
    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]

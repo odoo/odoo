@@ -17,33 +17,6 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-    volume: 0.0
-    warranty: 0.0
-    weight: 0.0
-    weight_net: 0.0
--
-  Create second  new product 'Pen Drive2'
--
- !record {model: product.product, id: product_product_pendrive2}:
-    categ_id: 'product.product_category_3'
-    cost_method: standard
-    mes_type: fixed
-    name: Pen Drive 2
-    price_margin: 1.0
-    procure_method: make_to_order
-    property_stock_inventory: stock.location_inventory
-    property_stock_procurement: stock.location_procurement
-    property_stock_production: stock.location_production
-    seller_delay: '1'
-    standard_price: 500.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
-    volume: 0.0
-    warranty: 0.0
-    weight: 0.0
-    weight_net: 0.0
 -
   I create first purchase order for Pen Drive1 where "invoice_method" is From Order.
 -
@@ -55,11 +28,10 @@
     order_line:
       - date_planned: !eval time.strftime('%Y-%m-%d')
         name: Pen Drive
-        price_unit: 100.0
+        price_unit: 500.0
         product_id: 'product_product_pendrive1'
         product_qty: 10.0
         product_uom: product.product_uom_unit
-        state: draft
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
     pricelist_id: purchase.list0
@@ -81,7 +53,6 @@
   I have to first cancel Picking of Approved Purchase order .
 -
   !python {model: stock.picking}: |
-    from tools.translate import _
     search_ids=self.search(cr, uid, [('purchase_id', '=', ref("purchase_order_pendrive1"))])
     self.action_cancel(cr, uid, search_ids)
 -
@@ -108,7 +79,6 @@
   I test for Copy and Delete Perchase order in Draft state.
 -
   !python {model: purchase.order}: |
-    from tools.translate import _
     copy_id = self.copy(cr, uid, ref("purchase_order_pendrive1"))   
     self.unlink(cr, uid, [copy_id])   
 -
@@ -122,11 +92,10 @@
     order_line:
       - date_planned: !eval time.strftime('%Y-%m-%d')
         name: Pen Drive
-        price_unit: 100.0
+        price_unit: 500.0
         product_id: 'product_product_pendrive1'
         product_qty: 10.0
         product_uom: product.product_uom_unit
-        state: draft
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
     pricelist_id: purchase.list0
