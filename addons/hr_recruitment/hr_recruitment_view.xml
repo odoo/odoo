@@ -291,11 +291,6 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
-                <field name="partner_name"/>
-                <field name="user_id"/>
-                <field name="stage_id"/>
-                <field name="survey"/>
-                <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
