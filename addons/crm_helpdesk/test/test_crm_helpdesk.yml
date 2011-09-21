@@ -16,7 +16,7 @@
   !python {model: crm.helpdesk}: |
     msg = {
        'subject': 'test_email',
-       'body': 'Testing',
+       'body_text': 'Testing',
        'from': 'Administrator <admin@openerp.com>',
       }
     context = None
@@ -39,12 +39,16 @@
     vals = {}
     msg = {
        'subject': 'test_email',
-       'body': 'Testing',
+       'body_text': 'Testing',
        'from': 'Administrator <admin@openerp.com>',
+       'priority': 'done'
       }
     context = None
     default_act = 'pending'
-    self.message_update(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')], vals, msg, default_act, context)    
+    try:
+      self.message_update(cr, uid,[ref('crm_helpdesk_somefunctionalquestion0')], msg,context)
+    except:
+      pass
 - |
   After a proper communication for the request via email I make sure that the request is fulfilled and
   I close this HelpDesk Request by clicking on "Close" button.
