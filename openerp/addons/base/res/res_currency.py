@@ -62,11 +62,12 @@ class res_currency(osv.osv):
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
-        'base': fields.boolean('Base')
-
+        'base': fields.boolean('Base'),
+        'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
         'active': lambda *a: 1,
+        'position' : 'after',
     }
     _sql_constraints = [
         # this constraint does not cover all cases due to SQL NULL handling for company_id,
