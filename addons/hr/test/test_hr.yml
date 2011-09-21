@@ -1,13 +1,13 @@
 -
-  In order to test  hr module in OpenERP, I will create new Employee , Department and Job Position.
+  In order to test hr module in OpenERP, I will create new Employee , Department and Job Position.
 -
-  I create "R&D Department"  in Department form.
+  I create "R&D Department" in Department form.
 -
   !record {model: hr.department, id: hr_department_rd0}:
     manager_id: base.user_root
     name: 'R & D'
 -
-  Now, I  create a new employee “Mark Johnson”, and select department as "R&D Department".
+  Now, I create a new employee “Mark Johnson”, and select department as "R&D Department".
 -
   !record {model: hr.employee, id: hr_employee_mark}:
     address_home_id: base.res_partner_address_1
@@ -16,7 +16,12 @@
     marital: 'single'
     name: Mark Johnson
     user_id: base.user_root
-    department_id: 'hr_department_rd0'
+-
+  I assign department for employee 'Mark Johnson'
+-
+  !python {model: hr.employee}: |
+    res = self.onchange_department_id(cr, uid, ref('hr_employee_mark'), ref('hr_department_rd0'), None)
+    assert res['value']['parent_id']
 -
   In order to check the wizard “Employee Hierarchy” , I will create new employee “Phil Graves ” and select "Mark Johnson" as
   Manager.
@@ -28,6 +33,12 @@
     name: Phil Graves
     user_id: base.user_demo
     parent_id: 'hr_employee_mark'
+-
+  I fill the Working address for Employee
+-
+  !python {model: hr.employee}: |
+    res = self.onchange_address_id(cr, uid, ref('hr_employee_phil'), ref('base.res_partner_address_3000'), None)
+    assert res['value']
 -
   I will open up form view of  “Mark Johnson” and test the wizard “Employee Hierarchy” so it display the employee
   hierarchy starting from “Mark Johnson”.
