@@ -10,7 +10,7 @@
             <field name="model">mrp.production.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-               <tree colors="blue:state in ('draft');black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('done','cancel') " string="Production">
+               <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('done','cancel') " string="Production">
                       <field name="date_planned"/>
                       <field name="bom_id" invisible="1"/>
                       <field name="product_id" invisible="1"/>
@@ -47,7 +47,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="6">
+                  <group>
 	                    <filter icon="terp-go-year" string="Year"
 	                    	    domain="[('year','=',time.strftime('%%Y'))]"
 	                    	    help="Production performed during current year"/>
@@ -57,13 +57,12 @@
 	                    		help="Production performed during current month"/>
 		                <filter icon="terp-go-week"
 	                            string="Month -1"
-	                            separator="1"
 	                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','in',('open','draft'))]"/>
                         <filter icon="terp-check" string="In Production" domain="[('state','=','in_production')]"/>
-                        <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
                       <separator orientation="vertical"/>
                         <field name="location_src_id" />
                         <field name="location_dest_id" />

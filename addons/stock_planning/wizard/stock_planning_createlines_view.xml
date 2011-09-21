@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-            
         <!-- Create Planning section -->
-        
         <record id="view_stock_planning_createlines_form" model="ir.ui.view">
             <field name="name">stock.planning.createlines.form</field>
             <field name="model">stock.planning.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Stock Planning Lines">
-                    <separator colspan ="4" string="Creates planning lines for selected period and warehouse."/>
                     <field name="period_id" widget="selection"/>
+                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <field name="forecasted_products"/>
                     <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
-                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
-                    <newline/>
-                    <label colspan ="4"  string="Note: Doesn't duplicate existing lines created by you."/>
-                    <separator colspan="4"/>
                     <group colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
                         <button icon="gtk-ok" name="create_planning" string="Create" type="object"/>
@@ -30,15 +24,17 @@
         <record id="action_stock_planning_createlines_form" model="ir.actions.act_window">
             <field name="name">Create Stock Planning Lines</field>
             <field name="res_model">stock.planning.createlines</field>
+            <field name="src_model">stock.planning</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_stock_planning_createlines_form"/>
+            <field name="help">This wizard helps create MPS planning lines for a given selected period and warehouse, so you don't have to create them one by one. The wizard doesn't duplicate lines if they already exist for this selection.</field>
             <field name="target">new</field>
         </record>
 
         <menuitem
             id="menu_stock_planning_createlines"
-            parent="menu_stock_planning_main"
+            parent="menu_stock_planning_manual"
             action="action_stock_planning_createlines_form" sequence = "5"/>
     </data>
 </openerp>

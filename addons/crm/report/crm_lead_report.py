@@ -121,7 +121,7 @@ class crm_lead_report(osv.osv):
                     c.planned_revenue,
                     c.planned_revenue*(c.probability/100) as probable_revenue,
                     1 as nbr,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.lead' AND res_id=c.id AND history=True) AS email,
+                    (SELECT count(id) FROM mail_message WHERE model='crm.lead' AND res_id=c.id AND email_from is not null) AS email,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
