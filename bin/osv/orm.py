@@ -1814,7 +1814,7 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
-    def exists(self, cr, uid, id, context=None):
+    def exists(self, cr, uid, ids, context=None):
         raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
@@ -2112,8 +2112,10 @@ class orm_memory(orm_template):
         # nothing to check in memory...
         pass
 
-    def exists(self, cr, uid, id, context=None):
-        return id in self.datas
+    def exists(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+        return all(( id in self.datas for id in ids ))
 
 class orm(orm_template):
     _sql_constraints = []
