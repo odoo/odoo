@@ -132,7 +132,7 @@
                         </group>
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
-                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors="{'pending':'blue'}"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
