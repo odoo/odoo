@@ -425,10 +425,11 @@ class expression(object):
                     self.__exp[i] = tuple(self.__exp[i])
 
                 if field.translate:
-                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
-                    if operator in ('like', 'ilike', 'not like', 'not ilike'):
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    if need_wildcard:
                         right = '%%%s%%' % right
-                        
+
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
@@ -436,19 +437,19 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if operator in ['in','not in']:
+                    if sql_operator in ['in','not in']:
                         instr = ','.join(['%s'] * len(right))
-                        query1 += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
+                        query1 += '     AND value ' + sql_operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + ' ' +" (" + instr + "))"
+                             '   WHERE "' + left + '" ' + sql_operator + ' ' +" (" + instr + "))"
                     else:
-                        query1 += '     AND value ' + operator + instr +   \
+                        query1 += '     AND value ' + sql_operator + instr +   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + instr + ")"
+                             '   WHERE "' + left + '" ' + sql_operator + instr + ")"
 
                     query2 = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
@@ -521,18 +522,16 @@ class expression(object):
                     query = '%s.id %s %%s' % (table._table, operator)
                     params = right
                 else:
-                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
-                    like = operator in ('like', 'ilike', 'not like', 'not ilike')
-                    
-                    op = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if left in table._columns:
-                        format = like and '%s' or table._columns[left]._symbol_set[0]
-                        query = '(%s."%s" %s %s)' % (table._table, left, op, format)
+                        format = need_wildcard and '%s' or table._columns[left]._symbol_set[0]
+                        query = '(%s."%s" %s %s)' % (table._table, left, sql_operator, format)
                     else:
-                        query = "(%s.\"%s\" %s '%s')" % (table._table, left, op, right)
+                        query = "(%s.\"%s\" %s '%s')" % (table._table, left, sql_operator, right)
 
                     add_null = False
-                    if like:
+                    if need_wildcard:
                         if isinstance(right, str):
                             str_utf8 = right
                         elif isinstance(right, unicode):

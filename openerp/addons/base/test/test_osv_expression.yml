@@ -188,18 +188,18 @@
         norm_domain = ['&','&','&'] + domain
         assert norm_domain == expression.normalize(domain), "Non-normalized domains should be properly normalized"
 -
-    Check that =like/=ilike expressions are working with an untranslated field.
+    Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on an untranslated field.
 -
     !python {model: res.partner }: |
-        all_ids = self.search(cr, uid, [('name', '=like', 'Ax')])
-        assert len(all_ids) == 1, "It should have 1 record !"
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'Ax')])
-        assert len(all_ids) == 2, "It should have 2 records !"
+        all_ids = self.search(cr, uid, [('name', '=like', 'A_e_or')])
+        assert len(all_ids) == 1, "Must match one partner (Axelor), got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'm_____')])
+        assert len(all_ids) == 1, "Must match *only* one partner (Maxtor), got %r"%all_ids
 -
-    Check that =like/=ilike expressions are working with a translated field.
+    Check that =like/=ilike expressions (no wildcard variants of like/ilike) are working on translated field.
 -
     !python {model: res.country }: |
-        all_ids = self.search(cr, uid, [('name', '=like', 'Ind')])
-        assert len(all_ids) == 3, "It should have 3 records !"
-        all_ids = self.search(cr, uid, [('name', '=ilike', 'Ind')])
-        assert len(all_ids) == 3, "It should have 3 records !"
+        all_ids = self.search(cr, uid, [('name', '=like', 'Ind__')])
+        assert len(all_ids) == 1, "Must match India only, got %r"%all_ids
+        all_ids = self.search(cr, uid, [('name', '=ilike', 'z%')])
+        assert len(all_ids) == 3, "Must match only countries with names starting with Z (currently 3), got %r"%all_ids
