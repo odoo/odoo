@@ -515,24 +515,30 @@ def get_pg_type(f, type_override=None):
     field_type = type_override or type(f)
 
     if field_type in FIELDS_TO_PGTYPES:
-        return (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
+        pg_type =  (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif issubclass(field_type, fields.float):
         if f.digits:
-            return ('numeric', 'NUMERIC')
-        return ('float8', 'DOUBLE PRECISION')
+            pg_type = ('numeric', 'NUMERIC')
+        else:
+            pg_type = ('float8', 'DOUBLE PRECISION')
     elif issubclass(field_type, (fields.char, fields.reference)):
-        return ('varchar', pg_varchar(f.size))
+        pg_type = ('varchar', pg_varchar(f.size))
     elif issubclass(field_type, fields.selection):
         if (isinstance(f.selection, list) and isinstance(f.selection[0][0], int))\
                 or getattr(f, 'size', None) == -1:
-            return ('int4', 'INTEGER')
-        return ('varchar', pg_varchar(getattr(f, 'size', None)))
+            pg_type = ('int4', 'INTEGER')
+        else:
+            pg_type = ('varchar', pg_varchar(getattr(f, 'size', None)))
     elif issubclass(field_type, fields.function):
         if f._type == 'selection':
-            return ('varchar', pg_varchar())
-        return get_pg_type(f, getattr(fields, f._type))
-    logging.getLogger('orm').warn('%s type not supported!', field_type)
-    return
+            pg_type = ('varchar', pg_varchar())
+        else:
+            pg_type = get_pg_type(f, getattr(fields, f._type))
+    else:
+        logging.getLogger('orm').warn('%s type not supported!', field_type)
+        pg_type = None
+
+    return pg_type
 
 
 class MetaModel(type):
