@@ -96,7 +96,11 @@
         name: Final Interview with manager
         sequence: 2
         survey_id: 'survey_0'
-
+-
+  I assign the evaluation plan to the employee "Mark Johnson".
+-
+  !python {model: hr.employee}: |
+    res = self.onchange_evaluation_plan_id(cr, uid, [ref('hr_employee_employee0')], ref('hr_evaluation_plan_managersplan0'), False, None)
 -
   I create an Evaluation for employee under "Manager Evaluation Plan".
 -
@@ -107,17 +111,34 @@
     progress: 0.0
     state: draft
 -
+  I change the employee on Evaluation.
+-
+  !python {model: hr_evaluation.evaluation}: |
+    self.onchange_employee_id(cr, uid, [ref('hr_evaluation_evaluation_0')], ref('hr_employee_employee0'), None)
+-
   I start the evaluation process by click on "Start Evaluation" button.
 -
   !python {model: hr_evaluation.evaluation}: |
      self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
-
+-
+  I find a mistake on evaluation form. So I cancel the evaluation and again start it.
+-
+  !python {model: hr_evaluation.evaluation}: |
+     self.button_cancel(cr, uid, [ref('hr_evaluation_evaluation_0')])
+     self.button_draft(cr, uid, [ref('hr_evaluation_evaluation_0')])
+     self.button_plan_in_progress(cr, uid, [ref('hr_evaluation_evaluation_0')])
 -
   I close this survey request by giving answer of survey question.
 -
   !python {model: hr_evaluation.evaluation}: |
     evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
     self.pool.get('hr.evaluation.interview').survey_req_done(cr, uid, [r.id for r in evaluation.survey_request_ids])
+-
+  I print the survey.
+-
+  !python {model: hr_evaluation.evaluation}: |
+    evaluation = self.browse(cr, uid, ref('hr_evaluation_evaluation_0'))
+    self.pool.get('hr.evaluation.interview').action_print_survey(cr, uid, [r.id for r in evaluation.survey_request_ids])
 -
   I click on "Final Validation" button to finalise evaluation.
 -
