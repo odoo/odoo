@@ -265,8 +265,8 @@ class WebKitParser(report_sxw):
               )
         if not report_xml.header :
             header = ''
-            defaut_head = addons.get_module_resource('report_webkit', 'default_header.html')
-            with open(defaut_head,'r') as f:
+            default_head = addons.get_module_resource('report_webkit', 'default_header.html')
+            with open(default_head,'r') as f:
                 header = f.read()
         css = report_xml.webkit_header.css
         if not css :
