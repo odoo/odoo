@@ -2637,6 +2637,10 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
+# ---------------------------------------------------------
+# Account Financial Report
+# ---------------------------------------------------------
+
 class account_financial_report(osv.osv):
     _name = "account.financial.report"
     _description = "Account Report"
@@ -2691,17 +2695,19 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
+        'note': fields.text('Notes'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
-            ('sum','Sum'),
+            ('sum','View'),
             ('accounts','Accounts'),
-            ('account_report','Account Report'),
+            ('account_type','Account Type'),
+            ('account_report','Report Value'),
             ],'Type'),
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
-        'note': fields.text('Notes'),
-        'account_report_id':  fields.many2one('account.financial.report', 'Account Report'),
-        'balance': fields.function(_get_balance, 'Balance'),
-        'display_detail': fields.boolean('Display the account list'),
-        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
+        'account_type_id':  fields.many2one('account.account.type', 'Account Type'),
     }
 
     _defaults = {
@@ -2710,7 +2716,9 @@ class account_financial_report(osv.osv):
 
 account_financial_report()
 
-    # Multi charts of Accounts wizard
+# ---------------------------------------------------------
+# Account generation from template wizards
+# ---------------------------------------------------------
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
