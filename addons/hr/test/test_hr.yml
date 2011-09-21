@@ -1,5 +1,5 @@
 -
-  In order to test hr module in OpenERP, I will create new Employee , Department and Job Position.
+  In order to test hr module in OpenERP, I will create new Employee, Department and Job Position.
 -
   I create "R&D Department" in Department form.
 -
@@ -7,7 +7,7 @@
     manager_id: base.user_root
     name: 'R & D'
 -
-  Now, I create a new employee “Mark Johnson”, and select department as "R&D Department".
+  Now, I create a new employee “Mark Johnson”, and select department as “R&D Department”.
 -
   !record {model: hr.employee, id: hr_employee_mark}:
     address_home_id: base.res_partner_address_1
@@ -15,15 +15,34 @@
     gender: male
     marital: 'single'
     name: Mark Johnson
-    user_id: base.user_root
 -
-  I assign department for employee 'Mark Johnson'
+  I change the company of the employee.
 -
   !python {model: hr.employee}: |
-    res = self.onchange_department_id(cr, uid, ref('hr_employee_mark'), ref('hr_department_rd0'), None)
+    self.onchange_company(cr, uid, [ref('hr_employee_mark')], ref('base.main_company'), None)
+-
+  I assign department for employee “Mark Johnson”.
+-
+  !python {model: hr.employee}: |
+    res = self.onchange_department_id(cr, uid, [ref('hr_employee_mark')], ref('hr_department_rd0'), None)
     assert res['value']['parent_id']
 -
-  In order to check the wizard “Employee Hierarchy” , I will create new employee “Phil Graves ” and select "Mark Johnson" as
+  Now I create a user for employee “Mark Johnson”.
+-
+  !record {model: res.users, id: hr_users_markjohnson0}:
+    context_lang: en_US
+    groups_id:
+      - base.group_user
+    login: markjohnson
+    name: Mark Johnson
+    password: markjohnson
+-
+  I assign user to employee “Mark Johnson”.
+-
+  !python {model: hr.employee}: |
+    res = self.onchange_user(cr, uid, [ref('hr_employee_mark')], ref('hr_users_markjohnson0'), None)
+-
+  In order to check the wizard “Employee Hierarchy” , I will create new employee “Phil Graves” and select “Mark Johnson” as
   Manager.
 -
   !record {model: hr.employee, id: hr_employee_phil}:
@@ -34,7 +53,7 @@
     user_id: base.user_demo
     parent_id: 'hr_employee_mark'
 -
-  I fill the Working address for Employee
+  I fill the Working address for Employee.
 -
   !python {model: hr.employee}: |
     res = self.onchange_address_id(cr, uid, ref('hr_employee_phil'), ref('base.res_partner_address_3000'), None)
@@ -44,7 +63,7 @@
   hierarchy starting from “Mark Johnson”.
 
 -
-  I will create new Job Position. I will check successfull creation of new Job Position by adding the information.
+  I will create new Job Position. I will check successful creation of new Job Position by adding the information.
 -
   !record {model: hr.job, id: hr_job_jea0}:
     department_id: 'hr_department_rd0'
@@ -56,7 +75,6 @@
 -
   !assert {model: hr.job, id: hr_job_jea0}:
     - state == 'open'
-
 -
   I create Employee for job position.
 -
@@ -72,3 +90,41 @@
 -
   !assert {model: hr.job, id: hr_job_jea0}:
     - no_of_employee != False
+-
+  As more requirements on the said job position are come, I increase the number of expected employees.
+-
+  !python {model: hr.job}: |
+    res = self.on_change_expected_employee(cr, uid, [ref('hr_job_jea0')], 6, 3, None)
+    assert res['value']['expected_employees']
+-
+  I open the job position for recruitment.
+-
+  !python {model: hr.job}: |
+    self.job_recruitement(cr, uid, [ref('hr_job_jea0')])
+-
+  I assign the job position to employee and mark the position.
+-
+  !python {model: hr.job}: |
+    self.job_open(cr, uid, [ref('hr_job_jea0')])
+-
+  Now the process is over so I don't want to use this position. I mark it as Old.
+-
+  !python {model: hr.job}: |
+    self.job_old(cr, uid, [ref('hr_job_jea0')])
+-
+  I create a parent category for the new recruited employees who are Freshers.
+-
+  !record {model: hr.employee.category, id: hr_employee_category_fresher0}:
+    name: Fresher
+-
+  I create another category for Junior Level freshers.
+-
+  !record {model: hr.employee.category, id: hr_employee_category_juniorlevel0}:
+    name: Junior Level
+    parent_id: hr_employee_category_fresher0
+-
+  I open the tree view of Categories and see the categories in a hierarchical manner.
+-
+  !python {model: hr.employee.category}: |
+    res = self.name_get(cr, uid, [ref('hr_employee_category_juniorlevel0')], None)
+    assert res
