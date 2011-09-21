@@ -491,7 +491,7 @@ class ir_model_access(osv.osv):
                        '   AND m.model = %s '
                        , (model_name,)
                        )
-            r = cr.fetchone()[0]
+            r = cr.fetchone()[0] or False
 
         if not r and raise_exception:
             cr.execute('''select
