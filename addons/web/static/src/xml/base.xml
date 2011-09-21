@@ -38,11 +38,17 @@
         </td>
     </tr>
     <tr>
-        <td valign="top" id="oe_secondary_menu" class="secondary_menu">
-        </td>
-        <td valign="top" class="oe-application-container">
-            <div id="oe_app" class="oe-application">
-            </div>
+        <td colspan="2" valign="top" height="100%">
+            <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
+            <tr>
+                <td valign="top" id="oe_secondary_menu" class="secondary_menu">
+                </td>
+                <td valign="top" class="oe-application-container">
+                    <div id="oe_app" class="oe-application">
+                    </div>
+                </td>
+            </tr>
+            </table>
         </td>
     </tr>
     <tr>
@@ -364,45 +370,39 @@
 </ul>
 <t t-name="Menu">
     <table align="center">
-        <tr>
-        <t t-foreach="data.children" t-as="menu">
-            <td>
-                <a href="#" t-att-data-menu="menu.id">
-                    <t t-esc="menu.name"/>
-                </a>
-            </td>
-        </t>
-        </tr>
+    <tr>
+        <td t-foreach="widget.data.data.children" t-as="menu">
+            <a href="#" t-att-data-menu="menu.id">
+                <t t-esc="menu.name"/>
+            </a>
+        </td>
+    </tr>
     </table>
 </t>
 <t t-name="Menu.secondary">
-    <div style="display: none" class="menu_accordion" t-att-data-menu-parent="menu.id">
+    <div t-attf-class="oe_toggle_secondary_menu">
+        <span class="oe_menu_fold" title="Fold menu">&amp;laquo;</span>
+        <span class="oe_menu_unfold" title="Unfold menu">&amp;raquo;</span>
+    </div>
+    <div t-foreach="widget.data.data.children" t-as="menu" style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu.id">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-set="header">h3</t>
+            <t t-set="classname">oe_secondary_menu_item</t>
+            <t t-set="level" t-value="0"/>
             <t t-call="Menu.secondary.children"/>
         </t>
     </div>
 </t>
 <t t-name="Menu.secondary.children">
-    &lt;<t t-esc="header"/>&gt;
-        <a href="#" t-attf-id="menu_#{menu.id}">
-            <span><t t-esc="menu.name"/></span>
-        </a>
-    &lt;/<t t-esc="header"/>&gt;
-    <div class="menu_content">
+    <t t-set="level" t-value="level + 1"/>
+    <a href="#" t-att-id="menu.children.length ? 'menu_' + menu.id : undefined"
+        t-att-class="classname + (menu.children.length ? ' submenu' : ' leaf') + (menu_first and level == 1 ? ' opened' : '')"
+        t-att-data-menu="menu.children.length ? undefined : menu.id">
+        <span t-attf-style="padding-left: #{(level - 2) * 20}px"> <t t-esc="menu.name"/></span>
+    </a>
+    <div t-attf-class="oe_secondary_submenu" t-if="menu.children.length" t-att-style="menu_first and level == 1 ? undefined : 'display: none'">
         <t t-foreach="menu.children" t-as="menu">
-            <t t-if="!menu.children.length">
-                <a href="#" class="leaf" t-att-data-menu="menu.id">
-                    <span><t t-esc="menu.name"/></span>
-                </a>
-            </t>
-            <t t-if="menu.children.length">
-                <div class="submenu_accordion">
-                    <t t-call="Menu.secondary.children">
-                        <t t-set="header">h4</t>
-                    </t>
-                </div>
-            </t>
+            <t t-set="classname">oe_secondary_submenu_item</t>
+            <t t-call="Menu.secondary.children"/>
         </t>
     </div>
 </t>

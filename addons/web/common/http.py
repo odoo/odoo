@@ -20,6 +20,7 @@ def session(request, storage_path, session_cookie='sessionid'):
     else:
         request.session = session_store.new()
 
-    yield request.session
-
-    session_store.save(request.session)
+    try:
+        yield request.session
+    finally:
+        session_store.save(request.session)
