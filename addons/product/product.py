@@ -466,7 +466,7 @@ class product_product(osv.osv):
         'price_extra': lambda *a: 0.0,
         'price_margin': lambda *a: 1.0,
         'color': 0,
-        'product_image':_get_photo,
+#        'product_image':_get_photo,
     }
 
     _name = "product.product"

@@ -233,7 +233,12 @@
                                         <table class="oe_kanban_table">
                                             <tr>
                                                 <td valign="top" width="22">
+                                                    <t t-if="record.product_image.raw_value">
                                                         <img t-att-src="'data:image/png;base64,'+record.product_image.raw_value" width='48' height='48'/>
+                                                    </t>
+                                                    <t t-if="!record.product_image.raw_value">
+                                                        <img src="/web/static/src/img/product_default.png"/>
+                                                    </t> 
                                                 </td>
                                                 <td>
                                                     <div class="oe_kanban_title2">
