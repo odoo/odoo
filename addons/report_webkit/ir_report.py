@@ -130,6 +130,9 @@ class ReportXML(osv.osv):
                                         ),
         'webkit_debug' : fields.boolean('Webkit debug', help="Enable the webkit engine debugger"),
         'report_webkit_data': fields.text('Webkit Template', help="This template will be used if the main report file is not found"),
+        'precise_mode':fields.boolean('Precise Mode', help='This mode allow more precise element \
+                                                            position as each object is printed on a separate HTML.\
+                                                            but memory and disk usage is wider')
     }
 
 ReportXML()
