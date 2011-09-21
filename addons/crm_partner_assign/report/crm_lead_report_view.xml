@@ -9,10 +9,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
-                    <group col="20" colspan="8">
+                    <group>
                         <filter string="Last 30 Days" icon="terp-go-month" name="this_month"
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter icon="terp-go-week" string="7 Days" separator="1"
+                        <filter icon="terp-go-week" string="7 Days" 
                             domain="[('create_date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-check"

@@ -7,7 +7,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
@@ -18,12 +18,12 @@
                         <field name="partner_id" string="Supplier"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
@@ -39,7 +39,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
@@ -50,12 +50,12 @@
                         <field name="partner_id" string="Customer"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
@@ -117,6 +117,7 @@
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                     />
                                     <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
+                                    <field name="paid" invisible="1"/>
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
@@ -152,7 +153,7 @@
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
-                        <group attrs="{'invisible':[('state','!=','posted')]}">
+                        <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
                            <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                         </group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
@@ -237,6 +238,7 @@
                                 <group col="2" colspan="1">
                                     <separator string="Payment Terms" colspan="2"/>
                                     <field name="date_due"/>
+                                    <field name="paid" invisible="1"/>
                                 </group>
                                 <group col="4" colspan="1">
                                     <separator string="Total" colspan="4"/>
@@ -271,7 +273,7 @@
                         <field name="state"/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <group attrs="{'invisible':[('state','!=','posted')]}">
+                        <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
                             <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                         </group>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>

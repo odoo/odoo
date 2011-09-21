@@ -132,7 +132,7 @@
 
       <blockTable colWidths="250.0,100.0,150.0,120.0,150.0" style="Table2_header" >
       <tr>
-        <td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
+        <td><para style="terp_tblheader_General_Centre">Chart of Accounts</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By  [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
     <td><para style="terp_tblheader_General_Centre">Display Account</para></td>
@@ -196,28 +196,40 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]]</font><font>[[ a['code1'] ]]</font></para>
+          <para style="terp_default_9">
+            <font>[[ repeatIn(get_lines(),'a' ) ]] </font>[[ a['code1'] ]]<font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]]</font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_9"><font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name1'] ]]</font></para>
+          <para style="terp_default_9">
+            <font color="white">[[  '. '*(a['level1']-1) ]]</font><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]][[ a['name1'] ]]</font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_Right_9"><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(a['balance1'], currency_obj=company.currency_id) ]]</font></para>
+          <para style="terp_default_Right_9">
+          <font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(a['balance1'], currency_obj=company.currency_id) ]]</font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines(), 'a') ]]</font> <font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]]</font><font>[[ a['code'] ]]</font><font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Bold_9'}) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_9">
+            [[ a['code'] ]]<font>[[ ( a['level']&lt;4 or a['name']=='Net Profit') and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]]</font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font><font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Bold_9'}) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_9">
+            <font color="white">[[ '. '*(a['level']-1) ]]</font>
+            <font>[[ ( a['level']&lt;4 or a['name']=='Net Profit') and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]][[ a['name'] ]]</font>
+          </para>
         </td>
         <td>
-          <para style="terp_default_Right_9"><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font>
-<font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Right_9_Bold'}) or removeParentNode('font') ]]</font>
-<font> [[(a['code'] and a['name']) and formatLang(a['balance'], currency_obj=company.currency_id) or removeParentNode('font')]]</font></para>
+          <para style="terp_default_Right_9">
+            <font>[[ ( a['level']&lt;4 or a['name']=='Net Profit') and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font>
+            <font>[[(a['code'] and a['name']) and formatLang(a['balance'], currency_obj=company.currency_id) or removeParentNode('font')]]</font>
+          </para>
         </td>
-     </tr>
-     </blockTable>
-     <blockTable colWidths="290.16,100.32,290.16,100.32" style="Table_Net_Profit_Loss">
+      </tr>
+    </blockTable>
+    <blockTable colWidths="290.16,100.32,290.16,100.32" style="Table_Net_Profit_Loss">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Balance:</para>

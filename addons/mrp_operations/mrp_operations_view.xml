@@ -17,7 +17,7 @@
 	               <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr" help="Start Working"/>
 	               <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
 	               <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-	               <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close" help="Finish Order"/>
+	               <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
                </group>
 	       </xpath>
 	    </field>
@@ -35,7 +35,7 @@
                 <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
                 <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
                 <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
-                <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
                 <field name="state"/>
            </xpath>
         </field>
@@ -63,7 +63,7 @@
                 <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
                 <button name="button_cancel" string="Cancel" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
                 <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
-                <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close" help="Finish Order"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
             </tree>
         </field>
     </record>
@@ -117,7 +117,7 @@
                         <button name="button_start_working" string="Start" states="draft" icon="terp-gtk-jump-to-ltr"/>
                         <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
                         <button name="button_pause" string="Pause" states="startworking" icon="gtk-media-pause"/>
-                        <button name="button_done" string="Finished" states="startworking" icon="terp-dialog-close"/>
+                        <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
                     </group>
                 </page>
                 </notebook>
@@ -131,7 +131,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
             <search string="Search Work Orders">
-                        <group col='9' colspan='4'>
+                        <group>
 	                       <filter icon="terp-document-new" string="Draft"
 	                           domain="[('state','=','draft')]"/>
 	                       <filter icon="terp-check" string="In Progress" name="Current"
@@ -150,7 +150,7 @@
 	                		<field name="date_planned"/>
 	                	</group>
                 	<newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
                         <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
                         <separator orientation="vertical"/>

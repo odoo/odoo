@@ -48,7 +48,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group col="10" colspan="12">
+                    <group>
                         <filter icon="terp-go-year" string=" Year "
                                 domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                                 help="Timesheet in current year"/>
