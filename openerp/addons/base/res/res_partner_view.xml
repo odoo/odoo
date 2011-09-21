@@ -361,14 +361,6 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="name"/>
-                    <field name="title"/>
-                    <field name="color"/>
-                    <field name="country"/>
-                    <field name="subname"/>
-                    <field name="function"/>
-                    <field name="email"/>
-                    <field name="phone"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
