@@ -80,7 +80,6 @@
 -
   !assert {model: mrp.repair, id: mrp_repair_rma0}:
       - state == 'draft'
-
 - |
   I confirm This Repair order.
 -
@@ -121,5 +120,9 @@
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
      invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
      invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-
      assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
+- |
+  Cancel repair order.
+-
+  !python {model: mrp.repair}: |
+    self.action_cancel(cr, uid, [ref('mrp_repair_rma0')], context=None)

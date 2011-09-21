@@ -41,6 +41,16 @@
     self.fields_view_get(cr, uid, False, "form", context)
     self.cancel_repair(cr, uid, [ref("mrp_repair_rma2")], context=context)
 -
+  Reopen the repair order in draft state.
+-
+  !python {model: mrp.repair}: |
+    self.action_cancel_draft(cr, uid, [ref('mrp_repair_rma2')])
+-
+  Repair order state to 'Ready'.
+-
+  !python {model: mrp.repair}: |
+    self.action_repair_ready(cr, uid, [ref('mrp_repair_rma2')], context=None)
+-
   I start by creating new Repair order for "Basic Pc" product and Invoice Type b4repair.
 -
   !record {model: mrp.repair, id: mrp_repair_rma1}:
