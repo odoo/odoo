@@ -313,77 +313,70 @@
         </record>
 
 	
-	   <!-- Project Task Kanban View  -->
-	   <record model="ir.ui.view" id="view_task_kanban">
-	       <field name="name">project.task.kanban</field>
-	       <field name="model">project.task</field>
-	       <field name="type">kanban</field>
-	       <field name="arch" type="xml">
-	           <kanban default_group_by="type_id" >
-	           <field name="name"/>
-	           <field name="type_id"/>
-	           <field name="color"/>
-	           <field name="project_id"/>
-	           <field name="user_id"/>
-	           <field name="date_deadline"/>
-	           <field name="sequence"/>
-	               <templates>
-	                   <t t-name="kanban-box">
-	                       <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>
-	                       <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
-	                           <div class="oe_kanban_box oe_kanban_color_border">
-	                               <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-	                               <tr>
-	                                   <td class="oe_kanban_title1" align="left" valign="middle">
-	                                       <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
-	                                       <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-	                                       <field name="name"/>
-	                                   </td>
-	                                   <td valign="top" width="22">
-	                                       <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
-	                                   </td>
-	                               </tr>
-	                               </table>
-	                               <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-	                                   <div class="oe_kanban_right oe_kanban_small">
-	                                       <field name="user_id"/>
-	                                   </div>
-	                                   <div class="oe_kanban_title2">
-	                                       <field name="project_id"/>
-	                                   </div>
-	                                   <div class="oe_kanban_small">
-	                                       <a target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.raw_value.toLowerCase().replace(' ','-')">
-	                                           http://pad.openerp.com/<t t-esc="record.name.raw_value.toLowerCase().replace(' ','-')"/>
-	                                       </a>
-	                                   </div>
-	                                   <div class="oe_kanban_small">
-	                                       <i><field name="date_deadline"/></i>
-	                                   </div>
-	                               </div>
-	                               <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-	                                   <div class="oe_kanban_left">
-	                                       <a string="Edit" icon="gtk-edit" type="edit"/>                                               
-	                                       <a string="Change Color" icon="color-picker" type="color" name="color"/>
-	                                       <a string="" />
-	                                       <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.value" style="text-decoration: none;" >
-	                                           <img src="/web/static/src/img/icons/pad-openerp.png" border="0" width="16" height="16"/>
-	                                       </a>                                                
-	                                       <a name="%(action_project_task_delegate)d" string="Delegate" states="pending,open,draft" type="action" icon="gtk-sort-descending" />
-	                                   </div>
-	                                   <div class="oe_kanban_right">
-	                                       <a name="do_cancel" string="Mark Lost" states="draft,open,pending" type="object" icon="lead-stage-lost"/>
-	                                       <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>        
-	                                       <a name="action_close" string="Mark Won"  states="pending,open" type="object" icon="lead-stage-won"/>
-	                                   </div>
-	                                   <br class="oe_kanban_clear"/>
-	                               </div>
-	                           </div>
-	                       </div>
-	                   </t>
-	               </templates>
-	           </kanban>
-	       </field>
-	    </record>
+        <!-- Project Task Kanban View  -->
+        <record model="ir.ui.view" id="view_task_kanban">
+            <field name="name">project.task.kanban</field>
+            <field name="model">project.task</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="type_id" >
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>
+                            <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                                <field name="name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <div class="oe_kanban_right oe_kanban_small">
+                                            <field name="user_id"/>
+                                        </div>
+                                        <div class="oe_kanban_title2">
+                                            <field name="project_id"/>
+                                        </div>
+                                        <div class="oe_kanban_small">
+                                            <a target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.raw_value.toLowerCase().replace(' ','-')">
+                                                http://pad.openerp.com/<t t-esc="record.name.raw_value.toLowerCase().replace(' ','-')"/>
+                                            </a>
+                                        </div>
+                                        <div class="oe_kanban_small">
+                                            <i><field name="date_deadline"/></i>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                               
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a string="" />
+                                            <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.value" style="text-decoration: none;" >
+                                                <img src="/web/static/src/img/icons/pad-openerp.png" border="0" width="16" height="16"/>
+                                            </a>                                                
+                                            <a name="%(action_project_task_delegate)d" string="Delegate" states="pending,open,draft" type="action" icon="gtk-sort-descending" />
+                                        </div>
+                                        <div class="oe_kanban_right">
+                                            <a name="do_cancel" string="Mark Lost" states="draft,open,pending" type="object" icon="lead-stage-lost"/>
+                                            <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>        
+                                            <a name="action_close" string="Mark Won"  states="pending,open" type="object" icon="lead-stage-won"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
 
         <record id="view_task_tree2" model="ir.ui.view">
             <field name="name">project.task.tree</field>
