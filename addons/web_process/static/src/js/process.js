@@ -176,10 +176,16 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 				.call('get',
 						['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context],
 						function(res) {
+							self.$element.empty();
 							var action = res[0][res[0].length - 1];
-							var action_manager = new openerp.web.ActionManager(self);
-							action_manager.appendTo(self.widget_parent.$element);
-							action_manager.do_action(action);
+							self.rpc("/web/action/load", {
+		                        action_id: action.id,
+		                        context: dataset.context
+		                    }, function(result) {
+		                        var action_manager = new openerp.web.ActionManager(self);
+		                        action_manager.appendTo(self.widget_parent.$element);
+		                        action_manager.do_action(result.result);
+		                    });
 						}
 				);
 		}
