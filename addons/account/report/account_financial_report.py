@@ -70,7 +70,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         flag = False
                         vals = {
                             'name': account.code + ' ' + account.name,
-                            'balance': account.balance,
+                            'balance':  account.balance != 0 and account.balance * account.user_type.sign or account.balance,
                             'type': 'account',
                             'level': 6,
                             'account_type': account.type,
