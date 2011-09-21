@@ -182,9 +182,11 @@ openerp.web.list_editable = function (openerp) {
                 self.edition_id = record_id;
                 self.edition_form = _.extend(new openerp.web.ListEditableFormView(self, self.dataset, false), {
                     form_template: 'ListView.row.form',
-                    registry: openerp.web.list.form.widgets
+                    registry: openerp.web.list.form.widgets,
+                    $element: $new_row
                 });
-                self.edition_form.appendTo($("#" + $new_row.attr('id')));
+                // HA HA
+                self.edition_form.appendTo();
                 $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('td')
@@ -335,6 +337,9 @@ openerp.web.list_editable = function (openerp) {
     });
     
     openerp.web.ListEditableFormView = openerp.web.FormView.extend({
-        init_view: function() {}
+        init_view: function() {},
+        _render_and_insert: function () {
+            return this.start();
+        }
     });
 };
