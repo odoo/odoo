@@ -614,8 +614,9 @@ class expression(object):
                     self.__exp[i] = tuple(self.__exp[i])
 
                 if field.translate:
-                    operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
-                    if operator in ('like', 'ilike', 'not like', 'not ilike'):
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    if need_wildcard:
                         right = '%%%s%%' % right
 
                     subselect = '( SELECT res_id'          \
@@ -625,19 +626,19 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if operator in ['in','not in']:
+                    if sql_operator in ['in','not in']:
                         instr = ','.join(['%s'] * len(right))
-                        subselect += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
+                        subselect += '     AND value ' + sql_operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + ' ' +" (" + instr + "))"
+                             '   WHERE "' + left + '" ' + sql_operator + ' ' +" (" + instr + "))"
                     else:
-                        subselect += '     AND value ' + operator + instr +   \
+                        subselect += '     AND value ' + sql_operator + instr +   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + instr + ")"
+                             '   WHERE "' + left + '" ' + sql_operator + instr + ")"
 
                     params = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
@@ -734,23 +735,23 @@ class expression(object):
             params = right
 
         else:
-            like = operator in ('like', 'ilike', 'not like', 'not ilike')
+            need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+            sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
 
-            op = {'=like':'like','=ilike':'ilike'}.get(operator, operator)
             if left in table._columns:
-                format = like and '%s' or table._columns[left]._symbol_set[0]
-                if self.has_unaccent and op in ('ilike', 'not ilike'):
-                    query = '(unaccent(%s."%s") %s unaccent(%s))' % (table._table, left, op, format)
+                format = need_wildcard and '%s' or table._columns[left]._symbol_set[0]
+                if self.has_unaccent and sql_operator in ('ilike', 'not ilike'):
+                    query = '(unaccent(%s."%s") %s unaccent(%s))' % (table._table, left, sql_operator, format)
                 else:
-                    query = '(%s."%s" %s %s)' % (table._table, left, op, format)
+                    query = '(%s."%s" %s %s)' % (table._table, left, sql_operator, format)
             else:
-                if self.has_unaccent and op in ('ilike', 'not ilike'):
-                    query = "(unaccent(%s.\"%s\") %s unaccent('%s'))" % (table._table, left, op, right)
+                if self.has_unaccent and sql_operator in ('ilike', 'not ilike'):
+                    query = "(unaccent(%s.\"%s\") %s unaccent('%s'))" % (table._table, left, sql_operator, right)
                 else:
-                    query = "(%s.\"%s\" %s '%s')" % (table._table, left, op, right)
+                    query = "(%s.\"%s\" %s '%s')" % (table._table, left, sql_operator, right)
 
             add_null = False
-            if like:
+            if need_wildcard:
                 if isinstance(right, str):
                     str_utf8 = right
                 elif isinstance(right, unicode):
