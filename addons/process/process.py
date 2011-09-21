@@ -242,10 +242,7 @@ class process_process(osv.osv):
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-        for k,v in nodes.items():
-            k = str(k)
-        for t,i in transitions.items():
-            t = str(t)
+        
         nodes = dict([str(n_key), n_val] for n_key, n_val in nodes.iteritems())
         transitions = dict([str(t_key), t_val] for t_key, t_val in transitions.iteritems())
         return dict(name=name, resource=resource, state=state, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
