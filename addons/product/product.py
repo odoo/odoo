@@ -457,16 +457,11 @@ class product_product(osv.osv):
                     (data['name'] or '') + (data['variants'] and (' - '+data['variants']) or '')
         return res
 
-    def _get_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('product','images','product.png')
-        return open(photo_path, 'rb').read().encode('base64')
-    
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
         'price_margin': lambda *a: 1.0,
         'color': 0,
-#        'product_image':_get_photo,
     }
 
     _name = "product.product"
