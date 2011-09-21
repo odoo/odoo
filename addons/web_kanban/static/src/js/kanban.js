@@ -20,6 +20,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.qweb = new QWeb2.Engine();
         this.aggregates = {};
         this.NO_OF_COLUMNS = 3;
+        this.dataset_default_domain = dataset.domain;
+        this.dataset_default_context = dataset.context;
         if (this.options.action_views_ids.form) {
             this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
             this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
@@ -434,9 +436,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     do_search: function (domains, contexts, group_by) {
         var self = this;
+        this.dataset.domain = this.dataset_default_domain;
+        this.dataset.context = this.dataset_default_context;
         this.rpc('/web/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
+            domains: [this.dataset.get_domain()].concat(domains),
+            contexts: [this.dataset.get_context()].concat(contexts),
             group_by_seq: group_by
         }, function (results) {
             self.domain = results.domain;
@@ -461,8 +465,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.do_render_group(groups);
             },
             function (dataset) {
-                self.domain = dataset.domain;
-                self.context = dataset.context;
                 self.groups = [];
                 self.dataset.read_slice([], {}, function(records) {
                     self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
