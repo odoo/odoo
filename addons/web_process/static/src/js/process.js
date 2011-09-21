@@ -116,7 +116,7 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            
 	            // Node text
 	            process_node_text =  r.text(text_position_x, n.node.y+10, (n.node.name))
-	            					.attr({"fill": "#fff", "font-weight": "bold"});
+	            					.attr({"fill": "#fff", "font-weight": "bold", "cursor": "pointer"});
 	            
 	            if(n.node.subflow) {
 	            	process_node_text.click(function() {
@@ -144,7 +144,6 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            
 	            process_set = r.set()
 	            	.push(process_node)
-	            	.push(process_node_text);
 	            process_set.mousedown(function() {
 	            	return false;
 	            });
