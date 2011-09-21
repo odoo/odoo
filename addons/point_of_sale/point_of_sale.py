@@ -675,17 +675,14 @@ class pos_order(osv.osv):
                     'quantity': line.qty,
                 }
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
-                sale_description = product_obj.browse(cr, uid, [line.product_id.id], context=context)[0].description_sale
-                description = product_obj.browse(cr, uid, [line.product_id.id], context=context)[0].description
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
+                sale_description = line.product_id.description_sale
                 if sale_description:
                     inv_line['note'] = sale_description
-                else:
-                    inv_line['note'] = description
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
