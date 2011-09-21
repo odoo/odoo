@@ -27,9 +27,15 @@ class sale_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
+        line_ids = []
+        for id in ids:
+            res[id] = 0.0
         for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
-                return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
+                line_ids.append(line.id)
+        if line_ids:
+            res_article = super(sale_order_line, self)._amount_line(cr, uid, line_ids, field_name, arg, context)
+            res.update(res_article)
         return res
 
     def invoice_line_create(self, cr, uid, ids, context=None):
@@ -116,6 +122,8 @@ class sale_order_line(osv.osv):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),
+        # Override the field to call the overridden _amount_line function
+        'price_subtotal': fields.function(_amount_line, method=True, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
     }
 
     _defaults = {

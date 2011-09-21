@@ -96,16 +96,13 @@ class stock_sale_forecast_createlines(osv.osv_memory):
                         'product_uom_categ': p.uom_id.category_id.id,
                         'product_uos_categ': prod_uos_categ,
                      }))
-        result = mod_obj._get_id(cr, uid, 'stock_planning', 'view_stock_sale_forecast_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
         return {
             'domain': "[('id','in', ["+','.join(map(str, forecast_lines))+"])]",
             'view_type': 'form',
-            "view_mode": 'tree, form',
+            "view_mode": 'tree,form',
             'res_model': 'stock.sale.forecast',
             'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id'],
         }
 
 stock_sale_forecast_createlines()

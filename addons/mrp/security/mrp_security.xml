@@ -37,5 +37,19 @@
         <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
     </record>
 
+    <record model="ir.rule" id="mrp_routing_rule">
+        <field name="name">mrp_routing multi-company</field>
+        <field name="model_id" search="[('model','=','mrp.routing')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+    </record>
+
+    <record model="ir.rule" id="mrp_routing_workcenter_rule">
+        <field name="name">mrp_routing_workcenter multi-company</field>
+        <field name="model_id" search="[('model','=','mrp.routing.workcenter')]" model="ir.model"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+    </record>
+
 </data>
 </openerp>

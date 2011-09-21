@@ -87,6 +87,9 @@ class hr_recruitment_degree(osv.osv):
     _defaults = {
         'sequence': 1,
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
+    ]
 hr_recruitment_degree()
 
 class hr_applicant(crm.crm_case, osv.osv):
@@ -282,7 +285,6 @@ class hr_applicant(crm.crm_case, osv.osv):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             context = {
-                'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
