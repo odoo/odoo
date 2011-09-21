@@ -112,7 +112,7 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            		});
 	            
 	            //Node
-	            process_node = r['rect'](n.node.x, n.node.y, 150, 100);
+	            process_node = r['rect'](n.node.x, n.node.y, 150, 100).attr({stroke: "none"});
 	            
 	            // Node text
 	            process_node_text =  r.text(text_position_x, n.node.y+10, (n.node.name))
@@ -128,7 +128,6 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            //Node Description
 	            process_node_desc = r.text(n.node.x+75, n.node.y+50, (n.node.notes));
 	            
-	            
 	            r['image']('/web/static/src/img/icons/gtk-info.png', n.node.x+20, n.node.y+70, 16, 16)
 	            	.attr({"cursor": "pointer", "title": "Help"})
 	            	.click(function(){
@@ -139,14 +138,13 @@ QWeb.add_template('/web_process/static/src/xml/web_process.xml');
 	            	r['image']('/web/static/src/img/icons/gtk-jump-to.png', n.node.x+115, n.node.y+70, 16, 16)
 	            	.attr({"cursor": "pointer", "title": n.node.menu.name})
 	            	.click(function() {
-	            		self.jump_to_view(n.node.res_model, n.node.menu.id)
+	            		self.jump_to_view(n.node.res_model, n.node.menu.id);
 	            	});
 	            }
 	            
 	            process_set = r.set()
 	            	.push(process_node)
-	            	.push(process_node_text)
-	            	.push(process_node_desc);
+	            	.push(process_node_text);
 	            process_set.mousedown(function() {
 	            	return false;
 	            });
