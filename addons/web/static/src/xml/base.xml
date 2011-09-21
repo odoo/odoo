@@ -801,8 +801,7 @@
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
 <t t-name="web.datetimepicker">
-       <!-- t-att-class="'field_' + widget.type"-->
-    <div>
+    <div class="oe_datepicker">
         <input type="text" size="1" style="width: 100%"/>
         <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
              title="Select date" width="16" height="16" border="0"/>
@@ -1051,6 +1050,18 @@
                t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"
                t-att-id="element_id"
                t-att-value="defaults[attrs.name] || ''"/>
+        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
+    </div>
+</t>
+<t t-name="SearchView.date">
+    <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
+           t-att-title="attrs.help"
+           t-att-for="element_id">
+        <t t-esc="attrs.string || attrs.name"/>
+        <span t-if="attrs.help">?</span>
+    </label>
+    <div style="white-space: nowrap;">
+        <span t-att-id="element_id"></span>
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>

@@ -793,20 +793,21 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
  * @extends openerp.web.search.DateField
  */
 openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
-    /**
-     * enables date picker on the HTML widgets
-     */
+    template: "SearchView.date",
     start: function () {
         this._super();
-        this.$element.addClass('field_date').datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
+        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget.prependTo(this.$element);
+        this.datewidget.$element.find("input").attr("size", 15);
+        this.datewidget.$element.find("input").attr("autofocus",
+            this.attrs.default_focus === '1' ? 'autofocus' : undefined);
+        this.datewidget.set_value(this.defaults[this.attrs.name] || false);
     },
     stop: function () {
         this.$element.datepicker('destroy');
     },
     get_value: function () {
-        return this.$element.val();
+        return this.datewidget.get_value() || null;
     }
 });
 /**

@@ -1145,6 +1145,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         this.$element.find('button.oe_datepicker_close').click(function() {
             self.$element.find('.oe_datepicker').hide();
         });
+        this.set_readonly(false);
     },
     picker: function() {
         return $.fn[this.jqueryui_object].apply(this.$element.find('.oe_datepicker_container'), arguments);
