@@ -122,22 +122,21 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         self.do_check_req_field(req_field);
     },
     do_check_req_field: function(req_fld) {
-        var self = this;
-        if (req_fld.length) {
-            self.$element.find("#message").remove();
-            var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld) {
-                return fld['text']
-            });
-            var required_fields = _.filter(req_fld, function(fld) {
-                return !_.contains(sel_fields, fld)
-            });
-            if (required_fields.length) {
-                $("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + required_fields + '.</div>');
-                $(".ui-button-text:contains('Import File')").parent().attr("disabled", true);
-            } else {
-                self.$element.find("#message").remove();
-                $(".ui-button-text:contains('Import File')").parent().attr("disabled", false);
-            }
+        if (!req_fld.length) { return; }
+
+        this.$element.find("#message").remove();
+        var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld) {
+            return fld['text']
+        });
+        var required_fields = _.filter(req_fld, function(fld) {
+            return !_.contains(sel_fields, fld)
+        });
+        if (required_fields.length) {
+            $("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + required_fields + '.</div>');
+            $(".ui-button-text:contains('Import File')").parent().attr("disabled", true);
+        } else {
+            this.$element.find("#message").remove();
+            $(".ui-button-text:contains('Import File')").parent().attr("disabled", false);
         }
     },
     stop: function() {
