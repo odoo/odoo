@@ -99,11 +99,11 @@
                                     </group>
                                 </form>
                             </field>
-                            <field name="state"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                             <group col="6" colspan="2">
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_user"/>
                                 <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
-                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                                <button name="confirm" states="draft" string="Submit to Manager" type="workflow" icon="gtk-apply"/>
                                 <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
                                 <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
                             </group>

@@ -140,7 +140,7 @@
                              </field>
                             <separator string="" colspan="4"/>
                             <group col="12" colspan="4">
-                                <field name="state" select="1"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
                                 <button string="Cancel" name="set_cancel" states="draft,open,pending" icon="gtk-cancel"/>
                                 <button string="Draft" name="set_draft" states="open" icon="gtk-indent"/>
                                 <button string="Pending" name="set_pending" states="open" icon="gtk-media-pause"/>

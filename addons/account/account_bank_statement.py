@@ -144,7 +144,7 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
             'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
+        'state': fields.selection([('draft', 'New'),('confirm', 'Confirmed')],
             'State', required=True,
             states={'confirm': [('readonly', True)]}, readonly="1",
             help='When new statement is created the state will be \'Draft\'. \
