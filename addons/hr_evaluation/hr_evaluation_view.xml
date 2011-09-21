@@ -201,7 +201,7 @@
                     </notebook>
                     <newline/>
                     <group col="8" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                         <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
                                 icon="gtk-cancel"/>
                         <button name="button_plan_in_progress" string="Start Evaluation" states="draft" type="object"
