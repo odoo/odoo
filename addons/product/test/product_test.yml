@@ -1,16 +1,10 @@
 -
-  In order to test product,I start by creating a Category
--
- !record {model: product.category, id: product_category_sugar}:
-    name: vehicle
-    type: normal
--
-  I create a 20KG UOM for 'Sugar'  
+  In order to test product,I start by creating a 20KG UOM for 'Sugar'  
 -
  !record {model: product.uom, id: product_20k_uom_sugar}:
     name: 20KG
     uom_type: bigger
-    category_id: 2
+    category_id: product.product_uom_categ_kgm
     rounding: 0.010
     factor_inv: 20
 -
@@ -19,32 +13,25 @@
  !record {model: product.uom, id: product_10k_uom_sugar}:
     name: 10KG
     uom_type: bigger
-    category_id: 2
+    category_id: product.product_uom_categ_kgm
     rounding: 0.010
     factor_inv: 10
 -
-  I create a new product 'Sugar'
+  I create a new product 'Sugar' in 20KG UOM.
 -
  !record {model: product.product, id: product_sugar_id1}:
-    categ_id: 'product.product_category_sugar'
+    categ_id: 'product.product_category_rawmaterial0'
     cost_method: standard
-    name: Cycle
+    name: Sugar 20KG
     procure_method: make_to_order
     seller_delay: '1'
     standard_price: 400.0
     uom_id: product.product_20k_uom_sugar
     uom_po_id: product.product_20k_uom_sugar
-    volume: 0.0
-    warranty: 0.0
-    weight: 0.0
-    weight_net: 0.0
 -
   I test onchanged on UOM, Create Duplicate Product and Delete original Product.
 -
   !python {model: product.product}: |
-    from tools.translate import _
-    ids = []
-    ids.append(ref("product_sugar_id1"))
-    self.onchange_uom(cr ,uid, ids, ref("product.product_20k_uom_sugar"), ref("product_10k_uom_sugar"))
-    self.copy(cr, uid, ids[0])
-    self.unlink(cr, uid, ids)
+    self.onchange_uom(cr ,uid, [ref("product_sugar_id1")], ref("product.product_20k_uom_sugar"), ref("product.product_10k_uom_sugar"))
+    self.copy(cr, uid, ref("product_sugar_id1"))
+    self.unlink(cr, uid, [ref("product_sugar_id1")])
