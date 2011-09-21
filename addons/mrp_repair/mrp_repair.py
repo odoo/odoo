@@ -69,12 +69,13 @@ class mrp_repair(osv.osv):
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
                 #manage prices with tax included use compute_all instead of compute
-                tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
                 if line.to_invoice:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
                 if line.to_invoice:
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
                     for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
@@ -480,21 +481,23 @@ class mrp_repair(osv.osv):
             repair.write({'state': 'under_repair'})
         return True
 
-    def action_invoice_end(self, cr, uid, ids, context=None):
-        """ Writes repair order state to 'Ready' if invoice method is Before repair.
-        @return: True
-        """
-        repair_line = self.pool.get('mrp.repair.line')
-        for order in self.browse(cr, uid, ids, context=context):
-            val = {}
-            if (order.invoice_method == 'b4repair'):
-                val['state'] = 'ready'
-                repair_line.write(cr, uid, [l.id for
-                        l in order.operations], {'state': 'confirmed'}, context=context)
-            else:
-                pass
-            self.write(cr, uid, [order.id], val, context=context)
-        return True
+# Remove this method because not use any where
+
+#    def action_invoice_end(self, cr, uid, ids, context=None):
+#        """ Writes repair order state to 'Ready' if invoice method is Before repair.
+#        @return: True
+#        """
+#        repair_line = self.pool.get('mrp.repair.line')
+#        for order in self.browse(cr, uid, ids, context=context):
+#            val = {}
+#            if (order.invoice_method == 'b4repair'):
+#                val['state'] = 'ready'
+#                repair_line.write(cr, uid, [l.id for
+#                        l in order.operations], {'state': 'confirmed'}, context=context)
+#            else:
+#                pass
+#            self.write(cr, uid, [order.id], val, context=context)
+#        return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'To be invoiced' if invoice method is
