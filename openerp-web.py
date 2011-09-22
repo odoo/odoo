@@ -15,8 +15,6 @@ if path_addons not in sys.path:
     sys.path.insert(0, path_addons)
 
 optparser = optparse.OptionParser()
-optparser.add_option("-p", "--port", dest="socket_port", default=8002,
-                     help="listening port", type="int", metavar="NUMBER")
 optparser.add_option("-s", "--session-path", dest="session_storage",
                      default=os.path.join(tempfile.gettempdir(), "oe-sessions"),
                      help="directory used for session storage", metavar="DIR")
@@ -28,22 +26,31 @@ optparser.add_option("--db-filter", dest="dbfilter", default='.*',
                      help="Filter listed database", metavar="REGEXP")
 optparser.add_option('--addons-path', dest='addons_path', default=path_addons,
                     help="Path do addons directory", metavar="PATH")
-optparser.add_option('--no-serve-static', dest='serve_static',
-                     default=True, action='store_false',
-                     help="Do not serve static files via this server")
-optparser.add_option('--reloader', dest='reloader',
-                     default=False, action='store_true',
-                     help="Reload application when python files change")
-optparser.add_option("--log-level", dest="log_level",
-                     default='debug', help="Log level", metavar="LOG_LEVEL")
-optparser.add_option("--log-config", dest="log_config",
-                     default='', help="Log config file", metavar="LOG_CONFIG")
-optparser.add_option('--multi-threaded', dest='threaded',
-                     default=False, action='store_true',
-                     help="Use multiple threads to handle requests")
-optparser.add_option('--proxy-mode', dest='proxy_mode',
-                     default=False, action='store_true',
-                     help="Enable correct behavior when behind a reverse Proxy")
+
+server_options = optparse.OptionGroup(optparser, "Server configuration")
+server_options.add_option("-p", "--port", dest="socket_port", default=8002,
+                          help="listening port", type="int", metavar="NUMBER")
+server_options.add_option('--reloader', dest='reloader',
+                          default=False, action='store_true',
+                          help="Reload application when python files change")
+server_options.add_option('--no-serve-static', dest='serve_static',
+                          default=True, action='store_false',
+                          help="Do not serve static files via this server")
+server_options.add_option('--multi-threaded', dest='threaded',
+                          default=False, action='store_true',
+                          help="Spawn one thread per HTTP request")
+server_options.add_option('--proxy-mode', dest='proxy_mode',
+                          default=False, action='store_true',
+                          help="Enable correct behavior when behind a reverse proxy")
+optparser.add_option_group(server_options)
+
+logging_opts = optparse.OptionGroup(optparser, "Logging")
+logging_opts.add_option("--log-level", dest="log_level", type="choice",
+                        default='debug', help="Global logging level", metavar="LOG_LEVEL",
+                        choices=['debug', 'info', 'warning', 'error', 'critical'])
+logging_opts.add_option("--log-config", dest="log_config",
+                        help="Logging configuration file", metavar="FILE")
+optparser.add_option_group(logging_opts)
 
 import web.common.dispatch
 
