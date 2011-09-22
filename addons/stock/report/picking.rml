@@ -163,20 +163,12 @@
         <td>
           <para style="terp_default_Bold_9">Shipping Address :</para>
           <para style="terp_default_9">[[ (picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.title.name) or '' ]] [[ picking.address_id and picking.address_id.partner_id and picking.address_id.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.display_address(picking.address_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.address_id and picking.address_id.title.name or '' ]] [[ picking.address_id and picking.address_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.street or '' ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ picking.address_id and picking.address_id.zip or '' ]] [[ picking.address_id and picking.address_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.state_id and picking.address_id.state_id.name) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (picking.address_id and picking.address_id.country_id and picking.address_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_9">[[ picking.address_id and picking.address_id.display_address(picking.address_id) ]] </para>
         </td>
       </tr>
     </blockTable>

@@ -131,19 +131,11 @@
         <td>
           <para style="terp_default_Bold_9">Invoiced to</para>
           <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.name or '']]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.street or '']]</para>
-          <para style="terp_default_9">[[ (o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.street2) or removeParentNode('para')]]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.zip or '']] [[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ (o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.state_id and o.sale_id.partner_invoice_id.state_id.name) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.country_id and o.sale_id.partner_invoice_id.country_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and o.sale_id.partner_invoice_id.display_address(o.sale_id.partner_invoice_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.address_id and o.address_id.partner_id and o.address_id.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ o.address_id and o.address_id.street or '']]</para>
-          <para style="terp_default_9">[[ o.address_id and o.address_id.street2 or removeParentNode('para')]]</para>
-          <para style="terp_default_9">[[ o.address_id and o.address_id.zip or '']] [[ o.address_id and o.address_id.city or '']]</para>
-          <para style="terp_default_9">[[ (o.address_id and o.address_id.state_id and o.address_id.state_id.name) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ o.address_id and o.address_id.country_id and o.address_id.country_id.name or '']]</para>
+          <para style="terp_default_9">[[ o.address_id and o.address_id and o.address_id.display_address(o.address_id) ]]</para>
         </td>
       </tr>
     </blockTable>

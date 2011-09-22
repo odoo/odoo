@@ -74,9 +74,7 @@
         </td>
         <td>
           <para style="Addressee">[[ o['partner'] and o['partner'].name or False]]</para>
-          <para style="Addressee">[[o['partner'] and o['partner'].address[0].street or False]]</para>
-          <para style="Addressee">[[o['partner'] and o['partner'].address[0].zip or False]][[o['partner'] and o['partner'].address[0].city or False]]</para>
-          <para style="P11">[[o['partner'] and o['partner'].address[0].country_id.name or False]]</para>
+          <para style="Addressee">[[ o['partner'] and o['partner'].address[0] and o['partner'].address[0].display_address(o['partner'].address[0]) </para> 
           <para style="P4">
             <font color="white"> </font>
           </para>
