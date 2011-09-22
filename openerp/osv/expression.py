@@ -221,13 +221,6 @@ def OR(domains):
     """OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
     return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
 
-# Probably bad style: the domain should be already normalized (and non-empty).
-def expression_and(term, domain):
-    if domain:
-        return ['&', term] + normalize(domain)
-    else:
-        return term
-
 def is_operator(element):
     """Test whether an object is a valid domain operator. """
     return isinstance(element, basestring) and element in DOMAIN_OPERATORS

@@ -21,18 +21,19 @@
 
 #.apidoc title: Objects Services (OSV)
 
+import logging
+from psycopg2 import IntegrityError, errorcodes
+
 import orm
 import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import logging
-from psycopg2 import IntegrityError, errorcodes
+import expression # must not be first local import!
 from openerp.tools.config import config
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model
-
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -289,11 +290,9 @@ class TransientModel(Model):
         return super(TransientModel, self).create(cr, uid, vals, context)
 
     def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-
         # Restrict acces to the current user, except for the super-user.
         if self._log_access and uid != openerp.SUPERUSER:
-            import expression
-            domain = expression.expression_and(('create_uid', '=', uid), domain)
+            domain = expression.AND(([('create_uid', '=', uid)], domain))
 
         # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
         return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
