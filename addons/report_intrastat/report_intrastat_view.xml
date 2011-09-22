@@ -97,15 +97,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Intrastat Data">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
                         <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="month" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="intrastat_id" select="1"/>
-                        <field name="type" select="1"/>
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="code"/>
+                        <field name="intrastat_id"/>
+                        <field name="type"/>
                     </group>
                 </search>
             </field>

@@ -144,14 +144,14 @@
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                        </group>
-                       <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                             <tree string="History">
                                 <field name="display_text" string="History Information"/>
-                                <field name="history" invisible="1"/>
+                                <field name="email_from" invisible="1"/>
                                 <button
-                                    string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
+                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                    name="%(mail.action_email_compose_message_wizard)d"
+                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                     icon="terp-mail-replied" type="action" />
                             </tree>
                             <form string="History">
@@ -160,21 +160,19 @@
                                     <field name="date"/>
                                     <field name="email_to" widget="char" size="512"/>
                                     <field name="email_cc" widget="char" size="512"/>
-                                    <field name="name" colspan="4" widget="char" size="512"/>
-                                    <field name="history" invisible="1"/>
+                                    <field name="subject" colspan="4" widget="char" size="512"/>
                                 </group>
                                 <notebook colspan="4">
                                     <page string="Details">
-                                        <group attrs="{'invisible': [('history', '!=', True)]}">
-                                            <field name="description" colspan="4" nolabel="1" height="250"/>
-                                            <button colspan="4"
-                                                string="Reply"
-                                                name="%(crm.action_crm_send_mail)d"
-                                                context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
-                                                icon="terp-mail-replied" type="action" />
+                                        <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                            <field name="body_text" colspan="4" nolabel="1" height="250"/>
+                                            <button colspan="4" string="Reply"
+                                                name="%(mail.action_email_compose_message_wizard)d"
+                                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                icon="terp-mail-replied" type="action"/>
                                         </group>
-                                        <group attrs="{'invisible': [('history', '=', True)]}">
-                                            <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                        <group attrs="{'invisible': [('email_from', '!=', False)]}">
+                                            <field name="body_text" colspan="4" nolabel="1"  height="250"/>
                                         </group>
                                     </page>
                                     <page string="Attachments">
@@ -183,14 +181,13 @@
                                 </notebook>
                             </form>
                         </field>
-                         <button string="Add Internal Note"
+                        <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
                         <button string="Send New Email"
-                           name="%(crm.action_crm_send_mail)d"
-                           context="{'mail':'new', 'model': 'hr.applicant'}"
-                           icon="terp-mail-message-new" type="action" />
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                  </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
@@ -247,10 +244,10 @@
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
