@@ -432,7 +432,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         self.datagroup.list([],
             function (groups) {
                 self.groups = groups;
-                self.do_render_group(groups);
+                if (groups.length) {
+                    self.do_render_group(groups);
+                }
+                else {
+                    self.all_display_data = [];
+                    self.on_show_data();
+                }
             },
             function (dataset) {
                 self.groups = [];
