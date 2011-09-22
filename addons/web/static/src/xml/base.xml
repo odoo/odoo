@@ -640,8 +640,8 @@
             <input type="checkbox"/>
         </th>
     </t>
-    
-  
+
+
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
@@ -1267,8 +1267,8 @@
         <t t-call="view_editor.row"/>
     </table>
 </t>
-<tr t-name="view_editor.row" t-att-id="'viewedit-' + rec.id" t-foreach="data" t-as="rec">
-    <td  t-att-id = "rec.id" class="view_editor">
+<tr t-name="view_editor.row" t-att-id="'viewedit-' + rec.id " t-att-level="rec.level" t-foreach="data" t-as="rec">
+    <td class="view_editor">
         <table>
             <tr>
                 <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
@@ -1280,7 +1280,7 @@
             </tr>
         </table>
     </td>
-    <td align="left" class="view_editor" style="cursor: pointer;">
+    <td align="left" width="15%" class="view_editor" style="cursor: pointer;" >
         <table  cellspacing="0" cellpadding ="0" width="100%">
             <tr>
                 <td> <img  src="/web/static/src/img/icons/gtk-add.png"  border="0"/> </td>
@@ -1296,6 +1296,7 @@
             <t t-call="view_editor.row"/>
         </t>
     </tr>
+
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>

@@ -41,12 +41,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 500,
             buttons: {
                 "Create": function(){
-                    
+
                 },
                 "Edit": function(){
                     self.xml_id = 0 ;
                     self.get_data();
-                    
+
                 },
                 "Close": function(){
                  $(this).dialog('destroy');
@@ -54,7 +54,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             },
 
         });
-       this.dialog.start(); 
+       this.dialog.start();
        this.dialog.open();
        action_manager.appendTo(this.dialog);
        action_manager.do_action(action);
@@ -72,14 +72,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             att_list = _.select(att_list, function(attrs){
                 if (tag != 'button'){
                    if(attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index"){
-                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';} 
+                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
                 }else{
                     if(attrs.nodeName == "name"){
-                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';} 
+                        name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
                 }
-                });                
+                });
                 name1+= ">";
-         });  
+         });
         obj.name = name1;
         return obj;
     },
@@ -117,14 +117,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             child_obj_list.push(string);
         });
         if(children_list.length != 0){
-            parent_child_id.push({key: parent_id, value: child_obj_list});
-            
+            var child_ids = _.map(child_obj_list ,function(num){return num.id;});
+            parent_child_id.push({'key': parent_id, 'value': child_ids});
             var parents = $(children_list[0]).parents().get();
             if(parents.length <= parent_list.length){
                 parent_list.splice(parents.length-1);}
             parent_list.push(parent_id);
             $.each(main_object, function(key,val) {
-                self.save_object(val,parent_list.slice(1),child_obj_list); 
+                self.save_object(val,parent_list.slice(1),child_obj_list);
             });
         }
         for(var i=0;i<children_list.length;i++){
@@ -134,7 +134,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return {"main_object":main_object,"parent_child_id":parent_child_id};
     },
     get_data : function(){
-        
             var self = this;
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
@@ -149,42 +148,64 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     edit_view : function(one_object){
         var self = this;
-            this.dialog = new openerp.web.Dialog(this,{
-                modal: true,
-                title: 'Edit Xml',
-                width: 750,
-                height: 500,
-                buttons: {
-                        "Inherited View": function(){
-                            
-                        },
-                        "Preview": function(){
-                            
-                        },
-                        "Close": function(){
-                            $(this).dialog('destroy');
-                        }
+        this.dialog = new openerp.web.Dialog(this,{
+            modal: true,
+            title: 'Edit Xml',
+            width: 750,
+            height: 500,
+            buttons: {
+                    "Inherited View": function(){
+
+                    },
+                    "Preview": function(){
+
+                    },
+                    "Close": function(){
+                        $(this).dialog('destroy');
                     }
-            });
-            this.dialog.start().open();
-            this.dialog.$element.html(QWeb.render('view_editor', {
-            'data': one_object['main_object'],
-            }));
-
-            $("tr[id^='viewedit-']").click(function() {
-                $("tr[id^='viewedit-']").removeClass('ui-selected');
-                $(this).addClass('ui-selected');
-            });
-
-            $("img[id^='parentimg-']").click(function() {
-                if ($(this).attr('src') == '/web/static/src/img/collapse.gif'){
-                    $(this).attr('src', '/web/static/src/img/expand.gif');
-                }else{
-                    $(this).attr('src', '/web/static/src/img/collapse.gif');
                 }
-            });
-    }
+        });
+        this.dialog.start().open();
+        this.dialog.$element.html(QWeb.render('view_editor', {
+        'data': one_object['main_object'],
+        }));
 
-        
+        $("tr[id^='viewedit-']").click(function() {
+            $("tr[id^='viewedit-']").removeClass('ui-selected');
+            $(this).addClass('ui-selected');
+        });
+
+        $("img[id^='parentimg-']").click(function() {
+            if ($(this).attr('src') == '/web/static/src/img/collapse.gif'){
+                $(this).attr('src', '/web/static/src/img/expand.gif');
+                self.on_expand(this);
+            }else{
+                $(this).attr('src', '/web/static/src/img/collapse.gif');
+                self.on_collapse(this,one_object['parent_child_id']);
+            }
+        });
+    },
+    on_expand: function(self){
+        var level = $(self).closest("tr[id^='viewedit-']").attr('level');
+        var cur_tr = $(self).closest("tr[id^='viewedit-']");
+        while (1){
+            var nxt_tr = cur_tr.next();
+            if (nxt_tr.attr('level') > level){
+                cur_tr = nxt_tr;
+                nxt_tr.hide();
+            }else break;
+        }
+    },
+    on_collapse: function(self,parent_child_id){
+        var id = self.id.split('-')[1];
+        var datas = _.detect(parent_child_id,function(res){
+            return res.key == id;
+        });
+        _.each(datas.value,function(rec){
+            var tr = $("tr[id='viewedit-"+rec+"']");
+            tr.find("img[id='parentimg-"+rec+"']").attr('src','/web/static/src/img/expand.gif');
+            tr.show();
+        });
+    }
 });
 };
