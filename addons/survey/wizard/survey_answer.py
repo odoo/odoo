@@ -49,7 +49,7 @@ class survey_question_wiz(osv.osv_memory):
         @param context: A standard dictionary for contextual values
         @return : Dictionary value for created view of particular survey pages.
         """
-        
+
         result = super(survey_question_wiz, self).fields_view_get(cr, uid, view_id, \
                                         view_type, context, toolbar,submenu)
 
@@ -61,6 +61,7 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
+        mail_message = self.pool.get('mail.message')
         if context is None:
             context = {}
         if view_type in ['form']:
@@ -79,7 +80,7 @@ class survey_question_wiz(osv.osv_memory):
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id' :wiz_id})
-  
+
             if context.has_key('active_id'):
                 context.pop('active_id')
 
@@ -401,7 +402,7 @@ class survey_question_wiz(osv.osv_memory):
                         response_id = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))['response']
                         context.update({'response_id':response_id})
                         report = self.create_report(cr, uid, [int(survey_id)], 'report.survey.browse.response', survey_data.title,context)
-                        attachments = []
+                        attachments = {}
                         file = open(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         file_data = ""
                         while 1:
@@ -410,7 +411,7 @@ class survey_question_wiz(osv.osv_memory):
                             if not line:
                                 break
 
-                        attachments.append((survey_data.title + ".pdf",file_data))
+                        attachments[survey_data.title + ".pdf"] = file_data
                         file.close()
                         os.remove(addons.get_module_resource('survey', 'report') + survey_data.title + ".pdf")
                         user_email = False
@@ -428,7 +429,7 @@ class survey_question_wiz(osv.osv_memory):
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            tools.email_send(user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attach = attachments)
+                            mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
@@ -447,7 +448,7 @@ class survey_question_wiz(osv.osv_memory):
 
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,        
+        @param uid: the current user’s ID for security checks,
         @param res_ids: List of survey answer IDs,
         @param report_name: name of the report,
         @param file_name: To give file name of the report,

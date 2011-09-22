@@ -22,6 +22,7 @@
 from osv import fields, osv
 from tools.translate import _
 import time
+import decimal_precision as dp
 
 
 class stock_partial_move_memory_out(osv.osv_memory):
@@ -198,7 +199,7 @@ class stock_partial_move(osv.osv_memory):
             if not p_moves.get(move.id):
                 continue
             partial_datas['move%s' % (move.id)] = {
-                'product_id' : p_moves[move.id].id,
+                'product_id' : p_moves[move.id].product_id.id,
                 'product_qty' : p_moves[move.id].quantity,
                 'product_uom' :p_moves[move.id].product_uom.id,
                 'prodlot_id' : p_moves[move.id].prodlot_id.id,

@@ -361,7 +361,7 @@
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">[[ data['model']=='account.account' and 'Company' or removeParentNode('para') ]]</para>
-          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para>
+          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Accounts' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
@@ -505,10 +505,10 @@
             <para style="terp_default_Bold_7_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account'), currency = company.currency_id) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_7_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account'),currency_obj=o.currency_id) or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -547,7 +547,7 @@
               <para style="terp_default_Right_7">[[ formatLang(line['credit'], digits=get_digits(dp='Account')) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_7">[[ formatLang(line['progress'], digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_7">[[ formatLang(line['progress'], digits=get_digits(dp='Account'), currency_obj=company.currency_id) ]]</para>
             </td>
             <td>
               <para style="terp_default_Right_7">[[ (line.has_key('currency_id') and line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[ formatLang(line['amount_currency'])]] [[ line['currency_code'] or '']]</para>
@@ -607,7 +607,7 @@
             <para style="terp_default_Bold_7_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account'), currency_obj=company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -646,7 +646,7 @@
               <para style="terp_default_Right_7">[[ formatLang(line['credit'], digits=get_digits(dp='Account')) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_7">[[ formatLang(line['progress'], digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_7">[[ formatLang(line['progress'], digits=get_digits(dp='Account'),currency_obj=company.currency_id) ]] </para>
             </td>
           </tr>
         </blockTable>

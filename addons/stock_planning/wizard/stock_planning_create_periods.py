@@ -53,8 +53,6 @@ class stock_period_createlines(osv.osv_memory):
     }
 
     def create_stock_periods(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         interval = context.get('interval',0)
         name = context.get('name','Daily')
         period_obj = self.pool.get('stock.period')
@@ -107,7 +105,7 @@ class stock_period_createlines(osv.osv_memory):
         return {
             'domain': "[('id','in', ["+','.join(map(str, lines))+"])]",
             'view_type': 'form',
-            "view_mode": 'tree, form',
+            "view_mode": 'tree,form',
             'res_model': 'stock.period',
             'type': 'ir.actions.act_window',
         }

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:09+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-17 04:59+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -498,8 +498,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1141,6 +1139,7 @@ msgstr "# tranzacţiei"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1329,6 +1328,16 @@ msgstr "Nu se poate folosi acest cont general în acest jurnal !"
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Cu sold diferit de zero"
 
@@ -2100,6 +2109,8 @@ msgstr "Proprietăţi contabilitate"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Înregistrări sortate după"
 
@@ -2121,11 +2132,16 @@ msgstr ""
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2449,6 +2465,7 @@ msgstr "Disc.(%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2694,6 +2711,8 @@ msgstr "Contabilitate financiară"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr ""
 
@@ -2969,7 +2988,6 @@ msgstr "Lasaţi necompletat dacă doriţi folosirea contului de cheltuieli"
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -2983,6 +3001,17 @@ msgstr "Lasaţi necompletat dacă doriţi folosirea contului de cheltuieli"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Jurnale"
 
@@ -3192,6 +3221,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr ""
 
@@ -3250,6 +3280,16 @@ msgstr "TVA :"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Plan de conturi"
 
@@ -3694,11 +3734,10 @@ msgid "Analytic Balance"
 msgstr "Balanţă analitică"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr ""
 
@@ -4517,7 +4556,6 @@ msgid "Analytic Balance -"
 msgstr "Sold analitic -"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4530,10 +4568,8 @@ msgstr "Sold analitic -"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4543,6 +4579,16 @@ msgstr "Sold analitic -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Miscări ţintă"
 
@@ -4659,6 +4705,8 @@ msgstr "Resultatul reconcilierii"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr ""
 
@@ -5377,6 +5425,19 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Fără filtre"
@@ -6290,6 +6351,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7203,6 +7265,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7457,6 +7520,19 @@ msgstr ""
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Perioadă"
@@ -7540,14 +7616,6 @@ msgstr "Tel. :"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Moneda companiei"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr ""
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7660,6 +7728,12 @@ msgstr "Jurnal restituiri"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr ""
 
@@ -7899,6 +7973,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8182,12 +8257,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr ""
 
@@ -8305,7 +8385,12 @@ msgstr "Păstraţi necompletat pentru a utiliza contul de venituri."
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8324,6 +8409,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr ""
 
@@ -8542,12 +8636,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr ""
 
@@ -8751,6 +8850,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8832,6 +8932,18 @@ msgstr "General"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9041,13 +9153,10 @@ msgid "Tax Source"
 msgstr "Sursa taxă"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr ""
 
@@ -9071,8 +9180,8 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "JRNL"
+msgid "JRNL"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9279,6 +9388,7 @@ msgstr "Factură furnizor"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9356,6 +9466,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Cu mişcări"
 
@@ -9725,6 +9845,18 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
+
 #~ msgid "OK"
 #~ msgstr "OK"
 
@@ -9791,9 +9923,6 @@ msgstr ""
 #~ msgid "Contact"
 #~ msgstr "Contact"
 
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
-
 #~ msgid "Partner account"
 #~ msgstr "Cont partener"
 
@@ -9823,9 +9952,6 @@ msgstr ""
 #~ msgid "The statement balance is incorrect !\n"
 #~ msgstr "Soldul final este incorect !\n"
 
-#~ msgid "Crédit"
-#~ msgstr "Credit"
-
 #~ msgid "Income"
 #~ msgstr "Venit"
 
@@ -9852,13 +9978,6 @@ msgstr ""
 
 #~ msgid "Account Manager"
 #~ msgstr "Manager financiar contabil"
-
-#~ msgid "Débit"
-#~ msgstr "Debit"
-
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Eroare de configurare !"
 
 #~ msgid "Create a Fiscal Year"
 #~ msgstr "Creare an fiscal"
@@ -9887,9 +10006,6 @@ msgstr ""
 #~ msgid "_Go"
 #~ msgstr "_Start"
 
-#~ msgid "Partner ID"
-#~ msgstr "ID partener"
-
 #~ msgid "Open State"
 #~ msgstr "Stare deschis"
 
@@ -9905,9 +10021,6 @@ msgstr ""
 #~ msgid "Document"
 #~ msgstr "Document"
 
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
-
 #~ msgid "Financial Management"
 #~ msgstr "Management financiar"
 
@@ -9916,9 +10029,6 @@ msgstr ""
 
 #~ msgid "Journal code"
 #~ msgstr "Cod jurnal"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Perioada pentru ajustare"
 
 #~ msgid "3 Months"
 #~ msgstr "3 luni"
@@ -9931,9 +10041,6 @@ msgstr ""
 
 #~ msgid "The currency of the journal"
 #~ msgstr "Moneda jurnalului"
-
-#~ msgid "Partner name"
-#~ msgstr "Nume partener"
 
 #~ msgid "Date Start"
 #~ msgstr "Data de început"
@@ -10084,18 +10191,6 @@ msgstr ""
 #~ msgid "Total entries"
 #~ msgstr "Total înregistrări"
 
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "În cazul în care plata dumneavoastră a fost efectuată după trimiterea "
-#~ "acestui e-mail, vă rog să îl consideraţi nul. Nu ezitaţi să contactaţi "
-#~ "serviciul nostru de contabilitate la +32 81 81 37 00"
-
-#~ msgid "Disc. (%)"
-#~ msgstr "Disc. (%)"
-
 #~ msgid "Contra"
 #~ msgstr "Contra"
 
@@ -10113,9 +10208,6 @@ msgstr ""
 
 #~ msgid "Printing Date"
 #~ msgstr "Data tipăririi"
-
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Eroare! Nu puteţi crea conturi recursive."
 
 #~ msgid "Fiscal Position Accounts Mapping"
 #~ msgstr "Corespondenţa conturilor de poziţie fiscală"
@@ -10194,10 +10286,6 @@ msgstr ""
 #~ msgid "Standard entry"
 #~ msgstr "Înregistrare standard"
 
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Nu puteţi valida o înregistrare neechilibrată !"
-
 #~ msgid "New Analytic Account"
 #~ msgstr "Cont analitic nou"
 
@@ -10242,13 +10330,6 @@ msgstr ""
 
 #~ msgid "Display accounts "
 #~ msgstr "Afişează conturile "
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Contul bancar al partenerului\n"
-#~ "Lăsaţi necompletat pentru a fi folosit contul implicit"
 
 #~ msgid "Print General Journal"
 #~ msgstr "Tipăreşte jurnalul general"
@@ -10404,10 +10485,6 @@ msgstr ""
 #~ "Nu este definită nici o perioadă pentru această dată !\n"
 #~ "Creaţi vă rog un an fiscal."
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr ""
-#~ "Pastrati necompletat pentru a utiliza perioada aferentă datei validării."
-
 #~ msgid "Automatic reconciliation"
 #~ msgstr "Compensare automată"
 
@@ -10491,9 +10568,6 @@ msgstr ""
 #~ msgid "Date to must be set between %s and %s"
 #~ msgstr "Până la (data trebuie stabilită între %s şi %s)"
 
-#~ msgid "Move name"
-#~ msgstr "Denumire mişcare"
-
 #~ msgid "Reconcilate the entries from payment"
 #~ msgstr "Compensaţi înregistrările din plăţi"
 
@@ -10515,10 +10589,6 @@ msgstr ""
 
 #~ msgid "Close Fiscal Year with new entries"
 #~ msgstr "Închide an fiscal cu noile intrări"
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Definiţia contului nu permite compensare !"
 
 #~ msgid "Statement encoding produces payment entries"
 #~ msgstr "Codarea situaţiei generează înregistrări de plăţi"
@@ -10554,9 +10624,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Impune ca toate mişcările acestui cont să aibă această monedă secundară."
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Balanţă înaintată"
-
 #~ msgid "Entry Model"
 #~ msgstr "Model înregistrare"
 
@@ -10590,10 +10657,6 @@ msgstr ""
 
 #~ msgid "Fiscal Position Template Tax Mapping"
 #~ msgstr "Corespondenţa taxelor pentru şablonul poziţiei fiscale"
-
-#, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "Anul fiscal precedent nu are înregistrări de compensat !"
 
 #, python-format
 #~ msgid "The journal must have centralised counterpart"
@@ -10773,10 +10836,6 @@ msgstr ""
 #~ msgid "Modify Invoice"
 #~ msgstr "Modificare factură"
 
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr "Nu puteţi dezactiva un cont care are mişcări."
-
 #~ msgid "Filter on Partners"
 #~ msgstr "Filtru după partener"
 
@@ -10900,9 +10959,6 @@ msgstr ""
 #~ "Selected Move lines does not have any account move enties in draft state"
 #~ msgstr "Liniile selectate nu au mişcări de cont în ciornă înregistrate"
 
-#~ msgid "All account entries"
-#~ msgstr "Toate înregistrările contabile"
-
 #~ msgid "Accounting entries at statement's confirmation"
 #~ msgstr "Înregistrări contabile la confirmarea înregistrării din bancă"
 
@@ -11002,15 +11058,6 @@ msgstr ""
 
 #~ msgid "Name of the fiscal year as displayed on screens."
 #~ msgstr "Denumirea afişată pentru anul fiscal"
-
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Dacă utilizaţi termene de plată, data scandentă va fi calculată automat la "
-#~ "generarea înregistrărilor contabile. Dacă păstraţi termenul de plată şi data "
-#~ "scadentă necompletate, atunci plata este directă."
 
 #~ msgid ""
 #~ "The optional quantity expressed by this line, eg: number of product sold. "
@@ -11126,186 +11173,9 @@ msgstr ""
 #~ msgid "asgfas"
 #~ msgstr "asgfas"
 
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Conturi analitice de închis"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Facturi în ciornă"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Conturi de facturat"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Costuri de facturat"
-
-#~ msgid "Aged receivables"
-#~ msgstr "Creanţe încasare învechite"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Panou pentru contabil"
-
-#~ msgid "My indicators"
-#~ msgstr "Indicatorii mei"
-
-#~ msgid "Aged income"
-#~ msgstr "Venit învechit"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Afişare informaţii debit/credit"
-
-#~ msgid "All accounts"
-#~ msgstr "Toate conturile"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Selectare înregistrări după"
-
-#~ msgid "Notification"
-#~ msgstr "Notificare"
-
-#~ msgid "Financial Period"
-#~ msgstr "Perioadă financiară"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Selectare perioadă(e)"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Comparare ani selectaţi după"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Selectare an(i) fiscal(i) (maxim trei ani)"
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Selectare cont referinţă (pentru comparare %)"
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Sold conturi - compară ani"
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Modulul Sold cont este o funcţionalitate adăugată la modulul Management "
-#~ "financiar.\n"
-#~ "\n"
-#~ "    Acest modul vă oferă opţiuni variate pentru tipărirea extraselor de "
-#~ "cont\n"
-#~ "\n"
-#~ "    1. Puteţi compara extrasele pentru diferiţi ani\n"
-#~ "\n"
-#~ "    2. Puteţi opta pentru comparare monetară sau procentuală între doi ani\n"
-#~ "\n"
-#~ "    3. Puteţi alege un cont de referinţă pentru comparare procentuală faţă "
-#~ "de un anumit an\n"
-#~ "\n"
-#~ "    4. Puteţi selecta perioade după data actuală sau după data creării\n"
-#~ "\n"
-#~ "    5. Aveţi opţiunea de a tipări rapoartele dorite în format vedere.\n"
-#~ "    "
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr ""
-#~ "Trebuie să selectaţi opţiunea 'landscape' (vedere). Verificaţi, vă rog."
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Afişează raportul în format vedere"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Afişează comparaţia în %"
-
-#~ msgid "Don't Compare"
-#~ msgstr "Nu compara"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Afişează conturi"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. Aţi selectat mai mult de 3 ani."
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Management financiar contabil - Comparare conturi"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "Puteţi selecta maxim 3 ani. Reîncercaţi."
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. Aţi selectat opţiunea 'Procentaj' pe mai mult de 2 ani, dar nu aţi ales "
-#~ "formatul vedere."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Poate aţi făcut vreuna din următoarele greşeli. Corectaţi şi reîncercaţi."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Lasaţi necompletat pentru comparare cu contul părinte"
-
-#~ msgid "Creation Date"
-#~ msgstr "Data creării"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr ""
-#~ "2. Nu aţi selectat opţiunea 'procentaj', dar aţi selectat mai mult de 2 ani."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "S-ar putea să fi selectat opţiunile de comparare cu mai mult de 1 an, cu "
-#~ "coloanele debit/credit şi opţiunea %. Toate acestea ar putea genera un "
-#~ "raport ce nu se încadrează în pagină. Reîncercaţi."
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr "Trebuie să selectaţi cel puţin 1 an fiscal. Reîncercaţi."
-
-#~ msgid "Customize Report"
-#~ msgstr "Raport personalizat"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Raportare contabilitate - Raportare"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr ""
-#~ "Un modul care adauga rapoarte noi bazate pe modulul de contabilitate."
-
-#~ msgid "Taxes Fiscal Mapping"
-#~ msgstr "Corespondență fiscală taxe"
-
-#~ msgid "Fiscal Mapping Templates"
-#~ msgstr "ȘCorespondență fiscală"
-
-#~ msgid "Fiscal Mapping Template"
-#~ msgstr "ȘCorespondență fiscală"
-
-#~ msgid "supplier"
-#~ msgstr "furnizor"
+#~ msgid "JNRL"
+#~ msgstr "JRNL"
 
 #, python-format
 #~ msgid "UnknownError"
 #~ msgstr "Eroare necunoscută"
-
-#~ msgid "End of Year"
-#~ msgstr "Sfîrșitul anului"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "ID-ul certificatului trebuie să fie unic !"
