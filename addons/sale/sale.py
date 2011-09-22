@@ -761,6 +761,7 @@ class sale_order(osv.osv):
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
+                        'sale_line_id': line.id,
                     }, *args)
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
