@@ -1,5 +1,5 @@
 - |
-  Now I will test Meetings which may be customer meeting or phonecall meeting or
+  I will test Meetings which may be customer meeting or phonecall meeting or
   internal Meeting.
 - |
   I start by creating a new Meeting.
@@ -33,7 +33,7 @@
     trigger_occurs: before
     trigger_related: start
 - |
-  Now I will assign this reminder.
+  I will assign this reminder.
 
 - !python {model: crm.meeting}: |
      self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'alarm_id': ref("res_alarm_minituesbefore0")})
@@ -61,7 +61,7 @@
      assert len(ids) == 10
 
 - |
-  Now If I want to edit meetings information for all occurrence I click on "Edit All" button.
+  If I want to edit meetings information for all occurrence I click on "Edit All" button.
 -
   !python {model: crm.meeting}: |
      self.write(cr, uid, [ref('crm_meeting_regardingpresentation0')], {'edit_all':'True'},context)

@@ -70,7 +70,7 @@
     self.on_change_optout(cr, uid, ref("crm_lead_democustomer"), True)
 
 -
-  Now I change the Opt-out to Opt-in to show email receive preference.
+  I change the Opt-out to Opt-in to show email receive preference.
 -
   !python {model: crm.lead}: |
     self.on_change_optin(cr, uid, ref("crm_lead_democustomer"), True)
@@ -85,7 +85,7 @@
   !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in open state}:
      - state == "open"
 -
-  Now i reset the lead "Demo Customer".
+  I reset the lead "Demo Customer".
 -
     !python {model: crm.lead}: |
       self.case_reset(cr, uid, [ref("crm_lead_democustomer")])
@@ -118,12 +118,12 @@
   !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Pending state}:
      - state == "pending"
 -
-  Now I Escalate the Lead "Demo Customer" Parent "Sales Team".
+  I Escalate the Lead "Demo Customer" Parent "Sales Team".
 -
     !python {model: crm.lead}: |
       self.case_escalate(cr, uid, [ref("crm_lead_democustomer")])
 -
-  Now I add Internal Note Saying Escalated Reason.
+  I add Internal Note Saying Escalated Reason.
 -
   !record {model: crm.add.note, id: crm_add_note_0}:
     body: Sales Lead Has Been Escalated Due to Some Technical reason to the parent  'Sales
@@ -138,7 +138,7 @@
     self.action_add(cr, uid, [ref("crm_add_note_0")], context=context)
 
 -
-  Now I Copying this lead "Demo Customer" to New Lead.
+  I Copying this lead "Demo Customer" to New Lead.
 -
     !python {model: crm.lead}: |
       self.copy(cr, uid, ref("crm_lead_democustomer"))

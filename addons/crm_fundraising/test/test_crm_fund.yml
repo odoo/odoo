@@ -1,5 +1,5 @@
 - |
-  Now I start test Fund Raising  which contain information about Donation or charity
+  I start test Fund Raising  which contain information about Donation or charity
   given by user.
 - |
   I start by creating new Funds entry for donation for books to poor school children
@@ -21,7 +21,7 @@
   !assert {model: crm.fundraising, id: crm_fundraising_donationforbookstopoorschoolchildren0}:
     - state == 'draft'
 - |
-  Now I open Funds by click on "Open" button.
+  I open Funds by click on "Open" button.
 -
   !python {model: crm.fundraising}: |
     self.case_open(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])

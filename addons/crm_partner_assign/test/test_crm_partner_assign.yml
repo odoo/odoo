@@ -62,7 +62,7 @@
     probability: 0.0
     type: opportunity
 -
-  Now change the assigned partner.
+  I change the assigned partner.
 -
   !python {model: crm.lead}: |
     self.onchange_assign_id(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'), context)
@@ -82,7 +82,7 @@
     context.update({'history': 'info', })
     self.on_change_history(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context.get('history'), context)
 -
-  Now check the case history.
+  I check the case history.
 -
   !python {model: crm.lead.forward.to.partner}: |
     context.update({'history': 'latest', })
@@ -94,12 +94,12 @@
     context.update({'history': 'whole', })
     self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
 -
-  Now get lead details.
+  I get lead details.
 -
   !python {model: crm.lead.forward.to.partner}: |
     self.get_lead_details(cr, uid, ref('crm_lead_questionnaireonopenerp0'), context)
 -
-  Now I click on Forward button.
+  I click on Forward button.
 -
   !python {model: crm.lead.forward.to.partner}: |
     from tools import config

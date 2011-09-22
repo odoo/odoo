@@ -61,7 +61,7 @@
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in open state}:
      - state == "open"
 -
-   Now, Find id for case object.
+   I search id for case object.
 -
    !python {model: crm.case.categ}: |
      self._find_object_id(cr, uid, context)
@@ -76,7 +76,7 @@
      assert action['res_model'] == 'crm.lead2opportunity.partner'
 -
    |
-   Now, select "create a new partner" option in this wizard.
+   I select "create a new partner" option in this wizard.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_0}:
       action: 'create'
@@ -88,7 +88,7 @@
       self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
 -
    |
-   Now, select "Link to an existing partner" option in this wizard.
+   I select "Link to an existing partner" option in this wizard.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
       action: 'exist'
@@ -100,7 +100,7 @@
       self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
 -
    |
-   Now, select "Do not link to a partner" option in this wizard.
+   I select "Do not link to a partner" option in this wizard.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_2}:
       action: 'nothing'

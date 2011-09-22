@@ -7,14 +7,14 @@
     duration: 2.0
     section_id: crm.section_sales_department
 -
-  Now , I select partner by click on "Create a Partner" button.
+  I select partner by click on "Create a Partner" button.
 -
   !record {model: crm.phonecall2partner, id: crm_phonecall2partner_1}:
     action: exist
     partner_id: base.res_partner_9
 
 -
-  Now, click on "Continue" button of this wizard.
+  I click on "Continue" button of this wizard.
 -
   !python {model: crm.phonecall2partner}: |
 
@@ -32,7 +32,7 @@
     planned_revenue: 0.0
     probability: 0.0
 -
-   Now, I click on "Convert" button of this wizard.
+   I click on "Convert" button of this wizard.
 -
   !python {model: crm.phonecall2opportunity}: |
      self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
