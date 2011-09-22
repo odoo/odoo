@@ -136,7 +136,6 @@
                             name="current"
                             domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','=','draft')]"
                             help="Draft Backlogs"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Backlogs"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Backlogs"/>
                         <separator orientation="vertical"/>
