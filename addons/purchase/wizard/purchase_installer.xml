@@ -8,12 +8,12 @@
             <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
             <field name="arch" type="xml">
               <data>
-          <xpath expr="//group[@name='purchase']" position="replace">
-            <newline/>
-            <separator  string="Purchase Management Features" colspan="4" />
-            <field name="purchase_requisition" />
-            <field name="purchase_analytic_plans" />
-          </xpath>
+                  <xpath expr="//group[@name='purchase']" position="replace">
+                    <newline/>
+                    <separator  string="Purchase Management Features" colspan="4" />
+                    <field name="purchase_requisition" />
+                    <field name="purchase_analytic_plans" />
+                  </xpath>
               </data>
             </field>
         </record>

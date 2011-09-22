@@ -22,7 +22,7 @@
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="/search/group/filter[@string='Not Invoiced']" position="after">
-             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]" separator="1" help="Purchase Orders with requisition"/>
+             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
@@ -102,7 +102,7 @@
         <field name="type">tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree colors="grey:state in ('done');red:date_end&lt;current_date and state not in ('done','cancel');black:date_end&gt;=current_date;" string="Purchase Requisition">
+            <tree colors="grey:state == 'done';red:date_end&lt;current_date and state not in ('done','cancel');black:date_end&gt;=current_date;" string="Purchase Requisition">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="date_start"/>
@@ -119,7 +119,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
-                 <group col='10' colspan='4'>
+                 <group>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
@@ -130,7 +130,7 @@
                     <field name="exclusive" />
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." colspan="4" col="10" groups="base.group_extended">
+                  <group expand="0" string="Group By..." groups="base.group_extended">
                   	<filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
 					<separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>

@@ -186,7 +186,7 @@
       <blockTable colWidths="85.0,80.0,80.0,120.0,70.0,100.0" style="Table2">
       <tr>
           <td><para style="terp_tblheader_General_Centre">  [[ data['model']=='account.journal.period'and 'Company' or removeParentNode('para') ]]</para>
-          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Account' or removeParentNode('para') ]]</para></td>
+          <para style="terp_tblheader_General_Centre">[[ data['model']=='ir.ui.menu' and 'Chart of Accounts' or removeParentNode('para') ]]</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
         <td><para style="terp_tblheader_General_Centre">Journal</para></td>
         <td><para style="terp_tblheader_General_Centre">Filters By </para></td>
@@ -247,8 +247,8 @@
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
-        <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P12">[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P12">[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
       </tr>
       <para style="Standard"><font color="white">[[lines(o.period_id.id, o.journal_id.id) or removeParentNode('story') ]]</font></para>
       <tr>
@@ -258,8 +258,8 @@
         <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,17) ]]</para></td>
         <td><para style="terp_default_8">[[ strip_name(line.name,27) ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.debit, currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.credit, currency_obj=company.currency_id) ]]</para></td>
       </tr>
     </blockTable>
 
@@ -282,8 +282,8 @@
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
         <td><para style="P11"><font color="white"></font></para></td>
-        <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P12">[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id)) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P12">[[ formatLang(sum_debit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P12">[[ formatLang(sum_credit(o.period_id.id, o.journal_id.id), currency_obj=company.currency_id) ]]</para></td>
         <!-- given a period and a journal, the sum of debit will always be equal to the sum of credit, so there is no point to display it-->
         <td><para style="P12"> <!--o.journal_id.currency and formatLang((sum_debit(o.period_id.id, o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ o.journal_id.currency and o.journal_id.currency.symbol --></para></td>
       </tr>
@@ -295,9 +295,9 @@
         <td><para style="terp_default_8">[[ line.account_id.code ]]</para></td>
         <td><para style="terp_default_8">[[ line.partner_id and strip_name(line.partner_id.name,15) ]]</para></td>
         <td><para style="terp_default_8">[[ strip_name(line.name,17) ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.debit) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P8">[[ formatLang(line.credit) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P8">[[ line.currency_id  and formatLang(line.amount_currency) or '' ]] [[ line.currency_id.symbol or '']]</para></td>
+        <td><para style="P8">[[ formatLang(line.debit, currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P8">[[ formatLang(line.credit, currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P8">[[ line.currency_id  and formatLang(line.amount_currency, currency_obj=line.currency_id) or '' ]]</para></td>
       </tr>
     </blockTable>
   </story>

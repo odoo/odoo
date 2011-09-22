@@ -69,7 +69,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Followup">
-                   <group col="10" colspan="4">
+                   <group>
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -99,7 +99,7 @@
             <field name="type">tree</field>
             <field eval="32" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('draft');black:state in ('validate')" editable="bottom" string="Partner entries">
+                <tree colors="red:state == 'draft';black:state == 'validate'" editable="bottom" string="Partner entries">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
