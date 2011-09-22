@@ -42,7 +42,6 @@
   I allocate leave request for employee "Phil Graves".
 -
   !record {model: hr.holidays, id: hr_holidays_allocateleaveforuser0}:
-    employee_id: 'hr_employee_philgraves0'
     holiday_status_id: hr_holidays_status_sick0
     name: Sick Leaves for Phil Graves
     number_of_days_temp: 12.0
@@ -50,10 +49,41 @@
     date_to: !eval "'%s-05-22 13:59:00' %(datetime.now().year)"
     type: add
 -
+  I assign allocation type as 'Employee'.
+-
+  !python {model: hr.holidays}: |
+    self.onchange_type(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], 'employee')
+-
+  I change Leave Type of the employee.
+-
+  !python {model: hr.holidays}: |
+    self.onchange_sec_id(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], ref('holiday_status_sl'))
+-
+  I assign the dates in the holiday request.
+-
+  !python {model: hr.holidays}: |
+    from datetime import datetime
+    date_from = '%s-%s-%s 14:00:00' %(datetime.now().year, datetime.now().month, datetime.now().day)
+    date_to = '%s-%s-%s 19:59:00' %(datetime.now().year, datetime.now().month, datetime.now().day)
+    self.onchange_date_from(cr, uid, [ref('hr_holidays_allocateleaveforuser0')], date_to, date_from)
+-
   I confirmed the allocation by clicking on "Confirm" button.
 -
   !workflow {model: hr.holidays, action: confirm, ref: hr_holidays_allocateleaveforuser0}
 
+-
+  I find a small mistake on my leave request to I refuse the leave request to correct a mistake.
+-
+  !workflow {model: hr.holidays, action: refuse, ref: hr_holidays_allocateleaveforuser0}
+
+-
+  I again set to draft and then confirm.
+-
+  !python {model: hr.holidays}: |
+     import netsvc
+     wf_service = netsvc.LocalService("workflow")
+     self.set_to_draft(cr, uid, [ref('hr_holidays_allocateleaveforuser0')])
+     wf_service.trg_validate(uid, 'hr.holidays', ref('hr_holidays_allocateleaveforuser0'), 'confirm', cr)
 -
   I validate the allocation by clicking on "To Approve" button.
 -
@@ -68,7 +98,7 @@
     employee_id: 'hr_employee_philgraves0'
     holiday_status_id: 'hr_holidays_status_sick0'
     name: Appointment with Doctor
-    notes: My appointment with the doctor is confirmed. so please accept my leave.
+    notes: My appointment with the doctor is confirmed. So please accept my leave.
     number_of_days_temp: 2.0
     type: remove
     user_id: 'test_holiday_user1'
