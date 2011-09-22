@@ -9,6 +9,12 @@
 -
   I create a new employee.
 -
+  !record {model: hr.employee, id: hr.employee}:
+    address_home_id: base.res_partner_address_1
+    address_id: base.main_address
+-
+  I assign home address to employee.
+-
   !record {model: hr.employee, id: hr.employee1}:
     address_home_id: base.res_partner_address_1
     address_id: base.main_address
@@ -26,7 +32,6 @@
   !record {model: product.product, id: product_product_travel0}:
     categ_id: product.product_category_services
     cost_method: standard
-    hr_expense_ok: 1
     list_price: 800.0
     mes_type: fixed
     name: Travel
@@ -40,15 +45,17 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-
+-
+  I mark this product for expenses.
+-
+  !python {model: product.product}: |
+    self.on_change_hr_expense_ok(cr, uid, [ref('product_product_travel0')], True)
 -
   I create an expense.
 -
   !record {model: hr.expense.expense, id: hr_expense_expense_september0}:
     company_id: base.main_company
-    currency_id: base.EUR
     date: !eval "'%s-05-05' %(datetime.now().year)"
-    employee_id: hr.employee1
     name: September Expenses
     line_ids:
       - date_value: !eval "'%s-05-27' %(datetime.now().year)"
@@ -63,6 +70,19 @@
 -
   !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'draft'
+-
+  I change the employee on expense form.
+-
+  !python {model: hr.expense.expense}: |
+    self.onchange_employee_id(cr, uid, [ref('hr_expense_expense_september0')], ref('hr.employee1'), None)
+-
+  Now I change the related product on expense line.
+-
+  !python {model: hr.expense.expense}: |
+    exp_line_obj = self.pool.get('hr.expense.line')
+    exp_obj = self.browse(cr, uid, ref('hr_expense_expense_september0'), None)
+    line_ids = [line.id for line in exp_obj.line_ids]
+    exp_line_obj.onchange_product_id(cr, uid, line_ids, ref('product_product_expense_air'), False, ref('hr.employee1'), None)
 -
   I confirm this expenses by click on "Confirm" button.
 -
@@ -81,10 +101,10 @@
 -
   I invoiced this expense by click on "Invoice" button.
 -
-  !workflow {model: hr.expense.expense, action: invoice, ref: hr_expense_expense_september0}
-
+  !python {model: hr.expense.expense}: |
+    self.invoice(cr, uid, [ref('hr_expense_expense_september0')], None)
 -
-  I check that state is "Invoiced"
+  I check that state is "Invoiced".
 -
   !assert {model: hr.expense.expense, id: hr_expense_expense_september0}:
     - state == 'invoiced'
@@ -94,3 +114,4 @@
   !python {model: hr.expense.expense}: |
     exp = self.browse(cr, uid, [ref('hr_expense_expense_september0')])[0]
     assert exp.invoice_id, "Invoice should be created"
+
