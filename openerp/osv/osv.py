@@ -288,14 +288,6 @@ class TransientModel(Model):
         self.vacuum(cr, uid)
         return super(TransientModel, self).create(cr, uid, vals, context)
 
-    def unlink(self, cr, uid, ids, context=None):
-        super(TransientModel, self).unlink(cr, uid, ids, context)
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if ids:
-            cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
-        return True
-
     def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
 
         # Restrict acces to the current user, except for the super-user.
