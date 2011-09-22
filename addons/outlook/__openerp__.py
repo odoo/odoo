@@ -25,17 +25,15 @@
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
-    'depends' : ['base', 'mail_gateway'],
+    'depends' : ['base', 'mail'],
     'category' : 'Tools',
     'description': '''
 This module provides the Outlook Plug-in.
 =========================================
-
 Outlook plug-in allows you to select an object that you’d like to add
 to your email and its attachments from MS Outlook. You can select a partner, a task,
 a project, an analytical account, or any other object and archive selected
-mail in mailgate.messages with attachments.
-
+mail into email.messages with attachments.
       ''',
     'init_xml' : [],
     'demo_xml' : [],

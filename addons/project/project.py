@@ -118,7 +118,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
@@ -590,11 +590,12 @@ class task(osv.osv):
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'project.task.close',
+                'res_model': 'mail.compose.message',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True,
-                'context': {'active_id': task.id}
+                'context': {'active_id': task.id,
+                            'active_model': 'project.task'}
            }
         return res
 

@@ -71,7 +71,7 @@ class delivery_carrier(osv.osv):
         'free_if_more_than': fields.boolean('Free If More Than'),
         'amount': fields.float('Amount'),
         'use_detailed_pricelist': fields.boolean('Use Detailed Pricelist'),
-        'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Price List'),
+        'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Advanced Pricing'),
     }
 
     _defaults = {

@@ -2,6 +2,12 @@
 <openerp>
 <data noupdate="1">
 
+    <record id="hr_applicant_comp_rule" model="ir.rule">
+        <field name="name">Applicant multi company rule</field>
+        <field model="ir.model" name="model_id" ref="model_hr_applicant"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
 
 
   </data>

@@ -24,7 +24,18 @@
                 </field>
             </field>
         </record>
-    
+        
+    <record id="view_project_mrp_inherit_form2" model="ir.ui.view">
+            <field name="name">project.mrp.form.view.inherit</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+            <xpath expr="/form/notebook/page[@string='Extra Info']/separator[@string='Notes']" position="before">
+                <field name="sale_line_id"/>
+            </xpath>    
+            </field>
+        </record>  
     </data>
 </openerp>
         
