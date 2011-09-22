@@ -189,7 +189,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
 
     },
     do_record_group: function() {
-        if (this.NO_OF_COLUMNS) {
+        if (this.NO_OF_COLUMNS && this.all_display_data.length > 0) {
             var records = this.all_display_data[0].records;
             var record_per_group = Math.round((records).length / this.NO_OF_COLUMNS);
             this.all_display_data = [];
@@ -443,7 +443,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             function (dataset) {
                 self.groups = [];
                 self.dataset.read_slice([], {'domain': self.domain, 'context': self.context}, function(records) {
-                    self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
+                    if (records.length) self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
+                    else self.all_display_data = [];
                     self.$element.find(".oe_kanban_view").remove();
                     self.on_show_data();
                 });
