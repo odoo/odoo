@@ -581,7 +581,6 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         this._super(parent);
         this.qs = "?" + jQuery.param.querystring();
         this.$content = $();
-        console.debug("initializing header with id", this.element_id);
         this.update_promise = $.Deferred().resolve();
     },
     start: function() {
@@ -702,10 +701,11 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             },
                 Save: function(){
                     var inner_viewmanager = action_manager.inner_viewmanager;
-                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save(function(){
-                        inner_viewmanager.start();
+                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                    .then(function() {
+                        self.dialog.stop();
+                        window.location.reload();
                     });
-                    $(this).dialog('destroy')
                 }
             }
         });
@@ -728,21 +728,13 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
-                        }, function(result) {
-                         if (result.error) {
-                            self.display_error(result);
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
                         return;
-                        }
-                        else {
-                            if (result.new_password) {
-                                self.session.password = result.new_password;
-                                var session = new openerp.web.Session(self.session.server, self.session.port);
-                                session.start();
-                                session.session_login(self.session.db, self.session.login, self.session.password)
-                            }
-                        }
-                    self.notification.notify("Changed Password", "Password has been changed successfully");
-                    self.dialog.close();
+                    } else {
+                        self.session.logout();
+                    }
                 });
             }
         });
@@ -963,7 +955,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session.start();
         this.login.start();
         this.menu.start();
-        console.debug("The openerp client has been initialized.");
     },
     on_logged: function() {
         if(this.action_manager)

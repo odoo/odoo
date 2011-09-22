@@ -291,7 +291,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
-        ctx = req.session.get_context()
+        ctx = req.session.get_context() if req.session._uid else {}
 
         return {
             "session_id": req.session_id,
