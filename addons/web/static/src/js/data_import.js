@@ -103,11 +103,20 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
 
         this.on_check_field_values(results['required_fields']);
     },
-    on_check_field_values: function (required_fields) {
-        this.$element.find("#message, #msg").remove();
-
-        var required_valid = this.check_required(required_fields);
-
+    /**
+     * Looks through all the field selections, and tries to find if two
+     * (or more) columns were matched to the same model field.
+     *
+     * Returns a map of the multiply-mapped fields to an array of offending
+     * columns (not actually columns, but the inputs containing the same field
+     * names).
+     *
+     * Also has the side-effect of marking the discovered inputs with the class
+     * ``duplicate_fld``.
+     *
+     * @returns {Object<String, Array<String>>} map of duplicate field matches to same-valued inputs
+     */
+    find_duplicate_fields: function() {
         // Maps values to DOM nodes, in order to discover duplicates
         var values = {}, duplicates = {};
         this.$element.find(".sel_fields").each(function(index, element) {
@@ -127,7 +136,14 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 $element.add(same_valued_field).addClass('duplicate_fld');
             }
         });
+        return duplicates;
+    },
+    on_check_field_values: function (required_fields) {
+        this.$element.find("#message, #msg").remove();
 
+        var required_valid = this.check_required(required_fields);
+
+        var duplicates = this.find_duplicate_fields();
         if (_.isEmpty(duplicates)) {
             this.toggle_import_button(required_valid);
         } else {
