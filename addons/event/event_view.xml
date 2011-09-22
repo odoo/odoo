@@ -475,7 +475,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group>
-                        <filter icon="terp-check" string="New" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
+                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
