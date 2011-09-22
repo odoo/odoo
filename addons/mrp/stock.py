@@ -46,6 +46,7 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         wf_service = netsvc.LocalService("workflow")
+        processed_ids = [move.id]
         if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
             bis = bom_obj.search(cr, uid, [
                 ('product_id','=',move.product_id.id),
@@ -55,7 +56,6 @@ class StockMove(osv.osv):
                 factor = move.product_qty
                 bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
-                dest = move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
                 if move.state == 'assigned':
                     state = 'assigned'
@@ -70,12 +70,12 @@ class StockMove(osv.osv):
                         'move_dest_id': move.id,
                         'state': state,
                         'name': line['name'],
-                        'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],
                         'procurements': [],
                     }
                     mid = move_obj.copy(cr, uid, move.id, default=valdef)
+                    processed_ids.append(mid)
                     prodobj = product_obj.browse(cr, uid, line['product_id'], context=context)
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': (move.picking_id.origin or ''),
@@ -92,14 +92,14 @@ class StockMove(osv.osv):
                     })
                     wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 move_obj.write(cr, uid, [move.id], {
-                    'location_id': move.location_dest_id.id,
+                    'location_dest_id': move.location_id.id, # dummy move for the kit
                     'auto_validate': True,
                     'picking_id': False,
                     'state': 'waiting'
                 })
                 for m in procurement_obj.search(cr, uid, [('move_id','=',move.id)], context):
                     wf_service.trg_validate(uid, 'procurement.order', m, 'button_wait_done', cr)
-        return True
+        return processed_ids
     
     def action_consume(self, cr, uid, ids, product_qty, location_id=False, context=None): 
         """ Consumed product with specific quatity from specific source location.
@@ -154,16 +154,12 @@ class StockPicking(osv.osv):
     #
     # Explode picking by replacing phantom BoMs
     #
-    def action_explode(self, cr, uid, picks, *args):
-        """ Explodes picking by replacing phantom BoMs
-        @param picks: Picking ids. 
-        @param *args: Arguments
-        @return: Picking ids.
-        """  
+    def action_explode(self, cr, uid, move_ids, *args):
+        """Explodes moves by expanding kit components"""
         move_obj = self.pool.get('stock.move')
-        for move in move_obj.browse(cr, uid, picks):
-            move_obj._action_explode(cr, uid, move)
-        return picks
+        for move in move_obj.browse(cr, uid, move_ids):
+            todo.extend(move_obj._action_explode(cr, uid, move))
+        return list(set(todo))
 
 StockPicking()
 
