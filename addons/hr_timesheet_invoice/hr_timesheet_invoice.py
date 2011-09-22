@@ -116,7 +116,7 @@ class account_analytic_line(osv.osv):
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
                     raise osv.except_osv(_('Error !'),
-                        _('You can not modify an invoiced analytic line!'))
+                        _('You cannot modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):

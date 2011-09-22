@@ -108,10 +108,10 @@ class mail_compose_message(osv.osv_memory):
     def template_toggle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
             had_template = record.use_template
-            record.write({'use_template': not(record.use_template)})
+            record.write({'use_template': not(had_template)})
             if had_template:
                 # equivalent to choosing an empty template
-                onchange_defaults = self.on_change_template(cr, uid, record.id, record.use_template,
+                onchange_defaults = self.on_change_template(cr, uid, record.id, not(had_template),
                                                             False, email_from=record.email_from,
                                                             email_to=record.email_to, context=context)
                 record.write(onchange_defaults['value'])

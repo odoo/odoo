@@ -98,7 +98,7 @@
     from tools.translate import _
     pur_id1=self.browse(cr, uid, ref("purchase_order_po2"))
     account_obj = self.pool.get('account.invoice')
-    ids = account_obj.search(cr, uid, [('origin', '=', 'PO-'+str(pur_id1.id))])
+    ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
 -
  I check that the order which was initially in the confirmed state has transit to approved state.

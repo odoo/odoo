@@ -255,16 +255,16 @@
                                 domain="[('state','=','pending')]"
                                 help="Pending Funds" />
                             <separator orientation="vertical" />
-                            <field name="state" select="1" />
-                            <field name="name" select='1'
+                            <field name="state"/>
+                            <field name="name"
                                 string="Fund Description" />
-                            <field name="user_id" select="1"
+                            <field name="user_id"
                                 widget="selection">
                                 <filter icon="terp-personal-"
                                     domain="[('user_id','=', False)]"
                                     help="Unassigned" />
                             </field>
-                            <field name="section_id" select="1" widget="selection" string="Sales Team">
+                            <field name="section_id" widget="selection" string="Sales Team">
                                 <filter icon="terp-personal+" groups="base.group_extended"
                                     domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                                     help="My Sales Team(s)" />

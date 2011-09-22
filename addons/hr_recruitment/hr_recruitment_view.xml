@@ -148,11 +148,11 @@
                             <tree string="History">
                                 <field name="display_text" string="History Information"/>
                                 <field name="email_from" invisible="1"/>
-	                            <button
-	                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-	                                name="%(mail.action_email_compose_message_wizard)d"
-	                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-	                                icon="terp-mail-replied" type="action" />
+                                <button
+                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                    name="%(mail.action_email_compose_message_wizard)d"
+                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                    icon="terp-mail-replied" type="action" />
                             </tree>
                             <form string="History">
                                 <group col="4" colspan="4">
@@ -166,13 +166,13 @@
                                     <page string="Details">
                                         <group attrs="{'invisible': [('email_from', '=', False)]}">
                                             <field name="body_text" colspan="4" nolabel="1" height="250"/>
-	                                        <button colspan="4" string="Reply"
-	                                            name="%(mail.action_email_compose_message_wizard)d"
-	                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-	                                            icon="terp-mail-replied" type="action"/>
+                                            <button colspan="4" string="Reply"
+                                                name="%(mail.action_email_compose_message_wizard)d"
+                                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                icon="terp-mail-replied" type="action"/>
                                         </group>
                                         <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                            <field name="display_text" colspan="4" nolabel="1"  height="250"/>
+                                            <field name="body_text" colspan="4" nolabel="1"  height="250"/>
                                         </group>
                                     </page>
                                     <page string="Attachments">
@@ -185,9 +185,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-	                    <button string="Send New Email"
-	                        name="%(mail.action_email_compose_message_wizard)d"
-	                        icon="terp-mail-message-new" type="action"/>
+                        <button string="Send New Email"
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                  </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
@@ -244,10 +244,10 @@
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>

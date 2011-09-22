@@ -132,6 +132,10 @@ class hr_contract(osv.osv):
             ], 'Scheduled Pay', select=True),
     }
 
+    _defaults = {
+        'schedule_pay': 'monthly',
+    }
+
     def get_all_structures(self, cr, uid, contract_ids, context=None):
         """
         @param contract_ids: list of contracts
@@ -207,6 +211,7 @@ class one2many_mod2(fields.one2many):
 class hr_payslip_run(osv.osv):
 
     _name = 'hr.payslip.run'
+    _description = 'Payslip Run'
     _columns = {
         'name': fields.char('Name', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'slip_ids': fields.one2many('hr.payslip', 'payslip_run_id', 'Payslips', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -818,7 +823,7 @@ result = rules.NET > categories.NET * 0.10''',
         'amount_percentage': 0.0,
         'quantity': '1.0',
      }
-
+    
     def _recursive_search_of_rules(self, cr, uid, rule_ids, context=None):
         """
         @param rule_ids: list of browse record

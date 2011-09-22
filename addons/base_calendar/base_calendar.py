@@ -386,7 +386,7 @@ property or property parameter."),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate a calendar attendee.'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -998,9 +998,9 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative'))
             if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative'))
             result[event] = self.compute_rule_string(datas)
         return result
 

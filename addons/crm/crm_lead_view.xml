@@ -195,7 +195,7 @@
                                     <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
                                 </group>
                                 <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                                <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
+                                <field name="body_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
@@ -341,7 +341,6 @@
                                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                     <div class="oe_kanban_left">
                                         <a string="Edit" icon="gtk-edit" type="edit"/>
-                                        <a string="Delete" icon="gtk-close" type="delete"/>
                                         <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Schedule/Log Call" name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action"/>
@@ -581,7 +580,7 @@
                                    <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
                                </group>
                                <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                               <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
+                               <field name="body_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
                            </group>
                            <notebook colspan="4">
                                <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">

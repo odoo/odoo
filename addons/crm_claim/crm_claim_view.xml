@@ -227,21 +227,21 @@
                 <search string="Search Claims">
                     <filter icon="terp-check" string="Current" name="current"
                         domain="[('state','in',('draft', 'open'))]"
-                        separator="1" help="Draft and Open Claims" />
+                        help="Draft and Open Claims" />
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"
-                        separator="1" help="In Progress Claims"
+                        help="In Progress Claims"
                     />
                     <filter icon="terp-gtk-media-pause"
                         string="Pending"
                         domain="[('state','=','pending')]"
-                        separator="1" help="All pending Claims"
+                        help="All pending Claims"
                     />
                     <separator orientation="vertical"/>
-                    <field name="name" select='1'/>
-                    <field name="partner_id" select="1"/>
-                    <field name="user_id" select="1" widget="selection">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="user_id" widget="selection">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
                                 help="Unassigned Claims" />
