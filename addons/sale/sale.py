@@ -665,41 +665,64 @@ class sale_order(osv.osv):
                 return False
             return canceled
 
+    def _get_order_picking_key(self, cr, uid, order, order_data, order_line, pickings_dict, context=None):
+        """Allows to partition a sale over several pickings: just override it and return
+           a unique key for the given parameters. If key changes, a new picking will be created.
+           :params order: the sale order
+           :params order_data: a place holder to store data while iterating the order lines
+           :params line: the sale order line
+           :params pickings_dict: the current dictionary of key / picking_id for this order
+           :return: unique key for those parameters
+           :rtype: string
+        """
+        return "default"
+
+    def _create_order_picking(self, cr, uid, order, order_data, line, picking_dict, picking_vals, context=None):
+        picking_vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
+        return self.pool.get('stock.picking').create(cr, uid, picking_vals)
+
+    def _create_line_move(self, cr, uid, order, order_data, line, move_vals, context=None):
+        return self.pool.get('stock.move').create(cr, uid, move_vals)
+
+    def _create_line_procurement(self, cr, uid, order, order_data, line, move_id, proc_vals, context=None):
+        return self.pool.get('procurement.order').create(cr, uid, proc_vals)
+
     def action_ship_create(self, cr, uid, ids, *args):
         wf_service = netsvc.LocalService("workflow")
-        picking_id = False
         move_obj = self.pool.get('stock.move')
         proc_obj = self.pool.get('procurement.order')
-        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
         for order in self.browse(cr, uid, ids, context={}):
-            proc_ids = []
             output_id = order.shop_id.warehouse_id.lot_output_id.id
-            picking_id = False
+            proc_ids = []
+            pickings = {}
+            order_data = {} #a place holder to store data while iteraing the lines if needed
+
             for line in order.order_line:
-                proc_id = False
                 date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+                date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
 
                 if line.state == 'done':
                     continue
                 move_id = False
                 if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     location_id = order.shop_id.warehouse_id.lot_stock_id.id
+                    picking_key = self._get_order_picking_key(cr, uid, order, order_data, line, pickings, *args)
+                    picking_id = pickings.get(picking_key, False)
                     if not picking_id:
-                        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, {
-                            'name': pick_name,
-                            'origin': order.name,
-                            'type': 'out',
-                            'state': 'auto',
-                            'move_type': order.picking_policy,
-                            'sale_id': order.id,
-                            'address_id': order.partner_shipping_id.id,
-                            'note': order.note,
-                            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-                            'company_id': order.company_id.id,
-                        })
-                    move_id = self.pool.get('stock.move').create(cr, uid, {
+                        picking_id = self._create_order_picking(cr, uid, order, order_data, line, pickings, {
+                        'origin': order.name,
+                        'type': 'out',
+                        'state': 'auto',
+                        'move_type': order.picking_policy,
+                        'sale_id': order.id,
+                        'address_id': order.partner_shipping_id.id,
+                        'note': order.note,
+                        'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
+                        'company_id': order.company_id.id,
+                        }, *args)
+                        pickings[picking_key] = picking_id
+                        
+                    move_id = self._create_line_move(cr, uid, order, order_data, line, {
                         'name': line.name[:64],
                         'picking_id': picking_id,
                         'product_id': line.product_id.id,
@@ -717,13 +740,12 @@ class sale_order(osv.osv):
                         'sale_line_id': line.id,
                         'tracking_id': False,
                         'state': 'draft',
-                        #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
-                    })
+                    }, *args)
                     
                 if line.product_id:
-                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
+                    proc_id = self._create_line_procurement(cr, uid, order, order_data, line, move_id, {
                         'name': line.name,
                         'origin': order.name,
                         'date_planned': date_planned,
@@ -739,8 +761,7 @@ class sale_order(osv.osv):
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
-                        'sale_line_id': line.id,
-                    })
+                    }, *args)
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
                     if order.state == 'shipping_except':
@@ -755,7 +776,7 @@ class sale_order(osv.osv):
 
             val = {}
 
-            if picking_id:
+            for k, picking_id in pickings.items():
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
 
             for proc_id in proc_ids:
