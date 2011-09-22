@@ -78,7 +78,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         full_account = []
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, COALESCE(sum(debit),0.00) as debit, COALESCE(sum(credit),0.00) as credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
                         "ELSE 0 " \
