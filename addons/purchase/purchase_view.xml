@@ -14,7 +14,7 @@
 
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
-            parent="menu_purchase_config_purchase" sequence="50"/>
+            parent="menu_purchase_config_purchase" sequence="50"  groups="base.group_extended"/>
 
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
@@ -48,6 +48,14 @@
         <menuitem
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
+
+        <menuitem
+            id="menu_purchase_partner_cat" name="Address Book"
+            parent="menu_purchase_config_purchase"/>
+
+        <menuitem
+            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
+            parent="purchase.menu_purchase_partner_cat"/>
 
 
         <!--supplier addresses action-->
@@ -232,22 +240,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
-                 <group col='10' colspan='4'>
-                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" separator="1" help="Purchase order which are in draft state"/>
-                    <filter icon="terp-camera_test" name="confirmed" string="To Approve" domain="[('state','in',('wait','confirmed'))]" separator="1" help="Purchase order to be approved"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]" separator="1" help="Approved purchase order"/>
+                 <group>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
+                    <filter icon="terp-camera_test" name="confirmed" string="To Approve" domain="[('state','in',('wait','confirmed'))]"  help="Purchase order to be approved"/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" separator="1" help="Purchase order which are in the exception state"/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Not Invoiced" domain="[('invoice_ids','=', False)]" separator="1" help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="Not Invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
                     <separator orientation="vertical"/>
-                    <field name="name" select="1" string="Reference"/>
-                    <field name="partner_id" select="1"/>
-                    <field name="product_id" select="1"/>
-                    <field name="create_uid" select="1"/>
+                    <field name="name" string="Reference"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="create_uid"/>
                 </group>
                 <newline/>
-                  <group expand="0" string="Group By..." colspan="4" col="10" groups="base.group_extended">
+                  <group expand="0" string="Group By..." groups="base.group_extended">
                     <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                      <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
@@ -455,7 +463,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Purchase Lines Not Invoiced</field>
+            <field name="name">On Purchase Order Line</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>

@@ -132,26 +132,25 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             vals['partner_address_id'] = False
 
         lead.write(vals, context=context)
-        leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
+        text = _('Converted to opportunity')
+        leads.message_append(cr, uid, [lead], text, body_text=text, context=context)
         if lead.partner_id:
             msg_ids = [ x.id for x in lead.message_ids]
-            self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
+            self.pool.get('mail.message').write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
 
-    def send_mail_to_salesman(self, lead):
+    def send_mail_to_salesman(self, cr, uid, lead):
         email_to = lead.user_id and lead.user_id.user_email
         if not email_to:
-            return
+            return False
+        message_pool = self.pool.get('mail.message')
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
-        partner = lead.partner_id and lead.partner_id.name or lead.partner_name 
+        partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name
-        body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)  
-        try :
-            tools.email_send(email_from, [email_to], subject, body)
-        except:
-            pass
+        body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
+        return message_pool.schedule_with_attach(cr, uid, email_from, [email_to], subject, body)
 
     def action_apply(self, cr, uid, ids, context=None):
         """
@@ -188,9 +187,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         for lead in leads.browse(cr, uid, record_id, context=context):
             if lead.section_id:
-                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
             else:
-                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('sequence','>=',1)])
 
             data = self.browse(cr, uid, ids[0], context=context)
 
@@ -205,7 +204,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 partner_id = False
 
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
-            self.send_mail_to_salesman(lead)
+            self.send_mail_to_salesman(cr, uid, lead)
             #If we convert in mass, don't merge if there is no other opportunity but no warning
             if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
                 merge_obj = self.pool.get('crm.merge.opportunity')

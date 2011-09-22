@@ -9,17 +9,17 @@
         <data>
           <xpath expr="//group[@name='crm']" position="replace">
             <newline/>
-            <separator  string="Customer Relationship Management Features" colspan="4" />
-            <field name="crm_claim" groups="base.group_extended" />
-            <field name="crm_helpdesk" groups="base.group_extended" />
-            <field name="crm_fundraising" groups="base.group_extended" />
-            <field name="wiki_sale_faq" groups="base.group_extended" />
-            <field name="sale_crm" invisible="1" groups="base.group_extended" />
-            <field name="crm_caldav" />
+            <separator string="Customer Relationship Management Features" colspan="4"/>
+            <field name="crm_claim" groups="base.group_extended"/>
+            <field name="crm_helpdesk" groups="base.group_extended"/>
+            <field name="crm_fundraising" groups="base.group_extended"/>
+            <field name="wiki_sale_faq" groups="base.group_extended"/>
+            <field name="sale_crm" invisible="1" groups="base.group_extended"/>
+            <field name="crm_caldav"/>
             <field name="import_sugarcrm"/>
-            <field name="fetchmail" />
-            <field name="thunderbird" />
-            <field name="outlook" />
+            <field name="fetchmail"/>
+            <field name="thunderbird"/>
+            <field name="outlook"/>
           </xpath>
         </data>
       </field>
@@ -39,8 +39,6 @@
         <field name="action_id" ref="crm_case_section_view_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
         <field name="sequence">10</field>
-        <field name="type">normal</field>
-        <field name="state">skip</field>
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
@@ -57,8 +55,6 @@
         <field name="action_id" ref="crm_case_stage_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
         <field name="sequence">10</field>
-        <field name="type">normal</field>
-        <field name="state">skip</field>
     </record>
 
   </data>

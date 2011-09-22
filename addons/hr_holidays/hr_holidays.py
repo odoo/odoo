@@ -135,7 +135,8 @@ class hr_holidays(osv.osv):
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
         'category_id': fields.many2one('hr.employee.category', "Category", help='Category of Employee'),
         'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category', required=True),
-        'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automatically filled by the user who validate the leave with second level (If Leave type need second validation)')
+        'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)'),
+        'double_validation': fields.related('holiday_status_id', 'double_validation', type='boolean', relation='hr.holidays.status', string='Apply Double Validation'),
     }
     _defaults = {
         'employee_id': _employee_get,
@@ -203,19 +204,23 @@ class hr_holidays(osv.osv):
 
     def onchange_sec_id(self, cr, uid, ids, status, context=None):
         warning = {}
+        double_validation = False
+        obj_holiday_status = self.pool.get('hr.holidays.status')
         if status:
-            brows_obj = self.pool.get('hr.holidays.status').browse(cr, uid, status, context=context)
-            if brows_obj.categ_id and brows_obj.categ_id.section_id and not brows_obj.categ_id.section_id.allow_unlink:
+            holiday_status = obj_holiday_status.browse(cr, uid, status, context=context)
+            double_validation = holiday_status.double_validation
+            if holiday_status.categ_id and holiday_status.categ_id.section_id and not holiday_status.categ_id.section_id.allow_unlink:
                 warning = {
                     'title': "Warning for ",
                     'message': "You won\'t be able to cancel this leave request because the CRM Sales Team of the leave type disallows."
                 }
-        return {'warning': warning}
+        return {'warning': warning, 'value': {'double_validation': double_validation}}
 
     def set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
+            'manager_id2': False,
         })
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -235,9 +240,12 @@ class hr_holidays(osv.osv):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.write(cr, uid, ids, {'state':'validate', 'manager_id2': manager})
+        self.write(cr, uid, ids, {'state':'validate'})
         data_holiday = self.browse(cr, uid, ids)
+        holiday_ids = []
         for record in data_holiday:
+            if record.holiday_status_id.double_validation:
+                holiday_ids.append(record.id)
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
                 vals = {
@@ -274,17 +282,23 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
+        if holiday_ids:
+            self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
         self.check_holidays(cr, uid, ids)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
-    def holidays_refuse(self, cr, uid, ids, *args):
+    def holidays_refuse(self, cr, uid, ids, approval, *args):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
+        if approval == 'first_approval':
+            self.write(cr, uid, ids, {'manager_id': manager})
+        else:
+            self.write(cr, uid, ids, {'manager_id2': manager})
+        self.write(cr, uid, ids, {'state': 'refuse'})
         self.holidays_cancel(cr, uid, ids)
         return True
 
@@ -361,9 +375,9 @@ class hr_employee(osv.osv):
 
 
    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, method=True, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
+        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
     }
 
 hr_employee()
 
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

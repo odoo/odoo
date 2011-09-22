@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <openerp>
     <data>
 
@@ -8,33 +7,25 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
                         <separator orientation="vertical"/>
-                        <filter string="This Month" icon="terp-go-month" name="This Month"
-                                domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
+                        <filter string="This Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                         <field name="employee_id">
-                            <filter icon="terp-personal"
-                                name="my_leaves"
-                                domain="[('employee_id.user_id','=', uid)]"
-                                help="My Leaves" />
+                            <filter icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
                         </field>
                         <field name="department_id" widget="selection">
-                            <filter icon="terp-personal+" help="My Department Leaves"
-                                domain="[('department_id.manager_id','=',uid)]" />
+                            <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters...">
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
-                    <newline />
+                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
@@ -70,10 +61,10 @@
             <field name="arch" type="xml">
                 <form string="Leave Request">
                     <group col="8" colspan="4">
-                    <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" />
+                    <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                     <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" groups="base.group_hr_manager"/>
                     <group attrs="{'invisible':[('holiday_type','=','employee')]}">
-                        <field name="category_id"  attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
+                        <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
                         </group>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
                         <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
@@ -81,14 +72,15 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}" />
-                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" />
+                            <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
+                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}"/>
                             <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="number_of_days_temp"/>
+                            <field name="double_validation" invisible="1"/>
                             <newline/>
                             <field name="manager_id"/>
-                            <field name="manager_id2"/>
+                            <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <newline/>
@@ -98,7 +90,7 @@
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                                 <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                                 <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                                <button string="Set to Draft" name="set_to_draft" states="refuse,validate,validate1" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                                <button string="Set to Draft" name="set_to_draft" states="refuse,validate" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                             </group>
                         </page>
                     </notebook>
@@ -114,7 +106,7 @@
             <field name="arch" type="xml">
             <form string="Allocation Request">
                 <group col="8" colspan="4">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Category" groups="base.group_hr_manager"/>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
                         <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
@@ -125,22 +117,23 @@
                 </group>
                 <notebook colspan="4">
                     <page string="General">
-                        <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}" />
-                        <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" />
+                        <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}"/>
+                        <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}"/>
                         <field name="number_of_days_temp"/>
+                        <field name="double_validation" invisible="1"/>
                         <newline/>
                         <field name="manager_id"/>
-                        <field name="manager_id2"/>
+                        <field name="manager_id2" attrs="{'invisible':[('double_validation', '!=', True)]}"/>
                         <separator string="Reasons" colspan="4"/>
-                        <field name="notes" nolabel="1" colspan="4" />
+                        <field name="notes" nolabel="1" colspan="4"/>
                         <newline/>
                         <field name="state" colspan="2"/>
                         <group colspan="2" col="6">
-                            <button string="Refuse" name="refuse" states="confirm" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
+                            <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,validate1,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                            <button string="Set to Draft" name="set_to_draft" states="cancel,validate,refuse" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
                     </page>
                 </notebook>
@@ -153,14 +146,14 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
+                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Leaves">
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
+                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
@@ -178,8 +171,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Leaves Management">
-                    <field name="name" />
-                    <field name="holiday_status_id" />
+                    <field name="name"/>
+                    <field name="holiday_status_id"/>
                     <field name="type"/>
                     <field name="date_from" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
                     <field name="date_to" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
@@ -208,12 +201,12 @@
             <field name="type">tree</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')" string="Leaves Summary">
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="type"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
+                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="holiday_status_id"/>
@@ -233,14 +226,14 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')">
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')">
                     <field name="holiday_type"/>
                     <field name="employee_id"/>
                     <field name="category_id"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Number of Days" sum='Remaining Days'/>
+                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="manager_id" invisible="1"/>
@@ -254,11 +247,7 @@
         </record>
 
         <!-- My leave dashboard -->
-        <menuitem
-            name="Leaves"
-            parent="hr.menu_hr_root"
-            id="menu_open_ask_holidays"
-            sequence="5"/>
+        <menuitem name="Leaves" parent="hr.menu_hr_root" id="menu_open_ask_holidays" sequence="5"/>
 
         <record model="ir.actions.act_window" id="open_ask_holidays">
             <field name="name">Leave Requests</field>
@@ -292,8 +281,7 @@
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
 
-        <menuitem name="Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new"
-             action="open_ask_holidays"/>
+        <menuitem name="Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new" action="open_ask_holidays"/>
 
         <record model="ir.actions.act_window" id="open_allocation_holidays">
             <field name="name">Allocation Requests</field>
@@ -319,8 +307,7 @@
             <field name="act_window_id" ref="open_allocation_holidays"/>
         </record>
 
-        <menuitem name="Allocation Requests" parent="menu_open_ask_holidays" id="menu_open_allocation_holidays"
-            action="open_allocation_holidays"/>
+        <menuitem name="Allocation Requests" parent="menu_open_ask_holidays" id="menu_open_allocation_holidays" action="open_allocation_holidays"/>
 
         <record model="ir.actions.act_window" id="open_company_allocation">
             <field name="name">Leaves Summary</field>
@@ -333,12 +320,7 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <menuitem
-            name="Leaves Summary"
-            parent="menu_open_ask_holidays"
-            id="menu_open_company_allocation"
-            action="open_company_allocation"
-            sequence="40"/>
+        <menuitem name="Leaves Summary" parent="menu_open_ask_holidays" id="menu_open_company_allocation" action="open_company_allocation" sequence="40"/>
 
         <!-- holidays status -->
         <record id="view_holidays_status_filter" model="ir.ui.view">
@@ -360,7 +342,7 @@
             <field name="arch" type="xml">
                 <form string="Leave Type">
                     <group colspan="4" col="6">
-                        <field name="name" />
+                        <field name="name"/>
                         <field name="color_name"/>
                         <field name="categ_id" widget="selection" groups="base.group_extended"/>
                     </group>
@@ -373,7 +355,7 @@
                           </group>
                           <group name="second" colspan="2" col="2">
                               <separator string="Misc" colspan="2"/>
-                              <field name="active" />
+                              <field name="active"/>
                           </group>
                       </page>
                     </notebook>
@@ -391,7 +373,7 @@
                     <field name="max_leaves"/>
                     <field name="leaves_taken"/>
                     <field name="remaining_leaves"/>
-                    <field name="limit" />
+                    <field name="limit"/>
                 </tree>
             </field>
         </record>
@@ -403,11 +385,11 @@
             <field name="arch" type="xml">
                 <tree string="Leave Type">
                     <field name="name"/>
-                    <field name="limit" />
+                    <field name="limit"/>
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_hr_holidays_status_search" model="ir.ui.view">
             <field name="name">hr.holidays.status.search</field>
             <field name="model">hr.holidays.status</field>
@@ -419,7 +401,7 @@
                 </search>
             </field>
         </record>
-        
+
         <record id="open_view_holiday_status" model="ir.actions.act_window">
             <field name="name">Leave Type</field>
             <field name="type">ir.actions.act_window</field>
@@ -429,13 +411,9 @@
             <field name="view_id" eval="view_holiday_status_normal_tree"/>
             <field name="search_view_id" ref="view_hr_holidays_status_search"/>
         </record>
-        
+
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        
-        <menuitem name="Leave Type"
-            action="open_view_holiday_status"
-            id="menu_open_view_holiday_status"
-            parent="hr.menu_open_view_attendance_reason_config"/>
+        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_open_view_attendance_reason_config"/>
 
     <!-- holiday on resource leave -->
         <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
@@ -451,13 +429,7 @@
         </record>
 
     <!--  Shortcuts -->
-        <act_window name="Leaves"
-            domain="[('type','=','remove')]"
-            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-            res_model="hr.holidays"
-            src_model="hr.employee"
-            view_id ="view_holiday"
-            id="act_hr_employee_holiday_request"/>
+        <act_window name="Leaves" domain="[('type','=','remove')]" context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}" res_model="hr.holidays" src_model="hr.employee" view_id="view_holiday" id="act_hr_employee_holiday_request"/>
             
        <!--  Assing leave       -->
         
@@ -485,8 +457,6 @@
        <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
            <field name="category_id" ref="hr.category_hr_management_config"/>
-           <field name="type">normal</field>
-           <field name="state">skip</field>
        </record>        
        
         <!-- Hr employee inherit Legal Leaves -->

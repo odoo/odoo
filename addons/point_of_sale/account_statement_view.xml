@@ -10,12 +10,12 @@
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
                         <group col="6" colspan="4">
-                            <separator colspan="6" string="Extended Configureation"/>
-                            <field name="check_dtls" groups="point_of_sale.group_pos_manager"/>
+                            <separator colspan="6" string="Extended Configuration"/>
+                            <field name="check_dtls" groups="point_of_sale.group_pos_manager" string="Check Cash Balance"/>
                             <field name="auto_cash"/>
                             <field name="special_journal"/>
                         </group>
-                        <separator colspan="4" string="Users"/>
+                        <separator colspan="4" string="POS Users"/>
                         <field name="journal_users" nolabel="1" colspan="4"/>
                     </page>
                 </xpath>
@@ -39,7 +39,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
@@ -64,7 +64,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>

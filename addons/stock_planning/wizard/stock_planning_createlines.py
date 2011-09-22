@@ -127,16 +127,13 @@ class stock_planning_createlines(osv.osv_memory):
                         'stock_supply_location': stock_supply_location,
 
                     }))
-        result = mod_obj._get_id(cr, uid, 'stock_planning', 'view_stock_planning_filter')
-        id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
 
         return {
             'domain': "[('id','in', ["+','.join(map(str, planning_lines))+"])]",
             'view_type': 'form',
-            "view_mode": 'tree, form',
+            "view_mode": 'tree,form',
             'res_model': 'stock.planning',
             'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id'],
         }
 
 stock_planning_createlines()

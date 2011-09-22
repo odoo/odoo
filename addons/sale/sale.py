@@ -22,7 +22,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-
+import pooler
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
@@ -109,7 +109,7 @@ class sale_order(osv.osv):
         for item in cr.dictfetchall():
             if item['move_state'] == 'cancel':
                 continue
-           
+        
             if item['picking_type'] == 'in':#this is a returned picking
                 tmp[item['sale_order_id']]['total'] -= item['nbr'] or 0.0 # Deducting the return picking qty
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
@@ -118,13 +118,13 @@ class sale_order(osv.osv):
                 tmp[item['sale_order_id']]['total'] += item['nbr'] or 0.0
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
                     tmp[item['sale_order_id']]['picked'] += item['nbr'] or 0.0
-                
+
         for order in self.browse(cr, uid, ids, context=context):
             if order.shipped:
                 res[order.id] = 100.0
             else:
                 res[order.id] = tmp[order.id]['total'] and (100.0 * tmp[order.id]['picked'] / tmp[order.id]['total']) or 0.0
-        return res
+        return res        
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -205,9 +205,9 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
+            ], 'Order State', readonly=True, help="Givwizard = self.browse(cr, uid, ids)[0]es the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
-        'create_date': fields.date('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
@@ -219,16 +219,16 @@ class sale_order(osv.osv):
         'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
-            ('prepaid', 'Payment Before Delivery'),
-            ('manual', 'Shipping & Manual Invoice'),
-            ('postpaid', 'Invoice On Order After Delivery'),
-            ('picking', 'Invoice From The Picking'),
-        ], 'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
-                    help="""The Shipping Policy is used to synchronise invoice and delivery operations.
-  - The 'Pay Before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
-  - The 'Shipping & Manual Invoice' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
-  - The 'Invoice On Order After Delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
-  - The 'Invoice From The Picking' choice is used to create an invoice during the picking process."""),
+            ('prepaid', 'Pay before delivery'),
+            ('manual', 'Deliver & invoice on demand'),
+            ('picking', 'Invoice based on deliveries'),
+            ('postpaid', 'Invoice on order after delivery'),
+        ], 'Invoice Policy', required=True, readonly=True, states={'draft': [('readonly', False)]},
+                    help="""The Invoice Policy is used to synchronise invoice and delivery operations.
+  - The 'Pay before delivery' choice will first generate the invoice and then generate the picking order after the payment of this invoice.
+  - The 'Deliver & Invoice on demand' will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice based on the sale order or the sale order lines.
+  - The 'Invoice on order after delivery' choice will generate the draft invoice based on sales order after all picking lists have been finished.
+  - The 'Invoice based on deliveries' choice is used to create an invoice during the picking process."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="Pricelist for current sales order."),
         'project_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True, states={'draft': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
@@ -291,7 +291,8 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sales Order(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before ! To cancel a sale order, you must first cancel related picking or delivery orders.'))
+
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_shop_id(self, cr, uid, ids, shop_id):
@@ -320,6 +321,16 @@ class sale_order(osv.osv):
             message = _("The sales order '%s' has been set in draft state.") %(name,)
             self.log(cr, uid, id, message)
         return True
+
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+        print order_lines
+        if (not pricelist_id) or (not order_lines):
+            return {}
+        warning = {
+            'title': _('Pricelist Warning!'),
+            'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
+        }
+        return {'warning': warning}
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
@@ -666,7 +677,7 @@ class sale_order(osv.osv):
             picking_id = False
             for line in order.order_line:
                 proc_id = False
-                date_planned = datetime.now() + relativedelta(days=line.delay or 0.0)
+                date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
                 date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
 
                 if line.state == 'done':
@@ -728,6 +739,7 @@ class sale_order(osv.osv):
                         'move_id': move_id,
                         'property_ids': [(6, 0, [x.id for x in line.property_ids])],
                         'company_id': order.company_id.id,
+                        'sale_line_id': line.id,
                     })
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
@@ -794,7 +806,6 @@ class sale_order(osv.osv):
                 'document': '',
                 'partner_id': part,
                 'date': time.strftime('%Y-%m-%d'),
-                'canal_id': False,
                 'user_id': uid,
                 'partner_type': partnertype,
                 'probability': 1.0,
@@ -839,6 +850,14 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
+    def _get_uom_id(self, cr, uid, *args):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+    
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -853,7 +872,8 @@ class sale_order_line(osv.osv):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Sale Price')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
+            help="If 'on order', it triggers a procurement when the sale order is confirmed to create a task, purchase order or manufacturing order linked to this sale order line."),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner.address', 'Allotment Partner'),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16, 2), required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -878,6 +898,7 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
+        'product_uom' : _get_uom_id,
         'discount': 0.0,
         'delay': 0.0,
         'product_uom_qty': 1,
@@ -967,7 +988,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sales order line that has already been invoiced !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced!'))
             for move_line in line.move_ids:
                 if move_line.state != 'cancel':
                     raise osv.except_osv(
@@ -1015,7 +1036,7 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         context = context or {}
-        lang = lang or ('lang' in context and context['lang'])
+        lang = lang or context.get('lang',False)
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
@@ -1023,9 +1044,10 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
+        context = {'lang': lang, 'partner_id': partner_id}
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
-        context = {'lang': lang, 'partner_id': partner_id}
+        context_partner = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1078,7 +1100,7 @@ class sale_order_line(osv.osv):
             result.update({'type': product_obj.procure_method})
 
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context)[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
         domain = {}
         if (not uom) and (not uos):
             result['product_uom'] = product_obj.uom_id.id
@@ -1167,7 +1189,7 @@ class sale_order_line(osv.osv):
         """Allows to delete sales order lines in draft,cancel states"""
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel']:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is %s !') %(rec.state,))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a sales order line which is in state \'%s\'!') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
 sale_order_line()
@@ -1175,42 +1197,93 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
-
     _columns = {
         'name': fields.char('Name', size=64),
+        'sale_orders': fields.boolean('Based on Sales Orders',),
+        'deli_orders': fields.boolean('Based on Delivery Orders'),
+        'task_work': fields.boolean('Based on Tasks\' Work'),
+        'timesheet': fields.boolean('Based on Timesheet'),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Invoicing Method', required=True,
-           help="You can generate invoices based on sales orders or based on shippings."),
-        'step': fields.selection([
-            ('one', 'Delivery Order Only'),
-            ('two', 'Picking List & Delivery Order')
-        ], 'Steps To Deliver a Sales Order', required=True,
-           help="By default, OpenERP is able to manage complex routing and paths "\
-           "of products in your warehouse and partner locations. This will configure "\
-           "the most common and simple methods to deliver products to the customer "\
-           "in one or two operations by the worker.")
+        ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
+        'charge_delivery': fields.boolean('Do you charge the delivery'),
+        'time_unit': fields.many2one('product.uom','Main Working Time Unit')
     }
     _defaults = {
         'order_policy': 'manual',
-        'step': 'one'
     }
+
+    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+        res = {}
+        if sale or deli:
+            res.update({'order_policy': 'manual'})
+        elif not sale and not deli:
+            res.update({'order_policy': 'manual'})
+        else:
+            return {}
+        return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
-        ir_model_data_obj = self.pool.get('ir.model.data')
-        stock_location_obj = self.pool.get('stock.location')
-        location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-        location_id = location_id and location_id[1] or False
-        chaining_type = False
-        for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
-                chaining_type = 'transparent'
-            else:
-                chaining_type = 'manual'
-            stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': chaining_type})
+        data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
+        module_obj = self.pool.get('ir.module.module')
+        module_upgrade_obj = self.pool.get('base.module.upgrade')
+        module_name = []
+        group_ids=[]
+        group_name = ['group_sale_salesman','group_sale_manager']
+
+        for name in group_name:
+            data_id = data_obj.name_search(cr, uid, name)
+            group_ids.append(data_obj.browse(cr,uid,data_id[0][0]).res_id)
+
+        wizard = self.browse(cr, uid, ids)[0]
+
+        if wizard.sale_orders:
+            menu_name = 'menu_invoicing_sales_order_lines'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]}) 
+
+        if wizard.deli_orders:
+            menu_name = 'menu_action_picking_list_to_invoice'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]})
+
+        if wizard.task_work:
+            module_name.append('project_timesheet')
+            module_name.append('account_analytic_analysis')
+
+        if wizard.timesheet:
+            module_name.append('account_analytic_analysis')
+
+        if wizard.charge_delivery:
+            module_name.append('delivery')    
+
+        if wizard.time_unit:
+            product_obj = self.pool.get('product.product')
+            product_id = product_obj.name_search(cr, uid, 'Employee')
+            product_obj.write(cr, uid, product_id[0][0], {'uom_id':wizard.time_unit.id})
+
+        if len(module_name):
+            module_ids = []
+            need_install = False
+            module_ids = []
+            for module in module_name:
+                data_id = module_obj.name_search(cr,uid,module)
+                module_ids.append(data_id[0][0])
+
+            for module in module_obj.browse(cr, uid, module_ids):
+                if module.state == 'uninstalled':
+                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
+                    need_install = True
+                    cr.commit()
+            if need_install:
+                pooler.restart_pool(cr.dbname, update_module=True)[1]
+
+        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)  
 
 sale_config_picking_policy()
 
