@@ -2459,8 +2459,7 @@ class orm_memory(orm_template):
                 args = [('active', '=', 1)]
         if args:
             import expression
-            e = expression.expression(args)
-            e.parse(cr, user, self, context)
+            e = expression.expression(cr, user, args, self, context)
             res = e.exp
         return res or []
 
@@ -2490,6 +2489,9 @@ class orm_memory(orm_template):
                     break
                 f = True
                 for arg in result:
+                    if len(arg) != 3:
+                       # Amazing hack: orm_memory handles only simple domains.
+                       continue
                     if arg[1] == '=':
                         val = eval('data[arg[0]]'+'==' +' arg[2]', locals())
                     elif arg[1] in ['<', '>', 'in', 'not in', '<=', '>=', '<>']:
@@ -4418,8 +4420,7 @@ class orm(orm_template):
 
         if domain:
             import expression
-            e = expression.expression(domain)
-            e.parse(cr, user, self, context)
+            e = expression.expression(cr, user, domain, self, context)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = where_clause and [where_clause] or []

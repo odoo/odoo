@@ -123,4 +123,14 @@ def create_categories(cr, categories):
         categories = categories[1:]
     return p_id
 
+def has_unaccent(cr):
+    """ Test if the database has an unaccent function.
+
+    The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
+    module but any similar function will be picked by OpenERP.
+
+    """
+    cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
+    return len(cr.fetchall()) > 0
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
