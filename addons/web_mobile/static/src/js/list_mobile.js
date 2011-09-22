@@ -27,7 +27,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var self = this;
         var dataset = new openerp.web.DataSetStatic(this, this.action.res_model, this.action.context);
         dataset.name_search('', [], 'ilike',false ,function(result){
-            self.$element.html(QWeb.render(self.template, {'records' : result}));
+            self.$element.html(self.render({'records' : result}));
             self.$element.find("[data-role=header]").find('h1').html(self.action.name);
             self.$element.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);

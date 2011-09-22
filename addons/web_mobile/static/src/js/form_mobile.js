@@ -48,7 +48,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                         var notebooks = view_fields[j];
                     }
                 }
-                self.$element.html(QWeb.render(self.template, {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data ,'temp_flag':'1'}));
+                self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data ,'temp_flag':'1'}));
 
                     self.$element.find("[data-role=header]").find('h1').html(self.head_title);
                     self.$element.find("[data-role=header]").find('#home').click(function(){
@@ -104,9 +104,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             }
 
                             if(notebook){
-                                $(this).find('p').html(QWeb.render(self.template, {'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
+                                $(this).find('p').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
                             }else{
-                                $(this).find('p').html(QWeb.render(self.template, {'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
+                                $(this).find('p').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
                             }
                             $(this).find('p').find('#formbutton').click(function(){
                                 var head = $(this).prev().find('select').find("option:selected").text();
@@ -150,7 +150,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 }
                                 if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
                                     $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
-                                    $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(QWeb.render("ListView", {'records' : res}));
+                                    $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res}));
                                     $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
                                     $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
                                         $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -202,7 +202,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                         }
                                                     }
                                                 }
-                                                $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(QWeb.render(self.template, {'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
+                                                $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
 
                                                 $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('h1').html(head_title);
                                                 $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('#home').click(function(){
