@@ -133,6 +133,7 @@
                         <filter
                             icon="terp-check"
                             string="Draft"
+                            name="current"
                             domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','=','draft')]"
                             help="Draft Backlogs"/>
                         <separator orientation="vertical"/>
@@ -178,7 +179,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">project.scrum.product.backlog</field>
             <field name="view_type">form</field>
-            <field name="context">{'search_default_user_id':uid,'search_default_project_id':project_id}</field>
+            <field name="context">{'search_default_current':1, 'search_default_user_id':uid,'search_default_project_id':project_id}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
             <field name="help">The scrum agile methodology is used in software development projects. The Product Backlog is the list of features to be implemented. A product backlog can be planified in a development sprint and may be split into several tasks. The product backlog is managed by the product owner of the project.</field>
         </record>
@@ -319,7 +320,7 @@
             <field name="arch" type="xml">
                 <search string="Sprints">
                     <group>
-                        <filter name="terp-check" icon="terp-check" string="New" domain="[('state','=','draft')]" help="New Sprints"/>
+                        <filter name="terp-check" icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Sprints"/>
                         <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Sprints"/>
                         <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Sprints"/>
                         <separator orientation="vertical"/>
@@ -349,7 +350,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
-            <field name="context">{"search_default_filter_current": 1}</field>
+            <field name="context">{"search_default_current": 1}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
             <field name="help">The scrum agile methodology is used in software development projects. In this methodology, a sprint is a short period of time (e.g. one month) during which the team implements a list of product backlogs. The sprint review is organized when the team presents its work to the customer and product owner.</field>
         </record>
