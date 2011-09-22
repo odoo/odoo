@@ -16,7 +16,6 @@
     name: Salary Structure for Software Developer
     code: SD
     company_id: base.main_company
-    parent_id: structure_base
     rule_ids:
       - hr_salary_rule_houserentallowance1
       - hr_salary_rule_convanceallowance1
@@ -92,3 +91,45 @@
     from tools.translate import _
     payslip_brw=self.browse(cr, uid, ref("hr_payslip_0"))
     assert(payslip_brw.state == 'done'), _('State not changed!')
+-
+  I want to check refund payslip so I click on refund button.
+-
+  !python {model: hr.payslip}: |
+    self.refund_sheet(cr, uid, [ref("hr_payslip_0")], None)
+-
+  I check on new payslip Credit Note is checked or not.
+-
+  !python {model: hr.payslip}: |
+    payslip_obj = self.browse(cr, uid, ref("hr_payslip_0"), None)
+    payslip_ids = self.search(cr, uid, [('name','like','Refund: '+payslip_obj.name),('credit_note','=',True)], None)
+    assert payslip_ids, "Payslip not refunded!"
+-
+  I want to generate a payslip from Payslip run.
+-
+  !record {model: hr.payslip.run, id: hr_payslip_run_PayslipforEmployee0}:
+    date_end: '2011-09-30'
+    date_start: '2011-09-01'
+    name: Payslip for Employee
+-
+  I create record for generating the payslip for this Payslip run.
+-
+  !record {model: hr.payslip.employees, id: hr_payslip_employees0}:
+    employee_ids:
+      - hr_employee_richard0
+-
+  I generate the payslip by clicking on Generat button wizard.
+-
+  !python {model: hr.payslip.employees}: |
+     self.compute_sheet(cr, uid, [ref('hr_payslip_employees0')], context={'active_id': ref('hr_payslip_run_PayslipforEmployee0')})
+-
+  I open Contribution Register and from there I print the Payslip Lines report.
+-
+  !record {model: payslip.lines.contribution.register, id: payslip_lines_contribution_register0}:
+    date_from: '2011-09-30'
+    date_to: '2011-09-01'
+-
+  I print the report.
+-
+  !python {model: payslip.lines.contribution.register}: |
+    self.print_report(cr, uid, [ref('payslip_lines_contribution_register0')], context={'active_ids': [ref('hr_houserent_register')]})
+
