@@ -491,9 +491,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             }
             var group_aggregates = '';
             _.each(self.aggregates, function(value, key) {
-                if (group.aggregates[key]) {
-                    group_aggregates += value + ": " + group.aggregates[key];
-                }
+                group_aggregates += value + ": " + group.aggregates[key];
             });
             self.dataset.read_slice([], {}, function(records) {
                 self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids, 'aggregates': group_aggregates});
