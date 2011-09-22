@@ -1424,7 +1424,7 @@
         <tr>
             <td width="100%" colspan="4">
                 <fieldset>
-                    <legend style="cursor:pointer;">CSV Options</legend>
+                    <legend style="cursor:pointer;">Import Options</legend>
                     <table style="display:none">
                         <tr>
                             <td colspan="4">
@@ -1435,20 +1435,21 @@
                             </td>
                         </tr>
                         <tr>
-                            <td><label>Separator:</label></td>
+                            <td><label for="csv_separator">Separator:</label></td>
                             <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
-                            <td><label>Delimiter:</label></td>
+                            <td><label for="csv_delimiter">Delimiter:</label></td>
                             <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
                         </tr>
                         <tr>
-                            <td><label>Encoding:</label></td>
+                            <td><label for="csv_encoding">Encoding:</label></td>
                             <td>
                                 <select name="csvcode" id="csv_encoding">
                                     <option value="utf-8">UTF-8</option>
                                     <option value="latin1">Latin 1</option>
                                 </select>
                             </td>
-                            <td><label>Lines to skip:</label></td>
+                            <td><label for="csv_skip" title="For use if CSV files have titles on multiple lines, skips more than a single line during import">
+                                Lines to skip<sup>?</sup>:</label></td>
                             <td><input type="text" name="csvskip" id="csv_skip" value="0"/></td>
                         </tr>
                     </table>
