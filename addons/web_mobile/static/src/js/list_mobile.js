@@ -59,12 +59,12 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         id = $record.data('id');
         head_title = $.trim($record.text());
 
-        if(!$('[id^="oe_form_'+id+'"]').html()){
-            $('<div id="oe_form_'+id+'" data-role="page" data-url="oe_form_'+id+'"> </div>').appendTo('#moe');
-            this.formview = new openerp.web_mobile.FormView(this, "oe_form_"+id, id, this.action, head_title);
+        if(!$('[id^="oe_form_'+id+this.action.res_model+'"]').html()){
+            $('<div id="oe_form_'+id+this.action.res_model+'" data-role="page" data-url="oe_form_'+id+this.action.res_model+'"> </div>').appendTo('#moe');
+            this.formview = new openerp.web_mobile.FormView(this, "oe_form_"+id+this.action.res_model, id, this.action, head_title, '' ,'');
             this.formview.start();
         }else{
-            $.mobile.changePage('#oe_form_'+id, "slide", true, true);
+            $.mobile.changePage('#oe_form_'+id+this.action.res_model, "slide", true, true);
         }
     }
  });

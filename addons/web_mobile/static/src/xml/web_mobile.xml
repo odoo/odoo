@@ -232,7 +232,7 @@
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
-                        <select id="" data-native-menu="false">
+                        <select id="" data-native-menu="false" t-att-for="fields[field.attrs.name].relation">
                             <t t-if="fields[field.attrs.name].selection">
                                 <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
                                     <t t-if="values[field.attrs.name]==opt[0]">
@@ -244,6 +244,9 @@
                                 </t>
                             </t>
                         </select>
+                        <t t-if="fields[field.attrs.name].selection">
+                            <a id="formbutton" href="#" title="Form View"><img src="/web/static/src/img/icons/gtk-index.png" /></a>
+                        </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'one2many'">
                         <ul data-role="listview" data-inset="true" data-theme="d">
@@ -281,7 +284,7 @@
         </form>
     </div>
     <t t-if="temp_flag">
-    <t t-call="Footer" />
+        <t t-call="Footer" />
     </t>
 </t>
 </templates>
