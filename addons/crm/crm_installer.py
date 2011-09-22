@@ -50,6 +50,7 @@ class crm_installer(osv.osv_memory):
             nodes = doc.xpath("//field[@name='sale_crm']")
             for node in nodes:
                 node.set('invisible', '0')
+                node.set('modifiers', '{}')
             res['arch'] = etree.tostring(doc)
         return res
 
