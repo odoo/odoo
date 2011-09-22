@@ -43,7 +43,6 @@ Caldav features in Meeting.
 
     'update_xml': ['crm_caldav_view.xml'],
     'demo_xml': [],
-    'test':['test/test_crm_caldav.yml' ],
     'installable': True,
     'active': False,
     'certificate' : '001088048737252670109',
