@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
        <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
          <field name="name">hr.timesheet.sheet.graph</field>
          <field name="model">hr_timesheet_sheet.sheet</field>
@@ -228,6 +228,19 @@
                 </field>
             </field>
         </record>
+
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.search</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="sheet_id" select="1"/>
+                </field>
+            </field>
+        </record>
+
         <!--
             hr.attendance inheritancy
         -->
@@ -279,14 +292,21 @@
         </record>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id], 'default_sheet_id': active_id}"
-        id="act_hr_timesheet_sheet_sheet_by_day"
+        context="{'search_default_sheet_id': [active_id]}"
+        id="act_hr_timesheet_sheet_sheet_by_account"
         name="Timesheet by Account"
         res_model="hr_timesheet_sheet.sheet.account"
         src_model="hr_timesheet_sheet.sheet"/>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id], 'default_sheet_id': active_id}"
+        context="{'search_default_sheet_id': [active_id]}"
+        id="act_hr_timesheet_sheet_sheet_by_day"
+        name="Timesheet by Day"
+        res_model="hr_timesheet_sheet.sheet.day"
+        src_model="hr_timesheet_sheet.sheet"/>
+
+        <act_window
+        context="{'search_default_sheet_id': [active_id]}"
         id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet"
         name="Timesheet Lines"
         res_model="hr.analytic.timesheet"
@@ -294,7 +314,7 @@
 
 
         <act_window
-        context="{'search_default_sheet_id': [active_id], 'default_sheet_id': active_id}"
+        context="{'search_default_sheet_id': [active_id]}"
         id="act_hr_timesheet_sheet_sheet_2_hr_attendance"
         name="Attendances"
         res_model="hr.attendance"
@@ -329,6 +349,21 @@
                 </graph>
             </field>
         </record>
+
+        <record id="hr_timesheet_day_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.day.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.day</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:total_difference&lt;0.1;red:total_difference&gt;=0.1" string="Period">
+                    <field name="name"/>
+                    <field name="total_attendance" widget="float_time" sum="Total Attendances"/>
+                    <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference"/>
+                </tree>
+            </field>
+        </record>
+
   <!-- Timesheet Button on Employee Form -->
   <act_window
            context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"

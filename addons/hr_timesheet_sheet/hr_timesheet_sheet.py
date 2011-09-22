@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv
@@ -35,16 +35,9 @@ class one2many_mod2(fields.one2many):
         if values is None:
             values = {}
 
-        # dict:
-        # {idn: (date_current, user_id), ...
-        #  1: ('2010-08-15', 1)}
-        res6 = dict([(rec['id'], (rec['date_current'], rec['user_id'][0]))
-                        for rec
-                            in obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)])
+        res6 = dict([(rec['id'], rec['date_current'])
+            for rec in obj.read(cr, user, ids, ['date_current'], context=context)])
 
-        # eg: ['|', '|',
-        #       '&', '&', ('name', '>=', '2011-03-01'), ('name', '<=', '2011-03-01'), ('employee_id.user_id', '=', 1),
-        #       '&', '&', ('name', '>=', '2011-02-01'), ('name', '<=', '2011-02-01'), ('employee_id.user_id', '=', 1)]
         dom = []
         for c, id in enumerate(ids):
             if id in res6:
@@ -52,9 +45,9 @@ class one2many_mod2(fields.one2many):
                     dom.insert(0 ,'|')
                 dom.append('&')
                 dom.append('&')
-                dom.append(('name', '>=', res6[id][0]))
-                dom.append(('name', '<=', res6[id][0]))
-                dom.append(('employee_id.user_id', '=', res6[id][1]))
+                dom.append(('name', '>=', res6[id]))
+                dom.append(('name', '<=', res6[id]))
+                dom.append(('sheet_id', '=', id))
 
         ids2 = obj.pool.get(self._obj).search(cr, user, dom, limit=self._limit)
 
@@ -62,10 +55,9 @@ class one2many_mod2(fields.one2many):
         for i in ids:
             res[i] = []
 
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
+        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_read'):
             if r[self._fields_id]:
                 res[r[self._fields_id][0]].append(r['id'])
-
         return res
 
     def set(self, cr, obj, id, field, values, user=None, context=None):
@@ -85,28 +77,28 @@ class one2many_mod(fields.one2many):
         if values is None:
             values = {}
 
-
-        res5 = obj.read(cr, user, ids, ['date_current', 'user_id'], context=context)
+        res5 = obj.read(cr, user, ids, ['date_current'], context=context)
         res6 = {}
         for r in res5:
-            res6[r['id']] = (r['date_current'], r['user_id'][0])
+            res6[r['id']] = r['date_current']
 
         ids2 = []
         for id in ids:
             dom = []
             if id in res6:
-                dom = [('date', '=', res6[id][0]), ('user_id', '=', res6[id][1])]
+                dom = [('date', '=', res6[id]), ('sheet_id', '=', id)]
             ids2.extend(obj.pool.get(self._obj).search(cr, user,
                 dom, limit=self._limit))
         res = {}
         for i in ids:
             res[i] = []
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
-                [self._fields_id], context=context, load='_classic_write'):
+                [self._fields_id], context=context, load='_classic_read'):
             if r[self._fields_id]:
                 res[r[self._fields_id][0]].append(r['id'])
 
         return res
+
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
@@ -114,33 +106,132 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
     _description="Timesheet"
 
-    def _total_day(self, cr, uid, ids, name, args, context=None):
+    def _total_attendances(self, cr, uid, ids, name, args, context=None):
+        """
+         Get the total attendance for the timesheets
+         Returns a dict like :
+         {id: {'date_current': '2011-06-17',
+               'totals_per_day': {
+                    day: timedelta,
+                    day: timedelta}
+               }
+         }
+        """
+        context = context or {}
+        attendance_obj = self.pool.get('hr.attendance')
         res = {}
-        cr.execute('SELECT sheet.id, day.total_attendance, day.total_timesheet, day.total_difference\
-                FROM hr_timesheet_sheet_sheet AS sheet \
-                LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
-                    ON (sheet.id = day.sheet_id \
-                        AND day.name = sheet.date_current) \
-                WHERE sheet.id IN %s',(tuple(ids),))
-        for record in cr.fetchall():
-            res[record[0]] = {}
-            res[record[0]]['total_attendance_day'] = record[1]
-            res[record[0]]['total_timesheet_day'] = record[2]
-            res[record[0]]['total_difference_day'] = record[3]
+        for sheet_id in ids:
+            sheet = self.browse(cr, uid, sheet_id, context)
+            date_current = sheet.date_current
+            # field attendances_ids of hr_timesheet_sheet.sheet only
+            # returns attendances of timesheet's current date
+            attendance_ids = attendance_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
+            attendances = attendance_obj.browse(cr, uid, attendance_ids, context=context)
+            total_attendance = {}
+            for attendance in [att for att in attendances
+                               if att.action in ('sign_in', 'sign_out')]:
+                day = attendance.name[:10]
+                if not total_attendance.get(day, False):
+                    total_attendance[day] = timedelta(seconds=0)
+
+                attendance_in_time = datetime.strptime(attendance.name, '%Y-%m-%d %H:%M:%S')
+                attendance_interval = timedelta(hours=attendance_in_time.hour,
+                                                minutes=attendance_in_time.minute,
+                                                seconds=attendance_in_time.second)
+                if attendance.action == 'sign_in':
+                    total_attendance[day] -= attendance_interval
+                else:
+                    total_attendance[day] += attendance_interval
+
+                # if the delta is negative, it means that a sign out is missing
+                # in a such case, we want to have the time to the end of the day
+                # for a past date, and the time to now for the current date
+                if total_attendance[day] < timedelta(0):
+                    if day == date_current:
+                        now = datetime.now()
+                        total_attendance[day] += timedelta(hours=now.hour,
+                                                           minutes=now.minute,
+                                                           seconds=now.second)
+                    else:
+                        total_attendance[day] += timedelta(days=1)
+
+            res[sheet_id] = {'date_current': date_current,
+                             'totals_per_day': total_attendance}
+        return res
+
+    def _total_timesheet(self, cr, uid, ids, name, args, context=None):
+        """
+         Get the total of analytic lines for the timesheets
+         Returns a dict like :
+         {id: {day: timedelta,
+               day: timedelta,}}
+        """
+        context = context or {}
+        sheet_line_obj = self.pool.get('hr.analytic.timesheet')
+
+        res = {}
+        for sheet_id in ids:
+            # field timesheet_ids of hr_timesheet_sheet.sheet only
+            # returns lines of timesheet's current date
+            sheet_lines_ids = sheet_line_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
+            sheet_lines = sheet_line_obj.browse(cr, uid, sheet_lines_ids, context=context)
+            total_timesheet = {}
+            for line in sheet_lines:
+                day = line.date
+                if not total_timesheet.get(day, False):
+                    total_timesheet[day] = timedelta(seconds=0)
+                total_timesheet[day] += timedelta(hours=line.unit_amount)
+            res[sheet_id] = total_timesheet
         return res
 
     def _total(self, cr, uid, ids, name, args, context=None):
+        """
+         Compute the attendances, analytic lines timesheets and differences between them
+         for all the days of a timesheet and the current day
+        """
+        def sum_all_days(sheet_amounts):
+            if not sheet_amounts:
+                return timedelta(seconds=0)
+            total = reduce(lambda memo, value: memo + value, sheet_amounts.values())
+            return total
+
+        def timedelta_to_hours(delta):
+            hours = 0.0
+            seconds = float(delta.seconds)
+            if delta.microseconds:
+                seconds += float(delta.microseconds) / 100000
+            hours += delta.days * 24
+            if seconds:
+                hours += seconds / 3600
+            return hours
+
         res = {}
-        cr.execute('SELECT s.id, COALESCE(SUM(d.total_attendance),0), COALESCE(SUM(d.total_timesheet),0), COALESCE(SUM(d.total_difference),0) \
-                FROM hr_timesheet_sheet_sheet s \
-                    LEFT JOIN hr_timesheet_sheet_sheet_day d \
-                        ON (s.id = d.sheet_id) \
-                WHERE s.id IN %s GROUP BY s.id',(tuple(ids),))
-        for record in cr.fetchall():
-            res[record[0]] = {}
-            res[record[0]]['total_attendance'] = record[1]
-            res[record[0]]['total_timesheet'] = record[2]
-            res[record[0]]['total_difference'] = record[3]
+        all_timesheet_attendances = self._total_attendances(cr, uid, ids, name, args, context)
+        all_timesheet_lines = self._total_timesheet(cr, uid, ids, name, args, context)
+        for id in ids:
+            res[id] = {}
+
+            all_attendances_sheet = all_timesheet_attendances[id]
+
+            date_current = all_attendances_sheet['date_current']
+            total_attendances_sheet = all_attendances_sheet['totals_per_day']
+            total_attendances_all_days = sum_all_days(total_attendances_sheet)
+            total_attendances_day = total_attendances_sheet.get(date_current, timedelta(seconds=0))
+
+            total_timesheets_sheet = all_timesheet_lines[id]
+            total_timesheets_all_days = sum_all_days(total_timesheets_sheet)
+            total_timesheets_day = total_timesheets_sheet.get(date_current, timedelta(seconds=0))
+
+            total_difference_all_days = total_attendances_all_days - total_timesheets_all_days
+            total_difference_day = total_attendances_day - total_timesheets_day
+
+            res[id]['total_attendance'] = timedelta_to_hours(total_attendances_all_days)
+            res[id]['total_timesheet'] = timedelta_to_hours(total_timesheets_all_days)
+            res[id]['total_difference'] = timedelta_to_hours(total_difference_all_days)
+
+            res[id]['total_attendance_day'] = timedelta_to_hours(total_attendances_day)
+            res[id]['total_timesheet_day'] = timedelta_to_hours(total_timesheets_day)
+            res[id]['total_difference_day'] = timedelta_to_hours(total_difference_day)
         return res
 
     def _state_attendance(self, cr, uid, ids, name, args, context=None):
@@ -172,6 +263,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def copy(self, cr, uid, ids, *args, **argv):
         raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet!'))
+
 
     def create(self, cr, uid, vals, *args, **argv):
         if 'employee_id' in vals:
@@ -287,12 +379,12 @@ class hr_timesheet_sheet(osv.osv):
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.function(_state_attendance, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
-        'total_attendance_day': fields.function(_total_day, string='Total Attendance', multi="_total_day"),
-        'total_timesheet_day': fields.function(_total_day, string='Total Timesheet', multi="_total_day"),
-        'total_difference_day': fields.function(_total_day, string='Difference', multi="_total_day"),
-        'total_attendance': fields.function(_total, string='Total Attendance', multi="_total_sheet"),
-        'total_timesheet': fields.function(_total, string='Total Timesheet', multi="_total_sheet"),
-        'total_difference': fields.function(_total, string='Difference', multi="_total_sheet"),
+        'total_attendance_day': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
+        'total_timesheet_day': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
+        'total_difference_day': fields.function(_total, method=True, string='Difference', multi="_total"),
+        'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
+        'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
+        'total_difference': fields.function(_total, method=True, string='Difference', multi="_total"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -397,85 +489,47 @@ class hr_timesheet_line(osv.osv):
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        cursor.execute('SELECT l.id, COALESCE(MAX(s.id), 0) \
-                FROM hr_timesheet_sheet_sheet s \
-                    LEFT JOIN (hr_analytic_timesheet l \
-                        LEFT JOIN account_analytic_line al \
-                            ON (l.line_id = al.id)) \
-                        ON (s.date_to >= al.date \
-                            AND s.date_from <= al.date \
-                            AND s.user_id = al.user_id) \
-                WHERE l.id IN %s GROUP BY l.id',(tuple(ids),))
-        res = dict(cursor.fetchall())
-        sheet_names = {}
-        for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
-                context=context):
-            sheet_names[sheet_id] = name
-
-        for line_id in {}.fromkeys(ids):
-            sheet_id = res.get(line_id, False)
-            if sheet_id:
-                res[line_id] = (sheet_id, sheet_names[sheet_id])
-            else:
-                res[line_id] = False
+        res = {}.fromkeys(ids, False)
+        for ts_line in self.browse(cursor, user, ids, context=context):
+            sheet_ids = sheet_obj.search(cursor, user,
+            [('date_to', '>=', ts_line.date),
+            ('date_from', '<=', ts_line.date),
+            ('employee_id.user_id', '=', ts_line.user_id.id)], context=context)
+            if sheet_ids:
+            # [0] because only one sheet possible for an employee between 2 dates
+                res[ts_line.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args, context=None):
-        if not len(args):
-            return []
-        sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+    def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
+        ts_line_ids = []
+        for ts in self.browse(cr, uid, ids, context=context):
+            cr.execute("""
+                    SELECT l.id
+                        FROM hr_analytic_timesheet l
+                    INNER JOIN account_analytic_line al
+                        ON (l.line_id = al.id)
+                    WHERE %(date_to)s >= al.date
+                        AND %(date_from)s <= al.date
+                        AND %(user_id)s = al.user_id
+                    GROUP BY l.id""", {'date_from': ts.date_from,
+                                        'date_to': ts.date_to,
+                                        'user_id': ts.employee_id.user_id.id,})
+            ts_line_ids.extend([row[0] for row in cr.fetchall()])
+        return ts_line_ids
 
-        i = 0
-        while i < len(args):
-            fargs = args[i][0].split('.', 1)
-            if len(fargs) > 1:
-                args[i] = (fargs[0], 'in', sheet_obj.search(cursor, user,
-                    [(fargs[1], args[i][1], args[i][2])], context=context))
-                i += 1
-                continue
-            if isinstance(args[i][2], basestring):
-                res_ids = sheet_obj.name_search(cursor, user, args[i][2], [],
-                        args[i][1])
-                args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
-            i += 1
-        qu1, qu2 = [], []
-        for x in args:
-            if x[1] != 'in':
-                if (x[2] is False) and (x[1] == '='):
-                    qu1.append('(s.id IS NULL)')
-                elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
-                    qu1.append('(s.id IS NOT NULL)')
-                else:
-                    qu1.append('(s.id %s %s)' % (x[1], '%s'))
-                    qu2.append(x[2])
-            elif x[1] == 'in':
-                if len(x[2]) > 0:
-                    qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
-                    qu2 += x[2]
-                else:
-                    qu1.append('(False)')
-        if len(qu1):
-            qu1 = ' WHERE ' + ' AND '.join(qu1)
-        else:
-            qu1 = ''
-        cursor.execute('SELECT l.id \
-                FROM hr_timesheet_sheet_sheet s \
-                    LEFT JOIN (hr_analytic_timesheet l \
-                        LEFT JOIN account_analytic_line al \
-                            ON (l.line_id = al.id)) \
-                        ON (s.date_to >= al.date \
-                            AND s.date_from <= al.date \
-                            AND s.user_id = al.user_id)' + \
-                qu1, qu2)
-        res = cursor.fetchall()
-        if not len(res):
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
+    def _get_account_analytic_line(self, cr, uid, ids, context=None):
+        ts_line_ids = self.pool.get('hr.analytic.timesheet').search(cr, uid, [('line_id', 'in', ids)])
+        return ts_line_ids
 
     _columns = {
         'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
-            fnct_search=_sheet_search),
+            store={
+                    'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
+                    'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),
+                    'hr.analytic.timesheet': (lambda self,cr,uid,ids,c={}: ids, ['line_id'], 10),
+                  },
+            ),
     }
     _defaults = {
         'date': _get_default_date,
@@ -517,90 +571,47 @@ class hr_attendance(osv.osv):
             return context['name'] + time.strftime(' %H:%M:%S')
         return time.strftime('%Y-%m-%d %H:%M:%S')
 
+    def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
+        attendance_ids = []
+        for ts in self.browse(cr, uid, ids, context=context):
+            cr.execute("""
+                        SELECT a.id
+                          FROM hr_attendance a
+                         INNER JOIN hr_employee e
+                               INNER JOIN resource_resource r
+                                       ON (e.resource_id = r.id)
+                            ON (a.employee_id = e.id)
+                        WHERE %(date_to)s >= date_trunc('day', a.name)
+                              AND %(date_from)s <= a.name
+                              AND %(user_id)s = r.user_id
+                         GROUP BY a.id""", {'date_from': ts.date_from,
+                                            'date_to': ts.date_to,
+                                            'user_id': ts.employee_id.user_id.id,})
+            attendance_ids.extend([row[0] for row in cr.fetchall()])
+        return attendance_ids
+
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        cursor.execute("SELECT a.id, COALESCE(MAX(s.id), 0) \
-                FROM hr_timesheet_sheet_sheet s \
-                    LEFT JOIN (hr_attendance a \
-                        LEFT JOIN hr_employee e \
-                            LEFT JOIN resource_resource r \
-                                ON (e.resource_id = r.id) \
-                            ON (a.employee_id = e.id)) \
-                        ON (s.date_to >= date_trunc('day',a.name) \
-                            AND s.date_from <= a.name \
-                            AND s.user_id = r.user_id) \
-                WHERE a.id IN %s GROUP BY a.id",(tuple(ids),))
-        res = dict(cursor.fetchall())
-        sheet_names = {}
-        for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
-                context=context):
-            sheet_names[sheet_id] = name
-        for line_id in {}.fromkeys(ids):
-            sheet_id = res.get(line_id, False)
-            if sheet_id:
-                res[line_id] = (sheet_id, sheet_names[sheet_id])
-            else:
-                res[line_id] = False
+        res = {}.fromkeys(ids, False)
+        for attendance in self.browse(cursor, user, ids, context=context):
+            date_to = datetime.strftime(datetime.strptime(attendance.name[0:10], '%Y-%m-%d'), '%Y-%m-%d %H:%M:%S')
+            sheet_ids = sheet_obj.search(cursor, user,
+                [('date_to', '>=', date_to),
+                 ('date_from', '<=', attendance.name),
+                 ('employee_id', '=', attendance.employee_id.id)], context=context)
+            if sheet_ids:
+                # [0] because only one sheet possible for an employee between 2 dates
+                res[attendance.id] = sheet_obj.name_get(cursor, user, sheet_ids, context=context)[0]
         return res
-
-    def _sheet_search(self, cursor, user, obj, name, args, context=None):
-        if not len(args):
-            return []
-
-        sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
-        i = 0
-        while i < len(args):
-            fargs = args[i][0].split('.', 1)
-            if len(fargs) > 1:
-                args[i] = (fargs[0], 'in', sheet_obj.search(cursor, user,
-                    [(fargs[1], args[i][1], args[i][2])], context=context))
-                i += 1
-                continue
-            if isinstance(args[i][2], basestring):
-                res_ids = sheet_obj.name_search(cursor, user, args[i][2], [],
-                        args[i][1])
-                args[i] = (args[i][0], 'in', [x[0] for x in res_ids])
-            i += 1
-        qu1, qu2 = [], []
-        for x in args:
-            if x[1] != 'in':
-                if (x[2] is False) and (x[1] == '='):
-                    qu1.append('(s.id IS NULL)')
-                elif (x[2] is False) and (x[1] == '<>' or x[1] == '!='):
-                    qu1.append('(s.id IS NOT NULL)')
-                else:
-                    qu1.append('(s.id %s %s)' % (x[1], '%s'))
-                    qu2.append(x[2])
-            elif x[1] == 'in':
-                if len(x[2]) > 0:
-                    qu1.append('(s.id in (%s))' % (','.join(['%d'] * len(x[2]))))
-                    qu2 += x[2]
-                else:
-                    qu1.append('(False)')
-        if len(qu1):
-            qu1 = ' WHERE ' + ' AND '.join(qu1)
-        else:
-            qu1 = ''
-        cursor.execute('SELECT a.id\
-                FROM hr_timesheet_sheet_sheet s \
-                    LEFT JOIN (hr_attendance a \
-                        LEFT JOIN hr_employee e \
-                            ON (a.employee_id = e.id)) \
-                                LEFT JOIN resource_resource r \
-                                    ON (e.resource_id = r.id) \
-                        ON (s.date_to >= date_trunc(\'day\',a.name) \
-                            AND s.date_from <= a.name \
-                            AND s.user_id = r.user_id) ' + \
-                qu1, qu2)
-        res = cursor.fetchall()
-        if not len(res):
-            return [('id', '=', '0')]
-        return [('id', 'in', [x[0] for x in res])]
 
     _columns = {
         'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
-            fnct_search=_sheet_search),
+            store={
+                      'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
+                      'hr.attendance': (lambda self,cr,uid,ids,c={}: ids, ['employee_id', 'name', 'day'], 10),
+                  },
+            )
     }
     _defaults = {
         'name': _get_default_date,
