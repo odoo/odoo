@@ -212,6 +212,19 @@ def last_day_of_current_month():
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
+def fix_import_export_id_paths(fieldname):
+    """
+    Fixes the id fields in import and exports, and splits field paths
+    on '/'.
+
+    :param str fieldname: name of the field to import/export
+    :return: split field name
+    :rtype: list of str
+    """
+    fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
+    fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
+    return fixed_external_id.split('/')
+
 class except_orm(Exception):
     def __init__(self, name, value):
         self.name = name
@@ -1006,11 +1019,7 @@ class orm_template(object):
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        def fsplit(fieldname):
-            fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
-            fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
-            return fixed_external_id.split('/')
-        fields_to_export = map(fsplit, fields_to_export)
+        fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         datas = []
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
@@ -1046,10 +1055,7 @@ class orm_template(object):
         """
         if not context:
             context = {}
-        def _replace_field(x):
-            x = re.sub('([a-z0-9A-Z_])\\.id$', '\\1/.id', x)
-            return x.replace(':id','/id').split('/')
-        fields = map(_replace_field, fields)
+        fields = map(fix_import_export_id_paths, fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
 
