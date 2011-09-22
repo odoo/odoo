@@ -1424,15 +1424,12 @@ class Import(View):
 
         _fields = {}
         _fields_invert = {}
-        req_field = []
         error = None
         fields = req.session.model(model).fields_get(False, req.session.eval_context(req.context))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
-        for field in fields:
-            value = fields[field]
-            if value.get('required'):
-                req_field.append(field)
+        required_fields = [field_name for field_name, field in fields.iteritems()
+                           if field.get('required')]
 
         def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
             def str_comp(x,y):
@@ -1506,7 +1503,9 @@ class Import(View):
                 jsonp, simplejson.dumps({'error':error}))
 
         return '<script>window.top.%s(%s);</script>' % (
-            jsonp, simplejson.dumps({'records':records[1:],'header':header_fields,'all_fields':all_fields,'req_field':req_field}))
+            jsonp, simplejson.dumps({
+                'records':records[1:],'header':header_fields,
+                'all_fields':all_fields,'required_fields':required_fields}))
 
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,

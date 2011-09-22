@@ -97,14 +97,13 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             $(this).autocomplete('search');
         });
 
-        this.do_check_req_field(results['req_field']);
-        this.on_change_check(results['req_field']);
+        this.on_change_check(results['required_fields']);
         var self = this;
         this.$element.find("td #sel_field").change(function() {
-            self.on_change_check(results['req_field']);
+            self.on_change_check(results['required_fields']);
         });
     },
-    on_change_check: function (req_field){
+    on_change_check: function (required_fields){
         var self = this;
         self.$element.find("#message, #msg").remove();
         var selected_flds = self.$element.find("td #sel_field option:selected");
@@ -129,7 +128,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             self.$element.find("#msg").remove();
             this.toggle_import_button(true);
         }
-        self.do_check_req_field(req_field);
+        self.do_check_req_field(required_fields);
     },
     do_check_req_field: function(req_fld) {
         if (!req_fld.length) { return; }
