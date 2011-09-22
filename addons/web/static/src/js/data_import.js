@@ -140,27 +140,24 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
             this.toggle_import_button(false);
         } else {
-            this.$element.find("#msg").remove();
             this.toggle_import_button(true);
         }
 
         this.do_check_required(required_fields);
     },
-    do_check_required: function(req_fld) {
-        if (!req_fld.length) { return; }
+    do_check_required: function(required_fields) {
+        if (!required_fields.length) { return; }
 
-        this.$element.find("#message").remove();
-        var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld) {
-            return fld['text']
-        });
-        var required_fields = _.filter(req_fld, function(fld) {
-            return !_.contains(sel_fields, fld)
-        });
-        if (required_fields.length) {
-            this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + required_fields + '.</div>');
+        var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
+            .pluck('value')
+            .compact()
+            .value();
+
+        var missing_fields = _.difference(required_fields, selected_fields);
+        if (missing_fields.length) {
+            this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + missing_fields + '.</div>');
             this.toggle_import_button(false);
         } else {
-            this.$element.find("#message").remove();
             this.toggle_import_button(true);
         }
     },
