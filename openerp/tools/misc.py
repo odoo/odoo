@@ -45,6 +45,7 @@ from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
+from email import Utils
 from email import Encoders
 from itertools import islice, izip
 from lxml import etree
@@ -59,6 +60,7 @@ except ImportError:
     html2text = None
 
 import openerp.loglevels as loglevels
+import openerp.pooler as pooler
 from config import config
 from cache import *
 
@@ -280,15 +282,7 @@ email_re = re.compile(r"""
     """, re.VERBOSE)
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
-
-priorities = {
-        '1': '1 (Highest)',
-        '2': '2 (High)',
-        '3': '3 (Normal)',
-        '4': '4 (Low)',
-        '5': '5 (Lowest)',
-    }
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+).*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -354,150 +348,51 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def generate_tracking_message_id(openobject_id):
+def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
     
        Used to track the replies related to a given object thanks to the "In-Reply-To"
        or "References" fields that Mail User Agents will set.
     """
-    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
-
-def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
-    """ Low-level method to send directly a Message through the configured smtp server.
-    
-        :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
-        :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
-        :param message: an email.message.Message to send
-        :param debug: True if messages should be output to stderr before being sent,
-                      and smtplib.SMTP put into debug mode.
-        :return: True if the mail was delivered successfully to the smtp,
-                 else False (+ exception logged)
-    """
-    class WriteToLogger(object):
-        def __init__(self):
-            self.logger = loglevels.Logger()
-
-        def write(self, s):
-            self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
-
-    if openobject_id:
-        message['Message-Id'] = generate_tracking_message_id(openobject_id)
-
-    try:
-        smtp_server = config['smtp_server']
-
-        if smtp_server.startswith('maildir:/'):
-            from mailbox import Maildir
-            maildir_path = smtp_server[8:]
-            mdir = Maildir(maildir_path,factory=None, create = True)
-            mdir.add(message.as_string(True))
-            return True
-
-        oldstderr = smtplib.stderr
-        if not ssl: ssl = config.get('smtp_ssl', False)
-        s = smtplib.SMTP()
-        try:
-            # in case of debug, the messages are printed to stderr.
-            if debug:
-                smtplib.stderr = WriteToLogger()
-
-            s.set_debuglevel(int(bool(debug)))  # 0 or 1
-            s.connect(smtp_server, config['smtp_port'])
-            if ssl:
-                s.ehlo()
-                s.starttls()
-                s.ehlo()
-
-            if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])
-
-            s.sendmail(smtp_from, smtp_to_list, message.as_string())
-        finally:
-            try:
-                s.quit()
-                if debug:
-                    smtplib.stderr = oldstderr
-            except Exception:
-                # ignored, just a consequence of the previous exception
-                pass
-
-    except Exception:
-        _logger.error('could not deliver email', exc_info=True)
-        return False
-
-    return True
-
+    return "<%s-openerp-%s@%s>" % (time.time(), res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
+               attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
+               smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
+    """Low-level function for sending an email (deprecated).
 
-    """Send an email.
-
-    @param email_from A string used to fill the `From` header, if falsy,
-                  config['email_from'] is used instead.  Also used for
-                  the `Reply-To` header if `reply_to` is not provided
-
-    @param email_to a sequence of addresses to send the mail to.
+    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead. 
+    :param email_from: A string used to fill the `From` header, if falsy,
+                       config['email_from'] is used instead.  Also used for
+                       the `Reply-To` header if `reply_to` is not provided
+    :param email_to: a sequence of addresses to send the mail to.
     """
-    if x_headers is None:
-        x_headers = {}
 
-        
+    # If not cr, get cr from current thread database
+    if not cr:
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            cr = pooler.get_db_only(db_name).cursor()
+        else:
+            raise Exception("No database cursor found, please pass one explicitly")
 
-    if not (email_from or config['email_from']):
-        raise ValueError("Sending an email requires either providing a sender "
-                         "address or having configured one")
+    # Send Email
+    try:
+        mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+        res = False
+        # Pack Message into MIME Object
+        email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
+                   attachments, message_id, references, openobject_id, subtype, headers=headers)
 
-    if not email_from: email_from = config.get('email_from', False)
-    email_from = ustr(email_from).encode('utf-8')
-
-    if not email_cc: email_cc = []
-    if not email_bcc: email_bcc = []
-    if not body: body = u''
-
-    email_body = ustr(body).encode('utf-8')
-    email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
-
-    msg = MIMEMultipart()
-
-    msg['Subject'] = Header(ustr(subject), 'utf-8')
-    msg['From'] = email_from
-    del msg['Reply-To']
-    if reply_to:
-        msg['Reply-To'] = reply_to
-    else:
-        msg['Reply-To'] = msg['From']
-    msg['To'] = COMMASPACE.join(email_to)
-    if email_cc:
-        msg['Cc'] = COMMASPACE.join(email_cc)
-    if email_bcc:
-        msg['Bcc'] = COMMASPACE.join(email_bcc)
-    msg['Date'] = formatdate(localtime=True)
-
-    msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-
-    # Add dynamic X Header
-    for key, value in x_headers.iteritems():
-        msg['%s' % key] = str(value)
-
-    if html2text and subtype == 'html':
-        text = html2text(email_body.decode('utf-8')).encode('utf-8')
-        alternative_part = MIMEMultipart(_subtype="alternative")
-        alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
-        alternative_part.attach(email_text)
-        msg.attach(alternative_part)
-    else:
-        msg.attach(email_text)
-
-    if attach:
-        for (fname,fcontent) in attach:
-            part = MIMEBase('application', "octet-stream")
-            part.set_payload( fcontent )
-            Encoders.encode_base64(part)
-            part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
-            msg.attach(part)
-
-    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
+        res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
+                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
+                       smtp_encryption=('ssl' if ssl else None), debug=debug)
+    except Exception:
+        _log.exception("tools.email_send failed to deliver email")
+        return False
+    finally:
+        cr.close()
+    return res
 
 #----------------------------------------------------------
 # SMS
@@ -1089,10 +984,7 @@ def detect_server_timezone():
     return 'UTC'
 
 def get_server_timezone():
-    # timezone detection is safe in multithread, so lazy init is ok here
-    if (not config['timezone']):
-        config['timezone'] = detect_server_timezone()
-    return config['timezone']
+    return "UTC"
 
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"

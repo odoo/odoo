@@ -2,6 +2,18 @@
 <openerp>
     <data>
 
+        <record id="view_currency_search" model="ir.ui.view">
+            <field name="name">res.currency.search</field>
+            <field name="model">res.currency</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Currencies">
+                    <field name="name"/>
+                    <field name="active"/>
+                </search>
+            </field>
+        </record>
+
         <record id="view_currency_tree" model="ir.ui.view">
             <field name="name">res.currency.tree</field>
             <field name="model">res.currency</field>
@@ -9,12 +21,13 @@
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
-                    <field name="company_id" select="2" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                      <field name="rate_ids" invisible="1"/>
                     <field name="date"/>
                     <field name="rate"/>
                     <field name="rounding"/>
                     <field name="accuracy"/>
+                    <field name="position"/>
                     <field name="active"/>
                 </tree>
             </field>
@@ -25,23 +38,30 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Currency">
-                    <group col="6" colspan="6">
-                        <field name="name" select="1"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
                         <field name="rate"/>
-                        <field name="company_id" select="2" groups="base.group_multi_company" />
-                        <field name="symbol"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
 
-                    <group col="2" colspan="2">
-                        <separator string="Price Accuracy" colspan="2"/>
-                        <field name="rounding"/>
-                        <field name="accuracy"/>
-                    </group>
+                    <group col="6" colspan="4">
+                        <group col="2" colspan="2">
+                            <separator string="Price Accuracy" colspan="2"/>
+                            <field name="rounding"/>
+                            <field name="accuracy"/>
+                        </group>
 
-                    <group col="2" colspan="2">
-                        <separator string="Miscelleanous" colspan="2"/>
-                        <field name="base"/>
-                        <field name="active" select="1"/>
+                        <group col="2" colspan="2">
+                            <separator string="Display" colspan="2"/>
+                            <field name="symbol"/>
+                            <field name="position"/>
+                        </group>
+
+                        <group col="2" colspan="2">
+                            <separator string="Miscelleanous" colspan="2"/>
+                            <field name="base"/>
+                            <field name="active" select="1"/>
+                        </group>
                     </group>
 
                     <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1" attrs="{'readonly':[('base','=',True)]}">
@@ -62,6 +82,7 @@
             <field name="res_model">res.currency</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_currency_search"/>
         </record>
 
         <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3"/>

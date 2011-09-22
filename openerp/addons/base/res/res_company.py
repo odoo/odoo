@@ -143,6 +143,9 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
         'company_registry': fields.char('Company Registry', size=64),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The company name must be unique !')
+    ]
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):

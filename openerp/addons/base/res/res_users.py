@@ -147,25 +147,16 @@ class users(osv.osv):
         return cr.fetchall()
 
     def send_welcome_email(self, cr, uid, id, context=None):
-        logger= netsvc.Logger()
-        user = self.pool.get('res.users').read(cr, uid, id, context=context)
-        if not user.get('email'):
-            return False
-        if not tools.config.get('smtp_server'):
-            logger.notifyChannel('mails', netsvc.LOG_WARNING,
-                _('"smtp_server" needs to be set to send mails to users'))
-            return False
-        if not tools.config.get('email_from'):
-            logger.notifyChannel("mails", netsvc.LOG_WARNING,
-                _('"email_from" needs to be set to send welcome mails '
-                  'to users'))
-            return False
+        if isinstance(id,list): id = id[0]
+        user = self.read(cr, uid, id, ['email','login','name', 'user_email'], context=context)
+        email = user['email'] or user['user_email']
 
-        return tools.email_send(email_from=None, email_to=[user['email']],
-                                subject=self.get_welcome_mail_subject(
-                                    cr, uid, context=context),
-                                body=self.get_welcome_mail_body(
-                                    cr, uid, context=context) % user)
+        ir_mail_server = self.pool.get('ir.mail_server')
+        msg = ir_mail_server.build_email(email_from=None, # take config default
+                                         email_to=[email],
+                                         subject=self.get_welcome_mail_subject(cr, uid, context=context),
+                                         body=(self.get_welcome_mail_body(cr, uid, context=context) % user))
+        return ir_mail_server.send_email(cr, uid, msg, context=context)
 
     def _set_interface_type(self, cr, uid, ids, name, value, arg, context=None):
         """Implementation of 'view' function field setter, sets the type of interface of the users.
@@ -347,7 +338,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -562,7 +553,7 @@ class users_implied(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
-        groups = values.pop('groups_id')
+        groups = values.pop('groups_id', None)
         user_id = super(users_implied, self).create(cr, uid, values, context)
         if groups:
             # delegate addition of groups to add implied groups
