@@ -20,32 +20,20 @@
 ##############################################################################
 
 {
-    'name': 'VAT Number Validation',
+    'name': 'Import SugarCRM Data into OpenERP Module.',
     'version': '1.0',
-    'category': 'Finance',
-    'complexity': "easy",
-    'description': """
-VAT validation for Partners' VAT numbers
-========================================
-
-After installing this module, values entered in the VAT field of Partners will
-be validated for all supported countries. The country is inferred from the
-2-letter country code that prefixes the VAT number, e.g. ``BE0477472701``
-will be validated using the Belgian rules.
-
-Supported countries currently include EU countries, and a few non-EU countries
-such as Chile, Colombia, Mexico, Norway or Russia. For unsupported countries,
-only the country code will be validated.
-
-    """,
+    'category': 'Generic Modules',
+    'description': """This Module Import SugarCRM "Leads", "Opportunities", "Users", "Accounts", 
+            "Contacts", "Employees", Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.""",
     'author': 'OpenERP SA',
-    'depends': ['account'],
     'website': 'http://www.openerp.com',
-    'data': ['base_vat_view.xml'],
+    'depends': ['import_base','crm', 'document'],
+    'init_xml': [],
+    'update_xml': ["wizard/import_message_view.xml",
+                   "import_sugarcrm_view.xml"],
+    'demo_xml': [],
+    'test': [],
     'installable': True,
     'active': False,
-    'certificate': '0084849360989',
-    'images': ['images/1_partner_vat.jpeg'],
 }
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

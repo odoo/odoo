@@ -18,7 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-import base_vat
+class import_message(osv.osv):
+     """Import Message"""
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+     _name = "import.message"
+     _description = __doc__
+     
+import_message()
