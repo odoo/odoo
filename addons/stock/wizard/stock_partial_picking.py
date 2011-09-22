@@ -122,7 +122,9 @@ class stock_partial_picking(osv.osv_memory):
             'quantity' : picking.product_qty, 
             'product_uom' : picking.product_uom.id, 
             'prodlot_id' : picking.prodlot_id.id, 
-            'move_id' : picking.id, 
+            'move_id' : picking.id,
+            'location_id' : picking.location_id.id, 
+            'location_dest_id' : picking.location_dest_id.id,  
         }
     
         if pick_type == 'in':
@@ -142,20 +144,33 @@ class stock_partial_picking(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
         pick_obj = self.pool.get('stock.picking')
-        
+        stock_move_obj = self.pool.get('stock.move')
         picking_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_datas = {
             'delivery_date' : partial.date
         }
-
         for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)
             moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
-
             for move in moves_list:
-                partial_datas['move%s' % (move.move_id.id)] = {
-                    'product_id': move.id, 
+                if not move.move_id.id:
+                    seq_obj_name =  'stock.picking.' + picking_type
+                    move_id = stock_move_obj.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
+                                                            'product_id': move.product_id.id, 
+                                                            'product_qty': move.quantity, 
+                                                            'product_uom': move.product_uom.id, 
+                                                            'prodlot_id': move.prodlot_id.id, 
+                                                            'location_id' : move.location_id.id,
+                                                            'location_dest_id' : move.location_dest_id.id,
+                                                            'picking_id': pick.id
+                                                            },context=context)
+                    stock_move_obj.action_done(cr, uid, [move_id], context)
+                else:
+                    move_id = move.move_id.id
+                
+                partial_datas['move%s' % (move_id)] = {
+                    'product_id': move.product_id.id, 
                     'product_qty': move.quantity, 
                     'product_uom': move.product_uom.id, 
                     'prodlot_id': move.prodlot_id.id, 

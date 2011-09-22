@@ -8,23 +8,23 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-10-30 14:52+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:21+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr "指定日期(如果是固定)"
+msgstr "安排的日期(如果是固定)"
 
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr "业务伙伴货币"
+msgstr "业务伙伴币别"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -40,7 +40,7 @@ msgstr "选择使用的付款方式"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -51,6 +51,11 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"此模块提供以下功能：\n"
+"- 更高效地管理发票的付款\n"
+"- 基本的机制用于简单地管理各种自动付款\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -62,7 +67,7 @@ msgstr "付款明细"
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr "所有者科目"
+msgstr "所有者描述"
 
 #. module: account_payment
 #: help:payment.order,state:0
@@ -71,6 +76,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"新建的申请状态是草稿\n"
+"银行确认了的申请状态是已确认\n"
+"银行已付款则申请状态是完成"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -84,17 +92,17 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr "首选日期"
+msgstr "优先日期"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr "免费"
+msgstr "自由"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
@@ -104,7 +112,7 @@ msgstr "凭证"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "使用的帐号"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -115,12 +123,12 @@ msgstr "到期日期"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "您不能在关闭的科目上建立分录。"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr "凭证行"
+msgstr "凭证明细"
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -131,7 +139,7 @@ msgstr "增加到付款单"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "填充付款声明"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -142,12 +150,12 @@ msgstr "金额"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "错误的分录"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr "公司货币的合计"
+msgstr "公司币别的合计"
 
 #. module: account_payment
 #: selection:payment.order,state:0
@@ -163,12 +171,12 @@ msgstr "新付款单"
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr "关联单号"
+msgstr "单号"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "付款明细名称必须是唯一的！"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -198,7 +206,7 @@ msgstr "金额合计"
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr "确认"
+msgstr "已确认"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
@@ -208,7 +216,7 @@ msgstr "发票有效日期"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "执行类型"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -244,7 +252,7 @@ msgstr "有效日期"
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr "发票关联单号"
+msgstr "发票单号"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
@@ -252,7 +260,7 @@ msgid ""
 "Choose an option for the Payment Order:'Fixed' stands for a date specified "
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
-msgstr "选择付款单选项‘固定’由你指定一个指定的日期. ‘直接’表示直接执行. ‘到期日期’指定一个时间表的日期执行."
+msgstr "选择付款单选项“固定”由你指定一个指定的日期，“直接”表示直接执行。“到期日期”指定一个日程表日期执行。"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -273,7 +281,7 @@ msgstr "执行日期"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "这付款方式的银行或现金日记账"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -284,17 +292,17 @@ msgstr "固定日期"
 #: field:payment.line,info_partner:0
 #: view:payment.order:0
 msgid "Destination Account"
-msgstr "目标科目"
+msgstr "目标描述"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Desitination Account"
-msgstr "目标科目"
+msgstr "目标描述"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "搜索付款单"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -315,7 +323,7 @@ msgstr "选择发票支付"
 #. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
-msgstr "当前金额合计"
+msgstr "金额合计"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -325,7 +333,7 @@ msgstr "建立付款"
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr "沟通类型"
+msgstr "讯息类型"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -335,7 +343,7 @@ msgstr "付款管理"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "银行对帐单明细"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -350,12 +358,12 @@ msgstr "应支付金额"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "币别"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -372,7 +380,7 @@ msgstr "如果没有指定付款日期将直接由银行付款"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "付款帐户填充声明"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -382,7 +390,7 @@ msgstr "付款方式"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "重要的日子"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -392,7 +400,7 @@ msgstr "付款类型"
 #. module: account_payment
 #: help:payment.line,amount_currency:0
 msgid "Payment amount in the partner currency"
-msgstr "在业务伙伴货币的货币金额"
+msgstr "业务伙伴币别的付款金额"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -403,13 +411,13 @@ msgstr "草稿"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr "沟通的消息"
+msgstr "讯息的跟进消息"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "No partner defined on entry line"
-msgstr "在凭证行没定义业务伙伴"
+msgstr "凭证明细定义业务伙伴"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -419,7 +427,7 @@ msgstr "客户订单地址"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "填充声明："
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -445,24 +453,24 @@ msgstr "付款明细"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "账簿项"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "公司帐户和会计期限必须相同。"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr "这凭证行将在这客户订单作为关联单号"
+msgstr "这凭证明细将与客户订单关联"
 
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
@@ -478,7 +486,7 @@ msgstr "付款日期"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "合计:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -488,12 +496,12 @@ msgstr "创建日期"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "增加"
 
 #. module: account_payment
 #: view:account.bank.statement:0
 msgid "Import payment lines"
-msgstr "进项付款明细"
+msgstr "导入付款明细"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -503,7 +511,7 @@ msgstr "支付金额"
 #. module: account_payment
 #: field:payment.line,amount:0
 msgid "Amount in Company Currency"
-msgstr "公司使用货币的金额"
+msgstr "公司币别的金额"
 
 #. module: account_payment
 #: help:payment.line,partner_id:0
@@ -513,17 +521,17 @@ msgstr "客户订单"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "帐户支付"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "发票单号"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr "你的关联单号"
+msgstr "您的单号"
 
 #. module: account_payment
 #: field:payment.order,mode:0
@@ -550,12 +558,12 @@ msgstr "完成"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "发票"
 
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr "沟通"
+msgstr "讯息"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -578,12 +586,12 @@ msgid ""
 "invoice or a customer credit note. Here you can register all payment orders "
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
-msgstr ""
+msgstr "付款申请是你的公司为支付供应商发票或客户红字发票建立的申请。这里你可以输入所有需要付款的申请，跟踪申请状态并通知业务伙伴你将付款。"
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr "在公司货币的付款金额"
+msgstr "公司币别的付款金额"
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -593,12 +601,12 @@ msgstr "查询付款明细"
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr "业务伙伴使用货币的金额"
+msgstr "业务伙伴币别的金额"
 
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr "沟通2"
+msgstr "讯息2"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
@@ -608,13 +616,13 @@ msgstr "目标银行账号"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "你确定你要付款吗？"
 
 #. module: account_payment
 #: view:payment.mode:0
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr "业务类型"
+msgstr "账簿"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -630,7 +638,7 @@ msgstr "确认付款"
 #: field:payment.line,company_currency:0
 #: report:payment.order:0
 msgid "Company Currency"
-msgstr "公司货币"
+msgstr "公司币别"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main_payment
@@ -642,19 +650,19 @@ msgstr "付款"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "预付款/付款"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr "凭证行"
+msgstr "凭证明细"
 
 #. module: account_payment
 #: help:payment.line,communication:0
 msgid ""
 "Used as the message between ordering customer and current company. Depicts "
 "'What do you want to say to the recipient about this order ?'"
-msgstr "用作订购客户和当前公司之间的消息.描述你在这订单想要说的?"
+msgstr "用与客户订单和公司之间的消息。描述你在这单据想要说的?"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -664,7 +672,7 @@ msgstr "名称"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "银行账户"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -675,7 +683,7 @@ msgstr "信息"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -691,7 +699,7 @@ msgstr "合计"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "建立付款"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -702,7 +710,7 @@ msgstr "业务伙伴"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "填写付款单"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -712,26 +720,13 @@ msgstr "这付款方式的银行账号"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "_Cancel"
 #~ msgstr "取消(_C)"
 
 #~ msgid "Execution date:"
 #~ msgstr "执行日期:"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module provide :\n"
-#~ "    * a more efficient way to manage invoice payment.\n"
-#~ "    * a basic mechanism to easily plug various automated payment.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这模块提供:\n"
-#~ "    * 更有效的方式来管理发票的付款.\n"
-#~ "    * 一个基本机制来自动支付\n"
-#~ "    "
 
 #~ msgid "Suitable bank types"
 #~ msgstr "合适的银行类型"

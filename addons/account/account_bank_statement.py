@@ -58,13 +58,6 @@ class account_bank_statement(osv.osv):
                 journal_id = ids[0]
         return journal_id
 
-    def _default_balance_start(self, cr, uid, context=None):
-        cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
-        res = cr.fetchone()
-        if res:
-            return self.browse(cr, uid, res[0], context=context).balance_end
-        return 0.0
-
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -90,7 +83,8 @@ class account_bank_statement(osv.osv):
                         res[statement.id] -= res_currency_obj.compute(cursor,
                                 user, company_currency_id, currency_id,
                                 line.credit, context=context)
-            if statement.state == 'draft':
+
+            if statement.state in ('draft', 'open'):
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
         for r in res:
@@ -127,7 +121,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself', states={'confirm': [('readonly', True)]}),
+        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
@@ -136,19 +130,21 @@ class account_bank_statement(osv.osv):
         'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly',True)]}),
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
-            states={'confirm':[('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, string='Balance'),
+            states={'confirm': [('readonly', True)]}),
+        'balance_end': fields.function(_end_balance, store=True, # store=True for account_cash_statement
+            string="Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
             'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
-            'State', required=True,
-            states={'confirm': [('readonly', True)]}, readonly="1",
-            help='When new statement is created the state will be \'Draft\'. \
-            \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
+        'state': fields.selection([('draft', 'Draft'),
+                                   ('open','Open'), # used by cash statements
+                                   ('confirm', 'Closed')],
+                                   'State', required=True, readonly="1",
+                                   help='When new statement is created the state will be \'Draft\'.\n'
+                                        'And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
         'currency': fields.function(_currency, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
@@ -158,7 +154,6 @@ class account_bank_statement(osv.osv):
         'name': "/",
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
-        'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
         'period_id': _get_period,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
@@ -386,7 +381,7 @@ class account_bank_statement(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 

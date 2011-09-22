@@ -24,7 +24,6 @@
           <separator string="title" position="attributes">
             <attribute name="string">Install Applications</attribute>
           </separator>
-
           <group colspan="8">
             <field name="crm" />
             <field name="sale" />
@@ -38,17 +37,17 @@
             <field name="hr" />
             <field name="profile_tools" />
             <field name="marketing" groups="base.group_extended" />
-            <field name="point_of_sale" groups="base.group_extended" />
+            <field name="point_of_sale"/>
             <field name="report_designer" groups="base.group_extended" />
             <separator string="Install Specific Industry Applications" colspan="4"/>
             <field name="association" />
             <field name="auction" />
             <field name="product_expiry" />
-            <group name="crm"/> 
-            <group name="sale"/> 
-            <group name="project"/> 
-            <group name="knowledge"/> 
-            <group name="mrp"/> 
+            <group name="crm"/>
+            <group name="sale"/>
+            <group name="project"/>
+            <group name="knowledge"/>
+            <group name="mrp"/>
             <group name="account_accountant"/>
             <group name="purchase"/>
             <group name="hr"/>
@@ -71,7 +70,6 @@
     </record>
     <record id="base_setup_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_installer"/>
-        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
     </record>
 
@@ -79,7 +77,7 @@
       <field name="name">Start Configuration</field>
       <field name="model_id" ref="base.model_ir_actions_todo"/>
       <field name="state">code</field>
-      <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = obj.pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
+      <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
     </record>
 
     <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
@@ -223,7 +221,6 @@
     </record>
     <record id="base_setup_company_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_company"/>
-        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
     </record>
     <!--   register Upload Logo configuration wizard  -->

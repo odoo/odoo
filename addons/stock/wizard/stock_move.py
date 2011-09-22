@@ -185,7 +185,6 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
         if context.get('active_id'):
             move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -197,6 +196,8 @@ class split_in_production_lot(osv.osv_memory):
                 res.update({'qty': move.product_qty})
             if 'use_exist' in fields:
                 res.update({'use_exist': (move.picking_id and move.picking_id.type=='out' and True) or False})
+            if 'location_id' in fields:
+                res.update({'location_id': move.location_id.id})
         return res
 
     _columns = {
@@ -206,6 +207,7 @@ class split_in_production_lot(osv.osv_memory):
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -306,6 +308,11 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _defaults = {
         'quantity': 1.0,
     }
+
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
+                        loc_id=False, product_id=False, uom_id=False):
+        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
+                        loc_id, product_id, uom_id)
 
 stock_move_split_lines_exist()
 

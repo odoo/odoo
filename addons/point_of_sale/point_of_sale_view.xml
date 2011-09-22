@@ -140,7 +140,7 @@
                     <field name="user_id"/>
                     <field name="date_order" string="Order date"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator string="" orientation="vertical"/>
@@ -235,11 +235,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS Order line">
-                    <field name="product_id"  select="1"/>
-                    <field name="qty"  select="1"/>
+                    <field name="product_id" />
+                    <field name="qty" />
                     <field name="discount" />
                     <field name="price_unit" />
-                    <field name="create_date"  select="1"/>
+                    <field name="create_date" />
                 </form>
             </field>
         </record>
@@ -282,10 +282,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                    <field name="user_id" select="1"/>
-                    <field name="journal_id" select="1"/>
-                    <field name="jl_id" select="1"/>
-                    <field name="date_create" select="1" widget="date"/>
+                    <field name="user_id"/>
+                    <field name="journal_id"/>
+                    <field name="jl_id"/>
+                    <field name="date_create" widget="date"/>
                     <field name="no_trans"/>
                     <field name="amount"/>
                     <field name="invoice_id"/>
@@ -373,7 +373,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="amount"/>
                     <field name="user_id"/>
@@ -388,7 +388,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="amount"/>
                     <field name="user_id"/>
@@ -439,7 +439,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS ">
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="amount"/>
                     <field name="user_id"/>
@@ -454,7 +454,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS">
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="amount"/>
                     <field name="user_id"/>
@@ -507,7 +507,7 @@
                 <form string="POS ">
                     <field name="user_id"/>
                     <field name="product_name"/>
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="net_margin_per_qty"/>
                     <field name="total"/>
@@ -524,7 +524,7 @@
                 <tree string="POS">
                     <field name="user_id"/>
                     <field name="product_name"/>
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="net_margin_per_qty"/>
                     <field name="total"/>
@@ -574,7 +574,7 @@
                 <form string="POS ">
                     <field name="user_id"/>
                     <field name="product_name"/>
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="net_margin_per_qty"/>
                     <field name="total"/>
@@ -591,7 +591,7 @@
                 <tree string="POS">
                     <field name="user_id"/>
                     <field name="product_name"/>
-                    <field name="date_order" select="1" widget="date"/>
+                    <field name="date_order" widget="date"/>
                     <field name="qty"/>
                     <field name="net_margin_per_qty"/>
                     <field name="total"/>
@@ -672,12 +672,12 @@
                    <group colspan="4" col="6">
                     <group colspan="4" col="2">
                         <separator string="Product Description" colspan="4"/>
-                        <field name="name" select="1"  />
+                        <field name="name"  />
                         <field groups="base.group_extended" name="variants" />
                     </group>
                     <group colspan="1" col="2">
                         <separator string="Codes" colspan="2"/>
-                        <field name="default_code" select="1"/>
+                        <field name="default_code"/>
                         <field groups="base.group_extended" name="ean13"/>
                     </group>
                    </group>
@@ -685,8 +685,8 @@
                         <page string="Information">
                           <group colspan="2" col="2" name="Type">
                             <separator string="Product Type" colspan="2"/>
-                              <field name="categ_id" select="1"/>
-                              <field name="property_account_income" select="1" string="Account" required="1"/>
+                              <field name="categ_id"/>
+                              <field name="property_account_income" string="Account" required="1"/>
                               <field name="type"/>
                             </group>
                             <group colspan="2" col="2" name="Miscelleanous">
@@ -781,10 +781,10 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="POS Orders lines">
-                    <field name="order_id" select="1" />
-                    <field name="serial_number" select="1" />
-                    <field name="create_date" select="1" />
-                    <field name="product_id" select="1" />
+                    <field name="order_id" />
+                    <field name="serial_number" />
+                    <field name="create_date" />
+                    <field name="product_id" />
                     <field name="qty" />
                     <field name="price_unit" />
                 </tree>

@@ -11,7 +11,7 @@
             <field name="model">procurement.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -30,7 +30,7 @@
             <field name="type">tree</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state in ('exception');black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state in ('ready')">
+                <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
@@ -100,7 +100,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                    <group col='10' colspan='4'>
+                    <group>
                        <filter icon="terp-check" string="Current" domain="[('state','in',('draft','confirmed'))]" name="current" help="Procurement Orders in draft or open state."/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
@@ -112,11 +112,11 @@
                        <separator orientation="vertical"/>
                        <field name="origin"/>
                        <field name="product_id" />
-                       <field name="date_planned" widget="date"/>
+                       <field name="date_planned"/>
                        <field name="state" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By" groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
@@ -181,7 +181,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Minimum Stock Rules Search">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="warehouse_id" widget="selection"/>
                         <field name="location_id"/>
@@ -189,7 +189,7 @@
                         <field name="product_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Warehouse" icon="terp-go-home" domain="[]"  context="{'group_by':'warehouse_id'}"/>
                         <filter string="Location" icon="terp-go-home" domain="[]" context="{'group_by':'location_id'}"/>
                     </group>
