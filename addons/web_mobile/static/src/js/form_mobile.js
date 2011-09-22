@@ -70,12 +70,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                         }
                     });
                     self.$element.find('#formbutton').click(function(){
+                        var head = $(this).prev().find('select').find("option:selected").text();
                         var selected_id = $(this).prev().find('select').val();
                         var select_model = $(this).prev().find('select').attr('for');
                         if(selected_id!="false"){
                             if(!$('[id^="oe_form_'+selected_id+select_model+'"]').html()){
                                 $('<div id="oe_form_'+selected_id+select_model+'" data-role="page" data-url="oe_form_'+selected_id+select_model+'"> </div>').appendTo('#moe');
-                                    this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', 'head',select_model,false);
+                                    this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
                                     this.formview.start();
                             }else{
                                 $.mobile.changePage('#oe_form_'+selected_id+select_model, "slide", true, true);
@@ -105,12 +106,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 $(this).find('p').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
                             }
                             $(this).find('p').find('#formbutton').click(function(){
+                                var head = $(this).prev().find('select').find("option:selected").text();
                                 var selected_id = $(this).prev().find('select').val();
                                 var select_model = $(this).prev().find('select').attr('for');
                                 if(selected_id!="false"){
                                     if(!$('[id^="oe_form_'+selected_id+select_model+'"]').html()){
                                         $('<div id="oe_form_'+selected_id+select_model+'" data-role="page" data-url="oe_form_'+selected_id+select_model+'"> </div>').appendTo('#moe');
-                                        this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', 'head',select_model,false);
+                                        this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
                                         this.formview.start();
                                     }else{
                                         $.mobile.changePage('#oe_form_'+selected_id+select_model, "slide", true, true);
@@ -222,12 +224,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                     }
                                                 });
                                                 $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find('#formbutton').click(function(){
+                                                    var head = $(this).prev().find('select').find("option:selected").text();
                                                     var selected_id = $(this).prev().find('select').val();
                                                     var select_model = $(this).prev().find('select').attr('for');
                                                     if(selected_id!="false"){
                                                         if(!$('[id^="oe_form_'+selected_id+select_model+'"]').html()){
                                                             $('<div id="oe_form_'+selected_id+select_model+'" data-role="page" data-url="oe_form_'+selected_id+select_model+'"> </div>').appendTo('#moe');
-                                                            this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', 'head',select_model,false);
+                                                            this.formview = new openerp.web_mobile.FormView(self, "oe_form_"+selected_id+select_model, selected_id, '', head, select_model, false);
                                                             this.formview.start();
                                                         }else{
                                                             $.mobile.changePage('#oe_form_'+selected_id+select_model, "slide", true, true);
