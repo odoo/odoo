@@ -90,18 +90,17 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             }
         }
 
+        var self = this;
         this.$element.find('.sel_fields').autocomplete({
             minLength: 0,
             source: results.all_fields
         }).focus(function () {
             $(this).autocomplete('search');
+        }).change(function() {
+            self.on_change_check(results['required_fields']);
         });
 
         this.on_change_check(results['required_fields']);
-        var self = this;
-        this.$element.find("td #sel_field").change(function() {
-            self.on_change_check(results['required_fields']);
-        });
     },
     on_change_check: function (required_fields){
         var self = this;
