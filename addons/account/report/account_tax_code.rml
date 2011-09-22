@@ -129,10 +129,10 @@
             <para style="terp_default_9">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']) ]] [[ company.currency_id.symbol]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['debit'], currency_obj=company.currency_id) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']) ]] [[ company.currency_id.symbol]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['credit'], currency_obj=company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>

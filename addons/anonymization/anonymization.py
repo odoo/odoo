@@ -52,7 +52,7 @@ class ir_model_fields_anonymization(osv.osv):
     }
 
     _sql_constraints = [
-        ('model_id_field_id_uniq', 'unique (model_name, field_name)', _("You cannot have two records having the same model and the same field")),
+        ('model_id_field_id_uniq', 'unique (model_name, field_name)', _("You cannot have two fields with the same name on the same object!")),
     ]
 
     def _get_global_state(self, cr, uid, context=None):
