@@ -20,8 +20,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.qweb = new QWeb2.Engine();
         this.aggregates = {};
         this.NO_OF_COLUMNS = 3;
-        this.dataset_default_domain = dataset.domain;
-        this.dataset_default_context = dataset.context;
         if (this.options.action_views_ids.form) {
             this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
             this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
@@ -202,31 +200,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     on_button_click: function (button_attrs, record_id) {
-        var self = this;
-        if (this.groups.length) {
-            _.each(this.groups, function (group) {
-                group.list([],
-                    function (groups) {},
-                    function (dataset) {
-                        dataset.read_slice([], {}, function(records) {
-                            var index = parseInt(_.indexOf(dataset.ids, record_id));
-                            if(index >= 0) {
-                                self.on_confirm_click(dataset, button_attrs, index, record_id);
-                            }
-                        });
-                    }
-                );
-            });
-        } else {
-            var index = parseInt(_.indexOf(self.dataset.ids, record_id));
-            if (index >= 0) {
-                _.extend(self.dataset, {domain: self.domain, context: self.context});
-                self.on_confirm_click(self.dataset, button_attrs, index, record_id);
-            }
-        }
-    },
-    on_confirm_click: function (dataset, button_attrs, index, record_id) {
-        this.on_execute_button_click(dataset, button_attrs, record_id);
+        this.on_execute_button_click(this.dataset, button_attrs, record_id);
     },
     do_add_record: function() {
         this.dataset.index = null;
@@ -436,8 +410,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     do_search: function (domains, contexts, group_by) {
         var self = this;
-        this.dataset.domain = this.dataset_default_domain;
-        this.dataset.context = this.dataset_default_context;
         this.rpc('/web/session/eval_domain_and_context', {
             domains: [this.dataset.get_domain()].concat(domains),
             contexts: [this.dataset.get_context()].concat(contexts),
@@ -457,8 +429,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             self.group_by = group_by;
         }
         self.datagroup = new openerp.web.DataGroup(self, self.model, self.domain, self.context, group_by);
-        self.dataset.context = self.context;
-        self.dataset.domain = self.domain;
         self.datagroup.list([],
             function (groups) {
                 self.groups = groups;
@@ -466,7 +436,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             },
             function (dataset) {
                 self.groups = [];
-                self.dataset.read_slice([], {}, function(records) {
+                self.dataset.read_slice([], {'domain': self.domain, 'context': self.context}, function(records) {
                     self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
                     self.$element.find(".oe_kanban_view").remove();
                     self.on_show_data();
@@ -478,8 +448,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.all_display_data = [];
         var self = this;
         _.each(datagroups, function (group) {
-            self.dataset.context = group.context;
-            self.dataset.domain = group.domain;
             var group_name = group.value;
             var group_value = group.value;
             if (!group.value) {
@@ -493,7 +461,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             _.each(self.aggregates, function(value, key) {
                 group_aggregates += value + ": " + group.aggregates[key];
             });
-            self.dataset.read_slice([], {}, function(records) {
+            self.dataset.read_slice([], {'domain': group.domain, 'context': group.context}, function(records) {
                 self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids, 'aggregates': group_aggregates});
                 if (datagroups.length == self.all_display_data.length) {
                     self.$element.find(".oe_kanban_view").remove();
