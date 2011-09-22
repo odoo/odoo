@@ -64,10 +64,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         }, this.on_import_results);
     },
     on_autodetect_data: function() {
-        if(this.$element.find("#res td")){
-            this.$element.find("#res td").remove();
-            this.$element.find("#imported_success").css('display','none');
-        }
         if(!this.$element.find('#csvfile').val()) { return; }
         jsonp(this.$element.find('#import_data'), {
             url: '/web/import/detect_data'
