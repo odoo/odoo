@@ -391,14 +391,18 @@ class expression(object):
                 return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
 
         def to_ids(value, field_obj):
-            """ Normalize a single id, or a string, or a list of ids to a list of ids.
-            """
+            """Normalize a single id or name, or a list of those, into a list of ids"""
+            names = []
             if isinstance(value, basestring):
-                return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
+                names = [value]
+            if value and isinstance(value, (tuple, list)) and isinstance(value[0], basestring):
+                names = value
+            if names:
+                return flatten([[x[0] for x in field_obj.name_search(cr, uid, n, [], 'ilike', context=context, limit=None)] \
+                                    for n in names])
             elif isinstance(value, (int, long)):
                 return [value]
-            else:
-                return list(value)
+            return list(value)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -505,9 +509,10 @@ class expression(object):
                                 call_null = False
                                 self.__exp[i] = FALSE_LEAF
                         else:
-                            call_null = False
-                            o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            self.__exp[i] = ('id', o2m_op, select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator))
+                            ids2 = select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator)
+                            if ids2:
+                                call_null = False
+                                self.__exp[i] = ('id', 'in', ids2)
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'

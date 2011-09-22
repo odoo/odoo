@@ -186,21 +186,23 @@
         partner_ids = self.search(cr, uid, [])
         partner_ids.sort()
         max_partner_id = max(partner_ids)
+
+        # Grab test sample data without using a normal
+        # search domain, because we want to test these later,
+        # so we can't rely on them!
         partners = self.browse(cr, uid, partner_ids)
         with_parent = []
         without_parent = []
-        for x in partners:
-            if x.parent_id and x.parent_id.id in partner_ids:
-                with_parent.append(x.id)
-        with_parent.sort()
-        for x in partners:
-            if not x.parent_id:
-                without_parent.append(x.id)
-        without_parent.sort()
         with_website = []
         for x in partners:
+            if x.parent_id:
+                with_parent.append(x.id)
+            else:
+                without_parent.append(x.id)
             if x.website:
                 with_website.append(x.id)
+        with_parent.sort()
+        without_parent.sort()
         with_website.sort()
 
         # We treat null values differently than in SQL. For instance in SQL:
@@ -400,13 +402,9 @@
         res_11.sort()
         res_12.sort()
         res_13.sort()
-
-        print ">>> 11:", res_11
-        #assert res_10 == res_11
+        assert res_10 == res_11
         assert res_10 == res_12
-        print ">>> 12:", res_12
         assert res_10 == res_13
-        print ">>> 13:", res_13
 
         # child_of x returns x and its children (direct or not).
         company = self.browse(cr, uid, ref('ymltest_company3'))
@@ -416,13 +414,13 @@
         res_1.sort()
         res_2 = self.search(cr, uid, [('id', 'child_of', ref('ymltest_company3'))])
         res_2.sort()
-        #res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])]) # TODO
-        #res_3.sort()
+        res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])])
+        res_3.sort()
         res_4 = self.search(cr, uid, [('id', 'child_of', company.name)])
         res_4.sort()
         assert res_1 == expected
         assert res_2 == expected
-        #assert res_3 == expected
+        assert res_3 == expected
         assert res_4 == expected
 -
     Verify that normalize_domain() works.
