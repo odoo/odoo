@@ -32,7 +32,9 @@
         * size
 """
 
+import base64
 import datetime as DT
+import re
 import string
 import sys
 import warnings
@@ -53,7 +55,7 @@ def _symbol_set(symb):
 
 class _column(object):
     """ Base of all fields, a database column
-    
+
         An instance of this object is a *description* of a database column. It will
         not hold any data, but only provide the methods to manipulate data of an
         ORM record or even prepare/update the database to hold such a field of data.
@@ -595,7 +597,7 @@ class many2many(_column):
                 if not cr.fetchone():
                     cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
-                cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
+                cr.execute('delete from '+self._rel+' where ' + self._id1 + ' = %s', (id,))
             elif act[0] == 6:
 
                 d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
@@ -623,34 +625,41 @@ def get_nice_size(value):
         size = len(value)
     return tools.human_size(size)
 
+# See http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+# and http://bugs.python.org/issue10066
+invalid_xml_low_bytes = re.compile(r'[\x00-\x08\x0b-\x0c\x0e-\x1f]')
+
 def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
-    # are not something else that won't pass via xmlrpc
+    # are not something else that won't pass via XML-RPC
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
         return value
 
-    # For all other cases, handle the value as a binary string:
-    # it could be a 7-bit ASCII string (e.g base64 data), but also
-    # any 8-bit content from files, with byte values that cannot
-    # be passed inside XML!
-    # See for more info:
+    # Handle invalid bytes values that will cause problems
+    # for XML-RPC. See for more info:
     #  - http://bugs.python.org/issue10066
     #  - http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
-    #
-    # One solution is to convert the byte-string to unicode,
-    # so it gets serialized as utf-8 encoded data (always valid XML)
-    # If invalid XML byte values were present, tools.ustr() uses
-    # the Latin-1 codec as fallback, which converts any 8-bit
-    # byte value, resulting in valid utf-8-encoded bytes
-    # in the end:
-    #  >>> unicode('\xe1','latin1').encode('utf8') == '\xc3\xa1'
-    # Note: when this happens, decoding on the other endpoint
-    # is not likely to produce the expected output, but this is
-    # just a safety mechanism (in these cases base64 data or
-    # xmlrpc.Binary values should be used instead)
-    return tools.ustr(value)
+
+    # Coercing to unicode would normally allow it to properly pass via
+    # XML-RPC, transparently encoded as UTF-8 by xmlrpclib.
+    # (this works for _any_ byte values, thanks to the fallback
+    #  to latin-1 passthrough encoding when decoding to unicode)
+    value = tools.ustr(value)
+
+    # Due to Python bug #10066 this could still yield invalid XML
+    # bytes, specifically in the low byte range, that will crash
+    # the decoding side: [\x00-\x08\x0b-\x0c\x0e-\x1f]
+    # So check for low bytes values, and if any, perform
+    # base64 encoding - not very smart or useful, but this is
+    # our last resort to avoid crashing the request.
+    if invalid_xml_low_bytes.search(value):
+        # b64-encode after restoring the pure bytes with latin-1
+        # passthrough encoding
+        value = base64.b64encode(value.encode('latin-1'))
+
+    return value
 
 
 # ---------------------------------------------------------
@@ -1179,7 +1188,7 @@ class property(function):
 
     def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
         prop = obj.pool.get('ir.property')
-        # get the default values (for res_id = False) for the property fields 
+        # get the default values (for res_id = False) for the property fields
         default_val = self._get_defaults(obj, cr, uid, prop_names, context)
 
         # build the dictionary that will be returned
@@ -1301,12 +1310,16 @@ class column_info(object):
        :attr parent_column: the name of the column containing the m2o
                             relationship to the parent model that contains
                             this column, None for local columns.
+       :attr original_parent: if the column is inherited, name of the original
+                            parent model that contains it i.e in case of multilevel
+                            inheritence, None for local columns.
     """
-    def __init__(self, name, column, parent_model=None, parent_column=None):
+    def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
         self.column = column
         self.parent_model = parent_model
         self.parent_column = parent_column
+        self.original_parent = original_parent
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

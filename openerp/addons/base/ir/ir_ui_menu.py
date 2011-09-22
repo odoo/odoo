@@ -88,7 +88,7 @@ class ir_ui_menu(osv.osv):
 
                     field = model_field.get(menu.action._name)
                     if field and data[field]:
-                        if not modelaccess.check(cr, uid, data[field], False):
+                        if not modelaccess.check(cr, uid, data[field], 'read', False):
                             continue
             else:
                 # if there is no action, it's a 'folder' menu

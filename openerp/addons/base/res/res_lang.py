@@ -174,7 +174,7 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
-            self._lang_data_get.clear_cache(self,lang_id= lang_id)
+            self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -194,7 +194,7 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
-    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False):
+    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
 
         if percent[0] != '%':

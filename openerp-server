@@ -27,7 +27,7 @@ OpenERP is an ERP+CRM program for small and medium businesses.
 The whole source code is distributed under the terms of the
 GNU Public Licence.
 
-(c) 2003-TODAY, Fabien Pinckaers - OpenERP s.a.
+(c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
 """
 
 import logging
@@ -215,7 +215,7 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     logger = logging.getLogger('server')
     logger.info("Initiating shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to force the sutdown.")
+    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
 
     # manually join() all threads before calling sys.exit() to allow a second signal
@@ -232,6 +232,8 @@ def quit_on_signals():
 
 if __name__ == "__main__":
 
+    os.environ["TZ"] = "UTC"
+
     check_root_user()
     openerp.tools.config.parse_config(sys.argv[1:])
     check_postgres_user()
@@ -239,6 +241,8 @@ if __name__ == "__main__":
     report_configuration()
 
     config = openerp.tools.config
+
+    setup_signal_handlers()
 
     if config["test_file"]:
         run_test_file(config['db_name'], config['test_file'])
@@ -252,6 +256,11 @@ if __name__ == "__main__":
         import_translation()
         sys.exit(0)
 
+    if not config["stop_after_init"]:
+        # Some module register themselves when they are loaded so we need the
+        # services to be running before loading any registry.
+        start_services()
+
     if config['db_name']:
         for dbname in config['db_name'].split(','):
             preload_registry(dbname)
@@ -260,8 +269,6 @@ if __name__ == "__main__":
         sys.exit(0)
 
     setup_pid_file()
-    setup_signal_handlers()
-    start_services()
     logger = logging.getLogger('server')
     logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()

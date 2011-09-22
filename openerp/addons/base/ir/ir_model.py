@@ -56,7 +56,7 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
 
 class ir_model(osv.osv):
     _name = 'ir.model'
-    _description = "Objects"
+    _description = "Models"
     _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
@@ -85,8 +85,8 @@ class ir_model(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Object Name', size=64, translate=True, required=True),
-        'model': fields.char('Object', size=64, required=True, select=1),
+        'name': fields.char('Model Description', size=64, translate=True, required=True),
+        'model': fields.char('Model', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
@@ -97,12 +97,12 @@ class ir_model(osv.osv):
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
-    
+
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    
+
     def _check_model_name(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
@@ -114,8 +114,12 @@ class ir_model(osv.osv):
 
     def _model_name_msg(self, cr, uid, ids, context=None):
         return _('The Object name must start with x_ and not contain any special character !')
+
     _constraints = [
         (_check_model_name, _model_name_msg, ['model']),
+    ]
+    _sql_constraints = [
+        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -561,14 +565,27 @@ class ir_model_access(osv.osv):
 ir_model_access()
 
 class ir_model_data(osv.osv):
+    """Holds external identifier keys for records in the database.
+       This has two main uses:
+
+           * allows easy data integration with third-party systems,
+             making import/export/sync of data possible, as records
+             can be uniquely identified across multiple systems
+           * allows tracking the origin of data installed by OpenERP
+             modules themselves, thus making it possible to later
+             update them seamlessly.
+    """
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
     _order = 'module,model,name'
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=128, select=1),
-        'model': fields.char('Object', required=True, size=64, select=1),
+        'name': fields.char('External Identifier', required=True, size=128, select=1,
+                            help="External Key/Identifier that can be used for "
+                                 "data integration with third-party systems"),
+        'model': fields.char('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'res_id': fields.integer('Record ID', select=1,
+                                 help="ID of the target record in the database"),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
@@ -580,7 +597,7 @@ class ir_model_data(osv.osv):
         'module': ''
     }
     _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
+        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same external ID in the same module!'),
     ]
 
     def __init__(self, pool, cr):
@@ -603,7 +620,7 @@ class ir_model_data(osv.osv):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
         ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
-            raise ValueError('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
 
@@ -613,7 +630,7 @@ class ir_model_data(osv.osv):
         data_id = self._get_id(cr, uid, module, xml_id)
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
-            raise ValueError('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return (res['model'], res['res_id'])
 
     def get_object(self, cr, uid, module, xml_id, context=None):
