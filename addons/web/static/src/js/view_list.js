@@ -749,8 +749,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
-
-                $(self).trigger('action', [field, record_id, function () {
+			  	
+				console.log('field',field, typeof field)
+                $(self).trigger('action', [field.toString(), record_id, function () {
                     return self.reload_record(self.records.get(record_id));
                 }]);
             })
