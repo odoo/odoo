@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:59+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:07+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -124,7 +124,7 @@ msgid "The code of the sales team must be unique !"
 msgstr "Код отдела продаж должен быть уникальным !"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "Кандидат '%s' был преобразован в предложение."
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "Не повторять"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -549,9 +549,9 @@ msgstr "Самый первый перспективный контакт"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -647,6 +647,8 @@ msgid ""
 "Thick this box if you want that on escalation, the responsible of this sale "
 "team automatically becomes responsible of the lead/opportunity escaladed"
 msgstr ""
+"Отметьте для обострения вопроса, ответственный этого отдела продаж "
+"автоматически становится ответственным за обостренного кандидата/предложение"
 
 #. module: crm
 #: help:crm.installer,outlook:0
@@ -739,6 +741,8 @@ msgid ""
 "The email address put in the 'Reply-To' of all emails sent by OpenERP about "
 "cases in this sales team"
 msgstr ""
+"Адрес, который будет помещен в поле \"Ответить\" всех писем, которые будут "
+"отправлены OpenERP о делах в этом отделе продаж"
 
 #. module: crm
 #: view:res.users:0
@@ -832,8 +836,8 @@ msgid "Statistics Dashboard"
 msgstr "Панель статистики"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -1019,7 +1023,7 @@ msgstr "Поставщик"
 #. module: crm
 #: help:crm.send.mail,reply_to:0
 msgid "Reply-to of the Sales team defined on this case"
-msgstr ""
+msgstr "Ответить отделу продаж ответственному за это дело"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1113,7 +1117,7 @@ msgstr "Подписан"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -1343,7 +1347,7 @@ msgstr "Пусть событие автоматически повторяет�
 #. module: crm
 #: view:base.action.rule:0
 msgid "Condition Case Fields"
-msgstr ""
+msgstr "Поля, зависящие от состояния"
 
 #. module: crm
 #: view:crm.case.section:0
@@ -1749,7 +1753,7 @@ msgstr "День рождения"
 #. module: crm
 #: view:crm.meeting:0
 msgid "The"
-msgstr ""
+msgstr "-"
 
 #. module: crm
 #: field:crm.send.mail.attachment,wizard_id:0
@@ -1782,12 +1786,12 @@ msgstr "Высокая"
 #. module: crm
 #: model:process.node,note:crm.process_node_partner0
 msgid "Convert to prospect to business partner"
-msgstr ""
+msgstr "Преобразовать в возможного бизнес-партнера"
 
 #. module: crm
 #: view:crm.phonecall2opportunity:0
 msgid "_Convert"
-msgstr ""
+msgstr "_Преобразовать"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_view_attendee_form
@@ -1814,7 +1818,7 @@ msgstr "Пятый"
 #. module: crm
 #: view:crm.phonecall2phonecall:0
 msgid "_Schedule"
-msgstr ""
+msgstr "_Запланировать"
 
 #. module: crm
 #: field:crm.lead.report,delay_close:0
@@ -1890,7 +1894,7 @@ msgstr "Вопрос '%s'  был открыт."
 #. module: crm
 #: view:crm.installer:0
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_phone1
@@ -2561,7 +2565,7 @@ msgstr "Макс. интервал"
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 msgid "_Schedule Call"
-msgstr ""
+msgstr "_Запланировать звонок"
 
 #. module: crm
 #: code:addons/crm/crm.py:326
@@ -2669,7 +2673,7 @@ msgid "Meeting Type"
 msgstr "Тип встречи"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr "Объединить с существующим предложением"
@@ -2959,7 +2963,7 @@ msgstr "Кем предложено"
 #: view:crm.lead:0
 #: model:ir.model,name:crm.model_crm_add_note
 msgid "Add Internal Note"
-msgstr "Добавить внутреннею заметку"
+msgstr "Добавить внутреннюю заметку"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:304
@@ -3214,8 +3218,8 @@ msgid "Schedule Call"
 msgstr "Запланировать звонок"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr "Закрытого/отмененного кандидата нельзя преобразовать в предложение"
@@ -3233,6 +3237,10 @@ msgid ""
 "If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"Отметьте, если категория ограничена контрагентами, подпадающими под критерии "
+"сегментации.                        \n"
+"Если отмечено, из категории будут удалёны контрагенты, не подпадающие под "
+"эти критерии."
 
 #. module: crm
 #: field:crm.meeting,exdate:0
@@ -3381,7 +3389,7 @@ msgstr ""
 #. module: crm
 #: view:crm.send.mail:0
 msgid "_Send Reply"
-msgstr ""
+msgstr "_Отправить ответ"
 
 #. module: crm
 #: field:crm.meeting,vtimezone:0
@@ -3483,6 +3491,8 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Эти эл. адреса будут добавлены в поле \"Копия\" всей входящей и исходящей "
+"почты для этой записи. Разделяйте эл. адреса запятыми."
 
 #. module: crm
 #: constraint:res.partner:0
@@ -3646,7 +3656,7 @@ msgstr "Договор"
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead4
 msgid "Twitter Ads"
-msgstr ""
+msgstr "Реклама в Twitter"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_add_note.py:26
@@ -3688,12 +3698,12 @@ msgstr "Контакт партнера"
 #. module: crm
 #: field:crm.meeting,recurrent_id:0
 msgid "Recurrent ID date"
-msgstr ""
+msgstr "Дата повторяющегося ID"
 
 #. module: crm
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr "Вы не можете иметь двух одинаковых пользователей !"
+msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:100
@@ -3755,7 +3765,7 @@ msgstr "Функция"
 #. module: crm
 #: view:crm.add.note:0
 msgid "_Add"
-msgstr ""
+msgstr "_Добавить"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -3925,7 +3935,7 @@ msgstr "Последовательность"
 #. module: crm
 #: field:crm.send.mail,body:0
 msgid "Message Body"
-msgstr "Содержимое сообщения"
+msgstr "Тело сообщения"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -4266,406 +4276,27 @@ msgstr "Рассылка"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия."
 
-#~ msgid "Human Resources"
-#~ msgstr "Кадры"
-
-#~ msgid "Duration (Hours)"
-#~ msgstr "Длительность(в часах)"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 дней    "
-
-#~ msgid "Send to"
-#~ msgstr "Отправить"
-
-#~ msgid "Amount"
-#~ msgstr "Количество"
-
-#, python-format
-#~ msgid "Please specify user's email address !"
-#~ msgstr "Пожалуйста, укажите адрес электронной почты пользователя!"
-
-#~ msgid "Fixed"
-#~ msgstr "Фиксированное"
-
-#~ msgid "Exception Dates"
-#~ msgstr "Исключения (даты)"
-
-#~ msgid "Subscribe to a Remote calendar"
-#~ msgstr "Подписаться на удаленный календарь"
-
-#~ msgid "Description Information"
-#~ msgstr "Описание"
-
-#~ msgid "Dead"
-#~ msgstr "Умер[ла]"
-
-#~ msgid "Home"
-#~ msgstr "Главная"
-
-#~ msgid "All Meetings"
-#~ msgstr "Все встречи"
-
-#~ msgid "Meetings Tree"
-#~ msgstr "Диаграмма встреч"
-
-#~ msgid "Assigned to"
-#~ msgstr "Назначено на"
-
-#~ msgid "   Today   "
-#~ msgstr "   Сегодня   "
-
-#~ msgid "All Leads"
-#~ msgstr "Все кандидаты"
-
-#~ msgid "Emails"
-#~ msgstr "Эл.письма"
-
-#, python-format
-#~ msgid "Email!"
-#~ msgstr "Эл.сообщения!"
-
-#~ msgid "Radio"
-#~ msgstr "Радио"
-
-#~ msgid "Search Histories"
-#~ msgstr "Поиск истории"
-
-#~ msgid "Direction"
-#~ msgstr "Направление"
-
-#~ msgid "Plan Meeting"
-#~ msgstr "План встреч"
-
-#, python-format
-#~ msgid "There is no mail to reply!"
-#~ msgstr "Нет ел. почты чтобы ответить!"
-
 #~ msgid "Category of case"
 #~ msgstr "Категория вопроса"
-
-#~ msgid "Category Name"
-#~ msgstr "Название категории"
-
-#~ msgid "Print"
-#~ msgstr "Печать"
-
-#~ msgid "Meeting Date"
-#~ msgstr "Дата встречи"
-
-#~ msgid "Message..."
-#~ msgstr "Сообщение..."
-
-#~ msgid "Next Meetings"
-#~ msgstr "Следующие встречи"
-
-#~ msgid "_Subscribe"
-#~ msgstr "_Подписаться"
-
-#~ msgid "Meeting Generic Wizard"
-#~ msgstr "Мастер встреч"
-
-#~ msgid "Website"
-#~ msgstr "Сайт"
-
-#~ msgid "Funds"
-#~ msgstr "Фонды"
 
 #, python-format
 #~ msgid "open"
 #~ msgstr "открыть"
 
-#~ msgid "Mail"
-#~ msgstr "Электронная почта"
-
-#~ msgid "Other Info"
-#~ msgstr "Прочая информация"
-
-#~ msgid "Next Meeting"
-#~ msgstr "Следующая встреча"
-
-#~ msgid "Web"
-#~ msgstr "Веб"
-
-#~ msgid "Bug Tracking"
-#~ msgstr "Учет ошибок"
-
-#~ msgid "Campaign Type"
-#~ msgstr "Тип кампании"
-
-#~ msgid "Histories"
-#~ msgstr "Истории"
-
-#~ msgid "Leads Tree"
-#~ msgstr "Дерево кандидатов"
-
-#~ msgid "Attendee"
-#~ msgstr "Участник"
-
-#, python-format
-#~ msgid "Email Fail!"
-#~ msgstr "Ошибка ел. сообщения"
-
-#~ msgid "Est.Revenue"
-#~ msgstr "Оценка доходов"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "Ошибка! Вы не можете создавать рекурсивные секции."
-
-#~ msgid "This Year"
-#~ msgstr "Этот год"
-
-#~ msgid "Shared Calendar"
-#~ msgstr "Общий календарь"
-
-#~ msgid "Payment Mode"
-#~ msgstr "Режим оплаты"
-
-#~ msgid "Source"
-#~ msgstr "Источник"
-
-#~ msgid "Jobs"
-#~ msgstr "Вакансии"
-
-#~ msgid "Cancel Meeting"
-#~ msgstr "Отмена встречи"
-
-#~ msgid "Employee Email"
-#~ msgstr "Эл.почта сотрудника"
-
-#~ msgid "Credit Card"
-#~ msgstr "Кредитная карта"
-
-#~ msgid "Send Email"
-#~ msgstr "Отправить эл. письмо"
-
-#~ msgid "Events"
-#~ msgstr "События"
-
-#~ msgid "Cheque"
-#~ msgstr "Чек"
-
-#~ msgid "Recycled"
-#~ msgstr "Повторно используется"
-
-#~ msgid "All Opportunities"
-#~ msgstr "Все возможные сделки"
-
-#~ msgid "Sales"
-#~ msgstr "Продажи"
-
-#~ msgid "Assigned"
-#~ msgstr "Назначен"
-
-#~ msgid "Set Meeting"
-#~ msgstr "Выбрать совещание"
-
-#~ msgid "Invalid"
-#~ msgstr "Неверное значение"
-
-#~ msgid "Calendar of Meetings"
-#~ msgstr "Календарь встреч"
-
-#~ msgid "This Month"
-#~ msgstr "Этот месяц"
-
-#~ msgid "Availability (weeks)"
-#~ msgstr "Доступность (недели)"
-
-#~ msgid "Server Action"
-#~ msgstr "Действие сервера"
-
-#~ msgid "Email Address"
-#~ msgstr "Эл. адрес (e-mail):"
-
-#, python-format
-#~ msgid "Email not sent !"
-#~ msgstr "Ел. письмо не отправлено!"
-
-#~ msgid "Funds Form"
-#~ msgstr "Источник финансирования"
-
-#~ msgid "Lead Source"
-#~ msgstr "Источник кандидата"
-
-#~ msgid "In Process"
-#~ msgstr "В процессе"
-
-#~ msgid "File name"
-#~ msgstr "Имя файла"
-
-#~ msgid "Ok"
-#~ msgstr "Хорошо"
-
-#~ msgid "Import ICS"
-#~ msgstr "Импорт ICS"
-
 #~ msgid "Invalid arguments"
 #~ msgstr "Недопустимые аргументы"
-
-#~ msgid "Reporting"
-#~ msgstr "Отчетность"
-
-#~ msgid "Expected Salary"
-#~ msgstr "Ожидаемая зарплата"
-
-#~ msgid "Send New Mail"
-#~ msgstr "Послать новое ел.письмо"
-
-#~ msgid "Planned"
-#~ msgstr "Запланировано"
-
-#~ msgid "My Cases"
-#~ msgstr "Мои дела"
-
-#~ msgid "Funds Tree"
-#~ msgstr "Диаграмма финансирования"
-
-#~ msgid "Office"
-#~ msgstr "Офис"
-
-#~ msgid "Assign"
-#~ msgstr "Назначить"
-
-#~ msgid "Employee"
-#~ msgstr "Сотрудник"
-
-#~ msgid "Internal Notes"
-#~ msgstr "Внутренние примечания"
-
-#~ msgid "CONFIDENTIAL"
-#~ msgstr "КОНФИДЕНЦИАЛЬНО"
-
-#~ msgid "Meeting date"
-#~ msgstr "Дата проведения встречи"
-
-#~ msgid "_Import"
-#~ msgstr "_Импортировать"
-
-#~ msgid "Mass Mailing"
-#~ msgstr "Массовая рассылка"
-
-#~ msgid "Funds by Categories"
-#~ msgstr "Фонды по категориям"
-
-#~ msgid "Cash"
-#~ msgstr "Наличные"
-
-#~ msgid "Future"
-#~ msgstr "Будущие"
-
-#~ msgid "Leads Cases"
-#~ msgstr "Вопросы кандидатов"
-
-#~ msgid "Lead Email"
-#~ msgstr "Эл. почта кандидата"
-
-#~ msgid "Cases by Leads and Type"
-#~ msgstr "Вопросы по кандидатам и типу"
-
-#~ msgid "Lead Information"
-#~ msgstr "Информация кандидата"
-
-#~ msgid "Close Lead"
-#~ msgstr "Закрыть кандидата"
-
-#~ msgid "Lead Name"
-#~ msgstr "Имя кандидата"
-
-#~ msgid "Lead Subject"
-#~ msgstr "Кандидат - тема"
-
-#~ msgid ""
-#~ "Allows you to track and manage leads which are pre-sales requests or "
-#~ "contacts, the very first contact with a customer request."
-#~ msgstr ""
-#~ "Позволяет вам управлять кандидатами. Кандидат - контакт или запрос до начала "
-#~ "продаж, первый контакт с заказчиком."
-
-#~ msgid "Meeting For Leads Generation"
-#~ msgstr "Встреча для поиска кандидатов"
-
-#~ msgid "Lead Details"
-#~ msgstr "Детализация кандидата"
-
-#~ msgid "Cases by Section, Category and Stage"
-#~ msgstr "Вопросы по разделам, категориям и этапам"
-
-#~ msgid "Cases by section and stage"
-#~ msgstr "Вопросы по разделам и этапам"
-
-#~ msgid "Sales Stage"
-#~ msgstr "Этап продаж"
-
-#~ msgid "Cases by Section and Stage"
-#~ msgstr "Вопросы по разделам и этапам"
-
-#~ msgid "Cases By Stage and Estimates"
-#~ msgstr "Вопросы по этапам и оценкам"
-
-#~ msgid "Sales Stage: "
-#~ msgstr "Этап продаж: "
-
-#~ msgid "Cases by section, Category and stage"
-#~ msgstr "Вопросы по разделам, категориям и этапам"
-
-#~ msgid "Stage: "
-#~ msgstr "Этап: "
-
-#~ msgid "Cases by Leads and Stage"
-#~ msgstr "Вопросы по кандидатам и этапам"
-
-#~ msgid "TRANSPARENT"
-#~ msgstr "ПРОЗРАЧНЫЙ"
-
-#~ msgid ""
-#~ "Section to which Case belongs to. Define Responsible user and Email account "
-#~ "for mail gateway."
-#~ msgstr ""
-#~ "Раздел к которому принадлежит вопрос. Определяет ответственного пользователя "
-#~ "и учетную запись эл. почты для почтового шлюза."
 
 #~ msgid "Case Section"
 #~ msgstr "Раздел вопроса"
 
-#~ msgid "Gives the sequence order when displaying a list of case sections."
-#~ msgstr "Определяет последовательность вывода в списке разделов вопросов."
-
-#~ msgid "Proposed Salary"
-#~ msgstr "Предложенная зарплата"
-
-#~ msgid "Exception Rules"
-#~ msgstr "Правила исключений"
-
 #~ msgid "%(email_from)s = Partner email"
 #~ msgstr "%(email_from)s = эл. почта партнера"
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Принято как претензия"
 
 #~ msgid "%(partner)s = Partner name"
 #~ msgstr "%(partner)s = название партнера"
 
-#~ msgid "Confirm Meeting"
-#~ msgstr "Подтвердить встречу"
-
-#~ msgid "Existing Customer"
-#~ msgstr "Существующий клиент"
-
 #~ msgid "%(case_user_phone)s = Responsible phone"
 #~ msgstr "%(case_user_phone)s  = тел. ответственного"
-
-#~ msgid "Add CC"
-#~ msgstr "Добавить копию"
-
-#~ msgid "Allows to show calendar"
-#~ msgstr "Позволяет показать календарь"
-
-#~ msgid "Phone Call Description"
-#~ msgstr "Описание звонка"
-
-#~ msgid "New Business"
-#~ msgstr "Новый бизнес"
 
 #~ msgid "%(case_id)s = Case ID"
 #~ msgstr "%(case_id)s = ID вопроса"
@@ -4677,30 +4308,6 @@ msgstr "Рассылка"
 #~ "Вы должны назначить ответственного пользователя этого вопроса для "
 #~ "использования этого действия!"
 
-#~ msgid "Meetings Form"
-#~ msgstr "Форма встреч"
-
-#~ msgid "Related Cases"
-#~ msgstr "Связанные вопросы"
-
-#~ msgid "New Claims"
-#~ msgstr "Новые претензии"
-
-#~ msgid "Negotiation/Review"
-#~ msgstr "Переговоры/Обзор"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Договор подписан"
-
-#~ msgid "Date of Claim"
-#~ msgstr "Дата претензиии"
-
-#~ msgid "Existing Business"
-#~ msgstr "Существующий бизнес"
-
-#~ msgid "Factual Claims"
-#~ msgstr "Фактические претензии"
-
 #~ msgid ""
 #~ "The email address put in the 'Reply-To' of all emails sent by Open ERP about "
 #~ "cases in this section"
@@ -4708,61 +4315,18 @@ msgstr "Рассылка"
 #~ "Адрес эл. почты для ответа вам, который будет подставляться во все эл. "
 #~ "письма о вопросах в этом разделе"
 
-#~ msgid "Save in .ics format"
-#~ msgstr "Сохранить в .ics формате"
-
-#~ msgid ""
-#~ "Category related to the section.Subdivide the CRM cases independently or "
-#~ "section-wise."
-#~ msgstr ""
-#~ "Категория относящаяся к разделу. Подразделить вопросы независимо или по "
-#~ "разделам."
-
 #~ msgid "Trigger Date"
 #~ msgstr "Дата триггера"
-
-#~ msgid ""
-#~ "These people will receive a copy of the future communication between partner "
-#~ "and users by email"
-#~ msgstr ""
-#~ "Эти люди получат копии эл. писем будущей переписки между партнером и "
-#~ "пользователем."
-
-#~ msgid "Server Action to be Triggered"
-#~ msgstr "Действие сервера будет инициировано"
-
-#~ msgid "Junior Developer"
-#~ msgstr "Младший разработчик"
 
 #~ msgid "%(case_description)s = Case description"
 #~ msgstr "%(case_description)s = описание вопроса"
 
-#~ msgid "Export ICS"
-#~ msgstr "Экспорт ICS"
-
-#~ msgid "Preventive"
-#~ msgstr "Предупредительный"
-
 #~ msgid "Conditions on Case Fields"
 #~ msgstr "Условия для полей вопроса"
-
-#, python-format
-#~ msgid "You can not assign Closed Case."
-#~ msgstr "Вы не можете назначить закрытый вопрос."
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the partner."
 #~ msgstr "Отметьте, если хотите посылать партнеру напоминание по эл. почте."
-
-#~ msgid ""
-#~ "Manages the supplier and customers claims, including your corrective or "
-#~ "preventive actions."
-#~ msgstr ""
-#~ "Управление претензиями поставщиков и покупателей, включая ваши исправляющие "
-#~ "и упреждающие действия."
-
-#~ msgid "Cases by section and category2"
-#~ msgstr "Вопросы по разделам и категориям2"
 
 #~ msgid ""
 #~ "The rule use a AND operator. The case must match all non empty fields so "
@@ -4771,242 +4335,14 @@ msgstr "Рассылка"
 #~ "Правило использует оператор \"И\". Действие, описанное в таблице действий, "
 #~ "выполнится если все не пустые поля Вопроса совпадут с условиями."
 
-#~ msgid "Email Add CC"
-#~ msgstr "Добавить копию эл. письма"
-
-#~ msgid "Contract Proposed"
-#~ msgstr "Договор предложен"
-
-#~ msgid "Candidate Refused"
-#~ msgstr "Кандидат отказался"
-
-#~ msgid "Regex on Case Name"
-#~ msgstr "Regex на название вопроса"
-
 #~ msgid "%(partner_email)s = Partner email"
 #~ msgstr "%(partner_email)s = эл. почта партнера"
-
-#~ msgid "Cases by section, Category and Category2"
-#~ msgstr "Вопросы по разделам, категориям и категориям2"
-
-#~ msgid "Pending Claims"
-#~ msgstr "Претензии в ожидании"
-
-#~ msgid "Closed Won"
-#~ msgstr "Закрыто удачно"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the case "
-#~ "section without removing it."
-#~ msgstr ""
-#~ "Если активное поле истинно, то это позволит вам скрыть секцию вопросов без "
-#~ "ее удаления."
-
-#~ msgid "Cases by Section and Category2"
-#~ msgstr "Вопросы по разделу и категории2"
-
-#~ msgid "Learning And Education"
-#~ msgstr "Обучение и образование"
-
-#~ msgid "Are you sure you want to create a partner based on this phonecall ?"
-#~ msgstr "Вы уверены, что хотите создать партнера на основе этого звонка ?"
-
-#~ msgid "Convert to Partner"
-#~ msgstr "Превратить в партнера"
-
-#~ msgid "Self Generated"
-#~ msgstr "Создался сам"
-
-#~ msgid "Candidate Name"
-#~ msgstr "Имя кандидата"
-
-#~ msgid ""
-#~ "Helps you to organise the jobs hiring process: evaluation, meetings, email "
-#~ "integration..."
-#~ msgstr ""
-#~ "Помогает вам в организации процесса найма: оценка, встречи, интеграция эл. "
-#~ "почты и т.д."
-
-#~ msgid "Awaiting Response"
-#~ msgstr "В ожидании ответа"
-
-#~ msgid "Reply to Last Email"
-#~ msgstr "Ответить на последнее эл. письмо"
-
-#~ msgid "Won't fix"
-#~ msgstr "Не исправить"
-
-#~ msgid "Converted"
-#~ msgstr "Конвертирован"
-
-#~ msgid "Schedule a Phone Call"
-#~ msgstr "Назначить звонок"
-
-#~ msgid "Search Funds"
-#~ msgstr "Поиск средств"
-
-#~ msgid "Type of claim"
-#~ msgstr "Тип претензии"
-
-#~ msgid "Regular Expression on Case Name"
-#~ msgstr "Регулярное выражение для названия вопроса"
-
-#~ msgid "Search Claims"
-#~ msgstr "Поиск претензий"
-
-#~ msgid "Needs Analysis"
-#~ msgstr "Нуждается в анализе"
-
-#~ msgid "Closed Lost"
-#~ msgstr "Закрыто неудачно"
-
-#~ msgid "In Progress Claims"
-#~ msgstr "Претензии в процессе"
-
-#~ msgid "Add a CC"
-#~ msgstr "Добавить копию"
-
-#~ msgid "Manages the calendar of meetings of the users."
-#~ msgstr "Управление календарем встреч пользователя."
-
-#~ msgid "Proposal/Price Quote"
-#~ msgstr "Предложение/Запрос цен"
-
-#~ msgid ""
-#~ "Note that you can also use the calendar view to graphically schedule your "
-#~ "next meeting."
-#~ msgstr ""
-#~ "Примечание: вы можете использовать вид календаря для наглядного назначения "
-#~ "ваших встреч."
-
-#~ msgid "Contract Data"
-#~ msgstr "Данные контакта"
-
-#~ msgid "Fund Raising"
-#~ msgstr "Сбор средств"
-
-#~ msgid "OPAQUE"
-#~ msgstr "ТЕМНЫЙ"
-
-#~ msgid "Claims Info"
-#~ msgstr "Инф. о претензиях"
-
-#~ msgid "Case Category2 Name"
-#~ msgstr "Название категории2 вопроса"
-
-#~ msgid "Convert To Partner"
-#~ msgstr "Преобразовать в партнера"
-
-#~ msgid "Meeting Cases"
-#~ msgstr "Вопросы - встречи"
-
-#~ msgid "Prospecting"
-#~ msgstr "Разведка"
-
-#~ msgid "Import ICS File"
-#~ msgstr "Импорт файла ICS"
 
 #~ msgid "Telesales"
 #~ msgstr "Продажи по телефону"
 
-#~ msgid "%(case_date)s = Creation date"
-#~ msgstr "%(case_date)s = дата создания"
-
-#~ msgid "Set case state to"
-#~ msgstr "Установить состояние вопроса в"
-
-#~ msgid "Support Query"
-#~ msgstr "Запрос поддержки"
-
-#~ msgid "Candidate Name2"
-#~ msgstr "Название2 кандидата"
-
-#~ msgid "Attachment3"
-#~ msgstr "Вложение3"
-
-#~ msgid "Attachment2"
-#~ msgstr "Вложение2"
-
-#~ msgid "To Assign"
-#~ msgstr "Назначить"
-
-#~ msgid "Candidate Phone"
-#~ msgstr "Телефон кандидата"
-
-#~ msgid "Attachment1"
-#~ msgstr "Вложение1"
-
-#~ msgid "Degree"
-#~ msgstr "Степень, звание"
-
-#, python-format
-#~ msgid "Please provide Proper URL !"
-#~ msgstr "Пожалуйста предоставьте правильный URL !"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the case "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Если активное поле истинно, то это позволит вам скрыть вопрос без его "
-#~ "удаления."
-
-#, python-format
-#~ msgid "A partner is already existing with the same name."
-#~ msgstr "Партнер с таким названием уже существует."
-
-#~ msgid "Claim/Action Description"
-#~ msgstr "Описание претензии/действия"
-
-#~ msgid "Phonecall Cases"
-#~ msgstr "Вопросы - звонки"
-
-#~ msgid "PUBLIC"
-#~ msgstr "ПУБЛИЧНЫЙ"
-
-#~ msgid "History of Events"
-#~ msgstr "История событий"
-
-#~ msgid "Category2 of case"
-#~ msgstr "Категория2 вопроса"
-
 #~ msgid "%(case_user_email)s = Responsible email"
 #~ msgstr "(case_user_email)s = эл. почта ответственного"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Имя сотрудника"
-
-#~ msgid "All Claims"
-#~ msgstr "Все претензии"
-
-#~ msgid "Related Case"
-#~ msgstr "Связанный вопрос"
-
-#~ msgid "First Interview"
-#~ msgstr "Первое собеседование"
-
-#~ msgid "Search Case"
-#~ msgstr "Искать вопрос"
-
-#~ msgid "Regex on Communication History"
-#~ msgstr "Regex истории переписки"
-
-#~ msgid "Close Phonecall"
-#~ msgstr "Закрыть звонок"
-
-#~ msgid "PRIVATE"
-#~ msgstr "ЧАСТНЫЙ"
-
-#~ msgid "Candidate Hired"
-#~ msgstr "Кандидат нанят"
-
-#~ msgid "Goals"
-#~ msgstr "Цели"
-
-#~ msgid "After-Sale Services"
-#~ msgstr "Послепродажное обслуживание"
-
-#~ msgid "Cases by Section and Type"
-#~ msgstr "Вопросы по разделам и типу"
 
 #~ msgid "%(case_user)s = Responsible name"
 #~ msgstr "%(case_user)s = имя ответственного"
@@ -5016,63 +4352,6 @@ msgstr "Рассылка"
 
 #~ msgid "%(case_subject)s = Case subject"
 #~ msgstr "%(case_subject)s = предмет вопроса"
-
-#~ msgid "Relevant"
-#~ msgstr "Уместный"
-
-#~ msgid "Claim Cases"
-#~ msgstr "Вопросы - претензии"
-
-#~ msgid "Generic Wizard"
-#~ msgstr "Общий мастер настройки"
-
-#~ msgid "Trensparent"
-#~ msgstr "Прозрачный"
-
-#~ msgid "Word of mouth"
-#~ msgstr "Из уст в уста"
-
-#~ msgid "Cases by Opportunities, Category and Type"
-#~ msgstr "Вопросы по сделкам, категориям и типам"
-
-#~ msgid "Cases by Opportunities and Stage"
-#~ msgstr "Вопросы по сделкам и этапам"
-
-#~ msgid ""
-#~ "The channels represent the different communication modes available with the "
-#~ "customer. With each commercial opportunity, you can indicate the canall "
-#~ "which is this opportunity source."
-#~ msgstr ""
-#~ "Каналы представляют собой доступные виды коммуникаций с клиентом. Для каждой "
-#~ "сделки вы можете выбрать свой канал в качестве источника сделки."
-
-#~ msgid "Cases by Opportunities, Category and Stage"
-#~ msgstr "Вопросы по сделкам, категориям и этапам"
-
-#~ msgid "Opportunity Cases"
-#~ msgstr "Вопросы по сделкам"
-
-#~ msgid "Opportunities Tree"
-#~ msgstr "Диаграмма сделок"
-
-#~ msgid "Cases by Opportunities and Type"
-#~ msgstr "Вопросы по сделкам и типу"
-
-#~ msgid "Second Interview"
-#~ msgstr "Второе собеседование"
-
-#~ msgid "Used by companies to track bugs and support requests on software"
-#~ msgstr ""
-#~ "Используется компаниями для работы с ошибками и запросами на поддержку "
-#~ "программ"
-
-#~ msgid "Search Jobs"
-#~ msgstr "Поиск вакансий"
-
-#~ msgid ""
-#~ "Check this if you want the rule to send an email to the responsible person."
-#~ msgstr ""
-#~ "Отметьте, если вы хотите, чтобы посылались эл. письма ответственному лицу."
 
 #~ msgid ""
 #~ "Check this if you want that all documents attached to the case be attached "
@@ -5084,69 +4363,8 @@ msgstr "Рассылка"
 #~ msgid "Case Rule"
 #~ msgstr "Правило вопроса"
 
-#~ msgid "Next Interview"
-#~ msgstr "Следующее собеседование"
-
-#~ msgid "My Funds"
-#~ msgstr "Мои средства"
-
-#~ msgid ""
-#~ " Will allow you to synchronise your Open ERP calendars with your phone, "
-#~ "outlook, Sunbird, ical, ..."
-#~ msgstr ""
-#~ " Позволит вам синхронизировать ваш календарь в Open ERP с вашим телефоном, "
-#~ "программами Outlook, Sunbird, ical и т.д."
-
-#~ msgid "Corrective"
-#~ msgstr "Поправка"
-
-#~ msgid "Jobs - Recruitment Form"
-#~ msgstr "Вакансия - форма для найма"
-
-#~ msgid "Gives the sequence order when displaying a list of case rules."
-#~ msgstr "Определяет последовательность вывода списка правил вопроса."
-
-#~ msgid "Jobs Hiring Process"
-#~ msgstr "Вакансии - процесс найма"
-
-#~ msgid "Open Jobs"
-#~ msgstr "Открытые вакансии"
-
-#~ msgid "Email-id of the persons whom mail is to be sent"
-#~ msgstr "ID эл. почты для лиц, которым будет отпралено письмо"
-
-#~ msgid "Search Cases by User"
-#~ msgstr "Искать вопросы по пользователям"
-
-#~ msgid "Type of Action"
-#~ msgstr "Тип действия"
-
-#~ msgid "Candidate Email"
-#~ msgstr "Эл. почта кандидата"
-
-#~ msgid "Meeting With Candidates"
-#~ msgstr "Встреча с кандидатами"
-
 #~ msgid "Delay after trigger date"
 #~ msgstr "Задержка после даты триггера"
-
-#~ msgid "Arts And Culture"
-#~ msgstr "Искусство и культура"
-
-#~ msgid "All Funds"
-#~ msgstr "Все средства"
-
-#~ msgid "Cases by Section, Category and Type"
-#~ msgstr "Вопросы по разделам, категориям и типам"
-
-#~ msgid "Licenced"
-#~ msgstr "Лицензированный"
-
-#~ msgid "Fund Raising Cases"
-#~ msgstr "Вопросы сбора средств"
-
-#~ msgid "Healthcare"
-#~ msgstr "Здравоохранение"
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the user."
@@ -5156,69 +4374,11 @@ msgstr "Рассылка"
 #~ msgid "E-Mail Actions"
 #~ msgstr "Действия эл. почты"
 
-#~ msgid "% = The '%' Character"
-#~ msgstr "% = символ '%'"
-
 #~ msgid "Partner Email"
 #~ msgstr "Эл. почта партнера"
 
-#~ msgid "Not fixed"
-#~ msgstr "Не определено"
-
-#~ msgid "Content of mail"
-#~ msgstr "Содержимое письма"
-
-#~ msgid "New Jobs"
-#~ msgstr "Новые вакансии"
-
-#~ msgid "Save ICS file"
-#~ msgstr "Сохранить файл ICS"
-
-#~ msgid "Select ICS file"
-#~ msgstr "Выберите файл ICS"
-
-#~ msgid "Export ICS File"
-#~ msgstr "Экспорт файла ICS"
-
 #~ msgid "Case logs"
 #~ msgstr "Журналы вопроса"
-
-#~ msgid "Jobs - Hiring Process"
-#~ msgstr "Вакансии - процесс найма"
-
-#~ msgid "Job Info"
-#~ msgstr "Описание вакансии"
-
-#~ msgid "Pending Jobs"
-#~ msgstr "Вакансии в ожидании"
-
-#~ msgid "Close job request"
-#~ msgstr "Закрыть запрос вакансии"
-
-#~ msgid "Job Cases"
-#~ msgstr "Вопросы вакансий"
-
-#~ msgid "Are you sure you want to create a partner based on this job request ?"
-#~ msgstr ""
-#~ "Вы уверены, вы хотите создать партнера основанного на этом запросе вакансии ?"
-
-#~ msgid "All Jobs Requests"
-#~ msgstr "Все запросы вакансий"
-
-#~ msgid "Helpdesk Support"
-#~ msgstr "Техподдержка"
-
-#~ msgid "Manages an Helpdesk service."
-#~ msgstr "Управление службой техподдержки"
-
-#~ msgid "Helpdesk Supports"
-#~ msgstr "Техподдержка"
-
-#~ msgid "Helpdesk Cases"
-#~ msgstr "Вопросы техподдержки"
-
-#~ msgid "HelpDesk"
-#~ msgstr "Техподдержка"
 
 #~ msgid ""
 #~ "A period is the average number of days between two cycle of sale or purchase "
@@ -5231,57 +4391,6 @@ msgstr "Рассылка"
 #~ "классификации. Если партнер покупает редко, или совсем не покупает, то мы "
 #~ "предполагаем, что его мнение о нас ухудшилось и он покупает в другом месте. "
 #~ "Используйте эту функцию для повторяющихся сделок."
-
-#~ msgid "Claim Cost"
-#~ msgstr "Расходы по претензии"
-
-#, python-format
-#~ msgid "A partner is already defined on this job request."
-#~ msgstr "Партнер для этого запроса вакансии уже определен."
-
-#~ msgid "Provide path for Remote Calendar"
-#~ msgstr "Укажите путь для удаленного календаря"
-
-#~ msgid "Resource's Calendar"
-#~ msgstr "Календарь ресурсов"
-
-#, python-format
-#~ msgid "is converted to Opportunity."
-#~ msgstr "превращается в сделку."
-
-#~ msgid "Count"
-#~ msgstr "Количество"
-
-#~ msgid "Repeat max that times"
-#~ msgstr "Повторить максимальное количество раз"
-
-#~ msgid ""
-#~ "Create specific phone call categories to better sort the type of calls "
-#~ "tracked in the system."
-#~ msgstr ""
-#~ "Создайте специальные категории звонков, чтобы лучше сортировать звонки в "
-#~ "системе."
-
-#~ msgid "Claim"
-#~ msgstr "Претензия"
-
-#~ msgid "Interval"
-#~ msgstr "Интервал"
-
-#~ msgid "Custom"
-#~ msgstr "Свой"
-
-#~ msgid "Seconds"
-#~ msgstr "Секунд"
-
-#~ msgid "Custom Recurrency Rule"
-#~ msgstr "Дополнительное правило повтора"
-
-#~ msgid "Exclude range"
-#~ msgstr "Исключить диапазон"
-
-#~ msgid "Case Meeting"
-#~ msgstr "Встреча по вопросу"
 
 #~ msgid "New Form"
 #~ msgstr "Новая форма"
@@ -5303,3 +4412,6 @@ msgstr "Рассылка"
 
 #~ msgid "Tree View"
 #~ msgstr "В виде дерева"
+
+#~ msgid "Mail Campaign 1"
+#~ msgstr "Почтовая кампания 1"

@@ -33,7 +33,7 @@
             <field name="model">project.scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
+                <tree colors="grey:state in ('cancel','done');blue:state == 'pending'" string="Product Backlog">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="project_id"/>
@@ -129,7 +129,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter
                             icon="terp-check"
                             string="Current"
@@ -163,7 +163,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
@@ -302,7 +302,7 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
-                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
                         			string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
@@ -319,7 +319,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sprints">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
@@ -331,7 +331,7 @@
                         <field name="date_start"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Product owner" icon="terp-personal" domain="[]" context="{'group_by':'product_owner_id'}"/>
                         <filter string="Scrum Master" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
                         <separator orientation="vertical"/>
@@ -396,7 +396,9 @@
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
-                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
+                        <button name="%(mail.action_email_compose_message_wizard)d"
+                                string="Send Email" type="action" icon="terp-mail-message-new"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
@@ -427,7 +429,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
@@ -436,7 +438,7 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Meeting Date"/>

@@ -64,7 +64,7 @@ class idea_category(osv.osv):
     _order = 'parent_id,name asc'
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive categories.', ['parent_id'])
     ]
 
 idea_category()

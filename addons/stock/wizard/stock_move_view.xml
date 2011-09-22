@@ -89,6 +89,7 @@
                           <field name="product_uom" readonly="1"/>
                       </group>
                   </group>
+                  <field name="location_id" invisible="1"/>
 
                   <group colspan="4" attrs="{'invisible':[('use_exist','=',True)]}">
                         <field name="line_ids" colspan="4" nolabel="1">
@@ -105,12 +106,12 @@
                   <group colspan="4" attrs="{'invisible':[('use_exist','!=',True)]}">
                         <field name="line_exist_ids" colspan="4" nolabel="1">
                             <tree string="Production Lot Numbers" editable="bottom">
-                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]"/>
-                                <field name="quantity" />
+                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom)"/>
+                                <field name="quantity" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom)" />
                             </tree>
                             <form string="Production Lot Number">
-                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]"/>
-                                <field name="quantity" />
+                                <field name="prodlot_id" string="Lot number" domain="[('product_id','=',parent.product_id)]" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom)"/>
+                                <field name="quantity" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom)" />
                             </form>
                         </field>
                     </group>

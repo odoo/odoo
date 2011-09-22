@@ -46,14 +46,12 @@
 	                        help="POS ordered created during current month"/>
 	                    <filter icon="terp-go-month"
 	                         string="Month -1"
-	                         separator="1"
 	                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                         help="POS ordered created last month"/>
 	                    <separator orientation="vertical"/>
 	                    <filter icon="terp-go-today"
                              string="Today"
                              name="today"
-                             separator="1"
                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d'))]"
                              help="POS ordered created by today"/>
 	                    <separator orientation="vertical"/>
@@ -78,7 +76,7 @@
                         <field name="date_payment"/>
                     </group>
 	                <newline/>
-	                <group expand="1" string="Group By..." colspan="10" col="12">
+	                <group expand="1" string="Group By...">
 	                    <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
 	                    <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
 	                    <separator orientation="vertical"/>

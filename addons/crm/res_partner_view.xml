@@ -2,8 +2,50 @@
 <openerp>
     <data>
 
-         <!--  Partners inherited form -->
+        <!-- Add section_id (Sales Team) to res.partner -->
+        <record id="view_partners_form_crm1" model="ir.ui.view">
+                <field name="name">view.res.partner.form.crm.inherited1</field>
+                <field name="model">res.partner</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="base.view_partner_form"/>
+                <field eval="18" name="priority"/>
+                <field name="arch" type="xml">
+                    <field name="user_id" position="after">
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
+                    </field>
+                </field>
+        </record>
 
+        <record id="view_partners_tree_crm2" model="ir.ui.view">
+                <field name="name">view.res.partner.tree.crm.inherited2</field>
+                <field name="model">res.partner</field>
+                <field name="type">tree</field>
+                <field name="inherit_id" ref="base.view_partner_tree"/>
+                <field eval="18" name="priority"/>
+                <field name="arch" type="xml">
+                    <field name="country" position="after">
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
+                    </field>
+                </field>
+        </record>
+
+        <record id="view_partners_form_crm3" model="ir.ui.view">
+                <field name="name">view.res.partner.search.crm.inherited3</field>
+                <field name="model">res.partner</field>
+                <field name="type">search</field>
+                <field name="inherit_id" ref="base.view_res_partner_filter"/>
+                <field eval="18" name="priority"/>
+                <field name="arch" type="xml">
+                    <field name="category_id" position="after">
+                        <field name="section_id" completion="1" widget="selection"
+                            groups="base.group_extended"/>
+                    </field>
+                </field>
+        </record>
+
+        <!-- Add History tabs to res.partner form -->
         <record id="view_crm_partner_info_form1" model="ir.ui.view">
             <field name="name">res.partner.crm.info.inherit1</field>
             <field name="model">res.partner</field>
@@ -66,6 +108,9 @@
                 </page>
             </field>
         </record>
+
+
+
     </data>
 </openerp>
 

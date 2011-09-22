@@ -51,7 +51,7 @@
         <field name="model">marketing.campaign</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Campaigns">
+            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name" select="1"/>
                 <field name="object_id" select="1"/>
                 <field name="mode"/>
@@ -95,10 +95,10 @@
                <filter icon="terp-gtk-jump-to-rtl" string="Test Mode" name = "test" domain="[('mode','=','test')]"/>
                <filter icon="terp-gtk-jump-to-rtl" string="Manual Mode" domain="[('mode','=','manual')]"/>
                <separator orientation="vertical"/>
-               <field name="name" select="1"/>
-               <field name="object_id" select="1" string="Resource"/>
+               <field name="name"/>
+               <field name="object_id" string="Resource"/>
                <newline/>
-               <group expand="0" string="Group By..." colspan="10" col="12">
+               <group expand="0" string="Group By...">
                    <filter string="Resource" name="Object" icon="terp-accessories-archiver" context="{'group_by':'object_id'}" />
                    <separator orientation="vertical"/>
                    <filter string="Mode" name="Mode" icon="terp-gtk-jump-to-rtl" context="{'group_by':'mode'}" />
@@ -176,7 +176,7 @@
         <field name="model">marketing.campaign.segment</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('running');gray:state in ('done','cancelled')" string="Segments">
+            <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
                 <field name="campaign_id"/>
                 <field name="date_run"/>
@@ -200,12 +200,12 @@
                <filter icon="terp-stock_effects-object-colorize" string="Newly Modified" help="Sync mode: only records updated after last sync" domain="[('sync_mode','=','write_date')]"/>
                <filter icon="terp-emblem-documents" string="All" help="Sync mode: all records" domain="[('sync_mode','=','all')]"/>
                <separator orientation="vertical"/>
-               <field name="name" select="1"/>
-               <field name="campaign_id" select="1"/>
-               <field name="object_id" select="1"/>
-               <field name="date_run" select="1"/>
+               <field name="name"/>
+               <field name="campaign_id"/>
+               <field name="object_id"/>
+               <field name="date_run"/>
                <newline/>
-               <group expand="0" string="Group By..." colspan="10" col="12">
+               <group expand="0" string="Group By...">
                    <filter string="Campaign" name="Campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                    <separator orientation="vertical"/>
                    <filter string="State" name="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}" />
@@ -267,7 +267,7 @@
                     <field name="type"/>
                     <group colspan='2' col='1'>
                         <field name="email_template_id" attrs="{'required':[('type','=','email')], 'invisible':[('type','!=','email')]}"
-                               context="{'default_object_name':object_id}" />
+                               context="{'default_model_id':object_id}" />
                         <group attrs="{'invisible':[('type','!=','report')]}" >
                             <field name="report_id" attrs="{'required':[('type','=','report')]}" context="{'object_id':object_id}"/>
                             <field name="report_directory_id" attrs="{'required':[('type','=','report')]}" />
@@ -334,7 +334,7 @@
         <field name="model">marketing.campaign.workitem</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="red:state in ('exception');black:state in ('todo');gray:state in ('cancelled')" string="Marketing Campaign Activities">
+            <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
                 <field name="segment_id"/>
                 <field name="activity_id" />
@@ -397,7 +397,7 @@
        <field name="type">search</field>
        <field name="arch" type="xml">
            <search string="Marketing Campaign Activities">
-               <group colspan="4" col="10">
+               <group>
                 <filter icon="terp-go-today" string="Today" name="today" domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
                 <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','todo')]"/>
                 <filter icon="terp-emblem-important" string="Exception" domain="[('state','=','exception')]"/>
@@ -412,7 +412,7 @@
                 <field name="partner_id"/>
                </group>
                <newline/>
-               <group expand="0" string="Group By..." colspan="10" col="12">
+               <group expand="0" string="Group By...">
                    <filter string="Campaign" name="campaign" icon="terp-gtk-jump-to-rtl" context="{'group_by':'campaign_id'}" />
                    <filter string="Segment" name="segment" icon="terp-stock_symbol-selection" context="{'group_by':'segment_id'}" />
                    <filter string="Activity" name="activity" icon="terp-stock_align_left_24" context="{'group_by':'activity_id'}" />
