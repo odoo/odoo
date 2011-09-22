@@ -26,14 +26,14 @@
 	      <field name="name">Bilanzkonten - Aktiva - Vermögenskonten</field>
 	      <field name="code">balance asset</field>
               <field name="report_type">asset</field>
-	      <field name="close_method">balance</field>
+	      <field name="close_method">unreconciled</field>
 	    </record>
 
 	   <record model="account.account.type" id="account.account_type_liability">
 	      <field name="name">Bilanzkonten - Passiva - Kapitalkonten</field>
 	      <field name="code">balance liability</field>
               <field name="report_type">liability</field>
-	      <field name="close_method">balance</field>
+	      <field name="close_method">unreconciled</field>
 	    </record>
  	<record model="account.account.type" id="account.account_type_other">
 	      <field name="name">Jahresabschlusskonten u. Statistik</field>

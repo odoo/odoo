@@ -12,13 +12,13 @@
 		<record id="user_type_capital" model="account.account.type">
 			<field name="name">资产类</field>
 			<field name="code">1</field>
-			<field name="close_method">balance</field>
+			<field name="close_method">unreconciled</field>
             <field name="report_type">asset</field>
 		</record>
 		<record id="user_type_debt" model="account.account.type">
 			<field name="name">负债类</field>
 			<field name="code">2</field>
-			<field name="close_method">balance</field>
+			<field name="close_method">unreconciled</field>
 			<field name="report_type">liability</field>
 		</record>
 		<record id="user_type_all" model="account.account.type">
@@ -29,7 +29,7 @@
 		<record id="user_type_equity" model="account.account.type">
 			<field name="name">所有者权益类</field>
 			<field name="code">4</field>
-			<field name="close_method">balance</field>
+			<field name="close_method">unreconciled</field>
 			<field name="report_type">liability</field>
 		</record>
 		<record id="user_type_cost" model="account.account.type">
