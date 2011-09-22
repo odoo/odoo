@@ -42,7 +42,6 @@ class stock_period(osv.osv):
         'date_start': fields.datetime('Start Date', required=True),
         'date_stop': fields.datetime('End Date', required=True),
         'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
-        'planning_id': fields.many2one('stock.period.createlines', 'Stock Period Planning'),
     }
     _defaults = {
         'state': 'draft'
