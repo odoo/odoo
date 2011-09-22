@@ -93,43 +93,60 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         this.$element.find('.sel_fields').autocomplete({
             minLength: 0,
-            source: results.all_fields
+            source: results.all_fields,
+            change: function () {
+                self.on_check_field_values(results['required_fields']);
+            }
         }).focus(function () {
             $(this).autocomplete('search');
-        }).change(function() {
-            self.on_change_check(results['required_fields']);
         });
 
-        this.on_change_check(results['required_fields']);
+        this.on_check_field_values(results['required_fields']);
     },
-    on_change_check: function (required_fields){
-        var self = this;
-        self.$element.find("#message, #msg").remove();
-        var selected_flds = self.$element.find("td #sel_field option:selected");
-        _.each(selected_flds, function(fld) {
-            if (fld.index != 0) {
-                var res = self.$element.find("td #sel_field option:selected[value='" + fld.value + "']");
-                if (res.length == 1) {
-                    res.parent().removeClass("duplicate_fld").addClass("select_fld");
-                } else if (res.length > 1) {
-                    res.parent().removeClass("select_fld").addClass("duplicate_fld");
-                    res.parent().focus();
-                }
+    on_check_field_values: function (required_fields) {
+        this.$element.find("#message, #msg").remove();
+
+        // Maps values to DOM nodes, in order to discover duplicates
+        var values = {}, duplicates = {};
+        this.$element.find(".sel_fields").each(function (index, element) {
+            var value = element.value;
+            var $element = $(element).removeClass('duplicate_fld');
+            if (!value) { return; }
+
+            if (!(value in values)) {
+                values[value] = element;
             } else {
-                var elem = self.$element.find("td #sel_field option:selected[value='" + fld.value + "']");
-                elem.parent().removeClass("duplicate_fld").addClass("select_fld");
+                var same_valued_field = values[value];
+                if (value in duplicates) {
+                    duplicates[value].push(element);
+                } else {
+                    duplicates[value] = [same_valued_field, element];
+                }
+                $element.add(same_valued_field).addClass('duplicate_fld');
             }
         });
-        if (self.$element.find(".duplicate_fld").length) {
-            this.$element.find("#result").before('<div id="msg" style="color:red">*Selected column should not be same.</div>');
+
+        if (!_.isEmpty(duplicates)) {
+            var $err = $('<div id="msg" style="color: red;">Destination fields should only be selected once, some fields are selected more than once:</div>')
+                .insertBefore(this.$element.find('#result'));
+            var $dupes = $('<dl>').appendTo($err);
+            _(duplicates).each(function (elements, value) {
+                $('<dt>').text(value).appendTo($dupes);
+                _(elements).each(function (element) {
+                    var cell = $(element).closest('td');
+                    $('<dd>').text(cell.parent().children().index(cell))
+                           .appendTo($dupes);
+                });
+            });
             this.toggle_import_button(false);
         } else {
-            self.$element.find("#msg").remove();
+            this.$element.find("#msg").remove();
             this.toggle_import_button(true);
         }
-        self.do_check_req_field(required_fields);
+
+        this.do_check_required(required_fields);
     },
-    do_check_req_field: function(req_fld) {
+    do_check_required: function(req_fld) {
         if (!req_fld.length) { return; }
 
         this.$element.find("#message").remove();
