@@ -106,9 +106,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     on_check_field_values: function (required_fields) {
         this.$element.find("#message, #msg").remove();
 
+        var required_valid = this.check_required(required_fields);
+
         // Maps values to DOM nodes, in order to discover duplicates
         var values = {}, duplicates = {};
-        this.$element.find(".sel_fields").each(function (index, element) {
+        this.$element.find(".sel_fields").each(function(index, element) {
             var value = element.value;
             var $element = $(element).removeClass('duplicate_fld');
             if (!value) { return; }
@@ -126,27 +128,24 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             }
         });
 
-        if (!_.isEmpty(duplicates)) {
-            var $err = $('<div id="msg" style="color: red;">Destination fields should only be selected once, some fields are selected more than once:</div>')
-                .insertBefore(this.$element.find('#result'));
+        if (_.isEmpty(duplicates)) {
+            this.toggle_import_button(required_valid);
+        } else {
+            var $err = $('<div id="msg" style="color: red;">Destination fields should only be selected once, some fields are selected more than once:</div>').insertBefore(this.$element.find('#result'));
             var $dupes = $('<dl>').appendTo($err);
-            _(duplicates).each(function (elements, value) {
+            _(duplicates).each(function(elements, value) {
                 $('<dt>').text(value).appendTo($dupes);
-                _(elements).each(function (element) {
+                _(elements).each(function(element) {
                     var cell = $(element).closest('td');
-                    $('<dd>').text(cell.parent().children().index(cell))
-                           .appendTo($dupes);
+                    $('<dd>').text(cell.parent().children().index(cell)).appendTo($dupes);
                 });
             });
             this.toggle_import_button(false);
-        } else {
-            this.toggle_import_button(true);
         }
 
-        this.do_check_required(required_fields);
     },
-    do_check_required: function(required_fields) {
-        if (!required_fields.length) { return; }
+    check_required: function(required_fields) {
+        if (!required_fields.length) { return true; }
 
         var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
             .pluck('value')
@@ -156,10 +155,9 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var missing_fields = _.difference(required_fields, selected_fields);
         if (missing_fields.length) {
             this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + missing_fields + '.</div>');
-            this.toggle_import_button(false);
-        } else {
-            this.toggle_import_button(true);
+            return false;
         }
+        return true;
     },
     stop: function() {
         $(this.$dialog).remove();
