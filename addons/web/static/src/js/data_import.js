@@ -79,7 +79,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var records = {};
 
         if (results['records']) {
-            records = {'header': results['header'], 'sel': results['all_fields'], 'row': results['records']};
+            records = {'header': results['header'], 'row': results['records']};
             result_node.append(QWeb.render('ImportView-result', {'records': records}));
         } else if (results['error']) {
             result_node.append(QWeb.render('ImportView-result', {'error': results['error']}));
@@ -89,6 +89,14 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 this.widget_parent.reload_content();
             }
         }
+
+        this.$element.find('.sel_fields').autocomplete({
+            minLength: 0,
+            source: results.all_fields
+        }).focus(function () {
+            $(this).autocomplete('search');
+        });
+
         this.do_check_req_field(results['req_field']);
         this.on_change_check(results['req_field']);
         var self = this;

@@ -1459,23 +1459,17 @@
         </t>
     </t>
     <table t-if="records" class="oe_import_grid" width="100%" style="margin: 5px 0;">
-        <t t-foreach="records" t-as="record">
-            <tr t-if="record=='header'" class="oe_import_grid-header">
-                <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell"><t t-esc="header[0]"/></td>
-            </tr>
-            <tr t-if="record=='sel'">
-                <td t-foreach="records.header" t-as="header">
-                    <select id="sel_field" class="select_fld">
-                        <option selected="selected" value=""></option>
-                        <option t-foreach="records.sel" t-as="selection" t-att="{'selected': header[0] === selection ? 'selected' : null}"
-                                t-att-value="selection"><t t-esc="selection"/></option>
-                    </select>
-                </td>
-            </tr>
-            <tr t-if="record=='row'" t-foreach="records.row" t-as="row" class="oe_import_grid-row">
-                <td t-foreach="row" t-as="column" class="oe_import_grid-cell"><t t-esc="column"/></td>
-            </tr>
-        </t>
+        <tr class="oe_import_grid-header">
+            <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell"><t t-esc="header[0]"/></td>
+        </tr>
+        <tr>
+            <td t-foreach="records.header" t-as="header">
+                <input class="sel_fields"/>
+            </td>
+        </tr>
+        <tr t-foreach="records.row" t-as="row" class="oe_import_grid-row">
+            <td t-foreach="row" t-as="column" class="oe_import_grid-cell"><t t-esc="column"/></td>
+        </tr>
     </table>
 </t>
 
