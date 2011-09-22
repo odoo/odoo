@@ -2775,7 +2775,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
         </record>
 
         <record id="action_account_financial_report_tree" model="ir.actions.act_window">
-            <field name="name">Account Reports</field>
+            <field name="name">Financial Reports</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.financial.report</field>
             <field name="view_type">form</field>
@@ -2802,7 +2802,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
             </field>
         </record>
         <record id="action_account_report_tree_hierarchy" model="ir.actions.act_window">
-            <field name="name">Account Reports Hierarchy</field>
+            <field name="name">Financial Reports Hierarchy</field>
             <field name="res_model">account.financial.report</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_report_tree_hierarchy"/>
