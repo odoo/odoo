@@ -1427,6 +1427,14 @@
                     <legend style="cursor:pointer;">CSV Options</legend>
                     <table style="display:none">
                         <tr>
+                            <td colspan="4">
+                                <label for="file_has_headers">Does your file have titles?</label>
+                                <input type="checkbox" checked="checked"
+                                        id="file_has_headers"
+                                        name="file_has_headers"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><label>Separator:</label></td>
                             <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
                             <td><label>Delimiter:</label></td>
@@ -1441,7 +1449,7 @@
                                 </select>
                             </td>
                             <td><label>Lines to skip:</label></td>
-                            <td><input type="text" name="csvskip" id="csv_skip" value="1"/></td>
+                            <td><input type="text" name="csvskip" id="csv_skip" value="0"/></td>
                         </tr>
                     </table>
                 </fieldset>

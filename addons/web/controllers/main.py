@@ -1420,7 +1420,7 @@ class Import(View):
 
     @openerpweb.httprequest
     def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
-                    jsonp):
+                    file_has_headers, jsonp):
 
         _fields = {}
         _fields_invert = {}
@@ -1509,7 +1509,7 @@ class Import(View):
 
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
-                        jsonp):
+                    file_has_headers, jsonp):
 
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)
