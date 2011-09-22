@@ -984,10 +984,7 @@ def detect_server_timezone():
     return 'UTC'
 
 def get_server_timezone():
-    # timezone detection is safe in multithread, so lazy init is ok here
-    if (not config['timezone']):
-        config['timezone'] = detect_server_timezone()
-    return config['timezone']
+    return "UTC"
 
 
 DEFAULT_SERVER_DATE_FORMAT = "%Y-%m-%d"

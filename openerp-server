@@ -232,6 +232,8 @@ def quit_on_signals():
 
 if __name__ == "__main__":
 
+    os.environ["TZ"] = "UTC"
+
     check_root_user()
     openerp.tools.config.parse_config(sys.argv[1:])
     check_postgres_user()
