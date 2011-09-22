@@ -553,7 +553,7 @@ class users_implied(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
-        groups = values.pop('groups_id')
+        groups = values.pop('groups_id', None)
         user_id = super(users_implied, self).create(cr, uid, values, context)
         if groups:
             # delegate addition of groups to add implied groups
