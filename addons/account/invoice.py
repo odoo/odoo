@@ -930,7 +930,8 @@ class account_invoice(osv.osv):
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name})
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
-            self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice':inv})
+            if journal.entry_posted:
+                self.pool.get('account.move').post(cr, uid, [move_id], context={'invoice':inv})
         self._log_event(cr, uid, ids)
         return True
 

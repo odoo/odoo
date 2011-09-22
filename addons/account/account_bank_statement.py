@@ -293,7 +293,8 @@ class account_bank_statement(osv.osv):
                         _('Journal Item "%s" is not valid') % line.name)
 
         # Bank statements will not consider boolean on journal entry_posted
-        account_move_obj.post(cr, uid, [move_id], context=context)
+        if st.journal_id.entry_posted:
+            account_move_obj.post(cr, uid, [move_id], context=context)
         return move_id
 
     def get_next_st_line_number(self, cr, uid, st_number, st_line, context=None):
