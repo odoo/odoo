@@ -240,7 +240,7 @@
             <para style="terp_default_Right_9">[[ formatLang(a['ref_qty']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(a['ref_amt']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(a['ref_amt'], currency_obj=company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">100.00%</para>
@@ -288,7 +288,7 @@
             <para style="terp_default_Right_9">[[formatLang(a['qty']) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(a['amt']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(a['amt'], currency_obj=company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(a['perc']) ]]%</para>

@@ -207,7 +207,7 @@
         </td>
         <td>
           <para style="terp_default_Right_9">
-            <font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[ formatLang(a['balance1']) ]] [[ company.currency_id.symbol ]]</font>
+          <font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(a['balance1'], currency_obj=company.currency_id) ]]</font>
           </para>
         </td>
         <td>
@@ -224,7 +224,7 @@
         <td>
           <para style="terp_default_Right_9">
             <font>[[ ( a['level']&lt;4 or a['name']=='Net Profit') and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font>
-            <font>[[(a['code'] and a['name']) and formatLang(a['balance']) or removeParentNode('font')]] [[ company.currency_id.symbol ]]</font>
+            <font>[[(a['code'] and a['name']) and formatLang(a['balance'], currency_obj=company.currency_id) or removeParentNode('font')]]</font>
           </para>
         </td>
       </tr>
@@ -235,13 +235,13 @@
           <para style="terp_default_Bold_9">Balance:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_cr()) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_cr(), currency_obj=company.currency_id) ) ]]</u></para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Balance:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_dr()) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_dr(), currency_obj=company.currency_id) ) ]]</u></para>
         </td>
       </tr>
     </blockTable>
