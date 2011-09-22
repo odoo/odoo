@@ -348,7 +348,8 @@ class purchase_order(osv.osv):
 
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
-
+        property_obj = self.pool.get('ir.property')
+        fp_obj =  self.pool.get('account.fiscal.position')
         journal_obj = self.pool.get('account.journal')
         for o in self.browse(cr, uid, ids):
             il = []
@@ -356,22 +357,22 @@ class purchase_order(osv.osv):
             for ol in o.order_line:
                 todo.append(ol.id)
                 if ol.product_id:
-                    a = ol.product_id.product_tmpl_id.property_account_expense.id
-                    if not a:
-                        a = ol.product_id.categ_id.property_account_expense_categ.id
-                    if not a:
+                    acc_id = ol.product_id.product_tmpl_id.property_account_expense.id
+                    if not acc_id:
+                        acc_id = ol.product_id.categ_id.property_account_expense_categ.id
+                    if not acc_id:
                         raise osv.except_osv(_('Error !'), _('There is no expense account defined for this product: "%s" (id:%d)') % (ol.product_id.name, ol.product_id.id,))
                 else:
-                    acc_id = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category')
-                    a = acc_id and acc_id.id or False
+                    prop = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    acc_id = prop and prop.id or False
                 fpos = o.fiscal_position or False
-                a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, a)
-                if not a:
+                acc_id = fp_obj.map_account(cr, uid, fpos, acc_id)
+                if not acc_id:
                     raise osv.except_osv(_('Error !'),
                         _('There is no expense account defined in default Properties for Product Category or Fiscal Position is not defined !'))
-                il.append(self.inv_line_create(cr, uid, a, ol))
+                il.append(self.inv_line_create(cr, uid, acc_id, ol))
 
-            a = o.partner_id.property_account_payable.id
+            acc_id = o.partner_id.property_account_payable.id
             journal_ids = journal_obj.search(cr, uid, [('type', '=','purchase'),('company_id', '=', o.company_id.id)], limit=1)
             if not journal_ids:
                 raise osv.except_osv(_('Error !'),
@@ -379,7 +380,7 @@ class purchase_order(osv.osv):
             inv = {
                 'name': o.partner_ref or o.name,
                 'reference': o.partner_ref or o.name,
-                'account_id': a,
+                'account_id': acc_id,
                 'type': 'in_invoice',
                 'partner_id': o.partner_id.id,
                 'currency_id': o.pricelist_id.currency_id.id,

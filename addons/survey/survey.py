@@ -506,8 +506,7 @@ class survey_question(osv.osv):
             if context.get('line_order', False):
                 lines =  context.get('line_order')
                 seq = data.get('sequence', 0)
-                for line in lines:
-                    seq = seq + 1
+                seq += len(lines)
                 data.update({'sequence': seq})
         return data
 
