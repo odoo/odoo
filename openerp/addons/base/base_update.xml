@@ -75,29 +75,29 @@
     -->
 
         <record id="view_users_form_simple_modif" model="ir.ui.view">
-            <field name="name">res.users.form.modif</field>
+            <field name="name">res.users.preferences.form</field>
             <field name="model">res.users</field>
             <field name="type">form</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="name"/>
+                    <field name="name" readonly="1"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Preferences" colspan="2"/>
-                        <field name="view"/>
-                        <field name="context_lang"/>
-                        <field name="context_tz"/>
-                        <field name="menu_tips"/>
+                        <field name="view" readonly="0"/>
+                        <field name="context_lang" readonly="0"/>
+                        <field name="context_tz" readonly="0"/>
+                        <field name="menu_tips" readonly="0"/>
                     </group>
                     <group name="default_filters" colspan="2" col="2">
                         <separator string="Default Filters" colspan="2"/>
-                        <field name="company_id" widget="selection"
+                        <field name="company_id" widget="selection" readonly="0"
                             groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     </group>
                     <separator string="Email Preferences" colspan="4"/>
-                    <field colspan="4" name="user_email" widget="email"/>
-                    <field colspan="4" name="signature"/>
+                    <field colspan="4" name="user_email" widget="email" readonly="0"/>
+                    <field colspan="4" name="signature" readonly="0"/>
                 </form>
             </field>
         </record>
@@ -147,7 +147,7 @@
                         <page string="Access Rights">
                             <field nolabel="1" name="groups_id"/>
                         </page>
-                        <page string="Companies" groups="base.group_multi_company">
+                        <page string="Allowed Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
                         </page>
                     </notebook>

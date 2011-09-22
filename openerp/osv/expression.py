@@ -212,7 +212,7 @@ class expression(object):
                         break
                     working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
                     if working_table not in self.__all_tables:
-                        self.__joins.append('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
+                        self.__joins.append('%s."%s"=%s."%s"' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
                         self.__all_tables.add(working_table)
                     main_table = working_table
 
@@ -425,10 +425,10 @@ class expression(object):
                     self.__exp[i] = tuple(self.__exp[i])
 
                 if field.translate:
-                    if operator in ('like', 'ilike', 'not like', 'not ilike'):
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    if need_wildcard:
                         right = '%%%s%%' % right
-
-                    operator = operator == '=like' and 'like' or operator
 
                     query1 = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
@@ -437,19 +437,19 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if operator in ['in','not in']:
+                    if sql_operator in ['in','not in']:
                         instr = ','.join(['%s'] * len(right))
-                        query1 += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
+                        query1 += '     AND value ' + sql_operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + ' ' +" (" + instr + "))"
+                             '   WHERE "' + left + '" ' + sql_operator + ' ' +" (" + instr + "))"
                     else:
-                        query1 += '     AND value ' + operator + instr +   \
+                        query1 += '     AND value ' + sql_operator + instr +   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + operator + instr + ")"
+                             '   WHERE "' + left + '" ' + sql_operator + instr + ")"
 
                     query2 = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
@@ -467,7 +467,7 @@ class expression(object):
         left, operator, right = leaf
 
         if operator == 'inselect':
-            query = '(%s.%s in (%s))' % (table._table, left, right[0])
+            query = '(%s."%s" in (%s))' % (table._table, left, right[0])
             params = right[1]
         elif operator in ['in', 'not in']:
             params = right and right[:] or []
@@ -485,36 +485,36 @@ class expression(object):
                     instr = ','.join(['%s'] * len_after)
                 else:
                     instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
-                query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
+                query = '(%s."%s" %s (%s))' % (table._table, left, operator, instr)
             else:
                 # the case for [field, 'in', []] or [left, 'not in', []]
                 if operator == 'in':
-                    query = '(%s.%s IS NULL)' % (table._table, left)
+                    query = '(%s."%s" IS NULL)' % (table._table, left)
                 else:
-                    query = '(%s.%s IS NOT NULL)' % (table._table, left)
+                    query = '(%s."%s" IS NOT NULL)' % (table._table, left)
             if check_nulls:
-                query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
         else:
             params = []
 
             if right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator == '='):
-                query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left,table._table, left)
+                query = '(%s."%s" IS NULL or %s."%s" = false )' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
-                query = '%s.%s IS NULL ' % (table._table, left)
+                query = '%s."%s" IS NULL ' % (table._table, left)
             elif right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator in ['<>', '!=']):
-                query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left,table._table, left)
+                query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table._table, left,table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
-                query = '%s.%s IS NOT NULL' % (table._table, left)
+                query = '%s."%s" IS NOT NULL' % (table._table, left)
             elif (operator == '=?'):
                 op = '='
                 if (right is False or right is None):
                     return ( 'TRUE',[])
                 if left in table._columns:
                         format = table._columns[left]._symbol_set[0]
-                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                        query = '(%s."%s" %s %s)' % (table._table, left, op, format)
                         params = table._columns[left]._symbol_set[1](right)
                 else:
-                        query = "(%s.%s %s '%%s')" % (table._table, left, op)
+                        query = "(%s.\"%s\" %s '%%s')" % (table._table, left, op)
                         params = right
 
             else:
@@ -522,17 +522,16 @@ class expression(object):
                     query = '%s.id %s %%s' % (table._table, operator)
                     params = right
                 else:
-                    like = operator in ('like', 'ilike', 'not like', 'not ilike')
-
-                    op = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
                     if left in table._columns:
-                        format = like and '%s' or table._columns[left]._symbol_set[0]
-                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                        format = need_wildcard and '%s' or table._columns[left]._symbol_set[0]
+                        query = '(%s."%s" %s %s)' % (table._table, left, sql_operator, format)
                     else:
-                        query = "(%s.%s %s '%s')" % (table._table, left, op, right)
+                        query = "(%s.\"%s\" %s '%s')" % (table._table, left, sql_operator, right)
 
                     add_null = False
-                    if like:
+                    if need_wildcard:
                         if isinstance(right, str):
                             str_utf8 = right
                         elif isinstance(right, unicode):
@@ -545,7 +544,7 @@ class expression(object):
                         params = table._columns[left]._symbol_set[1](right)
 
                     if add_null:
-                        query = '(%s OR %s IS NULL)' % (query, left)
+                        query = '(%s OR \"%s\" IS NULL)' % (query, left)
 
         if isinstance(params, basestring):
             params = [params]

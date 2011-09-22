@@ -233,6 +233,7 @@ class report_rml(report_int):
     def _get_path(self):
         ret = []
         ret.append(self.tmpl.replace(os.path.sep, '/').rsplit('/',1)[0]) # Same dir as the report rml
+        ret.append('addons')
         ret.append(tools.config['root_path'])
         return ret
 
