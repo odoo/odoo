@@ -40,15 +40,10 @@
             <field name="target">new</field>
         </record>
 
-        <record id="category_purchase_configuration" model="ir.actions.todo.category">
-            <field name="name">Purchase Management</field>
-            <field name="sequence">5</field>
-        </record>
-        
         <!-- register configuration wizard -->
         <record id="config_wizard_step_purchase_limit_amount" model="ir.actions.todo">
             <field name="action_id" ref="action_config_purchase_limit_amount"/>
-            <field name="category_id" ref="category_purchase_configuration"/>
+            <field name="category_id" ref="project.category_purchase_config"/>
         </record>
         
     </data>

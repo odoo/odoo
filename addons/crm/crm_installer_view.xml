@@ -25,12 +25,13 @@
     </record>
     
     <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
-        <field name="name">Create Sales Team</field>
+        <field name="name">Define Sales Team</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.case.section</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm.crm_case_section_view_tree"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
         <field name="help">Define sales teams to structure your sales organization and assign users to each team. You should also define the sales stage to each team. As an example, if you use Solutions Selling techniques to track your opportunities, you can assign the following stage to the team: Territory, Qualified, Qualified Sponsors, Proposition, Negociaton, Won/Lost.</field>
     </record>
 
@@ -55,6 +56,5 @@
         <field name="category_id" ref="base.category_sales_management_config"/>
         <field name="sequence">10</field>
     </record>
-
   </data>
 </openerp>
