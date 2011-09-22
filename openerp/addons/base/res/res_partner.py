@@ -345,6 +345,26 @@ class res_partner_address(osv.osv):
     def get_city(self, cr, uid, id):
         return self.browse(cr, uid, id).city
 
+    def display_address(self, cr, uid, context, address_obj): #,field_list=[]):
+#        if isinstance(address_id, list):
+#            address_id = address_id[0]
+#        address_obj = self.browse(cr, uid, address_id)
+        
+        address_field = ['title','street','street2','zip','city']
+        args = {}
+        for field in address_field :
+#            args[field] = field_list and field in field_list and getattr(address_obj,field) or getattr(address_obj,field) or ''
+            args[field] = getattr(address_obj,field) and getattr(address_obj,field) or ''
+        #TODO
+        args['state_code'] = address_obj.state_id and address_obj.state_id.code or ''
+        args['state_name'] = address_obj.state_id and address_obj.state_id.name or ''
+        args['country_code'] = address_obj.country_id and address_obj.country_id.code or ''
+        args['country_name'] = address_obj.country_id and address_obj.country_id.name or ''
+        # If no country is defined - just in case
+        address_format = address_obj.country_id and address_obj.country_id.address_format or \
+                                         '%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s' 
+        return address_format % args
+
 res_partner_address()
 
 class res_partner_category(osv.osv):
