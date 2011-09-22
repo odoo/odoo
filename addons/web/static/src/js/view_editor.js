@@ -116,6 +116,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
             child_obj_list.push(string);
         });
+       
         if(children_list.length != 0){
             var child_ids = _.map(child_obj_list ,function(num){return num.id;});
             parent_child_id.push({'key': parent_id, 'value': child_ids});
@@ -184,6 +185,30 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 self.on_collapse(this,one_object['parent_child_id']);
             }
         });
+    $("img[id^='side-']").click(function() {
+        var side = $(this).closest("'tr[id^='viewedit-']'");
+        switch (this.id)
+        {
+        case "side-add":
+          break;
+        case "side-remove":
+          break;
+        case "side-edit":
+          break;
+        case "side-up":
+            if(side.prev().attr('level') == side.attr('level')){
+                console.log();
+                $(side.prev()).before(side);
+            }
+          break;
+        case "side-down":
+            if(side.next().attr('level') == side.attr('level')){
+                var v = side.next().next().attr('level')
+                $(side.next()).after(side);
+            }
+          break;
+        }
+    });
     },
     on_expand: function(self){
         var level = $(self).closest("tr[id^='viewedit-']").attr('level');
