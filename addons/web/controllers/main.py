@@ -1419,7 +1419,7 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp):
+    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, jsonp):
         try:
             data = list(csv.reader(
                 csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
@@ -1447,65 +1447,69 @@ class Import(View):
                 }))
 
     @openerpweb.httprequest
-    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp):
-        # TODO: reintroduce CSVSKIP param
-        context = req.session.eval_context(req.context)
+    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp,
+                    meta):
         modle_obj = req.session.model(model)
-        res = None
-        data = []
+        skip, indices, fields = operator.itemgetter('skip', 'indices', 'fields')(
+            simplejson.loads(meta))
 
+        error = None
         if not (csvdel and len(csvdel) == 1):
-            error={'message': "The CSV delimiter must be a single character"}
-            return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
+            error = u"The CSV delimiter must be a single character"
 
+        if not indices and fields:
+            error = u"You must select at least one field to import"
+
+        if error:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {'message': error}}))
+
+        # skip ignored records
+        data_record = itertools.islice(
+            csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
+            skip, None)
+
+        # if only one index, itemgetter will return an atom rather than a tuple
+        if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
+        else: mapper = operator.itemgetter(*indices)
+
+        data = None
+        error = None
         try:
-            data_record = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
-            for rec in itertools.islice(data_record,0,None):
-                data.append(rec)
-
-            headers = itertools.islice(data,1)
-            fields = headers.next()
-
+            # decode each data row
+            data = [
+                [record.decode(csvcode) for record in row]
+                for row in itertools.imap(mapper, data_record)
+                # don't insert completely empty rows (can happen due to fields
+                # filtering in case of e.g. o2m content rows)
+                if any(row)
+            ]
+        except UnicodeDecodeError:
+            error = u"Failed to decode CSV file using encoding %s" % csvcode
         except csv.Error, e:
-            error={'message': str(e),'title': 'File Format Error'}
-            return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
-
-        datas = []
-        ctx = context
-
-        if not isinstance(fields, list):
-            fields = [fields]
-
-        for line in data[1:]:
-            try:
-                datas.append(map(lambda x:x.decode(csvcode).encode('utf-8'), line))
-            except:
-                datas.append(map(lambda x:x.decode('latin').encode('utf-8'), line))
+            error = u"Could not process CSV file: %s" % e
 
         # If the file contains nothing,
-        if not datas:
-            error = {'message': 'The file is empty !'}
+        if not data:
+            error = u"File to import is empty"
+        if error:
             return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
+                jsonp, simplejson.dumps({'error': {'message': error}}))
 
-        #Inverting the header into column names
         try:
-            res = modle_obj.import_data(fields, datas, 'init', '', False, ctx)
+            (code, record, message, _nope) = modle_obj.import_data(
+                fields, data, 'init', '', False,
+                req.session.eval_context(req.context))
         except xmlrpclib.Fault, e:
-            error = {"message":e.faultCode}
+            error = {"message": u"%s, %s" % (e.faultCode, e.faultString)}
             return '<script>window.top.%s(%s);</script>' % (
                 jsonp, simplejson.dumps({'error':error}))
 
-        if res[0]>=0:
+        if code != -1:
             return '<script>window.top.%s(%s);</script>' % (
                 jsonp, simplejson.dumps({'success':True}))
 
-        d = ''
-        for key,val in res[1].items():
-            d+= ('%s: %s' % (str(key),str(val)))
-        msg = 'Error trying to import this record:%s. ErrorMessage:%s %s' % (d,res[2],res[3])
-        error = {'message':str(msg)}
+        msg = u"Error during import: %s\n\nTrying to import record %r" % (
+            message, record)
         return '<script>window.top.%s(%s);</script>' % (
-            jsonp, simplejson.dumps({'error':error}))
+            jsonp, simplejson.dumps({'error': {'message':msg}}))

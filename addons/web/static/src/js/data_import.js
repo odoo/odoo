@@ -14,14 +14,18 @@ var QWeb = openerp.web.qweb;
  * @param {Function} callback function to call with the returned data
  */
 function jsonp(form, attributes, callback) {
+    attributes = attributes || {};
     var options = {jsonp: _.uniqueId('import_callback_')};
     window[options.jsonp] = function () {
         delete window[options.jsonp];
         callback.apply(null, arguments);
     };
-    $(form).ajaxSubmit(_.extend({
-        data: options
-    }, attributes));
+    if ('data' in attributes) {
+        _.extend(attributes.data, options);
+    } else {
+        _.extend(attributes, {data: options});
+    }
+    $(form).ajaxSubmit(attributes);
 }
 
 openerp.web.DataImport = openerp.web.Dialog.extend({
@@ -113,8 +117,31 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     },
     do_import: function() {
         if(!this.$element.find('#csvfile').val()) { return; }
+        var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10);
+        var with_headers = this.$element.find('#file_has_headers').prop('checked');
+        if (!lines_to_skip && with_headers) {
+            lines_to_skip = 1;
+        }
+        var indices = [], fields = [];
+        this.$element.find(".sel_fields").each(function(index, element) {
+            var val = element.value;
+            if (!val) {
+                return;
+            }
+            indices.push(index);
+            fields.push(val);
+        });
+
         jsonp(this.$element.find('#import_data'), {
-            url: '/web/import/import_data'
+            url: '/web/import/import_data',
+            data: {
+                model: this.model,
+                meta: JSON.stringify({
+                    skip: lines_to_skip,
+                    indices: indices,
+                    fields: fields
+                })
+            }
         }, this.on_import_results);
     },
     on_autodetect_data: function() {
