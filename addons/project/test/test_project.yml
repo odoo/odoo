@@ -12,6 +12,12 @@
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
 -
+  I create analytic account for assigned partner in project.
+-
+  !record {model: account.analytic.account, id: account_analytic_account0}:
+    name : account_analytic_account
+    partner_id: base.res_partner_asus
+-
   I create project 'OpenERP Training Programme'.
 -
   !record {model: project.project, id: project_project_openerptrainingprogramme0}:
@@ -21,12 +27,6 @@
     name: OpenERP Training Programme
     date_start: !eval time.strftime('%Y-%m-%d')
     date: !eval time.strftime('%Y-%m-%d')
--
-  I create analytic account for assigned partner in project.
--
-  !record {model: account.analytic.account, id: account_analytic_account0}:
-    name : account_analytic_account
-    partner_id: base.res_partner_asus
 -
   I create task 'Technical Training' for 'OpenERP Training Programme' project.
 -
