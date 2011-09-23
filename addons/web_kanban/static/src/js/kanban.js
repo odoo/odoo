@@ -236,9 +236,35 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             data[$e.data('name')] = $(this).data('color');
             self.dataset.write(id, data, {}, function() {
                 // TODO fme: reload record instead of all. need refactoring
-                self.do_actual_search();
+                self.on_reload_record(id, data);
             });
             $cpicker.remove();
+        });
+    },
+    /**
+        Reload one record in view.
+        record_id : reload record id.
+        data : change value in particular record.
+    */
+    on_reload_record: function (record_id, data){
+        var self = this;
+        for (var i=0, ii=this.all_display_data.length; i < ii; i++) {
+            for(j=0, jj=this.all_display_data[i].records.length; j < jj;  j++) {
+                if (this.all_display_data[i].records[j].id == record_id) {
+                    _.extend(this.all_display_data[i].records[j], data);
+                    this.$element.find("#main_" + record_id).children().remove();
+                    this.$element.find("#main_" + record_id).append(this.qweb.render('kanban-box', {
+                        record: this.do_transform_record(this.all_display_data[i].records[j]),
+                        kanban_color: this.kanban_color,
+                        kanban_gravatar: this.kanban_gravatar
+                    }));
+                    break;
+                }
+            }
+        }
+        this.$element.find("#main_" + record_id + " .oe_kanban_action").click(this.on_action_clicked);
+        this.$element.find("#main_" + record_id + " .oe_kanban_box_show_onclick_trigger").click(function() {
+            $(this).parent("#main_" + record_id + " .oe_kanban_box").find(".oe_kanban_box_show_onclick").toggle();
         });
     },
     do_delete: function (id) {
