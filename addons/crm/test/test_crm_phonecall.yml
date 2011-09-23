@@ -14,7 +14,7 @@
     partner_id: base.res_partner_9
 
 -
-  I click on "Continue" button of this wizard.
+  I click on "Continue" button of this wizard and make partner.
 -
   !python {model: crm.phonecall2partner}: |
 
@@ -31,18 +31,16 @@
     partner_id: base.res_partner_9
     planned_revenue: 0.0
     probability: 0.0
--
-   I click on "Convert" button of this wizard.
--
-  !python {model: crm.phonecall2opportunity}: |
-     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
-
 - |
   I can see that a business opportunity is now assigned to this phonecall
 -
   !assert {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
      - opportunity_id != False
-
+-
+   I click on "Convert" button of this wizard.
+-
+  !python {model: crm.phonecall2opportunity}: |
+     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
 - |
   And I check that the phonecall and the newly created business opportunity is linked
   to same  partner.
@@ -50,10 +48,8 @@
   !python {model:  crm.phonecall}: |
     obj_phonecall = self.browse(cr, uid, ref('crm_phonecall_interviewcall0'))
     ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
-    #self.case_reset(cr, uid, ids)
     obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
     assert obj_phonecall.partner_id == obj_opp.partner_id
-
 - |
   I schedule Meeting on this current phonecall by clicking on "schedule
   Meeting".

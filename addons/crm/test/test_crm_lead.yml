@@ -129,22 +129,6 @@
 -
    !python {model: crm.lead2opportunity.partner.mass}: |
       self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
-
--
-  I create notes.
--
-  !record {model: crm.add.note, id: crm_add_note0}:
-    {}
--
-  Then, try to add notes.
--
-   !python {model: crm.add.note}: |
-      try:
-        context.update({'active_model': "crm.lead"})
-        model = ref("crm_lead_newcustomer0") or False
-        self.action_add(cr, uid, [ref("crm_add_note0")],context)
-      except:
-        pass
 -
    I close lead by click on "close" button.
 -

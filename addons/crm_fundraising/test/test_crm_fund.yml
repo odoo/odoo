@@ -25,8 +25,21 @@
 -
   !python {model: crm.fundraising}: |
     self.case_open(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])
+-
+  I create the message regarding the all details of fundraising.
+-
+  !python {model: crm.fundraising}: |
+    msg = {
+       'subject': 'fundraising_email',
+       'body_text': 'fundraising details',
+       'from': 'Administrator <admin@openerp.com>',
+       'priority':'3',
+      }
+    context = None
+    self.message_new(cr, uid,msg,context)
+
 - |
-  I can close Funds by click on "Done" button.
+  After a request via email now I close this fundraising Request by clicking on "Done" button.
 -
   !python {model: crm.fundraising}: |
     self.case_close(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])
