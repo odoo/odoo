@@ -63,14 +63,18 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             if data['form']['enable_filter']:
                 vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
+            account_ids = []
             if report.type == 'accounts' and report.display_detail and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
+            elif report.type == 'account_type' and report.account_type_ids:
+                account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
+            if account_ids:
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
                     if account.type != 'view':
                         flag = False
                         vals = {
                             'name': account.code + ' ' + account.name,
-                            'balance': account.balance,
+                            'balance':  account.balance != 0 and account.balance * account.user_type.sign or account.balance,
                             'type': 'account',
                             'level': 6,
                             'account_type': account.type,
