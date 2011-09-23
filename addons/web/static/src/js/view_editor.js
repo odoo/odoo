@@ -65,11 +65,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         obj.child_id = [];
         obj.id = this.xml_id++;
         obj.level = level;
+        var vidhin = xml;
         var att_list = [];
         var name1 = "<" + tag;
+        var xml_tag = "<" + tag;
         $(xml).each(function() {
             att_list = this.attributes;
             att_list = _.select(att_list, function(attrs){
+                xml_tag += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';
                 if (tag != 'button'){
                    if(attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index"){
                         name1 += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
@@ -79,7 +82,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
                 });
                 name1+= ">";
+                xml_tag+= ">";
          });
+        obj.main_xml = xml_tag;
         obj.name = name1;
         return obj;
     },
@@ -134,17 +139,24 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         return {"main_object":main_object,"parent_child_id":parent_child_id};
     },
+    parse_xml :function(arch){
+        var self = this;
+        var root = $(arch).filter(":first")[0];
+        var tag = root.tagName.toLowerCase();
+        var root_object = self.check_attr(root,tag,0);
+        var one_object = self.children_function(arch,tag,[],0,[root_object],[]);
+        return self.edit_view(one_object);
+    },
     get_data : function(){
             var self = this;
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
+            dataset = new openerp.web.DataSetSearch(this,'ir.ui.view', null, null);
+            dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
+                _.each(result ,function(num){console.log(result);});
+            });
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
             ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch){
-                    var arch = arch[0].arch;
-                    var root = $(arch).filter(":first")[0];
-                    var tag = root.tagName.toLowerCase();
-                    var root_object = self.check_attr(root,tag,0);
-                    var one_object = self.children_function(arch,tag,[],0,[root_object],[]);
-                    return self.edit_view(one_object);
+                self.parse_xml(arch[0].arch);
                 });
     },
     edit_view : function(one_object){
@@ -197,18 +209,19 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
           break;
         case "side-up":
             if(side.prev().attr('level') == side.attr('level')){
-                console.log();
                 $(side.prev()).before(side);
             }
           break;
         case "side-down":
             if(side.next().attr('level') == side.attr('level')){
-                var v = side.next().next().attr('level')
                 $(side.next()).after(side);
             }
           break;
         }
     });
+    },
+    search_object:function(main_object){
+    
     },
     on_expand: function(self){
         var level = $(self).closest("tr[id^='viewedit-']").attr('level');
