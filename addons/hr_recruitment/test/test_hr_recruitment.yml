@@ -52,7 +52,12 @@
   !python {model: hr.applicant}: |
     self.case_open(cr, uid, [ref("hr_applicant_fresher0")], {"active_ids": [ref("hr_recruitment.menu_crm_case_categ0_act_job")],
       })
-
+-
+  I change the stages by clicking on stage next and stage previous buttons.
+-
+  !python {model: hr.applicant}: |
+    self.stage_next(cr, uid, [ref('hr_applicant_fresher0')], None)
+    self.stage_previous(cr, uid, [ref('hr_applicant_fresher0')], None)
 -
   I create a new case category.
 -
@@ -97,14 +102,35 @@
     rrule_type: none
     state: open
     user_id: base.user_root
-
+-
+  I print the survery filled up by the applicant.
+-
+  !python {model: hr.applicant}: |
+     self.action_print_survey(cr, uid, [ref('hr_applicant_fresher0')], None)
+-
+  I assign the position to the applicant and its relevant department.
+-
+  !python {model: hr.applicant}: |
+     self.onchange_job(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.job_jr_developers'), None)
+     self.onchange_department_id(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.dep_it'), None)
 -
   On a successful meeting with the applicant, I hired employee by click on "Hired" button.
 -
-  !python {model: hr.applicant}: |
-     self.case_close(cr, uid, [ref('hr_applicant_fresher0')])
+  !python {model: hired.employee}: |
+     self.case_close(cr, uid, [], context={'active_ids': [ref('hr_applicant_fresher0')]})
 -
   I check that applicant state is "Hired".
 -
   !assert {model: hr.applicant, id: hr_applicant_fresher0}:
     - state == 'done'
+-
+  I create partner for the hired applicant for accounting purpose.
+-
+  !record {model: hr.recruitment.partner.create, id: hr_recruitment_partner_create0}:
+    close: False
+-
+  I click on Create Partner button to create a partner for applicant.
+-
+  !python {model: hr.recruitment.partner.create}: |
+     self.make_order(cr, uid, [ref('hr_recruitment_partner_create0')], context={'active_ids': [ref('hr_applicant_fresher0')]})
+
