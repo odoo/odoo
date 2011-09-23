@@ -1420,7 +1420,7 @@ class Import(View):
 
     @openerpweb.httprequest
     def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode,
-                    csvskip, file_has_headers, jsonp):
+                    csvskip, jsonp):
         try:
             data = list(csv.reader(
                 csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
@@ -1449,7 +1449,7 @@ class Import(View):
 
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
-                    file_has_headers, jsonp):
+                    jsonp):
 
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)

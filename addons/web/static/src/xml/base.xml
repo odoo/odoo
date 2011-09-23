@@ -1407,8 +1407,7 @@
                 <td colspan="4">
                     <label for="file_has_headers">Does your file have titles?</label>
                     <input type="checkbox" checked="checked"
-                            id="file_has_headers"
-                            name="file_has_headers"/>
+                           id="file_has_headers"/>
                 </td>
             </tr>
             <tr>
@@ -1435,12 +1434,12 @@
 </t>
 <table t-name="ImportView.result"
         class="oe_import_grid" width="100%" style="margin: 5px 0;">
-    <tr class="oe_import_grid-header">
+    <tr t-if="headers" class="oe_import_grid-header">
         <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
             <t t-esc="header"/></td>
     </tr>
     <tr>
-        <td t-foreach="headers" t-as="header">
+        <td t-foreach="records[0]" t-as="column">
             <input class="sel_fields"/>
         </td>
     </tr>

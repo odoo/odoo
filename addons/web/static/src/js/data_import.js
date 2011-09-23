@@ -33,7 +33,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.model = parent.model;
         this.fields = [];
         this.all_fields = [];
-        this.required_fields;
+        this.required_fields = null;
 
         var convert_fields = function (root, prefix) {
             prefix = prefix || '';
@@ -128,9 +128,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var result_node = this.$element.find("#result");
 
         if (results['records']) {
+            var with_headers = this.$element.find('#file_has_headers').prop('checked');
             result_node.append(QWeb.render('ImportView.result', {
-                'headers': results.records[0],
-                'records': results.records.slice(1)
+                'headers': with_headers ? results.records[0] : null,
+                'records': with_headers ? results.records.slice(1) : results.records
             }));
         } else if (results['error']) {
             result_node.append(QWeb.render('ImportView.error', {
