@@ -136,8 +136,7 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <group>
-                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="Draft" help="Draft Expense"/>
-                      <separator orientation="vertical"/>
+                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
                       <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
                       <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
