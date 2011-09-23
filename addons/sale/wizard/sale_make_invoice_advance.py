@@ -65,6 +65,13 @@ class sale_advance_payment_inv(osv.osv_memory):
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
                         uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
+                
+                if not val['value'].get('account_id'):
+                    raise osv.except_osv(_('Error !'),
+                                _('There is no income account defined ' \
+                                        'for this product: "%s" (id:%d)') % \
+                                        (sale_adv_obj.product_id.name, sale_adv_obj.product_id.id,))
+                
                 line_id = obj_lines.create(cr, uid, {
                     'name': val['value']['name'],
                     'account_id': val['value']['account_id'],
