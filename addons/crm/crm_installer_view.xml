@@ -32,7 +32,6 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="crm.crm_case_section_view_tree"/>
-        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
         <field name="help">Define sales teams to structure your sales organization and assign users to each team. You should also define the sales stage to each team. As an example, if you use Solutions Selling techniques to track your opportunities, you can assign the following stage to the team: Territory, Qualified, Qualified Sponsors, Proposition, Negociaton, Won/Lost.</field>
     </record>
 
@@ -40,6 +39,7 @@
         <field name="action_id" ref="crm_case_section_view_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
         <field name="sequence">10</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
@@ -55,6 +55,7 @@
     <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="crm_case_stage_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
         <field name="sequence">10</field>
     </record>
   </data>

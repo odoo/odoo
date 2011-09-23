@@ -53,7 +53,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="hr.view_department_tree"/>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
             <field name="help">Your Company's Department Structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
         </record>
 
@@ -61,6 +60,7 @@
             <field name="action_id" ref="view_department_form_installer"/>
             <field name="category_id" ref="hr.category_hr_management_config"/>
             <field name="sequence">3</field>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
         </record>
     </data>
 </openerp>
