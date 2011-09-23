@@ -749,6 +749,7 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
+                        <field name="sign" />                        
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -2702,6 +2703,114 @@ action = pool.get('res.config').next(cr, uid, [], context)
         <menuitem id="menu_account_supplier" name="Suppliers"
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>
+
+        <!--
+            Account Reports
+        -->
+
+        <record id="view_account_financial_report_form" model="ir.ui.view">
+            <field name="name">account.financial.report.form</field>
+            <field name="model">account.financial.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Report">
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                        <field name="type"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Report" attrs="{'invisible': [('state','!=','confirm')]}">
+                            <field name="display_detail" attrs="{'invisible': [('type','!=','accounts')]}"/>
+                            <newline/>
+                            <field name="account_ids" nolabel="1" colspan="6" attrs="{'invisible': [('type', '!=', 'accounts')]}"/>
+                            <newline/>
+                            <field name="account_report_id" attrs="{'invisible': [('type', '!=', 'account_report')]}"/>
+                            <newline/>
+                            <field name="account_type_ids" nolabel="1" attrs="{'invisible': [('type', '!=', 'account_type')]}"/>
+                            <newline/>
+                        </page>
+                        <page string="Notes" attrs="{'invisible': [('state','!=','confirm')]}">
+                            <field name="note" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_financial_report_tree" model="ir.ui.view">
+            <field name="name">account.financial.report.tree</field>
+            <field name="model">account.financial.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Report">
+                    <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="account_report_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_financial_report_search" model="ir.ui.view">
+            <field name="name">account.financial.report.search</field>
+            <field name="model">account.financial.report</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Account Report">
+                    <group>
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="account_report_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_account_financial_report_tree" model="ir.actions.act_window">
+            <field name="name">Financial Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.financial.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_financial_report_search"/>
+            <field name="view_id" ref="view_account_financial_report_tree"/>
+            <field name="help">Makes a generic system to draw financial reports easily.</field>
+        </record>
+
+        <menuitem id="menu_account_financial_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_financial_report_tree"/>
+
+        <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
+            <field name="name">account.report.hierarchy</field>
+            <field name="model">account.financial.report</field>
+            <field name="type">tree</field>
+            <field name="field_parent">children_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Account Reports Hierarchy">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="account_report_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_report_tree_hierarchy" model="ir.actions.act_window">
+            <field name="name">Financial Reports Hierarchy</field>
+            <field name="res_model">account.financial.report</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree_hierarchy"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+        </record>
+
+        <menuitem id="menu_account_report_tree_hierarchy" name="Account Reports Hierarchy"
+                  parent="menu_account_reports" action="action_account_report_tree_hierarchy"/>
 
     </data>
 </openerp>

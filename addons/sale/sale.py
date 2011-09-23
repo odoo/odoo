@@ -322,6 +322,16 @@ class sale_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+        print order_lines
+        if (not pricelist_id) or (not order_lines):
+            return {}
+        warning = {
+            'title': _('Pricelist Warning!'),
+            'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
+        }
+        return {'warning': warning}
+
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'partner_order_id': False, 'payment_term': False, 'fiscal_position': False}}

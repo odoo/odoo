@@ -139,7 +139,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'report_type':fields.selection([
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
@@ -2637,7 +2637,88 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
-    # Multi charts of Accounts wizard
+# ---------------------------------------------------------
+# Account Financial Report
+# ---------------------------------------------------------
+
+class account_financial_report(osv.osv):
+    _name = "account.financial.report"
+    _description = "Account Report"
+
+    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            level = 0
+            if report.parent_id:
+                level = report.parent_id.level + 1
+            res[report.id] = level
+        return res
+
+    def _get_children_by_order(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            res.append(id)
+            ids2 = self.search(cr, uid, [('parent_id', '=', id)], order='sequence ASC', context=context)
+            res += self._get_children_by_order(cr, uid, ids2, context=context)
+        return res
+
+    def _get_balance(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        res_all = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            balance = 0.0
+            if report.id in res_all:
+                balance = res_all[report.id]
+            elif report.type == 'accounts':
+                # it's the sum of balance of the linked accounts
+                for a in report.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_report' and report.account_report_id:
+                # it's the amount of the linked report
+                res2 = self._get_balance(cr, uid, [report.account_report_id.id], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            elif report.type == 'sum':
+                # it's the sum of balance of the children of this account.report
+                #for child in report.children_ids:
+                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            res[report.id] = balance
+            res_all[report.id] = balance
+        return res
+
+    _columns = {
+        'name': fields.char('Report Name', size=128, required=True),
+        'parent_id': fields.many2one('account.financial.report', 'Parent'),
+        'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
+        'sequence': fields.integer('Sequence'),
+        'note': fields.text('Notes'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'type': fields.selection([
+            ('sum','View'),
+            ('accounts','Accounts'),
+            ('account_type','Account Type'),
+            ('account_report','Report Value'),
+            ],'Type'),
+        'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
+        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
+        'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
+    }
+
+    _defaults = {
+        'type': 'sum',
+    }
+
+account_financial_report()
+
+# ---------------------------------------------------------
+# Account generation from template wizards
+# ---------------------------------------------------------
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
