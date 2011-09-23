@@ -424,7 +424,8 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         return $.when(
             this._super(view_type),
             this.shortcut_check(this.views[view_type])).then(function () {
-                var view_id = self.views[self.active_view].controller.fields_view.view_id;
+            	var active_controller = self.views[self.active_view].controller;
+                var view_id = active_controller.fields_view ? active_controller.fields_view.view_id : active_controller.view_id;
                 self.$element.find('.oe_get_xml_view span').text(view_id);
         });
     },
