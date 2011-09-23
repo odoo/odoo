@@ -271,7 +271,6 @@ def init_module_models(cr, module_name, obj_list):
     TODO better explanation of _auto_init and init.
 
     """
-
     logger.notifyChannel('init', netsvc.LOG_INFO,
         'module %s: creating or updating database tables' % module_name)
     todo = []
@@ -284,8 +283,6 @@ def init_module_models(cr, module_name, obj_list):
         cr.commit()
     for obj in obj_list:
         obj._auto_end(cr, {'module': module_name})
-        if obj._transient:
-            obj.vacuum(cr, openerp.SUPERUSER)
         cr.commit()
     todo.sort()
     for t in todo:

@@ -605,7 +605,6 @@ class BaseModel(object):
     """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
-    _transient = False # True in a TransientModel
     _name = None
     _columns = {}
     _constraints = []
@@ -618,6 +617,12 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # Transience
+    _transient = False # True in a TransientModel
+    _transient_max_count = None
+    _transient_max_hours = None
+    _transient_check_time = 20
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -645,7 +650,6 @@ class BaseModel(object):
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     __logger = logging.getLogger('orm')
     __schema = logging.getLogger('orm.schema')
-
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
@@ -974,6 +978,13 @@ class BaseModel(object):
         for f in self._columns:
             self._columns[f].restart()
 
+        # Transience
+        if self.is_transient():
+            self._transient_check_count = 0
+            self._transient_max_count = config.get('osv_memory_count_limit')
+            self._transient_max_hours = config.get('osv_memory_age_limit')
+            assert self._log_access, "TransientModels must have log_access turned on, "\
+                                     "in order to implement their access rights policy"
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -3390,17 +3401,35 @@ class BaseModel(object):
            :raise except_orm: * if current ir.rules do not permit this operation.
            :return: None if the operation is allowed
         """
-        where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
-        if where_clause:
-            where_clause = ' and ' + ' and '.join(where_clause)
-            for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
-                           ' WHERE ' + self._table + '.id IN %s' + where_clause,
-                           [sub_ids] + where_params)
-                if cr.rowcount != len(sub_ids):
-                    raise except_orm(_('AccessError'),
-                                     _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                     % (operation, self._description))
+        if uid == openerp.SUPERUSER:
+            return
+
+        if self.is_transient:
+            # Only one single implicit access rule for transient models: owner only!
+            # This is ok to hardcode because we assert that TransientModels always
+            # have log_access enabled and this the create_uid column is always there.
+            # And even with _inherits, these fields are always present in the local
+            # table too, so no need for JOINs.
+            cr.execute("""SELECT distinct create_uid
+                          FROM %s
+                          WHERE id IN %%s""" % self._table, (tuple(ids),))
+            uids = [x[0] for x in cr.fetchall()]
+            if len(uids) != 1 or uids[0] != uid:
+                raise orm.except_orm(_('AccessError'), '%s access is '
+                    'restricted to your own records for transient models '
+                    '(except for the super-user).' % operation.capitalize())
+        else:
+            where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
+            if where_clause:
+                where_clause = ' and ' + ' and '.join(where_clause)
+                for sub_ids in cr.split_for_in_conditions(ids):
+                    cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
+                               ' WHERE ' + self._table + '.id IN %s' + where_clause,
+                               [sub_ids] + where_params)
+                    if cr.rowcount != len(sub_ids):
+                        raise except_orm(_('AccessError'),
+                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
+                                         % (operation, self._description))
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3771,6 +3800,10 @@ class BaseModel(object):
         """
         if not context:
             context = {}
+
+        if self.is_transient():
+            self._transient_vacuum(cr, user)
+
         self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
         vals = self._add_missing_default_values(cr, user, vals, context)
@@ -4257,6 +4290,10 @@ class BaseModel(object):
             context = {}
         self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
 
+        # For transient models, restrict acces to the current user, except for the super-user
+        if self.is_transient() and self._log_access and user != openerp.SUPERUSER:
+            args = expression.AND(([('create_uid', '=', user)], args or []))
+
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)
         order_by = self._generate_order_by(order, query)
@@ -4542,6 +4579,7 @@ class BaseModel(object):
                 results[k] = ''
         return results
 
+    # Transience
     def is_transient(self):
         """ Return whether the model is transient.
 
@@ -4549,6 +4587,48 @@ class BaseModel(object):
 
         """
         return self._transient
+
+    def _transient_clean_rows_older_than(self, cr, seconds):
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        cr.execute("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, now())::timestamp <"
+            " (now() - interval %s)", ("%s seconds" % seconds,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def _transient_clean_old_rows(self, cr, count):
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        cr.execute(
+            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            " AS t FROM " + self._table +
+            " ORDER BY t LIMIT %s", (count,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def _transient_vacuum(self, cr, uid, force=False):
+        """Clean the transient records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_transient_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_transient_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        """
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        self._transient_check_count += 1
+        if (not force) and (self._transient_check_count % self._transient_check_time):
+            self._transient_check_count = 0
+            return True
+
+        # Age-based expiration
+        if self._transient_max_hours:
+            self._transient_clean_rows_older_than(cr, self._transient_max_hours * 60 * 60)
+
+        # Count-based expiration
+        if self._transient_max_count:
+            self._transient_clean_old_rows(cr, self._transient_max_count)
+
+        return True
 
 class Model(BaseModel):
     """Main super-class for regular database-persisted OpenERP models.
@@ -4575,93 +4655,6 @@ class TransientModel(BaseModel):
     """
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = True
-    _max_count = None
-    _max_hours = None
-    _check_time = 20
-
-    def __init__(self, pool, cr):
-        super(TransientModel, self).__init__(pool, cr)
-        self.check_count = 0
-        self._max_count = config.get('osv_memory_count_limit')
-        self._max_hours = config.get('osv_memory_age_limit')
-        cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
-        assert self._log_access, "TransientModels must have log_access turned on, "\
-                                 "in order to implement their access rights policy"
-
-    def _clean_transient_rows_older_than(self, cr, seconds):
-        if not self._log_access:
-            self.logger = logging.getLogger('orm').warning(
-                "Transient model without write_date: %s" % (self._name,))
-            return
-
-        cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, now())::timestamp <"
-            " (now() - interval %s)", ("%s seconds" % seconds,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
-
-    def _clean_old_transient_rows(self, cr, count):
-        if not self._log_access:
-            self.logger = logging.getLogger('orm').warning(
-                "Transient model without write_date: %s" % (self._name,))
-            return
-
-        cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
-            " AS t FROM " + self._table +
-            " ORDER BY t LIMIT %s", (count,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
-
-    def vacuum(self, cr, uid, force=False):
-        """ Clean the TransientModel records.
-
-        This unlinks old records from the transient model tables whenever the
-        "_max_count" or "_max_age" conditions (if any) are reached.
-        Actual cleaning will happen only once every "_check_time" calls.
-        This means this method can be called frequently called (e.g. whenever
-        a new record is created).
-        """
-        self.check_count += 1
-        if (not force) and (self.check_count % self._check_time):
-            self.check_count = 0
-            return True
-
-        # Age-based expiration
-        if self._max_hours:
-            self._clean_transient_rows_older_than(cr, self._max_hours * 60 * 60)
-
-        # Count-based expiration
-        if self._max_count:
-            self._clean_old_transient_rows(cr, self._max_count)
-
-        return True
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        # Only one single implicit access rule for transient models: owner only!
-        # This is ok to hardcode because we assert that TransientModels always
-        # have log_access enabled and this the create_uid column is always there.
-        # And even with _inherits, these fields are always present in the local
-        # table too, so no need for JOINs.
-        if uid != openerp.SUPERUSER:
-            cr.execute("""SELECT distinct create_uid
-                          FROM %s
-                          WHERE id IN %s""" % self._table, (tuple(ids),))
-            uids = [x[0] for x in cr.fetchall()]
-            if len(uids) != 1 or uids[0] != uid:
-                raise orm.except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % operation.capitalize())
-
-    def create(self, cr, uid, vals, context=None):
-        self.vacuum(cr, uid)
-        return super(TransientModel, self).create(cr, uid, vals, context)
-
-    def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-        # Restrict acces to the current user, except for the super-user
-        if self._log_access and uid != openerp.SUPERUSER:
-            domain = expression.AND(([('create_uid', '=', uid)], domain))
-        return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
 
 class AbstractModel(BaseModel):
     """Abstract Model super-class for creating an abstract class meant to be
@@ -4678,4 +4671,3 @@ class AbstractModel(BaseModel):
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

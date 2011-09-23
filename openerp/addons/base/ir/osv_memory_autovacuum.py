@@ -26,9 +26,8 @@ class osv_memory_autovacuum(openerp.osv.osv.osv_memory):
     _name = 'osv_memory.autovacuum'
 
     def power_on(self, cr, uid, context=None):
-        for model in self.pool.obj_list():
-            obj = self.pool.get(model)
-            if obj.is_transient():
-                obj.vacuum(cr, uid)
+        for model in self.pool.models.values():
+            if model.is_transient():
+                obj._transient_vacuum(cr, uid)
         return True
 
