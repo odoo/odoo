@@ -157,6 +157,9 @@
                         <t t-if="(field.attrs.name == 'email' or field.attrs.name == 'email_from') and values[field.attrs.name]">
                             <a t-att-href="'mailto:'+values[field.attrs.name]"><img src="/web/static/src/img/icons/terp-mail-message-new.png" /></a>
                         </t>
+                        <t t-if="field.attrs.name == 'website' and values[field.attrs.name]">
+                            <a t-att-href="values[field.attrs.name]"><img src="/web/static/src/img/icons/gtk-ok.png" title="Open this resource"/></a>
+                        </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'text'">
                         <label for="">
@@ -170,13 +173,20 @@
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
-                        <t t-if="values[field.attrs.name]">
+                        <t t-if="values[field.attrs.name] and field.attrs.name=='progress_rate'">
+                        	<div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
+                        </t>
+                        <t t-if="!(values[field.attrs.name]) and field.attrs.name=='progress_rate'">
+                        	<div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
+                        </t>
+                         <t t-if="values[field.attrs.name] and field.attrs.name!='progress_rate'">
                             <input id="" type="text" t-att-value="values[field.attrs.name]"/>
                         </t>
-                        <t t-if="!(values[field.attrs.name])">
-                            <input id="" type="text" value=""/>
-                        </t>
+                        <t t-if="!values[field.attrs.name] and field.attrs.name!='progress_rate'">
+                       		<input id="" type="text" value=""/>
+                         </t>
                     </t>
+
                     <t t-if="fields[field.attrs.name].type == 'date'">
                         <label for="">
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>

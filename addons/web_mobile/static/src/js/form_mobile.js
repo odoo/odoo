@@ -47,6 +47,13 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 }
                 self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data ,'temp_flag':'1'}));
 
+				for(var i=0;i<get_fields.length;i++)
+				  {
+					if(get_fields[i].attrs.widget=="progressbar")
+						{
+							$("#progress").progressbar({value:data[get_fields[i].attrs.name]})
+						}
+				  }
                     self.$element.find("[data-role=header]").find('h1').html(self.head_title);
                     self.$element.find("[data-role=header]").find('#home').click(function(){
                         $.mobile.changePage("#oe_menu", "slide", false, true);
