@@ -750,6 +750,10 @@ class expression(object):
                 else:
                     query = '(%s."%s" %s %s)' % (table._table, left, sql_operator, format)
             else:
+                # Ugly case to support columns present in database but not in
+                # _columns. This will probably be removed in the future, but
+                # we have to keep it for now.
+                _logger.warning("The domain term '%s' specify a column not declared in _columns." % ((left, operator, right),))
                 if self.has_unaccent and sql_operator in ('ilike', 'not ilike'):
                     query = "(unaccent(%s.\"%s\") %s unaccent('%s'))" % (table._table, left, sql_operator, right)
                 else:
@@ -767,6 +771,10 @@ class expression(object):
                 add_null = not str_utf8
             elif left in table._columns:
                 params = table._columns[left]._symbol_set[1](right)
+            else:
+                # Matching else clause for the above else clause, where the
+                # params are actually already in the query.
+                params = []
 
             if add_null:
                 query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)

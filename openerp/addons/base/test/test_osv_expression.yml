@@ -466,3 +466,9 @@
         assert len(all_ids) == 1, "Must match India only, got %r"%all_ids
         all_ids = self.search(cr, uid, [('name', '=ilike', 'z%')])
         assert len(all_ids) == 3, "Must match only countries with names starting with Z (currently 3), got %r"%all_ids
+-
+    Use the create_date column on res.country (which doesn't declare it in _columns).
+-
+    !python {model: res.country }: |
+        ids = self.search(cr, uid, [('create_date', '<', '2001-01-01 12:00:00')])
+-
