@@ -217,12 +217,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-check" string="Current"
-                   domain="[('state','in',('draft','open'))]"
-                   help="All new and in progress jobs"
-                   name="current"
-               />
-               <separator orientation="vertical"/>
                <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
