@@ -28,6 +28,18 @@ import decimal_precision as dp
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
+    def set_weight(self, cr, uid, id, name, value, arg, context=None):
+        
+        cr.execute('update stock_picking set weight=%s where id=%s',
+            (value, int(id)))
+        return True
+    
+    def set_weight_net(self, cr, uid, id, name, value, arg, context=None):
+        
+        cr.execute('update stock_picking set weight_net=%s where id=%s',
+            (value, int(id)))
+        return True
+
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
         uom_obj = self.pool.get('product.uom')
@@ -43,7 +55,7 @@ class stock_picking(osv.osv):
                                 'weight_net': total_weight_net,
                               }
         return res
-
+    
 
     def _get_picking_line(self, cr, uid, ids, context=None):
         result = {}
@@ -54,12 +66,12 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight': fields.function(_cal_weight, fnct_inv=set_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight', 
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
-        'weight_net': fields.function(_cal_weight, method=True, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight_net': fields.function(_cal_weight, fnct_inv=set_weight_net, method=True, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight', 
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
@@ -129,6 +141,24 @@ class stock_picking(osv.osv):
                 'invoice_line_tax_id': [(6, 0,taxes_ids)],
             })
         return result
+    
+    def do_partial(self, cr, uid, ids, partial_datas, context=None):
+        original_pick = self.browse(cr, uid, ids[0], context=context)
+        weight = original_pick.weight
+        net_weight = original_pick.weight_net
+        
+        res = super(stock_picking, self).do_partial(cr, uid, ids, partial_datas, context=context)
+        for processed_picking in self.browse(cr, uid, res.values()[0].values(), context=context):
+            total_weight = total_weight_net = 0.00
+            if not processed_picking.id == original_pick.id:
+                for move in processed_picking.move_lines:
+                    total_weight += move.weight
+                    total_weight_net += move.weight_net
+                self.write(cr, uid, processed_picking.id, {'weight': total_weight, \
+                                    'weight_net': total_weight_net})
+        self.write(cr, uid, original_pick.id, {'weight': (weight - total_weight), \
+                                'weight_net': (net_weight - total_weight_net)})
+        return res
 
 stock_picking()
 
