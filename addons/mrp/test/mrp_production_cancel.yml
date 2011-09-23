@@ -1,0 +1,31 @@
+-
+  In order to test the manufacturing order in Openerp,
+  I am creating one manufacturing order
+-
+  !record {model: mrp.production, id: mrp_production_mo1}:
+    company_id: base.main_company
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    location_dest_id: stock.stock_location_stock
+    location_src_id: stock.stock_location_stock
+    product_id: product.product_product_pc1
+    name: MO/01234
+    product_qty: 5.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 0.0
+-
+  I confirm the order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
+-
+  In order to cancel the MO, I first cancel its picking.
+-
+  !python {model: stock.picking}: |
+    mrp_obj = self.pool.get('mrp.production')
+    mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
+    picking_id = self.search(cr, uid, [('id','=',mo.picking_id.id)])
+    if picking_id:
+      self.action_cancel(cr, uid, picking_id, context=None)
+-
+  Then I Cancel the production order and related stock moves.
+-
+  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
