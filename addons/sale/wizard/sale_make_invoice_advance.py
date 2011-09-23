@@ -73,14 +73,14 @@ class sale_advance_payment_inv(osv.osv_memory):
                                         (sale_adv_obj.product_id.name, sale_adv_obj.product_id.id,))
                 
                 line_id = obj_lines.create(cr, uid, {
-                    'name': res['name'],
+                    'name': res.get('name'),
                     'account_id': res['account_id'],
                     'price_unit': sale_adv_obj.amount,
                     'quantity': sale_adv_obj.qtty,
                     'discount': False,
-                    'uos_id': res['uos_id'],
+                    'uos_id': res.get('uos_id'),
                     'product_id': sale_adv_obj.product_id.id,
-                    'invoice_line_tax_id': [(6, 0, res['invoice_line_tax_id'])],
+                    'invoice_line_tax_id': [(6, 0, res.get('invoice_line_tax_id'))],
                     'account_analytic_id': sale.project_id.id or False,
                     #'note':'',
                 })
@@ -116,15 +116,15 @@ class sale_advance_payment_inv(osv.osv_memory):
                 if sale.order_policy == 'picking':
                     self.pool.get('sale.order.line').create(cr, uid, {
                         'order_id': sale.id,
-                        'name': res['name'],
+                        'name': res.get('name'),
                         'price_unit': -sale_adv_obj.amount,
                         'product_uom_qty': sale_adv_obj.qtty,
                         'product_uos_qty': sale_adv_obj.qtty,
-                        'product_uos': res['uos_id'],
-                        'product_uom': res['uos_id'],
+                        'product_uos': res.get('uos_id'),
+                        'product_uom': res.get('uos_id'),
                         'product_id': sale_adv_obj.product_id.id,
                         'discount': False,
-                        'tax_id': [(6, 0, res['invoice_line_tax_id'])],
+                        'tax_id': [(6, 0, res.get('invoice_line_tax_id'))],
                     }, context)
 
         context.update({'invoice_id':list_inv})
