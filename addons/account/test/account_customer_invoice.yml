@@ -82,6 +82,23 @@
     account = self.onchange_account_id(cr, uid, inv_line_id, False, ref('account.a_sale'))
     assert (not account['value']['invoice_line_tax_id']),"Account is not selected correctly"
 -
+  I manually assign tax on invoice
+-
+  !python {model: account.invoice.tax}: |
+    amt = self.amount_change(cr, uid, [], 50.0, ref('base.EUR'), ref('base.main_company'), False)
+    base_amt = self.base_change(cr, uid, [], 9000.0, ref('base.EUR'), ref('base.main_company'), False)
+    invoice_tax_line = {
+        'name':  'Test Tax for Customer Invoice',
+        'manual': 1,
+        'base': base_amt['value']['base_amount'],
+        'amount': amt['value']['tax_amount'],
+        'account_id': ref('account.ova'),
+        'invoice_id': ref("account_invoice_customer0"),
+        }
+    tax = self.create(cr, uid, invoice_tax_line)
+    assert tax, "Tax has not been assigned correctly"
+
+-
   I check that Initially customer invoice is in the "Draft" state
 -
   !assert {model: account.invoice, id: account_invoice_customer0}:
@@ -123,7 +140,7 @@
   !python {model: account.invoice}: |
     import time
     pay = self.pay_and_reconcile(cr, uid, [ref('account_invoice_customer0')],
-        9000.0, ref('cash'), ref('account.period_' + str(int(time.strftime('%m')))),
+        9050.0, ref('cash'), ref('account.period_' + str(int(time.strftime('%m')))),
         ref('bank_journal'), ref('cash'),
         ref('account.period_' + str(int(time.strftime('%m')))), ref('bank_journal'),
         name='Payment for test customer invoice')
