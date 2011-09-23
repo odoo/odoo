@@ -1419,8 +1419,8 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
-                    file_has_headers, jsonp):
+    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode,
+                    csvskip, file_has_headers, jsonp):
         try:
             data = list(csv.reader(
                 csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
@@ -1436,13 +1436,16 @@ class Import(View):
                     # of the ascii range (in range [128, 256))
                     'preview': csvfile.read(200).decode('iso-8859-1')}}))
 
-        records = data[:5]
-
-        header_fields = [word.decode(csvcode) for word in records[0]]
-
-        return '<script>window.top.%s(%s);</script>' % (
-            jsonp, simplejson.dumps({
-                'records':records[1:],'header':header_fields}))
+        try:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps(
+                    {'records': data[:10]}, encoding=csvcode))
+        except UnicodeDecodeError:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({
+                    'message': u"Failed to decode CSV file using encoding %s, "
+                               u"try switching to a different encoding" % csvcode
+                }))
 
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,

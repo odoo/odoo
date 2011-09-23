@@ -126,13 +126,15 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     on_import_results: function(results) {
         this.$element.find('#result, #success').empty();
         var result_node = this.$element.find("#result");
-        var records = {};
 
         if (results['records']) {
-            records = {'header': results['header'], 'row': results['records']};
-            result_node.append(QWeb.render('ImportView-result', {'records': records}));
+            result_node.append(QWeb.render('ImportView.result', {
+                'headers': results.records[0],
+                'records': results.records.slice(1)
+            }));
         } else if (results['error']) {
-            result_node.append(QWeb.render('ImportView-result', {'error': results['error']}));
+            result_node.append(QWeb.render('ImportView.error', {
+                'error': results['error']}));
         } else if (results['success']) {
             self.stop();
             if (this.widget_parent.widget_parent.active_view == "list") {
@@ -141,15 +143,16 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         }
 
         var self = this;
-        this.$element.find('.sel_fields').autocomplete({
-            minLength: 0,
-            source: this.all_fields,
-            change: self.on_check_field_values
-        }).focus(function () {
-            $(this).autocomplete('search');
+        this.ready.then(function () {
+            self.$element.find('.sel_fields').autocomplete({
+                minLength: 0,
+                source: self.all_fields,
+                change: self.on_check_field_values
+            }).focus(function () {
+                $(this).autocomplete('search');
+            });
+            self.on_check_field_values();
         });
-
-        this.on_check_field_values();
     },
     /**
      * Looks through all the field selections, and tries to find if two

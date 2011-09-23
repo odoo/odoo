@@ -1433,28 +1433,28 @@
     </fieldset>
 </form>
 </t>
-<t t-name="ImportView-result">
-    <t t-if="error">
-        <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
-        <t t-if="error.preview">
-            <p>Here is a preview of the file we could not import:</p>
-            <pre><t t-esc="error.preview"/></pre>
-        </t>
+<table t-name="ImportView.result"
+        class="oe_import_grid" width="100%" style="margin: 5px 0;">
+    <tr class="oe_import_grid-header">
+        <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
+            <t t-esc="header"/></td>
+    </tr>
+    <tr>
+        <td t-foreach="headers" t-as="header">
+            <input class="sel_fields"/>
+        </td>
+    </tr>
+    <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
+        <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
+            <t t-esc="cell"/></td>
+    </tr>
+</table>
+<t t-name="ImportView.error">
+    <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
+    <t t-if="error.preview">
+        <p>Here is a preview of the file we could not import:</p>
+        <pre><t t-esc="error.preview"/></pre>
     </t>
-    <table t-if="records" class="oe_import_grid" width="100%" style="margin: 5px 0;">
-        <tr class="oe_import_grid-header">
-            <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell">
-                <t t-esc="header"/></td>
-        </tr>
-        <tr>
-            <td t-foreach="records.header" t-as="header">
-                <input class="sel_fields"/>
-            </td>
-        </tr>
-        <tr t-foreach="records.row" t-as="row" class="oe_import_grid-row">
-            <td t-foreach="row" t-as="column" class="oe_import_grid-cell"><t t-esc="column"/></td>
-        </tr>
-    </table>
 </t>
 
 <t t-name="About-Page">
