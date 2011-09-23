@@ -1,9 +1,4 @@
 -
-  I assign an email address to Administrator.
--
-  !record {model: res.users, id: base.user_root}:
-    user_email: admin@openerp.com
--
   I test project template feature.
 -
   I create test project 'OpenERP Test Programme'.
@@ -12,11 +7,10 @@
     company_id: base.main_company
     name: OpenERP Training Programm
 -
-  I create analytic account.
+  I assign an email address to Administrator for communications.
 -
-  !record {model: account.analytic.account, id: account_analytic_account0}:
-    name : account_analytic_account
-    partner_id: base.res_partner_asus
+  !record {model: res.users, id: base.user_root}:
+    user_email: admin@openerp.com
 -
   I create project 'OpenERP Training Programme'.
 -
@@ -28,7 +22,13 @@
     date_start: !eval time.strftime('%Y-%m-%d')
     date: !eval time.strftime('%Y-%m-%d')
 -
-  I create task 'Technical Training' for this project.
+  I create analytic account for assigned partner in project.
+-
+  !record {model: account.analytic.account, id: account_analytic_account0}:
+    name : account_analytic_account
+    partner_id: base.res_partner_asus
+-
+  I create task 'Technical Training' for 'OpenERP Training Programme' project.
 -
   !record {model: project.task, id: project_task_technicaltraining0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -39,7 +39,7 @@
     remaining_hours: 30.0
     state: draft
 -
-  I create task 'Training' for this project.
+  I create task 'Training' for 'OpenERP Training Programme' project.
 -
   !record {model: project.task, id: project_task_child0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -49,7 +49,7 @@
     remaining_hours: 30.0
     state: done
 -
-  I create task 'Functional Training' for this project.
+  I create task 'Functional Training' for 'OpenERP Training Programme' project.
 -
   !record {model: project.task, id: project_task_functionaltraining0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -88,7 +88,7 @@
   !python {model: project.task}: |
     self.do_open(cr, uid,[ref("project_task_functionaltraining0")],context={})
 -
-  I check child project.
+  I check is there any child task assigned to 'Functional Training' task.
 -
   !python {model: project.task}: |
     self._check_child_task(cr, uid, [ref("project_task_functionaltraining0")])
@@ -108,12 +108,12 @@
   !python {model: project.task}: |
     self._change_type(cr, uid,[ref("project_task_functionaltraining0")], next, context)
 -
-  I click on next Button for change the type of project task.
+  I click on next button for change the type of project task.
 -
   !python {model: project.task}: |
     self.next_type(cr, uid,[ref("project_task_functionaltraining0")], context)
 -
-  I click on previous Button for go back to previous type of task.
+  I click on previous button for go back to previous type of task.
 -
   !python {model: project.task}: |
     self.prev_type(cr, uid,[ref("project_task_functionaltraining0")], context)
