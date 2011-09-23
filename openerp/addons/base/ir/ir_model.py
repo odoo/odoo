@@ -481,14 +481,12 @@ class ir_model_access(osv.osv):
 
         if isinstance(model, browse_record):
             assert model._table_name == 'ir.model', 'Invalid model object'
-            model_name = model.name
+            model_name = model.model
         else:
             model_name = model
 
-        # osv_memory objects can be read by everyone, as they only return
-        # results that belong to the current user (except for superuser)
-        model_obj = self.pool.get(model_name)
-        if model_obj.is_transient():
+        # TransientModel records have no access rights, only an implicit access rule
+        if self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
@@ -523,7 +521,7 @@ class ir_model_access(osv.osv):
             }
 
             raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
-        return r
+        return r or False
 
     __cache_clearing_methods = []
 
