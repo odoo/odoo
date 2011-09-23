@@ -497,13 +497,7 @@ class many2many(_column):
     _classic_write = False
     _prefetch = False
     _type = 'many2many'
-    def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, no_foreign_keys=False, **args):
-        """
-        :param no_foreign_keys: specifies if the relation table should not have
-            foreign keys constaints on ``id1`` and ``id2``. This option is
-            useful for many2many relationships involving views instead of
-            regular tables.
-        """
+    def __init__(self, obj, rel, id1, id2, string='unknown', limit=None, **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
         if '.' in rel:
@@ -513,7 +507,6 @@ class many2many(_column):
         self._id1 = id1
         self._id2 = id2
         self._limit = limit
-        self._no_foreign_keys = no_foreign_keys
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if not context:
