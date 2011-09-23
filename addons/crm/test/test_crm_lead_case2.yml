@@ -2,13 +2,13 @@
    In order to do complete test the CRM in OpenERP,
    I will create new full configured record and carry test on it.
 -  |
-   I Start by creating "Demo Sales Team" with No Unlink.
+   I Start by creating "Test Sales Team" with No Unlink.
    I create a crm.case.section record.
 -
   !record {model: crm.case.section, id: crm_case_section_demosalesteam}:
     code: DEMO
-    complete_name: Demo Sales Team
-    name: Demo Sales Team
+    complete_name: Test Sales Team
+    name: Test Sales Team
     allow_unlink: False
     member_ids:
       - base.user_admin
@@ -28,12 +28,12 @@
    !record {model: res.users, id: res_users_usercrm0}:
      context_section_id: crm_case_section_demosalesteam
 -  |
-   I create a new lead "Demo Customer" and I provide an address to this
-   demo customer and email "info@democustomer.com" and Also "Demo Sales Team".
+   I create a new lead "Test Customer" and I provide an address to this
+   demo customer and email "info@democustomer.com" and Also "Test Sales Team".
 -
    !record {model: crm.lead, id: crm_lead_democustomer}:
      email_from: info@democustomer.com
-     name: Demo Customer
+     name: Test Customer
      partner_name: NotSoTinySARL
      phone: (+32).81.81.37.00
      mobile: (+32).81.81.37.00
@@ -52,19 +52,19 @@
      name: crm_case_section_demosalesteam
      section_id: crm_case_section_demosalesteam
 -
-  I assigning contact detail to the Lead "Demo Customer" without address.
+  I assigning contact detail to the Lead "Test Customer" without address.
 -
   !python {model: crm.lead}: |
     self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), None, email=False)
 
 -
-  I assigning contact detail to the Lead "Demo Customer" with address.
+  I assigning contact detail to the Lead "Test Customer" with address.
 -
   !python {model: crm.lead}: |
     self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), ref("base.res_partner_address_notsotinysarl0"), email=False)
 
 -
-  I selecting email "Opt-out" option for the "Demo Customer" Lead.
+  I selecting email "Opt-out" option for the "Test Customer" Lead.
 -
   !python {model: crm.lead}: |
     self.on_change_optout(cr, uid, ref("crm_lead_democustomer"), True)
@@ -80,12 +80,12 @@
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_democustomer")])
 -
-  I check that lead "Demo Customer" is now in 'open' state.
+  I check that lead "Test Customer" is now in 'open' state.
 -
   !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in open state}:
      - state == "open"
 -
-  I reset the lead "Demo Customer".
+  I reset the lead "Test Customer".
 -
     !python {model: crm.lead}: |
       self.case_reset(cr, uid, [ref("crm_lead_democustomer")])
@@ -95,12 +95,12 @@
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_democustomer")])
 -
-  I setting stage "New" for the lead "Demo Customer".
+  I setting stage "New" for the lead "Test Customer".
 -
    !python {model: crm.lead}: |
      self.stage_next(cr, uid, [ref("crm_lead_democustomer")], context={'stage_type': 'lead'})
 -
-  I try to Unlink the Lead "Demo Customer" demo Lead.
+  I try to Unlink the Lead "Test Customer" demo Lead.
 -
    !python {model: crm.lead}: |
     try:
@@ -108,17 +108,17 @@
     except:
       pass
 -
-   I setting Lead "Demo Customer" to Pending State.
+   I setting Lead "Test Customer" to Pending State.
 -
     !python {model: crm.lead}: |
       self.case_pending(cr, uid, [ref("crm_lead_democustomer")])
 -
-  I check that lead "Demo Customer" is now in 'Pending' state.
+  I check that lead "Test Customer" is now in 'Pending' state.
 -
   !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Pending state}:
      - state == "pending"
 -
-  I Escalate the Lead "Demo Customer" Parent "Sales Team".
+  I Escalate the Lead "Test Customer" Parent "Sales Team".
 -
     !python {model: crm.lead}: |
       self.case_escalate(cr, uid, [ref("crm_lead_democustomer")])
@@ -138,7 +138,7 @@
     self.action_add(cr, uid, [ref("crm_add_note_0")], context=context)
 
 -
-  I Copying this lead "Demo Customer" to New Lead.
+  I Copying this lead "Test Customer" to New Lead.
 -
     !python {model: crm.lead}: |
       self.copy(cr, uid, ref("crm_lead_democustomer"))
@@ -146,6 +146,6 @@
   I checking the Lead Copied or Not.
 -
     !python {model: crm.lead}: |
-      sid = self.search(cr, uid, [('name', '=', 'Demo Customer'),('state', '=', 'draft')])
+      sid = self.search(cr, uid, [('name', '=', 'Test Customer'),('state', '=', 'draft')])
       if not sid:
         raise AssertionError("Lead is not copied Successfully")
