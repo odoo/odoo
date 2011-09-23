@@ -97,9 +97,13 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
             .removeClass("login_invalid")
             .addClass("login_valid");
             //.hide();
-
-        this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
-        this.menu.start();
+        if(!$('#oe_menu').html().length){
+            this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
+            this.menu.start();
+        }
+        else{
+            $.mobile.changePage("#oe_menu", "slide", false, true);
+        }
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
