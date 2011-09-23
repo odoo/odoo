@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="Balance Sheet.pdf">
-  <template pageSize="(595.0,842.0)" title="Balance Sheet" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+<document filename="Financial Report.pdf">
+  <template pageSize="(595.0,842.0)" title="Financial Report" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -24,10 +24,14 @@
     </blockTableStyle>
     <blockTableStyle id="Table_Account_Line_Title">
       <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
+      <blockValign value="MIDDLE"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
     </blockTableStyle>
-    <blockTableStyle id="Table5">
+     <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
@@ -36,11 +40,21 @@
       <blockValign value="TOP"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table1">
+    <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="-1,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,1" stop="-1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table_Final_Result">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="1,-1" stop="1,-1"/>
     </blockTableStyle>
    <blockTableStyle id="Table2_header">
       <blockAlignment value="LEFT"/>
@@ -74,23 +88,10 @@
       <lineStyle kind="LINEAFTER" colorName="#cccccc" start="7,0" stop="7,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="7,0" stop="7,0"/>
     </blockTableStyle>
-
-    <blockTableStyle id="Table2">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEBEFORE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-      <lineStyle kind="LINEAFTER" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-      <lineStyle kind="LINEABOVE" colorName="#cccccc" start="0,0" stop="-1,-1"/>
-    </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P1" rightIndent="2.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Times-Roman"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -114,7 +115,7 @@
     <paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_header_Left" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_header_Right" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -124,20 +125,20 @@
     <paraStyle name="terp_default_Right_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 
-    <paraStyle name="terp_level_1_code" fontName="Helvetica-Bold" fontSize="9.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_0_name" fontName="Helvetica-Bold" fontSize="9.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_0_balance" fontName="Helvetica-Bold" fontSize="9.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_level_1_name" fontName="Helvetica-Bold" fontSize="9.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_level_1_balance" fontName="Helvetica-Bold" fontSize="9.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_2_code" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="0.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_level_2_name" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="10.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_level_2_balance" fontName="Helvetica-Bold" fontSize="8.0" leftIndent=".0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_code" fontName="Helvetica" fontSize="8.0" leftIndent="0.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_code_bold" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="0.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_name" fontName="Helvetica" fontSize="8.0" leftIndent="20.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_name_bold" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="20.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_balance" fontName="Helvetica" fontSize="8.0" leftIndent="0.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_3_balance_bold" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="0.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_3_name" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="20.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_3_balance" fontName="Helvetica-Bold" fontSize="8.0" leftIndent=".0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_level_4_name" fontName="Helvetica" fontSize="8.0" leftIndent="30.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_level_4_name_bold" fontName="Helvetica-Bold" fontSize="8.0" leftIndent="30.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_4_balance" fontName="Helvetica" fontSize="8.0" leftIndent="0.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_5_name" fontName="Helvetica" fontSize="8.0" leftIndent="40.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_5_balance" fontName="Helvetica-Oblique" fontSize="8.0" leftIndent="0.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_6_name" fontName="Helvetica" fontSize="8.0" leftIndent="50.0" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_level_6_balance" fontName="Helvetica" fontSize="8.0" leftIndent="0.0" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
 
     <blockTableStyle id="Table1">
       <blockTopPadding start="0,0" stop="-1,0" length="15"/>
@@ -153,147 +154,115 @@
       <blockValign value="TOP"/>
     </blockTableStyle>
 
-  </stylesheet>
+    <blockTableStyle id="Table2_Report">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#cccccc"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table1_main">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+
+
+</stylesheet>
   <images/>
   <story>
-    <para style="Standard">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Company_Name">
       <tr>
         <td>
-          <para style="terp_header_Centre">Balance Sheet</para>
+          <para style="terp_header_Centre">[[ data['form']['account_report_id'][1] ]]</para>
         </td>
       </tr>
     </blockTable>
-        <para style="terp_default_8">[[ get_data(data) or removeParentNode('para') ]]</para>
-        <para style="terp_default_9">
+
+    <para style="Standard">
       <font color="white"> </font>
     </para>
-      <blockTable colWidths="120.0,100.0,140.0,90.0,90.0" style="Table2_header" >
+      <blockTable colWidths="163.0,163.0,163.0" style="Table2_header">
       <tr>
-        <td><para style="terp_tblheader_General_Centre">Chart of Accounts</para></td>
+        <td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
         <td><para style="terp_tblheader_General_Centre">Filter By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
-    <td><para style="terp_tblheader_General_Centre">Display Account</para></td>
-        <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
-  <tr>
-     <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
+    <tr>
+       <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
         <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-          <blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
-        <tr>
-                 <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
-              <td><para style="terp_tblheader_Details_Centre">End Date</para></td>
-            </tr>
-            <tr>
-              <td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
-              <td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
-            </tr>
-          </blockTable>
-          <blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
-        <tr>
-              <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
-              <td><para style="terp_tblheader_Details_Centre">End Period</para></td>
-            </tr>
-            <tr>
-              <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
-              <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
-            </tr>
-           </blockTable>
-          </td>
-    <td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='all' and 'All') or  (data['form']['display_account']=='movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
-    <td><para style="terp_default_Centre_8">[[ get_target_move(data) ]] </para></td>
-  </tr>
-  </blockTable>
-      <para style="Standard">
-      <font color="white"> </font>
-    </para>
+            <blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+                <tr>
+                   <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
+                    <td><para style="terp_tblheader_General_Centre">End Date</para></td>
+                </tr>
+                <tr>
+                    <td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+                    <td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
+                </tr>
+            </blockTable>
+            <blockTable colWidths="65.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+                <tr>
+                    <td><para style="terp_tblheader_General_Centre">Start Period</para></td>
+                    <td><para style="terp_tblheader_General_Centre">End Period</para></td>
+                </tr>
+                <tr>
+                    <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
+                    <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
+                </tr>
+             </blockTable>
+            </td>
+    </tr>
+    </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="539.0" style="Table_Company_Name">
-      <tr>
-        <td>
-          <para style="terp_header_Left">Assets</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="terp_default_9">
-      <font color="white"> </font>
+    <para style="Standard">
+        <font color="white"> </font>
     </para>
-    <blockTable colWidths="100.0,326.0,113.0" style="Table_Account_Line_Title" repeatRows="1">
+    <blockTable colWidths="390.0,100.0" style="Table_Account_Line_Title">
+      [[ data['form']['enable_filter'] == 0 or removeParentNode('blockTable') ]]
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Code</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">Account</para>
+          <para style="terp_default_Bold_9">Name</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Balance</para>
         </td>
       </tr>
-      <tr style="Table3">
-          [[ repeatIn(get_lines_another('asset'),'a' ) ]]  
-          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,a['level']))}) ]]
-        <td><para style="terp_level_3_code">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_code_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_code'}) ]]<i>[[ a['code'] ]]</i></para></td>
-        <td><para style="terp_level_3_name">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_name_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(4,a['level']))+'_name'}) ]][[ a['name'] ]]</para></td>
-        <td>[[ (a['level'] &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_balance'}) ]][[ formatLang(a['balance'], currency = company.currency_id) ]]</para></td>
-        <td>[[ a['level'] == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a['balance'], currency = company.currency_id) ]]</u></para></td>
+      <tr style="Table1">
+          [[ repeatIn(get_lines(data), 'a') ]]
+          [[ (a.get('level') &lt;&gt; 0) or removeParentNode('tr') ]]
+          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) ]]
+          <td><para style="terp_level_1_name">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_name'}) ]] [[ a.get('name') ]]</para></td>
+          <td>[[ a.get('level') == 4 or removeParentNode('td') ]]<para style="terp_level_1_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance'))]] [[company.currency_id.symbol]]</u></para></td>
+          <td>[[ a.get('level') &lt;&gt; 4 or removeParentNode('td') ]]<para style="terp_level_1_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance'))]] [[company.currency_id.symbol]]</para></td>
       </tr>
     </blockTable>
-    <blockTable colWidths="426.0,113.0" style="Table_Net_Profit_Loss">
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance:</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_cr(), currency = company.currency_id) ]]</u></para>
-        </td>
-      </tr>
-    </blockTable>
-    <condPageBreak height="20cm"/>
-    <para style="terp_default_9">
+    <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="539.0" style="Table_Company_Name">
+    <blockTable colWidths="263.0,100.0,100" style="Table_Account_Line_Title">
+      [[ data['form']['enable_filter'] == 1 or removeParentNode('blockTable') ]]
       <tr>
         <td>
-          <para style="terp_header_Left">Liabilities</para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="100.0,326.0,113.0" style="Table_Account_Line_Title" repeatRows="1">
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Code</para>
-        </td>
-        <td>
-          <para style="terp_default_Bold_9">Account</para>
+          <para style="terp_default_Bold_9">Name</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Balance</para>
         </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['label_filter'] ]]</para>
+        </td>
       </tr>
       <tr style="Table3">
-          [[ repeatIn(get_lines_another('liability'),'a' ) ]]  
-          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,a['level']))}) ]]
-        <td><para style="terp_level_3_code">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_code_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_code'}) ]]<i>[[ a['code'] ]]</i></para></td>
-        <td><para style="terp_level_3_name">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_name_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(4,a['level']))+'_name'}) ]][[ a['name'] ]]</para></td>
-        <td>[[ (a['level'] &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a['type'] =='view' and a['level'] &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a['level']))+'_balance'}) ]][[ formatLang(a['balance'], currency = company.currency_id) ]]</para></td>
-        <td>[[ a['level'] == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a['balance'], currency = company.currency_id) ]]</u></para></td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="426.0,113.0" style="Table_Net_Profit_Loss">
-      <tr>
-        <td>
-          <para style="terp_default_Bold_9">Balance:</para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_dr(), currency = company.currency_id) ]]</u></para>
-        </td>
+          [[ repeatIn(get_lines(data), 'a') ]]
+          [[ (a.get('level') &lt;&gt; 0) or removeParentNode('tr') ]]
+          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) ]]
+          <td><para style="terp_level_1_name">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_name'}) ]] [[ a.get('name') ]]</para></td>
+          <td>[[ a.get('level') == 4 or removeParentNode('td') ]]<para style="terp_level_1_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance'))]] [[company.currency_id.symbol]]</u></para></td>
+          <td>[[ a.get('level') &lt;&gt; 4 or removeParentNode('td') ]]<para style="terp_level_1_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance'))]] [[company.currency_id.symbol]]</para></td>
+          <td>[[ a.get('level') == 4 or removeParentNode('td') ]]<para style="terp_level_1_balance"><u>[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance_cmp'))]] [[company.currency_id.symbol]]</u></para></td>
+          <td>[[ a.get('level') &lt;&gt; 4 or removeParentNode('td') ]]<para style="terp_level_1_balance">[[ setTag('para','para',{'style': 'terp_level_'+str(min(6,a['level']))+'_balance'}) ]][[ formatLang(a.get('balance_cmp'))]] [[company.currency_id.symbol]]</para></td>
       </tr>
     </blockTable>
     <para style="Standard">
