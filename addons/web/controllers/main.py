@@ -1419,8 +1419,7 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode,
-                    csvskip, jsonp):
+    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp):
         try:
             data = list(csv.reader(
                 csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
@@ -1448,9 +1447,8 @@ class Import(View):
                 }))
 
     @openerpweb.httprequest
-    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
-                    jsonp):
-
+    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp):
+        # TODO: reintroduce CSVSKIP param
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)
         res = None
