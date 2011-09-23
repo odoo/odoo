@@ -20,20 +20,20 @@
 ##############################################################################
 
 {
-    'name': 'Base framework for module that need to import complex data',
-    'version': '0.9',
+    'name': 'Import SugarCRM Data into OpenERP Module.',
+    'version': '1.0',
     'category': 'Generic Modules',
-    'description': """
-        This module provide a class import_framework to help importing 
-        complex data from other software
-    """,
+    'description': """This Module Import SugarCRM "Leads", "Opportunities", "Users", "Accounts", 
+            "Contacts", "Employees", Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['import_base','crm', 'document'],
     'init_xml': [],
-    'update_xml': ["import_base_view.xml"],
+    'update_xml': ["wizard/import_message_view.xml",
+                   "import_sugarcrm_view.xml"],
     'demo_xml': [],
-    'test': [], #TODO provide test
+    'test': [],
     'installable': True,
     'active': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
