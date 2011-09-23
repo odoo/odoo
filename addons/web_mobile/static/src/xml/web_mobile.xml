@@ -28,9 +28,9 @@
                     </t>
                 </select>
                 <label for="login">Login:</label>
-                <input type="text" id="login" name="login" value=""/>
+                <input type="text" id="login" name="login" t-att-value="selected_login || ''" />
                 <label for="password">Password:</label>
-                <input type="password" id="password" name="password" value=""/>
+                <input type="password" id="password" name="password" t-att-value="selected_password || ''" />
                 <a id="login_btn" data-theme="c" href="#" data-role="button">Login</a>
                 <div class="login_error_message ui-btn-inner ui-btn-corner-all">
                     <span class="ui-btn-text">Bad username or password</span>

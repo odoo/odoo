@@ -30,6 +30,17 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
 
 openerp.web_mobile.Login =  openerp.web.Widget.extend({
     start: function() {
+
+        this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.remember_creditentials = true;
+        this.selected_login = null;
+        this.selected_password = null;
+
+        if (this.has_local_storage && this.remember_creditentials) {
+            this.selected_login = localStorage.getItem('last_login_login_success');
+            this.selected_password = localStorage.getItem('last_password_login_success');
+        }
+
         var self = this;
         jQuery("#oe_header").children().remove();
 
@@ -39,8 +50,6 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
             self.$element.html(QWeb.render("Login", self));
             if(self.session.db!=""){
                 self.$element.find("#database").val(self.session.db);
-                self.$element.find("#login").val(self.session.login);
-                self.$element.find("#password").val(self.session.password);
             }
             self.$element.find("#login_btn").click(self.on_login);
             $.mobile.initializePage();
@@ -60,6 +69,17 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
+                if (self.has_local_storage) {
+                    if(self.remember_creditentials) {
+                        localStorage.setItem('last_db_login_success', db);
+                        localStorage.setItem('last_login_login_success', login);
+                        localStorage.setItem('last_password_login_success', password);
+                    } else {
+                        localStorage.setItem('last_db_login_success', '');
+                        localStorage.setItem('last_login_login_success', '');
+                        localStorage.setItem('last_password_login_success', '');
+                    }
+                }
                 self.on_login_valid();
             } else {
                 self.on_login_invalid();
