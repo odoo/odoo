@@ -228,8 +228,8 @@
           [[ setTag('tr','tr',{'style': 'Table'+str(min(3,a.level))}) ]]
         <td><para style="terp_level_3_code">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_code_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_code'}) ]]<i>[[ a.code ]]</i></para></td>
         <td><para style="terp_level_3_name">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_name_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(4,a.level))+'_name'}) ]][[ a.name ]]</para></td>
-        <td>[[ (a.level &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_balance'}) ]][[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</para></td>
-        <td>[[ a.level == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</u></para></td>
+        <td>[[ (a.level &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_balance'}) ]][[ formatLang(a.balance * a.user_type.sign, currency_obj=company.currency_id.symbol)</para></td>
+        <td>[[ a.level == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a.balance * a.user_type.sign, currency_obj=company.currency_id) ]]</u></para></td>
       </tr>
     </blockTable>
     <blockTable colWidths="100.0,326.0,113.0" style="Table_Net_Profit_Loss">
@@ -241,7 +241,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and  formatLang(final_result()['balance']) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and  formatLang(final_result()['balance'], currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -251,7 +251,7 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_dr()) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_dr(), currency_obj=company.currency_id) ]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -277,8 +277,8 @@
           [[ setTag('tr','tr',{'style': 'Table'+str(min(3,a.level))}) ]]
         <td><para style="terp_level_3_code">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_code_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_code'}) ]]<i>[[ a.code ]]</i></para></td>
         <td><para style="terp_level_3_name">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_name_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(4,a.level))+'_name'}) ]][[ a.name ]]</para></td>
-        <td>[[ (a.level &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_balance'}) ]][[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</para></td>
-        <td>[[ a.level == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</u></para></td>
+        <td>[[ (a.level &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_balance'}) ]][[ formatLang(a.balance * a.user_type.sign, currency_obj=company.currency_id) ]]</para></td>
+        <td>[[ a.level == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a.balance * a.user_type.sign, currency_obj=company.currency_id) ]]</u></para></td>
       </tr>
     </blockTable>
     <blockTable colWidths="100.0,326.0,113.0" style="Table4">
@@ -290,7 +290,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss' and final_result()['type'] or removeParentNode('blockTable') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(final_result()['balance']) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(final_result()['balance'], currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -300,7 +300,7 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_cr()) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(sum_cr(), currency_obj=company.currency_id) ]]</u></para>
         </td>
       </tr>
     </blockTable>
