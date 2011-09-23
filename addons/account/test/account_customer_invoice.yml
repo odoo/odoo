@@ -12,7 +12,26 @@
     bank: base.res_bank_1
     bank_name: Reserve
 -
-  I will create a customer invoice
+  I select the journal for customer invoice
+-
+  !python {model: account.invoice}: |
+    journal = self.onchange_journal_id(cr, uid, [], journal_id=ref('account.sales_journal'))
+    assert journal['value']
+-
+  I select the partner for customer invoice
+-
+  !python {model: account.invoice}: |
+    partner = self.onchange_partner_id(cr, uid, [], 'out_invoice', ref('base.res_partner_3'), date_invoice=False,
+      payment_term=ref('account.account_payment_term_advance'), partner_bank_id=ref('res_partner_bank_0'), company_id=ref('base.main_company'))
+    assert partner['value'], "Partner has not been selected correctly"
+-
+  I select the company for invoice
+-
+  !python {model: account.invoice}: |
+    company = self.onchange_company_id(cr, uid, [], ref('base.main_company'), False, 'out_invoice', [], ref('base.EUR'))
+    assert company, "Company has not been selected correctly"
+-
+  I create a customer invoice
 -
   !record {model: account.invoice, id: account_invoice_customer0}:
     account_id: account.a_recv
@@ -23,17 +42,45 @@
     date_invoice: !eval time.strftime('%Y-%m-%d')
     payment_term: account.account_payment_term_advance
     partner_bank_id: res_partner_bank_0
-    invoice_line:
-      - account_id: account.a_sale
-        name: '[PC3] Medium PC'
-        price_unit: 900.0
-        quantity: 10.0
-        product_id: product.product_product_pc3
-        uos_id: product.product_uom_unit
     journal_id: account.sales_journal
     partner_id: base.res_partner_3
     reference_type: none
-
+    name: 'Test Customer Invoice'
+-
+  I select a product for invoice
+-
+  !python {model: account.invoice.line}: |
+    product = self.product_id_change(cr, uid, [], ref("product.product_product_pc3"), False, qty=10.0, name='[PC3] Medium PC',
+      type='out_invoice', partner_id=ref('base.res_partner_3'), fposition_id=False, price_unit= 900.0, address_invoice_id=ref('base.res_partner_address_zen'),
+      currency_id=ref('base.EUR'), context={'lang': u'en_US', 'tz': False, 'type': 'out_invoice'}, company_id=ref('base.main_company'))
+    price_unit = self._price_unit_default(cr, uid, {'lang': u'en_US', 'type': u'out_invoice', 'tz': False, 'view_type': 'form'})
+    line = {
+        'account_id':  product['value']['account_id'],
+        'name': product['value']['name'],
+        'price_unit': product['value']['price_unit'],
+        'quantity': 10.0,
+        'product_id': ref("product.product_product_pc3"),
+        'uos_id': product['value']['uos_id'],
+        'invoice_id': ref("account_invoice_customer0"),
+        }
+    invoice_line = self.create(cr, uid, line)
+    assert invoice_line, "Account invoice line has not been created"
+-
+  I select product Uos
+-
+  !python {model: account.invoice.line}: |
+    inv_line_id = self.search(cr, uid, [('invoice_id','=',ref('account_invoice_customer0'))])
+    uos = self.uos_id_change(cr, uid, inv_line_id, ref("product.product_product_pc3"), ref('product.product_uom_unit'), qty=0, name='[PC3] Medium PC', type='out_invoice',
+      partner_id=ref('base.res_partner_3'), fposition_id=False, price_unit=False, address_invoice_id=ref('base.res_partner_address_zen'),
+      currency_id=ref('base.EUR'), context={'lang': u'en_US', 'tz': False, 'type': 'out_invoice'}, company_id=ref('base.main_company'))
+    assert uos['value'], "Product Uos has not been selected correctly"
+-
+  I select the account for invoice line
+-
+  !python {model: account.invoice.line}: |
+    inv_line_id = self.search(cr, uid, [('invoice_id','=',ref('account_invoice_customer0'))])
+    account = self.onchange_account_id(cr, uid, inv_line_id, False, ref('account.a_sale'))
+    assert (not account['value']['invoice_line_tax_id']),"Account is not selected correctly"
 -
   I check that Initially customer invoice is in the "Draft" state
 -
@@ -70,6 +117,23 @@
   !python {model: account.invoice}: |
     acc_id=self.browse(cr, uid, ref("account_invoice_customer0"))
     assert acc_id.move_id, "Move not created for open invoice"
+-
+  I pay the Invoice
+-
+  !python {model: account.invoice}: |
+    import time
+    pay = self.pay_and_reconcile(cr, uid, [ref('account_invoice_customer0')],
+        9000.0, ref('cash'), ref('account.period_' + str(int(time.strftime('%m')))),
+        ref('bank_journal'), ref('cash'),
+        ref('account.period_' + str(int(time.strftime('%m')))), ref('bank_journal'),
+        name='Payment for test customer invoice')
+    assert (pay == True), "Incorrect Payment"
+-
+  I verify that invoice is now in Paid state
+-
+  !python {model: account.invoice}: |
+    inv = self.browse(cr, uid, ref("account_invoice_customer0"))
+    assert (inv.state == 'paid'), "Invoice is not in Paid state"
 -
   I refund the invoice Using Refund Button
 -
