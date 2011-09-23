@@ -23,11 +23,36 @@ function jsonp(form, attributes, callback) {
         data: options
     }, attributes));
 }
+
 openerp.web.DataImport = openerp.web.Dialog.extend({
     template: 'ImportDataView',
     dialog_title: "Import Data",
     init: function(parent, dataset){
+        var self = this;
         this._super(parent, {});
+        this.model = parent.model;
+        this.fields = [];
+        this.all_fields = [];
+        this.required_fields;
+
+        var convert_fields = function (root, prefix) {
+            prefix = prefix || '';
+            _(root.fields).each(function (f) {
+                var name = prefix + f.name;
+                self.all_fields.push(name);
+                if (f.fields) {
+                    convert_fields(f, name + '/');
+                }
+            });
+        };
+        this.ready  = $.Deferred.queue().then(function () {
+            self.required_fields = _(self.fields).chain()
+                .filter(function (field) { return field.required; })
+                .pluck('name')
+                .value();
+            convert_fields(self);
+            self.all_fields.sort();
+        });
     },
     start: function() {
         var self = this;
@@ -50,6 +75,35 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.find('fieldset legend').click(function() {
             $(this).next().toggle();
+        });
+        this.ready.push(new openerp.web.DataSet(this, this.model).call(
+            'fields_get', [], function (fields) {
+                self.graft_fields(fields);
+            }));
+    },
+    graft_fields: function (fields, parent, level) {
+        parent = parent || this;
+        level = level || 0;
+
+        var self = this;
+        _(fields).each(function (field, field_name) {
+            var f = {
+                name: field_name,
+                string: field.string,
+                required: field.required
+            };
+
+            if (field.type === 'one2many') {
+                f.fields = [];
+                // only fetch sub-fields to a depth of 2 levels
+                if (level < 2) {
+                    self.ready.push(new openerp.web.DataSet(self, field.relation).call(
+                        'fields_get', [], function (fields) {
+                            self.graft_fields(fields, f, level+1);
+                    }));
+                }
+            }
+            parent.fields.push(f);
         });
     },
     toggle_import_button: function (newstate) {
@@ -89,15 +143,13 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         this.$element.find('.sel_fields').autocomplete({
             minLength: 0,
-            source: results.all_fields,
-            change: function () {
-                self.on_check_field_values(results['required_fields']);
-            }
+            source: this.all_fields,
+            change: self.on_check_field_values
         }).focus(function () {
             $(this).autocomplete('search');
         });
 
-        this.on_check_field_values(results['required_fields']);
+        this.on_check_field_values();
     },
     /**
      * Looks through all the field selections, and tries to find if two
@@ -134,10 +186,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
         return duplicates;
     },
-    on_check_field_values: function (required_fields) {
+    on_check_field_values: function () {
         this.$element.find("#message, #msg").remove();
 
-        var required_valid = this.check_required(required_fields);
+        var required_valid = this.check_required();
 
         var duplicates = this.find_duplicate_fields();
         if (_.isEmpty(duplicates)) {
@@ -156,15 +208,15 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         }
 
     },
-    check_required: function(required_fields) {
-        if (!required_fields.length) { return true; }
+    check_required: function() {
+        if (!this.required_fields.length) { return true; }
 
         var selected_fields = _(this.$element.find('.sel_fields').get()).chain()
             .pluck('value')
             .compact()
             .value();
 
-        var missing_fields = _.difference(required_fields, selected_fields);
+        var missing_fields = _.difference(this.required_fields, selected_fields);
         if (missing_fields.length) {
             this.$element.find("#result").before('<div id="message" style="color:red">*Required Fields are not selected : ' + missing_fields + '.</div>');
             return false;

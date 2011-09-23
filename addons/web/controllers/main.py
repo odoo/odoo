@@ -1428,9 +1428,6 @@ class Import(View):
         fields = req.session.model(model).fields_get(False, req.session.eval_context(req.context))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
-        required_fields = [field_name for field_name, field in fields.iteritems()
-                           if field.get('required')]
-
         def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
             def str_comp(x,y):
                 if x<y: return 1
@@ -1458,9 +1455,6 @@ class Import(View):
                                        prefix_node+field, None, st_name+'/', level-1)
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
-
-        all_fields = _fields.keys()
-        all_fields.sort()
 
         try:
             data = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
@@ -1504,8 +1498,7 @@ class Import(View):
 
         return '<script>window.top.%s(%s);</script>' % (
             jsonp, simplejson.dumps({
-                'records':records[1:],'header':header_fields,
-                'all_fields':all_fields,'required_fields':required_fields}))
+                'records':records[1:],'header':header_fields}))
 
     @openerpweb.httprequest
     def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
