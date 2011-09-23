@@ -51,6 +51,11 @@
   !python {model: mrp.repair}: |
     self.action_repair_ready(cr, uid, [ref('mrp_repair_rma2')], context=None)
 -
+ Cancel repair order.
+-
+  !python {model: mrp.repair}: |
+   self.action_cancel(cr, uid, [ref('mrp_repair_rma2')], context=None)
+-
   I start by creating new Repair order for "Basic Pc" product and Invoice Type b4repair.
 -
   !record {model: mrp.repair, id: mrp_repair_rma1}:
