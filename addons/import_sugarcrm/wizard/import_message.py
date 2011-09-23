@@ -18,22 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields, osv
 
-{
-    'name': 'Base framework for module that need to import complex data',
-    'version': '0.9',
-    'category': 'Generic Modules',
-    'description': """
-        This module provide a class import_framework to help importing 
-        complex data from other software
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': ["import_base_view.xml"],
-    'demo_xml': [],
-    'test': [], #TODO provide test
-    'installable': True,
-    'active': False,
-}
+class import_message(osv.osv):
+     """Import Message"""
+
+     _name = "import.message"
+     _description = __doc__
+     
+import_message()

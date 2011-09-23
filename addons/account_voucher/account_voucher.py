@@ -807,11 +807,11 @@ class account_voucher(osv.osv):
                 if voucher.currency_rate_difference > 0:
                     account_id = voucher.company_id.property_expense_currency_exchange
                     if not account_id:
-                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
+                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
                 else:
                     account_id = voucher.company_id.property_income_currency_exchange
                     if not account_id:
-                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
+                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
 
                 currency_diff_line = {
                     'name': _('Currency Difference'),
