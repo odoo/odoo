@@ -924,7 +924,7 @@ class BaseModel(object):
                         if f == order:
                             ok = False
                 if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
+                    self.pool._store_function[object].append( (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
                     self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
