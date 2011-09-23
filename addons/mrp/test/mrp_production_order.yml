@@ -58,19 +58,6 @@
     order_ids = self.search(cr, uid, [('state','=','ready')])
     assert order_ids, _('No manufacturing order in Ready state!')
 -
-  In order to cancel the MO, I first cancel its picking.
--
-  !python {model: stock.picking}: |
-    mrp_obj = self.pool.get('mrp.production')
-    mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
-    picking_id = self.search(cr, uid, [('origin','like','%MO/0123')])
-    if picking_id:
-      self.action_cancel(cr, uid, picking_id, context=None)
--
-  Then I Cancel the production order and related stock moves.
--
-  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
--
   I start producing that product first. So I marked it as started.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo1}
@@ -125,4 +112,3 @@
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.default_code','=','PC1')])
     self.do_produce(cr, uid, [ref('mrp_product_produce1')], context={'active_ids': prod_ids})
-
