@@ -12,7 +12,7 @@
         <td t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
             <img t-att-id="columns.value" class="fold-columns-icon"  src="/web_kanban/static/src/img/minus-icon.png"/>
             <div class="oe_fold_column" t-att-id="'column_' + columns.value">
-                <t t-if="columns.value" t-esc="columns.header"/>
+                <t t-if="columns.value &amp;&amp; columns.header" t-esc="columns.header"/>
                 <t t-if="columns.aggregates">
                     <br/><t t-esc="columns.aggregates"/>
                 </t>
@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <td t-foreach="data" t-as="columns" class="oe_column oe_table_column" t-att-id="'column_' + columns.value" t-attf-style="width: #{Math.round(99 / data.length)}%">
-            <p class="oe_vertical_text" t-att-id="'column_' + columns.value"> <t t-esc="columns.header"/></p>
+            <p class="oe_vertical_text" t-att-id="'column_' + columns.value  &amp;&amp; columns.header"> <t t-esc="columns.header"/></p>
             <div t-foreach="columns.records" t-as="record" class="oe_fold_column oe_kanban_record" t-att-id="'main_' + record.id"/>
         </td>
     </tr>

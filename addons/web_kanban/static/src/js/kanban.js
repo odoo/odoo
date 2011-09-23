@@ -194,7 +194,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             var record_per_group = Math.round((records).length / this.NO_OF_COLUMNS);
             this.all_display_data = [];
             for (var i=0, ii=this.NO_OF_COLUMNS; i < ii; i++) {
-                this.all_display_data.push({'records': records.slice(0,record_per_group), 'value':false, 'header' : false, 'ids':[]});
+                this.all_display_data.push({'records': records.slice(0,record_per_group), 'value':i, 'header' : false, 'ids':[]});
                 records.splice(0,record_per_group);
             }
         }
