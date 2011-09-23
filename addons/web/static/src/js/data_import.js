@@ -174,10 +174,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
         } else if (results['success']) {
-            self.stop();
             if (this.widget_parent.widget_parent.active_view == "list") {
                 this.widget_parent.reload_content();
             }
+            this.stop();
+            return;
         }
 
         var self = this;
