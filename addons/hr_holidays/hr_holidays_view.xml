@@ -8,10 +8,9 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/>
                         <filter string="This Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
