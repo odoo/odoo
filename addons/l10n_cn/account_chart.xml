@@ -29,7 +29,7 @@
 		<record id="user_type_equity" model="account.account.type">
 			<field name="name">所有者权益类</field>
 			<field name="code">4</field>
-			<field name="close_method">unreconciled</field>
+			<field name="close_method">balance</field>
 			<field name="report_type">liability</field>
 		</record>
 		<record id="user_type_cost" model="account.account.type">
@@ -767,7 +767,7 @@
 			<field name="code">4103</field>
 			<field eval="False" name="reconcile"/>
 			<field ref="cn_root" name="parent_id"/>
-			<field name="type">payable</field>
+			<field name="type">other</field>
 			<field name="name">本年利润</field>
             <field name="user_type" ref="user_type_equity"/>
 		</record>
