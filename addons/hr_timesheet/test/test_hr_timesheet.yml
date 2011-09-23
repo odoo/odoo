@@ -38,14 +38,6 @@
     user_id: 'test_timesheet_user1'
 
 -
-  I create Timesheet journal for employee.
--
-  !record {model: account.analytic.journal, id: analytic_journal}:
-    code: TS
-    name: Timesheet Journal
-    type: general
-
--
   I create a product as "Consultancy - Senior Developer".
 -
   !record {model: product.product, id: product_consultant}:
@@ -103,7 +95,23 @@
       uid = ref('test_timesheet_user1')
       new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
-
+-
+  I create a timesheet line manually to check several default values. 
+  I also assign proper date and user for that line.
+-
+  !python {model: hr.analytic.timesheet}: |
+     import time
+     uid = ref('test_timesheet_user1')
+     current_date = time.strftime('%Y-%m-%d')
+     vals = {'name': 'Worked on project',
+             'user_id': ref('test_timesheet_user1'),
+             'account_id': ref('account.analytic_project_1_development'),
+             'unit_amount': 5.00,
+             'journal_id': ref('analytic_journal')
+     }
+     line_id = self.create(cr, uid, vals, None)
+     self.on_change_date(cr, uid, [line_id], current_date)
+     self.on_change_user_id(cr, uid, [line_id], ref('base.user_root'))
 -
   To stop work I click on "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
   Which check state in hr attendace form for user.
@@ -113,7 +121,6 @@
        ids = self.search(cr, uid, [('emp_id', '=', ref('hr_employee_fracline1')),('name', '=', 'Francline')])
        self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]
              })
-
 -
   I Create an analytic account "Project2".
 -
@@ -136,3 +143,4 @@
 
 - |
   I can see employee timesheet for particular month using "Employee Timesheet" report.
+
