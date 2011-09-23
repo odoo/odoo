@@ -1443,7 +1443,8 @@
     </t>
     <table t-if="records" class="oe_import_grid" width="100%" style="margin: 5px 0;">
         <tr class="oe_import_grid-header">
-            <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell"><t t-esc="header[0]"/></td>
+            <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell">
+                <t t-esc="header"/></td>
         </tr>
         <tr>
             <td t-foreach="records.header" t-as="header">

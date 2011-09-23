@@ -1421,80 +1421,24 @@ class Import(View):
     @openerpweb.httprequest
     def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
                     file_has_headers, jsonp):
-
-        _fields = {}
-        _fields_invert = {}
-        error = None
-        fields = req.session.model(model).fields_get(False, req.session.eval_context(req.context))
-        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
-
-        def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
-            def str_comp(x,y):
-                if x<y: return 1
-                elif x>y: return -1
-                else: return 0
-
-            fields_order = fields.keys()
-            fields_order.sort(lambda x,y: str_comp(fields[x].get('string', ''), fields[y].get('string', '')))
-            for field in fields_order:
-                if (fields[field].get('type','') not in ('reference',))\
-                            and (not fields[field].get('readonly')\
-                            or not dict(fields[field].get('states', {}).get(
-                            'draft', [('readonly', True)])).get('readonly',True)):
-
-                    st_name = prefix_value+fields[field]['string'] or field
-                    _fields[prefix_node+field] = st_name
-                    _fields_invert[st_name] = prefix_node+field
-
-                    if fields[field].get('type')=='one2many' and level>0:
-                        fields2 = self.fields_get(req,  fields[field]['relation'])
-                        model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
-
-                    if fields[field].get('relation',False) and level>0:
-                        model_populate({'/id': {'type': 'char', 'string': 'ID'}, '.id': {'type': 'char', 'string': 'Database ID'}},
-                                       prefix_node+field, None, st_name+'/', level-1)
-        fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
-        model_populate(fields)
-
         try:
-            data = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
-        except:
-            error={'message': 'error opening .CSV file. Input Error.'}
-            return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
-
-        records = []
-        count = 0
-        header_fields = []
-        word=''
-
-        try:
-            for rec in itertools.islice(data,0,4):
-                records.append(rec)
-
-            headers = itertools.islice(records,1)
-            line = headers.next()
-
-            for word in line:
-                word = str(word.decode(csvcode))
-                if word in _fields:
-                    header_fields.append((word, _fields[word]))
-                elif word in _fields_invert.keys():
-                    header_fields.append((_fields_invert[word], word))
-                else:
-                    count = count + 1
-                    header_fields.append((word, word))
-
-            if len(line) == count:
-                error = {'message':"File has not any column header."}
-        except:
-            error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
-
-        if error:
+            data = list(csv.reader(
+                csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
+        except csv.Error, e:
             csvfile.seek(0)
-            error=dict(error, preview=csvfile.read(200))
             return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':error}))
+                jsonp, simplejson.dumps({'error': {
+                    'message': 'Error parsing CSV file: %s' % e,
+                    # decodes each byte to a unicode character, which may or
+                    # may not be printable, but decoding will succeed.
+                    # Otherwise simplejson will try to decode the `str` using
+                    # utf-8, which is very likely to blow up on characters out
+                    # of the ascii range (in range [128, 256))
+                    'preview': csvfile.read(200).decode('iso-8859-1')}}))
+
+        records = data[:5]
+
+        header_fields = [word.decode(csvcode) for word in records[0]]
 
         return '<script>window.top.%s(%s);</script>' % (
             jsonp, simplejson.dumps({
