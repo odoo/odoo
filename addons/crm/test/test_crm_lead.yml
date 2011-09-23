@@ -76,37 +76,37 @@
      assert action['res_model'] == 'crm.lead2opportunity.partner'
 -
    |
-   I select "create a new partner" option in this wizard.
+   I select "create a new partner" option.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_0}:
       action: 'create'
       name: 'convert'
 -
-  Then, Click on "Create Opportunity" button of this wizard.
+  Then, Click on "Create Opportunity" button.
 -
    !python {model: crm.lead2opportunity.partner}: |
       self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
 -
    |
-   I select "Link to an existing partner" option in this wizard.
+   I select "Link to an existing partner" option.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
       action: 'exist'
       name: 'existing partner'
 -
-  Then, Click on "Create Opportunity" button of this wizard.
+  Then, Click on "Create Opportunity" button.
 -
    !python {model: crm.lead2opportunity.partner}: |
       self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
 -
    |
-   I select "Do not link to a partner" option in this wizard.
+   I select "Do not link to a partner" option.
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_2}:
       action: 'nothing'
       name: 'Do not link to a partner'
 -
-  Then, Click on "Create Opportunity" button of this wizard.
+  Then, Click on "Create Opportunity" button.
 -
    !python {model: crm.lead2opportunity.partner}: |
       self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_2")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
