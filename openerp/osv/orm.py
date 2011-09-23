@@ -4562,6 +4562,7 @@ class Model(BaseModel):
     which the class' module is installed).
     """
     _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = False # True in a TransientModel
 
 class TransientModel(BaseModel):
     """Model super-class for transient records, meant to be temporarily
@@ -4572,7 +4573,6 @@ class TransientModel(BaseModel):
        records they created. The super-user has unrestricted access
        to all TransientModel records.
     """
-    __metaclass__ = MetaModel
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = True
     _max_count = None
@@ -4638,10 +4638,15 @@ class TransientModel(BaseModel):
         return True
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
-        # No access rules for transient models.
+        # Only one single implicit access rule for transient models: owner only!
+        # This is ok to hardcode because we assert that TransientModels always
+        # have log_access enabled and this the create_uid column is always there.
+        # And even with _inherits, these fields are always present in the local
+        # table too, so no need for JOINs.
         if uid != openerp.SUPERUSER:
-            cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
-                " id IN %s", (tuple(ids),))
+            cr.execute("""SELECT distinct create_uid
+                          FROM %s
+                          WHERE id IN %s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
                 raise orm.except_orm(_('AccessError'), '%s access is '
@@ -4653,11 +4658,9 @@ class TransientModel(BaseModel):
         return super(TransientModel, self).create(cr, uid, vals, context)
 
     def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-        # Restrict acces to the current user, except for the super-user.
+        # Restrict acces to the current user, except for the super-user
         if self._log_access and uid != openerp.SUPERUSER:
             domain = expression.AND(([('create_uid', '=', uid)], domain))
-
-        # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
         return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
 
 class AbstractModel(BaseModel):
