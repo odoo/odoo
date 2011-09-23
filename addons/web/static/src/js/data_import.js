@@ -124,7 +124,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         }, this.on_import_results);
     },
     on_import_results: function(results) {
-        this.$element.find('#result, #success').empty();
+        this.$element.find('#result').empty();
         var result_node = this.$element.find("#result");
 
         if (results['records']) {
