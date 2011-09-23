@@ -23,7 +23,17 @@
   !record {model: account.analytic.account, id: account.analytic_sednacom}:
     partner_id: base.res_partner_desertic_hispafuentes
     pricelist_id: product.list0
-
+-
+  I open this account and make the state as pending.
+-
+  !python {model: account.analytic.account}: |
+    self.set_open(cr, uid, [ref('account.analytic_sednacom')], None)
+    self.set_pending(cr, uid, [ref('account.analytic_sednacom')], None)
+-
+  I assign account on analytic account line.
+-
+  !python {model: hr.analytic.timesheet}: |
+    self.on_change_account_id(cr, uid, [ref('account_analytic_line_developyamlforhrmodule0')], ref('account.analytic_sednacom'))
 -
   I create invoice on analytic Line using "Invoice analytic Line" wizard.
 -
@@ -73,11 +83,15 @@
     price: 1
     time: 1
 -
-  I click on "Create Invoice" button to create Invoice.
+  I click on "Create Invoice" button to create Invoice and validate the invoice.
 -
   !python {model: hr.timesheet.invoice.create.final}: |
-    self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_sednacom")]})
-
+    import netsvc
+    wkf_service = netsvc.LocalService("workflow")
+    res = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_final_0")], {"active_ids": [ref("account.analytic_sednacom")]})
+    invoice_ids = eval(res['domain'])[0][2]
+    for inv in invoice_ids:
+       wkf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_open', cr)
 -
   I can also make some theoretical revenue reports.
 -
