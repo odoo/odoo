@@ -45,7 +45,6 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         jQuery("#oe_header").children().remove();
 
         this.rpc("/web/database/get_list", {}, function(result) {
-            var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
             if(self.session.db!=""){
@@ -323,11 +322,4 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Selection = openerp.web.Widget.extend({
-    on_select_option: function(ev){
-        ev.preventDefault();
-        var $this = ev.currentTarget;
-        $($this).prev().find(".ui-btn-text").html($($this).find("option:selected").text());
-    }
-});
 };

@@ -38,15 +38,12 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 var fields = result.fields;
                 var view_fields = result.arch.children;
                 var get_fields = self.get_fields(view_fields);
-                var selection = new openerp.web_mobile.Selection();
-
                 for (var j = 0; j < view_fields.length; j++) {
                     if (view_fields[j].tag == 'notebook') {
                         var notebooks = view_fields[j];
                     }
                 }
                 self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data ,'temp_flag':'1'}));
-
 				for(var i=0;i<get_fields.length;i++)
 				  {
 					if(get_fields[i].attrs.widget=="progressbar")
@@ -106,7 +103,6 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                     }
                                 }
                             }
-
                             if(notebook){
                                 $(this).find('p').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
                             }else{
@@ -143,7 +139,6 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                         });
                         var relational = $(this).attr('for');
                         if(result.fields[relational]){
-
                             var head = $.trim($(this).text());
                             var dataset = new openerp.web.DataSetStatic(self, result.fields[relational].relation, result.fields[relational].context);
                             dataset.domain=[['id', 'in', data[relational]]];
