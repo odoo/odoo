@@ -29,11 +29,9 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import expression # must not be first local import!
-from openerp.tools.config import config
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import MetaModel, Model
+from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -201,106 +199,10 @@ class object_proxy(netsvc.Service):
             cr.close()
         return res
 
-
-class TransientModel(Model):
-    """ Model for transient records.
-
-    A TransientModel works similarly to a regular Model but the assiociated
-    records will be cleaned automatically from the database after some time.
-
-    A TransientModel has no access rules.
-
-    """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
-    _transient = True
-    _max_count = None
-    _max_hours = None
-    _check_time = 20
-
-    def __init__(self, pool, cr):
-        super(TransientModel, self).__init__(pool, cr)
-        self.check_count = 0
-        self._max_count = config.get('osv_memory_count_limit')
-        self._max_hours = config.get('osv_memory_age_limit')
-        cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
-
-    def _clean_transient_rows_older_than(self, cr, seconds):
-        if not self._log_access:
-            self.logger = logging.getLogger('orm').warning(
-                "Transient model without write_date: %s" % (self._name,))
-            return
-
-        cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, now())::timestamp <"
-            " (now() - interval %s)", ("%s seconds" % seconds,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
-
-    def _clean_old_transient_rows(self, cr, count):
-        if not self._log_access:
-            self.logger = logging.getLogger('orm').warning(
-                "Transient model without write_date: %s" % (self._name,))
-            return
-
-        cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
-            " AS t FROM " + self._table +
-            " ORDER BY t LIMIT %s", (count,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
-
-    def vacuum(self, cr, uid, force=False):
-        """ Clean the TransientModel records.
-
-        This unlinks old records from the transient model tables whenever the
-        "_max_count" or "_max_age" conditions (if any) are reached.
-        Actual cleaning will happen only once every "_check_time" calls.
-        This means this method can be called frequently called (e.g. whenever
-        a new record is created).
-        """
-        self.check_count += 1
-        if (not force) and (self.check_count % self._check_time):
-            self.check_count = 0
-            return True
-
-        # Age-based expiration
-        if self._max_hours:
-            self._clean_transient_rows_older_than(cr, self._max_hours * 60 * 60)
-
-        # Count-based expiration
-        if self._max_count:
-            self._clean_old_transient_rows(cr, self._max_count)
-
-        return True
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        # No access rules for transient models.
-        if self._log_access and uid != openerp.SUPERUSER:
-            cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
-                " id IN %s", (tuple(ids),))
-            uids = [x[0] for x in cr.fetchall()]
-            if len(uids) != 1 or uids[0] != uid:
-                raise orm.except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for transient models '
-                    '(except for the super-user).' % mode.capitalize())
-
-    def create(self, cr, uid, vals, context=None):
-        self.vacuum(cr, uid)
-        return super(TransientModel, self).create(cr, uid, vals, context)
-
-    def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-        # Restrict acces to the current user, except for the super-user.
-        if self._log_access and uid != openerp.SUPERUSER:
-            domain = expression.AND(([('create_uid', '=', uid)], domain))
-
-        # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
-        return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
-
-
-# For backward compatibility.
+# deprecated - for backward compatibility.
 osv = Model
 osv_memory = TransientModel
+osv_abstract = AbstractModel # ;-)
 
 
 def start_object_proxy():

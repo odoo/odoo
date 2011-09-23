@@ -45,24 +45,25 @@ import calendar
 import copy
 import datetime
 import logging
-import warnings
 import operator
 import pickle
 import re
+import simplejson
 import time
 import traceback
 import types
-import simplejson
-
-import openerp.netsvc as netsvc
+import warnings
 from lxml import etree
-from openerp.tools.config import config
-from openerp.tools.translate import _
 
+import expression
 import fields
-from query import Query
+import openerp
+import openerp.netsvc as netsvc
 import openerp.tools as tools
+from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
+from query import Query
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
@@ -585,22 +586,22 @@ class MetaModel(type):
         self.module_to_models.setdefault(self._module, []).append(self)
 
 
-class Model(object):
+class BaseModel(object):
     """ Base class for OpenERP models.
 
-    OpenERP models are created by inheriting from this class (or from
-    TransientModel)
+    OpenERP models are created by inheriting from this class' subclasses:
 
-        class user(Model):
-            ...
+        * Model: for regular database-persisted models
+        * TransientModel: for temporary data, stored in the database but automatically
+                          vaccuumed every so often
+        * AbstractModel: for abstract super classes meant to be shared by multiple
+                        _inheriting classes (usually Models or TransientModels)
 
-    The system will later instanciate the class once per database (on
+    The system will later instantiate the class once per database (on
     which the class' module is installed).
 
-    To create a class that should not be instanciated (because it is not a
-    model per se, but a class to be inherited to really create a model later),
-    the _register class attribute should be set to False.   
-
+    To create a class that should not be instantiated, the _register class attribute
+    may be set to False.
     """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
@@ -847,6 +848,8 @@ class Model(object):
         as being part of the module where it is defined.
 
         """
+
+
         # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
@@ -4540,6 +4543,130 @@ class Model(object):
 
         """
         return self._transient
+
+class Model(BaseModel):
+    """Main super-class for regular database-persisted OpenERP models.
+
+    OpenERP models are created by inheriting from this class::
+
+        class user(Model):
+            ...
+
+    The system will later instantiate the class once per database (on
+    which the class' module is installed).
+    """
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+
+class TransientModel(BaseModel):
+    """Model super-class for transient records, meant to be temporarily
+       persisted, and regularly vaccuum-cleaned.
+ 
+       A TransientModel has a simplified access rights management,
+       all users can create new records, and may only access the
+       records they created. The super-user has unrestricted access
+       to all TransientModel records.
+    """
+    __metaclass__ = MetaModel
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = True
+    _max_count = None
+    _max_hours = None
+    _check_time = 20
+
+    def __init__(self, pool, cr):
+        super(TransientModel, self).__init__(pool, cr)
+        self.check_count = 0
+        self._max_count = config.get('osv_memory_count_limit')
+        self._max_hours = config.get('osv_memory_age_limit')
+        cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
+        assert self._log_access, "TransientModels must have log_access turned on, "\
+                                 "in order to implement their access rights policy"
+
+    def _clean_transient_rows_older_than(self, cr, seconds):
+        if not self._log_access:
+            self.logger = logging.getLogger('orm').warning(
+                "Transient model without write_date: %s" % (self._name,))
+            return
+
+        cr.execute("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, now())::timestamp <"
+            " (now() - interval %s)", ("%s seconds" % seconds,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def _clean_old_transient_rows(self, cr, count):
+        if not self._log_access:
+            self.logger = logging.getLogger('orm').warning(
+                "Transient model without write_date: %s" % (self._name,))
+            return
+
+        cr.execute(
+            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            " AS t FROM " + self._table +
+            " ORDER BY t LIMIT %s", (count,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def vacuum(self, cr, uid, force=False):
+        """ Clean the TransientModel records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        """
+        self.check_count += 1
+        if (not force) and (self.check_count % self._check_time):
+            self.check_count = 0
+            return True
+
+        # Age-based expiration
+        if self._max_hours:
+            self._clean_transient_rows_older_than(cr, self._max_hours * 60 * 60)
+
+        # Count-based expiration
+        if self._max_count:
+            self._clean_old_transient_rows(cr, self._max_count)
+
+        return True
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        # No access rules for transient models.
+        if uid != openerp.SUPERUSER:
+            cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
+                " id IN %s", (tuple(ids),))
+            uids = [x[0] for x in cr.fetchall()]
+            if len(uids) != 1 or uids[0] != uid:
+                raise orm.except_orm(_('AccessError'), '%s access is '
+                    'restricted to your own records for transient models '
+                    '(except for the super-user).' % operation.capitalize())
+
+    def create(self, cr, uid, vals, context=None):
+        self.vacuum(cr, uid)
+        return super(TransientModel, self).create(cr, uid, vals, context)
+
+    def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+        # Restrict acces to the current user, except for the super-user.
+        if self._log_access and uid != openerp.SUPERUSER:
+            domain = expression.AND(([('create_uid', '=', uid)], domain))
+
+        # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
+        return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
+
+class AbstractModel(BaseModel):
+    """Abstract Model super-class for creating an abstract class meant to be
+       inherited by regular models (Models or TransientModels) but not meant to
+       be usable on its own, or persisted.
+
+       Technical note: we don't want to make AbstractModel the super-class of
+       Model or BaseModel because it would not make sense to put the main
+       definition of persistence methods such as create() in it, and still we
+       should be able to override them within an AbstractModel.
+       """
+    _auto = False # don't create any database backend for AbstractModels
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

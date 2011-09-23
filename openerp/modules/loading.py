@@ -340,7 +340,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj and not model_obj.is_transient():
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'The model %s (%s) has no access rules!' % (model, name))
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'Model %s (%s) has no access rules!' % (model, name))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights
@@ -348,7 +348,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj.is_transient():
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'The transient model (formerly osv_memory) %s (%s) should not have explicit access rules!' % (model, name))
+                    import pdb
+                    pdb.set_trace()
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'The transient model %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
@@ -356,7 +358,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if obj:
                     obj._check_removed_columns(cr, log=True)
                 else:
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)" % model)
 
             # Cleanup orphan records
             pool.get('ir.model.data')._process_end(cr, 1, processed_modules)
