@@ -112,7 +112,7 @@
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
-                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
+                            <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
@@ -492,7 +492,7 @@
                 </form>
                 <group colspan="4" col="8" position="replace">
                     <group colspan="8">
-                        <separator string="How do you generate your costumer invoice ?"/>
+                        <separator string="How do you generate your customer invoice ?"/>
                     </group>
                     <group colspan="8" col="2">
                         <label align="0.0" string="Based on Sales Orders" width="200"/>
