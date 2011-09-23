@@ -289,8 +289,9 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group>
-                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
-                    <filter icon="terp-camera_test" string="Accepted"
+                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
+                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
+                    <filter icon="terp-check" string="Accepted"
                         domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
                     <field name="name"/>

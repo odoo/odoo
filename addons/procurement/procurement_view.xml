@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-		<!--
+    <data>
+        <!--
         Procurement
         -->
 
@@ -101,14 +101,13 @@
             <field name="arch" type="xml">
                 <search string="Search Procurement">
                     <group>
-                       <filter icon="terp-check" string="Current" domain="[('state','in',('draft','confirmed'))]" name="current" help="Procurement Orders in draft or open state."/>
-                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
-                           help="Procurement started late" />
-                       <separator orientation="vertical"/>
                        <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
                        <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
+                       <separator orientation="vertical"/>
+                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
+                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
+                           help="Procurement started late" />
                        <separator orientation="vertical"/>
                        <field name="origin"/>
                        <field name="product_id" />
@@ -120,7 +119,7 @@
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                    	<filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>

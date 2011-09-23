@@ -140,11 +140,11 @@
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
-		                            <button
-		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-		                                name="%(mail.action_email_compose_message_wizard)d"
-		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                icon="terp-mail-replied" type="action" />
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                        icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -158,10 +158,10 @@
                                         <page string="Details">
                                             <group attrs="{'invisible': [('email_from', '=', False)]}">
                                                 <field name="body_text" colspan="4" nolabel="1" height="250"/>
-		                                        <button colspan="4" string="Reply"
-		                                            name="%(mail.action_email_compose_message_wizard)d"
-		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                            icon="terp-mail-replied" type="action"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -177,9 +177,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-		                    <button string="Send New Email"
-		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        icon="terp-mail-message-new" type="action"/>
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -244,9 +244,9 @@
                 <field name="arch" type="xml">
                     <search string="Search Funds">
                         <group>
-                            <filter icon="terp-check" string="Current"
-                                domain="[('state','in',('draft', 'open'))]" name="current"
-                                help="Current Funds" />
+                            <filter icon="terp-check" string="New"
+                                domain="[('state','=','draft')]" name="current"
+                                help="New Funds" />
                             <filter icon="terp-camera_test" string="Open"
                                 domain="[('state','=','open')]"
                                 help="Open Funds" />

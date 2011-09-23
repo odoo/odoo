@@ -252,8 +252,8 @@
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
                    <group>
-                    <filter icon="terp-check" string="Current" domain="[('state','=','wait')]" help="Evaluations that are in waiting state"/>
-                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in progress state"/>
+                    <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Evaluations that are in Plan In Progress state"/>
+                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in waiting appreciation state"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-week" string="7 Days" help="Evaluations to close within the next 7 days"
                         domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />

@@ -72,11 +72,11 @@
                                 domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                                 help="Previous Month"/>
                         <separator orientation="vertical"/>
-                        <filter string="Draft"
+                        <filter string="New"
                                 icon="terp-document-new"
                                 domain="[('state','=','draft')]"
-                                help = "Draft tasks"/>
-                        <filter string="Current"
+                                help = "New tasks"/>
+                        <filter string="In progress"
                                 icon="terp-check"
                                 domain="[('state', '=' ,'open')]"
                                 help = "In progress tasks"/>

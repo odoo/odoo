@@ -100,11 +100,11 @@
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
-		                            <button
-		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-		                                name="%(mail.action_email_compose_message_wizard)d"
-		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                icon="terp-mail-replied" type="action" />
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                        icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -118,10 +118,10 @@
                                         <page string="Details">
                                             <group attrs="{'invisible': [('email_from', '=', False)]}">
                                                 <field name="body_text" colspan="4" nolabel="1" height="250"/>
-		                                        <button colspan="4" string="Reply"
-		                                            name="%(mail.action_email_compose_message_wizard)d"
-		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                            icon="terp-mail-replied" type="action"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                              </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -137,9 +137,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-		                    <button string="Send New Email"
-		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        icon="terp-mail-message-new" type="action"/>
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group colspan="2" col="2">
@@ -232,6 +232,21 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
+                    <filter icon="terp-check" string="New" 
+                        name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Helpdesk Request" />
+                    <filter icon="terp-camera_test"
+                        string="Open"
+                        domain="[('state','=','open')]"
+                        help="Open Helpdesk Request"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        help="All pending Helpdesk Request"
+                    />
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-today" string="Today"
                         domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
                         help="Todays's Helpdesk Requests"
