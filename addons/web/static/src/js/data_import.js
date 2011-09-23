@@ -42,10 +42,9 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var convert_fields = function (root, prefix) {
             prefix = prefix || '';
             _(root.fields).each(function (f) {
-                var name = prefix + f.name;
-                self.all_fields.push(name);
+                self.all_fields.push(prefix + f.name);
                 if (f.fields) {
-                    convert_fields(f, name + '/');
+                    convert_fields(f, prefix + f.id + '/');
                 }
             });
         };
@@ -92,12 +91,19 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         var self = this;
         _(fields).each(function (field, field_name) {
             var f = {
+                id: field_name,
                 name: field_name,
                 string: field.string,
                 required: field.required
             };
 
-            if (field.type === 'one2many') {
+            switch (field.type) {
+            case 'many2many':
+            case 'many2one':
+                f.name += '/id';
+                break;
+            case 'one2many':
+                f.name += '/id';
                 f.fields = [];
                 // only fetch sub-fields to a depth of 2 levels
                 if (level < 2) {
@@ -106,6 +112,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                             self.graft_fields(fields, f, level+1);
                     }));
                 }
+                break;
             }
             parent.fields.push(f);
         });
