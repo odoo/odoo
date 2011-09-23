@@ -1364,7 +1364,8 @@ class account_move(osv.osv):
                 'date': move.period_id.date_stop,
                 'debit': 0.0,
                 'credit': 0.0,
-            }, context)
+                'state': 'valid',
+            }, context, check=False)
 
         # find the first line of this move with the other mode
         # so that we can exclude it from our calculation
