@@ -39,7 +39,7 @@
     remaining_hours: 30.0
     state: draft
 -
-  I create task 'Training' for 'OpenERP Training Programme' project.
+  I create child task 'Training' of 'OpenERP Training Programme' project.
 -
   !record {model: project.task, id: project_task_child0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -154,7 +154,7 @@
   !python {model: project.project}: |
     self.onchange_partner_id(cr, uid, [ref("project_project_openerptrainingprogramme0")], part=ref('base.res_partner_asus'), context = {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],"tz": False, "active_id": ref("project.menu_open_view_project_all")})
 -
-  I set project as project template.
+  I set 'OpenERP Training Programme' project as project template.
 -
   !python {model: project.project}: |
     self.set_template(cr, uid, [ref("project_project_openerptrainingprogramme0")],
@@ -180,7 +180,7 @@
      name = new_prj['name']
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state
 -
-  I reset project template to normal project.
+  I reset project template to normal project 'OpenERP Training Programme'.
 -
   !python {model: project.project}: |
     self.reset_project(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
@@ -209,7 +209,7 @@
        - state == "pending"
 -
   I cancel the project.
--
+- 
   !python {model: project.project}: |
     self.set_cancel(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
       [ref("project.menu_open_view_project_all")], "tz": False, "active_model":
@@ -255,7 +255,7 @@
   !python {model: project.task.reevaluate}: |
       self._get_remaining(cr, uid,{'active_id':ref('project_task_functionaltraining0') })
 - |
-  I click the apply button.
+  I click the apply button for compute hours.
 -
   !python {model: project.task.reevaluate}: |
       self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
