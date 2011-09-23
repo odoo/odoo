@@ -86,7 +86,7 @@
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma0}
 
 - |
-  I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
+  I start the repairing  process by click on "Start Repair" Button For Invoice Type After repair.
 -
   !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma0}
 
@@ -121,8 +121,3 @@
      invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
      invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
      assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
-- |
-  Cancel repair order.
--
-  !python {model: mrp.repair}: |
-    self.action_cancel(cr, uid, [ref('mrp_repair_rma0')], context=None)
