@@ -295,11 +295,12 @@ class ir_model_fields(osv.osv):
         if context and context.get('manual',False):
             vals['state'] = 'manual'
 
-        if vals['serialization_field_id'] or vals['name']:
+        #For the moment renaming a sparse field or changing the storing system is not allowed. This will be done later
+        if 'serialization_field_id' in vals or 'name' in vals:
             for field in self.browse(cr, user, ids, context=context):
-                if field.serialization_field_id and field.serialization_field_id.id != vals['serialization_field_id'] or (not field.serialization_field_id and vals['serialization_field_id']):
+                if 'serialization_field_id' in vals and field.serialization_field_id.id != vals['serialization_field_id']:
                     raise except_orm(_('Error!'),  _('Changing the storing system for the field "%s" is not allowed.'%field.name))
-                elif field.serialization_field_id and (field.name != vals['name']):
+                if field.serialization_field_id and (field.name != vals['name']):
                     raise except_orm(_('Error!'),  _('Renaming the sparse field "%s" is not allowed'%field.name))           
                 
         column_rename = None # if set, *one* column can be renamed here
