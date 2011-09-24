@@ -2556,7 +2556,8 @@ LOG_ACCESS_COLUMNS = {
     'write_date': 'TIMESTAMP'
 }
 # special columns automatically created by the ORM
-MAGIC_COLUMNS =  ['id'] + LOG_ACCESS_COLUMNS.keys()
+MAGIC_COLUMNS =  ['id'] + LOG_ACCESS_COLUMNS.keys() + \
+                 ['internal.create_uid', 'internal.date_access'] # for osv_memory only
 
 class orm(orm_template):
     _sql_constraints = []
