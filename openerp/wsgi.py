@@ -305,14 +305,11 @@ def serve():
     # TODO Change the xmlrpc_port option to http_port.
     try:
         import werkzeug.serving
-        httpd = werkzeug.serving.make_server('localhost',
-            config['xmlrpc_port'], application, threaded=True)
+        httpd = werkzeug.serving.make_server('0.0.0.0', config['xmlrpc_port'], application, threaded=True)
     except ImportError, e:
         import wsgiref.simple_server
-        logging.getLogger('wsgi').warn('Can not import werkzeug, '
-            'falling back to wsgiref.')
-        httpd = wsgiref.simple_server.make_server('localhost',
-            config['xmlrpc_port'], application)
+        logging.getLogger('wsgi').warn('Can not import werkzeug, ' 'falling back to wsgiref.')
+        httpd = wsgiref.simple_server.make_server('0.0.0.0', config['xmlrpc_port'], application)
 
     httpd.serve_forever()
 
