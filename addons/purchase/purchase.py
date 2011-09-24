@@ -540,7 +540,7 @@ class purchase_order(osv.osv):
             if not order_infos:
                 order_infos.update({
                     'origin': porder.origin,
-                    'date_order': time.strftime('%Y-%m-%d'),
+                    'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
                     'partner_address_id': porder.partner_address_id.id,
                     'dest_address_id': porder.dest_address_id.id,
@@ -553,6 +553,8 @@ class purchase_order(osv.osv):
                     'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
+                if porder.date_order < order_infos['date_order']:
+                    order_infos['date_order'] = porder.date_order
                 if porder.notes:
                     order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
                 if porder.origin:
