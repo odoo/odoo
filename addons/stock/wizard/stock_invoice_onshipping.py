@@ -44,7 +44,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         res_ids = context and context.get('active_ids', [])
         vals = []
         browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
-        
+
         for pick in browse_picking:
             src_usage = pick.move_lines[0].location_id.usage
             dest_usage = pick.move_lines[0].location_dest_id.usage
@@ -59,7 +59,7 @@ class stock_invoice_onshipping(osv.osv_memory):
                 journal_type = 'sale_refund'
             else:
                 journal_type = 'sale'
-                
+
             value = journal_obj.search(cr, uid, [('type', '=',journal_type )])
             for jr_type in journal_obj.browse(cr, uid, value, context=context):
                 t1 = jr_type.id,jr_type.name
@@ -140,7 +140,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         res = picking_pool.action_invoice_create(cr, uid, active_ids,
               journal_id = onshipdata_obj[0]['journal_id'],
               group = onshipdata_obj[0]['group'],
-              type = None,
+              type = inv_type,
               context=context)
         return res
 
