@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <xpath expr='//filter[@string="Member"]' position='after'>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-camera_test" string="Invoiceable" domain="[('to_invoice','!=', False)]" help="Invoiceable Project"/>
+                    <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
                 </xpath>
             </field>
         </record>

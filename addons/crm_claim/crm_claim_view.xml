@@ -155,11 +155,11 @@
                                     <tree string="History">
                                         <field name="display_text" string="History Information"/>
                                         <field name="email_from" invisible="1"/>
-			                            <button
-			                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-			                                name="%(mail.action_email_compose_message_wizard)d"
-			                                context="{'mail.compose.message.mode':'reply'}"
-			                                icon="terp-mail-replied" type="action" />
+                                        <button
+                                            string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                            name="%(mail.action_email_compose_message_wizard)d"
+                                            context="{'mail.compose.message.mode':'reply'}"
+                                            icon="terp-mail-replied" type="action" />
                                     </tree>
                                     <form string="Communication &amp; History">
                                         <group col="4" colspan="4">
@@ -173,10 +173,10 @@
                                             <page string="Details">
                                                 <group attrs="{'invisible': [('email_from', '=', False)]}">
                                                     <field name="body_text" colspan="4" nolabel="1" height="250"/>
-			                                        <button colspan="4" string="Reply"
-			                                            name="%(mail.action_email_compose_message_wizard)d"
-			                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-			                                            icon="terp-mail-replied" type="action"/>
+                                                    <button colspan="4" string="Reply"
+                                                        name="%(mail.action_email_compose_message_wizard)d"
+                                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                        icon="terp-mail-replied" type="action"/>
                                                 </group>
                                                 <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                     <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -192,9 +192,9 @@
                                     name="%(crm.action_crm_add_note)d"
                                     context="{'model': 'crm.lead' }"
                                     icon="terp-document-new" type="action" />
-			                    <button string="Send New Email"
-			                        name="%(mail.action_email_compose_message_wizard)d"
-			                        icon="terp-mail-message-new" type="action"/>
+                                <button string="Send New Email"
+                                    name="%(mail.action_email_compose_message_wizard)d"
+                                    icon="terp-mail-message-new" type="action"/>
                             </page>
                         </notebook>
                     </group>
@@ -225,9 +225,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                    <filter icon="terp-check" string="Current" name="current"
-                        domain="[('state','in',('draft', 'open'))]"
-                        help="Draft and Open Claims" />
+                    <filter icon="terp-check" string="New" name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Claims" />
                     <filter icon="terp-camera_test"
                         string="In Progress"
                         domain="[('state','=','open')]"

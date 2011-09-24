@@ -371,9 +371,9 @@
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <filter icon="terp-check"
-                    string="Current"
-                    name="current" help="Draft, Open and Pending Leads"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    string="New"
+                    name="current" help="New Leads"
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
                     domain="[('state','=','open')]"/>
@@ -411,7 +411,7 @@
                 </field>
                 <separator orientation="vertical"/>
                 <field name="country_id" context="{'invisible_country': False}">
-                	<filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                    <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
                 </field>
                 <newline/>
                 <group expand="0" string="Group By...">
@@ -674,9 +674,9 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <filter icon="terp-check"
-                    string="Current"  help="Draft, Open and Pending Opportunities"
+                    string="New"  help="New Opportunities"
                     name="current"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
                     domain="[('state','=','open')]"/>
