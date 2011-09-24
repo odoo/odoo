@@ -27,6 +27,16 @@ import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 
 class workflow_service(netsvc.Service):
+    """
+    Sometimes you might want to fire a signal or re-evaluate the current state
+    of a workflow using the service's API. You can access the workflow services
+    using:
+
+    >>> import netsvc
+    >>> wf_service = netsvc.LocalService("workflow")
+
+    """
+
     def __init__(self, name='workflow'):
         netsvc.Service.__init__(self, name)
         self.wkf_on_create_cache={}
@@ -35,12 +45,31 @@ class workflow_service(netsvc.Service):
         self.wkf_on_create_cache[cr.dbname]={}
 
     def trg_write(self, uid, res_type, res_id, cr):
+        """
+        Reevaluates the specified workflow instance. Thus if any condition for
+        a transition have been changed in the backend, then running ``trg_write``
+        will move the workflow over that transition.
+
+        :param res_type: the model name
+        :param res_id: the model instance id the workflow belongs to
+        :param cr: a database cursor
+        """
         ident = (uid,res_type,res_id)
         cr.execute('select id from wkf_instance where res_id=%s and res_type=%s and state=%s', (res_id or None,res_type or None, 'active'))
         for (id,) in cr.fetchall():
             instance.update(cr, id, ident)
 
     def trg_trigger(self, uid, res_type, res_id, cr):
+        """
+        Activate a trigger.
+
+        If a workflow instance is waiting for a trigger from another model, then this
+        trigger can be activated if its conditions are met.
+
+        :param res_type: the model name
+        :param res_id: the model instance id the workflow belongs to
+        :param cr: a database cursor
+        """
         cr.execute('select instance_id from wkf_triggers where res_id=%s and model=%s', (res_id,res_type))
         res = cr.fetchall()
         for (instance_id,) in res:
@@ -49,10 +78,24 @@ class workflow_service(netsvc.Service):
             instance.update(cr, instance_id, ident)
 
     def trg_delete(self, uid, res_type, res_id, cr):
+        """
+        Delete a workflow instance
+
+        :param res_type: the model name
+        :param res_id: the model instance id the workflow belongs to
+        :param cr: a database cursor
+        """
         ident = (uid,res_type,res_id)
         instance.delete(cr, ident)
 
     def trg_create(self, uid, res_type, res_id, cr):
+        """
+        Create a new workflow instance
+
+        :param res_type: the model name
+        :param res_id: the model instance id to own the created worfklow instance
+        :param cr: a database cursor
+        """
         ident = (uid,res_type,res_id)
         self.wkf_on_create_cache.setdefault(cr.dbname, {})
         if res_type in self.wkf_on_create_cache[cr.dbname]:
@@ -65,6 +108,14 @@ class workflow_service(netsvc.Service):
             instance.create(cr, ident, wkf_id)
 
     def trg_validate(self, uid, res_type, res_id, signal, cr):
+        """
+        Fire a signal on a given workflow instance
+
+        :param res_type: the model name
+        :param res_id: the model instance id the workflow belongs to
+        :signal: the signal name to be fired
+        :param cr: a database cursor
+        """
         result = False
         ident = (uid,res_type,res_id)
         # ids of all active workflow instances for a corresponding resource (id, model_nam)
@@ -74,10 +125,19 @@ class workflow_service(netsvc.Service):
             result = result or res2
         return result
 
-    # make all workitems which are waiting for a (subflow) workflow instance
-    # for the old resource point to the (first active) workflow instance for
-    # the new resource
     def trg_redirect(self, uid, res_type, res_id, new_rid, cr):
+        """
+        Re-bind a workflow instance to another instance of the same model.
+
+        Make all workitems which are waiting for a (subflow) workflow instance
+        for the old resource point to the (first active) workflow instance for
+        the new resource.
+
+        :param res_type: the model name
+        :param res_id: the model instance id the workflow belongs to
+        :param new_rid: the model instance id to own the worfklow instance
+        :param cr: a database cursor
+        """
         # get ids of wkf instances for the old resource (res_id)
 #CHECKME: shouldn't we get only active instances?
         cr.execute('select id, wkf_id from wkf_instance where res_id=%s and res_type=%s', (res_id, res_type))

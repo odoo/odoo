@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-import netsvc
-import tools
 from osv import fields, osv
 import re
+import logging
 
-class partner_wizard_spam(osv.osv_memory):
+_logger = logging.getLogger('mass.mailing')
+
+class partner_massmail_wizard(osv.osv_memory):
     """ Mass Mailing """
 
-    _name = "partner.wizard.spam"
+    _name = "partner.massmail.wizard"
     _description = "Mass Mailing"
 
     _columns = {
@@ -37,45 +38,45 @@ class partner_wizard_spam(osv.osv_memory):
     }
 
     def mass_mail_send(self, cr, uid, ids, context):
-        """
-            Send Email
+        """Send the given mail to all partners whose ids
+           are present in ``context['active_ids']``, to
+           all addresses with an email set.
 
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary
+           :param dict context: ``context['active_ids']``
+                                should contain the list of
+                                ids of the partners who should
+                                receive the mail.
         """
-
         nbr = 0
         partner_pool = self.pool.get('res.partner')
         data = self.browse(cr, uid, ids[0], context=context)
         event_pool = self.pool.get('res.partner.event')
-        active_ids = context and context.get('active_ids', [])
+        assert context['active_model'] == 'res.partner', 'This wizard must be started on a list of Partners'
+        active_ids = context.get('active_ids', [])
         partners = partner_pool.browse(cr, uid, active_ids, context)
-        type_ = 'plain'
+        subtype = 'plain'
         if re.search('(<(pre)|[pubi].*>)', data.text):
-            type_ = 'html'
+            subtype = 'html'
+        ir_mail_server = self.pool.get('ir.mail_server')
+        emails_seen = set()
         for partner in partners:
             for adr in partner.address:
-                if adr.email:
-                    name = adr.name or partner.name
-                    to = '"%s" <%s>' % (name, adr.email)
-    #TODO: add some tests to check for invalid email addresses
-    #CHECKME: maybe we should use res.partner/email_send
-                    tools.email_send(data.email_from,
-                                     [to],
-                                     data.subject,
-                                     data.text,
-                                     subtype=type_,
-                                     openobject_id="res.partner-%s"%partner.id)
-                    nbr += 1
+                if adr.email and not adr.email in emails_seen:
+                    try:
+                        emails_seen.add(adr.email)
+                        name = adr.name or partner.name
+                        to = '"%s" <%s>' % (name, adr.email)
+                        msg = ir_mail_server.build_email(data.email_from, [to], data.subject, data.text, subtype=subtype)
+                        if ir_mail_server.send_email(cr, uid, msg):
+                            nbr += 1
+                    except Exception:
+                        #ignore failed deliveries, will be logged anyway
+                        pass
             event_pool.create(cr, uid,
                     {'name': 'Email(s) sent through mass mailing',
                      'partner_id': partner.id,
                      'description': data.text })
-    #TODO: log number of message sent
+        _logger.info('Mass-mailing wizard sent %s emails', nbr)
         return {'email_sent': nbr}
-
-partner_wizard_spam()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

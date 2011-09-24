@@ -67,7 +67,7 @@
         'res/res_currency_view.xml',
         'res/res_partner_event_view.xml',
         'res/wizard/partner_sms_send_view.xml',
-        'res/wizard/partner_wizard_spam_view.xml',
+        'res/wizard/partner_wizard_massmail_view.xml',
         'res/wizard/partner_clear_ids_view.xml',
         'res/wizard/partner_wizard_ean_check_view.xml',
         'res/res_partner_data.xml',

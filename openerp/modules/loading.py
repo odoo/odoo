@@ -347,7 +347,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if isinstance(model_obj, osv.osv.osv_memory):
+                if isinstance(model_obj, osv.osv.osv_memory) and not isinstance(model_obj, osv.osv.osv):
                     logger.notifyChannel('init', netsvc.LOG_WARNING, 'In-memory object %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")

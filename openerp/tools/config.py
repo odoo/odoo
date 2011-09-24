@@ -254,6 +254,8 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
+        group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
+                         help="Use the unaccent function provided by the database when available.")
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -356,7 +358,7 @@ class configmanager(object):
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'unaccent',
         ]
 
         for arg in keys:
