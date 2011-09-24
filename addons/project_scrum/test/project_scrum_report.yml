@@ -1,9 +1,179 @@
 -
-  In order to test the PDF reports defined on a Project Scrum, we will print Project Scrum Sprint Burndown Report
-- 
+  I assign an email address to Administrator.
+-
+  !record {model: res.users, id: base.user_root}:
+    user_email: admin@openerp.com
+-
+  Test project template feature.
+-
+  I create project 'OpenERP Training Programme'.
+-
+  !record {model: project.project, id: project_project_0}:
+    company_id: base.main_company
+    name: OpenERP Training Test
+-
+  I create project 'Functional Programme'.
+-
+  !record {model: project.project, id: project_project_1}:
+    company_id: base.main_company
+    name: Functional Test    
+-
+  In order to test the PDF reports defined on a Project Scrum, we will print Project Scrum Sprint Burndown Report.
+-
   !python {model: project.scrum.sprint}: |
     import netsvc, tools, os
     data_dict = {'model': 'project.scrum.sprint', 'id':ref('project_scrum.scrum_sprint_0')}
     (data, format) = netsvc.LocalService('report.scrum.sprint.burndown').create(cr, uid, [ref('project_scrum.scrum_sprint_0')], data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'project_scrum-project_scrum_sprint_burndown.'+format), 'wb+').write(data)
+-
+  I create a project scrum product backlog record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog0}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: test
+    project_id: project_project_0
+    sequence: 0.0
+    state: draft
+-
+  Now, I create another two project scrum product backlog record for the merging purpose.
+-
+  I create "Test_merge_bklg1" project scrum product backlog record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog1}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: test_merge_bklg1
+    project_id: project_project_0
+    sequence: 0.0
+    state: draft
+-
+  I create "Test_merge_bklg2" project scrum product backlog record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_backlog2}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: test_merge_bklg2
+    project_id: project_project_1
+    sequence: 0.0
+    state: draft
+-
+  In order to test the Product Backlog.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.name_search(cr, uid, name='test', args=None, operator='ilike', context=None, limit=100)
+    self.button_draft(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I click on Open Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_open(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I click on Pending Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_pending(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I click on Open Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_open(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I create a project.scrum.meeting record.
+-
+  !record {model: project.scrum.meeting, id: project_scrum_meeting_0}:
+    date: !eval time.strftime('%Y-%m-%d')
+    sprint_id: project_scrum.scrum_sprint_0
+-
+  In order to test the Scrum meeting.
+-
+  !python {model: project.scrum.meeting}: |
+    try:
+      self.button_send_to_master(cr, uid, [ref("project_scrum_meeting_0")],context=None)
+      self.button_send_product_owner(cr, uid, [ref("project_scrum_meeting_0")],context=None)
+    except:
+      pass
+-
+  I create first scrum backlog for merge the record.
+-
+  !record {model: project.scrum.backlog.merge, id: project_scrum_backlog_merge1}:
+    project_id: project_project_0
+-
+  I create second scrum backlog for merge the record.
+-
+  !record {model: project.scrum.backlog.merge, id: project_scrum_backlog_merge2}:
+    project_id: project_project_1
+-
+  Set project scrum backlog merge.
+-
+  !python {model: project.scrum.backlog.merge}: |
+    context.update({
+                   'active_model': 'project.scrum.product.backlog',
+                   'active_ids': [ref("project_scrum_product_backlog1"),ref("project_scrum_product_backlog2")],
+                   'active_id': ref("project_scrum_product_backlog1")})
+    self.check_backlogs(cr, uid, [ref("project_scrum_product_backlog1"),ref("project_scrum_product_backlog2")],context)
+    self.do_merge(cr, uid, [ref('project_scrum_backlog_merge1'),ref('project_scrum_backlog_merge2')], context)
+-
+  In order to test the project_scrum_backlog_create_task wizard.
+-
+  !record {model: project.scrum.backlog.create.task, id: project_scrum_backlog_task0}:
+    user_id: base.user_root
+-
+  Set project as project template.
+-
+  !python {model: project.scrum.backlog.create.task}: |
+    context['active_ids'] = [ref("project_scrum_backlog_task0")]
+    self.do_create(cr, uid, [ref("project_scrum_backlog_task0")],context)
+
+-
+  I create a ScrumProduct Backlog Record.
+-
+  !record {model: project.scrum.product.backlog, id: project_scrum_product_demobacklog0}:
+    effective_hours: 0.0
+    expected_hours: 0.0
+    name: Demo Product backlog
+    project_id: project_project_0
+    sequence: 0.0
+
+-
+  I create a postpone.wizard record.
+-
+  !record {model: postpone.wizard, id: postpone_wizard_0}:
+    {}
+-
+  Now I am postponding the Backlog "Demo Product backlog".
+-
+  !python {model: postpone.wizard}: |
+    context['active_ids'] = [ref("project_scrum_product_demobacklog0")]
+    context['active_id'] = [ref("postpone_wizard_0")]
+    self.button_postpone( cr, uid, [ref("postpone_wizard_0")], context=context)
+-
+  I click on Postpone Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_postpone(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I click on Close Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_close(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I click on Cancel Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_cancel(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  I create a backlog sprint.
+-
+  !record {model: project.scrum.backlog.assign.sprint, id: project_scrum_backlog_assign_sprint}:
+    {}
+-
+  Now, I am assigning it.
+-
+  !python {model: project.scrum.backlog.assign.sprint}: |
+    context.update({'active_ids': [ref('project_scrum_backlog_task0')], 'avtive_id': ref('project_scrum_backlog_task0')})
+    try:
+      self.assign_sprint(cr, uid, [ref("project_scrum_backlog_assign_sprint")], context=context)
+    except:
+      pass

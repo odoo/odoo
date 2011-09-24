@@ -114,10 +114,18 @@ class pos_order(osv.osv):
             if date_p:
                 res[order.id] = date_p
                 return res
-            cr.execute(" SELECT MAX(l.date) "
-                        " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
-                        " WHERE i.move_id = m.id AND l.move_id = m.id AND l.reconcile_id = r.id AND o.id = %s AND o.invoice_id = i.id",
-                        (order.id,))
+            if order.invoice_id:
+                cr.execute(" SELECT MAX(l.date) "
+                            " FROM account_move_line l, account_move m, account_invoice i, account_move_reconcile r, pos_order o "
+                            " WHERE i.move_id = m.id AND l.move_id = m.id AND l.reconcile_id = r.id AND o.id = %s AND o.invoice_id = i.id",
+                            (order.id,))
+            else:
+                cr.execute("SELECT MAX(l.date) from account_move_line l "
+                            "left join account_bank_statement abs on (l.statement_id=abs.id)"
+                            "left join account_bank_statement_line absl on (absl.statement_id=abs.id) "
+                            "left join pos_order p on (p.id=absl.pos_statement_id) "
+                            "left join account_account a on (a.id=absl.account_id) "
+                            "where p.id=%s and l.reconcile_id is not NULL and a.reconcile=True", (order.id,))
             val = cr.fetchone()
             val = val and val[0] or None
             if val:
@@ -209,7 +217,8 @@ class pos_order(osv.osv):
             'picking_id': False,
             'statement_ids': [],
             'nb_print': 0,
-            'pickings': []
+            'pickings': [],
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order'),
         })
         return super(pos_order, self).copy(cr, uid, id, default, context=context)
 
@@ -666,12 +675,13 @@ class pos_order(osv.osv):
                     'quantity': line.qty,
                 }
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
-
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
+                if line.product_id.description_sale:
+                    inv_line['note'] = line.product_id.description_sale
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
@@ -1170,6 +1180,15 @@ class pos_order_line(osv.osv):
         if 'product_id' in values and not values['product_id']:
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context=context)
+
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'prodlot_id': False,
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'pos.order.line')
+        })
+        return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
     def _scan_product(self, cr, uid, ean, qty, order):
         # search pricelist_id

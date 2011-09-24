@@ -115,7 +115,7 @@
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
@@ -205,7 +205,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -294,13 +294,13 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -355,7 +355,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                   <group col="10" colspan="4">
+                   <group>
                         <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
                         <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
@@ -364,16 +364,16 @@
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id" select="1" widget="selection" string="Salesman">
-                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" separator="1"/>
+                        <field name="user_id" widget="selection" string="Salesman">
+                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
                         <field name="origin"/>
                         <field name="amount_total"/>
                     </group>
                     <newline/>
-                    <group col="10" colspan="4">
-                        <field name="journal_id" widget="selection" select='1'/>
-                        <field name="period_id" select='1' string="Period"/>
+                    <group>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="period_id" string="Period"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

@@ -29,8 +29,8 @@ from tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
-    ('draft', 'Draft'),
-    ('open', 'Open'),
+    ('draft', 'New'),
+    ('open', 'In Progress'),
     ('cancel', 'Cancelled'),
     ('done', 'Closed'),
     ('pending', 'Pending'),
@@ -116,39 +116,12 @@ class crm_case_section(osv.osv):
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
     ]
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-
-        """
-        Checks for recursion level for sales team
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Sales team ids
-        """
-        level = 100
-
-        while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id IN %s', (tuple(ids),))
-            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        """Overrides orm name_get method
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of sales team ids
-        """
-        if context is None:
-            context = {}
+        """Overrides orm name_get method"""
         if not isinstance(ids, list) : 
             ids = [ids]
         res = []
@@ -174,13 +147,7 @@ class crm_case_categ(osv.osv):
     }
 
     def _find_object_id(self, cr, uid, context=None):
-        """Finds id for case object
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-
+        """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
@@ -217,6 +184,9 @@ class crm_base(object):
         if not context.get('portal'):
             return False
         # was user.address_id.id, but address_id has been removed
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
         return False
 
     def _get_default_partner(self, cr, uid, context=None):
@@ -228,6 +198,8 @@ class crm_base(object):
         if not context.get('portal', False):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
         return user.company_id.partner_id.id
 
     def _get_default_email(self, cr, uid, context=None):
@@ -255,9 +227,9 @@ class crm_base(object):
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
-        @param ids: List of case IDs
-        @param add: Id of Partner's address
-        @email: Partner's email ID
+        :param ids: List of case IDs
+        :param add: Id of Partner's address
+        :param email: Partner's email ID
         """
         if not add:
             return {'value': {'email_from': False}}
@@ -269,9 +241,9 @@ class crm_base(object):
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
-        @param ids: List of case IDs
-        @param part: Partner's id
-        @email: Partner's email ID
+        :param ids: List of case IDs
+        :param part: Partner's id
+        :param email: Partner's email ID
         """
         data={}
         if  part:
@@ -282,6 +254,7 @@ class crm_base(object):
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
+        :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         for case in cases:
@@ -295,7 +268,7 @@ class crm_base(object):
 
     def case_close(self, cr, uid, ids, *args):
         """Closes Case
-        @param ids: List of case Ids
+        :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -306,7 +279,7 @@ class crm_base(object):
 
     def case_cancel(self, cr, uid, ids, *args):
         """Cancels Case
-        @param ids: List of case Ids
+        :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -317,6 +290,7 @@ class crm_base(object):
 
     def case_pending(self, cr, uid, ids, *args):
         """Marks case as pending
+        :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -326,13 +300,14 @@ class crm_base(object):
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft
+        :param ids: List of case Ids
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
         self._action(cr, uid, cases, 'draft')
         return True
-    
+
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if context is None:
             context = {}
@@ -357,13 +332,14 @@ class crm_case(crm_base):
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order)
         if stage_ids:
             return stage_ids[0]
+        return False
 
     def stage_set(self, cr, uid, ids, stage_id, context=None):
         value = {}
         if hasattr(self,'onchange_stage_id'):
             value = self.onchange_stage_id(cr, uid, ids, stage_id)['value']
         value['stage_id'] = stage_id
-        self.write(cr, uid, ids, value, context=context)
+        return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
         if context is None:
@@ -377,25 +353,25 @@ class crm_case(crm_base):
                 section_id = case.section_id.id
             next_stage_id = self.stage_find(cr, uid, section_id, [('sequence',op,seq)],order)
             if next_stage_id:
-                self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
+                return self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
+        return False
 
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
         using available stage for that case type
         """
-        self.stage_change(cr, uid, ids, '>','sequence', context)
+        return self.stage_change(cr, uid, ids, '>','sequence', context)
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current
         stage using available stage for that case type
         """
-        self.stage_change(cr, uid, ids, '<', 'sequence desc', context)
+        return self.stage_change(cr, uid, ids, '<', 'sequence desc', context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """ Overrides orm copy method.
-        """
-        if context is None:
-            context = {}
+        """Overrides orm copy method to avoid copying messages,
+           as well as date_closed and date_open columns if they
+           exist."""
         if default is None:
             default = {}
 
@@ -407,19 +383,11 @@ class crm_case(crm_base):
                 default.update({ 'date_open': False })
         return super(osv.osv, self).copy(cr, uid, id, default, context=context)
 
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
-        mailgate_pool = self.pool.get('mailgate.thread')
-        return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
-                                       subject=subject, email=email, \
-                                       details=details, email_from=email_from,\
-                                       message_id=message_id, attach=attach, \
-                                       context=context)
 
     def case_open(self, cr, uid, ids, *args):
-        """Opens Case
-        """
+        """Opens Case"""
         cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, _('Open'))
+        self.message_append(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state': 'open', 'active': True }
             if not case.user_id:
@@ -429,11 +397,10 @@ class crm_case(crm_base):
         return True
 
     def case_close(self, cr, uid, ids, *args):
-        """Closes Case
-        """
+        """Closes Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Close'))
+        self.message_append(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state': 'done',
                                   'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
                                   })
@@ -444,12 +411,10 @@ class crm_case(crm_base):
         return True
 
     def case_escalate(self, cr, uid, ids, *args):
-        """Escalates case to top level
-        """
+        """Escalates case to parent level"""
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {'active': True}
-
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
                 if case.section_id.parent_id.change_responsible:
@@ -459,16 +424,15 @@ class crm_case(crm_base):
                 raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
-        self._history(cr, uid, cases, _('Escalate'))
+        self.message_append(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
 
     def case_cancel(self, cr, uid, ids, *args):
-        """Cancels Case
-        """
+        """Cancels Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Cancel'))
+        self.message_append(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
@@ -478,56 +442,37 @@ class crm_case(crm_base):
         return True
 
     def case_pending(self, cr, uid, ids, *args):
-        """Marks case as pending
-        """
+        """Marks case as pending"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Pending'))
+        self.message_append(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
         self._action(cr, uid, cases, 'pending')
         return True
 
     def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
-        """
-        state = 'draft' 
+        """Resets case as draft"""
+        state = 'draft'
         if 'crm.phonecall' in args:
-            state = 'open' 
+            state = 'open'
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Draft'))
+        self.message_append(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': state, 'active': True})
         self._action(cr, uid, cases, state)
         return True
 
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
-
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        """
-
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's IDs to remind
-        @param context: A standard dictionary for contextual values
-        """
+        mail_message = self.pool.get('mail.message')
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
                 return False
             if not case.user_id.user_email:
                 return False
-            
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
@@ -548,37 +493,31 @@ class crm_case(crm_base):
 
             body = self.format_body(body)
 
-            attach_to_send = None
+            attach_to_send = {}
 
             if attach:
                 attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
                 attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                attach_to_send = map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send)
+                attach_to_send = dict(map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send))
 
-                # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name,)
-            tools.email_send(
+            # Send an email
+            subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
+            mail_message.schedule_with_attach(cr, uid,
                 src,
                 [dest],
                 subject,
                 body,
-                reply_to=case.section_id.reply_to or '',
-                openobject_id=str(case.id),
-                attach=attach_to_send
+                model='crm.case',
+                reply_to=case.section_id.reply_to,
+                res_id=case.id,
+                attachments=attach_to_send,
+                context=context
             )
-            self._history(cr, uid, [case], _('Send'), history=True, subject=subject, email=dest, details=body, email_from=src)
-
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
-        """
-        Function called by the scheduler to process cases for date actions
-        Only works on not done and cancelled cases
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+        """Function called by the scheduler to process cases for date actions
+           Only works on not done and cancelled cases
         """
         cr.execute('select * from crm_case \
                 where (date_action_last<%s or date_action_last is null) \
@@ -597,9 +536,7 @@ class crm_case(crm_base):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def message_followers(self, cr, uid, ids, context=None):
-        """ Get a list of emails of the people following this thread
-        """
+    def message_thread_followers(self, cr, uid, ids, context=None):
         res = {}
         for case in self.browse(cr, uid, ids, context=context):
             l=[]
@@ -611,12 +548,7 @@ class crm_case(crm_base):
         return res
 
 def _links_get(self, cr, uid, context=None):
-    """Gets links value for reference field
-    @param self: The object pointer
-    @param cr: the current row, from the database cursor,
-    @param uid: the current user’s ID for security checks,
-    @param context: A standard dictionary for contextual values
-    """
+    """Gets links value for reference field"""
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
@@ -632,10 +564,8 @@ class users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         res = super(users, self).create(cr, uid, vals, context=context)
         section_obj=self.pool.get('crm.case.section')
-
-        if vals.get('context_section_id', False):
+        if vals.get('context_section_id'):
             section_obj.write(cr, uid, [vals['context_section_id']], {'member_ids':[(4, res)]}, context)
         return res
 
 users()
-

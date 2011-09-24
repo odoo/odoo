@@ -165,21 +165,13 @@
           <blockTable colWidths="253.0" style="Tableau2">
             <tr>
               <td>
-                <para style="terp_default_9">
-                  <font color="white"> </font>
-                </para>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <para style="terp_default_9">[[ repeatIn(o.dest_address_id and [o.dest_address_id] or [],'addr') ]]</para>
                 <para style="terp_default_Bold_9">Shipping address :</para>
-                <para style="terp_default_9">[[ (addr.partner_id and addr.partner_id.title and addr.partner_id.title.name) or '' ]] [[ (addr.partner_id and addr.partner_id.name) or '' ]]</para>
-                <para style="terp_default_9">[[ addr.street ]]</para>
-                <para style="terp_default_9">[[ addr.street2 or removeParentNode('para') ]]</para>
-                <para style="terp_default_9">[[ addr.zip or '' ]] [[ addr.city or '' ]]</para>
-                <para style="terp_default_9">[[ addr.state_id and addr.state_id.name or removeParentNode('para') ]]</para>
-                <para style="terp_default_9">[[ addr.country_id and addr.country_id.name or '' ]]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id.partner_id.name) or (o.warehouse_id and o.warehouse_id.name) or '']]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id and o.dest_address_id.street) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.street) or '']]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id and o.dest_address_id.street2) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.street2) or removeParentNode('para') ]]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id and o.dest_address_id.zip) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.zip) or '' ]] [[ (o.dest_address_id and o.dest_address_id and o.dest_address_id.city) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.city) or '' ]]</para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id.state_id and o.dest_address_id.state_id.name) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.state_id and o.warehouse_id.partner_address_id.state_id.name) or removeParentNode('para') ]] </para>
+                <para style="terp_default_9">[[ (o.dest_address_id and o.dest_address_id.country_id and o.dest_address_id.country_id.name) or (o.warehouse_id and o.warehouse_id.partner_address_id and o.warehouse_id.partner_address_id.country_id and o.warehouse_id.partner_address_id.country_id.name) ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -293,7 +285,7 @@
             <para style="terp_default_Right_9">[[ formatLang(line.price_unit, digits=get_digits(dp='Purchase Price') ) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal, digits=get_digits(dp='Purchase Price') ) ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal, digits=get_digits(dp='Purchase Price'), currency_obj=o.pricelist_id.currency_id ) ]]</para>
           </td>
         </tr>
         <tr>
@@ -339,7 +331,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Purchase Price') ) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Purchase Price'), currency_obj=o.pricelist_id.currency_id ) ]]</para>
         </td>
       </tr>
       <tr>
@@ -352,7 +344,7 @@
           <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, dp='Purchase Price') ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, dp='Purchase Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -365,7 +357,7 @@
           <para style="terp_default_Bold_9">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total, digits=get_digits(dp='Purchase Price') ) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Bold_9_Right">[[ formatLang(o.amount_total, digits=get_digits(dp='Purchase Price') , currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

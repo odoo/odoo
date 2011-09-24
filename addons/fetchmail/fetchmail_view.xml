@@ -1,44 +1,42 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    
+
         <record model="ir.ui.view" id="view_email_server_tree">
-            <field name="name">email.server.tree</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.list</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('waiting');gray:state in('done')" string="POP/IMAP Servers">
+                <tree colors="blue:state == 'draft'" string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="user"/>
                     <field name="is_ssl"/>
                     <field name="object_id"/>
+                    <field name="date"/>
                     <field name="message_ids" string="# of emails"/>
                     <field name="state"/>
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_email_server_form">
-            <field name="name">email.server.form</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.form</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POP/IMAP Server">
+                <form string="Incoming Mail Server">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                         <field name="date" select="1"/>
-                        <field name="attach"/>
-                        <field name="active" select="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Server &amp; Login">
-                            <group col="2" colspan="2">
+                            <group col="4" colspan="2">
                                 <separator string="Server Information" colspan="2"/>
-                                <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
-                                <field name="server" />
+                                <field name="server" colspan="4"/>
                                 <field name="port" />
+                                <field name="is_ssl" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator string="Login Information" colspan="2"/>
@@ -46,35 +44,39 @@
                                 <field name="password" password="True" />
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Auto Reply?" colspan="2"/>
-                                <field name="action_id"/>
-                                <field name="user_id"/>
-                            </group>
-                            <group col="2" colspan="2">
-                                <separator string="Process Parameter" colspan="2"/>
+                                <separator string="Automated Processing" colspan="2"/>
                                 <field name="object_id"/>
-                                <field name="priority"/>
+                                <field name="action_id"/>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
+                        <page string="Advanced">
+                            <group colspan="2" col="2">
+                                <separator string="Advanced options" colspan="2"/>
+                                <field name="priority"/>
+                                <field name="attach"/>
+                                <field name="original"/>
+                                <field name="active" select="1"/>
+                            </group>
+                        </page>
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state" select="1"/>
-                        <button string="Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
-                        <button string="Fetch Emails" type="object" name="button_fetch_mail" states="done"/>
-                        <button string="Set to Draft" type="object" name="set_draft" icon="gtk-convert"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
                     </group>
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_email_server_search">
-            <field name="name">email.server.search</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.search</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Email Servers">
+                <search string="Search Incoming Mail Servers">
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
                     <separator orientation="vertical"/>
@@ -91,68 +93,52 @@
                 </search>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_email_server_tree">
-            <field name="name">Email Servers</field>
-            <field name="res_model">email.server</field>
+            <field name="name">Incoming Mail Servers</field>
+            <field name="res_model">fetchmail.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_email_server_tree"/>
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
 
-        <menuitem 
-            parent="base.menu_mail_gateway" 
+        <menuitem
+            parent="base.next_id_15"
             id="menu_action_fetchmail_server_tree"
-            action="action_email_server_tree" 
-            name="Email Servers"
+            action="action_email_server_tree"
+            name="Incoming Mail Servers"
+            sequence="40"
         />
-        
-      <record model="ir.ui.view" id="mailgate_message_tree_view">
-	      <field name="name">mailgate.message.tree</field>
-	      <field name="model">mailgate.message</field>
-	      <field name="type">tree</field>
-	      <field name="inherit_id" ref="mail_gateway.view_mailgate_message_tree"/>
-	      <field name="arch" type="xml">
-	          <field name="user_id" position="after">
-	              <field name="server_id" select="1"/>
-	              <field name="ref_id"/>
-	          </field>
-	      </field>
-      </record>
-      
-      <record model="ir.ui.view" id="mailgate_message_search_view">
-	      <field name="name">mailgate.message.inherit.search</field>
-	      <field name="model">mailgate.message</field>
-	      <field name="type">search</field>
-	      <field name="inherit_id" ref="mail_gateway.view_mailgate_message_search"/>
-	      <field name="arch" type="xml">
-			<xpath expr="/search/field[@name='name']" position="before">
-			     <filter string="Emails" name="emails" domain="[('server_id','!=',False)]" icon="terp-mail-message-new"/>
-			     <separator orientation="vertical"/>
-			</xpath>
-			<xpath expr="/search/group/filter[@string='Thread']" position="before">
-                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>
-            </xpath>
-	      </field>
-      </record>
-      
-      <record id="action_view_mail_message_emails" model="ir.actions.act_window">
-            <field name="name">Messages</field>
-            <field name="res_model">mailgate.message</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_emails': 1}</field>
-            <field name="search_view_id" ref="mailgate_message_search_view"/>
-      </record>
-        
-      <menuitem id="base.menu_email_gateway_form"
-               parent="base.menu_mail_gateway" action="action_view_mail_message_emails" />
 
-      <act_window 
-            context="{'search_default_server_id': [active_id], 'default_server_id': active_id}"
-            id="act_server_history" name="Emails"
-            res_model="mailgate.message" src_model="email.server"/>
-            
+      <record model="ir.ui.view" id="email_message_tree_view">
+          <field name="name">mail.message.list.fetchmail</field>
+          <field name="model">mail.message</field>
+          <field name="type">tree</field>
+          <field name="inherit_id" ref="mail.view_email_message_tree"/>
+          <field name="arch" type="xml">
+              <field name="user_id" position="after">
+                  <field name="fetchmail_server_id" select="1"/>
+              </field>
+          </field>
+      </record>
+
+      <record model="ir.ui.view" id="email_message_search_view">
+          <field name="name">mail.message.inherit.search</field>
+          <field name="model">mail.message</field>
+          <field name="type">search</field>
+          <field name="inherit_id" ref="mail.view_email_message_search"/>
+          <field name="arch" type="xml">
+            <xpath expr="/search/group/filter[@string='Thread']" position="before">
+                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'fetchmail_server_id'}"/>
+            </xpath>
+          </field>
+      </record>
+
+      <act_window
+            context="{'search_default_server_id': active_id, 'default_server_id': active_id}"
+            id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
+            res_model="mail.message" src_model="fetchmail.server"/>
+
     </data>
 </openerp>

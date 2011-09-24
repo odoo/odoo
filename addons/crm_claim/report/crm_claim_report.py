@@ -60,22 +60,20 @@ class crm_claim_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
-        'day': fields.char('Day', size=128, readonly=True), 
+        'day': fields.char('Day', size=128, readonly=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True,domain="[('section_ids','=',section_id)]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
         'type_action': fields.selection([('correction','Corrective Action'),('prevention','Preventive Action')], 'Action Type'),
-        'date_closed': fields.date('Close Date', readonly=True, select=True), 
-        'date_deadline': fields.date('Deadline', readonly=True, select=True), 
+        'date_closed': fields.date('Close Date', readonly=True, select=True),
+        'date_deadline': fields.date('Deadline', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
-        'email': fields.integer('# Emails', size=128, readonly=True),
-         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg")
+        'email': fields.integer('# Emails', size=128, readonly=True)
     }
 
     def init(self, cr):
@@ -106,8 +104,7 @@ class crm_claim_report(osv.osv):
                     c.type_action as type_action,
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mailgate_message WHERE model='crm.claim' AND res_id=c.id AND history=True) AS email,
-                    (SELECT avg(probability) FROM crm_case_stage WHERE id=c.stage_id) AS probability,
+                    (SELECT count(id) FROM mail_message WHERE model='crm.claim' AND res_id=c.id) AS email,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c

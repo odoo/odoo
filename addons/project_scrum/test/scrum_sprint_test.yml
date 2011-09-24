@@ -1,0 +1,51 @@
+-
+  I create a Scrum Sprint Record.
+-
+  !record {model: project.scrum.sprint, id: project_scrum_sprint_testsprint0}:
+    date_start: !eval time.strftime('%Y-%m-01')
+    date_stop: !eval time.strftime('%Y-%m-17')
+    name: Demo Sprint
+    product_owner_id: base.user_admin
+    project_id: project.project_project_22
+    scrum_master_id: base.user_admin
+    state: draft
+-
+  I am copying the "Demo Sprint" Sprint.
+-
+  !python {model: project.scrum.sprint}: |
+    self.copy(cr, uid, ref("project_scrum_sprint_testsprint0"))
+-
+  I am changing the Project of the "Demo Sprint" Sprint.
+-
+  !python {model: project.scrum.sprint}: |
+    self.onchange_project_id(cr, uid, [ref("project_scrum_sprint_testsprint0")], ref("project.project_project_9"))
+
+-
+  I am Opeing the "Demo Sprint" Sprint.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_open(cr, uid, [ref("project_scrum_sprint_testsprint0")])
+
+-
+  I am Setting the "Demo Sprint" Sprint to Pending.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_pending(cr, uid, [ref("project_scrum_sprint_testsprint0")])
+
+-
+  I am Closing the "Demo Sprint" Sprint.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_close(cr, uid, [ref("project_scrum_sprint_testsprint0")])
+
+-
+  I am Setting the "Demo Sprint" Sprint to Draft.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_draft(cr, uid, [ref("project_scrum_sprint_testsprint0")])
+
+-
+  I am Cancelling the "Demo Sprint" Sprint.
+-
+  !python {model: project.scrum.sprint}: |
+    self.button_cancel(cr, uid, [ref("project_scrum_sprint_testsprint0")])

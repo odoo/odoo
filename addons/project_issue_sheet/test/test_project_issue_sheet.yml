@@ -1,0 +1,28 @@
+-
+  I create analytic account.
+-
+  !record {model: account.analytic.account, id: account_analytic_account1}:
+    name : account_analytic_account
+    partner_id: base.res_partner_asus
+-
+   I create a project issue.
+-
+   !record {model: project.issue, id: project_issue_onchangeevent1}:
+    categ_id: project_issue.bug_categ
+    date_open: !eval time.strftime('%Y-%m-%d')
+    name: on_change event does not pass context to the method
+    project_id: project.project_project_22
+    working_hours_close: 0.0
+    working_hours_open: 0.0
+-
+   I change the project.
+-
+   !python {model: project.issue}: |
+    project_id = ref('project.project_project_21')
+    self.on_change_project(cr, uid, [ref('project_issue_onchangeevent1')], project_id, context)
+-
+   I add analytic account.
+-
+   !python {model: project.issue}: |
+    account_id = ref('account_analytic_account1')
+    self.on_change_account_id(cr, uid, [ref('project_issue_onchangeevent1')], account_id, context)    
