@@ -713,24 +713,16 @@ class product_supplierinfo(osv.osv):
         for supplier_info in self.browse(cr, uid, ids, context=context):
             for field in fields:
                 result[supplier_info.id] = {field:False}
-            if supplier_info.product_uom.id:
-                qty = product_uom_pool._compute_qty(cr, uid, supplier_info.product_uom.id, supplier_info.min_qty, to_uom_id=supplier_info.product_id.uom_id.id)
-            else:
-                qty = supplier_info.min_qty
+            qty = supplier_info.min_qty
             result[supplier_info.id]['qty'] = qty
         return result
-
-    def _get_uom_id(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        return context.get('uom_id', False)
 
     _columns = {
         'name' : fields.many2one('res.partner', 'Supplier', required=True,domain = [('supplier','=',True)], ondelete='cascade', help="Supplier of this product"),
         'product_name': fields.char('Supplier Product Name', size=128, help="This supplier's product name will be used when printing a request for quotation. Keep empty to use the internal one."),
         'product_code': fields.char('Supplier Product Code', size=64, help="This supplier's product code will be used when printing a request for quotation. Keep empty to use the internal one."),
         'sequence' : fields.integer('Sequence', help="Assigns the priority to the list of product supplier."),
-        'product_uom': fields.many2one('product.uom', string="Supplier UoM", help="Choose here the Unit of Measure in which the prices and quantities are expressed below."),
+        'product_uom': fields.related('product_id', 'uom_po_id', type='many2one', relation='product.uom', string="Supplier UoM", readonly="1", help="This comes from the product form."),
         'min_qty': fields.float('Minimal Quantity', required=True, help="The minimal quantity to purchase to this supplier, expressed in the supplier Product UoM if not empty, in the default unit of measure of the product otherwise."),
         'qty': fields.function(_calc_qty, store=True, type='float', string='Quantity', multi="qty", help="This is a quantity which is converted into Default Uom."),
         'product_id' : fields.many2one('product.template', 'Product', required=True, ondelete='cascade', select=True),
@@ -743,17 +735,7 @@ class product_supplierinfo(osv.osv):
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
-        'product_uom': _get_uom_id,
     }
-    def _check_uom(self, cr, uid, ids, context=None):
-        for supplier_info in self.browse(cr, uid, ids, context=context):
-            if supplier_info.product_uom and supplier_info.product_uom.category_id.id <> supplier_info.product_id.uom_id.category_id.id:
-                return False
-        return True
-
-    _constraints = [
-        (_check_uom, 'Error: The default UOM and the Supplier Product UOM must be in the same category.', ['product_uom']),
-    ]
     def price_get(self, cr, uid, supplier_ids, product_id, product_qty=1, context=None):
         """
         Calculate price from supplier pricelist.
