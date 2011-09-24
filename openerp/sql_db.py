@@ -183,6 +183,8 @@ class Cursor(object):
             self.__caller = False
         self.__closer = False
 
+        self._default_log_exceptions = True
+
     def __del__(self):
         if not self.__closed:
             # Oops. 'self' has not been closed explicitly.
@@ -199,7 +201,7 @@ class Cursor(object):
             self._close(True)
 
     @check
-    def execute(self, query, params=None, log_exceptions=True):
+    def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
             self.__logger.warn(query)
             self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
@@ -212,11 +214,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if log_exceptions:
+            if self._default_log_exceptions or log_exceptions:
                 self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if log_exceptions:
+            if self._default_log_exceptions or log_exceptions:
                 self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
