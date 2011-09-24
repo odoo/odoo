@@ -1,5 +1,5 @@
 -
-  Create a user 'HR Manager'
+  I create a user 'HR Manager'.
 -
   !record {model: res.users, id: res_users_hrmanager0}:
     company_id: base.main_company
@@ -11,7 +11,7 @@
       - base.group_hr_manager
 
 -
-  Create a product with type service used to specify employees designation
+  I create a product with type service used to specify employees designation.
 -
   !record {model: product.product, id: product_product_hrmanger0}:
     categ_id: product.product_category_services
@@ -30,7 +30,7 @@
     weight_net: 0.0
 
 -
-  Create an analytic journal for employees timesheet
+  I create an analytic journal for employees timesheet.
 -
   !record {model: account.analytic.journal, id: account_analytic_journal_hrtimesheet0}:
     company_id: base.main_company
@@ -38,7 +38,7 @@
     type: general
 
 -
-  Create an employee 'HR Manager' for user 'HR Manager'
+  I create an employee 'HR Manager' for user 'HR Manager'.
 -
   !record {model: hr.employee, id: hr_employee_hrmanager0}:
     name: HR Manager
@@ -47,7 +47,7 @@
     journal_id: account_analytic_journal_hrtimesheet0
 
 -
-  Create a timesheet sheet for HR manager
+  I create a timesheet sheet for HR manager.
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
     date_current: !eval time.strftime('%Y-05-%d')
@@ -59,15 +59,20 @@
     employee_id : 'hr_employee_hrmanager0'
 
 -
-  Create a project 'Timesheet Management'
+  I create a project 'Timesheet Management'.
 -
   !record {model: project.project, id: project_project_timesheetmanagement0}:
     company_id: base.main_company
     name: Timesheet Management
-
+    
+-
+  I change the partner to the realted project.
+-
+  !python {model: project.project}: |
+    self.onchange_partner_id(cr, uid, [ref('project_project_timesheetmanagement0')], part=False, context=None)
 
 -
-  Create a task 'Get all timesheet records'
+  I create a task 'Get all timesheet records'.
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
     date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
@@ -79,16 +84,17 @@
     user_id: res_users_hrmanager0
 
 -
-  Open the task
+  Open the task.
 -
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_getalltimesheetrecords0")], {"lang":
       "en_US", "active_ids": [ref("project_project_timesheetmanagement0")], "tz":
       False, "active_model": "project.project", "department_id": False, "project_id":
       False, "active_id": ref("project_project_timesheetmanagement0"), })
+    self.write(cr, uid, [ref('project_task_getalltimesheetrecords0')], {'name': 'Get all timesheet records','project_id': ref('project_project_timesheetmanagement0'),'user_id': ref('res_users_hrmanager0')},context)
 
 -
-  Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
+  Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager.
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
     work_ids:
@@ -96,9 +102,36 @@
         hours: 10.0
         name: Get work calendar of all employees
         user_id: res_users_hrmanager0
-
 -
-  Check for timesheet_ids in HR manager's timesheet
+  I create a project.task.work record.
+-
+  !record {model: project.task.work, id: project_task_work_test0}:
+    company_id: base.main_company
+    date: !eval time.strftime('%Y-06-%d')
+    hours: 10.0
+    name: test
+    task_id: project_task_getalltimesheetrecords0
+    user_id: res_users_hrmanager0
+-
+  Add the work details.
+-
+  !python {model: project.task.work}: |
+    import time
+    vals = {
+           'company_id': ref('base.main_company'),
+           'date': time.strftime('%Y-06-%d'),
+           'hours': 10.0,
+           'name': 'test',
+           'task_id': ref('project_task_getalltimesheetrecords0'),
+           'user_id': ref('res_users_hrmanager0'),
+           }
+    
+    self.get_user_related_details(cr, uid, ref('res_users_hrmanager0'))
+    self.write(cr, uid, [ref('project_task_work_test0')], vals,context)
+    self.unlink(cr, uid, [ref('project_task_work_test0')])
+-
+  I check for timesheet_ids in HR manager's timesheet.
 -
   !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
      - len(timesheet_ids) > 0
+

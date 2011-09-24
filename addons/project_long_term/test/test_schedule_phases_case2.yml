@@ -1,9 +1,9 @@
 -
-  In order to test scheduling of project phases, I create two different 
+  In order to test scheduling of project phases, I create two different
   working periods and resources. And schedule the phases.
-- 
+-
   I create first working period 'Working Time A'.
-- 
+-
   !record {model: resource.calendar, id: resource_calendar_workingtimea0}:
     attendance_ids:
       - dayofweek: '0'
@@ -24,45 +24,45 @@
         name: Thursday
     name: Working Time A
 
-- 
-  Creating a resource.calendar.attendance record
-- 
+-
+  I create a resource.calendar.attendance record.
+-
   !record {model: resource.calendar.attendance, id: resource_calendar_attendance_monday0}:
     calendar_id: resource_calendar_workingtimea0
     dayofweek: '0'
     hour_from: 10.0
     hour_to: 16.0
     name: Monday
-- 
-  Creating a resource.calendar.attendance record
-- 
+-
+  I create a resource.calendar.attendance record.
+-
   !record {model: resource.calendar.attendance, id: resource_calendar_attendance_tuesday0}:
     calendar_id: resource_calendar_workingtimea0
     dayofweek: '1'
     hour_from: 10.0
     hour_to: 16.0
     name: Tuesday
-- 
-  Creating a resource.calendar.attendance record
-- 
+-
+  I create a resource.calendar.attendance record.
+-
   !record {model: resource.calendar.attendance, id: resource_calendar_attendance_wednesday0}:
     calendar_id: resource_calendar_workingtimea0
     dayofweek: '2'
     hour_from: 10.0
     hour_to: 16.0
     name: Wednesday
-- 
-  Creating a resource.calendar.attendance record
-- 
+-
+  I create a resource.calendar.attendance record.
+-
   !record {model: resource.calendar.attendance, id: resource_calendar_attendance_thursday0}:
     calendar_id: resource_calendar_workingtimea0
     dayofweek: '3'
     hour_from: 10.0
     hour_to: 16.0
     name: Thursday
-- 
+-
   I create second working period 'Working Time B'.
-- 
+-
   !record {model: resource.calendar, id: resource_calendar_workingtimeb0}:
     attendance_ids:
       - dayofweek: '4'
@@ -70,35 +70,35 @@
         hour_to: 18.0
         name: Friday
     name: Working Time B
-- 
-  Creating a resource.calendar.attendance record
-- 
+-
+  I create a resource.calendar.attendance record.
+-
   !record {model: resource.calendar.attendance, id: resource_calendar_attendance_friday0}:
     calendar_id: resource_calendar_workingtimeb0
     dayofweek: '4'
     hour_from: 9.0
     hour_to: 18.0
     name: Friday
-- 
+-
   I create first resource say 'Resource X' without assigning working period.
-- 
+-
   !record {model: resource.resource, id: resource_resource_resourcex0}:
     name: Resource X
     resource_type: user
     time_efficiency: 1.0
     user_id: base.user_admin
-- 
+-
   I create first resource say 'Resource Y' with working period 'Working Time B'.
-- 
+-
   !record {model: resource.resource, id: resource_resource_resourcey0}:
     calendar_id: resource_calendar_workingtimeb0
     name: Resource Y
     resource_type: user
     time_efficiency: 1.0
     user_id: base.user_admin
-- 
+-
   I create a project 'Development and Testing' and assign working period 'Working Time A'.
-- 
+-
   !record {model: project.project, id: project_project_project0}:
     balance: 0.0
     credit: 0.0
@@ -142,10 +142,10 @@
       - project.project_tt_development
       - project.project_tt_testing
       - project.project_tt_merge
-     
-- 
+
+-
   I create a phase 'Initial Phase' for project 'Development and Testing'.
-- 
+-
   !record {model: project.phase, id: project_phase_phase0}:
     date_start: '2011-01-03'
     duration: 0.0
@@ -153,9 +153,9 @@
     product_uom: product.uom_day
     project_id: project_project_project0
     state: draft
-- 
+-
   I create first task 'Developing module' and assign 10h.
-- 
+-
   !record {model: project.task, id: project_task_task0}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -166,9 +166,9 @@
     state: draft
     total_hours: 10.0
     phase_id: project_phase_phase0
-- 
+-
   I create first task 'Testing module' and assign 10h.
-- 
+-
   !record {model: project.task, id: project_task_task1}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -190,4 +190,3 @@
 -
   !python {model: project.compute.phases}: |
     self.check_selection(cr, uid, [ref("project_compute_phases0")])
-

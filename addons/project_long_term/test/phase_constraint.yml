@@ -1,117 +1,252 @@
-- 
-  Given that I have a project 'Test Phases'.
-- 
+-
+  I have a project 'Develop yaml Project Module'.
+-
   !record {model: project.project, id: project_project_developyamlproject0}:
     name: "Develop Yaml Project Module"
     date_start: !eval time.strftime('%Y-%m-%d')
-    resource_calendar_id: resource.timesheet_group1
-- 
-  And I create three human ressources to work on this project, an analyst.
-- 
+-
+  I have set Working Time from Monday to  Friday from 9am to 17pm.
+-
+  !record {model: resource.calendar, id: resource_calendar_hoursweeks0}:
+    name: "from Monday to  Friday, from 9am to 17pm"
+
+-
+  I have set Day1 Working Time for Monday to  Friday from 9am to 17pm working hour.
+-
+  !record {model: resource.calendar.attendance, id: resource_calendar_atendanceday1}:
+    name: "Day1"
+    hour_from : 09.00
+    hour_to : 17.00
+    dayofweek : "0"
+    calendar_id : resource_calendar_hoursweeks0
+
+-
+  I have set Day2 Working Time for Monday to  Friday from 9am to 17pm working hour.
+-
+  !record {model: resource.calendar.attendance, id: resource_calendar_atendanceday1}:
+    name: "Day2"
+    hour_from : 09.00
+    hour_to : 17.00
+    dayofweek : "1"
+    calendar_id : resource_calendar_hoursweeks0
+
+-
+  I have set Day3 Working Time for Monday to  Friday from 9am to 17pm working hour.
+-
+  !record {model: resource.calendar.attendance, id: resource_calendar_atendanceday1}:
+    name: "Day3"
+    hour_from : 09.00
+    hour_to : 17.00
+    dayofweek : "2"
+    calendar_id : resource_calendar_hoursweeks0
+
+-
+  I have set Day4 Working Time for Monday to  Friday from 9am to 17pm working hour.
+-
+  !record {model: resource.calendar.attendance, id: resource_calendar_atendanceday1}:
+    name: "Day4"
+    hour_from : 09.00
+    hour_to : 17.00
+    dayofweek : "3"
+    calendar_id : resource_calendar_hoursweeks0
+
+-
+  I have set Day5 Working Time for Monday to  Friday from 9am to 17pm working hour.
+-
+  !record {model: resource.calendar.attendance, id: resource_calendar_atendanceday1}:
+    name: "Day5"
+    hour_from : 09.00
+    hour_to : 17.00
+    dayofweek : "4"
+    calendar_id : resource_calendar_hoursweeks0
+
+
+-
+  Now Set working period to  Project 'Develop yaml Project Module'.
+-
+  !python {model: project.project}: |
+    context.update({'resource_calendar_id': ref("resource_calendar_hoursweeks0")})
+    self.write(cr, uid, [ref("project_project_developyamlproject0")], context)
+    self.schedule_tasks(cr, uid, [ref('project_project_developyamlproject0')], context)
+
+    for project in self.browse(cr, uid, [ref('project_project_developyamlproject0')], context):
+      start_date = project.date_start
+      end_date = start_date
+    context.update({'start_date' : start_date,'end_date' : end_date})
+    self.compute_allocation(cr, uid, [ref('project_project_developyamlproject0')], start_date, end_date, context)
+    self.generate_members(cr, uid, [ref('project_project_developyamlproject0')], context=None)
+-
+  I create 3 consecutive 5-days phases.
+  For that Creating a Analyst Human resource to analyst Project Yaml.
+-
   !record {model: resource.resource, id: resource_resource_analyst1}:
-    calendar_id: resource.timesheet_group1
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
     name: Analyst
     resource_type: user
     time_efficiency: 1.0
     user_id: base.user_admin
-- 
-  I define a developer HR.
-- 
+
+-
+  I create Developer Human resource who develop Yaml.
+-
   !record {model: resource.resource, id: resource_resource_develop0}:
-    calendar_id: resource.timesheet_group1
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
     name: Developer
     resource_type: user
     time_efficiency: 1.0
     user_id: base.user_admin
-- 
-  I define a tester HR.
-- 
+-
+  I create a Tester Human resource for testing Yaml.
+-
   !record {model: resource.resource, id: resource_resource_tester1}:
-    calendar_id: resource.timesheet_group1
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
     name: tester
     resource_type: user
     time_efficiency: 1.0
     user_id: base.user_admin
-- 
-  Then I create three phases for my projects; Analysis, Development, Testing.
-- 
-  The first phase is 'Analysis' and has a duration of 6 days.
-- 
+
+-
+  I create 3 a project phase and NO one  depends on other one.
+  so,they should start on the same day.
+  I create First 'Analysis Flow for Yaml' Project Phase.
+-
   !record {model: project.phase, id: project_phase_analysisflowforyaml0}:
     date_start: !eval time.strftime('%Y-%m-%d')
     duration: 6.0
-    name: "Analysis"
+    name: "Analysis Flow for Yaml"
     product_uom: product.uom_day
     project_id: project_project_developyamlproject0
     responsible_id: project.res_users_analyst
     state: draft
 
-- 
-  I update the constrain and the analysis phase to not start before 4 days.
-- 
+-
+  I update the Constrain Date Start adn Date End for phase Analysis Flow for Yaml.
+-
    !python {model : project.phase }: |
-      pass
       import datetime
       from dateutil.relativedelta import *
-      start = datetime.date.today() + relativedelta(days=4)
-      self.write(cr,uid, [(ref("project_phase_analysisflowforyaml0"))], {'constraint_date_start': start})
-- 
-  The second phase is 'Development' and depend on the 'Analysis', with a duration of 6 days.
-- 
+      start = datetime.date.today() - relativedelta(days=2)
+      end = datetime.date.today() + relativedelta(days=6)
+      self.write(cr,uid, [(ref("project_phase_analysisflowforyaml0"))], {'constraint_date_start': start, 'constraint_date_end':end})
+
+-
+  I create project phase 'Develop yaml' with constraint date.
+-
   !record {model: project.phase, id: project_phase_developyaml0}:
     duration: 6.0
-    name: Development
+    name: Develop Yaml
     product_uom: product.uom_day
     project_id: project_project_developyamlproject0
+    responsible_id: base.user_admin
     previous_phase_ids:
       - project_phase_analysisflowforyaml0
 
-- 
-  I update the Constrain Date Start adn Date End for phase Develop yaml
-- 
-   !python {model : project.phase }: |
-      pass 
-      import datetime
-      #from dateutil.relativedelta import *
-      #start = datetime.date.today() - relativedelta(days=5)    
-      #end = datetime.date.today() + relativedelta(days=10)
-      #self.write(cr,uid, [(ref("project_phase_developyaml0"))], {'constraint_date_start': start, 'constraint_date_end':end})
 -
-  The third phase is 'Testing' and depend on the 'Develop' phase, with a duration of 6 days.
-- 
+  I update the Constrain Date Start adn Date End for phase Develop yaml.
+-
+   !python {model : project.phase }: |
+      import datetime
+      from dateutil.relativedelta import *
+      start = datetime.date.today() - relativedelta(days=5)
+      end = datetime.date.today() + relativedelta(days=10)
+      self._get_default_uom_id(cr, uid)
+      self.write(cr,uid, [(ref("project_phase_developyaml0"))], {'constraint_date_start': start, 'constraint_date_end':end})
+-
+  I create project phase 'Test Yaml'.
+-
   !record {model: project.phase, id: project_phase_testyaml0}:
     duration: 6.0
-    name: Testing
+    name: Testing Yaml
     product_uom: product.uom_day
     project_id: project_project_developyamlproject0
     previous_phase_ids:
       - project_phase_developyaml0
-- 
-  Then I launch the scheduler to compute starting and ending phases on all phases of this project.
-- 
+    constraint_date_start :
+    constraint_date_end :
+-
+  I compute Schedule of phases For One project.
+-
   !record {model: project.compute.phases, id: project_compute_phases_0}:
     project_id: project_project_developyamlproject0
     target_project: one
-- 
+
+-
+  I schedule project phases using "Compute Phase Scheduling".
+-
   !python {model: project.project}: |
     self.schedule_phases(cr, uid, [ref("project_project_developyamlproject0")])
+
 -
-  After scheduling, I check the starting date and ending date on the phases are correct.
+  After  scheduling,check that.
+  Phase "Analysis Flow for Yaml" and "Test Yaml" Phase should start on the project start date while "Develop yaml" Phase should respect the constraint.
+-
+  !python {model: project.project}: |
+     proj=self.browse(cr, uid, [ref("project_project_developyamlproject0")])[0]
+     for phase in proj.phase_ids:
+        for phase1 in proj.phase_ids:
+             if phase1.id != phase.id and phase.constraint_date_start == phase1.date_start:
+               raise AssertionError("Phases not scheduled")
+-
+  Now, I am Checking constraint start and end for Phase 'Develop Yaml'.
 -
   !python {model: project.phase}: |
-     import datetime
-     from dateutil.relativedelta import *
-     minstart = (datetime.date.today() + relativedelta(days=4)).strftime('%Y-%m-%d')
-     minend = (datetime.date.today() + relativedelta(days=11)).strftime('%Y-%m-%d')
+    self._check_constraint_start(cr, uid, [ref("project_phase_developyaml0")],context)
+    self._check_constraint_end(cr, uid, [ref("project_phase_developyaml0")],context)
+-
+  I am opening the Phase 'Develop Yaml'.
+-
+  !python {model: project.phase}: |
+    self.set_open(cr, uid, [ref("project_phase_developyaml0")])
+-
+  Now, Compute the Total Hours.
+-
+  !python {model: project.phase}: |
+    field_name = 'test'
+    arg = {}
+    self._compute(cr, uid, [ref("project_phase_developyaml0")], field_name, arg, context=None)
 
-     phase1=self.browse(cr, uid, ref('project_phase_analysisflowforyaml0'))
-     assert phase1.date_start>=minstart, 'Error, the Analysis phase '+phase1.date_start+' should start after '+str(minstart)
-     assert phase1.date_end>=minend, 'Error, the Analysis phase should end after '+str(minend)
-
-     phase2=self.browse(cr, uid, ref('project_phase_developyaml0'))
-     assert phase2.date_start>=phase1.date_end, 'Error, the phase Development should start after the end of the Analysis phase'
-
-     phase3=self.browse(cr, uid, ref('project_phase_testyaml0'))
-     assert phase3.date_start>=phase2.date_end, 'Error, the phase Testing should start after the end of the Development phase'
-     assert phase3.date_start<phase3.date_end, 'Error, the phase Testing should start before ending'
-
+-
+  Now, change the partner if needed.
+-
+  !python {model: project.phase}: |
+    for project in self.browse(cr, uid, [ref('project_phase_developyaml0')], context):
+      project_id = project.project_id.id
+      start_date = project.date_start
+      end_date = project.date_end
+    context.update({'start_date' : start_date,'end_date' : end_date})
+    self.onchange_project(cr, uid, [ref("project_phase_developyaml0")], project_id,context)
+-
+  Now, Check start date.
+-
+  !python {model: project.phase}: |
+    phase=self.browse(cr, uid, ref('project_phase_developyaml0'), context=context)
+    context.update({'project_id': ref('project_project_developyamlproject0')})
+    try:
+      self._check_date_start(cr, uid, phase, context.get('end_date'), context)
+    except:
+      pass
+-
+  Now, Check end date.
+-
+  !python {model: project.phase}: |
+    phase=self.browse(cr, uid, ref('project_phase_developyaml0'), context=context)
+    context.update({'project_id': ref('project_project_developyamlproject0')})
+    try:
+      self._check_date_end(cr, uid, phase, context.get('start_date'), context)
+    except:
+      pass
+-
+  I am Postponding the Phase 'Develop Yaml' So Setting State to Pending.
+-
+  !python {model: project.phase}: |
+    self.set_pending(cr, uid, [ref("project_phase_developyaml0")])
+-
+  Now, Done the Phase 'Develop Yaml'.
+-
+  !python {model: project.phase}: |
+    self.set_done(cr, uid, [ref("project_phase_developyaml0")])
+-
+  I am Cancelling the Phase 'Develop Yaml'.
+-
+  !python {model: project.phase}: |
+    self.set_cancel(cr, uid, [ref("project_phase_developyaml0")])
