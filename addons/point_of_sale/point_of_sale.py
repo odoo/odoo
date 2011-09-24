@@ -675,12 +675,13 @@ class pos_order(osv.osv):
                     'quantity': line.qty,
                 }
                 inv_name = product_obj.name_get(cr, uid, [line.product_id.id], context=context)[0][1]
-
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
                                                                line.qty, partner_id = order.partner_id.id,
                                                                fposition_id=order.partner_id.property_account_position.id)['value'])
+                if line.product_id.description_sale:
+                    inv_line['note'] = line.product_id.description_sale
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
                 inv_line['name'] = inv_name
@@ -1179,7 +1180,7 @@ class pos_order_line(osv.osv):
         if 'product_id' in values and not values['product_id']:
             return False
         return super(pos_order_line, self).write(cr, user, ids, values, context=context)
-    
+
     def copy_data(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
