@@ -19,9 +19,17 @@
 #
 ##############################################################################
 
+import logging
+import threading
+import time
+
 import http_server
 import netrpc_server
 import web_services
+
+import openerp.netsvc
+import openerp.osv
+import openerp.tools
 
 #.apidoc title: RPC Services
 
@@ -35,14 +43,15 @@ import web_services
 """
 
 def start_services():
-    import openerp
-    http_server = openerp.service.http_server
-    netrpc_server = openerp.service.netrpc_server
+    """ Start all services.
 
+    Services include the different servers and cron threads.
+
+    """
     # Instantiate local services (this is a legacy design).
     openerp.osv.osv.start_object_proxy()
     # Export (for RPC) services.
-    openerp.service.web_services.start_web_services()
+    web_services.start_web_services()
 
     # Initialize the HTTP stack.
     http_server.init_servers()
@@ -57,10 +66,7 @@ def start_services():
     openerp.netsvc.Server.startAll()
 
 def stop_services():
-    import openerp
-    import logging
-    import threading
-    import time
+    """ Stop all services. """
     openerp.netsvc.Agent.quit()
     openerp.netsvc.Server.quitAll()
     config = openerp.tools.config
@@ -69,14 +75,14 @@ def stop_services():
     logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
     logging.shutdown()
 
-    # manually join() all threads before calling sys.exit() to allow a second signal
+    # Manually join() all threads before calling sys.exit() to allow a second signal
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
-    # threading.Thread.join() should not mask signals (at least in python 2.5)
+    # threading.Thread.join() should not mask signals (at least in python 2.5).
     for thread in threading.enumerate():
         if thread != threading.currentThread() and not thread.isDaemon():
             while thread.isAlive():
-                # need a busyloop here as thread.join() masks signals
-                # and would present the forced shutdown
+                # Need a busyloop here as thread.join() masks signals
+                # and would prevent the forced shutdown.
                 thread.join(0.05)
                 time.sleep(0.05)
 
