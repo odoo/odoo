@@ -89,18 +89,18 @@
     </record>
 
      <!-- Import or create customers configartion view  -->
-	 <record id="action_import_create_installer" model="ir.actions.act_window">
-	     <field name="name">Import or Create Customers</field>
-	     <field name="type">ir.actions.act_window</field>
-	     <field name="res_model">res.partner</field>
-	     <field name="view_type">form</field>
-	     <field name="view_mode">tree,form</field>
-	     <field name="view_id" ref="base.view_partner_tree"/>
-	     <field name="help">Create some Customers, Suppliers and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
-	 </record>
-	<record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
-	    <field name="action_id" ref="action_import_create_installer"/>
-	    <field name="category_id" ref="base.category_administration_config"/>
+     <record id="action_import_create_installer" model="ir.actions.act_window">
+         <field name="name">Create or Import Customers</field>
+         <field name="type">ir.actions.act_window</field>
+         <field name="res_model">res.partner</field>
+         <field name="view_type">form</field>
+         <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="base.view_partner_tree"/>
+         <field name="help">Create or Import Customers  and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
+     </record>
+     <record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
+         <field name="action_id" ref="action_import_create_installer"/>
+         <field name="category_id" ref="base.category_sales_management_config"/>
     </record>
 
      <!-- Define default users preferences-->

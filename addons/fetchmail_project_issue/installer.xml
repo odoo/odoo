@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_link_issue_to_email_account">
+            <field name="name">Create Issues from Email Account</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fetchmail.server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_name' : "Email Account For Issue", 'fetchmail_model' : 'project.issue'}</field>
+        </record>
+
+        <record model="ir.actions.todo" id="config_wizard_action_link_issue_to_email_account">
+            <field name="action_id" ref="action_link_issue_to_email_account" />
+            <field name="category_id" ref="project.category_project_config" />
+        </record>
+    </data>
+</openerp>
