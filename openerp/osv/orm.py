@@ -55,7 +55,6 @@ import types
 import warnings
 from lxml import etree
 
-import expression
 import fields
 import openerp
 import openerp.netsvc as netsvc
@@ -585,6 +584,17 @@ class MetaModel(type):
         # Remember which models to instanciate for this module.
         self.module_to_models.setdefault(self._module, []).append(self)
 
+
+# Definition of log access columns, automatically added to models if
+# self._log_access is True
+LOG_ACCESS_COLUMNS = {
+    'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+    'create_date': 'TIMESTAMP',
+    'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+    'write_date': 'TIMESTAMP'
+}
+# special columns automatically created by the ORM
+MAGIC_COLUMNS =  ['id'] + LOG_ACCESS_COLUMNS.keys()
 
 class BaseModel(object):
     """ Base class for OpenERP models.
@@ -2492,7 +2502,7 @@ class BaseModel(object):
         # iterate on the database columns to drop the NOT NULL constraints
         # of fields which were required but have been removed (or will be added by another module)
         columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
-        columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
+        columns += MAGIC_COLUMNS
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
                    " WHERE c.relname=%s"
@@ -2559,7 +2569,7 @@ class BaseModel(object):
             column_data = self._select_column_data(cr)
 
             for k, f in self._columns.iteritems():
-                if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
+                if k in MAGIC_COLUMNS:
                     continue
                 # Don't update custom (also called manual) fields
                 if f.manual and not update_custom_fields:
@@ -2861,23 +2871,17 @@ class BaseModel(object):
 
 
     def _add_log_columns(self, cr):
-        logs = {
-            'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-            'create_date': 'TIMESTAMP',
-            'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-            'write_date': 'TIMESTAMP'
-        }
-        for k in logs:
+        for field, field_def in LOG_ACCESS_COLUMNS.iteritems():
             cr.execute("""
                 SELECT c.relname
                   FROM pg_class c, pg_attribute a
                  WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-                """, (self._table, k))
+                """, (self._table, field))
             if not cr.rowcount:
-                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
+                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, field, field_def))
                 cr.commit()
                 self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                    self._table, k, logs[k])
+                                    self._table, field, field_def)
 
 
     def _select_column_data(self, cr):
@@ -4142,7 +4146,6 @@ class BaseModel(object):
                 domain = [('active', '=', 1)]
 
         if domain:
-            import expression
             e = expression.expression(cr, user, domain, self, context)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
@@ -4368,7 +4371,7 @@ class BaseModel(object):
         for f in fields:
             ftype = fields[f]['type']
 
-            if self._log_access and f in ('create_date', 'create_uid', 'write_date', 'write_uid'):
+            if self._log_access and f in LOG_ACCESS_COLUMNS:
                 del data[f]
 
             if f in default:
@@ -4629,6 +4632,9 @@ class BaseModel(object):
             self._transient_clean_old_rows(cr, self._transient_max_count)
 
         return True
+
+# keep this import here, at top it will cause dependency cycle errors
+import expression
 
 class Model(BaseModel):
     """Main super-class for regular database-persisted OpenERP models.

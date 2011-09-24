@@ -126,6 +126,7 @@ import logging
 from openerp.tools import flatten, reverse_enumerate
 import fields
 import openerp.modules
+from openerp.osv.orm import MAGIC_COLUMNS
 
 #.apidoc title: Domain Expressions
 
@@ -413,7 +414,7 @@ class expression(object):
 
             # check if the expression is valid
             if not is_leaf(e):
-                raise ValueError('Bad domain expression: %r, %r is not a valid term.' % (exp, e))
+                raise ValueError("Invalid term %r in domain expression %r" % (e, exp))
 
             # normalize the leaf's operator
             e = normalize_leaf(*e)
@@ -421,41 +422,47 @@ class expression(object):
             left, operator, right = e
 
             working_table = table # The table containing the field (the name provided in the left operand)
-            fargs = left.split('.', 1)
+            field_path = left.split('.', 1)
 
             # If the field is _inherits'd, search for the working_table,
             # and extract the field.
-            if fargs[0] in table._inherit_fields:
+            if field_path[0] in table._inherit_fields:
                 while True:
-                    field = working_table._columns.get(fargs[0])
+                    field = working_table._columns.get(field_path[0])
                     if field:
                         self.__field_tables[i] = working_table
                         break
-                    next_table = working_table.pool.get(working_table._inherit_fields[fargs[0]][0])
+                    next_table = working_table.pool.get(working_table._inherit_fields[field_path[0]][0])
                     if next_table not in self.__all_tables:
                         self.__joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
                         self.__all_tables.add(next_table)
                     working_table = next_table
             # Or (try to) directly extract the field.
             else:
-                field = working_table._columns.get(fargs[0])
+                field = working_table._columns.get(field_path[0])
 
             if not field:
                 if left == 'id' and operator == 'child_of':
                     ids2 = to_ids(right, table)
                     dom = child_of_domain(left, ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
+                else:
+                    # field could not be found in model columns, it's probably invalid, unless
+                    # it's one of the _log_access special fields
+                    # TODO: make these fields explicitly available in self.columns instead!
+                    if field_path[0] not in MAGIC_COLUMNS:
+                        raise ValueError("Invalid field %r in domain expression %r" % (left, exp))
                 continue
 
             field_obj = table.pool.get(field._obj)
-            if len(fargs) > 1:
+            if len(field_path) > 1:
                 if field._type == 'many2one':
-                    right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    self.__exp[i] = (fargs[0], 'in', right)
+                    right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
+                    self.__exp[i] = (field_path[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
-                    right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    right1 = table.search(cr, uid, [(fargs[0], 'in', right)], context=context)
+                    right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
+                    right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=context)
                     self.__exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):
@@ -657,6 +664,12 @@ class expression(object):
     def __leaf_to_sql(self, leaf, table):
         left, operator, right = leaf
 
+        # final sanity checks - should never fail
+        assert operator in (TERM_OPERATORS + ('inselect',)), \
+            "Invalid operator %r in domain term %r" % (operator, leaf)
+        assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in table._all_columns \
+            or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+
         if leaf == TRUE_LEAF:
             query = 'TRUE'
             params = []
@@ -704,8 +717,8 @@ class expression(object):
                     query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
                 elif check_nulls and operator == 'not in':
                     query = '(%s AND %s."%s" IS NOT NULL)' % (query, table._table, left) # needed only for TRUE.
-            else: # Must not happen.
-                pass
+            else: # Must not happen
+                raise ValueError("Invalid domain term %r" % (leaf,))
 
         elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '='):
             query = '(%s."%s" IS NULL or %s."%s" = false )' % (table._table, left, table._table, left)
@@ -725,15 +738,12 @@ class expression(object):
 
         elif (operator == '=?'):
             if (right is False or right is None):
+                # '=?' is a short-circuit that makes the term TRUE if right is None or False
                 query = 'TRUE'
                 params = []
-            elif left in table._columns:
-                format = table._columns[left]._symbol_set[0]
-                query = '(%s."%s" = %s)' % (table._table, left, format)
-                params = table._columns[left]._symbol_set[1](right)
             else:
-                query = "(%s.\"%s\" = '%%s')" % (table._table, left)
-                params = right
+                # '=?' behaves like '=' in other cases
+                query, params = self.__leaf_to_sql((left, '=', right), table)
 
         elif left == 'id':
             query = '%s.id %s %%s' % (table._table, operator)
@@ -749,11 +759,11 @@ class expression(object):
                     query = '(unaccent(%s."%s") %s unaccent(%s))' % (table._table, left, sql_operator, format)
                 else:
                     query = '(%s."%s" %s %s)' % (table._table, left, sql_operator, format)
-            else:
-                if self.has_unaccent and sql_operator in ('ilike', 'not ilike'):
-                    query = "(unaccent(%s.\"%s\") %s unaccent('%s'))" % (table._table, left, sql_operator, right)
-                else:
-                    query = "(%s.\"%s\" %s '%s')" % (table._table, left, sql_operator, right)
+            elif left in MAGIC_COLUMNS:
+                    query = "(%s.\"%s\" %s %%s)" % (table._table, left, sql_operator)
+                    params = right
+            else: # Must not happen
+                raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
 
             add_null = False
             if need_wildcard:
