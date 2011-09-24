@@ -62,7 +62,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
