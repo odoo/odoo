@@ -25,10 +25,5 @@ import res
 import publisher_warranty
 import report
 
-def YEAH(environ, start_response):
-    response = 'YEAH.\n'
-    start_response('200 OK', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
-    return [response]
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
