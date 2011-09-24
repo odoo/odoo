@@ -39,11 +39,16 @@ class OpenERPSession(object):
         self._lang = {}
         self.remote_timezone = 'utc'
         self.client_timezone = False
-        
+
     def build_connection(self):
-        return openerplib.get_connection(hostname=self.config.server_host, port=self.config.server_port,
-                                         database=self._db, login=self._login,
-                                         user_id=self._uid, password=self._password)
+        if self.config.backend == 'local':
+            conn = openerplib.get_connection(protocol='local', database=self._db,
+                   login=self._login, user_id=self._uid, password=self._password)
+        else:
+            conn = openerplib.get_connection(hostname=self.config.server_host,
+                   port=self.config.server_port, database=self._db, login=self._login,
+                   user_id=self._uid, password=self._password)
+        return conn
 
     def proxy(self, service):
         return self.build_connection().get_service(service)

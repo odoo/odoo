@@ -379,7 +379,7 @@ class Model(object):
         records = self.read(record_ids, fields or [], context or {})
         return records
 
-def get_connector(hostname, protocol="xmlrpc", port="auto"):
+def get_connector(hostname=None, protocol="xmlrpc", port="auto"):
     """
     A shortcut method to easily create a connector to a remote server using XMLRPC or NetRPC.
 
@@ -398,7 +398,7 @@ def get_connector(hostname, protocol="xmlrpc", port="auto"):
     else:
         raise ValueError("You must choose xmlrpc or netrpc or local")
 
-def get_connection(hostname, protocol="xmlrpc", port='auto', database=None,
+def get_connection(hostname=None, protocol="xmlrpc", port='auto', database=None,
                  login=None, password=None, user_id=None):
     """
     A shortcut method to easily create a connection to a remote OpenERP server.
