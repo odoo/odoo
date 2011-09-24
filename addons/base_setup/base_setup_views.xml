@@ -70,6 +70,7 @@
     </record>
     <record id="base_setup_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_installer"/>
+        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
     </record>
 
@@ -221,6 +222,7 @@
     </record>
     <record id="base_setup_company_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_company"/>
+        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
     </record>
     <!--   register Upload Logo configuration wizard  -->
