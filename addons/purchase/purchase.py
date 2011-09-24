@@ -667,7 +667,7 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -740,10 +740,10 @@ class purchase_order_line(osv.osv):
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes)
+            name=name, price_unit=price_unit, notes=notes, context=context)
         if 'product_uom' in res['value']:
             if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
