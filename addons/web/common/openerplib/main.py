@@ -203,8 +203,19 @@ class LocalConnector(Connector):
 
     def send(self, service_name, method, *args):
         import openerp
-        # todo local
-        print service_name, method, args
+        # TODO Exception handling
+        # This will be changed to be xmlrpc compatible
+        # OpenERPWarning code 1
+        # OpenERPException code 2
+        #except openerp.netsvc.OpenERPDispatcherException, e:
+        #    fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
+        #    response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+        #except:
+        #    exc_type, exc_value, exc_tb = sys.exc_info()
+        #    fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+        #    response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+        result = openerp.netsvc.dispatch_rpc(service_name, method, args, None)
+        return result
 
 class Service(object):
     """
