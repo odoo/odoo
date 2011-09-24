@@ -83,7 +83,7 @@
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <newline/>
-                            <field name="state" colspan="2"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                             <group colspan="2" col="6">
                                 <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
@@ -126,7 +126,7 @@
                         <separator string="Reasons" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
                         <newline/>
-                        <field name="state" colspan="2"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                         <group colspan="2" col="6">
                             <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>

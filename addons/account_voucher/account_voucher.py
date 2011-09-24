@@ -265,7 +265,7 @@ class account_voucher(osv.osv):
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'company_currency': fields.related('company_id','currency_id', type='many2one', relation='res.currency', string='Currency', readonly=True),
         'state':fields.selection(
-            [('draft','Draft'),
+            [('draft','New'),
              ('proforma','Pro-forma'),
              ('posted','Posted'),
              ('cancel','Cancelled')

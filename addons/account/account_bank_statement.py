@@ -139,7 +139,7 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
             'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
                                    'State', required=True, readonly="1",

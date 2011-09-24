@@ -149,7 +149,7 @@
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
@@ -270,7 +270,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue'}'/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
                         <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
