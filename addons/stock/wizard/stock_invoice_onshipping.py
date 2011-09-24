@@ -135,6 +135,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         active_picking = picking_pool.browse(cr, uid, context.get('active_id',False), context=context)
         inv_type = picking_pool._get_invoice_type(active_picking)
         context['inv_type'] = inv_type
+        if isinstance(onshipdata_obj[0]['journal_id'], tuple):
+            onshipdata_obj[0]['journal_id'] = onshipdata_obj[0]['journal_id'][0]
         res = picking_pool.action_invoice_create(cr, uid, active_ids,
               journal_id = onshipdata_obj[0]['journal_id'],
               group = onshipdata_obj[0]['group'],
