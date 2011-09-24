@@ -26,7 +26,7 @@ from osv import osv, fields
 from tools.misc import email_re, email_send
 from tools.translate import _
 
-from base.res.res_user import _lang_get
+from base.res.res_users import _lang_get
 
 
 

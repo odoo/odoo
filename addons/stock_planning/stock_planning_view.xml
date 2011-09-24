@@ -2,8 +2,8 @@
 <openerp>
     <data>
         <menuitem id="menu_stock_period_main"
-                  name="Stock and Sales Periods"
-                  parent="base.menu_base_config" sequence="20"/>
+                  name="Stock Periods"
+                  parent="stock.menu_stock_configuration" sequence="20"/>
 
         <!-- Periods tree and form section -->
 
@@ -12,7 +12,7 @@
             <field name="model">stock.period</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Periods">
+                <form string="Stock Periods">
                     <field name="name" colspan="2"/>
                     <newline/>
                     <field name="date_start"/>
@@ -46,7 +46,7 @@
             <field name="model">stock.period</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Stock and Sales Period">
+                <search string="Stock Periods">
                     <filter string="Current" domain="[('state','in',['draft','open'])]" icon="terp-check" help="Current Periods"/>
                     <filter string="Closed" domain="[('state','=','close')]" icon="gtk-stop" help="Closed Periods"/>
                     <separator orientation="vertical"/>
@@ -58,11 +58,13 @@
         </record>
 
         <record id="action_stock_period_form" model="ir.actions.act_window">
-            <field name="name">Stock and Sales Periods</field>
+            <field name="name">Stock Periods</field>
             <field name="res_model">stock.period</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_stock_period_search"/>
+            <field name="help">Stock periods are used for stock planning. Stock periods are independent of account periods. You can use wizard for creating periods and review them here.</field>
+
         </record>
 
         <menuitem
@@ -112,7 +114,7 @@
                         <label string = ""/>
                         <label string = "Periods :"/>
                         <field name="analyzed_user_id" nolabel = "1" domain = "[('company_id','=',company_id)] "/>
-                        <field name="analyzed_dept_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
+                        <field name="analyzed_team_id" nolabel = "1" />
                         <field name="analyzed_warehouse_id" nolabel = "1" domain = "[('company_id','=',company_id)] " />
                         <group colspan = "1" col = "2">
                             <field name = "analyze_company"/>
@@ -190,14 +192,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search  Sales Forecast">
-                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" separator="1"/>
+                    <filter icon="terp-camera_test" string="Validated" domain="[('state','=','validated')]" />
                     <field name="company_id"/>
                     <field name="warehouse_id" />
                     <field name="period_id" />
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
@@ -215,7 +217,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{"search_default_create_uid":uid}</field>
-            <field name="search_view_id" ref="view_stock_sale_forecast_filter"/>
+            <field name="help">This quantity sales forecast is an indication for Stock Planner to make procurement manually or to complement automatic procurement. You can use manual procurement with this forecast when some periods are exceptional for usual minimum stock rules.</field>
         </record>
 
         <menuitem id="menu_stock_sale_forecast_all"
@@ -225,7 +227,7 @@
 
         <!-- Planning section -->
 
-        <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
+        <menuitem id="menu_stock_planning_manual" name="Master Procurement Schedule" parent="procurement.menu_stock_sched" sequence="10"/>
 
         <record id="view_stock_planning_form" model="ir.ui.view">
             <field name="name">stock.planning.form</field>
@@ -247,6 +249,7 @@
                             <field name="product_uom"
                                          domain = "[('category_id','in',[product_uom_categ,product_uos_categ])]"
                                          on_change = "onchange_uom(product_uom, product_id, active_uom, planned_outgoing, to_procure)"/>
+                            <field name="active_uom" invisible = "True" />
                             <separator colspan ="2" string = "Forecasts"/>
                             <field name="warehouse_forecast"/>
                             <field name="company_forecast"/>
@@ -283,7 +286,7 @@
                             <field name="stock_supply_location"/>
                         </group>
                     </group>
-                    <separator colspan ="4" string = "Requisition history"/>
+                    <separator colspan ="4" string = "Procurement history"/>
                     <field name = "history" colspan = "2" nolabel = "1"/>
                 </form>
             </field>
@@ -295,13 +298,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Planning">
-                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" separator="1"/>
+                    <filter icon="terp-purchase" string="No Requisition" domain="[('history','=',False)]" />
                     <field name="company_id" widget="selection"/>
                     <field name="warehouse_id" widget="selection"/>
                     <field name="period_id" widget="selection"/>
                     <field name="product_id"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
                         <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
@@ -338,12 +341,14 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_stock_planning_filter"/>
+            <field name="help">The Master Procurement Schedule can be the main driver for warehouse replenishment, or can complement the automatic MRP scheduling (minimum stock rules, etc.).
+Each MPS line gives you a pre-computed overview of the incoming and outgoing quantities of a given product for a given Stock Period in a given Warehouse, based on the current and future stock levels,
+as well as the planned stock moves. The forecast quantities can be altered manually, and when satisfied with resulting (simulated) Stock quantity, you can trigger the procurement of what is missing to reach your desired quantities</field>
         </record>
 
         <menuitem
             id="menu_stock_planning"
-            parent="menu_stock_planning_main"
+            parent="menu_stock_planning_manual"
             action="action_view_stock_planning_form"/>
 
 </data>

@@ -50,7 +50,7 @@ More information on the methodology:
     """,
     'author': 'OpenERP SA',
     'images': ['images/product_backlogs.jpeg', 'images/project_sprints.jpeg', 'images/scrum_dashboard.jpeg', 'images/scrum_meetings.jpeg'],
-    'depends': ['project', 'process'],
+    'depends': ['project', 'process', 'mail'],
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
@@ -58,14 +58,17 @@ More information on the methodology:
         'wizard/project_scrum_backlog_create_task_view.xml',
         'wizard/project_scrum_backlog_merger_view.xml',
         'wizard/project_scrum_postpone_view.xml',
-        "wizard/project_scrum_email_view.xml",
+#        "wizard/project_scrum_email_view.xml",
         'project_scrum_view.xml',
         'wizard/project_scrum_backlog_sprint_view.xml',
         'process/project_scrum_process.xml',
         "board_project_scrum_view.xml",
     ],
     'demo_xml': ['project_scrum_demo.xml'],
-    'test': ['test/project_scrum_report.yml'],
+    'test': [
+            'test/project_scrum_report.yml',
+            'test/scrum_sprint_test.yml'
+            ],
     'installable': True,
     'active': False,
     'certificate' : '00736750152003010781',

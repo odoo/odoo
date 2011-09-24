@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:34+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:38+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -48,7 +48,7 @@ msgstr ""
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Total period:"
-msgstr ""
+msgstr "Всего за период:"
 
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
@@ -203,7 +203,7 @@ msgstr "Печать"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
-msgstr ""
+msgstr "Поиск по посещаемости"
 
 #. module: hr_attendance
 #: model:ir.module.module,description:hr_attendance.module_meta_information
@@ -214,11 +214,18 @@ msgid ""
 "    actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"    Назначение этого модуля — управление посещаемостью сотрудников.\n"
+"    Ведёт учёт посещаемости сотрудников на основе действий\n"
+"    регистрации-выхода, совершаемых ими.\n"
+"       "
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
+"Ошибка: регистрация (или выход) должны производиться после выхода (или "
+"регистрации)."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -229,7 +236,7 @@ msgstr "Июль"
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
 #: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
 msgid "Attendance Error Report"
-msgstr ""
+msgstr "Отчёт об ошибках посещаемости"
 
 #. module: hr_attendance
 #: field:hr.attendance.error,init_date:0
@@ -240,7 +247,7 @@ msgstr "Дата начала"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr ""
+msgstr "Мин. задержка"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -279,22 +286,24 @@ msgstr "Месяц"
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
+"(*) Отрицательное значение обозначает, что сотрудник работал больше, чем "
+"указано."
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
+msgstr "Указывает причину регистрации/выхода в случае сверхурочной работы."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
 msgid "Print Monthly Attendance Report"
-msgstr ""
+msgstr "Распечатать месячный отчёт посещаемости"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr ""
+msgstr "Регистрация - Выход"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
@@ -321,7 +330,7 @@ msgstr "Август"
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "Выход должен следовать за регистрацией!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -331,12 +340,12 @@ msgstr "Июнь"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr ""
+msgstr "Распечатать отчёт об ошибках посещаемости"
 
 #. module: hr_attendance
 #: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
 msgid "Attendances Of Employees"
-msgstr ""
+msgstr "Посещаемость сотрудников"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -351,7 +360,7 @@ msgstr "Ноябрь"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -361,7 +370,7 @@ msgstr "Октябрь"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendances"
-msgstr ""
+msgstr "Моя посещаемость"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -383,12 +392,12 @@ msgstr "Данные анализа"
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
 msgid "Sign-Out Entry must follow Sign-In."
-msgstr ""
+msgstr "Запись о выходе должна следовать за записью о регистрации."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr ""
+msgstr "Ошибки посещаемости"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
@@ -404,21 +413,25 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
+"Если требуется, чтобы сотрудники регистрировались по прибытии на работу и "
+"выходили в конце дня, OpenERP позволяет управлять этим процессом с помощью "
+"этого инструмента. Если каждый сотрудник сопоставлен с учётной записью в "
+"системе, можно регистрировать время с помощью этой кнопки действия."
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "ID сотрудника"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
-msgstr ""
+msgstr "Распечатать недельный отчёт посещаемости"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
-msgstr ""
+msgstr "ID сотрудника"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -431,18 +444,20 @@ msgstr "Отмена"
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr ""
+msgstr "Указывает причину регистрации - выхода."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A positive delay means that the employee worked less than recorded."
 msgstr ""
+"(*) Положительное значение означает, что сотрудник работал меньше, чем "
+"записано."
 
 #. module: hr_attendance
 #: view:hr.attendance.month:0
 msgid "Print Attendance Report Monthly"
-msgstr ""
+msgstr "Печатать отчёт посещаемости ежемесячно"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -469,6 +484,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
+"Вы пытаетесь %s датой, предшествующей другому событию!\n"
+"Свяжитесь с администратором для исправления ошибки."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -479,14 +496,14 @@ msgstr "Ваша последняя регистрация"
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
-msgstr ""
+msgstr "Записанная дата"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Посещаемость"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -512,11 +529,15 @@ msgid ""
 "has been linked to a system user, then they can encode their time with this "
 "action button."
 msgstr ""
+"Регистрация - выход. В некоторых организациях, сотрудники должны "
+"регистрироваться по прибытии на работу и выходить в конце дня. Если каждый "
+"сотрудник сопоставлен с учётной записью в системе, можно регистрировать "
+"время с помощью этой кнопки."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Имя сотрудника"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -536,7 +557,7 @@ msgstr "Тип действия"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr ""
+msgstr "Посещаемость сотрудника"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,state:0
@@ -551,13 +572,13 @@ msgstr "Апрель"
 #. module: hr_attendance
 #: view:hr.attendance.error:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr ""
+msgstr "При задержке больше указанной, ошибка считается преднамеренной"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records found for your selection!"
-msgstr ""
+msgstr "В выборке не найдено записей!"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -565,6 +586,7 @@ msgid ""
 "You did not sign in the last time. Please enter the date and time you signed "
 "in."
 msgstr ""
+"В прошлый раз вы не зарегистрировались. Введите дату и время регистрации."
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0

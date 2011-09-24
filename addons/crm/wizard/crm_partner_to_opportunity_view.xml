@@ -31,17 +31,16 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>
+     </record>
 
-	    <!-- partner To Opportunity wizard -->
+        <!-- partner To Opportunity wizard -->
 
-	   <act_window id="crm_partner2opportunity"
-    		key2="client_action_multi" name="Create Opportunity"
-    		res_model="crm.partner2opportunity" src_model="res.partner"
-    		view_id="view_crm_partner2opportunity"
-    		view_mode="form" target="new" view_type="form"
-    		groups="base.group_extended"/>
-
- 	</data>
+     <act_window id="crm_partner2opportunity"
+            key2="client_action_multi" name="Create Opportunity"
+            res_model="crm.partner2opportunity" src_model="res.partner"
+            view_id="view_crm_partner2opportunity"
+            view_mode="form" target="new" view_type="form"
+            groups="base.group_extended"/>
+     </data>
 
 </openerp>

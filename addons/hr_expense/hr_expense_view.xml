@@ -46,7 +46,7 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')"  string="Expenses" editable="top">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id" groups="base.group_extended"/>
@@ -99,11 +99,11 @@
                                     </group>
                                 </form>
                             </field>
-                            <field name="state"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                             <group col="6" colspan="2">
                                 <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_user"/>
                                 <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
-                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                                <button name="confirm" states="draft" string="Submit to Manager" type="workflow" icon="gtk-apply"/>
                                 <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
                                 <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
                             </group>
@@ -136,8 +136,7 @@
             <field name="arch" type="xml">
                 <search string="Expense">
                     <group>
-                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="Draft" help="Draft Expense"/>
-                      <separator orientation="vertical"/>
+                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
                       <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
                         help="Confirmed Expense"/>
                       <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
@@ -146,13 +145,13 @@
                       <filter icon="terp-go-month" string="This Month" name="this"
                               domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                       <separator orientation="vertical"/>
-                      <field name="employee_id" select='1'/>
-                      <field name="date" select='1'/>
+                      <field name="employee_id"/>
+                      <field name="date"/>
                       <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
                    <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
                     </field>
-                      <field name="name" select='1'/>
-                      <field name="user_id"  string="User" invisible="True">
+                      <field name="name"/>
+                      <field name="user_id"  string="User">
                       <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
                             string="Expenses of My Department"/>
                       </field>

@@ -6,7 +6,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
+            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -57,7 +57,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
-              <group col="10" colspan="12">
+              <group>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -78,7 +78,6 @@
                             help="Customer Invoices And Refunds"/>
                     <filter icon="terp-personal"
                             string="Supplier"
-                            separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
                             help="Supplier Invoices And Refunds"/>
                    <separator orientation="vertical"/>
@@ -87,7 +86,6 @@
                             help="Customer And Supplier Invoices"/>
                    <filter icon="terp-dolar_ok!"
                             string="Refund"
-                            separator="1"
                             domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
                             help="Customer And Supplier Refunds"/>
                    <separator orientation="vertical"/>
