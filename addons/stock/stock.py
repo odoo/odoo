@@ -1528,13 +1528,13 @@ class stock_move(osv.osv):
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True,states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM')),
-        'product_uos': fields.many2one('product.uom', 'Product UOS'),
+        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM'), states={'done': [('readonly', True)]}),
+        'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True,states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
-        'address_id': fields.many2one('res.partner.address', 'Destination Address', help="Optional address where goods are to be delivered, specifically used for allotment"),
+        'address_id': fields.many2one('res.partner.address', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', states={'done': [('readonly', True)]}, help="Production lot is used to put a serial number on the production", select=True),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
