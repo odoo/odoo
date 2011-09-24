@@ -26,9 +26,8 @@ class OpenERPSession(object):
         Used to store references to non-literal domains which need to be
         round-tripped to the client browser.
     """
-    def __init__(self, server='127.0.0.1', port=8069):
-        self._server = server
-        self._port = port
+    def __init__(self, config):
+        self.config = config
         self._db = False
         self._uid = False
         self._login = False
@@ -42,7 +41,7 @@ class OpenERPSession(object):
         self.client_timezone = False
         
     def build_connection(self):
-        return openerplib.get_connection(hostname=self._server, port=self._port,
+        return openerplib.get_connection(hostname=self.config.server_host, port=self.config.server_port,
                                          database=self._db, login=self._login,
                                          user_id=self._uid, password=self._password)
 

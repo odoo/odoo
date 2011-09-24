@@ -20,9 +20,5 @@ def wsgi_postload():
     o.backend = 'local'
 
     app = common.dispatch.Root(o)
-    #import openerp.wsgi
     openerp.wsgi.register_wsgi_handler(app)
-
-# TODO
-# if we detect that we are imported from the openerp server register common.Root() as a wsgi entry point
 

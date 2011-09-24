@@ -190,6 +190,22 @@ class NetRPCConnector(Connector):
         socket.disconnect()
         return result
 
+class LocalConnector(Connector):
+    """
+    A type of connector that uses the XMLRPC protocol.
+    """
+    PROTOCOL = 'local'
+    
+    __logger = _getChildLogger(_logger, 'connector.local')
+
+    def __init__(self):
+        pass
+
+    def send(self, service_name, method, *args):
+        import openerp
+        # todo local
+        print service_name, method, args
+
 class Service(object):
     """
     A class to execute RPC calls on a specific service of the remote server.
@@ -377,8 +393,10 @@ def get_connector(hostname, protocol="xmlrpc", port="auto"):
         return XmlRPCConnector(hostname, port)
     elif protocol == "netrpc":
         return NetRPCConnector(hostname, port)
+    elif protocol == "local":
+        return LocalConnector()
     else:
-        raise ValueError("You must choose xmlrpc or netrpc")
+        raise ValueError("You must choose xmlrpc or netrpc or local")
 
 def get_connection(hostname, protocol="xmlrpc", port='auto', database=None,
                  login=None, password=None, user_id=None):
