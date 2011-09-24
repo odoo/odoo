@@ -106,7 +106,7 @@
                        <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
+                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
                            help="Procurement started late" />
                        <separator orientation="vertical"/>
                        <field name="origin"/>

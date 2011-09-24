@@ -248,13 +248,13 @@
                     />
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-today" string="Today"
-                        domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                        domain="[('date','&gt;=',current_date), ('date','&lt;=',current_date)]"
                         help="Todays's Helpdesk Requests"
                         />
                     <filter icon="terp-go-week"
                         string="7 Days" 
                         help="Helpdesk requests during last 7 days"
-                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        domain="[('date','&lt;',current_date), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         />
                     <separator orientation="vertical"/>
                     <field name="name" string="Query"/>
