@@ -848,7 +848,11 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             todo = []
             for move in pick.move_lines:
-                if move.state == 'assigned':
+                if move.state == 'draft':
+                    self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
+                        context=context)
+                    todo.append(move.id)
+                elif move.state in ('assigned','confirmed'):
                     todo.append(move.id)
             if len(todo):
                 self.pool.get('stock.move').action_done(cr, uid, todo,
