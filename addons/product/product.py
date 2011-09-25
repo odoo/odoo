@@ -75,7 +75,7 @@ class product_uom(osv.osv):
     _description = 'Product Unit of Measure'
 
     def _compute_factor_inv(self, factor):
-        return factor and round(1.0 / factor, 6) or 0.0
+        return factor and (1.0 / factor) or 0.0
 
     def _factor_inv(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -100,7 +100,7 @@ class product_uom(osv.osv):
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How many times this UoM is smaller than the reference UoM in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits_compute=dp.get_precision('Product UoM'),
+        'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
             string='Ratio',
             help='How many times this UoM is bigger than the reference UoM in this category:\n'\
