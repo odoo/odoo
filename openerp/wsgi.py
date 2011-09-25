@@ -61,18 +61,18 @@ def xmlrpc_return(start_response, service, method, params):
 
 def wsgi_xmlrpc(environ, start_response):
     """ The main OpenERP WSGI handler."""
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/openerp/xmlrpc'):
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/openerp/6.1/xmlrpc'):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
 
         params, method = xmlrpclib.loads(data)
 
-        path = environ['PATH_INFO'][len('/openerp/xmlrpc'):]
+        path = environ['PATH_INFO'][len('/openerp/6.1/xmlrpc'):]
         if path.startswith('/'): path = path[1:]
         if path.endswith('/'): p = path[:-1]
         path = path.split('/')
 
-        # All routes are hard-coded. Need a way to register addons-supplied handlers.
+        # All routes are hard-coded.
 
         # No need for a db segment.
         if len(path) == 1:
