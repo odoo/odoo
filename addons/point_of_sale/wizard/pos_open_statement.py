@@ -74,7 +74,7 @@ class pos_open_statement(osv.osv_memory):
         search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
 
         return {
-            'domain': "[('state', '=', 'open'),('user_id', '=', "+ str(uid) +")]",
+            'domain': "[('state', '=', 'open'),('id', 'in',[ "+','.join(map(str,j_ids))+"])]",
             'name': 'Open Statement',
             'view_type': 'form',
             'view_mode': 'tree, form',

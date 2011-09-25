@@ -49,11 +49,10 @@ class pos_box_out(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char('Description', size=32, required=True),
+        'name': fields.char('Description / Reason', size=32, required=True),
         'journal_id': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True),
         'product_id': fields.selection(_get_expense_product, "Operation", required=True),
-        'amount': fields.float('Amount', digits=(16, 2)),
-        'ref': fields.char('Ref', size=32),
+        'amount': fields.float('Amount', digits=(16, 2), required=True),
     }
     _defaults = {
          'journal_id': 1,
@@ -105,7 +104,6 @@ class pos_box_out(osv.osv_memory):
             if data['amount'] > 0:
                 amount = -data['amount']
             vals['amount'] = amount
-            vals['ref'] = data['ref'] or ''
             vals['name'] = "%s: %s " % (product.name, data['name'])
             statement_line_obj.create(cr, uid, vals, context=context)
         return {}

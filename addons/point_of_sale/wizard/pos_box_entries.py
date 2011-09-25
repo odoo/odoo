@@ -69,12 +69,11 @@ class pos_box_entries(osv.osv_memory):
 
         return res
 
-
     _columns = {
-        'name': fields.char('Description', size=32, required=True),
+        'name': fields.char('Reason', size=32, required=True),
         'journal_id': fields.selection(get_journal, "Cash Register", required=True),
         'product_id': fields.selection(_get_income_product, "Operation", required=True),
-        'amount': fields.float('Amount', digits=(16, 2)),
+        'amount': fields.float('Amount', digits=(16, 2), required=True),
         'ref': fields.char('Ref', size=32),
     }
     _defaults = {

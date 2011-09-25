@@ -26,7 +26,6 @@ class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
         'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox"),
-        'special_journal': fields.boolean('Special Journal', help="Will put all the orders in waiting status till being accepted"),
         'check_dtls': fields.boolean('Check Details', help="This field authorize Validation of Cashbox without checking ending details"),
         'journal_users': fields.many2many('res.users', 'pos_journal_users', 'journal_id', 'user_id', 'Users'),
     }
