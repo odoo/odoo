@@ -302,14 +302,18 @@ def serve():
 
     global httpd
 
-    # TODO Change the xmlrpc_port option to http_port.
+    # TODO Change the xmlrpc_* options to http_*
+    interface = config['xmlrpc_interface'] or '0.0.0.0'
+    port = config['xmlrpc_port']
     try:
         import werkzeug.serving
-        httpd = werkzeug.serving.make_server('0.0.0.0', config['xmlrpc_port'], application, threaded=True)
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+        logging.getLogger('wsgi').info('HTTP service (werkzeug) running on %s:%s', interface, port)
     except ImportError, e:
         import wsgiref.simple_server
-        logging.getLogger('wsgi').warn('Can not import werkzeug, ' 'falling back to wsgiref.')
-        httpd = wsgiref.simple_server.make_server('0.0.0.0', config['xmlrpc_port'], application)
+        logging.getLogger('wsgi').warn('Werkzeug module unavailable, falling back to wsgiref.')
+        httpd = wsgiref.simple_server.make_server(interface, port, application)
+        logging.getLogger('wsgi').info('HTTP service (wsgiref) running on %s:%s', interface, port)
 
     httpd.serve_forever()
 
