@@ -25,9 +25,9 @@ from osv import fields, osv
 class account_journal(osv.osv):
     _inherit = 'account.journal'
     _columns = {
-        'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox"),
-        'check_dtls': fields.boolean('Check Details', help="This field authorize Validation of Cashbox without checking ending details"),
-        'journal_users': fields.many2many('res.users', 'pos_journal_users', 'journal_id', 'user_id', 'Users'),
+        'auto_cash': fields.boolean('Automatic Opening', help="This field authorize the automatic creation of the cashbox, without control of the initial balance."),
+        'check_dtls': fields.boolean('Control Balance Before Closing', help="This field authorize Validation of Cashbox without controlling the closing balance."),
+        'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
     }
     _defaults = {
         'check_dtls': False,
@@ -47,14 +47,6 @@ class account_cash_statement(osv.osv):
             return False
         else:
             return True
-
-    def _user_allow(self, cr, uid, statement_id, context=None):
-        statement = self.browse(cr, uid, statement_id, context=context)
-        if (not statement.journal_id.journal_users) and uid == 1: return True
-        for user in statement.journal_id.journal_users:
-            if uid == user.id:
-                return True
-        return False
 
     def _get_cash_open_box_lines(self, cr, uid, context=None):
         res = super(account_cash_statement,self)._get_cash_open_box_lines(cr, uid, context)

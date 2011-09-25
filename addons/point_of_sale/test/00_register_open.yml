@@ -13,5 +13,5 @@
   I check that I have some bank statements open for the admin user
 - 
   !python {model: account.bank.statement}: |
-    ids = self.search(cr, uid, [('state', '=', 'open'), ('user_id', '=', 1)])
-    assert (len(ids)>0), 'No statement open for the admin user !'
+    ids = self.search(cr, uid, [('state', 'in', ('open','new')), ('user_id', '=', 1)])
+    assert (len(ids)>0), 'No statement open for the admin user!'

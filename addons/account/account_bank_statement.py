@@ -117,6 +117,12 @@ class account_bank_statement(osv.osv):
             res[statement_id] = (currency_id, currency_names[currency_id])
         return res
 
+    def _get_statement(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
+            result[line.statement_id.id] = True
+        return result.keys()
+
     _order = "date desc, id desc"
     _name = "account.bank.statement"
     _description = "Bank Statement"
@@ -131,7 +137,11 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly',True)]}),
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm': [('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, store=True, # store=True for account_cash_statement
+        'balance_end': fields.function(_end_balance, 
+            store = {
+                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement.line': (_get_statement, ['amount'], 10),
+            },
             string="Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
@@ -306,7 +316,7 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def check_status_condition(self, cr, uid, state, journal_type='bank'):
-        return state=='draft'
+        return state in ('draft','open')
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
         obj_seq = self.pool.get('ir.sequence')

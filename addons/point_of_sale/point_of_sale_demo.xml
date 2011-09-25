@@ -5,7 +5,7 @@
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
         </record>
         <record id="account.cash_journal" model="account.journal">
-            <field eval="[(6, 0, [ref('base.user_root')])]" name="journal_users"/>
+            <field eval="True" name="journal_user"/>
         </record>
         
         <record id="product_product_putmoneyforchange0" model="product.product">

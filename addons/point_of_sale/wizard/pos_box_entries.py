@@ -37,12 +37,9 @@ def get_journal(self, cr, uid, context=None):
 
     journal_obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
-    cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users WHERE user_id = %s ORDER BY journal_id", (uid, ))
-    j_ids = map(lambda x1: x1[0], cr.fetchall())
-    ids = journal_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
-    obj_ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)], context=context)
-    res_obj = journal_obj.read(cr, uid, ids, ['journal_id'], context=context)
-    res_obj = [(r1['id']) for r1 in res_obj]
+
+    j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+    obj_ids = statement_obj.search(cr, uid, [('state', '=', 'open'), ('user_id', '=', uid), ('journal_id', 'in', j_ids)], context=context)
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context=context)
     res = [(r['journal_id']) for r in res]
     res.insert(0, ('', ''))

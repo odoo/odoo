@@ -130,11 +130,16 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
+                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
+                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="date_order" string="Order date"/>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -723,6 +728,16 @@
         <!--  Miscelleanous Operations/Reporting -->
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager"/>
         <!-- Invoice -->
+
+        <record model="ir.actions.act_window" id="action_pos_sale_all">
+            <field name="name">All Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <menuitem parent="menu_point_root" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
