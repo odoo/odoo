@@ -21,7 +21,6 @@
 
 import pos_confirm
 import pos_discount
-import pos_get_sale
 import pos_open_statement
 import pos_close_statement
 import pos_box_entries
@@ -29,8 +28,6 @@ import pos_box_out
 import pos_details
 import pos_sales_user
 import pos_sales_user_today
-import pos_sales_user_current_user
-import all_closed_cashbox_of_the_day
 import pos_receipt
 import pos_payment_report_user
 import pos_payment_report_date

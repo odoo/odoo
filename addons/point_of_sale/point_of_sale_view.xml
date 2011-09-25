@@ -642,7 +642,7 @@
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
-            <field name="name">Products</field>
+            <field name="name">Products 'Take Money Out'</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
@@ -661,14 +661,14 @@
             <field name="view_id" ref="product_input_output_form_view"/>
             <field name="act_window_id" ref="action_product_input"/>
         </record>
-        <menuitem name="Products for Input Operations"
-                    parent="menu_point_config_product"
-                    action="action_product_input"
-                    id="products_for_input_operations"
-                    groups="group_pos_manager"/>
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_product_input"
+            id="products_for_input_operations"
+            groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
-            <field name="name">Products</field>
+            <field name="name">Products 'Put Money In'</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
@@ -687,11 +687,11 @@
             <field name="view_id" ref="product_input_output_form_view"/>
             <field name="act_window_id" ref="action_product_output"/>
         </record>
-        <menuitem name="Products for Output Operations"
-                    parent="menu_point_config_product"
-                    action="action_product_output"
-                    id="products_for_output_operations"
-                    groups="group_pos_manager"/>
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_product_output"
+            id="products_for_output_operations"
+            groups="group_pos_manager"/>
 
         <menuitem
             parent="menu_point_of_sale"
@@ -702,6 +702,21 @@
             parent="menu_point_of_sale"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
+
+        <record id="action_account_journal_form" model="ir.actions.act_window">
+            <field name="name">Payment Methods</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_journal_user': 1}</field>
+            <field name="domain">[('journal_user','=', 1)]</field>
+            <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
+        </record>
+
+        <menuitem action="action_account_journal_form"
+            id="menu_action_account_journal_form_open"
+            parent="menu_point_config_product"
+            sequence="20"/>
 
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
@@ -737,7 +752,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
         </record>
-        <menuitem parent="menu_point_root" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
+        <menuitem parent="menu_point_rep" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>
