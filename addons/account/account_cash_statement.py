@@ -197,7 +197,7 @@ class account_cash_statement(osv.osv):
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             }),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Balance', help="Closing balance based on cashBox"),
+        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Closing Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
@@ -312,7 +312,7 @@ class account_cash_statement(osv.osv):
         if journal_type == 'bank':
             return super(account_cash_statement, self).balance_check(cr, uid, cash_id, journal_type, context)
         if not self._equal_balance(cr, uid, cash_id, context):
-            raise osv.except_osv(_('Error !'), _('CashBox Balance is not matching with Calculated Balance !'))
+            raise osv.except_osv(_('Error !'), _('The closing balance should be the same than the computed balance !'))
         return True
 
     def statement_close(self, cr, uid, ids, journal_type='bank', context=None):

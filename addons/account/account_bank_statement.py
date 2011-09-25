@@ -142,7 +142,7 @@ class account_bank_statement(osv.osv):
                 'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
             },
-            string="Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
+            string="Computed Balance", help='Balance as calculated based on Starting Balance and transaction lines'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
