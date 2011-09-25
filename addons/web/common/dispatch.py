@@ -387,7 +387,8 @@ class Root(object):
         for module in os.listdir(addons_path):
             if module not in addons_module:
                 manifest_path = os.path.join(addons_path, module, '__openerp__.py')
-                if os.path.isfile(manifest_path):
+                path_controllers = os.path.join(addons_path, module, 'controllers')
+                if os.path.isfile(manifest_path) and os.path.isdir(path_controllers):
                     manifest = ast.literal_eval(open(manifest_path).read())
                     _logger.info("Loading %s", module)
                     m = __import__(module)
