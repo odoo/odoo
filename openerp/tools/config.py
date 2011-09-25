@@ -143,6 +143,13 @@ class configmanager(object):
                          help="disable the NETRPC protocol")
         parser.add_option_group(group)
 
+        # WEB
+        # TODO move to web addons after MetaOption merge
+        group = optparse.OptionGroup(parser, "Web interface Configuration")
+        group.add_option("--db-filter", dest="dbfilter", default='.*',
+                         help="Filter listed database", metavar="REGEXP")
+        parser.add_option_group(group)
+
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
@@ -333,7 +340,7 @@ class configmanager(object):
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
-                'secure_cert_file', 'secure_pkey_file',
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter'
                 ]
 
         for arg in keys:
