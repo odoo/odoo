@@ -9,13 +9,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Apply Discount">
-                    <group col="2" colspan="4">
-                        <field name="discount"/>
-                        <button icon='gtk-cancel' special="cancel"
-                            string="Close" />
-                        <button name="apply_discount" string="Apply Discount"
-                            colspan="1" type="object" icon="gtk-ok" />
-                    </group>
+                    <field name="discount" colspan="4"/>
+                    <separator colspan="2" string=""/>
+                    <group colspan="2"/>
+                    <button icon='gtk-cancel' special="cancel"
+                        string="Close" />
+                    <button name="apply_discount" string="Apply Discount"
+                        colspan="1" type="object" icon="gtk-ok" />
                 </form>
             </field>
         </record>

@@ -51,7 +51,7 @@ class pos_open_statement(osv.osv_memory):
         for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
             if len(ids):
-                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related cash register.') %(journal.name))
+                continue
 
             number = ''
             if journal.sequence_id:

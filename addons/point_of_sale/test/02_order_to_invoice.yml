@@ -31,7 +31,6 @@
 -
   !python {model: pos.order}: |
     order = self.browse(cr,uid,ref('pos_order_pos1'))
-    print order.state, order.invoice_id, order.amount_total, order.amount_paid
 -
   !assert {model: pos.order, id: pos_order_pos1, string: State not correct}:
      - state == 'paid'
