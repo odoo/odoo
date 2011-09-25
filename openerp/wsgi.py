@@ -39,7 +39,7 @@ import time
 
 import openerp
 import openerp.tools.config as config
-import openerp.service.websrv_lib as websrv_lib
+import service.websrv_lib as websrv_lib
 
 def xmlrpc_return(start_response, service, method, params):
     """ Helper to call a service's method with some params, using a
