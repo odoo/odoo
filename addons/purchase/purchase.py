@@ -475,7 +475,7 @@ class purchase_order(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-        return picking_id
+        return True
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
