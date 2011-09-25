@@ -50,7 +50,7 @@ def xmlrpc_return(start_response, service, method, params):
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except openerp.netsvc.OpenERPDispatcherException, e:
-        fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
+        fault = xmlrpclib.Fault(2, openerp.tools.exception_to_unicode(e.exception) + '\n' + e.traceback) # TODO map OpenERP-specific exception to some fault code
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except:
         exc_type, exc_value, exc_tb = sys.exc_info()
