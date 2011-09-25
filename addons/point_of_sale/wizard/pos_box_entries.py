@@ -122,9 +122,6 @@ class pos_box_entries(osv.osv_memory):
             vals['amount'] = data['amount'] or 0.0
             vals['ref'] = "%s" % (data['ref'] or '')
             vals['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['product_id'], context=context).name, data['name'].decode('utf8'))
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
-            if address_u:
-                vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
             bank_statement.create(cr, uid, vals, context=context)
         return {}
 

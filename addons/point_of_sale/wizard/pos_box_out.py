@@ -81,7 +81,6 @@ class pos_box_out(osv.osv_memory):
             sunday = (datetime.today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')
             done_statmt = statement_obj.search(cr, uid, [('date', '>=', monday+' 00:00:00'), ('date', '<=', sunday+' 23:59:59'), ('journal_id', '=', data['journal_id']), ('company_id', '=', curr_company), ('user_id', '=', uid)], context=context)
             stat_done = statement_obj.browse(cr, uid, done_statmt, context=context)
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             am = 0.0
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
             acc_id = product.property_account_income
@@ -108,9 +107,6 @@ class pos_box_out(osv.osv_memory):
             vals['amount'] = amount
             vals['ref'] = data['ref'] or ''
             vals['name'] = "%s: %s " % (product.name, data['name'])
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
-            if address_u:
-                vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
             statement_line_obj.create(cr, uid, vals, context=context)
         return {}
 
