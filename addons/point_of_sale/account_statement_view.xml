@@ -20,17 +20,6 @@
             </field>
         </record>
 
-        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" 
-                sequence="4" groups="point_of_sale.group_pos_manager"/>
-
-        <!--<menuitem
-            name="All Cash Registers"
-            parent="menu_cash_register"
-            action="account.action_view_bank_statement_tree"
-            id="menu_all_menu_cash_register"
-            sequence="4"
-        />-->
-        
         <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit</field>
             <field name="model">account.bank.statement</field>
@@ -139,14 +128,6 @@
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
 
-        <menuitem
-            name="Cash Registers"
-            parent="menu_cash_register"
-            action="action_new_bank_statement_all_tree"
-            id="menu_all_menu_all_register"
-            sequence="4"
-        />
-
         <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
             id="menu_point_open_config" sequence="1"/>
         <menuitem
@@ -160,6 +141,15 @@
             string="Close Cash Registers"
             action="action_pos_close_statement"
             id="menu_close_statement" sequence="2" />
+
+        <menuitem
+            name="List of Cash Registers"
+            parent="menu_point_open_config"
+            action="action_new_bank_statement_all_tree"
+            id="menu_all_menu_all_register"
+            sequence="4"
+        />
+
 
     </data>
 </openerp>
