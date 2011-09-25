@@ -50,7 +50,6 @@ There are two common alternatives to configure the mailbox integration:
     ],
     'demo_xml': [
     ],
-    'test': ['test/test_project_mailgate.yml'],
     'installable': True,
     'active': False,
     'certificate': '001075048780413258261',
