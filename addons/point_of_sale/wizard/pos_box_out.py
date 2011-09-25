@@ -84,15 +84,6 @@ class pos_box_out(osv.osv_memory):
             address_u = res_obj.browse(cr, uid, uid, context=context).address_id
             am = 0.0
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
-            amount_check = product.am_out or False
-            for st in stat_done:
-                for s in st.line_ids:
-                    if address_u and s.partner_id == address_u.partner_id and s.am_out:
-                        am += s.amount
-            if (-data['amount'] or 0.0) + am < -(res_obj.browse(cr, uid, uid, context=context).company_id.max_diff or 0.0) and amount_check:
-                val = (res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) + am
-                raise osv.except_osv(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ')%(val))
-
             acc_id = product.property_account_income
             if not acc_id:
                 raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product.name))
@@ -115,8 +106,6 @@ class pos_box_out(osv.osv_memory):
             if data['amount'] > 0:
                 amount = -data['amount']
             vals['amount'] = amount
-            if product.am_out:
-                vals['am_out'] = True
             vals['ref'] = data['ref'] or ''
             vals['name'] = "%s: %s " % (product.name, data['name'])
             address_u = res_obj.browse(cr, uid, uid, context=context).address_id

@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        
+    <data>
         <!--  Add  Product -->
-        
-		<record id="view_pos_discount" model="ir.ui.view">
+
+        <record id="view_pos_discount" model="ir.ui.view">
             <field name="name">Apply Discount</field>
             <field name="model">pos.discount</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Apply Discount">
-				    <group col="2" colspan="4">
-				    	<field name="discount"/>
-				    	<field name="discount_notes"/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="apply_discount" string="Apply Discount"
-                			colspan="1" type="object" icon="gtk-ok" />
-                	</group>
+                    <group col="2" colspan="4">
+                        <field name="discount"/>
+                        <button icon='gtk-cancel' special="cancel"
+                            string="Close" />
+                        <button name="apply_discount" string="Apply Discount"
+                            colspan="1" type="object" icon="gtk-ok" />
+                    </group>
                 </form>
             </field>
         </record>
@@ -29,6 +28,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
-	</data>
-</openerp>	        
+
+    </data>
+</openerp>
