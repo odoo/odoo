@@ -47,7 +47,7 @@ def xmlrpc_return(start_response, service, method, params):
     # This mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for exception
     # handling.
     try:
-        result = openerp.netsvc.dispatch_rpc(service, method, params, None) # TODO auth
+        result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except openerp.netsvc.OpenERPDispatcherException, e:
         fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)

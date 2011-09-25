@@ -96,12 +96,9 @@ def LocalService(name):
 class ExportService(object):
     """ Proxy for exported services.
 
-    All methods here should take an AuthProxy as their first parameter. It
-    will be appended by the calling framework.
-
     Note that this class has no direct proxy, capable of calling
     eservice.method(). Rather, the proxy should call
-    dispatch(method,auth,params)
+    dispatch(method, params)
     """
 
     _services = {}
@@ -118,7 +115,7 @@ class ExportService(object):
 
     # Dispatch a RPC call w.r.t. the method name. The dispatching
     # w.r.t. the service (this class) is done by OpenERPDispatcher.
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         raise Exception("stub dispatch at %s" % self.__name)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
@@ -393,7 +390,7 @@ def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
             logger.log(channel, indent+line)
             indent=indent_after
 
-def dispatch_rpc(service_name, method, params, auth):
+def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
     This is pure Python code, the actual marshalling (from/to XML-RPC or
@@ -408,7 +405,7 @@ def dispatch_rpc(service_name, method, params, auth):
             _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
         if logger.isEnabledFor(logging.DEBUG_RPC):
             start_time = time.time()
-        result = ExportService.getService(service_name).dispatch(method, auth, params)
+        result = ExportService.getService(service_name).dispatch(method, params)
         if logger.isEnabledFor(logging.DEBUG_RPC):
             end_time = time.time()
         if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):

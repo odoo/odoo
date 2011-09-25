@@ -93,7 +93,7 @@ class db(netsvc.ExportService):
 
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
             'change_admin_password', 'migrate_databases',
@@ -368,20 +368,14 @@ class common(netsvc.ExportService):
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         logger = netsvc.Logger()
         if method == 'login':
-            # At this old dispatcher, we do NOT update the auth proxy
             res = security.login(params[0], params[1], params[2])
             msg = res and 'successful login' or 'bad login or password'
             # TODO log the client ip address..
             logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
             return res or False
-        elif method == 'logout':
-            if auth:
-                auth.logout(params[1]) # TODO I didn't see any AuthProxy implementing this method.
-            logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
-            return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
                         'login_message','get_stats', 'check_connectivity',
                         'list_http_services']:
@@ -562,7 +556,7 @@ class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
         netsvc.ExportService.__init__(self,name)
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method == 'obj_list':
@@ -595,7 +589,7 @@ class wizard(netsvc.ExportService):
         self.wiz_name = {}
         self.wiz_uid = {}
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method not in ['execute','create']:
@@ -652,7 +646,7 @@ class report_spool(netsvc.ExportService):
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method not in ['report', 'report_get', 'render_report']:
