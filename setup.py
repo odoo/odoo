@@ -20,54 +20,12 @@
 #
 ##############################################################################
 
-# setup from TinERP
-#   taken from straw http://www.nongnu.org/straw/index.html
-#   taken from gnomolicious http://www.nongnu.org/gnomolicious/
-#   adapted by Nicolas Évrard <nicoe@altern.org>
-#
-# doc/migrate is not included since about 6.1-dev
-# doc/tests is not included
-# python25-compat/*py should be in the openerp (and imported appropriately)
-
-import sys
+import os, sys
 import os
 from os.path import join, isfile
 import glob
 
 from setuptools import setup, find_packages
-
-# Backports os.walk with followlinks from python 2.6.
-# Needed to add all addons files to data_files for Windows packaging.
-def walk_followlinks(top, topdown=True, onerror=None, followlinks=False):
-    from os.path import join, isdir, islink
-    from os import listdir, error
-
-    try:
-        names = listdir(top)
-    except error, err:
-        if onerror is not None:
-            onerror(err)
-        return
-
-    dirs, nondirs = [], []
-    for name in names:
-        if isdir(join(top, name)):
-            dirs.append(name)
-        else:
-            nondirs.append(name)
-
-    if topdown:
-        yield top, dirs, nondirs
-    for name in dirs:
-        path = join(top, name)
-        if followlinks or not islink(path):
-            for x in walk_followlinks(path, topdown, onerror, followlinks):
-                yield x
-    if not topdown:
-        yield top, dirs, nondirs
-
-if sys.version_info < (2, 6):
-    os.walk = walk_followlinks
 
 py2exe_keywords = {}
 py2exe_data_files = []
