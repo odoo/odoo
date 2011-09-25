@@ -76,6 +76,7 @@ def stop_services():
     """ Stop all services. """
     openerp.netsvc.Agent.quit()
     openerp.netsvc.Server.quitAll()
+    openerp.wsgi.stop_server()
     config = openerp.tools.config
     logger = logging.getLogger('server')
     logger.info("Initiating shutdown")
