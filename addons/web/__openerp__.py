@@ -24,6 +24,7 @@
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
         "static/lib/labjs/LAB.src.js",
+        "static/lib/py.parse/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/core.js",
         "static/src/js/dates.js",

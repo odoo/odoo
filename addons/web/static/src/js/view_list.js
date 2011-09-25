@@ -49,6 +49,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.model = dataset.model;
         this.view_id = view_id;
         this.previous_colspan = null;
+        this.colors = null;
 
         this.columns = [];
 
@@ -75,6 +76,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
             self.compute_aggregates();
         });
+
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -132,6 +134,25 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_view(null, null, true);
     },
     /**
+     * Returns the color for the provided record in the current view (from the
+     * ``@colors`` attribute)
+     *
+     * @param {Record} record record for the current row
+     * @returns {String} CSS color declaration
+     */
+    color_for: function (record) {
+        if (!this.colors) { return ''; }
+        for(var i=0, len=this.colors.length; i<len; ++i) {
+            var pair = this.colors[i],
+                color = pair[0],
+                expression = pair[1];
+            if (py.evaluate(expression, record.attributes)) {
+                return 'color: ' + color + ';';
+            }
+        }
+        return '';
+    },
+    /**
      * Called after loading the list view's description, sets up such things
      * as the view table's columns, renders the table itself and hooks up the
      * various table-level and row-level DOM events (action buttons, deletion
@@ -158,6 +179,16 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+
+        if (this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).map(
+                function (color_pair) {
+                    var pair = color_pair.split(':'),
+                        color = pair[0],
+                        expr = pair[1];
+                    return [color, py.parse(py.tokenize(expr))];
+                });
+        }
 
         this.setup_columns(this.fields_view.fields, grouped);
 
