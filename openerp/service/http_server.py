@@ -246,7 +246,6 @@ class XMLRPCRequestHandler(FixSendError,HttpLogHandler,SimpleXMLRPCServer.Simple
         self.connection = dummyconn()
         self.rpc_paths = map(lambda s: '/%s' % s, netsvc.ExportService._services.keys())
 
-
 def init_xmlrpc():
     if tools.config.get('xmlrpc', False):
         # Example of http file serving:
@@ -259,50 +258,6 @@ def init_xmlrpc():
         # only register at the secure server
         reg_http_service('/xmlrpc/', XMLRPCRequestHandler, secure_only=True)
         logging.getLogger("web-services").info("Registered XML-RPC over HTTPS only")
-
-class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):
-    _logger = logging.getLogger('httpd')
-    _HTTP_OPTIONS = { 'Allow': ['OPTIONS', 'GET', 'HEAD'] }
-
-    def __init__(self,request, client_address, server):
-        HTTPHandler.__init__(self,request,client_address,server)
-        document_root = tools.config.get('static_http_document_root', False)
-        assert document_root, "Please specify static_http_document_root in configuration, or disable static-httpd!"
-        self.__basepath = document_root
-
-    def translate_path(self, path):
-        """Translate a /-separated PATH to the local filename syntax.
-
-        Components that mean special things to the local file system
-        (e.g. drive or directory names) are ignored.  (XXX They should
-        probably be diagnosed.)
-
-        """
-        # abandon query parameters
-        path = path.split('?',1)[0]
-        path = path.split('#',1)[0]
-        path = posixpath.normpath(urllib.unquote(path))
-        words = path.split('/')
-        words = filter(None, words)
-        path = self.__basepath
-        for word in words:
-            if word in (os.curdir, os.pardir): continue
-            path = os.path.join(path, word)
-        return path
-
-def init_static_http():
-    if not tools.config.get('static_http_enable', False):
-        return
-    
-    document_root = tools.config.get('static_http_document_root', False)
-    assert document_root, "Document root must be specified explicitly to enable static HTTP service (option --static-http-document-root)"
-    
-    base_path = tools.config.get('static_http_url_prefix', '/')
-    
-    reg_http_service(base_path, StaticHTTPHandler)
-    
-    logging.getLogger("web-services").info("Registered HTTP dir %s for %s" % \
-                        (document_root, base_path))
 
 import security
 
