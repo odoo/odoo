@@ -234,6 +234,13 @@ if __name__ == "__main__":
     if config["stop_after_init"]:
         sys.exit(0)
 
+    for m in openerp.conf.server_wide_modules:
+        __import__(m)
+        # Call any post_load hook.
+        info = openerp.modules.module.load_information_from_description_file(m)
+        if info['post_load']:
+            getattr(sys.modules[m], info['post_load'])()
+
     setup_pid_file()
     logger = logging.getLogger('server')
     logger.info('OpenERP server is running, waiting for connections...')

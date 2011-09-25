@@ -60,20 +60,21 @@ def close_socket(sock):
 #.apidoc title: Common Services: netsvc
 #.apidoc module-mods: member-order: bysource
 
+def abort_response(error, description, origin, details):
+    if not tools.config['debug_mode']:
+        raise Exception("%s -- %s\n\n%s"%(origin, description, details))
+    else:
+        raise
+
 class Service(object):
     """ Base class for *Local* services
 
         Functionality here is trusted, no authentication.
     """
     _services = {}
-    def __init__(self, name, audience=''):
+    def __init__(self, name):
         Service._services[name] = self
         self.__name = name
-        self._methods = {}
-
-    def joinGroup(self, name):
-        raise Exception("No group for local services")
-        #GROUPS.setdefault(name, {})[self.__name] = self
 
     @classmethod
     def exists(cls, name):
@@ -84,35 +85,13 @@ class Service(object):
         if cls.exists(name):
             cls._services.pop(name)
 
-    def exportMethod(self, method):
-        if callable(method):
-            self._methods[method.__name__] = method
+def LocalService(name):
+  # Special case for addons support, will be removed in a few days when addons
+  # are updated to directly use openerp.osv.osv.service.
+  if name == 'object_proxy':
+      return openerp.osv.osv.service
 
-    def abortResponse(self, error, description, origin, details):
-        if not tools.config['debug_mode']:
-            raise Exception("%s -- %s\n\n%s"%(origin, description, details))
-        else:
-            raise
-
-class LocalService(object):
-    """ Proxy for local services.
-
-        Any instance of this class will behave like the single instance
-        of Service(name)
-    """
-    __logger = logging.getLogger('service')
-    def __init__(self, name):
-        self.__name = name
-        try:
-            self._service = Service._services[name]
-            for method_name, method_definition in self._service._methods.items():
-                setattr(self, method_name, method_definition)
-        except KeyError, keyError:
-            self.__logger.error('This service does not exist: %s' % (str(keyError),) )
-            raise
-
-    def __call__(self, method, *params):
-        return getattr(self, method)(*params)
+  return Service._services[name]
 
 class ExportService(object):
     """ Proxy for exported services.
@@ -126,32 +105,21 @@ class ExportService(object):
     """
 
     _services = {}
-    _groups = {}
     _logger = logging.getLogger('web-services')
-
-    def __init__(self, name, audience=''):
+    
+    def __init__(self, name):
         ExportService._services[name] = self
         self.__name = name
         self._logger.debug("Registered an exported service: %s" % name)
-
-    def joinGroup(self, name):
-        ExportService._groups.setdefault(name, {})[self.__name] = self
 
     @classmethod
     def getService(cls,name):
         return cls._services[name]
 
+    # Dispatch a RPC call w.r.t. the method name. The dispatching
+    # w.r.t. the service (this class) is done by OpenERPDispatcher.
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
-
-    def new_dispatch(self,method,auth,params):
-        raise Exception("stub dispatch at %s" % self.__name)
-
-    def abortResponse(self, error, description, origin, details):
-        if not tools.config['debug_mode']:
-            raise Exception("%s -- %s\n\n%s"%(origin, description, details))
-        else:
-            raise
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -425,33 +393,36 @@ def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
             logger.log(channel, indent+line)
             indent=indent_after
 
-class OpenERPDispatcher:
-    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+def dispatch_rpc(service_name, method, params, auth):
+    """ Handle a RPC call.
+
+    This is pure Python code, the actual marshalling (from/to XML-RPC or
+    NET-RPC) is done in a upper layer.
+    """
+    def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
         log(title, msg, channel=channel, depth=depth, fn=fn)
-    def dispatch(self, service_name, method, params):
-        try:
-            auth = getattr(self, 'auth_provider', None)
-            logger = logging.getLogger('result')
-            start_time = end_time = 0
-            if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-                self.log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
-            if logger.isEnabledFor(logging.DEBUG_RPC):
-                start_time = time.time()
-            result = ExportService.getService(service_name).dispatch(method, auth, params)
-            if logger.isEnabledFor(logging.DEBUG_RPC):
-                end_time = time.time()
-            if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-                self.log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
-            self.log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
-            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
-            return result
-        except Exception, e:
-            self.log('exception', tools.exception_to_unicode(e))
-            tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = "".join(traceback.format_exception(*tb))
-            if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
-                import pdb
-                pdb.post_mortem(tb[2])
-            raise OpenERPDispatcherException(e, tb_s)
+    try:
+        logger = logging.getLogger('result')
+        start_time = end_time = 0
+        if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+            _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            start_time = time.time()
+        result = ExportService.getService(service_name).dispatch(method, auth, params)
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            end_time = time.time()
+        if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+            _log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
+        _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
+        _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
+        return result
+    except Exception, e:
+        _log('exception', tools.exception_to_unicode(e))
+        tb = getattr(e, 'traceback', sys.exc_info())
+        tb_s = "".join(traceback.format_exception(*tb))
+        if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
+            import pdb
+            pdb.post_mortem(tb[2])
+        raise OpenERPDispatcherException(e, tb_s)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -52,60 +52,16 @@ class AuthProvider:
     def __init__(self,realm):
         self.realm = realm
 
-    def setupAuth(self, multi,handler):
-        """ Attach an AuthProxy object to handler
-        """
-        pass
-
     def authenticate(self, user, passwd, client_address):
         return False
 
     def log(self, msg):
         print msg
 
-class BasicAuthProvider(AuthProvider):
-    def setupAuth(self, multi, handler):
-        if not multi.sec_realms.has_key(self.realm):
-            multi.sec_realms[self.realm] = BasicAuthProxy(self)
-
-
-class AuthProxy:
-    """ This class will hold authentication information for a handler,
-        i.e. a connection
-    """
-    def __init__(self, provider):
-        self.provider = provider
-
     def checkRequest(self,handler,path = '/'):
         """ Check if we are allowed to process that request
         """
         pass
-
-class BasicAuthProxy(AuthProxy):
-    """ Require basic authentication..
-    """
-    def __init__(self,provider):
-        AuthProxy.__init__(self,provider)
-        self.auth_creds = None
-        self.auth_tries = 0
-
-    def checkRequest(self,handler,path = '/'):
-        if self.auth_creds:
-            return True
-        auth_str = handler.headers.get('Authorization',False)
-        if auth_str and auth_str.startswith('Basic '):
-            auth_str=auth_str[len('Basic '):]
-            (user,passwd) = base64.decodestring(auth_str).split(':')
-            self.provider.log("Found user=\"%s\", passwd=\"%s\"" %(user,passwd))
-            self.auth_creds = self.provider.authenticate(user,passwd,handler.client_address)
-            if self.auth_creds:
-                return True
-        if self.auth_tries > 5:
-            self.provider.log("Failing authorization after 5 requests w/o password")
-            raise AuthRejectedExc("Authorization failed.")
-        self.auth_tries += 1
-        raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
-
 
 class HTTPHandler(SimpleHTTPRequestHandler):
     def __init__(self,request, client_address, server):
@@ -125,13 +81,17 @@ class HTTPHandler(SimpleHTTPRequestHandler):
     def setup(self):
         pass
 
+# A list of HTTPDir.
+handlers = []
+
 class HTTPDir:
     """ A dispatcher class, like a virtual folder in httpd
     """
-    def __init__(self,path,handler, auth_provider = None):
+    def __init__(self, path, handler, auth_provider=None, secure_only=False):
         self.path = path
         self.handler = handler
         self.auth_provider = auth_provider
+        self.secure_only = secure_only
 
     def matches(self, request):
         """ Test if some request matches us. If so, return
@@ -139,6 +99,48 @@ class HTTPDir:
         if request.startswith(self.path):
             return self.path
         return False
+
+    def instanciate_handler(self, request, client_address, server):
+        handler = self.handler(noconnection(request), client_address, server)
+        if self.auth_provider:
+            handler.auth_provider = self.auth_provider()
+        return handler
+
+def reg_http_service(path, handler, auth_provider=None, secure_only=False):
+    """ Register a HTTP handler at a given path.
+
+    The auth_provider will be instanciated and set on the handler instances.
+    """
+    global handlers
+    service = HTTPDir(path, handler, auth_provider, secure_only)
+    pos = len(handlers)
+    lastpos = pos
+    while pos > 0:
+        pos -= 1
+        if handlers[pos].matches(service.path):
+            lastpos = pos
+        # we won't break here, but search all way to the top, to
+        # ensure there is no lesser entry that will shadow the one
+        # we are inserting.
+    handlers.insert(lastpos, service)
+
+def list_http_services(protocol=None):
+    global handlers
+    ret = []
+    for svc in handlers:
+        if protocol is None or protocol == 'http' or svc.secure_only:
+            ret.append((svc.path, str(svc.handler)))
+    
+    return ret
+
+def find_http_service(path, secure=False):
+    global handlers
+    for vdir in handlers:
+        p = vdir.matches(path)
+        if p == False or (vdir.secure_only and not secure):
+            continue
+        return vdir
+    return None
 
 class noconnection(object):
     """ a class to use instead of the real connection
@@ -246,11 +248,10 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
 
     def __init__(self, request, client_address, server):
         self.in_handlers = {}
-        self.sec_realms = {}
         SocketServer.StreamRequestHandler.__init__(self,request,client_address,server)
         self.log_message("MultiHttpHandler init for %s" %(str(client_address)))
 
-    def _handle_one_foreign(self,fore, path, auth_provider):
+    def _handle_one_foreign(self, fore, path):
         """ This method overrides the handle_one_request for *children*
             handlers. It is required, since the first line should not be
             read again..
@@ -266,9 +267,9 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
             return
 
         self.request_version = fore.request_version
-        if auth_provider and auth_provider.realm:
+        if hasattr(fore, 'auth_provider'):
             try:
-                self.sec_realms[auth_provider.realm].checkRequest(fore,path)
+                fore.auth_provider.checkRequest(fore,path)
             except AuthRequiredExc,ae:
                 # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
                 # authorisation features of HTTP/1.1 
@@ -408,35 +409,29 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                 return
             self.do_OPTIONS()
             return
-            
-        for vdir in self.server.vdirs:
-            p = vdir.matches(self.path)
-            if p == False:
-                continue
+        vdir = find_http_service(self.path, self.server.proto == 'HTTPS')
+        if vdir:
+            p = vdir.path
             npath = self.path[len(p):]
             if not npath.startswith('/'):
                 npath = '/' + npath
 
             if not self.in_handlers.has_key(p):
-                self.in_handlers[p] = vdir.handler(noconnection(self.request),self.client_address,self.server)
-                if vdir.auth_provider:
-                    vdir.auth_provider.setupAuth(self, self.in_handlers[p])
+                self.in_handlers[p] = vdir.instanciate_handler(noconnection(self.request),self.client_address,self.server)
             hnd = self.in_handlers[p]
             hnd.rfile = self.rfile
             hnd.wfile = self.wfile
             self.rlpath = self.raw_requestline
             try:
-                self._handle_one_foreign(hnd,npath, vdir.auth_provider)
+                self._handle_one_foreign(hnd, npath)
             except IOError, e:
                 if e.errno == errno.EPIPE:
                     self.log_message("Could not complete request %s," \
                             "client closed connection", self.rlpath.rstrip())
                 else:
                     raise
-            return
-        # if no match:
-        self.send_error(404, "Path not found: %s" % self.path)
-        return
+        else: # no match:
+            self.send_error(404, "Path not found: %s" % self.path)
 
     def _get_ignore_body(self,fore):
         if not fore.headers.has_key("content-length"):

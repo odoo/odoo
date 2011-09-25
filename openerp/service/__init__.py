@@ -26,10 +26,12 @@ import time
 import http_server
 import netrpc_server
 import web_services
+import websrv_lib
 
 import openerp.netsvc
 import openerp.osv
 import openerp.tools
+import openerp.wsgi
 
 #.apidoc title: RPC Services
 
@@ -54,9 +56,9 @@ def start_services():
     web_services.start_web_services()
 
     # Initialize the HTTP stack.
-    http_server.init_servers()
-    http_server.init_xmlrpc()
-    http_server.init_static_http()
+    #http_server.init_servers()
+    #http_server.init_xmlrpc()
+    #http_server.init_static_http()
     netrpc_server.init_servers()
 
     # Start the main cron thread.
@@ -64,6 +66,11 @@ def start_services():
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
+
+
+    # Start the WSGI server.
+    openerp.wsgi.start_server()
+
 
 def stop_services():
     """ Stop all services. """

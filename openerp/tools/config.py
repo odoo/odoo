@@ -24,6 +24,7 @@ import optparse
 import os
 import sys
 import openerp
+import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
@@ -101,8 +102,10 @@ class configmanager(object):
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules")
         parser.add_option_group(group)
 
+        # XML-RPC / HTTP
         group = optparse.OptionGroup(parser, "XML-RPC Configuration")
         group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", my_default='',
                          help="Specify the TCP IP address for the XML-RPC protocol. The empty string binds to all interfaces.")
@@ -112,6 +115,7 @@ class configmanager(object):
                          help="disable the XML-RPC protocol")
         parser.add_option_group(group)
 
+        # XML-RPC / HTTPS
         title = "XML-RPC Secure Configuration"
         if not self.has_ssl:
             title += " (disabled as ssl is unavailable)"
@@ -260,9 +264,26 @@ class configmanager(object):
                 self.options[option.dest] = option.my_default
                 self.casts[option.dest] = option
 
-        self.parse_config()
+        self.parse_config(None, False)
 
-    def parse_config(self, args=None):
+    def parse_config(self, args=None, complete=True):
+        """ Parse the configuration file (if any) and the command-line
+        arguments.
+
+        This method initializes openerp.tools.config and openerp.conf (the
+        former should be removed in the furture) with library-wide
+        configuration values.
+
+        This method must be called before proper usage of this library can be
+        made.
+
+        Typical usage of this method:
+
+            openerp.tools.config.parse_config(sys.argv[1:])
+
+        :param complete: this is a hack used in __init__(), leave it to True.
+
+        """
         if args is None:
             args = []
         opt, args = self.parser.parse_args(args)
@@ -418,6 +439,17 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        openerp.conf.addons_paths = self.options['addons_path'].split(',')
+        openerp.conf.server_wide_modules = \
+            map(lambda m: m.strip(), opt.server_wide_modules.split(',')) if \
+            opt.server_wide_modules else []
+        if complete:
+            openerp.modules.module.initialize_sys_path()
+            openerp.modules.loading.open_openerp_namespace()
+            # openerp.addons.__path__.extend(openerp.conf.addons_paths) # This
+            # is not compatible with initialize_sys_path(): import crm and
+            # import openerp.addons.crm load twice the module.
 
     def _generate_pgpassfile(self):
         """
