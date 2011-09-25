@@ -150,6 +150,13 @@ class configmanager(object):
                          help="Filter listed database", metavar="REGEXP")
         parser.add_option_group(group)
 
+        # Static HTTP
+        group = optparse.OptionGroup(parser, "Static HTTP service")
+        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", my_default=False, help="enable static HTTP service for serving plain HTML files")
+        group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
+        group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
+        parser.add_option_group(group)
+
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", my_default=False,
@@ -340,6 +347,7 @@ class configmanager(object):
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
+                'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
                 'secure_cert_file', 'secure_pkey_file', 'dbfilter'
                 ]
 
