@@ -43,6 +43,7 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data = self.read(cr, uid, ids, context=context)[0]
+        data['journal'] = data['journal'][0]
 
         if amount != 0.0:
             order_obj.add_payment(cr, uid, active_id, data, context=context)
@@ -74,6 +75,10 @@ class pos_make_payment(osv.osv_memory):
             'datas': datas,
         }
 
+    def _default_journal(self, cr, uid, context=None):
+        res = pos_box_entries.get_journal(self, cr, uid, context=context)
+        return len(res)>1 and res[1] or False
+
     def _default_amount(self, cr, uid, context=None):
         order_obj = self.pool.get('pos.order')
         active_id = context and context.get('active_id', False)
@@ -91,7 +96,8 @@ class pos_make_payment(osv.osv_memory):
     _defaults = {
         'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
         'payment_name': _('Payment'),
-        'amount': _default_amount
+        'amount': _default_amount,
+        'journal': _default_journal
     }
 
 pos_make_payment()

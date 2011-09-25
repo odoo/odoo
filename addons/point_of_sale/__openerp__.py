@@ -77,8 +77,9 @@ Main features :
         'account_statement_demo.xml',
         'test/00_register_open.yml'
     ],
-    'test': ['test/point_of_sale_test.yml',
-            'test/point_of_sale_report.yml',
+    'test': [
+        'test/01_order_to_payment.yml',
+        'test/point_of_sale_report.yml'
     ],
     'installable': True,
     'certificate' : '001156338024966477869',

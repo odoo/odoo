@@ -643,7 +643,7 @@ class pos_order_line(osv.osv):
     _columns = {
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.char('Line No', size=32, required=True),
-        'notice': fields.char('Discount Notice', size=128, required=True),
+        'notice': fields.char('Discount Notice', size=128),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], required=True, change_default=True),
         'price_unit': fields.float(string='Unit Price', digits=(16, 2)),
         'qty': fields.float('Quantity', digits=(16, 2)),
@@ -658,7 +658,6 @@ class pos_order_line(osv.osv):
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'pos.order.line'),
         'qty': lambda *a: 1,
         'discount': lambda *a: 0.0,
-        'notice': lambda *a: 'No Discount',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
