@@ -836,7 +836,7 @@ class procurement_order(osv.osv):
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
-                'price_unit': price,
+                'price_unit': price or 0.0,
                 'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
