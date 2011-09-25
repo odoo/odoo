@@ -333,6 +333,7 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields):
         record_dict = {}
+        fields = fields or {}
         for field_name, expression in fields.items():
             field_value = self._eval_field(model, field_name, expression)
             record_dict[field_name] = field_value
