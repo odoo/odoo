@@ -207,14 +207,15 @@ class LocalConnector(Connector):
         # This will be changed to be xmlrpc compatible
         # OpenERPWarning code 1
         # OpenERPException code 2
-        #except openerp.netsvc.OpenERPDispatcherException, e:
-        #    fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
-        #    response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-        #except:
-        #    exc_type, exc_value, exc_tb = sys.exc_info()
-        #    fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
-        #    response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-        result = openerp.netsvc.dispatch_rpc(service_name, method, args, None)
+        try:
+            result = openerp.netsvc.dispatch_rpc(service_name, method, args, None)
+        except openerp.netsvc.OpenERPDispatcherException, e:
+            fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
+            raise fault
+        except:
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+            raise fault
         return result
 
 class Service(object):
