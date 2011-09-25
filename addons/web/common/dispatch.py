@@ -387,16 +387,14 @@ class Root(object):
         for module in os.listdir(addons_path):
             if module not in addons_module:
                 manifest_path = os.path.join(addons_path, module, '__openerp__.py')
-                path_controllers = os.path.join(addons_path, module, 'controllers')
-                if os.path.isfile(manifest_path) and os.path.isdir(path_controllers):
+                path_static = os.path.join(addons_path, module, 'static')
+                if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                     manifest = ast.literal_eval(open(manifest_path).read())
                     _logger.info("Loading %s", module)
                     m = __import__(module)
                     addons_module[module] = m
                     addons_manifest[module] = manifest
-
-                    statics['/%s/static' % module] = \
-                        os.path.join(addons_path, module, 'static')
+                    statics['/%s/static' % module] = path_static
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()
