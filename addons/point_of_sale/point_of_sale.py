@@ -94,7 +94,6 @@ class pos_order(osv.osv):
             default = {}
         d = {
             'state': 'draft',
-            'partner_id': False,
             'invoice_id': False,
             'account_move': False,
             'picking_id': False,
@@ -371,16 +370,17 @@ class pos_order(osv.osv):
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
                 inv_line_ref.create(cr, uid, inv_line, context=context)
+            inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
 
         if not inv_ids: return {}
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        res_id = res and res[1] or False,
+        res_id = res and res[1] or False
         return {
             'name': _('PoS Invoices'),
             'view_type': 'form',
             'view_mode': 'form',
-            'view_id': [res_id],
+            'view_id': res_id,
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice'}",
             'type': 'ir.actions.act_window',

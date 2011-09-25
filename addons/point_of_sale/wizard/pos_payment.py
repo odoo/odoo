@@ -34,7 +34,6 @@ class pos_make_payment(osv.osv_memory):
         if the order is not paid: continue payment,
         if the order is paid print ticket.
         """
-        print ids, context
         context = context or {}
         order_obj = self.pool.get('pos.order')
         obj_partner = self.pool.get('res.partner')
@@ -43,7 +42,8 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data = self.read(cr, uid, ids, context=context)[0]
-        data['journal'] = data['journal'][0]
+        # this is probably a problem of osv_memory as it's not compatible with normal OSV's
+        #data['journal'] = data['journal'][0]
 
         if amount != 0.0:
             order_obj.add_payment(cr, uid, active_id, data, context=context)
@@ -77,7 +77,7 @@ class pos_make_payment(osv.osv_memory):
 
     def _default_journal(self, cr, uid, context=None):
         res = pos_box_entries.get_journal(self, cr, uid, context=context)
-        return len(res)>1 and res[1] or False
+        return len(res)>1 and res[1][0] or False
 
     def _default_amount(self, cr, uid, context=None):
         order_obj = self.pool.get('pos.order')
