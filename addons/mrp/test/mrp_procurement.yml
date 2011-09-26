@@ -195,74 +195,26 @@
   I Check incoming shipments for cloth. And receive products.
 -
   !python {model: stock.picking}: |
-    from tools.translate import _
     pick_ids = self.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
-    assert pick_ids, _('No Incoming Shipments found!')
--
-  I create record for partial picking.
--
-  !record {model: stock.partial.picking, id: stock_partial_picking0}:
-    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-
--
-  I make my picking done.
--
-  !python {model: stock.partial.picking}: |
-     pick_obj = self.pool.get('stock.picking')
-     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
-     partial = self.browse(cr, uid, ref('stock_partial_picking0'), context)
-     partial_datas = {
-            'delivery_date' : partial.date
-     }
-     for pick in pick_obj.browse(cr, uid, picking_ids):
-        for m in pick.move_lines:
-           partial_datas['move%s'%(m.id)] = {
-                    'product_id' : m.product_id.id,
-                    'product_qty' : m.product_qty,
-                    'product_uom' : m.product_uom.id
-           }
-           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
-                    partial_datas['move%s'%(m.id)].update({
-                        'product_price' : m.product_price,
-                        'product_currency': m.product_currency
-                    })
-     pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
+    assert pick_ids, 'No Incoming Shipments found!'
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    for pick_id in pick_ids:
+        partial_id = stock_partial_picking.create(cr, uid, {},
+                context={'active_model': 'stock.picking',
+                         'active_ids': [pick_id]})
+        stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   I Check incoming shipments for buttons and receive products.
 -
   !python {model: stock.picking}: |
-    from tools.translate import _
     pick_ids = self.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
-    assert pick_ids, _('No Incoming Shipments found!')
--
-  I create record for partial picking.
--
-  !record {model: stock.partial.picking, id: stock_partial_picking0}:
-    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-
--
-  I make my picking done.
--
-  !python {model: stock.partial.picking}: |
-     pick_obj = self.pool.get('stock.picking')
-     picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
-     partial = self.browse(cr, uid, ref('stock_partial_picking0'), context)
-     partial_datas = {
-            'delivery_date': partial.date
-     }
-     for pick in pick_obj.browse(cr, uid, picking_ids):
-        for m in pick.move_lines:
-           partial_datas['move%s'%(m.id)] = {
-                    'product_id': m.product_id.id,
-                    'product_qty': m.product_qty,
-                    'product_uom': m.product_uom.id
-           }
-           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
-                    partial_datas['move%s'%(m.id)].update({
-                        'product_price': m.product_price,
-                        'product_currency': m.product_currency
-                    })
-     pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
+    assert pick_ids, 'No Incoming Shipments found!'
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    for pick_id in pick_ids:
+        partial_id = stock_partial_picking.create(cr, uid, {},
+                context={'active_model': 'stock.picking',
+                         'active_ids': [pick_id]})
+        stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   Run scheduler again.
 -
@@ -297,7 +249,6 @@
   I produce 2 products with 5.00 quantities each.
 -
   !python {model: mrp.product.produce}: |
-    from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
     self.do_produce(cr, uid, [ref('mrp_product_produce0')], context={'active_ids': prod_ids})
@@ -321,8 +272,7 @@
   And finally production order is done.
 -
   !python {model: mrp.product.produce}: |
-    from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
-    self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
+    self.do_produce(cr, uid, [ref('mrp_product_produce0')], context={'active_ids': prod_ids})
 

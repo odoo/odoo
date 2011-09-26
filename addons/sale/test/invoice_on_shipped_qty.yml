@@ -30,41 +30,21 @@
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so6}
 -
-  I verify that the picking has been generated for the sale order
+  I verify that the picking has been generated for the sale order and I process it
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so6"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so6"
--
-  Then I click on the "Product Sent" button of Outgoing Shipments
--
-  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
--
-  I change the quantity on the picking to 199, and confirm partially 100 PCE.
--
-  !python {model: stock.picking }: |
-    import time
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so6"))
-    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-    if picking_id:
-       pick=self.browse(cr,uid,picking_id[0])
-       self.pool.get('stock.move').write(cr, uid, [pick.move_lines[0].id], {'product_qty': 199, 'product_uos_qty': 199})
-       pick=self.browse(cr,uid,picking_id[0])
-       pick.force_assign(cr, uid)
-       partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-           'address_id': pick.address_id.id,
-           'delivery_date' : time.strftime('%Y-%m-%d'),
-       }
-       move = pick.move_lines[0]
-       partial_datas['move%s'%(move.id)]= {
-           'product_id': move.product_id.id,
-           'product_qty': '100',
-           'product_uom': move.product_uom.id,
-       }
-       self.do_partial(cr, uid, [pick.id],partial_datas)
+    picking, = so.picking_ids
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    partial_id = stock_partial_picking.create(cr, uid, {},
+            context={'active_model': 'stock.picking',
+                     'active_ids': [picking.id]})
+    # I change the qty to 100 for a partial delivery
+    partial = stock_partial_picking.browse(cr,uid,partial_id)
+    line_id = partial.move_ids[0].id
+    partial.write({'move_ids': [(1,line_id,{'quantity':100})]})
+    partial.do_partial()
 -
   Then I click on 'Create Invoices' button
 -
@@ -72,7 +52,7 @@
     import time
     sale_obj = self.pool.get('sale.order')
     sale_id = sale_obj.browse(cr, uid, ref("sale_order_so6"))
-    ids = [x.id for x in sale_id.picking_ids]
+    ids = [x.id for x in sale_id.picking_ids if x.state == 'done']
     wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
       {'active_ids': ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
@@ -98,7 +78,7 @@
     inv_brw = self.browse(cr,uid,inv_id)[0]
     for inv_lines in inv_brw.invoice_line:
         qty1=inv_lines.quantity
-    assert (qty1 == qty), "Quantities are not the same"
+    assert (qty1 == qty), "Quantities are not the same: invoiced: %s, shipped: %s" % (qty1,qty)
 -
   I open the Invoice for the SO.
 -
