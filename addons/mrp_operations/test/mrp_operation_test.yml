@@ -32,10 +32,10 @@
 -
   I am checking Internal picking.
 -
-  !python {model: stock.picking}: |
+  !python {model: mrp.production}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('type','=','internal')])
-    assert pick_ids, _('No Internal Pickings!')
+    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
+    assert pick_ids.picking_id.id, _('No Internal Pickings!')
 -
   In order to cancel the MO, first cancel its picking
 -
@@ -47,3 +47,10 @@
   Then cancel The Manufacturing order.
 -
   !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
+-
+  I check that there is one Work order generated related to the production order that is cancel or not.
+-
+  !python {model: mrp.production.workcenter.line}: |
+    from tools.translate import _
+    order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','cancel')])
+    assert order_id, _('Work order is not cancel for this production order!')

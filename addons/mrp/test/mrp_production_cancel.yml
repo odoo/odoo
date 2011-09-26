@@ -22,7 +22,7 @@
   !python {model: stock.picking}: |
     mrp_obj = self.pool.get('mrp.production')
     mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
-    self.action_cancel(cr, uid, mo.picking_id.id, context=None)
+    self.action_cancel(cr, uid, [mo.picking_id.id], context=None)
 -
   Then I Cancel the production order and related stock moves.
 -
