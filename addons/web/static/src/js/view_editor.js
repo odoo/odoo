@@ -198,7 +198,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         });
     $("img[id^='side-']").click(function() {
-        var side = $(this).closest("'tr[id^='viewedit-']'");
+        var side = $(this).closest("'tr[id^='viewedit-']'")
+        var id_tr = (side.attr('id')).split('-')[1];
         switch (this.id)
         {
         case "side-add":
@@ -213,15 +214,40 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
           break;
         case "side-down":
-            if(side.next().attr('level') == side.attr('level')){
-                $(side.next()).after(side);
+           var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src');
+            var level = side.attr('level');
+            var list_shift =[];
+            var last_tr;
+            list_shift.push(side);
+            if(img){
+                while(1){
+                    var next_tr = side.next();
+                        if(next_tr.attr('level') <= level || next_tr.length==0){
+                            last_tr = next_tr;
+                            break;
+                        }else{
+                        list_shift.push(next_tr);
+                        side = next_tr;
+                        } 
+                }
+            }else{last_tr = side.next();}
+            var last_tr_id = (last_tr.attr('id')).split('-')[1];  
+            img = last_tr.find("img[id='parentimg-"+last_tr_id+"']").attr('src');
+            if(img){
+                while(1){
+                    var nxt_tr = last_tr.next();
+                    if (nxt_tr.attr('level') <= level || nxt_tr.length==0){break;}
+                        last_tr = nxt_tr;
+                }
+                list_shift.reverse()
+                
             }
+            _.each(list_shift,function(rec){
+                    $(last_tr).after(rec); 
+              });
           break;
         }
     });
-    },
-    search_object:function(main_object){
-    
     },
     on_expand: function(self){
         var level = $(self).closest("tr[id^='viewedit-']").attr('level');
@@ -231,10 +257,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             if (nxt_tr.attr('level') > level){
                 cur_tr = nxt_tr;
                 nxt_tr.hide();
-            }else break;
+            }else return nxt_tr;
         }
     },
-    on_collapse: function(self,parent_child_id){
+    on_collapse: function(self,parent_child_id,id){
         var id = self.id.split('-')[1];
         var datas = _.detect(parent_child_id,function(res){
             return res.key == id;
