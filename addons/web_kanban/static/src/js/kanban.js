@@ -164,6 +164,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.source_index['column'] = ui.item.parent().attr('id');
             },
             stop: self.on_receive_record,
+            scroll: false
         });
         this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
