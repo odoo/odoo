@@ -1,15 +1,33 @@
 -
-  I start by creating new Repair order for "Basic Pc" product and Invoice Type None.
+  In order to test "mrp_repair" module.
+-
+  I have create stock move line record.
+-
+  !record {model: stock.move, id: stock_move_pcbasicpc0}:
+    company_id: base.main_company
+    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    date_expected: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+    location_dest_id: stock.stock_location_stock
+    location_id: stock.stock_location_stock
+    name: '[PC1] Basic PC'
+    product_id: product.product_product_pc1
+    product_qty: 1.0
+    product_uom: product.product_uom_unit
+    product_uos_qty: 1.0
+
+-
+  I start by creating new Repair order for "Basic Pc" product and Invoice Type b4repair.
 -
   !record {model: mrp.repair, id: mrp_repair_rma2}:
     address_id: base.res_partner_address_1
     guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
-    invoice_method: 'none'
+    invoice_method: 'b4repair'
     partner_invoice_id: base.res_partner_address_1
     location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_14
     move_id: 'stock_move_pcbasicpc0'
     name: RMA000055
+    invoiced: 1
     operations:
       - location_dest_id: stock.location_production
         location_id: stock.stock_location_stock
@@ -56,67 +74,34 @@
   !python {model: mrp.repair}: |
    self.action_cancel(cr, uid, [ref('mrp_repair_rma2')], context=None)
 -
-  I start by creating new Repair order for "Basic Pc" product and Invoice Type b4repair.
+  Reopen the repair order in draft state.
 -
-  !record {model: mrp.repair, id: mrp_repair_rma1}:
-    address_id: base.res_partner_address_1
-    guarantee_limit: !eval datetime.today().strftime("%Y-%m-%d")
-    invoice_method: 'b4repair'
-    partner_invoice_id: base.res_partner_address_1
-    location_dest_id: stock.stock_location_14
-    location_id: stock.stock_location_14
-    move_id: 'stock_move_pcbasicpc0'
-    name: RMA00005
-    operations:
-      - location_dest_id: stock.location_production
-        location_id: stock.stock_location_stock
-        name: '[HDD1] HDD Seagate 7200.8 80GB'
-        price_unit: 50.0
-        product_id: product.product_product_hdd1
-        product_uom: product.product_uom_unit
-        product_uom_qty: 1.0
-        state: draft
-        to_invoice: 1
-        type: add
-    fees_lines:
-      - name: 'HDD1 Seagate repair fees'
-        product_id: product.product_product_hdd1
-        product_uom_qty: 1.0
-        product_uom: product.product_uom_unit
-        price_unit: 50.0
-    partner_id: base.res_partner_9
-    product_id: product.product_product_pc1
+  !python {model: mrp.repair}: |
+    self.action_cancel_draft(cr, uid, [ref('mrp_repair_rma2')])
 -
   I confirm This Repair order For Invoice Type b4repair.
 -
-  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma1}
--
-  I select invoiced before repair option in this "RMA00005" Repair order.
-  so I create Invoice by click on "Make Invoice" wizard.
--
-  !record {model: mrp.repair.make_invoice, id: mrp_repair_make_invoice_0}:
-    group: 1
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma2}
 -
   I click on "Create Invoice" button of this wizard to make invoice.
 -
-  !python {model: mrp.repair.make_invoice}: |
-    self.make_invoices(cr, uid, [ref("mrp_repair_make_invoice_0")], {"active_ids": [ref("mrp_repair.mrp_repair_rma1")]})
+  !python {model: mrp.repair}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'mrp.repair', ref("mrp_repair.mrp_repair_rma2"), 'action_invoice_create', cr)
 -
   I check that Invoice is created for this repair order.
 -
-  !python {model: mrp.repair}: |
-     obj_lines = self.pool.get('account.invoice.line')
-     inv_obj = self.pool.get('account.invoice')
-     repair_id = self.browse(cr, uid, [ref('mrp_repair_rma1')], context=context)[0]
-     invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
-     invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-     assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
+  !python {model: account.invoice}: |
+     mrp_obj = self.pool.get('mrp.repair')
+     repair_id = mrp_obj.browse(cr, uid, [ref('mrp_repair_rma2')], context=context)[0]
+     assert repair_id.invoice_id.id, _("No invoice existing for this partner")
 -
   I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
 -
-  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma1}
+  !workflow {model: mrp.repair, action: action_repair_start, ref: mrp_repair_rma2}
 -
   Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
 -
-  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma1}
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma2}
 
