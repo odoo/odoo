@@ -34,7 +34,7 @@
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pick_ids = self.search(cr, uid, [('state','!=','done'),('type','=','internal'),('origin','like','%MO/01234567')])
+    pick_ids = self.search(cr, uid, [('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
   In order to cancel the MO, first cancel its picking
@@ -42,9 +42,7 @@
   !python {model: stock.picking}: |
     mrp_obj = self.pool.get('mrp.production')
     mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
-    picking_id = self.search(cr, uid, [('origin','like','%MO/01234567')])
-    if picking_id:
-      self.action_cancel(cr, uid, picking_id, context=None)
+    self.action_cancel(cr, uid, [mo.picking_id.id], context=None)
 -
   Then cancel The Manufacturing order.
 -
