@@ -2518,6 +2518,25 @@ class BaseModel(object):
                 self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                                     self._table, column['attname'])
 
+    # checked version: for direct m2o starting from `self`
+    def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
+        assert self.is_transient() or not dest_model.is_transient(), \
+            'Many2One relationships from non-transient Model to TransientModel are forbidden'
+        if self.is_transient() and not dest_model.is_transient():
+            # TransientModel relationships to regular Models are annoying
+            # usually because they could block deletion due to the FKs.
+            # So unless stated otherwise we default them to ondelete=cascade.
+            ondelete = ondelete or 'cascade'
+        self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
+        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                                        self._table, source_field, dest_model._table, ondelete)
+
+    # unchecked version: for custom cases, such as m2m relationships
+    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
+        self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
+        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                                        source_table, source_field, dest_model._table, ondelete)
+
     def _auto_init(self, cr, context=None):
         """
 
@@ -2716,7 +2735,8 @@ class BaseModel(object):
                                 self.__schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
-                                ref = self.pool.get(f._obj)._table
+                                dest_model = self.pool.get(f._obj)
+                                ref = dest_model._table
                                 if ref != 'ir_actions':
                                     cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
                                                 'pg_attribute as att1, pg_attribute as att2 '
@@ -2735,9 +2755,9 @@ class BaseModel(object):
                                                 "AND con.contype = 'f'", (self._table, ref, k, 'id'))
                                     res2 = cr.dictfetchall()
                                     if res2:
-                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
+                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get((f.ondelete or 'set null').upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            self._foreign_keys.append((self._table, k, ref, f.ondelete))
+                                            self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
@@ -2775,12 +2795,11 @@ class BaseModel(object):
                             if isinstance(f, fields.many2one):
                                 if not self.pool.get(f._obj):
                                     raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
-                                ref = self.pool.get(f._obj)._table
+                                dest_model = self.pool.get(f._obj)
+                                ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
-                                    self._foreign_keys.append((self._table, k, ref, f.ondelete))
-                                    self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-                                        self._table, k, ref, f.ondelete)
+                                    self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                             if f.required:
@@ -2906,16 +2925,17 @@ class BaseModel(object):
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
                 raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
-            ref = self.pool.get(f._obj)._table
+            dest_model = self.pool.get(f._obj)
+            ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, f._id2, f._id1, f._id2))
 
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
-                self._foreign_keys.append((f._rel, f._id2, ref, 'CASCADE'))
+                self._m2o_add_foreign_key_unchecked(f._rel, f._id2, dest_model, 'cascade')
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
-                self._foreign_keys.append((f._rel, f._id1, self._table, 'CASCADE'))
+                self._m2o_add_foreign_key_unchecked(f._rel, f._id1, self, 'cascade')
 
             cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
             cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
