@@ -24,6 +24,9 @@ import pooler
 import tools
 from osv import fields, osv
 from tools.translate import _
+from lxml import etree
+from osv import fields, osv
+
 
 #Application and feature chooser, this could be done by introspecting ir.modules
 
@@ -89,7 +92,190 @@ class base_setup_installer(osv.osv_memory):
             help="Installs a preselected set of OpenERP "
                  "applications selected to help you manage your auctions "
                  "as well as the business processes around them."),
-        }
+        'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
+            help="Allows invoice lines to impact multiple analytic accounts "
+                 "simultaneously."),
+        'account_payment': fields.boolean('Suppliers Payment Management',
+            help="Streamlines invoice payment and creates hooks to plug "
+                 "automated payment systems in."),
+        'account_followup': fields.boolean('Followups Management',
+            help="Helps you generate reminder letters for unpaid invoices, "
+                 "including multiple levels of reminding and customized "
+                 "per-partner policies."),
+        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
+            help="This module will support the Anglo-Saxons accounting methodology by "
+                "changing the accounting logic with stock transactions."),
+        'account_asset': fields.boolean('Assets Management',
+            help="Helps you to manage your assets and their depreciation entries."),
+        # Manufacturing Resource Planning
+        'stock_location': fields.boolean('Advanced Routes',
+            help="Manages product routes and paths within and between "
+                 "locations (e.g. warehouses)."),
+        'mrp_jit': fields.boolean('Just In Time Scheduling',
+            help="Enables Just In Time computation of procurement orders."
+                 "\n\nWhile it's more resource intensive than the default "
+                 "setup, the JIT computer avoids having to wait for the "
+                 "procurement scheduler to run or having to run the "
+                 "procurement scheduler manually."),
+        'mrp_operations': fields.boolean('Manufacturing Operations',
+            help="Enhances production orders with readiness states as well "
+                 "as the start date and end date of execution of the order."),
+        'mrp_subproduct': fields.boolean('MRP Subproducts',
+            help="Enables multiple product output from a single production "
+                 "order: without this, a production order can have only one "
+                 "output product."),
+        'mrp_repair': fields.boolean('Repairs',
+            help="Enables warranty and repair management (and their impact "
+                 "on stocks and invoicing)."),
+        # Knowledge Management
+        'document_ftp':fields.boolean('Shared Repositories (FTP)',
+            help="Provides an FTP access to your OpenERP's "
+                "Document Management System. It lets you access attachments "
+                "and virtual documents through a standard FTP client."),
+        'document_webdav':fields.boolean('Shared Repositories (WebDAV)',
+            help="Provides a WebDAV access to your OpenERP's Document "
+                 "Management System. Lets you access attachments and "
+                 "virtual documents through your standard file browser."),
+        'wiki':fields.boolean('Collaborative Content (Wiki)',
+            help="Lets you create wiki pages and page groups in order "
+                 "to keep track of business knowledge and share it with "
+                 "and  between your employees."),
+        # Content templates
+        'wiki_faq':fields.boolean('Template: Internal FAQ',
+            help="Creates a skeleton internal FAQ pre-filled with "
+                 "documentation about OpenERP's Document Management "
+                 "System."),
+        'wiki_quality_manual':fields.boolean('Template: Quality Manual',
+            help="Creates an example skeleton for a standard quality manual."),
+        # Reporting
+        'base_report_designer':fields.boolean('OpenOffice Report Designer',help="Adds wizards to Import/Export .SXW report which "
+                                "you can modify in OpenOffice.Once you have modified it you can "
+                                "upload the report using the same wizard."),
+        'base_report_creator':fields.boolean('Query Builder',help="Allows you to create any statistic "
+                                "reports  on several objects. It's a SQL query builder and browser for end users."),
+        'lunch':fields.boolean('Lunch',help='A simple module to help you to manage Lunch orders.'),
+        'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
+        'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
+        'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
+        'share':fields.boolean('Web Share',help='Allows you to give restricted access to your OpenERP documents to external users, ' \
+            'such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc.'),
+        'pad': fields.boolean('Collaborative Note Pads',
+            help="This module creates a tighter integration between a Pad "
+                 "instance of your choosing and your OpenERP Web Client by "
+                 "letting you easily link pads to OpenERP objects via "
+                 "OpenERP attachments."),
+        'email_template':fields.boolean('Automated E-Mails',
+            help="Helps you to design templates of emails and integrate them in your different processes."),
+        'marketing_campaign':fields.boolean('Marketing Campaigns',
+            help="Helps you to manage marketing campaigns and automate actions and communication steps."),
+        'crm_profiling':fields.boolean('Profiling Tools',
+            help="Helps you to perform segmentation of partners and design segmentation questionnaires"),
+        # Human Resources Management
+        'hr_holidays': fields.boolean('Leaves Management',
+            help="Tracks employee leaves, allocation requests and planning."),
+        'hr_expense': fields.boolean('Expenses',
+            help="Tracks and manages employee expenses, and can "
+                 "automatically re-invoice clients if the expenses are "
+                 "project-related."),
+        'hr_recruitment': fields.boolean('Recruitment Process',
+            help="Helps you manage and streamline your recruitment process."),
+        'hr_timesheet_sheet':fields.boolean('Timesheets',
+            help="Tracks and helps employees encode and validate timesheets "
+                 "and attendances."),
+        'hr_contract': fields.boolean("Employee's Contracts",
+            help="Extends employee profiles to help manage their contracts."),
+        'hr_evaluation': fields.boolean('Periodic Evaluations',
+            help="Lets you create and manage the periodic evaluation and "
+                 "performance review of employees."),
+        'hr_attendance': fields.boolean('Attendances',
+            help="Simplifies the management of employee's attendances."),
+        'hr_payroll': fields.boolean('Payroll',
+            help="Generic Payroll system."),
+        'hr_payroll_account': fields.boolean('Payroll Accounting',
+            help="Generic Payroll system Integrated with Accountings."),
+        # Project Management
+        'project_long_term': fields.boolean(
+        'Long Term Planning',
+            help="Enables long-term projects tracking, including "
+                 "multiple-phase projects and resource allocation handling."),
+        'hr_timesheet_sheet': fields.boolean('Timesheets',
+            help="Tracks and helps employees encode and validate timesheets "
+                 "and attendances."),
+        'project_timesheet': fields.boolean('Bill Time on Tasks',
+            help="Helps generate invoices based on time spent on tasks, if activated on the project."),
+        'account_budget': fields.boolean('Budgets',
+            help="Helps accountants manage analytic and crossover budgets."),
+        'project_issue': fields.boolean('Issues Tracker',
+            help="Automatically synchronizes project tasks and crm cases."),
+        # Methodologies
+        'project_scrum': fields.boolean('Methodology: SCRUM',
+            help="Implements and tracks the concepts and task types defined "
+                 "in the SCRUM methodology."),
+        'project_gtd': fields.boolean('Methodology: Getting Things Done',
+            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
+        'purchase_requisition':fields.boolean('Purchase Requisition',help="Manages your Purchase Requisition and allows you to easily keep track and manage all your purchase orders."),
+        'purchase_analytic_plans': fields.boolean('Purchase Analytic Plans',help="Manages analytic distribution and purchase orders."),
+        'delivery': fields.boolean('Delivery Costs', 
+            help="Allows you to compute delivery costs on your quotations."),
+        'sale_journal': fields.boolean('Invoicing journals',
+            help="Allows you to group and invoice your delivery orders according to different invoicing types: daily, weekly, etc."),
+        'sale_layout': fields.boolean('Sales Orders Print Layout',
+            help="Provides some features to improve the layout of the Sales Order reports."),
+        'sale_margin': fields.boolean('Margins in Sales Orders',
+            help="Gives the margin of profitability by calculating "
+                 "the difference between Unit Price and Cost Price."),
+        'sale_order_dates': fields.boolean('Full Dates on Sales Orders',
+            help="Adds commitment, requested and effective dates on Sales Orders."),
+        'hr_expense':fields.boolean('Resources Management: Expenses Tracking',  help="Tracks and manages employee expenses, and can "
+                 "automatically re-invoice clients if the expenses are "
+                 "project-related."),
+        'event_project':fields.boolean('Event Management: Events', help="Helps you to manage and organize your events."),
+        'project_gtd':fields.boolean('Getting Things Done',
+            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
+        'wiki': fields.boolean('Wiki', help="Lets you create wiki pages and page groups in order "
+                 "to keep track of business knowledge and share it with "
+                 "and  between your employees."),
+        'name': fields.char('Name', size=64),
+        'crm_helpdesk': fields.boolean('Helpdesk', help="Manages a Helpdesk service."),
+        'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fundraising process and tracking."),
+        'crm_claim': fields.boolean('Claims', help="Manages the suppliers and customers claims, including your corrective or preventive actions."),
+        'import_sugarcrm': fields.boolean('Import Data from SugarCRM', help="Help you to import and update data from SugarCRM to OpenERP"),
+        'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
+        'sale_crm': fields.boolean('Opportunity to Quotation', help="Create a Quotation from an Opportunity."),
+        'fetchmail': fields.boolean('Fetch Emails', help="Allows you to receive E-Mails from POP/IMAP server."),
+        'thunderbird': fields.boolean('Thunderbird Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
+        'outlook': fields.boolean('MS-Outlook Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
+        'wiki_sale_faq': fields.boolean('Sale FAQ', help="Helps you manage wiki pages for Frequently Asked Questions on Sales Application."),
+        'import_google': fields.boolean('Google Import', help="Imports contacts and events from your google account."),
+    }
+
+    _defaults = {
+        'mrp_jit': lambda self,cr,uid,*a: self.pool.get('res.users').browse(cr, uid, uid).view == 'simple',
+        'document_ftp':True,
+        'marketing_campaign': lambda *a: 1,
+    }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(base_setup_installer, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        doc = etree.XML(res['arch'])
+        for module in ['project_gtd','hr_expense']:
+            count = 0
+            for node in doc.xpath("//field[@name='%s']" % (module)):
+                count = count + 1
+                if count > 1:
+                    node.set('invisible', '1')
+        res['arch'] = etree.tostring(doc)
+        #Checking sale module is installed or not
+        cr.execute("SELECT * from ir_module_module where state='installed' and name = 'sale'")
+        count = cr.fetchall()
+        if count:
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='sale_crm']")
+            for node in nodes:
+                node.set('invisible', '0')
+                node.set('modifiers', '{}')
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def _if_knowledge(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
@@ -138,6 +324,8 @@ class base_setup_installer(osv.osv_memory):
             self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
         return
 
+
+
 #Migrate data from another application Conf wiz
 
 class migrade_application_installer_modules(osv.osv_memory):
@@ -158,11 +346,11 @@ class product_installer(osv.osv_memory):
     _name = 'product.installer'
     _inherit = 'res.config'
     _columns = {
-                'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
+        'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
 
     }
     _defaults = {
-                 'customers': 'create',
+        'customers': 'create',
     }
 
     def execute(self, cr, uid, ids, context=None):

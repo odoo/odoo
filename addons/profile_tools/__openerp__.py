@@ -37,7 +37,6 @@ modules like share, lunch, pad, idea, survey and subscription.
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-        'misc_tools_installer.xml',
     ],
     'demo_xml': [],
     'installable': True,

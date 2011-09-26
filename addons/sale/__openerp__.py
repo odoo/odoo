@@ -79,7 +79,6 @@ Dashboard for Sales Manager that includes:
         'sale_sequence.xml',
         'sale_data.xml',
         'sale_view.xml',
-        'sale_installer.xml',
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',

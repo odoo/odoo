@@ -39,7 +39,6 @@ document and Wiki based tools.
     'update_xml': [
         'security/knowledge_security.xml',
         'security/ir.model.access.csv',
-        'knowledge_installer.xml',
         'knowledge_view.xml',
     ],
     'demo_xml': ['knowledge_demo.xml'],
