@@ -33,8 +33,20 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.$element.hide();
     },
     start: function() {
+        var self = this;
         this._super();
-        return this.rpc("/web_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return $.when(
+            new openerp.web.DataSet(this, this.model).call('fields_get', []),
+            this.rpc('/web/view/load', {
+                model: this.model,
+                view_id: this.view_id,
+                view_type: 'graph'
+            })).then(function (fields_result, view_result) {
+                self.on_loaded({
+                    all_fields: fields_result[0],
+                    fields_view: view_result[0]
+                });
+        });
     },
     on_loaded: function(data) {
         this.all_fields = data.all_fields;
