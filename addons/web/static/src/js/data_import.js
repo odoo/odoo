@@ -183,7 +183,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
 
         var self = this;
         this.ready.then(function () {
-            self.$element.find('.sel_fields').autocomplete({
+            self.$element.find('.sel_fields').bind('blur', function () {
+                if (this.value && !_(self.all_fields).contains(this.value)) {
+                    this.value = '';
+                }
+            }).autocomplete({
                 minLength: 0,
                 source: self.all_fields,
                 change: self.on_check_field_values
