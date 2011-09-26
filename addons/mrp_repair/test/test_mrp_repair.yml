@@ -8,7 +8,7 @@
     company_id: base.main_company
     date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     date_expected: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_stock
     name: '[PC1] Basic PC'
     product_id: product.product_product_pc1
@@ -17,7 +17,7 @@
     product_uos_qty: 1.0
 
 - |
-  I start by creating new Repair order for "Basic Pc" product.
+  I start by creating new Repair order for "Basic PC" product.
 -
   !record {model: mrp.repair, id: mrp_repair_rma0}:
     address_id: base.res_partner_address_1
@@ -115,9 +115,5 @@
   I check that Invoice is created for this repair order.
 -
   !python {model: mrp.repair}: |
-     obj_lines = self.pool.get('account.invoice.line')
-     inv_obj = self.pool.get('account.invoice')
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
-     invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
-     invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-     assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
+     assert repair_id.invoice_id.id, _("No invoice exists for this repair order")
