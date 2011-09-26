@@ -91,26 +91,17 @@
 -
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma1}
 -
-  I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
--
-  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma1}
--
-  Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
--
-  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma1}
-
-- |
   I select invoiced before repair option in this "RMA00005" Repair order.
   so I create Invoice by click on "Make Invoice" wizard.
 -
   !record {model: mrp.repair.make_invoice, id: mrp_repair_make_invoice_0}:
     group: 1
-- |
+-
   I click on "Create Invoice" button of this wizard to make invoice.
 -
   !python {model: mrp.repair.make_invoice}: |
     self.make_invoices(cr, uid, [ref("mrp_repair_make_invoice_0")], {"active_ids": [ref("mrp_repair.mrp_repair_rma1")]})
-- |
+-
   I check that Invoice is created for this repair order.
 -
   !python {model: mrp.repair}: |
@@ -120,3 +111,12 @@
      invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
      invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
      assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
+-
+  I start the repairing  process by click on "Start Repair" Button For Invoice Type b4repair.
+-
+  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma1}
+-
+  Repairing Process for product is Done and I End Repair process by click on "End Repair" button For Invoice Type b4repair.
+-
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma1}
+
