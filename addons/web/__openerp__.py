@@ -19,6 +19,7 @@
         "static/lib/jquery.ui/js/jquery-ui-1.8.9.custom.min.js",
         "static/lib/jquery.ui/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
+        "static/lib/jquery.deferred-queue/jquery.deferred-queue.js",
         "static/lib/json/json2.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
@@ -32,6 +33,7 @@
         "static/src/js/views.js",
         "static/src/js/data.js",
         "static/src/js/data_export.js",
+        "static/src/js/data_import.js",
         "static/src/js/search.js",
         "static/src/js/view_form.js",
         "static/src/js/view_list.js",
@@ -44,6 +46,7 @@
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
+        "static/src/css/data_import.css",
     ],
     'post_load' : 'wsgi_postload',
 }
