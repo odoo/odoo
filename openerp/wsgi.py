@@ -38,6 +38,7 @@ import threading
 import time
 
 import openerp
+import openerp.modules
 import openerp.tools.config as config
 import service.websrv_lib as websrv_lib
 
@@ -49,8 +50,18 @@ def xmlrpc_return(start_response, service, method, params):
     try:
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+    except openerp.exceptions.AccessError, e:
+        fault = xmlrpclib.Fault(5, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.Warning, e:
+        fault = xmlrpclib.Fault(4, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.AccessDenied, e:
+        fault = xmlrpclib.Fault(3, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except openerp.netsvc.OpenERPDispatcherException, e:
-        fault = xmlrpclib.Fault(2, openerp.tools.exception_to_unicode(e.exception) + '\n' + e.traceback) # TODO map OpenERP-specific exception to some fault code
+        # TODO collapse this case with the next one.
+        fault = xmlrpclib.Fault(2, openerp.tools.exception_to_unicode(e.exception) + '\n' + e.traceback)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except:
         exc_type, exc_value, exc_tb = sys.exc_info()

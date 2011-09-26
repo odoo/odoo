@@ -37,6 +37,7 @@ from pprint import pformat
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
+import openerp.exceptions
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
@@ -60,11 +61,12 @@ def close_socket(sock):
 #.apidoc title: Common Services: netsvc
 #.apidoc module-mods: member-order: bysource
 
-def abort_response(error, description, origin, details):
-    if not tools.config['debug_mode']:
-        raise Exception("%s -- %s\n\n%s"%(origin, description, details))
+def abort_response(dummy_1, description, dummy_2, details):
+    # TODO Replace except_{osv,orm} with these directly.
+    if description == 'AccessError':
+        raise openerp.exceptions.AccessError(details)
     else:
-        raise
+        raise openerp.exceptions.Warning(details)
 
 class Service(object):
     """ Base class for *Local* services
@@ -413,6 +415,12 @@ def dispatch_rpc(service_name, method, params):
         _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
         _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
         return result
+    except openerp.exceptions.AccessError:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.Warning:
+        raise
     except Exception, e:
         _log('exception', tools.exception_to_unicode(e))
         tb = getattr(e, 'traceback', sys.exc_info())

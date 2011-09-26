@@ -38,6 +38,7 @@ import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
+import openerp.exceptions
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
@@ -302,7 +303,7 @@ class db(netsvc.ExportService):
 
     def exp_list(self, document=False):
         if not tools.config['list_db'] and not document:
-            raise Exception('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -356,7 +357,7 @@ class db(netsvc.ExportService):
             except except_orm, inst:
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
-                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
