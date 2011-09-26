@@ -138,8 +138,9 @@
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
-    proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','=','running')])
-    assert(proc_ids),"Procurement is not in the running state!"
+    proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','in',['running','ready'])])
+    # should be running is 'purchase' is installed, else 'ready'
+    assert(proc_ids),"Procurement is not in running/ready state!"
 -
   I verify that a purchase order has been generated
 -
