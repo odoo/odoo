@@ -37,7 +37,6 @@ class account_pl_report(osv.osv_memory):
     _defaults = {
         'display_type': False,
         'journal_ids': [],
-        'target_move': False
     }
 
     def _print_report(self, cr, uid, ids, data, context=None):
