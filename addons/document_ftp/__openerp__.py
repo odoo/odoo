@@ -51,6 +51,7 @@ FTP client.
     'active': False,
     'certificate': '00934787762705016005',
     'images': ['images/1_configure_ftp.jpeg','images/2_document_browse.jpeg','images/3_document_ftp.jpeg'],
+    'post_load': 'post_load',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
