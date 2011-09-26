@@ -53,7 +53,7 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group>
-                           <filter string="Year" icon="terp-go-year" help="Current Year"
+                        <filter string="Year" icon="terp-go-year" help="Current Year"
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         />
 
@@ -63,11 +63,13 @@
                        <filter icon="terp-go-week" string="Month-1"  help="Previous Month"
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                         />
-
-                           <separator orientation="vertical" />
+                        <separator orientation="vertical" />
                         <filter  icon="terp-camera_test"
-                            string="Current"
-                            domain="[('state','in',('draft','open'))]"/>
+                            string="New"
+                            domain="[('state','=','draft')]"/>
+                        <filter  icon="terp-check"
+                            string="To Do"
+                            domain="[('state','=','open')]"/>                            
                        <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>

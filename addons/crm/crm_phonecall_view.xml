@@ -107,7 +107,7 @@
                 <field name="description" nolabel="1" colspan="4" />
                 <separator colspan="4" />
                 <group col="8" colspan="4">
-                    <field name="state" select="1" />
+                	<field name="state" widget="statusbar" statusbar_visible="open,done" statusbar_colors='{"pending":"red"}' select="1"/>
                     <button name="case_cancel" string="Cancel"
                         states="open,pending" type="object"
                         icon="gtk-cancel" />
@@ -182,9 +182,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-check" string="Current"
-                   name="current"
-                   domain="[('state','in', ('open','pending'))]"/>
                <filter icon="terp-go-today" string="Today"
                    domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
                     ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
@@ -226,6 +223,56 @@
            </search>
         </field>
     </record>
+    <!-- Scheduled a phonecall search view-->
+    <record id="view_crm_case_scheduled_phonecalls_filter" model="ir.ui.view">
+        <field name="name">CRM - Scheduled Calls Search</field>
+        <field name="model">crm.phonecall</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Scheduled Phonecalls">
+               <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>    
+               <separator orientation="vertical"/>
+               <filter icon="terp-go-today" string="Today"
+                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
+                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
+                   name="today"
+                   help="Todays's Phonecalls"
+               />
+               <filter icon="terp-go-week"
+                   string="7 Days"
+                   help="Phonecalls during last 7 days"
+                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+               />
+
+               <separator orientation="vertical"/>
+               <field name="name"/>
+               <field name="partner_id"/>
+               <field name="user_id">
+                   <filter icon="terp-personal-"
+                       domain="[('user_id','=',False)]"
+                       help="Unassigned Phonecalls" />
+               </field>
+               <field name="section_id"
+                   widget="selection" string="Sales Team">
+                   <filter icon="terp-personal+" groups="base.group_extended"
+                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       help="My Sales Team(s)" />
+               </field>
+               <newline/>
+               <group expand="0" string="Group By...">
+                   <filter string="Partner" icon="terp-partner" domain="[]"
+                       context="{'group_by':'partner_id'}" />
+                   <filter string="Responsible" icon="terp-personal"
+                       domain="[]" context="{'group_by':'user_id'}" />
+                   <separator orientation="vertical" />
+                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
+                       domain="[]" context="{'group_by':'create_date'}" />
+                   <filter string="Date" icon="terp-go-month" domain="[]"
+                       context="{'group_by':'date'}" help="Date of Call" />
+               </group>
+           </search>
+        </field>
+    </record>   
 
     </data>
 </openerp>

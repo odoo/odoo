@@ -83,9 +83,9 @@
                             <field name="description" nolabel="1" colspan="4"/>
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
-                            <field name="state" />
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_open" string="Solve" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
@@ -124,7 +124,7 @@
                                                     icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                                <field name="body_text" colspan="4" nolabel="1"  height="250"/>
+                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
                                         <page string="Attachments">
@@ -208,10 +208,8 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft','pending'))]" help="New, pending and to do" icon="terp-check"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
+                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
+                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>

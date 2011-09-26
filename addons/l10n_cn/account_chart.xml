@@ -12,13 +12,13 @@
 		<record id="user_type_capital" model="account.account.type">
 			<field name="name">资产类</field>
 			<field name="code">1</field>
-			<field name="close_method">balance</field>
+			<field name="close_method">unreconciled</field>
             <field name="report_type">asset</field>
 		</record>
 		<record id="user_type_debt" model="account.account.type">
 			<field name="name">负债类</field>
 			<field name="code">2</field>
-			<field name="close_method">balance</field>
+			<field name="close_method">unreconciled</field>
 			<field name="report_type">liability</field>
 		</record>
 		<record id="user_type_all" model="account.account.type">
@@ -767,7 +767,7 @@
 			<field name="code">4103</field>
 			<field eval="False" name="reconcile"/>
 			<field ref="cn_root" name="parent_id"/>
-			<field name="type">payable</field>
+			<field name="type">other</field>
 			<field name="name">本年利润</field>
             <field name="user_type" ref="user_type_equity"/>
 		</record>
