@@ -2921,28 +2921,28 @@ class BaseModel(object):
 
 
     def _m2m_raise_or_create_relation(self, cr, f):
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
+        m2m_tbl, col1, col2 = f._sql_names(self)
+        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
-                raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+                raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
             dest_model = self.pool.get(f._obj)
             ref = dest_model._table
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, f._id2, f._id1, f._id2))
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
 
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(f._rel, f._id2, dest_model, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade')
             cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
             if not cr.fetchall():
-                self._m2o_add_foreign_key_unchecked(f._rel, f._id1, self, 'cascade')
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
 
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
-            self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
-                                f._rel, self._table, ref)
+            self.__schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
     def _add_sql_constraints(self, cr):
