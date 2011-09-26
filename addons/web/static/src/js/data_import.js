@@ -159,13 +159,15 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     },
     on_import_results: function(results) {
         this.$element.find('#result').empty();
-        var result_node = this.$element.find("#result");
+        var headers, result_node = this.$element.find("#result");
 
         if (results['records']) {
-            var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10);
-            var with_headers = this.$element.find('#file_has_headers').prop('checked');
+            var lines_to_skip = parseInt(this.$element.find('#csv_skip').val(), 10),
+                with_headers = this.$element.find('#file_has_headers').prop('checked');
+            headers = with_headers ? results.records[0] : null;
+
             result_node.append(QWeb.render('ImportView.result', {
-                'headers': with_headers ? results.records[0] : null,
+                'headers': headers,
                 'records': lines_to_skip ? results.records.slice(lines_to_skip)
                           : with_headers ? results.records.slice(1)
                           : results.records
@@ -183,7 +185,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
 
         var self = this;
         this.ready.then(function () {
-            self.$element.find('.sel_fields').bind('blur', function () {
+            var $fields = self.$element.find('.sel_fields').bind('blur', function () {
                 if (this.value && !_(self.all_fields).contains(this.value)) {
                     this.value = '';
                 }
@@ -193,6 +195,16 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 change: self.on_check_field_values
             }).focus(function () {
                 $(this).autocomplete('search');
+            });
+            // Column auto-detection
+            _(headers).each(function (header, index) {
+                var f =_(self.fields).detect(function (field) {
+                    // TODO: levenshtein between header and field.string
+                    return field.name === header || field.string.toLowerCase() === header;
+                });
+                if (f) {
+                    $fields.eq(index).val(f.name);
+                }
             });
             self.on_check_field_values();
         });
