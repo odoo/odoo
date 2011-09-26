@@ -474,8 +474,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     recursive_save: function() {
         var self = this;
         return $.when(this.do_save()).pipe(function(res) {
-            if (self.parent_form_view)
-                return self.parent_form_view.recursive_save();
+            if (self.dataset.parent_view)
+                return self.dataset.parent_view.recursive_save();
         });
     }
 });
@@ -2004,6 +2004,7 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         } else {
             var self = this;
             var pop = new openerp.web.form.SelectCreatePopup(this);
+            pop.on_default_get.add(self.dataset.on_default_get);
             pop.select_element(self.o2m.field.relation,{
                 initial_view: "form",
                 alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
@@ -2165,6 +2166,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.dataset = new openerp.web.ReadOnlyDataSetSearch(this, this.model,
             this.context);
         this.dataset.parent_view = this.options.parent_view;
+        this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
             this.setup_search_view();
         } else { // "form"
@@ -2287,7 +2289,8 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.on_select_elements(this.created_elements);
         }
         this.stop();
-    }
+    },
+    on_default_get: function(res) {}
 });
 
 openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
