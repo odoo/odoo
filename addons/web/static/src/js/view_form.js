@@ -345,7 +345,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     do_save: function(success, prepend_on_create) {
         var self = this;
         if (!this.ready) {
-            return false;
+            return $.Deferred().reject();
         }
         var form_dirty = false,
             form_invalid = false,
@@ -367,17 +367,17 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (form_invalid) {
             first_invalid_field.focus();
             this.on_invalid();
-            return false;
+            return $.Deferred().reject();
         } else {
             console.log("About to save", values);
             if (!this.datarecord.id) {
-                return this.dataset.create(values, function(r) {
-                    self.on_created(r, success, prepend_on_create);
-                });
+                return this.dataset.create(values).pipe(function(r) {
+                    return self.on_created(r, undefined, prepend_on_create);
+                }).then(success);
             } else {
-                return this.dataset.write(this.datarecord.id, values, {}, function(r) {
-                    self.on_saved(r, success);
-                });
+                return this.dataset.write(this.datarecord.id, values, {}).pipe(function(r) {
+                    return self.on_saved(r);
+                }).then(success);
             }
         }
     },
@@ -402,11 +402,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_saved: function(r, success) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
+            return $.Deferred().reject();
         } else {
-            if (success) {
-                success(r);
-            }
             this.reload();
+            return $.Deferred().then(success).resolve(r);
         }
     },
     /**
@@ -425,6 +424,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
+            return $.Deferred().reject();
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
@@ -439,10 +439,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             console.debug("The record has been created with id #" + this.datarecord.id);
-            if (success) {
-                success(_.extend(r, {created: true}));
-            }
             this.reload();
+            return $.Deferred().then(success).resolve(_.extend(r, {created: true}));
         }
     },
     do_search: function (domains, contexts, groupbys) {
@@ -472,6 +470,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     get_selected_ids: function() {
         var id = this.dataset.ids[this.dataset.index];
         return id ? [id] : [];
+    },
+    recursive_save: function() {
+        var self = this;
+        return $.when(this.do_save()).pipe(function(res) {
+            if (self.parent_form_view)
+                return self.parent_form_view.recursive_save();
+        });
     }
 });
 openerp.web.FormDialog = openerp.web.Dialog.extend({
@@ -830,30 +835,31 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this._super.apply(this, arguments);
         this.$element.click(this.on_click);
     },
-    on_click: function(saved) {
+    on_click: function() {
         var self = this;
-        if ((!this.node.attrs.special && this.view.dirty_for_user && saved !== true) || !this.view.datarecord.id) {
-            this.view.do_save(function() {
-                self.on_click(true);
-            });
-        } else {
-            if (this.node.attrs.confirm) {
-                var dialog = $('<div>' + this.node.attrs.confirm + '</div>').dialog({
+        var exec_action = function() {
+            if (self.node.attrs.confirm) {
+                var dialog = $('<div>' + self.node.attrs.confirm + '</div>').dialog({
                     title: 'Confirm',
                     modal: true,
                     buttons: {
                         Ok: function() {
                             self.on_confirmed();
-                            $(this).dialog("close");
+                            $(self).dialog("close");
                         },
                         Cancel: function() {
-                            $(this).dialog("close");
+                            $(self).dialog("close");
                         }
                     }
                 });
             } else {
-                this.on_confirmed();
+                self.on_confirmed();
             }
+        };
+        if ((!this.node.attrs.special && this.view.dirty_for_user) || !this.view.datarecord.id) {
+            this.view.recursive_save().then(exec_action);
+        } else {
+            exec_action();
         }
     },
     on_confirmed: function() {
@@ -1945,11 +1951,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
                 var res = $.when(view.do_save());
-                if (res === false) {
-                    // ignore
-                } else if (res.isRejected()) {
-                    throw "Save or create on one2many dataset is not supposed to fail.";
-                } else if (!res.isResolved()) {
+                if (!res.isResolved() && !res.isRejected()) {
                     throw "Asynchronous get_value() is not supported in form view.";
                 }
                 return res;
