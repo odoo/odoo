@@ -1030,17 +1030,6 @@ class orm_template(object):
         """
         Import given data in given module
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param fields: list of fields
-        :param data: data to import
-        :param mode: 'init' or 'update' for record creation
-        :param current_module: module name
-        :param noupdate: flag for record creation
-        :param context: context arguments, like lang, time zone,
-        :param filename: optional file to store partial import state for recovery
-        :rtype: tuple
-
         This method is used when importing data via client menu.
 
         Example of fields to import for a sale.order::
@@ -1053,6 +1042,22 @@ class orm_template(object):
             order_line/price_unit,
             order_line/product_uom_qty,
             order_line/product_uom/id    (=xml_id)
+
+        This method returns a 4-tuple with the following structure:
+
+        * The first item is a return code, it returns either ``-1`` in case o
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param fields: list of fields
+        :param data: data to import
+        :param mode: 'init' or 'update' for record creation
+        :param current_module: module name
+        :param noupdate: flag for record creation
+        :param context: context arguments, like lang, time zone,
+        :param filename: optional file to store partial import state for recovery
+        :returns: 4-tuple of a return code, an errored resource, an error message and ???
+        :rtype: (int, dict|0, str|0, ''|0)
         """
         if not context:
             context = {}
