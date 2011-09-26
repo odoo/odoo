@@ -20,15 +20,12 @@
 #
 ##############################################################################
 
-import os, sys
-import os
+import glob, os, re, setuptools, sys
 from os.path import join, isfile
-import glob
 
-from setuptools import setup, find_packages
+execfile(join('openerp', 'release.py'))
 
 py2exe_keywords = {}
-py2exe_data_files = []
 if os.name == 'nt':
     import py2exe
     py2exe_keywords['console'] = [
@@ -52,37 +49,30 @@ if os.name == 'nt':
             "excludes" : ["Tkconstants","Tkinter","tcl"],
         }
     }
-    # TODO is it still necessary now that we don't use the library.zip file?
-    def data_files():
-        '''For Windows, we consider all the addons as data files.
-           It seems also that package_data below isn't honored by py2exe.'''
-        files = []
-        os.chdir('openerp')
-        for (dp, dn, names) in os.walk('addons'):
-            files.append((join('openerp',dp), map(lambda x: join('openerp', dp, x), names)))
-        os.chdir('..')
-        files.append(('openerp', [join('openerp', 'import_xml.rng'),]))
 
-        # copy pytz/timzeone
-        # TODO check if we have to also copy dateutil's timezone data.
-        import pytz
-        # Make sure the layout of pytz hasn't changed
-        assert (pytz.__file__.endswith('__init__.pyc') or
-                pytz.__file__.endswith('__init__.py')), pytz.__file__
-        pytz_dir = os.path.dirname(pytz.__file__)
+# List all data files
+def data():
+    files = []
+    for root, dirnames, filenames in os.walk('openerp'):
+        for filename in filenames:
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
+                files.append(os.path.join(root, filename))
+    d = {}
+    for v in files:
+        k=os.path.dirname(v)
+        if k in d:
+            d[k].append(v)
+        else:
+            d[k]=[v]
+    r = d.items()
+    return r
 
-        saved_dir = os.getcwd()
-        os.chdir(pytz_dir)
-        for dp, dn, names in os.walk('zoneinfo'):
-            files.append((join('pytz',dp), map(lambda x: join(pytz_dir, dp, x), names)))
-        os.chdir(saved_dir)
+def gen_manifest():
+    file_list="\n".join(data())
+    open('MANIFEST','w').write(file_list)
 
-        return files
-    py2exe_data_files = data_files()
-
-execfile(join('openerp', 'release.py'))
-
-setup(name             = name,
+setuptools.setup(
+      name             = name,
       version          = version,
       description      = description,
       long_description = long_desc,
@@ -91,18 +81,10 @@ setup(name             = name,
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      data_files       = [
-        (join('man', 'man1'), ['man/openerp-server.1']),
-        (join('man', 'man5'), ['man/openerp_serverrc.5']),
-        ('doc', filter(isfile, glob.glob('doc/*'))),
-      ] + py2exe_data_files,
       scripts          = ['openerp-server'],
-      packages = find_packages(),
-      include_package_data = True,
-      package_data = {
-          '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
-      },
-      dependency_links = ['http://download.gna.org/pychart/'],
+      data_files       = data(),
+      packages         = setuptools.find_packages(),
+      #include_package_data = True,
       install_requires = [
        # We require the same version as caldav for lxml.
           'lxml==2.1.5',
@@ -114,6 +96,7 @@ setup(name             = name,
         # It is probably safe to move to PyChart 1.39 (the latest one).
         # (Let setup.py choose the latest one, and we should check we can remove pychart from
         # our tree.)
+        # http://download.gna.org/pychart/
           'pychart',
           'pydot',
           'pytz',

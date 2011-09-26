@@ -245,9 +245,7 @@ class res_company(osv.osv):
             return False
 
     def _get_logo(self, cr, uid, ids):
-        return open(os.path.join(
-            tools.config['root_path'], '..', 'pixmaps', 'your_logo.png'),
-                    'rb') .read().encode('base64')
+        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
     _header = """
 <header>
