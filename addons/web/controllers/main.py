@@ -68,10 +68,12 @@ class Xml2Json:
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-def manifest_glob(addons_path, addons, key):
+def manifest_glob(addons, key):
     files = []
     for addon in addons:
-        globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
+        manifest = openerpweb.addons_manifest.get(addon, {})
+        addons_path = manifest['addons_path']
+        globlist = manifest.get(key, [])
         for pattern in globlist:
             for path in glob.glob(os.path.join(addons_path, addon, pattern)):
                 files.append(path[len(addons_path):])
@@ -118,22 +120,22 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='web'):
-        return manifest_glob(req.config.addons_path, mods.split(','), 'css')
+        return manifest_glob(mods.split(','), 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods='web'):
-        return manifest_glob(req.config.addons_path, mods.split(','), 'js')
+        return manifest_glob(mods.split(','), 'js')
 
     @openerpweb.httprequest
     def css(self, req, mods='web'):
-        files = manifest_glob(req.config.addons_path, mods.split(','), 'css')
+        files = manifest_glob(mods.split(','), 'css')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods='web'):
-        files = manifest_glob(req.config.addons_path, mods.split(','), 'js')
+        files = manifest_glob(mods.split(','), 'js')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
@@ -143,13 +145,13 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/web/webclient/js']
         if req.debug:
-            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'js')]
+            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(['web'], 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/webclient/css']
         if req.debug:
-            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'css')]
+            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(['web'], 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
             'javascript': js,
@@ -179,7 +181,8 @@ class WebClient(openerpweb.Controller):
             transl = {"messages":[]}
             transs[addon_name] = transl
             for l in langs:
-                f_name = os.path.join(req.config.addons_path, addon_name, "po", l + ".po")
+                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
