@@ -9,13 +9,13 @@
         </td>
     </tr>
     <tr>
-        <td t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
+        <td t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value">
             <img t-att-id="columns.value" class="fold-columns-icon"  src="/web_kanban/static/src/img/minus-icon.png"/>
-            <div class="oe_fold_column" t-att-id="'column_' + columns.value">
+            <div class="oe_fold_column oe_column_heading" t-att-id="'column_' + columns.value">
                 <t t-if="columns.value and columns.header" t-esc="columns.header"/>
-                <t t-if="columns.aggregates">
-                    <br/><t t-esc="columns.aggregates"/>
-                </t>
+            </div>
+            <div t-foreach="columns.aggregates" t-as="aggregate">
+                <i><u><t t-esc="aggregate"/>:</u> <t t-esc="aggregate_value"/></i>
             </div>
         </td>
     </tr>
