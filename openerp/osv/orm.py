@@ -62,6 +62,7 @@ import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
 from query import Query
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
@@ -69,9 +70,6 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
-
-# Super-user identifier (aka Administrator aka root)
-ROOT_USER_ID = 1
 
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
@@ -2465,7 +2463,7 @@ class BaseModel(object):
         while ids_lst:
             iids = ids_lst[:40]
             ids_lst = ids_lst[40:]
-            res = f.get(cr, self, iids, k, ROOT_USER_ID, {})
+            res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
                     val = val[k]
@@ -2671,7 +2669,7 @@ class BaseModel(object):
                                 # set the field to the default value if any
                                 if k in self._defaults:
                                     if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, ROOT_USER_ID, context)
+                                        default = self._defaults[k](self, cr, SUPERUSER_ID, context)
                                     else:
                                         default = self._defaults[k]
 
@@ -2756,7 +2754,7 @@ class BaseModel(object):
                             # initialize it
                             if not create and k in self._defaults:
                                 if callable(self._defaults[k]):
-                                    default = self._defaults[k](self, cr, ROOT_USER_ID, context)
+                                    default = self._defaults[k](self, cr, SUPERUSER_ID, context)
                                 else:
                                     default = self._defaults[k]
 
@@ -3405,7 +3403,7 @@ class BaseModel(object):
            :raise except_orm: * if current ir.rules do not permit this operation.
            :return: None if the operation is allowed
         """
-        if uid == openerp.SUPERUSER:
+        if uid == SUPERUSER_ID:
             return
 
         if self.is_transient:
@@ -3484,10 +3482,10 @@ class BaseModel(object):
             # Note: following steps performed as admin to avoid access rights restrictions, and with no context
             #       to avoid possible side-effects during admin calls.
             # Step 1. Calling unlink of ir_model_data only for the affected IDS
-            reference_ids = pool_model_data.search(cr, ROOT_USER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
+            reference_ids = pool_model_data.search(cr, SUPERUSER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
             # Step 2. Marching towards the real deletion of referenced records
             if reference_ids:
-                pool_model_data.unlink(cr, ROOT_USER_ID, reference_ids)
+                pool_model_data.unlink(cr, SUPERUSER_ID, reference_ids)
 
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
@@ -4004,7 +4002,7 @@ class BaseModel(object):
         mapping = {}
         for function in to_compute:
             # use admin user for accessing objects having rules defined on store fields
-            target_ids = [id for id in function[id_mapping_fnct_](self, cr, ROOT_USER_ID, ids, context) if id]
+            target_ids = [id for id in function[id_mapping_fnct_](self, cr, SUPERUSER_ID, ids, context) if id]
 
             # the compound key must consider the priority and model name
             key = (function[priority_], function[model_name_])
@@ -4071,7 +4069,7 @@ class BaseModel(object):
             val = todo[key]
             if key:
                 # use admin user for accessing objects having rules defined on store fields
-                result = self._columns[val[0]].get(cr, self, ids, val, ROOT_USER_ID, context=context)
+                result = self._columns[val[0]].get(cr, self, ids, val, SUPERUSER_ID, context=context)
                 for id, value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -4097,7 +4095,7 @@ class BaseModel(object):
             else:
                 for f in val:
                     # use admin user for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, ROOT_USER_ID, context=context)
+                    result = self._columns[f].get(cr, self, ids, f, SUPERUSER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -4294,7 +4292,7 @@ class BaseModel(object):
         self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
 
         # For transient models, restrict acces to the current user, except for the super-user
-        if self.is_transient() and self._log_access and user != openerp.SUPERUSER:
+        if self.is_transient() and self._log_access and user != SUPERUSER_ID:
             args = expression.AND(([('create_uid', '=', user)], args or []))
 
         query = self._where_calc(cr, user, args, context=context)
@@ -4597,7 +4595,7 @@ class BaseModel(object):
             " COALESCE(write_date, create_date, now())::timestamp <"
             " (now() - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
+        self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_clean_old_rows(self, cr, count):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
@@ -4606,7 +4604,7 @@ class BaseModel(object):
             " AS t FROM " + self._table +
             " ORDER BY t LIMIT %s", (count,))
         ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, openerp.SUPERUSER, ids)
+        self.unlink(cr, SUPERUSER_ID, ids)
 
     def _transient_vacuum(self, cr, uid, force=False):
         """Clean the transient records.

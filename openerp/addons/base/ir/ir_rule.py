@@ -26,8 +26,7 @@ from functools import partial
 import tools
 from tools.safe_eval import safe_eval as eval
 from tools.misc import unquote as unquote
-
-SUPERUSER_UID = 1
+from openerp import SUPERUSER_ID
 
 class ir_rule(osv.osv):
     _name = 'ir.rule'
@@ -104,7 +103,7 @@ class ir_rule(osv.osv):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
 
-        if uid == SUPERUSER_UID:
+        if uid == SUPERUSER_ID:
             return None
         cr.execute("""SELECT r.id
                 FROM ir_rule r
@@ -117,10 +116,10 @@ class ir_rule(osv.osv):
         rule_ids = [x[0] for x in cr.fetchall()]
         if rule_ids:
             # browse user as super-admin root to avoid access errors!
-            user = self.pool.get('res.users').browse(cr, SUPERUSER_UID, uid)
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid)
             global_domains = []                 # list of domains
             group_domains = {}                  # map: group -> list of domains
-            for rule in self.browse(cr, SUPERUSER_UID, rule_ids):
+            for rule in self.browse(cr, SUPERUSER_ID, rule_ids):
                 # read 'domain' as UID to have the correct eval context for the rule.
                 rule_domain = self.read(cr, uid, rule.id, ['domain'])['domain']
                 dom = expression.normalize(rule_domain)
