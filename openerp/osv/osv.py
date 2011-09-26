@@ -30,14 +30,10 @@ from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel
+import openerp.exceptions
 
-
-class except_osv(Exception):
-    def __init__(self, name, value, exc_type='warning'):
-        self.name = name
-        self.exc_type = exc_type
-        self.value = value
-        self.args = (exc_type, name)
+# For backward compatibility
+except_osv = openerp.exceptions.Warning
 
 service = None
 
