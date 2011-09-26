@@ -19,10 +19,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
     init: function(parent, dataset, view_id) {
         this._super(parent);
-        this.view_manager = parent;
         this.dataset = dataset;
-        this.dataset_index = 0;
-        this.model = this.dataset.model;
         this.view_id = view_id;
     },
     do_show: function () {
@@ -36,9 +33,9 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         var self = this;
         this._super();
         return $.when(
-            new openerp.web.DataSet(this, this.model).call('fields_get', []),
+            this.dataset.call('fields_get', []),
             this.rpc('/web/view/load', {
-                model: this.model,
+                model: this.dataset.model,
                 view_id: this.view_id,
                 view_type: 'graph'
             })).then(function (fields_result, view_result) {
@@ -80,35 +77,17 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         if(this.operator == ''){
             this.operator_field = this.chart_info_fields[1];
         }
-        this.chart_info = this.chart_info_fields[0];
-        this.x_title = this.fields[this.chart_info_fields[0]]['string'];
+        this.x_title = this.fields[this.chart_info_fields[0]].string;
         this.y_title = this.fields[this.operator_field]['string'];
-        this.load_chart();
-    },
 
-    load_chart: function(data) {
-        var self = this;
-        var domain = false;
-        if(data){
-            this.x_title = this.all_fields[this.chart_info_fields]['string'];
-            this.y_title = this.all_fields[this.operator_field]['string'];
-            self.schedule_chart(data);
-        }else{
-            if(! _.isEmpty(this.view_manager.dataset.domain)){
-                domain = this.view_manager.dataset.domain;
-            }else if(! _.isEmpty(this.view_manager.action.domain)){
-                domain = this.view_manager.action.domain;
-            }
-            this.dataset.domain = domain;
-            this.dataset.context = this.view_manager.dataset.context;
-            this.dataset.read_slice(_(this.fields).keys(),{}, function(res) {
-                self.schedule_chart(res);
-            });
-        }
+        this.dataset.read_slice([], {}, $.proxy(this, 'schedule_chart'));
     },
-
     schedule_chart: function(results) {
-        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'element_id': this.element_id}));
+        this.$element.html(QWeb.render("GraphView", {
+            "fields_view": this.fields_view,
+            "chart": this.chart,
+            'element_id': this.element_id
+        }));
 
         _.each(results, function (result) {
             _.each(result, function (field_value, field_name) {
@@ -437,14 +416,12 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             id = id[0];
         }
 
-        var record_id = "";
-        this.dataset.model = this.model;
+        var record_id;
         if (typeof this.chart_info_fields == 'object'){
             record_id = this.chart_info_fields[0];
         }else{
             record_id = this.chart_info_fields;
         }
-        this.dataset.domain = [[record_id, '=', id],['id','in',this.dataset.ids]];
         var modes = !!modes ? modes.split(",") : ["list", "form", "graph"];
         var views = [];
         _.each(modes, function(mode) {
@@ -456,7 +433,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         });
         this.do_action({
             "res_model" : this.dataset.model,
-            "domain" : this.dataset.domain,
+            "domain" : [[record_id, '=', id], ['id','in',this.dataset.ids]],
             "views" : views,
             "type" : "ir.actions.act_window",
             "auto_search" : true,
@@ -473,17 +450,17 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             group_by_seq: groupbys
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
-            if(results.group_by  && results.group_by != ''){
-                self.chart_info_fields = results.group_by[0];
-            }else{
-                self.chart_info_fields = self.chart_info;
+            if(!_(results.group_by).isEmpty()){
+                self.x_title = results.group_by[0];
+            } else {
+                self.x_title = self.chart_info_fields[0].string;
             }
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.dataset.read_slice([],{}, $.proxy(self, 'load_chart'));
+            self.dataset.read_slice([],{
+                context: results.context,
+                domain: results.domain
+            }, $.proxy(self, 'schedule_chart'));
         });
     }
 });
-// here you may tweak globals object, if any, and play with on_* or do_* callbacks on them
 };
 // vim:et fdc=0 fdl=0:
