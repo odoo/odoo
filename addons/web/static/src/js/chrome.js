@@ -1025,7 +1025,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     do_url_set_hash: function(url) {
         if(!this.url_external_hashchange) {
-            console.log("url set #hash to",url);
             this.url_internal_hashchange = true;
             jQuery.bbq.pushState(url);
         }
@@ -1033,10 +1032,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     on_url_hashchange: function() {
         if(this.url_internal_hashchange) {
             this.url_internal_hashchange = false;
-            console.log("url jump to FLAG OFF");
         } else {
             var url = jQuery.deparam.fragment();
-            console.log("url jump to",url);
             this.url_external_hashchange = true;
             this.action_manager.on_url_hashchange(url);
             this.url_external_hashchange = false;

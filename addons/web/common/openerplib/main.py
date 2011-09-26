@@ -190,6 +190,34 @@ class NetRPCConnector(Connector):
         socket.disconnect()
         return result
 
+class LocalConnector(Connector):
+    """
+    A type of connector that uses the XMLRPC protocol.
+    """
+    PROTOCOL = 'local'
+    
+    __logger = _getChildLogger(_logger, 'connector.local')
+
+    def __init__(self):
+        pass
+
+    def send(self, service_name, method, *args):
+        import openerp
+        # TODO Exception handling
+        # This will be changed to be xmlrpc compatible
+        # OpenERPWarning code 1
+        # OpenERPException code 2
+        try:
+            result = openerp.netsvc.dispatch_rpc(service_name, method, args, None)
+        except openerp.netsvc.OpenERPDispatcherException, e:
+            fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
+            raise fault
+        except:
+            exc_type, exc_value, exc_tb = sys.exc_info()
+            fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+            raise fault
+        return result
+
 class Service(object):
     """
     A class to execute RPC calls on a specific service of the remote server.
@@ -363,7 +391,7 @@ class Model(object):
         records = self.read(record_ids, fields or [], context or {})
         return records
 
-def get_connector(hostname, protocol="xmlrpc", port="auto"):
+def get_connector(hostname=None, protocol="xmlrpc", port="auto"):
     """
     A shortcut method to easily create a connector to a remote server using XMLRPC or NetRPC.
 
@@ -377,10 +405,12 @@ def get_connector(hostname, protocol="xmlrpc", port="auto"):
         return XmlRPCConnector(hostname, port)
     elif protocol == "netrpc":
         return NetRPCConnector(hostname, port)
+    elif protocol == "local":
+        return LocalConnector()
     else:
-        raise ValueError("You must choose xmlrpc or netrpc")
+        raise ValueError("You must choose xmlrpc or netrpc or local")
 
-def get_connection(hostname, protocol="xmlrpc", port='auto', database=None,
+def get_connection(hostname=None, protocol="xmlrpc", port='auto', database=None,
                  login=None, password=None, user_id=None):
     """
     A shortcut method to easily create a connection to a remote OpenERP server.
