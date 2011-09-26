@@ -29,7 +29,7 @@ class payment_order_create(osv.osv_memory):
     Create a payment object with lines corresponding to the account move line
     to pay according to the date and the mode provided by the user.
     Hypothesis:
-    - Small number of non-reconcilied move line, payment mode and bank account type,
+    - Small number of non-reconciled move line, payment mode and bank account type,
     - Big number of partner and bank account.
 
     If a type is given, unsuitable account Entry lines are ignored.
@@ -48,12 +48,11 @@ class payment_order_create(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(payment_order_create, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context and 'line_ids' in context:
-            view_obj = etree.XML(res['arch'])
-            child = view_obj.getchildren()[0]
-            domain = '[("id", "in", '+ str(context['line_ids'])+')]'
-            field = etree.Element('field', attrib={'domain': domain, 'name':'entries', 'colspan':'4', 'height':'300', 'width':'800', 'nolabel':"1"})
-            child.addprevious(field)
-            res['arch'] = etree.tostring(view_obj)
+            doc = etree.XML(res['arch'])
+            nodes = doc.xpath("//field[@name='entries']")
+            for node in nodes:
+                node.set('domain', '[("id", "in", '+ str(context['line_ids'])+')]')
+            res['arch'] = etree.tostring(doc)
         return res
 
     def create_payment(self, cr, uid, ids, context=None):
