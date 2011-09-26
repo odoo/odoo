@@ -39,25 +39,20 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 view_id: this.view_id,
                 view_type: 'graph'
             })).then(function (fields_result, view_result) {
-                self.on_loaded({
-                    all_fields: fields_result[0],
-                    fields_view: view_result[0]
-                });
+                self.fields = fields_result[0];
+                self.fields_view = view_result[0];
+                self.on_loaded();
         });
     },
-    on_loaded: function(data) {
-        this.all_fields = data.all_fields;
-        this.fields_view = data.fields_view;
-        this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
-        this.view_id = this.fields_view.view_id;
+    on_loaded: function() {
         this.chart = this.fields_view.arch.attrs.type || 'pie';
-        this.fields = this.fields_view.fields;
+        this.orientation = this.fields_view.arch.attrs.orientation || 'vertical';
+
         this.chart_info_fields = [];
         this.operator_field = '';
         this.operator_field_one = '';
         this.operator = [];
         this.group_field = [];
-        this.orientation = this.fields_view.arch.attrs.orientation || '';
         _.each(this.fields_view.arch.children, function (field) {
             if (field.attrs.operator) {
                 this.operator.push(field.attrs.name);
@@ -95,7 +90,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     result[field_name] = field_value[field_value.length - 1];
                 }
                 if (typeof field_value == 'string') {
-                    var choices = this.all_fields[field_name]['selection'];
+                    var choices = this.fields[field_name]['selection'];
                     _.each(choices, function (choice) {
                         if (field_value == choice[0]) {
                             result[field_name] = choice;
