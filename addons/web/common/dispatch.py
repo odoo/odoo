@@ -21,8 +21,7 @@ import werkzeug.wsgi
 import ast
 import nonliterals
 import http
-# import backendlocal as backend
-import session as backend
+import session
 import openerplib
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
@@ -79,12 +78,12 @@ class WebRequest(object):
 
     .. attribute:: session_id
 
-        opaque identifier for the :class:`backend.OpenERPSession` instance of
+        opaque identifier for the :class:`session.OpenERPSession` instance of
         the current request
 
     .. attribute:: session
 
-        :class:`~backend.OpenERPSession` instance for the current request
+        :class:`~session.OpenERPSession` instance for the current request
 
     .. attribute:: context
 
@@ -100,13 +99,12 @@ class WebRequest(object):
         self.httpresponse = None
         self.httpsession = request.session
         self.config = config
+
     def init(self, params):
         self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(
-            self.session_id, backend.OpenERPSession(
-                self.config.server_host, self.config.server_port))
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.config))
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
@@ -389,15 +387,14 @@ class Root(object):
         for module in os.listdir(addons_path):
             if module not in addons_module:
                 manifest_path = os.path.join(addons_path, module, '__openerp__.py')
-                if os.path.isfile(manifest_path):
+                path_static = os.path.join(addons_path, module, 'static')
+                if os.path.isfile(manifest_path) and os.path.isdir(path_static):
                     manifest = ast.literal_eval(open(manifest_path).read())
                     _logger.info("Loading %s", module)
                     m = __import__(module)
                     addons_module[module] = m
                     addons_manifest[module] = manifest
-
-                    statics['/%s/static' % module] = \
-                        os.path.join(addons_path, module, 'static')
+                    statics['/%s/static' % module] = path_static
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()

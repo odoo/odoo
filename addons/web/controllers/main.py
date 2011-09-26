@@ -166,14 +166,14 @@ class WebClient(openerpweb.Controller):
                                                 "grouping", "decimal_point", "thousands_sep"])
         else:
             lang_obj = None
-            
+
         if lang.count("_") > 0:
             separator = "_"
         else:
             separator = "@"
         langs = lang.split(separator)
         langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-        
+
         transs = {}
         for addon_name in mods:
             transl = {"messages":[]}
@@ -240,7 +240,7 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        
+
         try:
             return req.session.proxy("db").drop(password, db)
         except xmlrpclib.Fault, e:
@@ -336,7 +336,7 @@ class Session(openerpweb.Controller):
             }
         except Exception, e:
             return {"error": e, "title": "Languages"}
-            
+
     @openerpweb.jsonrequest
     def modules(self, req):
         # TODO query server for installed web modules
@@ -715,7 +715,7 @@ class DataSet(openerpweb.Controller):
             args[domain_id] = d
         if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
-        
+
         for i in xrange(len(args)):
             if isinstance(args[i], web.common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
@@ -963,7 +963,7 @@ class SearchView(View):
             if field.get('context'):
                 field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
-    
+
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
         Model = req.session.model("ir.filters")
@@ -972,7 +972,7 @@ class SearchView(View):
             filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
             filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
         return filters
-    
+
     @openerpweb.jsonrequest
     def save_filter(self, req, model, name, context_to_save, domain):
         Model = req.session.model("ir.filters")
@@ -1382,7 +1382,7 @@ class Reports(View):
                 report_data['form'] = action['datas']['form']
             if 'ids' in action['datas']:
                 report_ids = action['datas']['ids']
-        
+
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
             action["report_name"], report_ids,
@@ -1394,6 +1394,7 @@ class Reports(View):
                 req.session._db, req.session._uid, req.session._password, report_id)
             if report_struct["state"]:
                 break
+
             time.sleep(self.POLLING_DELAY)
 
         report = base64.b64decode(report_struct['result'])
@@ -1407,3 +1408,108 @@ class Reports(View):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
+
+
+class Import(View):
+    _cp_path = "/web/import"
+
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get(False, req.session.eval_context(req.context))
+        return fields
+
+    @openerpweb.httprequest
+    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, jsonp):
+        try:
+            data = list(csv.reader(
+                csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
+        except csv.Error, e:
+            csvfile.seek(0)
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {
+                    'message': 'Error parsing CSV file: %s' % e,
+                    # decodes each byte to a unicode character, which may or
+                    # may not be printable, but decoding will succeed.
+                    # Otherwise simplejson will try to decode the `str` using
+                    # utf-8, which is very likely to blow up on characters out
+                    # of the ascii range (in range [128, 256))
+                    'preview': csvfile.read(200).decode('iso-8859-1')}}))
+
+        try:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps(
+                    {'records': data[:10]}, encoding=csvcode))
+        except UnicodeDecodeError:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({
+                    'message': u"Failed to decode CSV file using encoding %s, "
+                               u"try switching to a different encoding" % csvcode
+                }))
+
+    @openerpweb.httprequest
+    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp,
+                    meta):
+        modle_obj = req.session.model(model)
+        skip, indices, fields = operator.itemgetter('skip', 'indices', 'fields')(
+            simplejson.loads(meta))
+
+        error = None
+        if not (csvdel and len(csvdel) == 1):
+            error = u"The CSV delimiter must be a single character"
+
+        if not indices and fields:
+            error = u"You must select at least one field to import"
+
+        if error:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {'message': error}}))
+
+        # skip ignored records
+        data_record = itertools.islice(
+            csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
+            skip, None)
+
+        # if only one index, itemgetter will return an atom rather than a tuple
+        if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
+        else: mapper = operator.itemgetter(*indices)
+
+        data = None
+        error = None
+        try:
+            # decode each data row
+            data = [
+                [record.decode(csvcode) for record in row]
+                for row in itertools.imap(mapper, data_record)
+                # don't insert completely empty rows (can happen due to fields
+                # filtering in case of e.g. o2m content rows)
+                if any(row)
+            ]
+        except UnicodeDecodeError:
+            error = u"Failed to decode CSV file using encoding %s" % csvcode
+        except csv.Error, e:
+            error = u"Could not process CSV file: %s" % e
+
+        # If the file contains nothing,
+        if not data:
+            error = u"File to import is empty"
+        if error:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {'message': error}}))
+
+        try:
+            (code, record, message, _nope) = modle_obj.import_data(
+                fields, data, 'init', '', False,
+                req.session.eval_context(req.context))
+        except xmlrpclib.Fault, e:
+            error = {"message": u"%s, %s" % (e.faultCode, e.faultString)}
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
+
+        if code != -1:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'success':True}))
+
+        msg = u"Error during import: %s\n\nTrying to import record %r" % (
+            message, record)
+        return '<script>window.top.%s(%s);</script>' % (
+            jsonp, simplejson.dumps({'error': {'message':msg}}))

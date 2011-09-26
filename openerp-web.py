@@ -56,7 +56,7 @@ import web.common.dispatch
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
-    options.backend =  'rpc'
+    options.backend =  'xmlrpc'
 
     os.environ["TZ"] = "UTC"
 

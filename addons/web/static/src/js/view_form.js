@@ -1467,7 +1467,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-        
+
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
             var rdataset = new openerp.web.DataSetStatic(self, "ir.values", self.build_context());
@@ -1475,7 +1475,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
                 .then(function(result) {
                 self.related_entries = result;
-                
+
                 var $cmenu = $("#" + self.cm_id);
                 $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
                 var bindings = {};
