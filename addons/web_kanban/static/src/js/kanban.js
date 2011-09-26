@@ -447,7 +447,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             self.group_by = group_by;
         }
         self.datagroup = new openerp.web.DataGroup(self, self.model, self.domain, self.context, group_by);
-        self.datagroup.list([],
+        self.datagroup.list(_.keys(self.fields_view.fields),
             function (groups) {
                 self.groups = groups;
                 if (groups.length) {
