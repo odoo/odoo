@@ -795,20 +795,18 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
  * @extends openerp.web.search.DateField
  */
 openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
-    /**
-     * enables date picker on the HTML widgets
-     */
+    template: "SearchView.date",
     start: function () {
         this._super();
-        this.$element.addClass('field_date').datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
-    },
-    stop: function () {
-        this.$element.datepicker('destroy');
+        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget.prependTo(this.$element);
+        this.datewidget.$element.find("input").attr("size", 15);
+        this.datewidget.$element.find("input").attr("autofocus",
+            this.attrs.default_focus === '1' ? 'autofocus' : undefined);
+        this.datewidget.set_value(this.defaults[this.attrs.name] || false);
     },
     get_value: function () {
-        return this.$element.val();
+        return this.datewidget.get_value() || null;
     }
 });
 /**
@@ -1123,7 +1121,7 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.OldWidget.extend
     }
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.OldWidget.extend({
-    template: 'SearchView.extended_search.proposition.datetime',
+    template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
         {value: "=", text: "is equal to"},
@@ -1134,18 +1132,16 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.OldWidget.ex
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        return this.$element.val();
+        return this.datewidget.get_value();
     },
     start: function() {
         this._super();
-        this.$element.datetimepicker({
-            dateFormat: 'yy-mm-dd',
-            timeFormat: 'hh:mm:ss'
-        });
+        this.datewidget = new openerp.web.DateTimeWidget(this);
+        this.datewidget.prependTo(this.$element);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Date = openerp.web.OldWidget.extend({
-    template: 'SearchView.extended_search.proposition.date',
+    template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-date',
     operators: [
         {value: "=", text: "is equal to"},
@@ -1156,14 +1152,12 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.OldWidget.extend
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        return this.$element.val();
+        return this.datewidget.get_value();
     },
     start: function() {
         this._super();
-        this.$element.datepicker({
-            dateFormat: 'yy-mm-dd',
-            timeFormat: 'hh:mm:ss'
-        });
+        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget.prependTo(this.$element);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.OldWidget.extend({

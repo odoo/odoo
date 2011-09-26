@@ -1,7 +1,10 @@
 /*---------------------------------------------------------
  * OpenERP Web core
  *--------------------------------------------------------*/
-
+var console;
+if (!console) {
+    console = {log: function () {}};
+}
 if (!console.debug) {
     console.debug = console.log;
 }
@@ -483,7 +486,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
-            self.on_session_valid();
+            if (self.uid)
+                self.on_session_valid();
             return true;
         }).then(success_callback);
     },
@@ -771,7 +775,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
  *         // stuff that you want to init before the rendering
  *     },
  *     start: function() {
- *         this._super();
  *         // stuff you want to make after the rendering, `this.$element` holds a correct value
  *         this.$element.find(".my_button").click(/* an example of event binding * /);
  *
@@ -915,6 +918,8 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * @returns {jQuery.Deferred}
      */
     start: function() {
+        /* The default implementation is only useful for retro-compatibility, it is
+        not necessary to call it using _super() when using Widget for new components. */
         if (!this.$element) {
             var tmp = document.getElementById(this.element_id);
             this.$element = tmp ? $(tmp) : undefined;
@@ -922,7 +927,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
         return $.Deferred().done().promise();
     },
     /**
-     * Destroys the current widget, also destory all its children before destroying itself.
+     * Destroys the current widget, also destroy all its children before destroying itself.
      */
     stop: function() {
         _.each(_.clone(this.widget_children), function(el) {
@@ -943,7 +948,6 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * If that's not the case this method will simply return `false`.
      */
     do_action: function(action, on_finished) {
-        console.log('Widget.do_action', action, on_finished);
         if (this.widget_parent) {
             return this.widget_parent.do_action(action, on_finished);
         }
