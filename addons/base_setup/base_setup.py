@@ -20,15 +20,166 @@
 ##############################################################################
 import pytz
 
+import simplejson
+import cgi
 import pooler
 import tools
 from osv import fields, osv
 from tools.translate import _
 from lxml import etree
-from osv import fields, osv
+
+class ir_module_category(osv.osv):
+    _inherit = 'ir.module.category'
+
+    _columns = {
+        'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
+    }
+ir_module_category()
 
 
 #Application and feature chooser, this could be done by introspecting ir.modules
+class base_setup_installer2(osv.osv_memory):
+    _name = 'base.setup.installer2'
+
+    _inherit = 'res.config.installer'
+
+    _columns = {
+        'modules' : fields.text('Modules'),
+    }
+
+    def fields_get(self, cr, uid, fields=None, context=None):
+        if context is None:
+            context = {}
+        if fields is None:
+            fields = {}
+
+        fields = {} #super(base_setup_installer2, self).fields_get(cr, uid, fields, context=context)
+        category_proxy = self.pool.get('ir.module.category')
+        category_ids = category_proxy.search(cr, uid, [], context=context)
+        for category in category_proxy.browse(cr, uid, category_ids, context=context):
+            category_name = 'category_%d' % (category.id,)
+            fields[category_name] = {
+                'type' : 'boolean',
+                'string' : category.name,
+                'name' : category_name,
+            }
+
+        module_proxy = self.pool.get('ir.module.module')
+        module_ids = module_proxy.search(cr, uid, [], context=context)
+        for module in module_proxy.browse(cr, uid, module_ids, context=context):
+            module_name = 'module_%s' % (module.name,)
+            module_is_installed = module.state == 'installed'
+            fields[module_name] = {
+                'type' : 'boolean',
+                'string' : module.shortdesc,
+                'name' : module_name,
+                'help' : module.description,
+            }
+
+        return fields
+
+    def default_get(self, cr, uid, fields=None, context=None):
+        if context is None:
+            context = {}
+        if fields is None:
+            fields = {}
+
+        result = {}
+
+        if 'dont_compute_virtual_attributes' not in context:
+            module_proxy = self.pool.get('ir.module.module')
+            module_ids = module_proxy.search(cr, uid, [], context=context)
+            for module in module_proxy.browse(cr, uid, module_ids, context=context):
+                result['module_%s' % (module.name,)] = module.state == 'installed'
+                category_name = 'category_%d' % (module.category_id.id,)
+                if not result.get('category_name'):
+                    result[category_name] = module.state == 'installed'
+
+        return result
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='from', context=None, toolbar=False, submenu=False):
+        result = super(base_setup_installer2, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
+        module_category_proxy = self.pool.get('ir.module.category')
+        module_category_ids = module_category_proxy.search(cr, uid, [('name', '!=', 'Base')], context=context, order='name asc')
+        arch = ['<form string="Automatic Base Setup">']
+        arch.append('<separator string="Categories" colspan="4" />')
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            readonly = False
+            for module in module_category.module_ids:
+                if module.state == 'installed':
+                    readonly=True
+
+            if readonly:
+                arch.append("""<field name="category_%d" modifiers='%s'/>""" % (module_category.id, simplejson.dumps({'readonly' : True}),))
+            else:
+                arch.append('<field name="category_%d" />' % (module_category.id,))
+
+
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            if not module_category.module_ids:
+                continue
+
+            modifiers = {
+                'invisible' : [('category_%d' % (module_category.id), '=', False)],
+                'readonly' : module.state == 'installed',
+            }
+            modifiers = simplejson.dumps(modifiers)
+            arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
+            for module in module_category.module_ids: 
+                arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
+
+        arch.append(
+            '<separator colspan="4" />'
+            '<group colspan="4" col="2">'
+            '<button special="cancel" string="Cancel" icon="gtk-cancel" />'
+            '<button string="Install Modules" type="object" name="apply_cb" icon="gtk-apply" />'
+            '</group>'
+        )
+
+        arch.append('</form>')
+
+        result['arch'] = ''.join(arch)
+
+        from pprint import pprint as pp
+        pp(result['arch'])
+
+        return result
+
+    def write(self, cr, uid, ids, values, context=None):
+        return True
+
+    def create(self, cr, uid, values, context=None):
+        modules_to_install = [ key[len('module_'):] for key, value in values.iteritems() if value == 1 and key.startswith('module_')]
+        values = {
+            'modules' : simplejson.dumps(modules_to_install),
+        }
+        print "values: %r" % (values,)
+        context.update(dont_compute_virtual_attributes=True)
+        return super(base_setup_installer2, self).create(cr, uid, values, context=context)
+
+    def apply_cb(self, cr, uid, ids, context=None): 
+        for installer in self.browse(cr, uid, ids, context=context):
+            modules_to_install = simplejson.loads(installer.modules)
+            proxy = self.pool.get('ir.module.module')
+
+            module_ids = proxy.search(cr, uid, [('name', 'in', modules_to_install)], context=context)
+
+            need_update = False
+            for module in proxy.browse(cr, uid, module_ids, context=context):
+                module.state_update('to install', ['uninstalled'], context=context)
+                need_update = True
+                cr.commit()
+
+            if need_update:
+                self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
+
+        if 'html' in context:
+            return {'type' : 'ir.actions.reload'}
+        else:
+            return {'type' : 'ir.actions.act_window_close'}
+
+base_setup_installer2()
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
