@@ -1,32 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        
+    <data>
         <!--  Point of Sale Confirm -->
-        
-		<record id="view_pos_confirm" model="ir.ui.view">
-            <field name="name">Sale Confirm</field>
+        <record id="view_pos_confirm" model="ir.ui.view">
+            <field name="name">Post Journal Entries</field>
             <field name="model">pos.confirm</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Open Statements">
-				     	<label string="Are you sure you want to close your sales ?" colspan="2"/>
-				     	<newline/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="No" />
-                		<button name="action_confirm" string="Yes"
-                			colspan="1" type="object" icon="gtk-ok"/>
+                <form string="Post All Orders">
+                <separator string="Generate Journal Entries" colspan="4"/>
+                <label string="This wizard will generate all journal entries for orders linked to a closed cash register or statement." colspan="4" align="0.0"/>
+                <newline/>
+                <separator colspan="4"/>
+                <group colspan="4" col="4">
+                    <group colspan="2" col="2">
+                    <button icon='gtk-cancel' special="cancel"
+                        string="Cancel" />
+                    <button name="action_confirm" string="Generate Entries"
+                        colspan="1" type="object" icon="gtk-ok"/>
+                    </group>
+                </group>
                 </form>
             </field>
         </record>
 
         <record id="action_pos_confirm" model="ir.actions.act_window">
-            <field name="name">Sale Confirm</field>
+            <field name="name">Post Journal Entries</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pos.confirm</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        
-	</data>
-</openerp>	        
+
+    </data>
+</openerp>

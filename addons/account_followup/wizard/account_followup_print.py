@@ -115,12 +115,13 @@ class account_followup_print_all(osv.osv_memory):
     _name = 'account.followup.print.all'
     _description = 'Print Followup & Send Mail to Customers'
     _columns = {
-        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True, domain="[('account_id.type', '=', 'receivable'), ('account_id.reconcile', '=', True), ('reconcile_id','=', False), ('state', '!=', 'draft'), ('account_id.active', '=', True), ('debit', '>', 0)]"),
+        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
         'email_conf': fields.boolean('Send email confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
-        'summary': fields.text('Summary', required=True, readonly=True)
+        'summary': fields.text('Summary', required=True, readonly=True),
+        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing followups level.')
     }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
@@ -316,14 +317,15 @@ class account_followup_print_all(osv.osv_memory):
         to_update = res
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
-        for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids']:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    date, int(id),))
+        if not data['test_print']:
+            for id in to_update.keys():
+                if to_update[id]['partner_id'] in data['partner_ids']:
+                    cr.execute(
+                        "UPDATE account_move_line "\
+                        "SET followup_line_id=%s, followup_date=%s "\
+                        "WHERE id=%s",
+                        (to_update[id]['level'],
+                        date, int(id),))
         data.update({'date': context['date']})
         datas = {
              'ids': [],

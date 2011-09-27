@@ -2,65 +2,62 @@
 <openerp>
     <data>
         <record id="view_report_pos_order_tree" model="ir.ui.view">
-	        <field name="name">report.pos.order.tree</field>
-	        <field name="model">report.pos.order</field>
-	        <field name="type">tree</field>
-	        <field name="arch" type="xml">
-	            <tree string="Point of Sale Analysis">
-	                <field name="date" invisible="1"/>
-	                <field name="user_id" invisible="1"/>
-	                <field name="year" invisible="1"/>
-	                <field name="day" invisible="1"/>
-	                <field name="month" invisible="1"/>
-	                <field name="partner_id" invisible="1"/>
-	                <field name="product_id" invisible="1"/>
-	                <field name="shop_id" invisible="1"/>
-	                <!--<field name="journal_id" invisible="1"/>-->
-	                <field name="date_validation" invisible="1"/>
-	                <field name="date_payment" invisible="1"/>
+            <field name="name">report.pos.order.tree</field>
+            <field name="model">report.pos.order</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Point of Sale Analysis">
+                    <field name="date" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="year" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="shop_id" invisible="1"/>
+                    <!--<field name="journal_id" invisible="1"/>-->
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
-	                <field name="nbr" sum="# of Lines"/>
-	                <field name="product_qty" sum="# of Qty"/>
-	                <field name="average_price" sum="Average Price"/>
-	                <field name="total_discount" sum="Total Discount"/>
-	                <field name="price_total" sum="Total Price"/>
-	                <field name="delay_validation"/>
-	                <field name="delay_payment"/>
-	                <!--<field name="state" invisible="1"/>-->
-	            </tree>
-	        </field>
+                    <field name="nbr" sum="# of Lines"/>
+                    <field name="product_qty" sum="# of Qty"/>
+                    <field name="average_price" sum="Average Price"/>
+                    <field name="total_discount" sum="Total Discount"/>
+                    <field name="price_total" sum="Total Price"/>
+                    <field name="delay_validation"/>
+                    <!--<field name="state" invisible="1"/>-->
+                </tree>
+            </field>
         </record>
 
         <record id="view_report_pos_order_search" model="ir.ui.view">
-	        <field name="name">report.pos.order.search</field>
-	        <field name="model">report.pos.order</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Point of Sale Analysis">
-	                <group>
-	                    <filter icon="terp-go-year" string="Year"
-	                        domain="[('year','=',time.strftime('%%Y'))]"
-	                        help="POS ordered created during current year"/>
-	                    <filter icon="terp-go-month" string="Month"
-	                       domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-	                        help="POS ordered created during current month"/>
-	                    <filter icon="terp-go-month"
-	                         string="Month -1"
-	                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-	                         help="POS ordered created last month"/>
-	                    <separator orientation="vertical"/>
-	                    <filter icon="terp-go-today"
+            <field name="name">report.pos.order.search</field>
+            <field name="model">report.pos.order</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Point of Sale Analysis">
+                    <group>
+                        <filter icon="terp-go-year" string="Year"
+                            domain="[('year','=',time.strftime('%%Y'))]"
+                            help="POS ordered created during current year"/>
+                        <filter icon="terp-go-month" string="Month"
+                           domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                            help="POS ordered created during current month"/>
+                        <filter icon="terp-go-month"
+                             string="Month -1"
+                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                             help="POS ordered created last month"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-today"
                              string="Today"
                              name="today"
                              domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d'))]"
                              help="POS ordered created by today"/>
-	                    <separator orientation="vertical"/>
+                        <separator orientation="vertical"/>
                         <filter icon="terp-dolar"
                             string="Invoiced"
                             domain="[('state','=',('invoiced'))]"/>
-	                    <filter icon="terp-dolar"
-	                        string="Paid"
-	                        domain="[('state','=',('paid'))]"/>
+                        <filter icon="terp-dolar"
+                            string="Paid"
+                            domain="[('state','=',('paid'))]"/>
                     <separator orientation="vertical"/>
                     <field name="partner_id"/>
                     <field name="user_id" widget="selection">
@@ -69,36 +66,31 @@
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
                     </field>
-	                </group>
-	                <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <field name="date_validation"/>
-                        <field name="date_payment"/>
                     </group>
-	                <newline/>
-	                <group expand="1" string="Group By...">
-	                    <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-	                    <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                    <newline/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
+                        <filter string="Customer" icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day of order date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Month of order date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Year of order date"/>
-	                </group>
-	            </search>
-	        </field>
+                    </group>
+                </search>
+            </field>
         </record>
 
         <record id="action_report_pos_order_all" model="ir.actions.act_window">
-	        <field name="name">Point of Sale Analysis</field>
-	        <field name="res_model">report.pos.order</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">tree,graph</field>
-	        <field name="search_view_id" ref="view_report_pos_order_search"/>
-	        <field name="context">{'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
-	    </record>
+            <field name="name">Point of Sale Analysis</field>
+            <field name="res_model">report.pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="search_view_id" ref="view_report_pos_order_search"/>
+            <field name="context">{'search_default_today':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        </record>
 
-	    <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>
-	</data>
+        <menuitem action="action_report_pos_order_all" id="menu_report_pos_order_all" parent="menu_point_rep" sequence="3"/>
+    </data>
 </openerp>

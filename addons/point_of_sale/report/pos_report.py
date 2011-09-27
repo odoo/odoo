@@ -49,7 +49,7 @@ class report_transaction_pos(osv.osv):
                     min(absl.id) as id,
                     count(absl.id) as no_trans,
                     sum(absl.amount) as amount,
-                    sum(line.price_ded) as disc,
+                    sum((100.0-line.discount) * line.price_unit * line.qty / 100.0) as disc,
                     to_char(date_trunc('day',absl.create_date),'YYYY-MM-DD')::text as date_create,
                     po.user_id as user_id,
                     po.sale_journal as journal_id,

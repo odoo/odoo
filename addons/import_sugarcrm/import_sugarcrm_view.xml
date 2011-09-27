@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <!-- Import Sugarcrm Form View -->
+        <record model="ir.ui.view" id="view_import_sugarcrm_form">
+            <field name="name">import.sugarcrm.form</field>
+            <field name="model">import.sugarcrm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Data From SugarCRM">
+    				<group col="8" >
+	    				<group colspan="2" col="1" width="200">
+	    					<label colspan="2"  string="Import your data from SugarCRM :"/>
+	    					<label colspan="2"  string="" />
+	    					<label colspan="2"  string="Use the SugarSoap API URL (read tooltip) and a full access SugarCRM login."/>
+	    					<label colspan="2"  string="" />
+	    					<label colspan="2"  string="Choose data you want to import. Click 'Import' to get data manually or 'Schedule Reccurent Imports' to get recurrently and automatically data."/>
+	    					<label colspan="2"  string="" /> 
+	    					<label colspan="2"  string="If you make recurrent or ponctual import, data already  in OpenERP will be updated by SugarCRM data."/>
+	    					<label colspan="2"  string="" />
+	    					<label colspan="2"  string="Do not forget the email address to be notified of the success of the import."/>
+	    					<label colspan="2" />
+	    	                <label colspan="2"  string="Online documentation:"/>
+                            <label colspan="2"  string="(Comming Soon)"/>
+                            <label colspan="2"  string=""/>
+			            </group>
+	    				<separator string="" orientation="vertical" colspan="1" rowspan="24" />                
+	                    <group colspan="4"> 
+	                    	<separator string="Login Information" colspan="3"/>
+	                    	 <field name="url" colspan="4" widget="url"/>
+	                         <field name="username"/>
+	                         <newline/>
+	                         <field name="password" password="True" />
+	                         <separator string="" colspan="4"/>
+	                         <group colspan="4" col="6">
+	                            <group colspan="1" col="2">    
+	                                <separator string="Address Book" colspan="4"/>
+	                                <field name="user" />
+	                                <field name= "account" />
+	                                <field name= "contact" />
+	                            </group>                         
+	                            <group colspan="1" col="1">    
+	                                <separator string="CRM" colspan="4"/>
+	                             	<field name="opportunity" />
+	                             	<field name= "call" />
+	                             	<field name= "meeting" />
+	                             	<field name= "claim" />
+	                             	
+	                             </group>
+	                         
+	                             <group colspan="2" col="2"> 
+	                                <separator string="Project" colspan="4"/>       
+		                             <field name= "project" />
+		                             <field name= "project_task" />
+		                             <field name= "bug"/>
+	                            </group>
+	                            <group colspan="1" col="2">
+	                            	<separator string="HR" colspan="4"/>
+	    	                         <field name="employee" />  
+	                                <separator string="Document" colspan="4"/>
+	                                <field name="email_history"/>
+		                             <field name= "document" />
+	                            </group>	                            
+	                          </group>  
+		                         <group colspan="4">
+		                         	<separator string="Email Notification When Import is finished" colspan="4"/>
+		                     		<field name="email_from" widget="email" string="Email Address to Notify"/>
+		                     	</group>
+		                     	<group colspan="4" groups="base.group_no_one">   
+		                   			<separator string="Multi Instance Management" colspan="4"/>
+		                       		<field name="instance_name"/>
+		                       </group>
+	                        <separator string="" colspan="4" />
+	                    <group colspan="4" col="6">
+	                        <label string="" colspan="2"/>
+	                        <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
+	                         <button name="import_from_scheduler_all" groups="base.group_extended" string="_Schedule Recurrent Imports"
+	                                   type="object" icon="gtk-execute" />
+	                        <button name="import_all" string="_Import"
+	                                type="object" icon="terp-camera_test"/>
+	                   </group>		                       
+	                    </group>
+	                </group>   
+                </form>
+            </field>
+        </record>
+
+        <!-- Import Sugarcrm Action -->
+
+    <record model="ir.actions.act_window" id="action_import_sugarcrm">
+        <field name="name">Import SugarCRM</field>
+        <field name="res_model">import.sugarcrm</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_import_sugarcrm_form"/>
+        <field name="target">new</field>
+    </record>
+
+    
+    <menuitem name="Import SugarCRM" id="menu_sugarcrm_import" parent="import_base.menu_import_crm" action="action_import_sugarcrm" icon="STOCK_EXECUTE"/>
+
+    </data>
+</openerp>
+
