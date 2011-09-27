@@ -36,6 +36,7 @@ import signal
 import sys
 import threading
 import time
+import traceback
 
 import openerp
 import openerp.modules
@@ -46,7 +47,8 @@ import service.websrv_lib as websrv_lib
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
 # create directly ``xmlrpclib.Fault`` objects).
-XML_RPC_FAULT_CODE_APPLICATION_ERROR = 2
+XML_RPC_FAULT_CODE_APPLICATION_ERROR = 1
+XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR = 2
 XML_RPC_FAULT_CODE_ACCESS_DENIED = 3
 XML_RPC_FAULT_CODE_WARNING = 4
 XML_RPC_FAULT_CODE_ACCESS_ERROR = 5
@@ -77,13 +79,19 @@ def xmlrpc_return(start_response, service, method, params):
     except openerp.exceptions.AccessDenied, e:
         fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_DENIED, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except openerp.netsvc.OpenERPDispatcherException, e:
-        # TODO collapse this case with the next one.
-        fault = xmlrpclib.Fault(2, openerp.tools.exception_to_unicode(e.exception) + '\n' + e.traceback)
+    except openerp.exceptions.DeferredException, e:
+        info = e.traceback
+        # Which one is the best ?
+        formatted_info = "".join(traceback.format_exception(*info))
+        #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR, formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except:
-        exc_type, exc_value, exc_tb = sys.exc_info()
-        fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+    except Exception, e:
+        info = sys.exc_info()
+        # Which one is the best ?
+        formatted_info = "".join(traceback.format_exception(*info))
+        #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
     return [response]

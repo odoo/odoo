@@ -19,6 +19,14 @@
 #
 ##############################################################################
 
+""" OpenERP core exceptions.
+
+This module defines a few exception types. Those types are understood by the
+RPC layer. Any other exception type bubbling until the RPC layer will be
+treated as a 'Server error'.
+
+"""
+
 class Warning(Exception):
     pass
 
@@ -32,5 +40,19 @@ class AccessDenied(Exception):
 class AccessError(Exception):
     """ Access rights error. """
 
+class DeferredException(Exception):
+    """ Exception object holding a traceback for asynchronous reporting.
+
+    Some RPC calls (database creation and report generation) happen with
+    an initial request followed by multiple, polling requests. This class
+    is used to store the possible exception occuring in the thread serving
+    the first request, and is then sent to a polling request.
+
+    ('Traceback' is misleading, this is really a exc_info() triple.)
+    """
+    def __init__(self, msg, tb):
+        self.message = msg
+        self.traceback = tb
+        self.args = (msg, tb)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

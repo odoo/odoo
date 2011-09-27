@@ -162,7 +162,7 @@ class db(netsvc.ExportService):
                 self.actions.pop(id)
                 return (1.0, users)
             else:
-                e = self.actions[id]['exception']
+                e = self.actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
                 self.actions.pop(id)
                 raise Exception, e
 
@@ -634,12 +634,6 @@ class wizard(netsvc.ExportService):
 #     False -> True
 #
 
-class ExceptionWithTraceback(Exception):
-    def __init__(self, msg, tb):
-        self.message = msg
-        self.traceback = tb
-        self.args = (msg, tb)
-
 class report_spool(netsvc.ExportService):
     def __init__(self, name='report'):
         netsvc.ExportService.__init__(self, name)
@@ -678,7 +672,7 @@ class report_spool(netsvc.ExportService):
             (result, format) = obj.create(cr, uid, ids, datas, context)
             if not result:
                 tb = sys.exc_info()
-                self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
             self._reports[id]['result'] = result
             self._reports[id]['format'] = format
             self._reports[id]['state'] = True
@@ -690,9 +684,9 @@ class report_spool(netsvc.ExportService):
             logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                     'Exception: %s\n%s' % (str(exception), tb_s))
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
-                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
             self._reports[id]['state'] = True
         cr.commit()
         cr.close()
@@ -721,7 +715,7 @@ class report_spool(netsvc.ExportService):
                 (result, format) = obj.create(cr, uid, ids, datas, context)
                 if not result:
                     tb = sys.exc_info()
-                    self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
@@ -733,9 +727,9 @@ class report_spool(netsvc.ExportService):
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()
             cr.close()

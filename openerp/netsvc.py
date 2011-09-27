@@ -370,11 +370,6 @@ class Server:
     def _close_socket(self):
         close_socket(self.socket)
 
-class OpenERPDispatcherException(Exception):
-    def __init__(self, exception, traceback):
-        self.exception = exception
-        self.traceback = traceback
-
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
@@ -421,13 +416,18 @@ def dispatch_rpc(service_name, method, params):
         raise
     except openerp.exceptions.Warning:
         raise
+    except openerp.exceptions.DeferredException, e:
+        _log('exception', tools.exception_to_unicode(e))
+        post_mortem(e.traceback)
+        raise
     except Exception, e:
         _log('exception', tools.exception_to_unicode(e))
-        tb = getattr(e, 'traceback', sys.exc_info())
-        tb_s = "".join(traceback.format_exception(*tb))
-        if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
-            import pdb
-            pdb.post_mortem(tb[2])
-        raise OpenERPDispatcherException(e, tb_s)
+        post_mortem(sys.exc_info())
+        raise
+
+def post_mortem(info):
+    if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
+        import pdb
+        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
