@@ -26,20 +26,12 @@ from tools.translate import _
 class survey_print_statistics(osv.osv_memory):
     _name = 'survey.print.statistics'
     _columns = {
-        'survey_ids': fields.many2many('survey','survey_print_statistics_survey_rel','survey_id',\
-                                'print_id', "Survey", required="1"),
+        'survey_ids': fields.many2many('survey', string="Survey", required="1"),
     }
 
     def action_next(self, cr, uid, ids, context=None):
         """
         Print Survey Statistics in pdf format.
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Survey statistics IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value for created survey statistics report
         """
         if context is None:
             context = {}
