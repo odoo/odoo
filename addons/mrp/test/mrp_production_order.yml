@@ -36,10 +36,14 @@
   Changes the Quantity of Product.
 -
   !python {model: change.production.qty}: |
-    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_qty")], "tz": False, "active_id":ref('mrp_production_qty')}
+    context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
     self.default_get(cr, uid, ["product_qty"], context)
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
 -
+  I check now quantity of the production order is 8 or not.
+-
+  !assert {model: mrp.production, id: mrp_production_mo1}:
+    - product_qty == 8
 -
   I am checking Procurement orders for components of PC1.
 -
