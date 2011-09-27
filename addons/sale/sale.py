@@ -1280,7 +1280,7 @@ class sale_config_picking_policy(osv.osv_memory):
             need_install = False
             module_ids = []
             for module in module_name:
-                data_id = module_obj.name_search(cr,uid,module)
+                data_id = module_obj.name_search(cr, uid , module, [], '=')
                 module_ids.append(data_id[0][0])
 
             for module in module_obj.browse(cr, uid, module_ids):
