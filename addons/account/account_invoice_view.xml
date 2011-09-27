@@ -51,26 +51,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Line">
-                    <notebook>
-                        <page string="Line">
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
-                            <field name="uos_id"  on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
-                            <field name="quantity"/>
-                            <field name="price_unit"/>
-                            <field name="discount" groups="base.group_extended"/>
-                            <field colspan="4" name="name"/>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                            <newline/>
-                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            <separator colspan="4" string="Taxes"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"
-                            nolabel="1"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                    </notebook>
+                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
+                    <field colspan="2" name="name"/>
+                    <label string="Quantity :" align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="quantity" nolabel="1"/>
+                        <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)" nolabel="1"/>
+                    </group>
+                    <field name="price_unit"/>
+                    <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
+                    <field name="discount" groups="base.group_extended"/>
+                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <separator string="Notes" colspan="4"/>
+                    <field colspan="4" name="note" nolabel="1"/>
+                    <separator colspan="4" string="Taxes"/>
+                    <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -119,7 +115,7 @@
             <field name="model">account.invoice</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                     <field name="date_invoice"/>
                     <field name="number"/>
                     <field name="partner_id" groups="base.group_user"/>
@@ -209,7 +205,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -297,13 +293,13 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft,proforma2" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -357,7 +353,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                   <group col="10" colspan="4">
+                   <group>
                         <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                         <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
                         <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
@@ -366,16 +362,16 @@
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id" select="1" widget="selection" string="Salesman">
-                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" separator="1"/>
+                        <field name="user_id" widget="selection" string="Salesman">
+                        <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" />
                         </field>
                         <field name="origin"/>
                         <field name="amount_total"/>
                     </group>
                     <newline/>
-                    <group col="10" colspan="4">
-                        <field name="journal_id" widget="selection" select='1'/>
-                        <field name="period_id" select='1' string="Period"/>
+                    <group>
+                        <field name="journal_id" widget="selection"/>
+                        <field name="period_id" string="Period"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

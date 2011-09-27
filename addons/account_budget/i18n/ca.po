@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:36+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:39+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -56,7 +56,7 @@ msgstr "Usuari validat"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Imprimeix un resum"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -97,7 +97,7 @@ msgstr "Moneda:"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "Informe creuat pressupost comptable"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -131,11 +131,20 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"Un pressupost és una previsió dels ingressos i despeses esperats per la "
+"vostra companyia en un període futur. Amb un pressupost, una companyia és "
+"capaç d'observar minuciosament quants diners està ingressant en un període "
+"determinat, i pensar en la millor manera de dividir-lo entre diverses "
+"categories. En fer el seguiment dels moviments dels diners, tindreu menys "
+"tendència a una sobre-despesa, i us aproximareu més a les vostres metes "
+"financeres. Feu una previsió d'un pressupost detallant l'ingrés esperat per "
+"compte analític i monitoritzeu l'avaluació basant-vos en els valors actuals "
+"durant aquest període."
 
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
-msgstr ""
+msgstr "Aquest assistent s'utilitza per imprimir el resum dels pressupostos"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -152,7 +161,7 @@ msgstr "Descripció"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Divises"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -164,17 +173,17 @@ msgstr "Total :"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Companyia"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "Per aprovar"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Canvia a esborrany"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -199,7 +208,7 @@ msgstr "Finalitzat"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Import pràctic"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -219,13 +228,10 @@ msgstr "Data final"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Informe pressupost comptable per a la comptabilitat analítica"
 
 #. module: account_budget
 #: view:account.analytic.account:0
-#: view:account.budget.post:0
-#: view:crossovered.budget:0
-#: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoritical Amount"
 msgstr "Import teòric"
 
@@ -238,7 +244,7 @@ msgstr "Nom"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Línia de pressupost"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -272,7 +278,7 @@ msgstr "Codi"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Aquest assistent és utilitzat per imprimir el pressupost"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -292,6 +298,8 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"Error! La moneda ha de ser la mateixa que la moneda de la companyia "
+"seleccionada"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -301,7 +309,7 @@ msgstr "Cancel·lat"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprova"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -327,13 +335,13 @@ msgstr "Inici del període"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Informe creuat resumit del pressupost comptable"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "Import teòric"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -379,6 +387,35 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"Aquest mòdul permet als comptables gestionar pressupostos analítics (costos) "
+"i creuats.\n"
+"\n"
+"Una vegada que s'han definit els pressupostos principals i els pressupostos "
+"(en Comptabilitat/Pressupostats/),\n"
+"els gestors de projectes poden establir l'import previst en cada compte "
+"analític.\n"
+"\n"
+"El comptable té la possibilitat de veure el total de l'import previst per a "
+"cada\n"
+"pressupost i pressupost principal a fi de garantir que el total previst no "
+"és\n"
+"major/menor que el que havia previst per a aquest pressupost / pressupost "
+"principal.\n"
+"Cada llista de dades també pot canviar-se a una vista gràfica de la "
+"mateixa.\n"
+"\n"
+"Estan disponibles tres informes:\n"
+"1. El primer està disponible des d'una llista de pressupostos. Proporciona "
+"la difusió, per a aquests pressupostos, dels comptes analítics per "
+"pressupostos principals.\n"
+"\n"
+"2. El segon és un resum de l'anterior. Només indica la difusió, per als "
+"pressupostos seleccionats, dels comptes analítics.\n"
+"\n"
+"3. L'últim està disponible des del pla de comptes analític. Indica la "
+"difusió, per als comptes analítics seleccionats, dels pressupostos "
+"principals per pressupostos.\n"
+"\n"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -395,7 +432,7 @@ msgstr "Pressupost :"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Import previst"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -434,7 +471,7 @@ msgstr "Gestió de pressupostos"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Error! No podeu crear comptes analítiques recursives."
 
 #. module: account_budget
 #: report:account.budget:0

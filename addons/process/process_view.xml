@@ -108,12 +108,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Process">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="model_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4">
+                    <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
@@ -213,13 +213,13 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search ProcessNode">
-                <group col="10" colspan="4">
+                <group>
                     <field name="name"/>
                     <field name="model_id"/>
                     <field name="kind" />
                 </group>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="4" col="4">
+                <group expand="0" string="Group By...">
                     <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     <filter string="Kind Of Node" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'kind'}"/>
                 </group>
@@ -302,7 +302,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Process Transition">
-                <group col="10" colspan="4">
+                <group>
                     <field name="name"/>
                     <field name="source_node_id"/>
                     <field name="target_node_id" />

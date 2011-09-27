@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
       <record id="action_application_tiles" model="ir.actions.client">
         <field name="name">Applications Tiles</field>
         <field name="tag">board.home.applications</field>
@@ -137,7 +136,7 @@
 
         <menuitem
             action="action_view_board_list_form"
-            id="menu_view_board_form" parent="base.reporting_menu" groups="base.group_no_one" sequence="1"/>
+            id="menu_view_board_form" parent="base.reporting_menu" sequence="1"/>
 
         <act_window context="{'view': active_id}" id="dashboard_open"
             multi="True" name="Open Dashboard" res_model="board.board"
