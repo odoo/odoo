@@ -23,34 +23,28 @@ from osv import osv, fields
 
 class pos_discount(osv.osv_memory):
     _name = 'pos.discount'
-    _description = 'Add Discount'
-
+    _description = 'Add a Global Discount'
     _columns = {
-        'discount': fields.float('Discount ', required=True),
-        'discount_notes': fields.char('Discount Notes', size= 128, required=True),
+        'discount': fields.float('Discount (%)', required=True, digits=(16,2)),
     }
     _defaults = {
         'discount': 5,
     }
 
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        """
-         Creates view dynamically and adding fields at runtime.
-         @param self: The object pointer.
-         @param cr: A database cursor
-         @param uid: ID of the user currently logged in
-         @param context: A standard dictionary
-         @return: New arch of view with new columns.
-        """
-        if context is None:
-            context = {}
-        super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) or False
-        order = self.pool.get('pos.order').browse(cr, uid, record_id, context=context)
-        if not order.lines:
-                raise osv.except_osv(_('Error!'), _('No Order Lines'))
-        True
+#    def view_init(self, cr, uid, fields_list, context=None):
+#        """
+#         Creates view dynamically and adding fields at runtime.
+#         @param self: The object pointer.
+#         @param cr: A database cursor
+#         @param uid: ID of the user currently logged in
+#         @param context: A standard dictionary
+#         @return: New arch of view with new columns.
+#        """
+#        if context is None:
+#            context = {}
+#        super(pos_discount, self).view_init(cr, uid, fields_list, context=context)
+#        record_id = context and context.get('active_id', False) or False
+#        True
 
     def apply_discount(self, cr, uid, ids, context=None):
         """
@@ -70,33 +64,8 @@ class pos_discount(osv.osv_memory):
         record_id = context and context.get('active_id', False)
         if isinstance(record_id, (int, long)):
             record_id = [record_id]
-
         for order in order_ref.browse(cr, uid, record_id, context=context):
-            for line in order.lines:
-                company_discount = order.company_id.company_discount
-                applied_discount = this.discount
-
-                if applied_discount == 0.00:
-                    notice = 'No Discount'
-                elif company_discount >= applied_discount:
-                    notice = 'Minimum Discount'
-                else:
-                    notice = this.discount_notes
-                res_new = {}
-                if this.discount <= company_discount:
-                    res_new = {
-                        'discount': this.discount,
-                        'notice': notice,
-                        'price_ded': line.price_unit * line.qty * (this.discount or 0) * 0.01 or 0.0
-                    }
-                else:
-                    res_new = {
-                        'discount': this.discount,
-                        'notice': notice,
-                        'price_ded': line.price_unit * line.qty * (this.discount or 0) * 0.01 or 0.0
-                    }
-
-                order_line_ref.write(cr, uid, [line.id], res_new, context=context)
+            order_line_ref.write(cr, uid, [x.id for x in order.lines], {'discount':this.discount}, context=context)
         return {}
 
 pos_discount()

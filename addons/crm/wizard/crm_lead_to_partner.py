@@ -158,6 +158,7 @@ class crm_lead2partner(osv.osv_memory):
                         'name': lead.partner_name or lead.contact_name or lead.name,
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
+                        'address': []
                     })
                     contact_obj.create(cr, uid, {
                         'partner_id': partner_id,

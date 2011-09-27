@@ -8,7 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
@@ -19,12 +19,12 @@
                         <field name="partner_id" string="Customer"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
@@ -41,7 +41,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
@@ -52,12 +52,12 @@
                         <field name="partner_id" string="Supplier"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                    <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
@@ -162,8 +162,9 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"
                                         />
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -186,6 +187,11 @@
                             </group>
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
+                                    <field name="exchange_acc_id"
+                                           attrs="{'invisible':[('currency_id','=',False)]}"
+                                           domain="[('type','=','other')]"/>
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
@@ -195,14 +201,12 @@
                                            domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-                                    <field name="analytic_id"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
-                                           groups="analytic.group_analytic_accounting"/>
+
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
-                                <group col="4" colspan="1">
-                                  <field name="currency_id"/>
-                                  <field name="number"/>
+                                <group col="2" colspan="1">
+                                    <field name="number"/>
+                                    <field name="currency_id" invisible="1"/>
                                 </group>
                             </group>
                         </page>
@@ -231,7 +235,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>
@@ -303,8 +307,9 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"
                                         />
-                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -328,6 +333,11 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
+                                    <field name="exchange_acc_id"
+                                           attrs="{'invisible':[('currency_id','=',False)]}"
+                                           domain="[('type','=','other')]"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
@@ -336,13 +346,9 @@
                                            domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-                                    <field name="analytic_id"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
-                                           groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
                                 <group col="4" colspan="1">
-                                    <field name="currency_id"/>
                                     <field name="number"/>
                                 </group>
                             </group>
@@ -372,7 +378,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel" invisible="context.get('line_type', False)"/>
                         <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize" invisible="context.get('line_type', False)"/>

@@ -98,6 +98,7 @@ module named account_voucher.
         'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
+        'wizard/account_financial_report_view.xml',
         'project/wizard/project_account_analytic_line_view.xml',
         'account_end_fy.xml',
         'account_invoice_view.xml',
@@ -122,7 +123,8 @@ module named account_voucher.
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
-        "wizard/account_report_balance_sheet_view.xml"
+        "wizard/account_report_balance_sheet_view.xml",
+        "account_bank_view.xml"
     ],
     'demo_xml': [
         'demo/account_demo.xml',

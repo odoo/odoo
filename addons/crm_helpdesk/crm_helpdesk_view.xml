@@ -62,14 +62,14 @@
                                 <separator colspan="4" string="Categorization"/>
                                 <field name="priority"/>
                                 <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
-                                <field name="canal_id"/>
+                                <field name="channel_id"/>
                             </group>
 
                             <separator colspan="4" string="Notes"/>
                             <field name="description" colspan="4" nolabel="1" />
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
-                                <field name="state" select="1"/>
+                                <field name="state" select="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                                 <button name="case_cancel"
                                     states="draft,open,pending" string="Cancel"
                                     type="object" icon="gtk-cancel" />
@@ -99,11 +99,11 @@
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
-                                    <field name="history" invisible="1"/>
+                                    <field name="email_from" invisible="1"/>
                                     <button
-                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'crm.helpdesk', 'include_original' : True}"
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
@@ -112,20 +112,18 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                        <field name="history" invisible="1"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'crm.helpdesk', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
+                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                              </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
@@ -140,9 +138,8 @@
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
                             <button string="Send New Email"
-                                name="%(crm.action_crm_send_mail)d"
-                                context="{'mail':'new', 'model': 'crm.helpdesk'}"
-                                icon="terp-mail-message-new" type="action" />
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                         </page>
                         <page string="Extra Info" groups="base.group_extended">
                             <group colspan="2" col="2">
@@ -235,21 +232,35 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
+                    <filter icon="terp-check" string="New" 
+                        name="current"
+                        domain="[('state','=','draft')]"
+                        help="New Helpdesk Request" />
+                    <filter icon="terp-camera_test"
+                        string="Open"
+                        domain="[('state','=','open')]"
+                        help="Open Helpdesk Request"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        help="All pending Helpdesk Request"
+                    />
+                    <separator orientation="vertical"/>
                     <filter icon="terp-go-today" string="Today"
-                        separator="1"
-                        domain="[('date::date','=',time.strftime('%%Y-%%m-%%d'))]"
+                        domain="[('date','&gt;=',current_date), ('date','&lt;=',current_date)]"
                         help="Todays's Helpdesk Requests"
                         />
                     <filter icon="terp-go-week"
-                        string="7 Days" separator="1"
+                        string="7 Days" 
                         help="Helpdesk requests during last 7 days"
-                        domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d')), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
+                        domain="[('date','&lt;',current_date), ('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
                         />
                     <separator orientation="vertical"/>
-                    <field name="name" select='1' string="Query"/>
+                    <field name="name" string="Query"/>
                     <field name="partner_id" />
-                    <field name="user_id" select="1" widget="selection"/>
-                    <field name="section_id" select="1" widget="selection" string="Sales Team">
+                    <field name="user_id" widget="selection"/>
+                    <field name="section_id" widget="selection" string="Sales Team">
                         <filter icon="terp-personal+" groups="base.group_extended"
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />

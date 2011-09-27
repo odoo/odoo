@@ -20,37 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-
+from tools.translate import _
 import decimal_precision as dp
-
-class stock_move_track(osv.osv_memory):
-    _name = "stock.move.track"
-    _description = "Track moves"
-
-    _columns = {
-        'tracking_prefix': fields.char('Tracking prefix', size=64),
-        'quantity': fields.float("Quantity per lot")
-    }
-
-    _defaults = {
-        'quantity': lambda *x: 1
-    }
-
-    def track_lines(self, cr, uid, ids, context=None):
-        """ To track stock moves lines
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: An ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return:
-        """
-        datas = self.read(cr, uid, ids)[0]
-        move_obj = self.pool.get('stock.move')
-        move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-
-stock_move_track()
 
 class stock_move_consume(osv.osv_memory):
     _name = "stock.move.consume"
@@ -185,7 +156,6 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
         if context.get('active_id'):
             move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
@@ -197,6 +167,8 @@ class split_in_production_lot(osv.osv_memory):
                 res.update({'qty': move.product_qty})
             if 'use_exist' in fields:
                 res.update({'use_exist': (move.picking_id and move.picking_id.type=='out' and True) or False})
+            if 'location_id' in fields:
+                res.update({'location_id': move.location_id.id})
         return res
 
     _columns = {
@@ -206,6 +178,7 @@ class split_in_production_lot(osv.osv_memory):
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -219,7 +192,7 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-        self.split(cr, uid, ids, context.get('active_ids'), context=context)
+        res = self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
@@ -258,7 +231,8 @@ class split_in_production_lot(osv.osv_memory):
                     uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
                     if quantity_rest < 0:
                         quantity_rest = quantity
-                        break
+                        self.pool.get('stock.move').log(cr, uid, move.id, _('Unable to assign all lots to this move!'))
+                        return False
                     default_val = {
                         'product_qty': quantity,
                         'product_uos_qty': uos_qty,
@@ -306,6 +280,11 @@ class stock_move_split_lines_exist(osv.osv_memory):
     _defaults = {
         'quantity': 1.0,
     }
+
+    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
+                        loc_id=False, product_id=False, uom_id=False):
+        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
+                        loc_id, product_id, uom_id)
 
 stock_move_split_lines_exist()
 

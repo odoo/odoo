@@ -3,6 +3,23 @@
 <data noupdate="1">
 
 
+        <!--    HR Recruitment Source        -->
+
+    <record model="hr.recruitment.source" id="source_linkedin">
+        <field name="name">LinkedIn</field>
+    </record>
+    <record model="hr.recruitment.source" id="source_monster">
+        <field name="name">Monster</field>
+    </record>
+    <record model="hr.recruitment.source" id="source_word">
+        <field name="name">Word of Mouth</field>
+    </record>
+    <record model="hr.recruitment.source" id="source_website_company">
+        <field name="name">Company Website</field>
+    </record>
+
+
+
         <!--    CASE CATEGORY(categ_id)        -->
 
     <record model="crm.case.categ" id="categ_job1">
@@ -21,17 +38,21 @@
         <field name="name">Graduate</field>
         <field name="sequence">1</field>
     </record>
-    <record model="hr.recruitment.degree" id="degree_licenced">
-        <field name="name">Licenced</field>
+    <record model="hr.recruitment.degree" id="degree_bachelor">
+        <field name="name">Bachelor Degree</field>
         <field name="sequence">2</field>
     </record>
-    <record model="hr.recruitment.degree" id="degree_bac5">
-        <field name="name"> > Bac +5</field>
+    <record model="hr.recruitment.degree" id="degree_licenced">
+        <field name="name">Master Degree</field>
         <field name="sequence">3</field>
+    </record>
+    <record model="hr.recruitment.degree" id="degree_bac5">
+        <field name="name">Doctoral Degree</field>
+        <field name="sequence">4</field>
     </record>
 
     <record model="hr.recruitment.stage" id="stage_job1">
-        <field name="name">Initial Jobs Demand</field>
+        <field name="name">Initial Qualification</field>
         <field name="sequence">1</field>
         <field name="object_id" search="[('model','=','hr.applicant')]" model="ir.model"/>
     </record>
@@ -67,7 +88,6 @@
     </record>
     <record id="survey_job_0" model="survey">
         <field name="title">Job Survey</field>
-        <field name="state">draft</field>
         <field name="max_response_limit">20</field>
         <field eval="[(6,0,[])]" name="users"/>
         <field name="type" ref="survey.survey_type1"/>

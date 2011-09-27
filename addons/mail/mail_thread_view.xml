@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_mailgate_thread_form">
+            <field name="name">mail.thread.form</field>
+            <field name="model">mail.thread</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Email Thread">
+                    <separator string="Communication History" colspan="4"/>
+                    <field name="message_ids" nolabel="1" colspan="4" mode="tree,form">
+                        <tree string="Communication History">
+                            <field name="display_text"/>
+                        </tree>
+                        <form string="Message">
+                            <field name="subject" widget="char"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <notebook colspan="4">
+                                <page string="Email Details">
+                                    <group col="4" colspan="4">
+                                        <separator string="Email Details" colspan="4"/>
+                                        <field name="email_from"/>
+                                        <field name="email_to"/>
+                                        <field name="email_cc"/>
+                                        <field name="email_bcc"/>
+                                   </group>
+                                </page>
+                                <page string="Attachments">
+                                    <field name="attachment_ids" nolabel="1" colspan="4" />
+                                </page>
+                            </notebook>
+                        </form>
+                    </field>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_mailgate_thread_tree">
+            <field name="name">mail.thread.tree</field>
+            <field name="model">mail.thread</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Email Threads">
+                    <field name="message_ids" />
+                </tree>
+            </field>
+        </record>
+
+         <!-- Emails thread action -->
+        <record model="ir.actions.act_window" id="action_view_mailgate_thread">
+            <field name="name">Email Threads</field>
+            <field name="res_model">mail.thread</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view1">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_mailgate_thread_tree"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_view_mailgate_thread_view2">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_mailgate_thread_form"/>
+            <field name="act_window_id" ref="action_view_mailgate_thread"/>
+        </record>
+
+    </data>
+</openerp>

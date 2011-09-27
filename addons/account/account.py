@@ -102,7 +102,7 @@ class account_payment_term_line(osv.osv):
                                    ('fixed', 'Fixed Amount')], 'Valuation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be threated."""),
 
-        'value_amount': fields.float('Value Amount', digits_compute=dp.get_precision('Payment Term'), help="For Value percent enter % ratio between 0-1."),
+        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
@@ -131,7 +131,7 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
     _columns = {
-        'name': fields.char('Acc. Type Name', size=64, required=True),
+        'name': fields.char('Account Type', size=64, required=True),
         'code': fields.char('Code', size=32, required=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
@@ -139,14 +139,14 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'report_type':fields.selection([
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
             ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
-        ],'P&L / BS Category', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)", required=True),
+        ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -250,6 +250,7 @@ class account_account(osv.osv):
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
@@ -306,12 +307,11 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-            null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
             for id in ids:
-                res[id] = 0.0
+                res[id] = null_result
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -358,13 +358,13 @@ class account_account(osv.osv):
             ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
+            "different types of accounts: view can not have journal items, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            help="These types are defined according to your country. The type contains more information "\
-            "about the account and its specificities."),
+            help="Account Type is used for information purpose, to generate "
+              "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
@@ -431,9 +431,16 @@ class account_account(osv.osv):
                 return False
         return True
 
+    def _check_account_type(self, cr, uid, ids, context=None):
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.type in ('receivable', 'payable') and account.user_type.close_method != 'unreconciled':
+                return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
-        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
+        (_check_type, 'Configuration Error! \nYou can not define children to an account with internal type different of "View"! ', ['type']),
+        (_check_account_type, 'Configuration Error! \nYou can not select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable"! ', ['user_type','type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -509,14 +516,14 @@ class account_account(osv.osv):
 
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
-                raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
+                raise osv.except_osv(_('Error !'), _('You can not desactivate an account that contains some journal items.'))
             elif method == 'unlink':
-                raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+                raise osv.except_osv(_('Error !'), _('You can not remove an account containing journal items!. '))
         #Checking whether the account is set as a property to any Partner or not
         value = 'account.account,' + str(ids[0])
         partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value_reference','=',value)], context=context)
         if partner_prop_acc:
-            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner.'))
+            raise osv.except_osv(_('Warning !'), _('You can not remove/desactivate an account which is set on a customer or supplier.'))
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
@@ -529,15 +536,20 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains journal items!"))
                 #Check for change From group1 to group2 and vice versa
                 if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains journal items!") % (old_type,new_type,))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
+
         if context is None:
             context = {}
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
 
         # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
@@ -602,13 +614,13 @@ class account_journal(osv.osv):
     _description = "Journal"
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True),
-        'code': fields.char('Code', size=5, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
+        'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
-                                 help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
-                                 " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
-                                 " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' for miscellaneous operations."\
-                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
+                                 help="Select 'Sale' for customer invoices journals."\
+                                 " Select 'Purchase' for supplier invoices journals."\
+                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
+                                 " Select 'General' for miscellaneous operations journals."\
+                                 " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
@@ -623,7 +635,7 @@ class account_journal(osv.osv):
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
-        'allow_date':fields.boolean('Check Date not in the Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
+        'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
     }
 
     _defaults = {
@@ -650,21 +662,18 @@ class account_journal(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for journal in self.browse(cr, uid, ids, context=context):
             if 'company_id' in vals and journal.company_id.id != vals['company_id']:
                 move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
                 if move_lines:
-                    raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+                    raise osv.except_osv(_('Warning !'), _('You can not modify the company of this journal as its related record exist in journal items'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
         """
         Create new entry sequence for every new Joural
-        @param cr: cursor to database
-        @param user: id of current user
-        @param ids: list of record ids to be process
-        @param context: context arguments, like lang, time zone
-        @return: return a result
         """
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
@@ -686,6 +695,8 @@ class account_journal(osv.osv):
             'padding': 4,
             'number_increment': 1
         }
+        if 'company_id' in vals:
+            seq['company_id'] = vals['company_id']
         return seq_pool.create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
@@ -801,8 +812,8 @@ class account_fiscalyear(osv.osv):
         return True
 
     _constraints = [
-        (_check_duration, 'Error! The duration of the Fiscal Year is invalid. ', ['date_stop']),
-        (_check_fiscal_year, 'Error! You cannot define overlapping fiscal years',['date_start', 'date_stop'])
+        (_check_duration, 'Error! The start date of the fiscal year must be before his end date.', ['date_start','date_stop']),
+        (_check_fiscal_year, 'Error! You can not define overlapping fiscal years for the same company.',['date_start', 'date_stop'])
     ]
 
     def create_period3(self, cr, uid, ids, context=None):
@@ -880,7 +891,10 @@ class account_period(osv.osv):
         'state': 'draft',
     }
     _order = "date_start, special desc"
-
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
+    ]
+    
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
@@ -946,7 +960,7 @@ class account_period(osv.osv):
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('period_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this period as its related record exist in Entry Lines'))
+                raise osv.except_osv(_('Warning !'), _('You can not modify company of this period as some journal items exists.'))
         return super(account_period, self).write(cr, uid, ids, vals, context=context)
 
     def build_ctx_periods(self, cr, uid, period_from_id, period_to_id):
@@ -1174,10 +1188,10 @@ class account_move(osv.osv):
 
     _constraints = [
         (_check_centralisation,
-            'You cannot create more than one move per period on centralized journal',
+            'You can not create more than one move per period on centralized journal',
             ['journal_id']),
         (_check_period_journal,
-            'You cannot create entries on different periods/journals in the same move',
+            'You can not create journal items on different periods/journals in the same journal entry',
             ['line_id']),
     ]
 
@@ -1188,7 +1202,7 @@ class account_move(osv.osv):
         valid_moves = self.validate(cr, uid, ids, context)
 
         if not valid_moves:
-            raise osv.except_osv(_('Integrity Error !'), _('You cannot validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
+            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured payment terms properly !\nThe latest payment term line should be of the type "Balance" !'))
         obj_sequence = self.pool.get('ir.sequence')
         for move in self.browse(cr, uid, valid_moves, context=context):
             if move.name =='/':
@@ -1224,7 +1238,7 @@ class account_move(osv.osv):
                 if not top:
                     top = account2.id
                 elif top<>account2.id:
-                    raise osv.except_osv(_('Error !'), _('You cannot validate a Journal Entry unless all journal items are in same chart of accounts !'))
+                    raise osv.except_osv(_('Error !'), _('You can not validate a journal entry unless all journal items belongs to the same chart of accounts !'))
         return self.post(cursor, user, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1311,7 +1325,7 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             if move['state'] != 'draft':
                 raise osv.except_osv(_('UserError'),
-                        _('You can not delete posted movement: "%s"!') % \
+                        _('You can not delete a posted journal entry "%s"!') % \
                                 move['name'])
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
@@ -1331,7 +1345,7 @@ class account_move(osv.osv):
 
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        currency_obj = self.pool.get('res.currency') 
+        currency_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
 
@@ -1593,7 +1607,7 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
-        res2 = {} 
+        res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
@@ -1762,6 +1776,9 @@ class account_tax(osv.osv):
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
+    ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         """
@@ -2120,7 +2137,11 @@ class account_model(osv.osv):
         period_id = period_id[0]
 
         for model in self.browse(cr, uid, ids, context=context):
-            entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
+            try:
+                entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
+            except:
+                raise osv.except_osv(_('Wrong model !'), _('You have a wrong expression "%(...)s" in your model !'))
+                
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
@@ -2192,8 +2213,8 @@ class account_model_line(osv.osv):
     }
     _order = 'sequence'
     _sql_constraints = [
-        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model (Credit Or Debit Must Be "0")!'),
-        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model (Credit + Debit Must Be greater "0")!'),
+        ('credit_debit1', 'CHECK (credit*debit=0)',  'Wrong credit or debit value in model, they must be positive!'),
+        ('credit_debit2', 'CHECK (credit+debit>=0)', 'Wrong credit or debit value in model, they must be positive!'),
     ]
 account_model_line()
 
@@ -2359,7 +2380,7 @@ class account_account_template(osv.osv):
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
+        (_check_type, 'Configuration Error!\nYou can not define children to an account with internal type different of "View"! ', ['type']),
 
     ]
 
@@ -2392,7 +2413,7 @@ class account_add_tmpl_wizard(osv.osv_memory):
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]], ['code'])
         res = None
         if not ptids or not ptids[0]['code']:
-            raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
+            raise osv.except_osv(_('Error !'), _('I can not locate a parent code for the template account!'))
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
         return res and res[0] or False
 
@@ -2607,7 +2628,88 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
-    # Multi charts of Accounts wizard
+# ---------------------------------------------------------
+# Account Financial Report
+# ---------------------------------------------------------
+
+class account_financial_report(osv.osv):
+    _name = "account.financial.report"
+    _description = "Account Report"
+
+    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            level = 0
+            if report.parent_id:
+                level = report.parent_id.level + 1
+            res[report.id] = level
+        return res
+
+    def _get_children_by_order(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            res.append(id)
+            ids2 = self.search(cr, uid, [('parent_id', '=', id)], order='sequence ASC', context=context)
+            res += self._get_children_by_order(cr, uid, ids2, context=context)
+        return res
+
+    def _get_balance(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        res_all = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            balance = 0.0
+            if report.id in res_all:
+                balance = res_all[report.id]
+            elif report.type == 'accounts':
+                # it's the sum of balance of the linked accounts
+                for a in report.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_report' and report.account_report_id:
+                # it's the amount of the linked report
+                res2 = self._get_balance(cr, uid, [report.account_report_id.id], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            elif report.type == 'sum':
+                # it's the sum of balance of the children of this account.report
+                #for child in report.children_ids:
+                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            res[report.id] = balance
+            res_all[report.id] = balance
+        return res
+
+    _columns = {
+        'name': fields.char('Report Name', size=128, required=True),
+        'parent_id': fields.many2one('account.financial.report', 'Parent'),
+        'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
+        'sequence': fields.integer('Sequence'),
+        'note': fields.text('Notes'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'type': fields.selection([
+            ('sum','View'),
+            ('accounts','Accounts'),
+            ('account_type','Account Type'),
+            ('account_report','Report Value'),
+            ],'Type'),
+        'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
+        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
+        'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
+    }
+
+    _defaults = {
+        'type': 'sum',
+    }
+
+account_financial_report()
+
+# ---------------------------------------------------------
+# Account generation from template wizards
+# ---------------------------------------------------------
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
@@ -2675,9 +2777,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return False
 
     def _get_default_accounts(self, cr, uid, context=None):
-        return [{'acc_name': _('Current'),'account_type':'bank'},
-                    {'acc_name': _('Deposit'),'account_type':'bank'},
-                    {'acc_name': _('Cash'),'account_type':'cash'}]
+        return [
+            {'acc_name': _('Bank Account'),'account_type':'bank'},
+            {'acc_name': _('Cash'),'account_type':'cash'}
+        ]
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
@@ -2699,7 +2802,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
