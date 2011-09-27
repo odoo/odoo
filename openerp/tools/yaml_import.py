@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
+import threading
 import types
 import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import misc
 from config import config
 import yaml_tag
@@ -331,6 +333,7 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields):
         record_dict = {}
+        fields = fields or {}
         for field_name, expression in fields.items():
             field_value = self._eval_field(model, field_name, expression)
             record_dict[field_name] = field_value
@@ -799,5 +802,20 @@ def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
 
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
+
+def threaded_yaml_import(db_name, module_name, file_name, delay=0):
+    def f():
+        time.sleep(delay)
+        cr = None
+        fp = None
+        try:
+            cr = sql_db.db_connect(db_name).cursor()
+            fp = misc.file_open(file_name)
+            convert_yaml_import(cr, module_name, fp, {}, 'update', True)
+        finally:
+            if cr: cr.close()
+            if fp: fp.close()
+    threading.Thread(target=f).start()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

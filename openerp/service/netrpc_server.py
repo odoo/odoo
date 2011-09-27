@@ -36,7 +36,7 @@ import openerp.netsvc as netsvc
 import openerp.tiny_socket as tiny_socket
 import openerp.tools as tools
 
-class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
+class TinySocketClientThread(threading.Thread):
     def __init__(self, sock, threads):
         spn = sock and sock.getpeername()
         spn = 'netrpc-client-%s:%s' % spn[0:2]
@@ -59,7 +59,8 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         while self.running:
             try:
                 msg = ts.myreceive()
-                result = self.dispatch(msg[0], msg[1], msg[2:])
+                auth = getattr(self, 'auth_provider', None)
+                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:], auth)
                 ts.mysend(result)
             except socket.timeout:
                 #terminate this channel because other endpoint is gone
@@ -107,7 +108,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.socket.listen(5)
         self.threads = []
         netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting NET-RPC service at %s port %d" % (interface or '0.0.0.0', port,))
+                         "starting NET-RPC service on %s:%s" % (interface or '0.0.0.0', port,))
 
     def run(self):
         try:

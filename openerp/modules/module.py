@@ -31,7 +31,6 @@ import openerp.osv as osv
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
 from openerp.tools.safe_eval import safe_eval as eval
-import openerp.pooler as pooler
 from openerp.tools.translate import _
 
 import openerp.netsvc as netsvc
@@ -58,6 +57,11 @@ loaded = []
 logger = netsvc.Logger()
 
 def initialize_sys_path():
+    """ Add all addons paths in sys.path.
+
+    This ensures something like ``import crm`` works even if the addons are
+    not in the PYTHONPATH.
+    """
     global ad_paths
 
     if ad_paths:
@@ -250,6 +254,8 @@ def load_information_from_description_file(module):
             info['license'] = info.get('license') or 'AGPL-3'
             info.setdefault('installable', True)
             info.setdefault('active', False)
+            # If the following is provided, it is called after the module is --loaded.
+            info.setdefault('post_load', None)
             for kind in ['data', 'demo', 'test',
                 'init_xml', 'update_xml', 'demo_xml']:
                 info.setdefault(kind, [])
@@ -289,23 +295,22 @@ def init_module_models(cr, module_name, obj_list):
         t[1](cr, *t[2])
     cr.commit()
 
+# Import hook to write a addon m in both sys.modules['m'] and
+# sys.modules['openerp.addons.m']. Otherwise it could be loaded twice
+# if imported twice using different names.
+#class MyImportHook(object):
+#    def find_module(self, module_name, package_path):
+#       print ">>>", module_name, package_path
+#    def load_module(self, module_name):
+#       raise ImportError("Restricted")
 
-def load_module(module_name):
-    """ Load a Python module found on the addons paths."""
-    fm = imp.find_module(module_name, ad_paths)
-    try:
-        imp.load_module(module_name, *fm)
-    finally:
-        if fm[0]:
-            fm[0].close()
-
+#sys.meta_path.append(MyImportHook())
 
 def register_module_classes(m):
     """ Register module named m, if not already registered.
 
-    This will load the module and register all of its models. (Actually, the
-    explicit constructor call of each of the models inside the module will
-    register them.)
+    This loads the module and register all of its models, thanks to either
+    the MetaModel metaclass, or the explicit instantiation of the model.
 
     """
 
@@ -325,7 +330,7 @@ def register_module_classes(m):
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
-            load_module(m)
+            __import__(m)
         else:
             zimp = zipimport.zipimporter(zip_mod_path)
             zimp.load_module(m)

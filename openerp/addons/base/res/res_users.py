@@ -700,7 +700,7 @@ class users_view(osv.osv):
         self._process_values_groups(cr, uid, values, context)
         return super(users_view, self).write(cr, uid, ids, values, context)
 
-    def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
             group_fields, fields = [], self.fields_get(cr, uid, context).keys()
         else:

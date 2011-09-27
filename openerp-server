@@ -96,14 +96,17 @@ def preload_registry(dbname):
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
-    db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+    try:
+        db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        cr = db.cursor()
+        logger = logging.getLogger('server')
+        logger.info('loading test file %s', test_file)
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+        cr.rollback()
+        cr.close()
+    except Exception:
+        logging.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
 
-    cr = db.cursor()
-    logger = logging.getLogger('server')
-    logger.info('loading test file %s', test_file)
-    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
-    cr.rollback()
-    cr.close()
 
 def export_translation():
     config = openerp.tools.config
@@ -138,27 +141,6 @@ def import_translation():
     openerp.tools.trans_update_res_ids(cr)
     cr.commit()
     cr.close()
-
-def start_services():
-    http_server = openerp.service.http_server
-    netrpc_server = openerp.service.netrpc_server
-
-    # Instantiate local services (this is a legacy design).
-    openerp.osv.osv.start_object_proxy()
-    # Export (for RPC) services.
-    openerp.service.web_services.start_web_services()
-
-    # Initialize the HTTP stack.
-    http_server.init_servers()
-    http_server.init_xmlrpc()
-    http_server.init_static_http()
-    netrpc_server.init_servers()
-
-    # Start the main cron thread.
-    openerp.netsvc.start_agent()
-
-    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
-    openerp.netsvc.Server.startAll()
 
 # Variable keeping track of the number of calls to the signal handler defined
 # below. This variable is monitored by ``quit_on_signals()``.
@@ -211,26 +193,10 @@ def quit_on_signals():
     while quit_signals_received == 0:
         time.sleep(60)
 
-    openerp.netsvc.Agent.quit()
-    openerp.netsvc.Server.quitAll()
-    config = openerp.tools.config
     if config['pidfile']:
         os.unlink(config['pidfile'])
-    logger = logging.getLogger('server')
-    logger.info("Initiating shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
-    logging.shutdown()
 
-    # manually join() all threads before calling sys.exit() to allow a second signal
-    # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
-    # threading.Thread.join() should not mask signals (at least in python 2.5)
-    for thread in threading.enumerate():
-        if thread != threading.currentThread() and not thread.isDaemon():
-            while thread.isAlive():
-                # need a busyloop here as thread.join() masks signals
-                # and would present the forced shutdown
-                thread.join(0.05)
-                time.sleep(0.05)
+    openerp.service.stop_services()
     sys.exit(0)
 
 if __name__ == "__main__":
@@ -262,7 +228,7 @@ if __name__ == "__main__":
     if not config["stop_after_init"]:
         # Some module register themselves when they are loaded so we need the
         # services to be running before loading any registry.
-        start_services()
+        openerp.service.start_services()
 
     if config['db_name']:
         for dbname in config['db_name'].split(','):
@@ -270,6 +236,16 @@ if __name__ == "__main__":
 
     if config["stop_after_init"]:
         sys.exit(0)
+
+    for m in openerp.conf.server_wide_modules:
+        try:
+            __import__(m)
+            # Call any post_load hook.
+            info = openerp.modules.module.load_information_from_description_file(m)
+            if info['post_load']:
+                getattr(sys.modules[m], info['post_load'])()
+        except Exception:
+            logging.exception('Failed to load server-wide module `%s`', m)
 
     setup_pid_file()
     logger = logging.getLogger('server')

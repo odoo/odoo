@@ -77,14 +77,21 @@ class Registry(object):
         """ Return a model for a given name or raise KeyError if it doesn't exist."""
         return self.models[model_name]
 
-    def instanciate(self, module, cr):
-        """ Instanciate all the classes of a given module for a particular db."""
+    def load(self, cr, module):
+        """ Load a given module in the registry.
+
+        At the Python level, the modules are already loaded, but not yet on a
+        per-registry level. This method populates a registry with the given
+        modules, i.e. it instanciates all the classes of a the given module
+        and registers them in the registry.
+
+        """
 
         res = []
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
-        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module, []):
+        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
             res.append(cls.create_instance(self, cr))
 
         return res

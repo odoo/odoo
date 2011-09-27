@@ -40,13 +40,13 @@ class except_osv(Exception):
         self.value = value
         self.args = (exc_type, name)
 
+service = None
 
-class object_proxy(netsvc.Service):
+class object_proxy():
     def __init__(self):
         self.logger = logging.getLogger('web-services')
-        netsvc.Service.__init__(self, 'object_proxy', audience='')
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.execute)
+        global service
+        service = self
 
     def check(f):
         @wraps(f)
@@ -120,14 +120,14 @@ class object_proxy(netsvc.Service):
             except orm.except_orm, inst:
                 if inst.name == 'AccessError':
                     self.logger.debug("AccessError", exc_info=True)
-                self.abortResponse(1, inst.name, 'warning', inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
-                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
+                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning',
+                        netsvc.abort_response(1, _('Constraint Error'), 'warning',
                                         tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
@@ -148,9 +148,9 @@ class object_proxy(netsvc.Service):
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:
                         pass
-                    self.abortResponse(1, _('Integrity Error'), 'warning', msg)
+                    netsvc.abort_response(1, _('Integrity Error'), 'warning', msg)
                 else:
-                    self.abortResponse(1, _('Integrity Error'), 'warning', inst[0])
+                    netsvc.abort_response(1, _('Integrity Error'), 'warning', inst[0])
             except Exception:
                 self.logger.exception("Uncaught exception")
                 raise
