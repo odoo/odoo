@@ -378,7 +378,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payslips">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Slip"/>
                         <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]" help="Done Slip"/>
                         <separator orientation="vertical"/>
@@ -389,7 +389,7 @@
                         <field name="payslip_run_id"/>
                     </group>
                     <newline/>
-                    <group col="8" colspan="4" expand="0" string="Group By...">
+                    <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="PaySlip Run" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
@@ -460,8 +460,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Salary Rule Categories">
-                    <field name="name" select="1"/>
-                     <field name="code" select="1"/>
+                    <field name="name"/>
+                    <field name="code"/>
                </search>
             </field>
         </record>

@@ -3,12 +3,12 @@
 - |
   I want to organize one conference event on "OpenERP Business".
 - |
-  I'm creating new product "Ticket for Conference" to specify registration Cost of conference.
+  I'm creating new product "Conference Ticket" to specify registration Cost of conference.
 - 
   !record {model: product.product, id: product_product_ticketforconcert0}:
     categ_id: product.cat1
     list_price: 68.0
-    name: Ticket for Conference  
+    name: Conference Ticket  
 - |
   I'm creating Event type "Conference".
 -   
@@ -75,7 +75,7 @@
     event_id: event.event_event_conference0
     partner_id: event.res_partner_markjohnson0
     partner_invoice_id: event.res_partner_markjohnson0
-    event_product: Ticket for Conference
+    event_product: Conference Ticket
     unit_price: 68.0
     nb_register: 10
 - |
@@ -128,7 +128,7 @@
     event_id: event.event_event_conference0
     partner_id: event.res_partner_markjohnson0
     partner_invoice_id: event.res_partner_markjohnson0
-    event_product: Ticket for Conference
+    event_product: Conference Ticket
     unit_price: 68.0
     nb_register: 100
     

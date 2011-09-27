@@ -622,8 +622,8 @@ class stock_picking(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location',help="Location where the system will stock the finished products.", select=True),
         'move_type': fields.selection([('direct', 'Partial Delivery'), ('one', 'All at once')], 'Delivery Method', required=True, help="It specifies goods to be delivered all at once or by direct delivery"),
         'state': fields.selection([
-            ('draft', 'Draft'),
-            ('auto', 'Waiting'),
+            ('draft', 'New'),
+            ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Process'),
             ('done', 'Done'),
@@ -661,6 +661,7 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.picking").create(
@@ -847,7 +848,11 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             todo = []
             for move in pick.move_lines:
-                if move.state == 'assigned':
+                if move.state == 'draft':
+                    self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
+                        context=context)
+                    todo.append(move.id)
+                elif move.state in ('assigned','confirmed'):
                     todo.append(move.id)
             if len(todo):
                 self.pool.get('stock.move').action_done(cr, uid, todo,
@@ -1521,19 +1526,19 @@ class stock_move(osv.osv):
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
-        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
+        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True,states={'done': [('readonly', True)]}),
-        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM')),
-        'product_uos': fields.many2one('product.uom', 'Product UOS'),
+        'product_uos_qty': fields.float('Quantity (UOS)', digits_compute=dp.get_precision('Product UoM'), states={'done': [('readonly', True)]}),
+        'product_uos': fields.many2one('product.uom', 'Product UOS', states={'done': [('readonly', True)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging', help="It specifies attributes of packaging like type, quantity of packaging,etc."),
 
         'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True,states={'done': [('readonly', True)]}, help="Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."),
         'location_dest_id': fields.many2one('stock.location', 'Destination Location', required=True,states={'done': [('readonly', True)]}, select=True, help="Location where the system will stock the finished products."),
-        'address_id': fields.many2one('res.partner.address', 'Destination Address', help="Optional address where goods are to be delivered, specifically used for allotment"),
+        'address_id': fields.many2one('res.partner.address', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
 
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', states={'done': [('readonly', True)]}, help="Production lot is used to put a serial number on the production", select=True),
         'tracking_id': fields.many2one('stock.tracking', 'Pack', select=True, states={'done': [('readonly', True)]}, help="Logistical shipping unit: pallet, box, pack ..."),
@@ -1545,7 +1550,7 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Not Available'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+        'state': fields.selection([('draft', 'New'), ('waiting', 'Waiting Another Move'), ('confirmed', 'Waiting Availability'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
@@ -1558,10 +1563,18 @@ class stock_move(osv.osv):
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
     }
+    def _check_location(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            if (record.state=='done') and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
+                return False
+        return True
+
     _constraints = [
         (_check_tracking,
             'You must assign a production lot for this product',
             ['prodlot_id']),
+        (_check_location, 'You can not move products from or to a location of the type view.',
+            ['location_id','location_dest_id']),
         (_check_product_lot,
             'You try to assign a lot which is not from the same product',
             ['prodlot_id'])]
@@ -1756,6 +1769,16 @@ class stock_move(osv.osv):
         if loc_dest_id:
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
+
+    def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
+        """ On change of Scheduled Date gives a Move date.
+        @param date_expected: Scheduled Date 
+        @param date: Move Date
+        @return: Move Date
+        """
+        if not date_expected:
+            date_expected = time.strftime('%Y-%m-%d %H:%M:%S')
+        return {'value':{'date': date_expected}}
 
     def _chain_compute(self, cr, uid, moves, context=None):
         """ Finds whether the location has chained location type or not.
@@ -2220,6 +2243,7 @@ class stock_move(osv.osv):
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
 
+    # _create_lot function is not used anywhere 
     def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         """ Creates production lot
         @return: Production lot id
@@ -2260,11 +2284,12 @@ class stock_move(osv.osv):
             res += [new_move]
             product_obj = self.pool.get('product.product')
             for (id, name) in product_obj.name_get(cr, uid, [move.product_id.id]):
-                self.log(cr, uid, move.id, "%s x %s %s" % (move.product_qty, name, _("were scrapped")))
+                self.log(cr, uid, move.id, "%s x %s %s" % (quantity, name, _("were scrapped")))
 
         self.action_done(cr, uid, res)
         return res
 
+    # action_split function is not used anywhere 
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
         """ Split Stock Move lines into production lot which specified split by quantity.
         @param cr: the database cursor
@@ -2617,7 +2642,7 @@ class stock_inventory(osv.osv):
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
                              raise osv.except_osv(_('UserError'),
-                                                  _('You can not cancel inventory which has any account move with posted state.'))
+                                                  _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True

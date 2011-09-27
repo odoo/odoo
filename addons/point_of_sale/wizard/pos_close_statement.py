@@ -38,27 +38,27 @@ class pos_close_statement(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         statement_obj = self.pool.get('account.bank.statement')
         journal_obj = self.pool.get('account.journal')
-        cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
-                    "WHERE user_id=%s ORDER BY journal_id", (uid, ))
-        j_ids = map(lambda x1: x1[0], cr.fetchall())
-        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
-        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)], context=context)
-        for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
-            if not ids:
-                raise osv.except_osv(_('Message'), _('Cash registers are already closed.'))
-            else:
-                if not journal.check_dtls:
-                    statement_obj.button_confirm_cash(cr, uid, ids, context=context)
 
-        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
+        j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+        ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', j_ids)], context=context)
+        if not ids:
+            raise osv.except_osv(_('Message'), _('Cash registers are already closed.'))
+        for statement in statement_obj.browse(cr, uid, ids, context=context):
+            statement_obj.write(cr, uid, [statement.id], {
+                'balance_end_real': statement.balance_end
+            }, context=context)
+            if not statement.journal_id.check_dtls:
+                statement_obj.button_confirm_cash(cr, uid, [statement.id], context=context)
+
+        tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')
         tree_id = tree_res and tree_res[1] or False
         form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
         form_id = form_res and form_res[1] or False
         search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_confirm_cash_statement_filter')
-        
+
         return {
             'domain': "[('id', 'in', " + str(ids) + ")]",
-            'name': 'Close Statements',
+            'name': _('Close Cash Registers'),
             'view_type': 'form',
             'view_mode': 'tree, form',
             'search_view_id': search_id and search_id[1] or False,
@@ -66,7 +66,6 @@ class pos_close_statement(osv.osv_memory):
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'type': 'ir.actions.act_window'
         }
-
 pos_close_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

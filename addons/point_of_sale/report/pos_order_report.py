@@ -35,9 +35,7 @@ class pos_order_report(osv.osv):
         'day': fields.char('Day', size=128, readonly=True),
         'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('payment', 'Payment'),
-                                    ('advance','Advance'),
-                                   ('paid', 'Paid'), ('done', 'Done'), ('invoiced', 'Invoiced'), ('cancel', 'Cancel')],
+        'state': fields.selection([('draft', 'New'), ('paid', 'Closed'), ('done', 'Synchronized'), ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
                                   'State'),
         'user_id':fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total':fields.float('Total Price', readonly=True),
@@ -49,9 +47,6 @@ class pos_order_report(osv.osv):
         'product_qty':fields.integer('# of Qty', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Journal'),
         'delay_validation': fields.integer('Delay Validation'),
-        'delay_payment': fields.integer('Delay Payment'),
-        'date_validation': fields.date('Validation Date', required=True),
-        'date_payment': fields.date('Payment Date', required=True),
     }
     _order = 'date desc'
 
@@ -65,10 +60,9 @@ class pos_order_report(osv.osv):
                     to_date(to_char(s.date_order, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
                     sum(l.qty * u.factor) as product_qty,
                     sum(l.qty * l.price_unit) as price_total,
-                    sum(l.qty * l.price_ded) as total_discount,
+                    sum(l.qty * l.discount) as total_discount,
                     (sum(l.qty*l.price_unit)/sum(l.qty * u.factor))::decimal(16,2) as average_price,
-                    sum(cast(to_char(date_trunc('day',s.date_validation) - date_trunc('day',s.date_order),'DD') as int)) as delay_validation,
-                    sum(cast(to_char(date_trunc('day',s.date_payment) - date_trunc('day',s.date_order),'DD') as int)) as delay_payment,
+                    sum(cast(to_char(date_trunc('day',s.date_order) - date_trunc('day',s.create_date),'DD') as int)) as delay_validation,
                     to_char(s.date_order, 'YYYY') as year,
                     to_char(s.date_order, 'MM') as month,
                     to_char(s.date_order, 'YYYY-MM-DD') as day,
@@ -78,9 +72,7 @@ class pos_order_report(osv.osv):
                     s.shop_id as shop_id,
                     s.company_id as company_id,
                     s.sale_journal as journal_id,
-                    l.product_id as product_id,
-                    s.date_validation,
-                    s.date_payment
+                    l.product_id as product_id
                 from pos_order_line as l
                     left join pos_order s on (s.id=l.order_id)
                     left join product_template pt on (pt.id=l.product_id)
@@ -88,8 +80,7 @@ class pos_order_report(osv.osv):
                 group by
                     to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
-                    s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.date_validation,
-                    s.date_payment
+                    s.user_id,s.shop_id,s.company_id,s.sale_journal,l.product_id,s.create_date
                 having
                     sum(l.qty * u.factor) != 0)""")
 

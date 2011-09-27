@@ -59,8 +59,7 @@
                         domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Sales order created in current month"/>
                     <filter icon="terp-go-month"
-                         string="    Month-1    "
-                         separator="1"
+                         string="Month-1"
                          domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Sales order created in last month"/>
                     <separator orientation="vertical"/>
@@ -94,7 +93,7 @@
                     <field name="date_confirm"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>

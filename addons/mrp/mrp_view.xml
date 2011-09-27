@@ -79,13 +79,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                   <group col='15' colspan='4'>
+                   <group>
                        <field name="name"/>
                        <field name="composition"/>
                        <field name="group_id"  widget="selection" />
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20">
+                   <group expand="0" string="Group By...">
                         <filter string="Property Group" icon="terp-personal" domain="[]" context="{'group_by':'group_id'}"/>
                     </group>
                </search>
@@ -183,7 +183,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search for mrp workcenter">
-                   <group col='15' colspan='4'>
+                   <group>
                         <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <separator orientation="vertical"/>
                         <field name="code"/>
@@ -191,7 +191,7 @@
                         <field name="resource_type"/>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                   <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'resource_type'}"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
@@ -289,7 +289,7 @@
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Production Location" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'location_id'}"/>
                     </group>
                 </search>
@@ -420,14 +420,14 @@
            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Bill Of Material">
-                    <group col='4' colspan='4'>
+                    <group>
                          <field name="name"/>
                          <field name="code" string="Reference"/>
                          <field name="product_id"/>
                          <field name="company_id" groups="base.group_multi_company"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
                         <separator orientation="vertical"/>
@@ -700,7 +700,7 @@
                                </field>
                             <separator colspan="4"/>
                             <group col="9" colspan="4">
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                                 <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
                                 <button name="action_cancel" type="object" states="confirmed" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
@@ -796,7 +796,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Production">
-                   <group col='9' colspan='4'>
+                   <group>
                        <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
                            domain="[('state','=','confirmed')]"
                            help="Manufacturing Orders which are waiting for raw materials."/>
@@ -808,7 +808,7 @@
                            help="Manufacturing Orders which are currently in production."/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
                            help="Production started late" />
                        <separator orientation="vertical"/>
                        <field name="name"/>
@@ -817,7 +817,7 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
