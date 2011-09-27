@@ -218,7 +218,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     on_record_saved: function(r) {
         var id = this.form_dialog.form.datarecord.id;
         // TODO fme: reload record instead of all. need refactoring
-        this.do_actual_search();
+        this.on_reload_record(id);
     },
     do_change_color: function(record_id, $e) {
         var self = this,
@@ -237,7 +237,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             data[$e.data('name')] = $(this).data('color');
             self.dataset.write(id, data, {}, function() {
                 // TODO fme: reload record instead of all. need refactoring
-                self.on_reload_record(id, data);
+                self.on_reload_record(id);
             });
             $cpicker.remove();
         });
@@ -245,28 +245,32 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     /**
         Reload one record in view.
         record_id : reload record id.
-        data : change value in particular record.
     */
-    on_reload_record: function (record_id, data){
+    on_reload_record: function (record_id){
         var self = this;
-        for (var i=0, ii=this.all_display_data.length; i < ii; i++) {
-            for(j=0, jj=this.all_display_data[i].records.length; j < jj;  j++) {
-                if (this.all_display_data[i].records[j].id == record_id) {
-                    _.extend(this.all_display_data[i].records[j], data);
-                    this.$element.find("#main_" + record_id).children().remove();
-                    this.$element.find("#main_" + record_id).append(this.qweb.render('kanban-box', {
-                        record: this.do_transform_record(this.all_display_data[i].records[j]),
-                        kanban_color: this.kanban_color,
-                        kanban_gravatar: this.kanban_gravatar
-                    }));
-                    break;
+        this.dataset.read_ids([record_id], [], function (records) {
+            if (records.length > 0) {
+                for (var i=0, ii=self.all_display_data.length; i < ii; i++) {
+                    for(j=0, jj=self.all_display_data[i].records.length; j < jj;  j++) {
+                        if (self.all_display_data[i].records[j].id == record_id) {
+                            _.extend(self.all_display_data[i].records[j], records[0]);
+                            self.$element.find("#main_" + record_id).children().remove();
+                            self.$element.find("#main_" + record_id).append(self.qweb.render('kanban-box', {
+                                record: self.do_transform_record(self.all_display_data[i].records[j]),
+                                kanban_color: self.kanban_color,
+                                kanban_gravatar: self.kanban_gravatar
+                            }));
+                            break;
+                        }
+                    }
                 }
+                self.$element.find("#main_" + record_id + " .oe_kanban_action").click(self.on_action_clicked);
+                self.$element.find("#main_" + record_id + " .oe_kanban_box_show_onclick_trigger").click(function() {
+                    $(this).parent("#main_" + record_id + " .oe_kanban_box").find(".oe_kanban_box_show_onclick").toggle();
+                });
             }
-        }
-        this.$element.find("#main_" + record_id + " .oe_kanban_action").click(this.on_action_clicked);
-        this.$element.find("#main_" + record_id + " .oe_kanban_box_show_onclick_trigger").click(function() {
-            $(this).parent("#main_" + record_id + " .oe_kanban_box").find(".oe_kanban_box_show_onclick").toggle();
         });
+
     },
     do_delete: function (id) {
         var self = this;
