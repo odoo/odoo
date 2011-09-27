@@ -162,8 +162,9 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"
                                         />
-                                    <field name="account_id" groups="base.group_extended" domain="[('type','=','payable')]"/>
+                                    <field name="account_id" groups="base.group_no_one" domain="[('type','=','payable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -186,6 +187,11 @@
                             </group>
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
+                                    <field name="exchange_acc_id"
+                                           attrs="{'invisible':[('currency_id','=',False)]}"
+                                           domain="[('type','=','other')]"/>
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
@@ -196,11 +202,6 @@
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
 
-                                    <field name="exchange_acc_id"
-                                           attrs="{'invisible':[('currency_id','=',False)]}"
-                                           domain="[('type','=','other')]"/>
-                                    <field name="analytic_id"
-                                           groups="analytic.group_analytic_accounting"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
                                 <group col="2" colspan="1">
@@ -306,8 +307,9 @@
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"
                                         />
-                                    <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
                                     <field name="date_original" readonly="1"/>
                                     <field name="date_due" readonly="1"/>
                                     <field name="amount_original" readonly="1"/>
@@ -331,6 +333,11 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
+                                    <field name="exchange_acc_id"
+                                           attrs="{'invisible':[('currency_id','=',False)]}"
+                                           domain="[('type','=','other')]"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
@@ -339,14 +346,9 @@
                                            domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-                                    <field name="analytic_id"
-                                           groups="analytic.group_analytic_accounting"/>
-                                    <field name="exchange_acc_id"
-                                           domain="[('type','=','other')]"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
                                 <group col="4" colspan="1">
-                                    <field name="currency_id"/>
                                     <field name="number"/>
                                 </group>
                             </group>
