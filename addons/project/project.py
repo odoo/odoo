@@ -133,7 +133,12 @@ class project(osv.osv):
     def _get_project_task(self, cr, uid, ids, context=None):
         result = {}
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            if task.project_id: result[task.project_id.id] = True
+            if task.project_id: 
+                result[task.project_id.id] = True
+                if task.project_id.parent_id:
+                    cr.execute('''SELECT id FROM project_project WHERE analytic_account_id = '%s' '''%task.project_id.parent_id.id)
+                    for parent in cr.fetchall():
+                        result[parent[0]] = True
         return result.keys()
 
     def _get_project_work(self, cr, uid, ids, context=None):
