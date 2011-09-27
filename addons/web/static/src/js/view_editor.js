@@ -152,7 +152,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
             dataset = new openerp.web.DataSetSearch(this,'ir.ui.view', null, null);
             dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
-                _.each(result ,function(num){console.log(result);});
+                _.each(result ,function(num){
+                    // todo xpath
+                    });
             });
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
             ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch){
@@ -209,42 +211,75 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         case "side-edit":
           break;
         case "side-up":
-            if(side.prev().attr('level') == side.attr('level')){
-                $(side.prev()).before(side);
-            }
-          break;
-        case "side-down":
-           var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src');
+            var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src');
             var level = side.attr('level');
             var list_shift =[];
             var last_tr;
+            var next_tr;
             list_shift.push(side);
+            var cur_tr = side;
+            while(1){
+                var prev_tr = cur_tr.prev();
+                if(level >= prev_tr.attr('level') || prev_tr.length==0){
+                    last_tr = prev_tr;
+                    break;
+                    }
+                cur_tr = prev_tr;
+            }
             if(img){
                 while(1){
                     var next_tr = side.next();
                         if(next_tr.attr('level') <= level || next_tr.length==0){
-                            last_tr = next_tr;
                             break;
                         }else{
                         list_shift.push(next_tr);
                         side = next_tr;
                         } 
                 }
-            }else{last_tr = side.next();}
-            var last_tr_id = (last_tr.attr('id')).split('-')[1];  
-            img = last_tr.find("img[id='parentimg-"+last_tr_id+"']").attr('src');
+            }
+            if(last_tr.length!=0 && last_tr.attr('level') == level){
+                 _.each(list_shift,function(rec){
+                        $(last_tr).before(rec); 
+                  });
+            }
+          break;
+        case "side-down":
+            var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src');
+            var level = side.attr('level');
+            var list_shift =[];
+            var last_tr;
+            var next_tr;
+            var cur_tr = side;
+            list_shift.push(side);
             if(img){
                 while(1){
-                    var nxt_tr = last_tr.next();
-                    if (nxt_tr.attr('level') <= level || nxt_tr.length==0){break;}
-                        last_tr = nxt_tr;
+                    var next_tr = cur_tr.next();
+                        if(next_tr.attr('level') <= level || next_tr.length==0){
+                            last_tr = next_tr;
+                            break;
+                        }else{
+                        list_shift.push(next_tr);
+                        cur_tr = next_tr;
+                        } 
                 }
-                list_shift.reverse()
-                
+            }else{last_tr = cur_tr.next();}
+            if(last_tr.length != 0 && last_tr.attr('level')==level){
+                var last_tr_id = (last_tr.attr('id')).split('-')[1];  
+                img = last_tr.find("img[id='parentimg-"+last_tr_id+"']").attr('src');
+                if(img){
+                    $("img[id='parentimg-"+last_tr_id+"']").attr('src', '/web/static/src/img/expand.gif');
+                    while(1){
+                        var next_tr = last_tr.next();
+                        if (next_tr.attr('level') <= level || next_tr.length==0){break;}
+                            next_tr.hide();
+                            last_tr = next_tr;
+                    }
+                 }
+                list_shift.reverse();
+                _.each(list_shift,function(rec){
+                        $(last_tr).after(rec); 
+                  });
             }
-            _.each(list_shift,function(rec){
-                    $(last_tr).after(rec); 
-              });
           break;
         }
     });
