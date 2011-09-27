@@ -1,0 +1,59 @@
+.. -*- restructuredtext -*-
+
+In jQuery 1.5, jQuery has introduced a Deferred object in order to
+better handle callbacks.
+
+Along with Deferred, it introduced ``jQuery.when`` which allows, among
+other things, for multiplexing deferreds (waiting on multiple
+deferreds at the same time).
+
+While this is very nice if all deferreds are available at the same
+point, it doesn't really work if the resolution of a deferred can
+generate more deferreds, or for collections of deferreds coming from
+multiple sources (which may not be aware of one another).
+
+Deferred.queue tries to be a solution to this. It is based on the
+principle of FIFO multiple-producers multiple-consumers tasks queues,
+such as Python's `queue.Queue`_. Any code with a reference to the
+queue can add a promise to the queue, and the queue (which is a
+promise itself) will only be resolved once all promises within are
+resolved.
+
+Quickstart
+----------
+
+Deferred.queue has a very simple life cycle: it is dormant when
+created, it starts working as soon as promises get added to it (via
+``.push``, or by providing them directly to its constructor), and as
+soon as the last promise in the queue is resolved it resolves itself.
+
+If any promise in the queue fails, the queue itself will be rejected
+(without waiting for further promises).
+
+Once a queue has been resolved or rejected, adding new promises to it
+results in an error.
+
+API
+---
+
+``jQuery.Deferred.queue([promises...])``
+  Creates a new deferred queue. Can be primed with a series of promise
+  objects.
+
+``.push(promise...)``
+  Adds promises to the queue. Returns the queue itself (can be
+  chained).
+
+  If the queue has already been resolved or rejected, raises an error.
+
+``.then([doneCallbacks][, failCallbacks])``
+  Promise/A ``then`` method.
+
+``.done(doneCallbacks)``
+  jQuery ``done`` extension to promise objects
+
+``.fail(failCallbacks)``
+  jQuery ``fail`` extension to promise objects
+
+.. _queue.Queue:
+    http://docs.python.org/dev/library/queue.html

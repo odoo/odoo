@@ -608,15 +608,23 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.reset_ids([]);
+        this.last_default_get = {};
+    },
+    default_get: function(fields, callback) {
+        return this._super(fields).then(this.on_default_get).then(callback);
+    },
+    on_default_get: function(res) {
+        this.last_default_get = res;
     },
     create: function(data, callback, error_callback) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
+        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
+            defaults: this.last_default_get};
         this.to_create.push(cached);
         this.cache.push(cached);
         this.on_change();
-        var to_return =  $.Deferred().then(callback);
-        to_return.resolve({result: cached.id});
-        return to_return.promise();
+        var prom = $.Deferred().then(callback);
+        setTimeout(function() {prom.resolve({result: cached.id});}, 0);
+        return prom.promise();
     },
     write: function (id, data, options, callback) {
         var self = this;
@@ -676,7 +684,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             var cached = _.detect(self.cache, function(x) {return x.id === id;});
             var created = _.detect(self.to_create, function(x) {return x.id === id;});
             if (created) {
-                _.each(fields, function(x) {if (cached.values[x] === undefined) cached.values[x] = false;});
+                _.each(fields, function(x) {if (cached.values[x] === undefined)
+                    cached.values[x] = created.defaults[x] || false;});
             } else {
                 if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
                     to_get.push(id);
@@ -716,6 +725,10 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     }
 });
 openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+    default_get: function(fields, callback) {
+        return this._super(fields, callback).then(this.on_default_get);
+    },
+    on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
         var to_return = $.Deferred().then(callback);
