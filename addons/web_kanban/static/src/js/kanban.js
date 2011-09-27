@@ -217,7 +217,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     on_record_saved: function(r) {
         var id = this.form_dialog.form.datarecord.id;
-        // TODO fme: reload record instead of all. need refactoring
         this.on_reload_record(id);
     },
     do_change_color: function(record_id, $e) {
@@ -236,7 +235,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             var data = {};
             data[$e.data('name')] = $(this).data('color');
             self.dataset.write(id, data, {}, function() {
-                // TODO fme: reload record instead of all. need refactoring
                 self.on_reload_record(id);
             });
             $cpicker.remove();
@@ -308,7 +306,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         if (!ui.item.attr("id")) {
             return false;
         }
-        // TODO fme: check what was this sequence
         if (self.fields_view.fields.sequence != undefined && ((self.source_index.index >= 0 && self.source_index.index != from) ||
                 (self.source_index.column && self.source_index.column != ui.item.parent().attr('id')))) {
             var child_record = ui.item.parent().children();
