@@ -121,7 +121,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
             child_obj_list.push(string);
         });
-       
         if(children_list.length != 0){
             var child_ids = _.map(child_obj_list ,function(num){return num.id;});
             parent_child_id.push({'key': parent_id, 'value': child_ids});
@@ -144,22 +143,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
         var root_object = self.check_attr(root,tag,0);
-        var one_object = self.children_function(arch,tag,[],0,[root_object],[]);
-        return self.edit_view(one_object);
+        return self.children_function(arch,tag,[],0,[root_object],[]);
     },
     get_data : function(){
             var self = this;
+            var inherited_view =[];
+            var result;
             var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
-            dataset = new openerp.web.DataSetSearch(this,'ir.ui.view', null, null);
-            dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
-                _.each(result ,function(num){
-                    // todo xpath
-                    });
-            });
             var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');
+            dataset = new openerp.web.DataSetSearch(self,'ir.ui.view', null, null);
+            dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
+                return result;
+            });
             ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch){
-                self.parse_xml(arch[0].arch);
-                });
+                var one_object = self.parse_xml(arch[0].arch);
+                return self.edit_view(one_object);
+            });
+            
     },
     edit_view : function(one_object){
         var self = this;
@@ -200,7 +200,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         });
     $("img[id^='side-']").click(function() {
-        var side = $(this).closest("'tr[id^='viewedit-']'")
+        var side = $(this).closest("tr[id^='viewedit-']")
         var id_tr = (side.attr('id')).split('-')[1];
         switch (this.id)
         {
