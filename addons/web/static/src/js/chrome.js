@@ -490,7 +490,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     },
     start: function() {
         var self = this;
-
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
 
@@ -501,8 +500,15 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.$element.find("form").submit(this.on_submit);
 
         this.rpc("/web/database/get_list", {}, function(result) {
-            self.db_list = result.db_list;
+            var tpl = openerp.web.qweb.render('Login_dblist', {db_list: result.db_list, selected_db: self.selected_db});
+            self.$element.find("input[name=db]").replaceWith(tpl)
+        }, 
+        function(error, event) {
+            if (error.data.fault_code === 'AccessDenied') {
+                event.preventDefault();
+            }
         });
+
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
