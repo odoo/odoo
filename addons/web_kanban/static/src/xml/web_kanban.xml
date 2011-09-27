@@ -15,7 +15,7 @@
                 <div class="oe_column_heading" t-if="columns.value and columns.header">
                     <t t-esc="columns.header"/>
                 </div>
-                <div t-foreach="columns.aggregates" t-as="aggregate">
+                <div t-foreach="columns.aggregates or {}" t-as="aggregate">
                     <i><u><t t-esc="aggregate"/>:</u> <t t-esc="aggregate_value"/></i>
                 </div>
             </div>
