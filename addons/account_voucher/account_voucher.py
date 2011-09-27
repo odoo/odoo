@@ -790,8 +790,7 @@ class account_voucher(osv.osv):
                 'state': 'posted',
                 'number': name,
             })
-            if inv.journal_id.entry_posted:
-                move_pool.post(cr, uid, [move_id], context={})
+            move_pool.post(cr, uid, [move_id], context={})
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     move_line_pool.reconcile_partial(cr, uid, rec_ids)
