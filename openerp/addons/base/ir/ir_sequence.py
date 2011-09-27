@@ -20,49 +20,55 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
-import pooler
 
-class ir_sequence_type(osv.osv):
+import openerp
+
+class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name',size=64, required=True),
-        'code': fields.char('Code',size=32, required=True),
+        'name': openerp.osv.fields.char('Name', size=64, required=True),
+        'code': openerp.osv.fields.char('Code', size=32, required=True),
     }
-ir_sequence_type()
 
 def _code_get(self, cr, uid, context={}):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
 
-class ir_sequence(osv.osv):
+class ir_sequence(openerp.osv.osv.osv):
+    """ Sequence model.
+
+    The sequence model allows to define and use so-called sequence objects.
+    Such objects are used to generate unique identifiers in a transaction-safe
+    way.
+
+    """
     _name = 'ir.sequence'
     _order = 'name'
     _columns = {
-        'name': fields.char('Name',size=64, required=True),
-        'code': fields.selection(_code_get, 'Code',size=64, required=True),
-        'active': fields.boolean('Active'),
-        'prefix': fields.char('Prefix',size=64, help="Prefix value of the record for the sequence"),
-        'suffix': fields.char('Suffix',size=64, help="Suffix value of the record for the sequence"),
-        'number_next': fields.integer('Next Number', required=True, help="Next number of this sequence"),
-        'number_increment': fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
-        'company_id': fields.many2one('res.company', 'Company'),
+        'name': openerp.osv.fields.char('Name', size=64, required=True),
+        'code': openerp.osv.fields.selection(_code_get, 'Code',size=64, required=True),
+        'active': openerp.osv.fields.boolean('Active'),
+        'prefix': openerp.osv.fields.char('Prefix', size=64, help="Prefix value of the record for the sequence"),
+        'suffix': openerp.osv.fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
+        'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
+        'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
+        'padding' : openerp.osv.fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
     }
     _defaults = {
-        'active': lambda *a: True,
+        'active': True,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
-        'number_increment': lambda *a: 1,
-        'number_next': lambda *a: 1,
-        'padding' : lambda *a : 0,
+        'number_increment': 1,
+        'number_next': 1,
+        'padding' : 0,
     }
 
     def _process(self, s):
         return (s or '') % {
-            'year':time.strftime('%Y'),
+            'year': time.strftime('%Y'),
             'month': time.strftime('%m'),
-            'day':time.strftime('%d'),
+            'day': time.strftime('%d'),
             'y': time.strftime('%y'),
             'doy': time.strftime('%j'),
             'woy': time.strftime('%W'),
@@ -93,9 +99,8 @@ class ir_sequence(osv.osv):
                 return self._process(res['prefix']) + self._process(res['suffix'])
         return False
 
-    def get(self, cr, uid, code):
-        return self.get_id(cr, uid, code, test='code')
-ir_sequence()
+    def get(self, cr, uid, code, context=None):
+        return self.get_id(cr, uid, code, 'code', context)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
