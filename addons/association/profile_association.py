@@ -18,26 +18,36 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
+from lxml import etree
 from osv import fields, osv
 
 class profile_association_config_install_modules_wizard(osv.osv_memory):
-    _name='profile.association.config.install_modules_wizard'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
-        'hr_expense':fields.boolean('Expenses Tracking',  help="Tracks and manages employee expenses, and can "
+        'hr_expense':fields.boolean('Resources Management: Expenses Tracking',  help="Tracks and manages employee expenses, and can "
                  "automatically re-invoice clients if the expenses are "
                  "project-related."),
-        'project':fields.boolean('Project Management', 
-                              help="Helps you manage your projects and tasks by tracking them, "
-                 "generating plannings, etc..."),
-        'event_project':fields.boolean('Events', help="Helps you to manage and organize your events."),
+        'event_project':fields.boolean('Event Management: Events', help="Helps you to manage and organize your events."),
         'project_gtd':fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         'wiki': fields.boolean('Wiki', help="Lets you create wiki pages and page groups in order "
                  "to keep track of business knowledge and share it with "
                  "and  between your employees."),
     }
+
+    # Will be removed when rd-v61-al-config-depends will be done
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(profile_association_config_install_modules_wizard, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        for module in ['project_gtd','hr_expense']:
+            count = 0
+            for node in doc.xpath("//field[@name='%s']" % (module)):
+                count = count + 1
+                if count > 1:
+                    node.set('invisible', '1')
+        res['arch'] = etree.tostring(doc)
+        return res
+   
 profile_association_config_install_modules_wizard()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

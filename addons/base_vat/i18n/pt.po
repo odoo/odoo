@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -38,29 +38,39 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Activa o NIF para o terceiro. Verifica se o número de NIF é válido.\n"
+"\n"
+"    Este módulo segue os métodos definidos em  http://sima-pc.com/nif.php "
+"para \n"
+"    verificar a validade de números NIF assignados a terceiros em países "
+"Europeus.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr "Base VAT - Para verificar a estrutura do NIF"
+msgstr "Base VAT - Para verificar se o NIF é válido"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "Erro! Não pode criar membros associados recursivamente."
+msgstr "Erro ! Não é possível criar membros associados recursivos."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr "O NIF está inválido porque deve começar com o código do país."
+msgstr "O NIF é inválido, deve iniciar com o código do país"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
 msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
-msgstr "Carregue aqui se o terceiro estiver sujeito a IVA."
+msgstr ""
+"Marque esta caixa se o terceiro for sujeito a IVA. Será utilizado na "
+"declaração do IVA."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -82,18 +92,3 @@ msgstr "Declaração Legal do IVA"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista !"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
-#~ "especial !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "O ID do certificado do módulo tem de ser único!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "O nome do módulo deve ser único!"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -24,17 +24,17 @@ msgstr "Not"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Satış ve paketleme için kullanılan yayın türü."
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Sipariş referans no'su tek olmalı !"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Faturalama"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -47,6 +47,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Aktif alan Hatalı olarak ayarlanmışsa, fatura tipini kaldırmadan saklamanıza "
+"yardımcı olur."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -85,6 +87,30 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Satış Yevmiyesi Modülü, farklı yevmiyelerdeki satış ve teslimatlarınızı\n"
+"    (toplama listeleri) sınıflandırmanızı sağlar.\n"
+"    Bu modül bölümlerce çalışan büyük firmalar\n"
+"    için çok yararlıdır.\n"
+"\n"
+"    Yevmiyeyi farklı amaçlar için kullanabilirsiniz, örneğin:\n"
+"    * farklı bölümlerin satışlarını ayırma\n"
+"    * kamyon ile ya da UPS (kargo) ile yapılan sevkiyat yevmiyeleri\n"
+"\n"
+"    yevmiyelerin bir sorumlusu vrdır ve farklı durumlara göre değişir:\n"
+"    * taslak, aç, vazgeç, bitti.\n"
+"\n"
+"    Tüm satışların bir seferde onaylanması, paketlemeyi doğrulamak ya da \n"
+"    faturalandırmak, ... için farklı yevmiyelere toplu işlemler "
+"uygulanabilir.\n"
+"\n"
+"    Paydaşlara, satış siparişlerine göre yapılandırılabilen toplu\n"
+"    faturalandırma yöntemlerini destekler, örnekler:\n"
+"    * günlük faturalandırma,\n"
+"    * aylık faturalandırma, ...\n"
+"\n"
+"    Yevmiyelere göre bazı istatistikler elde edilir.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -99,7 +125,7 @@ msgstr "Gruplanmış"
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hata! Yinelemeli üyeler oluşturamazsınız."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -108,6 +134,9 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Fatura çeşitleri, iş ortakları, satış siparişleri ve teslim fişleri için "
+"kullanılır. Müşterinizin ihtiyacına uygun olarak faturalama yayınınızı "
+"gruplayabilirsiniz: günlük, her Çarşamba, aylık, vb."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -117,7 +146,7 @@ msgstr "Faturalama Yöntemi"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Siparişi"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -135,7 +164,7 @@ msgstr "Aktif"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "İş ortağı"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -147,12 +176,12 @@ msgstr "Fatura Tipleri"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Paketleme Listesi"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr ""
+msgstr "Yevmiyelere göre satış ve teslimat yönetimi"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

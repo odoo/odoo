@@ -46,7 +46,7 @@
             <field name="model">payment.mode</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <form string="Payment Mode">
+                <search string="Payment Mode">
                     <field name="name"/>
                     <field name="journal" widget='selection'/>
                     <field name="company_id" widget='selection' groups="base.group_multi_company"/>
@@ -54,7 +54,7 @@
                     <group expand="0" string="Group By...">
                       <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
                     </group>
-                </form>
+                </search>
             </field>
         </record>
 
@@ -79,8 +79,9 @@
                 <form string="Payment Mode">
                     <field name="name" select="1"/>
                     <field name="journal" select="1"/>
-                    <field name="bank_id"/>
-                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company"/>
+                    <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
+                    <field name="company_id" select="1" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                    <field name="partner_id" select="1" widget='selection' invisible="1"/>
                 </form>
             </field>
         </record>
@@ -149,6 +150,7 @@
                         <tree string="Payment Line">
                             <field name="ml_inv_ref" />
                             <field name="partner_id" select="1"/>
+                            <field name="communication"/>
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
                             <field name="date"/>
@@ -177,7 +179,7 @@
             <field name="type">tree</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel','done');black:state in ('open')" string="Payment order">
+                <tree colors="blue:state == 'draft';gray:state in ('cancel','done');black:state == 'open'" string="Payment order">
                     <field name="reference"/>
                     <field name="mode"/>
                     <field name="user_id"/>
@@ -199,7 +201,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Payment Orders">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
                         <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
                         <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
@@ -290,6 +292,7 @@
                     <field name="ml_inv_ref" />
                     <field name="ml_maturity_date"/>
                     <field name="partner_id" select="1"/>
+                    <field name="communication"/>
                     <field name="amount" sum="Amount Total"/>
                     <field name="amount_currency" sum="Currency Amount Total"/>
                     <field name="currency"/>

@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-16 04:59+0000\n"
-"X-Generator: Launchpad (build 12735)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid ""
 "This distribution model has been saved.You will be able to reuse it later."
-msgstr ""
+msgstr "Шаблон разнесения сохранен. Вы можете использовать его в дальнейшем."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
@@ -60,7 +60,7 @@ msgstr "Управление несколькими планами аналит�
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
 msgid "Analytic Journal"
-msgstr "Книга аналитики"
+msgstr "Журнал аналитики"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -87,12 +87,12 @@ msgstr "OK"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr "Нельзя сделать проводку по закрытому счету."
+msgstr "Нельзя сделать действие по закрытому счету."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
-msgstr "План модели"
+msgstr "План шаблона"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
@@ -127,7 +127,7 @@ msgstr "счет 6 уровня"
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
 msgid "Multi Plans"
-msgstr ""
+msgstr "Несколько планов"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
@@ -147,7 +147,7 @@ msgstr "Код журнала должен быть уникальным для 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
-msgstr ""
+msgstr "Ссылка на счет аналитики"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -166,12 +166,12 @@ msgstr "Позиция заказа на продажу"
 #: view:analytic.plan.create.model:0
 #, python-format
 msgid "Distribution Model Saved"
-msgstr "Распределительный шаблон сохранен"
+msgstr "Шаблон разнесения сохранен"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr "Шаблоны Аналитического Распределения"
+msgstr "Шаблоны разнесения аналитики"
 
 #. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
@@ -181,7 +181,7 @@ msgstr "Печать"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
-msgstr "Процентное отношение"
+msgstr "В процентах"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:201
@@ -232,7 +232,7 @@ msgstr "Строки плана аналитики"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr ""
+msgstr "Сумма ваучера должна совпадать с суммой в строке выписки"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -262,7 +262,7 @@ msgstr "Счет 5 уровня"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "Пример позиции аналитики"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
@@ -333,6 +333,39 @@ msgid ""
 "of distribution models.\n"
 "        "
 msgstr ""
+"Этот модуль позволяет использовать несколько планов счетов аналитики, в "
+"соответствии \n"
+"с общим журналом, так что несколько аналитических проводок создаются, при\n"
+"подтверждении счета или бухгалтерской проводки.\n"
+"\n"
+"Например, можно определить такую структуру аналитики:\n"
+"  Проекты\n"
+"      Проект 1\n"
+"          Подпроект 1.1\n"
+"          Подпроект 1.2\n"
+"      Проект 2\n"
+"  Продавец\n"
+"      Юрий\n"
+"      Николай\n"
+"\n"
+"Здесь, у нас есть два плана: Проекты и Продавец. Позиция счета должна "
+"создавать\n"
+"проводки аналитики в 2 планах: Подпроект 1.1 и Николай. Сумма может быть \n"
+"разделена. Следующий пример для счета, который затрагивает два подпроекта и "
+"\n"
+"отнесен к одному продавцу:\n"
+"План1:\n"
+"    Подпроект 1.1 : 50%\n"
+"    Подпроект 1.2 : 50%\n"
+"План2:\n"
+"    Юрий: 100%\n"
+"\n"
+"Поэтому, когда эта позиция счета будет подтверждена, будет генерироваться 3 "
+"\n"
+"аналитических проводки,  для одной бухгалтерской.\n"
+"План аналитики утверждает минимальный и максимальный процент в момент \n"
+"создания шаблона разнесения.\n"
+"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -385,7 +418,7 @@ msgstr "Ошибка"
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
-msgstr ""
+msgstr "Сохранить это разнесение как шаблон"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -401,7 +434,7 @@ msgstr "Пожалуйста, укажите имя и код перед сох�
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
 msgid "Print Crossovered Analytic"
-msgstr ""
+msgstr "Печать перекрестной аналитики"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:321
@@ -439,13 +472,13 @@ msgstr "Счет 4 уровня"
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
+msgstr "Позиции разнесения аналитики"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "Всего должно быть между %s и %s"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -460,12 +493,12 @@ msgstr "Название счета"
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr "Строка аналитического распределения"
+msgstr "Позиция разнесения аналитики"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,code:0
 msgid "Distribution Code"
-msgstr ""
+msgstr "Код разнесения"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -486,7 +519,7 @@ msgstr "100.00%"
 #: field:account.move.line,analytics_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Аналитическое распределение"
+msgstr "Разнесение аналитики"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
@@ -506,7 +539,7 @@ msgstr "Дата окончания"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr "Шаблоня распределения"
+msgstr "Шаблон разнесения"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -571,18 +604,3 @@ msgstr "Нельзя создать проводку по счету с типо
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Позиция заказа на продажу"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"

@@ -116,7 +116,7 @@
                     <page string="Invoicing">
                         <field name="invoice_method" colspan="4"/>
                         <field
-                            name="pricelist_id" context="product_id=product_id"
+                            name="pricelist_id" context="{'product_id':product_id}"
                             attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <field name="partner_invoice_id" attrs="{'readonly':[('invoice_method','=', 'none')]}"/>
                         <!-- <field name="invoice_id"/> -->
@@ -179,7 +179,7 @@
           <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
-                  <group col='4' colspan='4'>
+                  <group>
                        <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
                        <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
                        <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
@@ -192,7 +192,7 @@
                        <field name="state" />
                   </group>
                   <newline/>
-                  <group expand="0" string="Group By..." colspan="10" col="8">
+                  <group expand="0" string="Group By...">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>

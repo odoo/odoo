@@ -23,6 +23,7 @@
     'name': 'HR - Recruitment',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 Manages job positions and the recruitment process.
 ==================================================
@@ -47,6 +48,7 @@ system to store and search in your CV base.
         'security/ir.model.access.csv',
         'report/hr_recruitment_report_view.xml',
         'board_hr_recruitment_statistical_view.xml',
+        'hr_recruitment_installer_view.xml'
      ],
     'init_xml': [
         'hr_recruitment_data.xml'

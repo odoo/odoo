@@ -37,7 +37,10 @@ class invoice_directly(osv.osv_memory):
             context = {}
         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
         pick_obj = self.pool.get('stock.picking')
+        context.update({'active_model':'stock.picking'})
         picking_ids = context.get('active_ids', False)
+        if picking_ids:
+            context.update({'active_id':picking_ids[0]})
         pick = pick_obj.browse(cr, uid, picking_ids, context=context)[0]
         if pick.invoice_state == '2binvoiced':
             return {
@@ -47,6 +50,7 @@ class invoice_directly(osv.osv_memory):
                 'res_model': 'stock.invoice.onshipping',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
+                'context': context
             }
         return {'type': 'ir.actions.act_window_close'}
 

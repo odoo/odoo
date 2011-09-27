@@ -2,15 +2,11 @@
 <openerp>
     <data>
 
-        <record id="note_project_type" model="board.note.type">
-            <field name="name">Project managers</field>
-        </record>
-
         <!--
          Board for project managers
          -->
         <act_window 
-            domain="[('manager', '=', uid)]" 
+            domain="[('user_id', '=', uid)]" 
             id="act_my_project" name="My projects" 
             res_model="project.project" view_mode="tree,form" 
             view_type="form"/>

@@ -1,0 +1,89 @@
+# Vietnamese translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-07-20 09:55+0000\n"
+"Last-Translator: Phong Nguyen-Thanh <Unknown>\n"
+"Language-Team: Vietnamese <vi@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: base_crypt
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Bạn không thể có hai người sử dụng với cùng tên đăng nhập !"
+
+#. module: base_crypt
+#: model:ir.model,name:base_crypt.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: base_crypt
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Công ty được lựa chọn không nằm trong các công ty mà người sử dụng này được "
+"phép"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Please specify the password !"
+msgstr "Vui lòng xác định mật khẩu !"
+
+#. module: base_crypt
+#: model:ir.module.module,shortdesc:base_crypt.module_meta_information
+msgid "Base - Password Encryption"
+msgstr "Cơ sở - Mã hóa Mật khẩu"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: base_crypt
+#: model:ir.module.module,description:base_crypt.module_meta_information
+msgid ""
+"This module replaces the cleartext password in the database with a password "
+"hash,\n"
+"preventing anyone from reading the original password.\n"
+"For your existing user base, the removal of the cleartext passwords occurs "
+"the first time\n"
+"a user logs into the database, after installing base_crypt.\n"
+"After installing this module it won't be possible to recover a forgotten "
+"password for your\n"
+"users, the only solution is for an admin to set a new password.\n"
+"\n"
+"Note: installing this module does not mean you can ignore basic security "
+"measures,\n"
+"as the password is still transmitted unencrypted on the network (by the "
+"client),\n"
+"unless you are using a secure protocol such as XML-RPCS.\n"
+"                    "
+msgstr ""
+"Mô-đun này thay thế mật khẩu dạng tường minh (cleartext) trong cơ sở dữ liệu "
+"với một mật khẩu băm (hash),\n"
+"ngăn chặn bất cứ ai đọc các mật khẩu ban đầu.\n"
+"Đối với người dùng hiện tại của bạn, việc loại bỏ các mật khẩu tường minh "
+"xảy ra lần đầu tiên\n"
+"người dùng đăng nhập vào cơ sở dữ liệu, sau khi cài đặt base_crypt.\n"
+"Sau khi cài đặt mô-đun này, sẽ không thể khôi phục lại một mật khẩu bị lãng "
+"quên cho\n"
+"người sử dụng của bạn, giải pháp duy nhất là để một quản trị viên thiết lập "
+"một mật khẩu mới.\n"
+"\n"
+"Lưu ý: cài đặt mô-đun này không có nghĩa là bạn có thể bỏ qua các biện pháp "
+"bảo mật cơ bản,\n"
+"như mật khẩu vẫn được truyền không mã hóa trên mạng (từ máy khách),\n"
+"trừ khi bạn sử dụng một giao thức an toàn chẳng hạn như XML-RPCS.\n"
+"                    "

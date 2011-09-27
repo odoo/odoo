@@ -281,7 +281,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -310,7 +310,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -347,16 +347,16 @@
     <blockTable colWidths="82.0,82.0,82.0,128.0,82.0,82.0" style="Table1">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Chart of Account</para>
+          <para style="terp_tblheader_General_Centre">Chart of Accounts</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Journal</para>
+          <para style="terp_tblheader_General_Centre">Journals</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
+          <para style="terp_tblheader_General_Centre">Filters By [[ data['form']['filter'] not in ('filter_no','unreconciled') and get_filter(data) ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Partner's</para>
@@ -378,7 +378,7 @@
           <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">[[ data['form']['filter'] in ('filter_no','unreconciled') and get_filter(data) or removeParentNode('para') ]]</para>
           <blockTable colWidths="58.0,58.0" style="Table7">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
@@ -441,7 +441,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -482,7 +482,7 @@
             <para style="terp_default_Bold_9_Right">[[ formatLang((sum_credit_partner(p))) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p)), currency_obj=company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -502,7 +502,7 @@
               <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][1]) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][2], currency_obj=company.currency_id) ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -533,7 +533,7 @@
               <para style="terp_default_Right_8">[[ formatLang((line['credit'])) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_8">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang((line['progress']), currency_obj=company.currency_id) ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -546,7 +546,7 @@
             <para style="terp_tblheader_Details">Date</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details">JNRL</para>
+            <para style="terp_tblheader_Details">JRNL</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Centre">Ref</para>
@@ -590,7 +590,7 @@
             <para style="terp_default_Bold_9_Right">[[ formatLang((sum_credit_partner(p))) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p)), currency_obj=company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Bold_9_Right">
@@ -613,7 +613,7 @@
               <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][1]) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][2]) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang(get_intial_balance(p)[0][2], currency_obj=company.currency_id) ]]</para>
             </td>
             <td>
               <para style="terp_default_Right_8">
@@ -649,7 +649,7 @@
               <para style="terp_default_Right_8">[[ formatLang((line['credit'])) ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_8">[[ formatLang((line['progress'])) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_8">[[ formatLang((line['progress']), currency_obj=company.currency_id) ]]</para>
             </td>
             <td>
               <para style="terp_default_Right_8">

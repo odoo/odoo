@@ -136,17 +136,18 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'code': account.code,
                         'name': account.name,
                         'level': account.level,
-                        'balance':account.balance,
+                        'balance': account.balance != 0 and account.balance * account.user_type.sign or account.balance,
+                        'type': account.type,
                     }
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += account.balance
                     if typ == 'asset' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += account.balance
-                    if data['form']['display_account'] == 'bal_movement':
+                    if data['form']['display_account'] == 'movement':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account_dict)
-                    elif data['form']['display_account'] == 'bal_solde':
+                    elif data['form']['display_account'] == 'not_zero':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account_dict)
                     else:
@@ -163,10 +164,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
             for i in range(0,max(len(cal_list['liability']),len(cal_list['asset']))):
                 if i < len(cal_list['liability']) and i < len(cal_list['asset']):
                     temp={
+                          'type': cal_list['liability'][i]['type'],
                           'code': cal_list['liability'][i]['code'],
                           'name': cal_list['liability'][i]['name'],
                           'level': cal_list['liability'][i]['level'],
                           'balance':cal_list['liability'][i]['balance'],
+                          'type1': cal_list['asset'][i]['type'],
                           'code1': cal_list['asset'][i]['code'],
                           'name1': cal_list['asset'][i]['name'],
                           'level1': cal_list['asset'][i]['level'],
@@ -176,10 +179,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                 else:
                     if i < len(cal_list['asset']):
                         temp={
+                              'type': '',
                               'code': '',
                               'name': '',
                               'level': False,
                               'balance':False,
+                              'type1': cal_list['asset'][i]['type'],
                               'code1': cal_list['asset'][i]['code'],
                               'name1': cal_list['asset'][i]['name'],
                               'level1': cal_list['asset'][i]['level'],
@@ -188,10 +193,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         self.result_temp.append(temp)
                     if  i < len(cal_list['liability']):
                         temp={
+                              'type': cal_list['liability'][i]['type'],
                               'code': cal_list['liability'][i]['code'],
                               'name': cal_list['liability'][i]['name'],
                               'level': cal_list['liability'][i]['level'],
                               'balance':cal_list['liability'][i]['balance'],
+                              'type1': '',
                               'code1': '',
                               'name1': '',
                               'level1': False,

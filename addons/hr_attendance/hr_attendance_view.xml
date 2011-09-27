@@ -52,7 +52,7 @@
                 <search string="Hr Attendance Search">
                     <filter icon="terp-stock_align_left_24" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name::date','=',current_date)]" />
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
                     <field name="name"/>
@@ -129,11 +129,10 @@
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
                     <group colspan="2">
+                        <field name="state"/>
                         <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
                         <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </group>
-                    <field name="state"/>
-                    <newline/>
                 </field>
             </field>
         </record>

@@ -7,7 +7,7 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <notebook>
+                <notebook position="inside">
                     <page string="Overdue Payments" position="inside">
                         <separator string="Overdue Payments Message" colspan="4"/>
                         <field name="overdue_msg" nolabel="1" colspan ="4"/>
@@ -22,12 +22,9 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                  <group col="2" colspan="2">
-                      <separator string="Reserve And Profit/Loss Account" colspan="2"/>
+                <field name="currency_id" position="after">
                       <field name="property_reserve_and_surplus_account" colspan="2"/>
-                  </group>
-                </page>
+                </field>
             </field>
         </record>
 

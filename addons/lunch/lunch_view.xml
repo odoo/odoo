@@ -24,15 +24,19 @@
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
                 <form string="Order">
-                    <group colspan="2" col="4">
-                        <field name="user_id" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="product" select="1" on_change="onchange_product(product)"/>
-                        <field name="category"/>
-                        <field name="descript"/>
-                        <field name="price"/>
-                        <field name="cashmove"/>
-                        <field name="state"/>
+                    <field name="user_id" select="1"/>
+                    <field name="date" select="1"/>
+                    <field name="product" select="1" on_change="onchange_product(product)"/>
+                    <field name="category"/>
+                    <field name="descript"/>
+                    <field name="price"/>
+                    <field name="cashmove"/>
+                    <newline/>
+                   <separator string="" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                        <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"/>
+                        <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -45,7 +49,7 @@
             <field name="model">lunch.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirmed')" string="Order">
+                <tree colors="blue:state == 'draft';black:state == 'confirmed'" string="Order">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="product"/>
@@ -83,7 +87,7 @@
                     <field name="user_id"/>
                     <field name="date"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
                     </group>
                 </search>
@@ -187,11 +191,10 @@
                 <search string="Search CashMove">
                     <filter icon="terp-go-today" name="Today" string="Today" domain="[('create_date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59'))]"/>
                     <separator orientation="vertical"/>
-                    <field name="name"/>
                     <field name="user_cashmove"/>
                     <field name="create_date"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_cashmove'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Box" icon="terp-dolar" domain="[]"  context="{'group_by':'box'}"/>
@@ -257,11 +260,18 @@
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
                 <form string="Products">
-                    <field name="name" select="1"/>
-                    <field name="category_id" widget="selection"/>
-                    <field name="description" />
-                    <field name="price" />
-                    <field name="active"/>
+                     <group col="6">
+                          <field name="name" select="1"/>
+                          <field name="category_id" widget="selection"/>
+                          <field name="price" />
+                     </group>
+                     <notebook colspan="4">
+                         <page string="General Information"> 
+                              <field name="active"/>
+                              <separator string="Description" colspan="4" />
+                              <field name="description" nolabel="1" colspan="4" />
+                          </page>
+                     </notebook>
                 </form>
             </field>
         </record>
@@ -276,7 +286,6 @@
                 <tree string="Products">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="description"/>
                     <field name="price"/>
                 </tree>
             </field>
@@ -292,7 +301,6 @@
                 <search string="Products">
                     <field name="name" />
                     <field name="category_id" widget="selection"/>
-                    <field name="description" />
                     <field name="price"/>
                 </search>
             </field>
@@ -372,16 +380,15 @@
                                 help="Box amount in current month"/>
                         <filter icon="terp-go-month"
                          string="    Month-1    "
-                         separator="1"
                          domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Box amount in last month"/>
                     <separator orientation="vertical"/>
-                        <field name="user_id" select="1"/>
-                        <field name="box" select="1"/>
-                        <field name="amount" select="1"/>
+                        <field name="user_id"/>
+                        <field name="box"/>
+                        <field name="amount"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4">
+                    <group expand="0" string="Group By...">
                         <filter string="Box" icon="terp-dolar" context="{'group_by':'box'}"/>
                     </group>
                 </search>

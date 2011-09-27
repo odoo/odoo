@@ -1,37 +1,42 @@
 # Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 16:11+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2009-11-25 15:28+0000\n"
+"PO-Revision-Date: 2010-12-20 20:44+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-20 04:54+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:45+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
-#. module: l10n_in
-#: model:ir.module.module,description:l10n_in.module_meta_information
+#. module: l10n_chart_in
+#: model:ir.module.module,description:l10n_chart_in.module_meta_information
 msgid ""
 "\n"
 "    Indian Accounting : chart of Account\n"
 "    "
 msgstr ""
 
-#. module: l10n_in
-#: model:ir.module.module,shortdesc:l10n_in.module_meta_information
-msgid "Indian Chart of Account"
+#. module: l10n_chart_in
+#: constraint:account.account.template:0
+msgid "Error ! You can not create recursive account templates."
+msgstr "Erro! Não pode criar modelos de conta recursivamente."
+
+#. module: l10n_chart_in
+#: model:account.journal,name:l10n_chart_in.opening_journal
+msgid "Opening Journal"
 msgstr ""
 
-#. module: l10n_in
-#: model:ir.actions.todo,note:l10n_in.config_call_account_template_in_minimal
+#. module: l10n_chart_in
+#: model:ir.actions.todo,note:l10n_chart_in.config_call_account_template_in_minimal
 msgid ""
 "Generate Chart of Accounts from a Chart Template. You will be asked to pass "
 "the name of the company, the chart template to follow, the no. of digits to "
@@ -40,4 +45,44 @@ msgid ""
 "\tThis is the same wizard that runs from Financial "
 "Management/Configuration/Financial Accounting/Financial Accounts/Generate "
 "Chart of Accounts from a Chart Template."
+msgstr ""
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_liability1
+msgid "Liability"
+msgstr ""
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_asset1
+msgid "Asset"
+msgstr ""
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_closed1
+msgid "Closed"
+msgstr ""
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_income1
+msgid "Income"
+msgstr "Rendimento"
+
+#. module: l10n_chart_in
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
+msgstr "Erro! Não pode criar códigos de imposto recursivamente."
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_expense1
+msgid "Expense"
+msgstr "Despesa"
+
+#. module: l10n_chart_in
+#: model:ir.module.module,shortdesc:l10n_chart_in.module_meta_information
+msgid "Indian Chart of Account"
+msgstr ""
+
+#. module: l10n_chart_in
+#: model:account.account.type,name:l10n_chart_in.account_type_root_ind1
+msgid "View"
 msgstr ""

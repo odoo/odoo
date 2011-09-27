@@ -17,9 +17,11 @@
                 <field name="display_account"/>
                 <field name="sortby"/>
                 <field name="landscape"/>
-                <field name="initial_balance" attrs="{'readonly':[('fiscalyear_id','=', False)]}"/>
                 <field name="amount_currency"/>
                 <newline/>
+            </xpath>
+            <xpath expr="//field[@name='filter']" position="after">
+                <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no'))]}" />
             </xpath>
             </data>
             </field>

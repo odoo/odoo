@@ -20,9 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.osv import osv_pool, object_proxy
+from osv.osv import object_proxy
 from tools.translate import _
-import ir
 import pooler
 import time
 import tools
@@ -59,7 +58,7 @@ class audittrail_rule(osv.osv):
     }
 
     _sql_constraints = [
-        ('model_uniq', 'unique (object_id)', """There is a rule defined on this object\n You can not define other on the same!""")
+        ('model_uniq', 'unique (object_id)', """There is a rule defined on this object\n You cannot define another one the same object!""")
     ]
     __functions = {}
 
@@ -105,7 +104,7 @@ class audittrail_rule(osv.osv):
         @return: True
         """
         obj_action = self.pool.get('ir.actions.act_window')
-        val_obj = self.pool.get('ir.values')
+        ir_values_obj = self.pool.get('ir.values')
         value=''
         #start Loop
         for thisrule in self.browse(cr, uid, ids):
@@ -116,9 +115,10 @@ class audittrail_rule(osv.osv):
             if w_id:
                 obj_action.unlink(cr, uid, w_id)
                 value = "ir.actions.act_window" + ',' + str(w_id[0])
-            val_id = val_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
+            val_id = ir_values_obj.search(cr, uid, [('model', '=', thisrule.object_id.model), ('value', '=', value)])
             if val_id:
-                res = ir.ir_del(cr, uid, val_id[0])
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                res = ir_values_obj.unlink(cr, uid, [val_id[0]])
             self.write(cr, uid, [thisrule.id], {"state": "draft"})
         #End Loop
         return True
@@ -406,13 +406,16 @@ class audittrail_objects_proxy(object_proxy):
             cr.close()
             return res
         else:
-            res_ids = args[0]
-            old_values = {}
-            fields = []
-            if len(args)>1 and type(args[1]) == dict:
-                fields = args[1].keys()
-            if type(res_ids) in (long, int):
-                res_ids = [res_ids]
+            res_ids = []
+            res = True
+            if args:
+                res_ids = args[0]
+                old_values = {}
+                fields = []
+                if len(args)>1 and type(args[1]) == dict:
+                    fields = args[1].keys()
+                if type(res_ids) in (long, int):
+                    res_ids = [res_ids]
             if res_ids:
                 for resource in resource_pool.read(cr, uid, res_ids):
                     resource_id = resource['id']

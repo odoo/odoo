@@ -13,42 +13,42 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:25+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:39+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:96
 #: code:addons/analytic_user_function/analytic_user_function.py:131
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Грешка!"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Ред в график"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,account_id:0
 #: model:ir.model,name:analytic_user_function.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитична сметка"
 
 #. module: analytic_user_function
 #: view:account.analytic.account:0
 #: field:account.analytic.account,user_product_ids:0
 msgid "Users/Products Rel."
-msgstr ""
+msgstr "Потребители/Продукти Връзка."
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Потребител"
 
 #. module: analytic_user_function
 #: constraint:account.analytic.account:0
@@ -56,18 +56,19 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"Грешка! Валутата трябва да бъде същата като валутата на избраната компания"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:97
 #: code:addons/analytic_user_function/analytic_user_function.py:132
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Няма определена разходна сметка за този продукт: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
 msgid "Relation table between users and products on a analytic account"
-msgstr ""
+msgstr "Свързваща таблица между потребители и продукти по аналитична сметка"
 
 #. module: analytic_user_function
 #: model:ir.module.module,description:analytic_user_function.module_meta_information
@@ -85,21 +86,34 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Този модул дава възможност да се определи какво е стандартната функция "
+"на даден потребител по дадена сметка. Това се използва предимно, когато "
+"потребителят си кодира график: стойностите са възстановени и областта се "
+"попълва автоматично ... но и възможноста за промяна на тези стойности е в "
+"наличност.\n"
+"\n"
+"Очевидно, ако няма данни е регистриран по текущата сметка, стойността по "
+"подразбиране е дадена, както обикновено от служебни данни, така че този "
+"модул е напълно съвместим с по-големи конфигурации.\n"
+"\n"
+"    "
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
 msgid "Analytic User Function"
-msgstr ""
+msgstr "Аналитична потребителска сметка"
 
 #. module: analytic_user_function
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Грешка! Не можете да създадете рекурсивни аналитични сметки."
 
 #. module: analytic_user_function
 #: view:analytic_user_funct_grid:0
 msgid "User's Product for this Analytic Account"
-msgstr ""
+msgstr "Продукт на потребителя за аналитична сметка"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Невалиден XML за преглед на архитектурата"

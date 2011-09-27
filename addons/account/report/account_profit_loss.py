@@ -101,6 +101,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
 
         cal_list = {}
         account_id = data['form'].get('chart_account_id', False)
+        company_currency = account_pool.browse(self.cr, self.uid, account_id).company_id.currency_id
         account_ids = account_pool._get_children_and_consol(cr, uid, account_id, context=ctx)
         accounts = account_pool.browse(cr, uid, account_ids, context=ctx)
 
@@ -110,18 +111,21 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_dr += abs(account.debit - account.credit)
+                        self.result_sum_dr += account.debit - account.credit
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
-                        self.result_sum_cr += abs(account.debit - account.credit)
-                    if data['form']['display_account'] == 'bal_movement':
+                        self.result_sum_cr += account.credit - account.debit
+                    if data['form']['display_account'] == 'movement':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.credit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.debit) or not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account)
-                    elif data['form']['display_account'] == 'bal_solde':
+                    elif data['form']['display_account'] == 'not_zero':
                         if not currency_pool.is_zero(self.cr, self.uid, currency, account.balance):
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)
-            if self.result_sum_dr > self.result_sum_cr:
+            if currency_pool.is_zero(self.cr, self.uid, company_currency, (self.result_sum_dr-self.result_sum_cr)):
+                self.res_pl['type'] = None
+                self.res_pl['balance'] = 0.0
+            elif self.result_sum_dr > self.result_sum_cr:
                 self.res_pl['type'] = _('Net Loss')
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:
@@ -137,11 +141,15 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                           'code': cal_list['expense'][i].code,
                           'name': cal_list['expense'][i].name,
                           'level': cal_list['expense'][i].level,
-                          'balance':cal_list['expense'][i].balance,
+                          'balance': cal_list['expense'][i].balance != 0 and \
+                                    cal_list['expense'][i].balance * cal_list['expense'][i].user_type.sign or \
+                                    cal_list['expense'][i].balance,
                           'code1': cal_list['income'][i].code,
                           'name1': cal_list['income'][i].name,
                           'level1': cal_list['income'][i].level,
-                          'balance1':cal_list['income'][i].balance,
+                          'balance1': cal_list['income'][i].balance != 0 and \
+                                        cal_list['income'][i].balance * cal_list['income'][i].user_type.sign or \
+                                        cal_list['income'][i].balance,
                           }
                     self.result_temp.append(temp)
                 else:
@@ -154,7 +162,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                               'code1': cal_list['income'][i].code,
                               'name1': cal_list['income'][i].name,
                               'level1': cal_list['income'][i].level,
-                              'balance1':cal_list['income'][i].balance,
+                              'balance1': cal_list['income'][i].balance != 0 and \
+                                            cal_list['income'][i].balance * cal_list['income'][i].user_type.sign \
+                                            or cal_list['income'][i].balance,
                               }
                         self.result_temp.append(temp)
                     if  i < len(cal_list['expense']):
@@ -162,7 +172,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
                               'code': cal_list['expense'][i].code,
                               'name': cal_list['expense'][i].name,
                               'level': cal_list['expense'][i].level,
-                              'balance':cal_list['expense'][i].balance,
+                              'balance': cal_list['expense'][i].balance != 0 and \
+                                            cal_list['expense'][i].balance * cal_list['expense'][i].user_type.sign \
+                                            or cal_list['expense'][i].balance,
                               'code1': '',
                               'name1': '',
                               'level1': False,

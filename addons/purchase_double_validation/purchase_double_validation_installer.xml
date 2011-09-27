@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <!-- configartion view -->
@@ -19,9 +18,9 @@
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Define minimum amount after which puchase is needed to be validated.</attribute>
                   </xpath>
-                <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                      <attribute name='rowspan'>15</attribute>
-                      <attribute name='string'></attribute>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                      <attribute name="rowspan">15</attribute>
+                      <attribute name="string"/>
                   </xpath>
                 <group string="res_config_contents" position="replace">
                   <field name="limit_amount"/>
@@ -44,7 +43,7 @@
         <!-- register configuration wizard -->
         <record id="config_wizard_step_purchase_limit_amount" model="ir.actions.todo">
             <field name="action_id" ref="action_config_purchase_limit_amount"/>
-            <field name="restart">onskip</field>
+            <field name="category_id" ref="purchase.category_purchase_config"/>
         </record>
         
     </data>

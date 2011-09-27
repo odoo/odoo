@@ -108,9 +108,9 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Partner Contact">
-                <field name="name" select="1"/>
-                <field name="first_name" select="1"/>
-                <field name="partner_id" select="1" string="Partner"/>
+                <field name="name"/>
+                <field name="first_name"/>
+                <field name="partner_id" string="Partner"/>
             </search>
         </field>
     </record>
@@ -126,7 +126,12 @@
         <field name="search_view_id" ref="view_partner_contact_search"/>
     </record>
     <menuitem name="Contacts" id="menu_partner_contact_form" action="action_partner_contact_form" parent = "base.menu_address_book" sequence="2"/>
-    
+
+    <!-- Rename menuitem for partner addresses -->
+    <record model="ir.ui.menu" id="base.menu_partner_address_form">
+        <field name="name">Addresses</field>
+    </record>
+
     <!--    
     Contacts for Suppliers
     -->
@@ -339,7 +344,7 @@
         <field name="inherit_id" ref="base.view_res_partner_address_filter"/>
         <field name="arch" type="xml">
             <search string="Search Contact">
-                   <field name="job_ids" select='1'/>
+                   <field name="job_ids"/>
             </search>
         </field>
     </record>

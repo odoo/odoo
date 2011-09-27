@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import logging
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -33,6 +34,7 @@ import tools
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
+    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -63,21 +65,6 @@ class account_installer(osv.osv_memory):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
 
-    def _get_default_charts(self, cr, uid, context=None):
-        module_name = False
-        company_id = self._default_company(cr, uid, context=context)
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-        address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
-        if address_id['default']:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
-            code = address.country_id.code
-            module_name = (code and 'l10n_' + code.lower()) or False
-        if module_name:
-            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)], context=context)
-            if module_id:
-                return module_name
-        return 'configurable'
-
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
@@ -85,13 +72,11 @@ class account_installer(osv.osv_memory):
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
         'company_id': _default_company,
-        'charts': _get_default_charts
+        'charts': 'configurable'
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        configured_cmp = []
-        unconfigured_cmp = []
         cmp_select = []
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
@@ -99,12 +84,12 @@ class account_installer(osv.osv_memory):
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
-           if field == 'company_id':
-               res['fields'][field]['domain'] = unconfigured_cmp
-               res['fields'][field]['selection'] = [('', '')]
-               if unconfigured_cmp:
-                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-                   res['fields'][field]['selection'] = cmp_select
+            if field == 'company_id':
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
+                res['fields'][field]['selection'] = [('', '')]
+                if unconfigured_cmp:
+                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    res['fields'][field]['selection'] = cmp_select
         return res
 
     def on_change_tax(self, cr, uid, id, tax):
@@ -120,17 +105,13 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        super(account_installer, self).execute(cr, uid, ids, context=context)
         fy_obj = self.pool.get('account.fiscalyear')
         mod_obj = self.pool.get('ir.model.data')
         obj_acc_temp = self.pool.get('account.account.template')
         obj_tax_code_temp = self.pool.get('account.tax.code.template')
         obj_tax_temp = self.pool.get('account.tax.template')
-        obj_product = self.pool.get('product.product')
-        ir_values = self.pool.get('ir.values')
         obj_acc_chart_temp = self.pool.get('account.chart.template')
         record = self.browse(cr, uid, ids, context=context)[0]
-        company_id = record.company_id
         for res in self.read(cr, uid, ids, context=context):
             if record.charts == 'configurable':
                 fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
@@ -231,22 +212,20 @@ class account_installer(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
+        super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_DEBUG,
-            'Installing chart of accounts %s'%chart)
+        self.__logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()
 
 class account_installer_modules(osv.osv_memory):
-    _name = 'account.installer.modules'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
             help="Allows invoice lines to impact multiple analytic accounts "
@@ -258,16 +237,11 @@ class account_installer_modules(osv.osv_memory):
             help="Helps you generate reminder letters for unpaid invoices, "
                  "including multiple levels of reminding and customized "
                  "per-partner policies."),
-        'account_voucher': fields.boolean('Voucher Management',
-            help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
-    }
-
-    _defaults = {
-        'account_voucher': True,
+        'account_asset': fields.boolean('Assets Management',
+            help="Helps you to manage your assets and their depreciation entries."),
     }
 
 account_installer_modules()

@@ -4,7 +4,8 @@
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
             web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"/>
+            web_icon_hover="images/hr-hover.png"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
@@ -28,7 +29,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)" />
+                        <field name="department_id" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
@@ -43,11 +44,12 @@
                                 <field name="sinid" groups="base.group_extended"/>
                                 <field name="identification_id" groups="base.group_extended"/>
                                 <field name="passport_id"/>
+                                <field name="otherid"/>
                             </group>
                             <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator string="Status" colspan="2"/>
                                 <field name="gender"/>
-                                <field name="marital" widget="selection"/>
+                                <field name="marital"/>
                                 <field name="country_id"/>
                                 <field name="birthday"/>
                             </group>
@@ -62,7 +64,7 @@
                                 <field name="work_location"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Position" colspan="2"/>
+                                <separator string="Job Information" colspan="2"/>
                                 <field name="job_id" domain="[('state','!=','old')]"/>
                                 <field name="coach_id" />
                             </group>
@@ -109,6 +111,7 @@
                     <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]" string="My Departments Employee"/>
                     </field>
                     <field name="job_id" widget="selection"/>
+                    <field name="category_ids" select="1" groups="base.group_extended"/>
                     <field name="parent_id"/>
                     <newline />
                     <group expand="0" string="Group By...">
@@ -156,53 +159,12 @@
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
-	    <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
-	        <field name="name">Employees</field>
-	        <field name="resource">ir.ui.menu</field>
-	        <field name="user_id" ref="base.user_root"/>
-	        <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
-	    </record>
-
-        <!--
-        =======================
-        Employee marital status
-        =======================
-        -->
-
-    <record id="hr_hr_employee_marital_status_tree" model="ir.ui.view">
-            <field name="name">hr.hr.employee.marital.status.tree</field>
-            <field name="model">hr.employee.marital.status</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Marital Status">
-                    <field name="name" />
-                </tree>
-            </field>
+        <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
+            <field name="name">Employees</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
-
-        <record id="hr_hr_employee_marital_status_form" model="ir.ui.view">
-            <field name="name">hr.hr.employee.marital.status</field>
-            <field name="model">hr.employee.marital.status</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Marital Status">
-                    <field name="name"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_hr_marital_status" model="ir.actions.act_window">
-            <field name="name">Marital Status</field>
-            <field name="res_model">hr.employee.marital.status</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="hr_hr_employee_marital_status_tree"/>
-        </record>
-
-        <menuitem action="action_hr_marital_status" id="hr_menu_marital_status"
-            parent="hr.menu_view_employee_category_configuration_form" sequence="3" groups="base.group_extended"/>
 
         <!--
         =======================
@@ -215,6 +177,7 @@
             <field name="model">hr.employee</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -320,8 +283,8 @@
             <field eval="True" name="object"/>
         </record>
 
-        <menuitem action="open_view_categ_tree" 
-            id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
+        <menuitem action="open_view_categ_tree"
+            id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -346,8 +309,8 @@
                             <separator colspan="4" string="Requirements"/>
                             <field name="requirements" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Employee">
-                            <field name="employee_ids" colspan='4' nolabel="1" widget="many2many" mode="tree,form"/>
+                        <page string="Employees">
+                            <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
@@ -383,9 +346,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <filter icon="terp-check" domain="[('state','in',('open','recruit'))]" string="Current"
-                        name="Current" help="Open and in recruitment positions"/>
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test"  
+                            domain="[('state','=','open')]" 
+                            string="In Position"
+                            help="In Position"/>
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
                         help="In Recruitment"/>
                     <separator orientation="vertical"/>
@@ -414,7 +378,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
+        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>
 </openerp>

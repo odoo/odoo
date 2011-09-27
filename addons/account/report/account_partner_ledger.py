@@ -23,6 +23,7 @@ import time
 import re
 from report import report_sxw
 from common_report_header import common_report_header
+from tools.translate import _
 
 class third_party_ledger(report_sxw.rml_parse, common_report_header):
 
@@ -53,15 +54,23 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'get_target_move': self._get_target_move,
         })
 
+    def _get_filter(self, data):
+        if data['form']['filter'] == 'unreconciled':
+            return _('Unreconciled Entries')
+        return super(third_party_ledger, self)._get_filter(data)
+
     def set_context(self, objects, data, ids, report_type=None):
         obj_move = self.pool.get('account.move.line')
         obj_partner = self.pool.get('res.partner')
         self.query = obj_move._query_get(self.cr, self.uid, obj='l', context=data['form'].get('used_context', {}))
         ctx2 = data['form'].get('used_context',{}).copy()
-        ctx2.update({'initial_bal': True})
-        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
-        self.reconcil = data['form'].get('reconcil', True)
         self.initial_balance = data['form'].get('initial_balance', True)
+        if self.initial_balance:
+            ctx2.update({'initial_bal': True})
+        self.init_query = obj_move._query_get(self.cr, self.uid, obj='l', context=ctx2)
+        self.reconcil = True
+        if data['form']['filter'] == 'unreconciled':
+            self.reconcil = False
         self.result_selection = data['form'].get('result_selection', 'customer')
         self.amount_currency = data['form'].get('amount_currency', False)
         self.target_move = data['form'].get('target_move', 'all')
@@ -118,7 +127,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         else:
             amount = str(amount)
         if (amount == '0'):
-             return ' '
+            return ' '
         orig = amount
         new = re.sub("^(-?\d+)(\d{3})", "\g<1>'\g<2>", amount)
         if orig == new:
@@ -169,7 +178,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             RECONCILE_TAG = " "
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
-
         self.cr.execute(
             "SELECT COALESCE(SUM(l.debit),0.0), COALESCE(SUM(l.credit),0.0), COALESCE(sum(debit-credit), 0.0) " \
             "FROM account_move_line AS l,  " \
@@ -402,14 +410,14 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return currency_total
 
     def _display_initial_balance(self, data):
-         if self.initial_balance:
-             return True
-         return False
+        if self.initial_balance:
+            return True
+        return False
 
     def _display_currency(self, data):
-         if self.amount_currency:
-             return True
-         return False
+        if self.amount_currency:
+            return True
+        return False
 
 report_sxw.report_sxw('report.account.third_party_ledger', 'res.partner',
         'addons/account/report/account_partner_ledger.rml',parser=third_party_ledger,

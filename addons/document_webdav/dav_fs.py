@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import pooler
+import sql_db
 
 import os
 import time
@@ -361,7 +362,7 @@ class openerp_dav_handler(dav_interface):
         for db_name in result:
             cr = None
             try:
-                db = pooler.get_db_only(db_name)
+                db = sql_db.db_connect(db_name)
                 cr = db.cursor()
                 cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
                 res=cr.fetchone()
@@ -454,7 +455,7 @@ class openerp_dav_handler(dav_interface):
     def get_cr(self, uri, allow_last=False):
         """ Split the uri, grab a cursor for that db
         """
-        pdb = self.parent.auth_proxy.last_auth
+        pdb = self.parent.auth_provider.last_auth
         dbname, uri2 = self.get_db(uri, rest_ret=True, allow_last=allow_last)
         uri2 = (uri2 and uri2.split('/')) or []
         if not dbname:
@@ -462,10 +463,10 @@ class openerp_dav_handler(dav_interface):
         # if dbname was in our uri, we should have authenticated
         # against that.
         assert pdb == dbname, " %s != %s" %(pdb, dbname)
-        res = self.parent.auth_proxy.auth_creds.get(dbname, False)
+        res = self.parent.auth_provider.auth_creds.get(dbname, False)
         if not res:
-            self.parent.auth_proxy.checkRequest(self.parent, uri, dbname)
-            res = self.parent.auth_proxy.auth_creds[dbname]
+            self.parent.auth_provider.checkRequest(self.parent, uri, dbname)
+            res = self.parent.auth_provider.auth_creds[dbname]
         user, passwd, dbn2, uid = res
         db,pool = pooler.get_db_and_pool(dbname)
         cr = db.cursor()

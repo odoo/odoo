@@ -3,50 +3,69 @@
     <data>
         <record id="view_purchase_install_module_form" model="ir.ui.view">
             <field name="name">Purchases Application Configuration</field>
-            <field name="model">purchase.installer</field>
+            <field name="model">base.setup.installer</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
             <field name="arch" type="xml">
               <data>
-              <form position="attributes">
-                <attribute name="string">Purchases Application Configuration</attribute>
-              </form>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
+                  <xpath expr="//group[@name='purchase']" position="replace">
+                    <newline/>
+                    <separator  string="Purchase Management Features" colspan="4" />
+                    <field name="purchase_requisition" />
+                    <field name="purchase_analytic_plans" />
                   </xpath>
-              <separator string="title" position="attributes">
-                <attribute name="string"
-                           >Configure Your Purchases Management Application</attribute>
-              </separator>
-              <xpath expr="//label[@string='description']"
-                     position="attributes">
-                <attribute name="string">Extend your Purchases Management Application with additional functionalities.</attribute>
-              </xpath>
-              <xpath expr="//button[@string='Install Modules']" position="attributes">
-                   <attribute name="string">Configure</attribute>
-               </xpath>
-                <group colspan="8">
-                  <field name="purchase_requisition"/>
-                  <field name="purchase_analytic_plans"/>
-                </group>
               </data>
             </field>
         </record>
 
-        <record id="action_purchase_install_module" model="ir.actions.act_window">
-            <field name="name">Purchases Application Configuration</field>
+        <record id="action_import_create_supplier_installer" model="ir.actions.act_window">
+            <field name="name">Create or Import Suppliers</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">purchase.installer</field>
-            <field name="view_id" ref="view_purchase_install_module_form"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_supplier': 1, 'default_supplier' : True, 'default_customer' : False}</field>
+            <field name="view_id" ref="base.view_partner_tree" />
+            <field name="help">Create or Import Suppliers and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
+        </record>
+
+        <record id="category_purchase_config" model="ir.actions.todo.category">
+            <field name="name">Purchase Management</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="config_wizard_action_import_create_supplier_installer" model="ir.actions.todo">
+            <field name="action_id" ref="action_import_create_supplier_installer" />
+            <field name="category_id" ref="category_purchase_config" />
+        </record>
+
+        <record id="view_purchase_config" model="ir.ui.view">
+            <field name="name">purchase.view_purchase_config</field>
+            <field name="type">form</field>
+            <field name="model">purchase.config.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Config">
+                    <label string="Set Your Default Invoicing Control Method" />
+                    <field name="default_method" nolabel="1"/>
+
+                    <group colspan="4">
+                        <button special="cancel" icon="gtk-cancel" string="Cancel" />
+                        <button name="validate_cb" string="Validate" icon="gtk-apply" type="object" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_purchase_config" model="ir.actions.act_window">
+            <field name="name">Set the Default Invoicing Control Method</field>
+            <field name="res_model">purchase.config.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-    <record id="purchase_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_purchase_install_module"/>
-      <field name="sequence">3</field>
-      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
-    </record>
+        <record id="todo_purchase_config" model="ir.actions.todo">
+            <field name="action_id" ref="action_purchase_config" />
+        </record>
     </data>
 </openerp>

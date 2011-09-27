@@ -110,22 +110,22 @@
                 <search string="Search Invitations">
                    <filter icon="terp-gtk-jump-to-ltr" name="toreview" string="To Review"
                        domain="[('state','=', 'needs-action')]"
-                       separator="1" help="Invitations To Review" />
+                       help="Invitations To Review" />
                    <filter icon="terp-check" string="Accepted"
                        domain="[('state','=', 'accepted')]"
-                       separator="1" help="Accepted Invitations" />
+                       help="Accepted Invitations" />
                    <filter icon="terp-dialog-close" string="Declined"
                        domain="[('state','=', 'declined')]"
-                       separator="1" help="Declined Invitations" />
+                       help="Declined Invitations" />
                    <filter icon="gtk-sort-descending" string="Delegated"
                        domain="[('state','=', 'delegated')]"
-                       separator="1" help="Delegated Invitations" />
+                       help="Delegated Invitations" />
                    <separator orientation="vertical"/>
-                   <field name="email" select='1'/>
-                   <field name="user_id" select="1" string="Responsible"/>
+                   <field name="email"/>
+                   <field name="user_id" string="Responsible"/>
                    <separator orientation="vertical"/>
-                   <field name="cutype" string="Invitation type" select="1"/>
-                   <field name="event_date" select="1"/>
+                   <field name="cutype" string="Invitation type"/>
+                   <field name="event_date"/>
                    <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible" icon="terp-personal" domain="[]"
@@ -242,8 +242,7 @@
                             widget="selection" />
                         <group colspan="2" col="4" attrs="{'readonly': [('state','=','done')]}">
                            <field name="recurrency"/>      
-                           <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
-                                on_change="onchange_edit_all(rrule_type,edit_all)"/>                                    
+                           <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}" />                                    
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -448,7 +447,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Events">
-                       <group col="12" colspan="4">
+                       <group>
                            <filter icon="terp-go-today" string="My Events"
                                domain="[('user_id','=',uid)]"
                                help="My Events" />
@@ -457,13 +456,13 @@
                                domain="[('state','=','confirmed')]"
                                help="Confirmed Events" />
                            <separator orientation="vertical"/>
-                           <field name="name" select="1" string="Summary"/>
-                           <field name="location" select="1" string="Location"/>
+                           <field name="name" string="Summary"/>
+                           <field name="location" string="Location"/>
                            <separator orientation="vertical"/>
-                           <field name="user_id" select="1"/>
+                           <field name="user_id"/>
                            <separator orientation="vertical"/>
-                           <field name="show_as" select="1"/>
-                           <field name="class" select="1" string="Privacy"/>
+                           <field name="show_as"/>
+                           <field name="class" string="Privacy"/>
                        </group>
                        <newline/>
                         <group expand="0" string="Group By...">

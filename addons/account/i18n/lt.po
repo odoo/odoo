@@ -7,30 +7,30 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-12-11 22:27+0000\n"
-"Last-Translator: Giedrius Slavinskas <giedrius.slavinskas@gmail.com>\n"
+"PO-Revision-Date: 2011-07-07 11:41+0000\n"
+"Last-Translator: Edvinas Zemaitis <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:51+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-17 04:58+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
 msgid "System payment"
-msgstr ""
+msgstr "Sisteminis mokėjimas"
 
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr ""
+msgstr "Kita konfigūracija"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr ""
+msgstr "Neužbaigtas metų žurnalas fiskaliniams metams"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -39,16 +39,18 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Jūs negalite pašalinti ar išjungti sąskaitos kuri yra priskirta bet kuriam "
+"partneriui kaip nuosavybė."
 
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr ""
+msgstr "Suderinti žurnalo įrašą"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
 msgid "Voucher Management"
-msgstr ""
+msgstr "Kvitų valdymas"
 
 #. module: account
 #: view:account.account:0
@@ -68,7 +70,7 @@ msgstr "Likutis"
 #: code:addons/account/invoice.py:785
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr ""
+msgstr "Prašome nurodyti eiliškumą sąskaitų žurnale"
 
 #. module: account
 #: constraint:account.period:0
@@ -78,17 +80,17 @@ msgstr "Klaida! Neteisinga periodo trukmė. "
 #. module: account
 #: field:account.analytic.line,currency_id:0
 msgid "Account currency"
-msgstr ""
+msgstr "Sąskaitos valiuta"
 
 #. module: account
 #: view:account.tax:0
 msgid "Children Definition"
-msgstr ""
+msgstr "Žemesnio lygio apibrėžimas"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr ""
+msgstr "Pradelstos pajamos iki šiandienos"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -101,11 +103,13 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Pelno - nuostolių ataskaita leidžia peržiūrėti Jūsų įmonės pelną - nuostolį "
+"viename dokumente"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr ""
+msgstr "Importuoti iš sąskaitos ar mokėjimo"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -123,6 +127,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
+"Jeigu Jūs nesuderinote transakcijų, Jūs taip pat turėtumėte patikrinti visus "
+"veiksmus kurie yra susiję su šiomis transakcijomis, nes jos nebus išjungtos"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -164,7 +170,7 @@ msgstr "Nuoroda"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
-msgstr ""
+msgstr "Pasirinkite finansinius metus "
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -172,18 +178,20 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
+"Jeigu aktyvus laukelis nustatytas kaip \"ne\", leidžiame paslėpti apmokėjimo "
+"terminą jo nepašalinus."
 
 #. module: account
 #: code:addons/account/invoice.py:1421
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr ""
+msgstr "Sąskaitos šaltinis"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
@@ -193,7 +201,7 @@ msgstr "Visi analitiniai įrašai"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
 msgid "Invoices Created Within Past 15 Days"
-msgstr ""
+msgstr "Sukurtos sąskaitos per pastarąsias 15 dienų"
 
 #. module: account
 #: selection:account.account.type,sign:0
@@ -204,7 +212,7 @@ msgstr "Neigiamas"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Žurnalas: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -289,7 +297,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_view_account_use_model
 #: model:ir.ui.menu,name:account.menu_action_manual_recurring
 msgid "Manual Recurring"
-msgstr ""
+msgstr "Pasirinktinas pasikartojančių įrašų kūrimas"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -487,8 +495,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1127,6 +1133,7 @@ msgstr "# Transakcijų"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1314,6 +1321,16 @@ msgstr "Jūs negalite naudoti suminės sąskaitos šiame žurnale !"
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Kurių balansas nelygus nuliui"
 
@@ -1422,7 +1439,7 @@ msgstr "Uždaryta"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_recurrent_entries
 msgid "Recurring Entries"
-msgstr ""
+msgstr "Pasikartojantys įrašai"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
@@ -2018,6 +2035,11 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
+"Ši reikšmė naudojama išskirti sąskaitų tipus naudojant kai kurias OpenERP "
+"funkcijas: žiūrėti - negali būti įrašų, Konsolidacija - sąskaitos kurios "
+"gali turėti žemesnės klasės sąskaitas multi-kompanijos konsolidacijai, "
+"pajamos/sąnaudos - partnerių sąskaitoms (kredito debito apskaičiavimui), "
+"uždaryta - nenaudojamoms sąskaitoms"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2085,6 +2107,8 @@ msgstr "Apskaitos savybės"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Įrašai surikiuoti pagal"
 
@@ -2106,11 +2130,16 @@ msgstr ""
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2429,6 +2458,7 @@ msgstr "Nuolaida (%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2674,6 +2704,8 @@ msgstr "Finansinė apskaita"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr ""
 
@@ -2939,7 +2971,6 @@ msgstr "Norėdami naudoti sąnaudų sąskaitą, palikite tuščią"
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -2953,6 +2984,17 @@ msgstr "Norėdami naudoti sąnaudų sąskaitą, palikite tuščią"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Žurnalai"
 
@@ -3163,6 +3205,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr ""
 
@@ -3221,6 +3264,16 @@ msgstr "PVM:"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Sąskaitų planas"
 
@@ -3579,7 +3632,7 @@ msgstr "Nustatyti kaip juodraštį"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
 msgid "Recurring Lines"
-msgstr ""
+msgstr "Pasikartojančios eilutės"
 
 #. module: account
 #: field:account.partner.balance,display_partner:0
@@ -3666,11 +3719,10 @@ msgid "Analytic Balance"
 msgstr "Analitinis balansas"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr ""
 
@@ -4054,7 +4106,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_model_form
 #: model:ir.ui.menu,name:account.menu_action_model_form
 msgid "Recurring Models"
-msgstr ""
+msgstr "Pasikartojantys modeliai"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4485,7 +4537,6 @@ msgid "Analytic Balance -"
 msgstr "Analitinis balansas -"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4498,10 +4549,8 @@ msgstr "Analitinis balansas -"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4511,6 +4560,16 @@ msgstr "Analitinis balansas -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr ""
 
@@ -4627,6 +4686,8 @@ msgstr "Sugretinimo rezultatas"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr ""
 
@@ -5342,6 +5403,19 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Nėra filtro"
@@ -5995,7 +6069,7 @@ msgstr "Įrašai: "
 #. module: account
 #: view:account.use.model:0
 msgid "Create manual recurring entries in a chosen journal."
-msgstr ""
+msgstr "Sukurti pasikartojančius įrašus pasirinktame žurnale."
 
 #. module: account
 #: code:addons/account/account.py:1393
@@ -6251,6 +6325,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7157,6 +7232,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7409,6 +7485,19 @@ msgstr ""
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Laikotarpis"
@@ -7490,14 +7579,6 @@ msgstr "Tel.:"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Įmonės naudojama valiuta"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr ""
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7611,6 +7692,12 @@ msgstr "Grąžinimų žurnalas"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr ""
 
@@ -7852,6 +7939,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8135,12 +8223,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr ""
 
@@ -8258,7 +8351,12 @@ msgstr "Norėdami naudoti pajamų sąskaitą, palikite tuščią"
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8277,6 +8375,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr ""
 
@@ -8491,12 +8598,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr ""
 
@@ -8701,6 +8813,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8782,6 +8895,18 @@ msgstr "Bendra"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -8991,13 +9116,10 @@ msgid "Tax Source"
 msgstr ""
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr ""
 
@@ -9021,7 +9143,7 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
+msgid "JRNL"
 msgstr ""
 
 #. module: account
@@ -9090,7 +9212,7 @@ msgstr "Įmonė"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
 msgid "Define Recurring Entries"
-msgstr ""
+msgstr "Apibrėžti pasikartojančius įrašus"
 
 #. module: account
 #: field:account.entries.report,date_maturity:0
@@ -9229,6 +9351,7 @@ msgstr "Tiekėjo sąskaita faktūra"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9263,7 +9386,7 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Recurring"
-msgstr ""
+msgstr "Pasikartojantis"
 
 #. module: account
 #: code:addons/account/account_move_line.py:805
@@ -9302,6 +9425,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Su DK įrašais"
 
@@ -9672,6 +9805,18 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
+
 #~ msgid "Asset"
 #~ msgstr "Turtas"
 
@@ -9713,9 +9858,6 @@ msgstr ""
 
 #~ msgid "Amount paid"
 #~ msgstr "Sumokėta suma"
-
-#~ msgid "Partner name"
-#~ msgstr "Kontrahento pavadinimas"
 
 #~ msgid "General Credit"
 #~ msgstr "Bendras Kreditas"
@@ -9783,9 +9925,6 @@ msgstr ""
 #~ msgid "Automatic reconciliation"
 #~ msgstr "Automatinis sugretinimas"
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Palikite tuščią norėdami naudoti einamąjį periodą"
-
 #~ msgid "Date End"
 #~ msgstr "Pabaigos data"
 
@@ -9818,9 +9957,6 @@ msgstr ""
 
 #~ msgid "Journal code"
 #~ msgstr "Žurnalo kodas"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Nurašymų periodas"
 
 #~ msgid "Entry Name"
 #~ msgstr "Įrašo pavadinimas"
@@ -9878,9 +10014,6 @@ msgstr ""
 
 #~ msgid "Write-Off journal"
 #~ msgstr "Nurašymų žurnalas"
-
-#~ msgid "All account entries"
-#~ msgstr "Visi sąskaitos įrašai"
 
 #~ msgid "Subscription Entries"
 #~ msgstr "Periodiniai įrašai"
@@ -10056,9 +10189,6 @@ msgstr ""
 #~ msgid "PRO-FORMA Customer Invoices"
 #~ msgstr "Išankstinė sąskaita klientui"
 
-#~ msgid "Disc. (%)"
-#~ msgstr "Nuol. (%)"
-
 #~ msgid "Contact"
 #~ msgstr "Kontaktas"
 
@@ -10088,10 +10218,6 @@ msgstr ""
 
 #~ msgid "Unpaid invoices"
 #~ msgstr "Neapmokėtos sąskaitos"
-
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Konfigūracijos klaida!"
 
 #~ msgid "Create a Fiscal Year"
 #~ msgstr "Sukurti fiskalinius metus"
@@ -10136,9 +10262,6 @@ msgstr ""
 #~ msgid "Journal Voucher"
 #~ msgstr "Orderis"
 
-#~ msgid "account.move.line"
-#~ msgstr "Įrašo eilutė"
-
 #~ msgid "(Keep empty for all open fiscal years)"
 #~ msgstr "(palikite tuščią, jei norite visų atvirų fiskalinių metų)"
 
@@ -10169,10 +10292,6 @@ msgstr ""
 
 #~ msgid "Voucher Nb"
 #~ msgstr "Dokumento numeris"
-
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Jūs negalite patvirtinti įrašo, neturinčio balanso !"
 
 #~ msgid "Are you sure you want to close the fiscal year ?"
 #~ msgstr "Ar tikrai norite uždaryti fiskalinius metus ?"
@@ -10346,9 +10465,6 @@ msgstr ""
 #~ msgid "Analytic Debit"
 #~ msgstr "Analitinis debetas"
 
-#~ msgid "Move name"
-#~ msgstr "Didžiosios knygos įrašas"
-
 #~ msgid "Reconcilate the entries from payment"
 #~ msgstr "Įrašų sugretinimas iš mokėjimo"
 
@@ -10362,10 +10478,6 @@ msgstr ""
 
 #~ msgid "By Date and Period"
 #~ msgstr "Pagal datą ir periodą"
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Ši sąskaita nepažymėta kaip gretinama !"
 
 #~ msgid "Statement encoding produces payment entries"
 #~ msgstr "Dokumentai padeda sukurti mokėjimo eilutes"
@@ -10489,12 +10601,6 @@ msgstr ""
 
 #~ msgid "Number of entries are generated"
 #~ msgstr "Įrašų numeriai yra sugeneruojami"
-
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr ""
-#~ "Jūs negalite deaktyvuoti sąskaitų , kurios turi susijusių didžiosios knygos "
-#~ "įrašų."
 
 #~ msgid "Modify Invoice"
 #~ msgstr "Redaguoti sąskaitą faktūrą"
@@ -10625,15 +10731,6 @@ msgstr ""
 
 #~ msgid "Name of the fiscal year as displayed on screens."
 #~ msgstr "Fiskalinių metų pavadinimas rodomas ekrane."
-
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Jeigu naudojate mokėjimo terminą, mokėjimo data bus užpildoma automatiškai, "
-#~ "kai bus generuojamos sąskaitos eilutės. Jeigu nenaudojate mokėjimo termino, "
-#~ "tai reiškia, kad bus tiesioginis mokėjimas."
 
 #~ msgid "Account Code"
 #~ msgstr "Sąskaitos kodas"
@@ -10769,9 +10866,6 @@ msgstr ""
 
 #~ msgid "Account Entry Lines"
 #~ msgstr "Sąskaitos įrašo eilutės"
-
-#~ msgid "Partner ID"
-#~ msgstr "Partnerio ID"
 
 #~ msgid "Untaxed amount"
 #~ msgstr "Suma be mokesčių"

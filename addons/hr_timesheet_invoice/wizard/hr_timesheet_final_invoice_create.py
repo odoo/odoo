@@ -95,13 +95,8 @@ class final_invoice_create(osv.osv_memory):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
             invoices.append(last_invoice)
 
-            context2=context.copy()
+            context2 = context.copy()
             context2['lang'] = partner.lang
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
-                    "FROM account_analytic_line as line " \
-                    "WHERE account_id = %s " \
-                        "AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id, to_invoice", (account.id,))
 
             cr.execute("""SELECT
                     line.product_id,
@@ -131,6 +126,8 @@ class final_invoice_create(osv.osv_memory):
                     taxes = []
 
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                if not account_id:
+                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
                 curr_line = {
                     'price_unit': -amount,
                     'quantity': 1.0,
@@ -151,6 +148,8 @@ class final_invoice_create(osv.osv_memory):
             taxes = product.taxes_id
             tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
             account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
+            if not account_id:
+                raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
             curr_line = {
                 'price_unit': account.amount_max - amount_total,
                 'quantity': 1.0,

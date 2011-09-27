@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "Alv ei näytä olevan oikein. Sinun olisi tullut syöttää esim. %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -38,22 +38,29 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Aseta partnerin ALV numero. Tarkista ALV numeron oikeellisuus.\n"
+"\n"
+"    Tämä moduuli seuraa toimintatapaa joka onmääritelty http://sima-"
+"pc.com/nif.php\n"
+"    EU:n alueen alv numeroiden tarkistamiseksi\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "Perus ALV - ALV numeron tarkistamiseksi"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "ALV (VAT) numero on virheellinen, sen tulisi alkaa maakoodilla"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -61,11 +68,13 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Valitse tämä jos kumppani on alv velvollinen. Tätä käytetään ALV laillisissa "
+"lausekkeissa"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Kumppani"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0

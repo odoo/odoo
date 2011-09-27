@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -8,10 +7,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-Up Lines">
-                    <field name="sequence"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="start"/>
+                    <field name="start" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -22,12 +20,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up Lines">
-                    <field name="sequence"/>
-                    <field name="name" />
-                    <field name="delay" />
-                    <field name="start" />
+                  <group col="6" colspan="4">
+                     <field name="name"/>
+                     <field name="delay"/>
+                     <field name="start" groups="base.group_extended"/>
+                  </group>
                     <newline/>
-                    <field colspan="4" name="description" />
+                    <separator string="Message" colspan="4"/>
+                    <field colspan="4" name="description" nolabel="1"/>
                     <separator string="Legend" colspan="4"/>
                     <label string="%%(partner_name)s: Partner Name" colspan="2"/>
                     <label string="%%(date)s: Current Date" colspan="2"/>
@@ -43,11 +43,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="Description"/>
-                    <field colspan="4" name="description" nolabel="1" />
-                    <separator colspan="4" string="Followup Lines"/>
+                    <separator colspan="4" string=""/>
                     <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
@@ -71,9 +69,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Followup">
-                   <group col="10" colspan="4">
+                   <group>
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Group By...">
+                        <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    </group>
                </search>
             </field>
@@ -85,9 +87,9 @@
             <field name="res_model">account_followup.followup</field>
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
+            <field name="help">Define follow up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
         </record>
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu"
-            parent="account.menu_configuration_misc"/>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
 
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
 
@@ -97,7 +99,7 @@
             <field name="type">tree</field>
             <field eval="32" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('draft');black:state in ('validate')" editable="bottom" string="Partner entries">
+                <tree colors="red:state == 'draft';black:state == 'validate'" editable="bottom" string="Partner entries">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -138,23 +140,11 @@
             </field>
         </record>
 
-        <act_window
-            domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]"
-            id="act_account_partner_account_move_all"
-            name="Receivable Items"
-            res_model="account.move.line"
-            src_model=""
-            view_id="account_move_line_partner_tree"/>
+        <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="Receivable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
       <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
 
-        <act_window
-            domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]"
-            id="act_account_partner_account_move_payable_all"
-            name="Payable Items"
-            res_model="account.move.line"
-            src_model=""
-            view_id="account_move_line_partner_tree"/>
+        <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="Payable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 
@@ -164,12 +154,31 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="overdue_msg" nolabel="1" colspan ="4" position="after">
-                    <field name="follow_up_msg" nolabel="1" colspan ="4"/>
+                <field name="overdue_msg" nolabel="1" colspan="4" position="after">
+                    <field name="follow_up_msg" nolabel="1" colspan="4"/>
                     <separator string="Follow-up Message" colspan="4"/>
                 </field>
             </field>
         </record>
+        
+        <!--   Configure Follow-Ups  Wizard    -->
+        
+          <record id="action_view_account_followup_followup_form" model="ir.actions.act_window">
+            <field name="name">Review Invoicing Follow-Ups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account_followup.followup</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_account_followup_followup_form"/>
+        </record>
+        
+         <!--      register configuration wizard -->
+        <record id="config_wizard_view_account_followup_followup_form" model="ir.actions.todo">
+            <field name="action_id" ref="action_view_account_followup_followup_form"/>
+            <field name="category_id" ref="account.category_accounting_configuration"/>
+        </record>
+        
+        
 
     </data>
 </openerp>

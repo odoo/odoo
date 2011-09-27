@@ -149,7 +149,7 @@ class membership_line(osv.osv):
         'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True,  help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
-        'state': fields.function(_state, method=True,
+        'state': fields.function(_state,
                         string='Membership State', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
@@ -284,14 +284,14 @@ class Partner(osv.osv):
                  'membership_cancel': False
             }
             if name == 'membership_start':
-                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
+                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_from', context=context)
                 if line_id:
                         res[partner.id]['membership_start'] = member_line_obj.read(cr, uid, line_id[0],
                                 ['date_from'], context=context)['date_from']
 
             if name == 'membership_stop':
-                line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
+                line_id1 = member_line_obj.search(cr, uid, [('partner', '=', partner_id),('date_cancel','=',False)],
                             limit=1, order='date_to desc', context=context)
                 if line_id1:
                       res[partner.id]['membership_stop'] = member_line_obj.read(cr, uid, line_id1[0],
@@ -322,7 +322,7 @@ class Partner(osv.osv):
                     'Membership amount', digits=(16, 2),
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
-                    __get_membership_state, method=True,
+                    __get_membership_state,
                     string = 'Current Membership State', type = 'selection',
                     selection = STATE,
                     store = {
@@ -337,7 +337,7 @@ class Partner(osv.osv):
                     -Invoiced Member: A member whose invoice has been created.
                     -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
-                    _membership_date, method=True, multi = 'membeship_start',
+                    _membership_date, multi = 'membeship_start',
                     string = 'Start membership date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
@@ -345,7 +345,7 @@ class Partner(osv.osv):
                         'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
-                    _membership_date, method=True,
+                    _membership_date,
                     string = 'Stop membership date', type='date', multi='membership_stop',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
@@ -353,7 +353,7 @@ class Partner(osv.osv):
                         'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['free_member'], 10)
                     }, help="Date until which membership remains active."),
         'membership_cancel': fields.function(
-                    _membership_date, method=True,
+                    _membership_date,
                     string = 'Cancel membership date', type='date', multi='membership_cancel',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 11),
@@ -379,7 +379,7 @@ class Partner(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
+        (_check_recursion, 'Error ! You cannot create recursive associated members.', ['associate_member'])
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):

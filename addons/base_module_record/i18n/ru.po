@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-09 04:55+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -33,6 +33,9 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Если вы полагаете, что ваш модуль может заинтересовать других людей — можете "
+"опубликовать его на OpenERP.com в разделе «Модули». Это можно сделать "
+"непосредственно на сайте или с помощью функции модуля base_module_publish."
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
@@ -65,7 +68,7 @@ msgstr "Только записи"
 #. module: base_module_record
 #: model:ir.model,name:base_module_record.model_ir_module_record
 msgid "ir.module.record"
-msgstr "Системный модуль записи"
+msgstr "ir.module.record"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -158,7 +161,7 @@ msgstr "YAML файл создан !"
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Результат. Вставьте это в XML вашего модуля"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -192,7 +195,7 @@ msgstr "Запись"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Модуль записи"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -292,6 +295,26 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Этот модуль позволяет создавать новые модули без какой-либо разработки.\n"
+"Он записывает все действия над объектами в процессе своей работы и\n"
+"формирует модуль .ZIP. Можно создавать свои модули напрямую из клиента\n"
+"OpenERP.\n"
+"\n"
+"Эта версия позволяет работать с существующими записями. Она вычисляет\n"
+"зависимости и связь для всех типов виджетов (многие-к-одному, многие-ко-"
+"многим ...).\n"
+"Она также поддерживает рабочие процессы, демо-данные и обновления.\n"
+"\n"
+"Это средство должно облегчить работу по созданию переиспользуемых модулей и\n"
+"возможность их публикации для частных конфигураций и демонстрационные или \n"
+"тестовые данные.\n"
+"\n"
+"Как использовать:\n"
+"Выполните Администрирование/Настройка/Создание модулей/Экспорт настроек в "
+"виде мастера модулей.\n"
+"Укажите параметры даты/времени, записываемые объекты и модуль записи.\n"
+"    "
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

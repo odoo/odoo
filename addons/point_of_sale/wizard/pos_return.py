@@ -24,19 +24,6 @@ from osv import osv,fields
 from tools.translate import _
 import time
 
-class pos_return_memory(osv.osv_memory):
-    _name = "pos.return.memory"
-    _rec_name = 'product_id'
-    _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True),
-        'quantity' : fields.float("Quantity", required=True),
-        'pos_moves_id' : fields.many2one('pos.return', string="Move"),
-        'line_id': fields.integer('Line Id'),
-    }
-    
-pos_return_memory()
-
-
 class pos_return(osv.osv_memory):
     _name = 'pos.return'
     _description = 'Point of sale return'
@@ -124,7 +111,7 @@ class pos_return(osv.osv_memory):
             date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
-                stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
+                source_stock_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
                             "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
                             (order_id.shop_id.warehouse_id.id,))
@@ -152,9 +139,9 @@ class pos_return(osv.osv_memory):
                                 'product_uos_qty': uom_obj._compute_qty(cr, uid, qty ,line.product_id.uom_id.id),
                                 'picking_id': new_picking,
                                 'product_uom': line.product_id.uom_id.id,
-                                'location_id': location_id,
+                                'location_id': source_stock_id,
                                 'product_id': line.product_id.id,
-                                'location_dest_id': stock_dest_id,
+                                'location_dest_id': location_id,
                                 'name': '%s (return)' %order_id.name,
                                 'date': date_cur
                             })
@@ -290,7 +277,6 @@ class add_product(osv.osv_memory):
             res=cr.fetchone()
             location_id=res and res[0] or None
 
-            order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
                 invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
             new_picking=picking_obj.create(cr, uid, {
@@ -305,7 +291,6 @@ class add_product(osv.osv_memory):
                     if data.has_key(key):
                         qty = data[key]
                         lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data[key],
                                 'qty':line.qty-(data[key] or 0.0)
                         })
                     else:

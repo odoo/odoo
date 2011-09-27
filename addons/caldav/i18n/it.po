@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:54+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -64,8 +64,8 @@ msgid "Can not map a field more than once"
 msgstr "Non è possibile mappare un campo più di una volta"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:772
-#: code:addons/caldav/calendar.py:861
+#: code:addons/caldav/calendar.py:787
+#: code:addons/caldav/calendar.py:877
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Warning !"
@@ -108,7 +108,7 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:861
+#: code:addons/caldav/calendar.py:877
 #, python-format
 msgid "Please provide proper configuration of \"%s\" in Calendar Lines"
 msgstr ""
@@ -168,6 +168,29 @@ msgid ""
 "        CALENDAR_NAME: Name of calendar to access\n"
 "     "
 msgstr ""
+"\n"
+"  * Server WebDav che fornisce un accesso remoto al calendario\n"
+"  * Sincronizzazione di calendario utilizzando WebDav\n"
+"  * Personalizza eventi calendari e attributi con ogni modello OpenERP\n"
+"  * Fornisce funzionalità di import / export iCal\n"
+"\n"
+"    Per accedere ai calendario utilizzando client CalDav, farli puntare a:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    Per accedere al calendario OpenERP utilizzando WebCal da sito remoto "
+"utilizzare un URL tipo:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      Dove,\n"
+"        HOSTNAME: Host dove risiede il server OpenERP (con WebDav attivo)\n"
+"        PORT: porta su cui sta girando il server OpenERP (di default è "
+"8069)\n"
+"        DATABASE_NAME: Nome del database su cui il calendario OpenERP è "
+"stato creato\n"
+"        CALENDAR_NAME: Nome del calendario a cui accedere\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:147
@@ -201,6 +224,35 @@ msgid ""
 "\n"
 "7. Then Finish, your meetings should appear now in your calendar view\n"
 msgstr ""
+"\n"
+"Prerequisiti\n"
+"----------\n"
+"Se state utilizzando Thunderbird, prima è necessario installare il modulo "
+"lightning\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"\n"
+"configurazione\n"
+"-------------\n"
+"\n"
+"1. Andare in visualizzazione calendario\n"
+"\n"
+"2. File -> Nuovo calendario\n"
+"\n"
+"3. Scegliere \"Sulla rete\"\n"
+"\n"
+"4. Per il formato scegliere CalDav\n"
+"   e come luogo scegliere l'URL qui fornito (es. "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"   \n"
+"5. Scegliere un nome ed un colore per il calendario, consigliamo di togliere "
+"la spunta su \"Mostra allarmi\"\n"
+"\n"
+"6. Inserire poi il vostro login e password di OpenERP (per non dover più "
+"fornire la password spuntare \"Usa il password manager per ricordare questa "
+"password\"\n"
+"\n"
+"7. Il processo è completo, i vostri meeting dovrebbero apparire ora sulla "
+"vista calendario\n"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -220,7 +272,7 @@ msgid "Use the field"
 msgstr "Usa il campo"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:772
+#: code:addons/caldav/calendar.py:787
 #, python-format
 msgid "Can not create line \"%s\" more than once"
 msgstr "Non è possibile creare più di una volta linee: \"%s\""
@@ -292,7 +344,7 @@ msgid "Save in .ics format"
 msgstr "Salva nel formato .ICS"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:1275
+#: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Error !"
 msgstr "Errore !"
@@ -516,7 +568,7 @@ msgid "Calendar Collections"
 msgstr "Collezioni calendario"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:798
+#: code:addons/caldav/calendar.py:813
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
@@ -575,6 +627,33 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"Prerequisiti\n"
+"---------\n"
+"Non c'è un modo pre costruito di sincronizzare un calendario con caldav.\n"
+"E' perciò necessario installare software di terze parti: Calendario "
+"(CalDav), \n"
+"per ora, è il solo\n"
+"\n"
+"configurazione\n"
+"-------------\n"
+"\n"
+"1. Aprire sincronizzazione calendario\n"
+"   Io fornisco un'interfaccia con 2 tabulazioni\n"
+"   Stare sul primo\n"
+"   \n"
+"2. URL calendario Caldav: mettere l'URL qui fornito (es: "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Fornire il vostro utente e password di openerp\n"
+"\n"
+"4. Se il vostro server non utilizza SSL, avrete un avviso, confermate con "
+"\"Sì\"\n"
+"\n"
+"5. Fatto questo potrete sincronizzare manualmente o personalizzare le "
+"impostazioni di sincronizzazione ogni x minuti.\n"
+"    \n"
+"    "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:53
@@ -792,7 +871,7 @@ msgid "basic.calendar.alarm"
 msgstr "basic.calendar.alarm"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:1275
+#: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Attendee must have an Email Id"
 msgstr "Il partecipante deve avere un ID email"
@@ -869,32 +948,8 @@ msgstr "basic.calendar.todo"
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
 
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Il nome del modulo deve essere unico!"
-
-#~ msgid "description"
-#~ msgstr "descrizione"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "L'ID del certificato del modulo deve essere unico!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modello non valido nella definizione dell'azione."
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Il nome dell'oggetto deve iniziare per “x_” e non contenere alcun carattere "
 #~ "speciale!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
-
-#~ msgid "Modifided Date"
-#~ msgstr "Data modificata"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per l'Architettura di Visualizzazione!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Errore! Non è possibile creare un Menù ricorsivo."

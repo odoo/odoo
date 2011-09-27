@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:38+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 04:54+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -24,13 +24,13 @@ msgstr "指派任务"
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "包含当前任务的描述"
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "任务 '%s' 已被分派给 '%s'"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -38,17 +38,19 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
-msgstr "这将设置项目和任务的计量单位如果你使用链接的时间表不要忘记设置你员工的计量单位"
+msgstr ""
+"此操作用于设置项目和任务的所采用的计量单位\n"
+"如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设置中选择正确的计量单位。"
 
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr "选择的公司不属于此用户允许访问的公司。"
+msgstr "用户无权操作所选择公司数据"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "在这里输入完成这个任务还需要多少小时"
 
 #. module: project
 #: view:project.task:0
@@ -56,7 +58,7 @@ msgid "Deadlines"
 msgstr "截止期限"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "不允许的操作"
@@ -75,7 +77,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: "
-msgstr ""
+msgstr "CHECK: "
 
 #. module: project
 #: field:project.installer,project_issue:0
@@ -85,7 +87,7 @@ msgstr "问题跟踪程序"
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr "时间表"
+msgstr "工作时间表"
 
 #. module: project
 #: view:project.task:0
@@ -102,29 +104,29 @@ msgstr "确认小时数"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
-msgstr "进展"
+msgstr "进度"
 
 #. module: project
 #: help:project.task,remaining_hours:0
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr "总剩余时间,任务接收者能重新估计"
+msgstr "总剩余时间，任务执行者可定期重估"
 
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "调整项目显示优先级"
 
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "任务重估"
 
 #. module: project
 #: field:project.project,members:0
@@ -139,7 +141,7 @@ msgstr "委派任务"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "三月"
 
 #. module: project
 #: view:project.task:0
@@ -149,14 +151,14 @@ msgstr "委派任务"
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr "委派任务"
+msgstr "已委派任务"
 
 #. module: project
 #: help:project.project,warn_header:0
 msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
-msgstr "任务关闭时通知客户的消息邮件的头"
+msgstr "任务关闭时通知客户的消息邮件设置"
 
 #. module: project
 #: view:project.task:0
@@ -166,7 +168,7 @@ msgstr "我的任务"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "错误！不能创建循环引用的任务"
 
 #. module: project
 #: field:project.task,company_id:0
@@ -179,22 +181,22 @@ msgstr "公司"
 #. module: project
 #: field:project.installer,project_scrum:0
 msgid "SCRUM"
-msgstr ""
+msgstr "SCRUM"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "项目：计划工时和实际工时"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "警告信息"
 
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "阶段名称"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -205,12 +207,12 @@ msgstr "设为未决"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "距开始日期"
 
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "修改阶段"
 
 #. module: project
 #: view:project.project:0
@@ -220,7 +222,7 @@ msgstr "新的基于模板的项目"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "不能升级到相同的项目"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -231,25 +233,25 @@ msgstr "非常紧急"
 #. module: project
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "你要分派这个任务给哪个用户"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
-msgstr ""
+msgstr "天数"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
-msgstr ""
+msgstr "任务 '%s' 已完成"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
 msgid "Project Close Task"
-msgstr ""
+msgstr "关闭任务"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -266,7 +268,7 @@ msgstr "任务"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr ""
+msgstr "成员"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -278,7 +280,7 @@ msgstr "做任务的估计时间.通常由项目经理在任务草稿阶段设�
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "任务进度"
 
 #. module: project
 #: view:project.project:0
@@ -290,22 +292,22 @@ msgstr "备注"
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs remaining hours"
-msgstr ""
+msgstr "项目及剩余时间"
 
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "发票地址"
 
 #. module: project
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "任务摘要"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "非模版任务"
 
 #. module: project
 #: view:project.task:0
@@ -317,13 +319,13 @@ msgstr "开始任务"
 msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
-msgstr ""
+msgstr "如果项目允许，能够按实际工时生成发票"
 
 #. module: project
 #: view:project.project:0
 msgid ""
 "Automatic variables for headers and footer. Use exactly the same notation."
-msgstr "页眉页脚的自动变量.使用同一个符号."
+msgstr "用于页眉和和页脚的内置变量。请注意使用正确的符号。"
 
 #. module: project
 #: selection:project.task,state:0
@@ -348,7 +350,7 @@ msgstr "邮件头"
 #. module: project
 #: view:project.installer:0
 msgid "Configure Your Project Management Application"
-msgstr ""
+msgstr "配置项目管理功能"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -358,13 +360,13 @@ msgstr "完成任务"
 #. module: project
 #: help:project.task.delegate,prefix:0
 msgid "Title for your validation task"
-msgstr ""
+msgstr "验证任务的前缀"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,hours_delay:0
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "计划实际平均偏差"
 
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
@@ -375,12 +377,12 @@ msgstr "任务完成"
 #: field:project.task,date_end:0
 #: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "结束日期"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "   Month   "
-msgstr ""
+msgstr "   月   "
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
@@ -392,7 +394,7 @@ msgstr "委派任务给其它用户"
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组于..."
 
 #. module: project
 #: help:project.task,effective_hours:0
@@ -409,17 +411,17 @@ msgstr "如果勾选此项用户关闭任务时将弹出一个信息这信息会
 #. module: project
 #: model:ir.model,name:project.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr ""
+msgstr "测试"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr ""
+msgstr "被分派任务的人估算的工时"
 
 #. module: project
 #: view:project.project:0
@@ -427,10 +429,10 @@ msgid "Reactivate Project"
 msgstr "重新启动项目"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
-msgstr ""
+msgstr "任务 '%s' 已关闭"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -460,7 +462,7 @@ msgstr "最后期限"
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -474,51 +476,51 @@ msgstr "业务伙伴"
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "错误! 你不能创建递归的辅助核算项目"
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (copy)"
 
 #. module: project
 #: help:project.installer,hr_timesheet_sheet:0
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
-msgstr ""
+msgstr "跟踪并帮助员工制定、检验时间表和考勤。"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,nbr:0
 msgid "# of tasks"
-msgstr ""
+msgstr "任务编号"
 
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "上一个"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "任务重估"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr ""
+msgstr "分配给"
 
 #. module: project
 #: view:project.project:0
 msgid "Date Stop: %(date)s"
-msgstr ""
+msgstr "结束日期：%(date)s"
 
 #. module: project
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "不能有用户名相同的两个用户"
 
 #. module: project
 #: view:project.project:0
@@ -533,22 +535,22 @@ msgstr "模板"
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "文档"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
 msgid "My projects"
-msgstr "我的项目"
+msgstr "我的项目列表"
 
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "错误！您不能创建递归公司."
 
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "下一个"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
@@ -559,7 +561,7 @@ msgstr "从草稿状态它将进入待处理状态"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr ""
+msgstr "天数"
 
 #. module: project
 #: help:project.task,active:0
@@ -567,7 +569,7 @@ msgid ""
 "This field is computed automatically and have the same behavior than the "
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
-msgstr ""
+msgstr "这个字段由系统自动更新。功能类似“启用”字段：如果任务属于一个项目模版或停用的项目，任务会被隐藏，除非用指定条件查询。"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -588,7 +590,7 @@ msgstr "项目任务"
 #. module: project
 #: view:project.installer:0
 msgid "Methodologies"
-msgstr ""
+msgstr "理论"
 
 #. module: project
 #: help:project.task,total_hours:0
@@ -598,7 +600,7 @@ msgstr "计算:花费的时间 + 剩余的时间"
 #. module: project
 #: help:project.task.close,partner_email:0
 msgid "Email Address of Customer"
-msgstr ""
+msgstr "客户邮件地址"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -609,23 +611,23 @@ msgstr "有效时间"
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task Title"
-msgstr ""
+msgstr "验证任务标题"
 
 #. module: project
 #: view:project.task:0
 msgid "Reevaluate"
-msgstr ""
+msgstr "重估"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
-msgstr ""
+msgstr "关闭任务后发送邮件"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "OverPass delay"
-msgstr ""
+msgstr "拖期总计"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -668,14 +670,14 @@ msgstr "任务“%s”已经关闭"
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "未分配的任务"
 
 #. module: project
 #: help:project.project,planned_hours:0
 msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
+msgstr "项目下的任务和子任务计划工时的合计数"
 
 #. module: project
 #: field:project.task.delegate,name:0
@@ -695,7 +697,7 @@ msgstr "额外信息"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
@@ -710,13 +712,13 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
 #, python-format
 msgid "Projects"
-msgstr "项目"
+msgstr "项目列表"
 
 #. module: project
 #: view:project.task:0
@@ -724,7 +726,7 @@ msgstr "项目"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,type_id:0
 msgid "Stage"
-msgstr ""
+msgstr "阶段"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -732,13 +734,13 @@ msgid ""
 "Define the steps that will be used in the project from the creation of the "
 "task, up to the closing of the task or issue. You will use these stages in "
 "order to track the progress in solving a task or an issue."
-msgstr ""
+msgstr "定义从任务创建到关闭要经过的步骤。你将用这些阶段来跟踪任务或缺陷的进度"
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
-msgstr ""
+msgstr "任务 '%s' 已创建"
 
 #. module: project
 #: view:project.task:0
@@ -748,24 +750,24 @@ msgstr "日期"
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr ""
+msgstr "分派给这个用户的任务标题"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    上月    "
 
 #. module: project
 #: view:project.installer:0
 msgid ""
 "Various OpenERP applications are available to manage your projects with "
 "different level of control and flexibility."
-msgstr ""
+msgstr "OpenERP中有很多模块用于在项目管理中维护控制和自由度的平衡"
 
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
-msgstr ""
+msgstr "项目的计划和实际工时"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -787,7 +789,7 @@ msgstr "延迟的小时数"
 #: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "任务分析"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
@@ -803,7 +805,7 @@ msgstr "委派"
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 msgid "Templates of Projects"
-msgstr ""
+msgstr "项目模版"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -823,7 +825,7 @@ msgstr "项目"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_估算"
 
 #. module: project
 #: view:board.board:0
@@ -834,7 +836,7 @@ msgstr "我的面板"
 #: code:addons/project/wizard/project_task_close.py:79
 #, python-format
 msgid "Please specify the email address of Project Manager."
-msgstr ""
+msgstr "请输入项目经理的邮件地址"
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
@@ -845,13 +847,13 @@ msgstr "项目管理"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "八月"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr ""
+msgstr "任务分派"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -868,12 +870,12 @@ msgstr "任务"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "上一级"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr ""
+msgstr "任务分派"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -887,21 +889,24 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"任务是一个要完成的工作。每个用户根据自己的任务列表工作并记录进度和工时。他可以自己完成这个任务或分派给其他人。如果你把任务分派给其他人，你会得到一个“等待"
+"”状态的新任务，在你得到工作成果后这个任务会被重启以便你复核工作成果。如果你安装了project_timesheet模块，根据项目的配置，你可以基于工时开"
+"发票。如果安装了project_mrp模块，销售订单确认时会自动创建任务。"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "十二月"
 
 #. module: project
 #: field:project.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "图片"
 
 #. module: project
 #: field:project.task,progress:0
@@ -917,6 +922,10 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"任务创建后的状态是“草稿”\n"
+" 任务开始后的状态是“进行中”\n"
+" 如果需要复核，状态是“等待”\n"
+" 如果任务已结束，状态是“完成”"
 
 #. module: project
 #: help:project.task,progress:0
@@ -938,7 +947,7 @@ msgstr "项目任务"
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr ""
+msgstr "任务阶段"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -962,19 +971,19 @@ msgstr "状态: %(state)s"
 #. module: project
 #: field:project.installer,project_long_term:0
 msgid "Long Term Planning"
-msgstr ""
+msgstr "长期计划"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "开始日期"
 
 #. module: project
 #: view:project.task:0
 #: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr ""
+msgstr "上级任务"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -984,12 +993,12 @@ msgstr "警告业务伙伴"
 #. module: project
 #: view:report.project.task.user:0
 msgid "  Year  "
-msgstr ""
+msgstr "  年  "
 
 #. module: project
 #: view:project.project:0
 msgid "Billing"
-msgstr ""
+msgstr "发票"
 
 #. module: project
 #: view:project.task:0
@@ -999,13 +1008,13 @@ msgstr "信息"
 #. module: project
 #: help:project.installer,account_budget:0
 msgid "Helps accountants manage analytic and crossover budgets."
-msgstr ""
+msgstr "用于会计人员管理预算"
 
 #. module: project
 #: field:project.task,priority:0
 #: field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "优先级"
 
 #. module: project
 #: view:project.project:0
@@ -1015,17 +1024,17 @@ msgstr "管理"
 #. module: project
 #: model:ir.model,name:project.model_project_task_reevaluate
 msgid "project.task.reevaluate"
-msgstr ""
+msgstr "project.task.reevaluate"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "My Task"
-msgstr ""
+msgstr "我的任务"
 
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "成员"
 
 #. module: project
 #: view:project.task:0
@@ -1035,7 +1044,7 @@ msgstr "项目任务列表"
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "错误！您不能创建递归的相关成员。"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1057,7 +1066,7 @@ msgstr "低"
 #. module: project
 #: view:project.project:0
 msgid "Performance"
-msgstr ""
+msgstr "表现"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
@@ -1068,7 +1077,7 @@ msgstr "我的任务最后期限"
 #: view:project.project:0
 #: field:project.task,manager_id:0
 msgid "Project Manager"
-msgstr "项目管理"
+msgstr "项目经理"
 
 #. module: project
 #: view:project.project:0
@@ -1085,18 +1094,18 @@ msgstr "未决"
 #. module: project
 #: view:project.task:0
 msgid "Task Edition"
-msgstr ""
+msgstr "任务"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
-msgstr ""
+msgstr "阶段"
 
 #. module: project
 #: view:project.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "配置:"
 
 #. module: project
 #: view:project.project:0
@@ -1109,25 +1118,25 @@ msgstr "项目名称"
 msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
-msgstr ""
+msgstr "你的任务进入了新的阶段。等待状态将在分派的任务结束后重启任务"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #. module: project
 #: help:project.installer,project_scrum:0
 msgid ""
 "Implements and tracks the concepts and task types defined in the SCRUM "
 "methodology."
-msgstr ""
+msgstr "实现了SCRUM方法下的概念和任务类型"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "剩余天数"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
@@ -1137,7 +1146,6 @@ msgstr "项目控制台"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "上级项目"
 
@@ -1154,23 +1162,23 @@ msgstr "确认要求和设置计划时间"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "十一月"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "增加筛选条件"
 
 #. module: project
 #: field:project.task.close,partner_email:0
 msgid "Customer Email"
-msgstr ""
+msgstr "客户邮件"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
-msgstr ""
+msgstr "项目 '%s' 已关闭"
 
 #. module: project
 #: view:project.task:0
@@ -1180,12 +1188,12 @@ msgstr "任务编辑"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "十月"
 
 #. module: project
 #: help:project.task.close,manager_warn:0
 msgid "Warn Manager by Email"
-msgstr ""
+msgstr "邮件通知经理"
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -1195,19 +1203,19 @@ msgstr "待处理任务"
 #. module: project
 #: field:project.task.close,manager_email:0
 msgid "Manager Email"
-msgstr ""
+msgstr "经理邮件"
 
 #. module: project
 #: help:project.project,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
-msgstr ""
+msgstr "如果启用字段的勾去掉，可以不用删除就隐藏项目"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "公司"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
@@ -1215,10 +1223,10 @@ msgid "When task is completed, it will come into the done state."
 msgstr "当任务完成它将进入完成状态"
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
-msgstr ""
+msgstr "项目 '%s' 已创建"
 
 #. module: project
 #: field:project.task.work,date:0
@@ -1228,14 +1236,14 @@ msgstr "日期"
 #. module: project
 #: model:ir.ui.menu,name:project.next_id_86
 msgid "Dashboard"
-msgstr ""
+msgstr "控制台"
 
 #. module: project
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "错误！货币必须是所选公司的本位币"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
@@ -1244,7 +1252,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
@@ -1254,23 +1262,23 @@ msgstr "用户计划"
 #. module: project
 #: field:project.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "配置进度"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "_Delegate"
-msgstr ""
+msgstr "_分派"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:91
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
-msgstr ""
+msgstr "不能发送邮件因为您的邮件地址没有配置！"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr ""
+msgstr "距开始日期"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
@@ -1280,7 +1288,7 @@ msgstr "委派給"
 #. module: project
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "历史记录"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1295,7 +1303,7 @@ msgstr "委派任务"
 #. module: project
 #: field:project.installer,project_gtd:0
 msgid "Getting Things Done"
-msgstr ""
+msgstr "GTD"
 
 #. module: project
 #: help:project.project,members:0
@@ -1307,7 +1315,7 @@ msgstr ""
 #. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
-msgstr ""
+msgstr "邮件提醒客户"
 
 #. module: project
 #: model:ir.module.module,description:project.module_meta_information
@@ -1319,6 +1327,12 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"项目管理模块用于管理多层项目和任务、任务进度等。\n"
+"还能统计项目进展，进行任务排序等。\n"
+" 项目成员的控制台包括：\n"
+"    我的任务列表\n"
+"    项目成员列表\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -1349,10 +1363,10 @@ msgid ""
 "This report allows you to analyse the performance of your projects and "
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
+msgstr "这个报表用于分析你项目和成员的效率。可以分析任务数量、计划工时和实际工时的对比、任务的平均花费天数"
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "任务 '%s' 设置进度"
@@ -1392,7 +1406,7 @@ msgstr "取消"
 #. module: project
 #: selection:project.vs.hours,state:0
 msgid "Close"
-msgstr ""
+msgstr "结束"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
@@ -1401,11 +1415,11 @@ msgid "Open"
 msgstr "待处理"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
-msgstr ""
+msgstr "您不能删除一个包含任务的项目。我建议您不启用该项目。"
 
 #. module: project
 #: view:project.project:0
@@ -1424,7 +1438,7 @@ msgstr "进展"
 #: code:addons/project/wizard/project_task_close.py:82
 #, python-format
 msgid "Please specify the email address of Customer."
-msgstr ""
+msgstr "请输入客户的邮件地址"
 
 #. module: project
 #: view:project.task:0
@@ -1435,41 +1449,41 @@ msgstr "恢复"
 #: model:ir.actions.act_window,name:project.action_project_task_close
 #: view:project.task.close:0
 msgid "Send Email"
-msgstr ""
+msgstr "发送邮件"
 
 #. module: project
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "当前活动"
 
 #. module: project
 #: field:project.task,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "项目列表"
 
 #. module: project
 #: help:project.installer,project_gtd:0
 msgid ""
 "GTD is a methodology to efficiently organise yourself and your tasks. This "
 "module fully integrates GTD principle with OpenERP's project management."
-msgstr ""
+msgstr "GTD是一种高效统筹个人的时间和任务的方法。这个模块把GTD方法和OpenERP的项目管理结合在了一起"
 
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
 msgid " Project vs  hours"
-msgstr ""
+msgstr " 项目小时数"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Current"
-msgstr ""
+msgstr "当前的"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1486,48 +1500,48 @@ msgstr "警告信息"
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "超过截止日期"
 
 #. module: project
 #: help:project.project,effective_hours:0
 msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
+msgstr "本项目和相关项目的任务实际花费的小时数合计"
 
 #. module: project
 #: help:project.task,delay_hours:0
 msgid ""
 "Computed as difference of the time estimated by the project manager and the "
 "real time to close the task."
-msgstr ""
+msgstr "计算公式为：项目经理估算的时间和实际花费的时间的差"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
-msgstr ""
+msgstr "任务重估"
 
 #. module: project
 #: help:project.installer,project_long_term:0
 msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
 "resource allocation handling."
-msgstr ""
+msgstr "用于长期项目的管理，包括分阶段的项目和资源分配管理"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
 msgid "Development"
-msgstr ""
+msgstr "开发"
 
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "按任务开发票"
 
 #. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
-msgstr ""
+msgstr "按项目统计我的剩余工时数"
 
 #. module: project
 #: field:project.task,description:0
@@ -1552,7 +1566,7 @@ msgstr "紧急的"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "五月"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1562,14 +1576,14 @@ msgstr "确认任务"
 #. module: project
 #: field:task.by.days,total_task:0
 msgid "Total tasks"
-msgstr ""
+msgstr "任务总数"
 
 #. module: project
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.action_view_delegate_task_tree
 #: view:project.task:0
 msgid "My Delegated Tasks"
-msgstr ""
+msgstr "我分派的任务"
 
 #. module: project
 #: view:project.project:0
@@ -1580,7 +1594,7 @@ msgstr "任务:%(名称)"
 #: model:ir.actions.act_window,name:project.action_project_installer
 #: view:project.installer:0
 msgid "Project Application Configuration"
-msgstr ""
+msgstr "项目管理功能配置"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -1601,7 +1615,7 @@ msgstr "我的发票科目"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "一月"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -1620,52 +1634,52 @@ msgstr "如果勾选此项项目经理将收到他团队每个任务完成时间
 msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
-msgstr ""
+msgstr "此项目极其子项目的所有任务的实际工时数"
 
 #. module: project
 #: help:project.task.close,manager_email:0
 msgid "Email Address of Project's Manager"
-msgstr ""
+msgstr "项目经理邮件地址"
 
 #. module: project
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "End Date"
-msgstr ""
+msgstr "结束日期"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
 #: model:ir.model,name:project.model_task_by_days
 #: view:task.by.days:0
 msgid "Task By Days"
-msgstr ""
+msgstr "任务日程"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid ""
 "Couldn't send mail! Check the email ids and smtp configuration settings"
-msgstr ""
+msgstr "不能发送邮件！检查邮箱帐号和smtp设置"
 
 #. module: project
 #: field:project.task.close,partner_warn:0
 msgid "Warn Customer"
-msgstr ""
+msgstr "提醒客户"
 
 #. module: project
 #: view:project.task:0
 msgid "Edit"
-msgstr ""
+msgstr "编辑"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
@@ -1676,27 +1690,27 @@ msgstr "你工作小时编码"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr ""
+msgstr "距结束日期"
 
 #. module: project
 #: view:board.board:0
 msgid "My Projects: Planned vs Total Hours"
-msgstr ""
+msgstr "我的项目：计划和实际工时"
 
 #. module: project
 #: model:ir.model,name:project.model_project_installer
 msgid "project.installer"
-msgstr ""
+msgstr "project.installer"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "四月"
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -1707,7 +1721,7 @@ msgstr "时间花费"
 #: view:project.project:0
 #: view:project.task:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "杂项"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
@@ -1722,13 +1736,13 @@ msgstr "项目时间单位"
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "花费时间"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
-msgstr ""
+msgstr "任务 '%s' 在等待状态"
 
 #. module: project
 #: field:project.task,total_hours:0
@@ -1741,33 +1755,33 @@ msgstr "总小时数"
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "输入项目序号用于对项目列表排序"
 
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: view:project.task:0
 msgid "Users"
-msgstr ""
+msgstr "用户"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "拖期任务"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "合并"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_remaining_hours_graph
 #: view:project.vs.hours:0
 msgid "Remaining Hours Per Project"
-msgstr ""
+msgstr "每个项目的剩余工时"
 
 #. module: project
 #: help:project.project,warn_footer:0
@@ -1788,6 +1802,8 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
+"项目包含一系列要由指定人员处理的任务或缺陷。项目可以有层级结构，作为另一个项目的子项目。这允许你把一个长期的大项目分成多个阶段去完成。每个用户都可以设置一"
+"个默认项目这样他可以自动地筛选他常用的任务或缺陷。如果你允许按任务工时开发票，你可以在会计管理的菜单下看到可以开票的任务。"
 
 #. module: project
 #: field:project.project,total_hours:0
@@ -1800,10 +1816,10 @@ msgid "Validation State"
 msgstr "确认状态"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
-msgstr ""
+msgstr "任务 '%s' 取消了"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1815,28 +1831,28 @@ msgstr "工作完成"
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
-msgstr ""
+msgstr "你复核分派任务的工作成果需要的工时数"
 
 #. module: project
 #: view:project.project:0
 msgid "Manager"
-msgstr ""
+msgstr "经理"
 
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "创建日期"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
-msgstr ""
+msgstr "任务 ‘%s' 取消了"
 
 #. module: project
 #: view:project.task.close:0
 msgid "_Send"
-msgstr ""
+msgstr "发送(_S)"
 
 #. module: project
 #: field:project.task.work,name:0
@@ -1846,18 +1862,18 @@ msgstr "工作摘要"
 #. module: project
 #: view:project.installer:0
 msgid "title"
-msgstr ""
+msgstr "标题"
 
 #. module: project
 #: help:project.installer,project_issue:0
 msgid "Automatically synchronizes project tasks and crm cases."
-msgstr ""
+msgstr "自动同步项目的任务和CRM的业务"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,type_ids:0
 msgid "Tasks Stages"
-msgstr ""
+msgstr "任务阶段"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
@@ -1873,7 +1889,7 @@ msgstr "邮件页脚"
 #. module: project
 #: field:project.installer,account_budget:0
 msgid "Budgets"
-msgstr ""
+msgstr "预算"
 
 #~ msgid "Close Task"
 #~ msgstr "关闭任务"
@@ -2149,140 +2165,3 @@ msgstr ""
 #~ "New state of your own task. Pending will be reopened automatically when the "
 #~ "delegated task is closed."
 #~ msgstr "你任务的新状态.未决的任务将会自动重新开始.委派的任务结束."
-
-#~ msgid "My project's planning"
-#~ msgstr "我的项目计划"
-
-#~ msgid "Board for project users"
-#~ msgstr "用户项目面板"
-
-#~ msgid "Pipeline of tasks"
-#~ msgstr "任务管线"
-
-#~ msgid "My Planning"
-#~ msgstr "我的计划"
-
-#~ msgid "Project Manager Dashboard"
-#~ msgstr "项目管理控制台"
-
-#~ msgid "My Deadlines"
-#~ msgstr "我的最后期限"
-
-#~ msgid "User's timesheets"
-#~ msgstr "用户时间表"
-
-#~ msgid "Project manager board"
-#~ msgstr "项目管理控制台"
-
-#~ msgid "My tasks board"
-#~ msgstr "我的任务面板"
-
-#~ msgid "My user's pipeline"
-#~ msgstr "我用户的管线"
-
-#~ msgid "My Timesheet"
-#~ msgstr "我的时间表"
-
-#~ msgid "Tasks finished by project (this month)"
-#~ msgstr "项目的完成的任务(这月)"
-
-#~ msgid "Tasks Closed by Project and User"
-#~ msgstr "项目和用户关闭的任务"
-
-#~ msgid "Tasks finished by project and user (this month)"
-#~ msgstr "项目和用户完成的任务(这月)"
-
-#~ msgid "Task Closed"
-#~ msgstr "任务关闭"
-
-#~ msgid "Tasks by Project"
-#~ msgstr "项目的任务"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "销售管理 - 报表"
-
-#~ msgid "User"
-#~ msgstr "用户"
-
-#~ msgid "Tasks by Project and User"
-#~ msgstr "项目和用户的任务"
-
-#~ msgid "This Month"
-#~ msgstr "本月"
-
-#~ msgid "Tasks by projects and users"
-#~ msgstr "项目和用户的任务"
-
-#~ msgid "Avg Closing Delay"
-#~ msgstr "平均关闭延迟"
-
-#~ msgid "Tasks by project"
-#~ msgstr "项目任务"
-
-#~ msgid "Tasks Closed by Project"
-#~ msgstr "项目关闭的任务"
-
-#~ msgid "Tasks by User"
-#~ msgstr "用户任务"
-
-#~ msgid "No Task"
-#~ msgstr "没任务"
-
-#~ msgid "Report on tasks by user for projects"
-#~ msgstr "项目用户任务报表"
-
-#~ msgid "Timesheet / Task Hours Per Month"
-#~ msgstr "时间表/每月任务小时数"
-
-#~ msgid "Reporting"
-#~ msgstr "内部报表"
-
-#~ msgid ""
-#~ "Gives statistics on tasks by user on projects to check the pipeline of users."
-#~ msgstr "项目用户任务的统计来检查用户的管线"
-
-#~ msgid "Task Closed Within Past 15 Days"
-#~ msgstr "15天前关闭的任务"
-
-#~ msgid "Task Hours"
-#~ msgstr "任务的小时数"
-
-#~ msgid "Task Number"
-#~ msgstr "任务数"
-
-#~ msgid "Timesheet/Task hours Report Per Month"
-#~ msgstr "时间表/每月任务小时数报表"
-
-#~ msgid "Task Progress"
-#~ msgstr "任务进度"
-
-#~ msgid "Closed Task Report"
-#~ msgstr "关闭任务报表"
-
-#~ msgid "Timesheet Hours"
-#~ msgstr "时间表小时数"
-
-#~ msgid "Closed Tasks"
-#~ msgstr "关闭任务"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module implements a dashboard for project member that includes:\n"
-#~ "    * List of my open tasks\n"
-#~ "    * List of my next deadlines\n"
-#~ "    * List of public notes\n"
-#~ "    * Graph of my timesheet\n"
-#~ "    * Graph of my work analysis\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "这模块实现项目的控制台包括:\n"
-#~ "    *我打开的任务列表\n"
-#~ "    *我的下一最后期限列表\n"
-#~ "    *公开备注列表\n"
-#~ "    *我的时间表图表\n"
-#~ "    *我的工作分析图形\n"
-#~ "    "
-
-#~ msgid "All Months"
-#~ msgstr "所有月份"

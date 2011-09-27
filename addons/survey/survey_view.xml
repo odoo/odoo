@@ -180,14 +180,12 @@
                                 </form>
                             </field>
                             <group col="9" colspan="4">
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                                 <button name="survey_cancel"
                                     string="Cancel" states="open" type="object" icon="gtk-cancel"/>
-                                <button name="survey_draft"
-                                    string="Set to draft" states="cancel,close" type="object"
-                                    icon="gtk-new"/>
-                                <button name="survey_open" string="Open"
-                                    states="draft" type="object" icon="gtk-go-forward"/>
+                                <button name="survey_open"
+                                    string="Open" states="cancel,close" type="object"
+                                    icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
                             </group>
@@ -233,7 +231,7 @@
             <field name="model">survey</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="gray:state in ('close')" string="Survey">
+                <tree colors="gray:state == 'close'" string="Survey">
                     <field name="title" select="1"/>
                     <field name="type" select="1"/>
                     <field name="responsible_id"/>
@@ -260,17 +258,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
-                   <group col='10' colspan='4'>
-                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                   <group>
+                        <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
                         <separator orientation="vertical"/>
-                        <field name="title" select="1"/>
-                        <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1">
+                        <field name="title"/>
+                        <field name="type" widget="selection"/>
+                        <field name="responsible_id">
                             <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
                    <newline/>
-                   <group expand="0" string="Group By..." colspan="4" col="20">
+                   <group expand="0" string="Group By...">
                        <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
@@ -476,7 +475,7 @@
                     <field name="title"/>
                     <field name="survey_id"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
                     </group>
                 </search>
@@ -683,7 +682,7 @@
                     <field name="survey" widget="selection"/>
                     <field name="type"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Page" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'page_id'}"/>
                     </group>
                </search>
@@ -702,6 +701,7 @@
         <record model="ir.ui.view" id="survey_question_wizard_test">
             <field name="name">survey_question_wizard_test</field>
             <field name="model">survey.question</field>
+            <field name="priority">20</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Question">
@@ -1094,18 +1094,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Survey">
-                   <group col='10' colspan='4'>
+                   <group>
                         <filter icon="terp-gtk-media-pause" string="Waiting Answer" domain="[('state','=','waiting_answer')]"/>
                         <filter icon="terp-emblem-important" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
                         <separator orientation="vertical"/>
-                        <field name="survey_id" widget="selection" select="1"/>
-                        <field name="email" select="1"/>
-                        <field name="user_id" select="1">
+                        <field name="survey_id" widget="selection"/>
+                        <field name="email"/>
+                        <field name="user_id">
                         <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>

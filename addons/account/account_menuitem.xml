@@ -16,7 +16,7 @@
         <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing"/>
         <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
         <menuitem id="periodical_processing_invoicing" name="Invoicing" parent="menu_finance_periodical_processing"/>
-        <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" sequence="6"/>
+        <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" groups="account.group_account_user" sequence="6"/>
         <menuitem id="menu_finance_reporting" name="Reporting" parent="account.menu_finance" sequence="13"/>
         <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user"/>
         <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reporting"/>
@@ -30,6 +30,7 @@
         <menuitem id="base.menu_action_currency_form" parent="menu_configuration_misc" sequence="20"/>
         <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reporting" sequence="100"/>
         <menuitem id="menu_finance_entries" name="Journal Entries" parent="menu_finance" sequence="5" groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_accounting" sequence="18"/>
 
         <menuitem id="account.menu_finance_recurrent_entries" name="Recurring Entries"
             parent="menu_finance_periodical_processing" sequence="15"

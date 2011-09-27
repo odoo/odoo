@@ -46,7 +46,6 @@
                         help="Auction during current month."/>
                     <filter icon="terp-go-week"
                          string="Month -1"
-                         separator="1"
                          domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
                          help="Auction during last month."/>
                     <separator orientation="vertical"/>
@@ -70,7 +69,7 @@
                     <field name="lot_type"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Buyer" icon="terp-personal" name="buyer" context="{'group_by':'buyer'}"/>
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>
@@ -159,7 +158,7 @@ Objects per Day
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Objects per day"  type="bar">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="obj_num" operator="+"/>
                 <field name="user_id" group="True"/>
             </graph>
@@ -168,12 +167,14 @@ Objects per Day
 
 
     <record model="ir.actions.act_window" id="action_report_auction_object_date_tree_my">
+        <field name="name">My Auction Object Date</field>
         <field name="res_model">report.auction.object.date</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('user_id','=',uid),('month','=',time.strftime('%Y-%m-01'))]</field>
     </record>
     <record model="ir.actions.act_window" id="action_report_auction_object_date_tree">
+        <field name="name">Auction Object Date</field>
         <field name="res_model">report.auction.object.date</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -203,14 +204,15 @@ Auction adjudication
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Total adjudication" type="bar">
-                <field name="name" select="1"/>
-                <field name="adj_total" select="1" />
+                <field name="name"/>
+                <field name="adj_total"/>
                 <field name="user_id" group="True"/>
             </graph>
         </field>
     </record>
 
     <record model="ir.actions.act_window" id="action_report_auction_adjudication_tree">
+        <field name="name">Auction Adjudication Report</field>
         <field name="res_model">report.auction.adjudication</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -246,7 +248,7 @@ Object encoded
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Object statistic" type="bar">
-                <field name="user_id" select="1"/>
+                <field name="user_id"/>
                 <field name="obj_ret"  operator="+" />
                 <field name="obj_num"  operator="+" />
                 <field name="obj_margin"  operator="+" />

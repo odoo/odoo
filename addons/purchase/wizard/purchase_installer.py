@@ -21,13 +21,36 @@
 from osv import fields, osv
 
 class purchase_installer(osv.osv_memory):
-    _name = 'purchase.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         'purchase_requisition':fields.boolean('Purchase Requisition',help="Manages your Purchase Requisition and allows you to easily keep track and manage all your purchase orders."),
         'purchase_analytic_plans': fields.boolean('Purchase Analytic Plans',help="Manages analytic distribution and purchase orders.")
     }
 purchase_installer()
+
+class purchase_config_wizard(osv.osv_memory):
+    _name = 'purchase.config.wizard'
+
+    _columns = {
+        'default_method' : fields.selection(
+            [('manual', 'Based on Purchase Orders'),
+             ('picking', 'Based on Receptions'),
+             ('order', 'Pre-Generate Draft Invoices on Purchase Orders'),
+            ],
+            'Default Invoicing Control Method',
+            required=True,
+        ),
+    }
+
+    def validate_cb(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids, context=context)[0]
+
+        proxy = self.pool.get('ir.values')
+        proxy.set(cr, uid, 'default', False, 'invoice_method', ['purchase.order'], wizard.default_method),
+
+        return {'type' : 'ir.actions.act_window_close'}
+
+purchase_config_wizard()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

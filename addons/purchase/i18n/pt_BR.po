@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-01 04:37+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:02+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -27,7 +27,7 @@ msgstr ""
 "se torna um Pedido de compra confirmado."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
@@ -46,7 +46,7 @@ msgid "Destination"
 msgstr "Local Destino"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -84,8 +84,8 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "From Picking"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -129,7 +129,7 @@ msgstr ""
 "controlar as faturas do fornecedor."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "O fornecedor selecionado somente vende este produto por %s"
@@ -152,7 +152,7 @@ msgid "From a Pick list"
 msgstr "Da Lista de Separação"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
 msgstr "Sem Lista de Preços !"
@@ -245,7 +245,7 @@ msgid "Partial Picking"
 msgstr "Separação Parcial"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "O pedido de compra '%s' está confirmado."
@@ -292,7 +292,7 @@ msgid "Notes"
 msgstr "Observações"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -372,7 +372,7 @@ msgid "Cancelled"
 msgstr "Cancelada"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "Valor de compra acima do limite."
@@ -426,7 +426,7 @@ msgid "Reference"
 msgstr "Referência"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "Ordem(ns) de Compra com Status em %s não podem ser deletados"
@@ -448,7 +448,7 @@ msgid "Day"
 msgstr "Dia"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "O Pedido de Compra '%s' foi colocado em Provisório."
@@ -465,8 +465,8 @@ msgid "# of Lines"
 msgstr "# de Linhas"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -503,7 +503,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Isso indica que a Separação foi Feita"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "UdM do Produto errada !"
@@ -609,7 +609,7 @@ msgid "Order Lines"
 msgstr "Linhas do Pedido"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
 msgstr "Sem Parceiro!"
@@ -664,9 +664,9 @@ msgid "Invoices generated for a purchase order"
 msgstr "Faturas geradas para um pedido de compra"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -731,7 +731,7 @@ msgid "Reservation Destination"
 msgstr "Reserva Destino"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
 msgstr "Ação Inválida !"
@@ -815,7 +815,7 @@ msgid "    Month-1    "
 msgstr "    Mês-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Não há diário de compras definido para esta empresa: \"%s\" (id:%d)"
@@ -826,7 +826,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -948,7 +948,6 @@ msgid "Month"
 msgstr "Mês"
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr "Aguardando Confirmação do Fornecedor"
@@ -1001,8 +1000,14 @@ msgstr "Aguardando revisão do contador."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
-msgstr "Linhas não faturadas do Pedido de Compra"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1148,7 +1153,7 @@ msgid "Manual Invoices"
 msgstr "Faturamento Manual"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1165,7 +1170,7 @@ msgid "Extended Filters..."
 msgstr "Filtros Extendidos..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
@@ -1173,7 +1178,7 @@ msgstr ""
 "No existe conta de despesas definida para este produto: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1232,7 +1237,7 @@ msgstr ""
 "    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1505,7 +1510,7 @@ msgid "Date Approved"
 msgstr "Data da Aprovação"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Não é possível cancelar esta ordem de compra!"
@@ -1620,7 +1625,7 @@ msgid "Total Qty and Amount by month"
 msgstr "Total Qtd e Valor por Mês"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr "Não foi possível cancelar o pedido de compra!"
@@ -1785,7 +1790,7 @@ msgstr ""
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Pedido de compra '%s' está cancelado."
@@ -1865,7 +1870,7 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1915,17 +1920,11 @@ msgstr ""
 msgid "Purchase Dashboard"
 msgstr "Painel de Compras"
 
-#~ msgid "You can not have 2 pricelist version that overlaps!"
-#~ msgstr "Você não pode ter 2 listas de preços que sobrepoem!"
-
 #~ msgid "Confirm Purchase Order"
 #~ msgstr "Confirmar Ordem de Compra"
 
 #~ msgid "Order Ref"
 #~ msgstr "Ref. Pedido"
-
-#~ msgid "N°"
-#~ msgstr "Nº"
 
 #, python-format
 #~ msgid ""
@@ -1984,15 +1983,6 @@ msgstr "Painel de Compras"
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Fatura do fornecedor pré-gerada nos recebimentos para controle"
 
-#~ msgid ""
-#~ "Please note that orders will only be merged if they are to the same partner "
-#~ "and going to the same location, and lines will only be merged if they are "
-#~ "exactly the same except for the quantity and unit."
-#~ msgstr ""
-#~ "Por favor note que as ordens só serão agrupadas se forem do mesmo parceiro e "
-#~ "estiverem indo para mesma localidade, e as linhas serão agrupadas se forem "
-#~ "exatamente iguais, com exceção da quantidade e da unidade."
-
 #~ msgid "Confirmed Purchase"
 #~ msgstr "Compra Confirmada"
 
@@ -2044,97 +2034,11 @@ msgstr "Painel de Compras"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo inválido na definição da ação."
 
-#~ msgid "Extended filters..."
-#~ msgstr "Extended filters..."
-
-#~ msgid "To Invoice"
-#~ msgstr "Para Faturar"
-
-#~ msgid ""
-#~ "From Order: a draft invoice will be pre-generated based on the purchase "
-#~ "order. The accountant will just have to validate this invoice for control.\n"
-#~ "From Picking: a draft invoice will be pre-generated based on validated "
-#~ "receptions.\n"
-#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
-#~ "manually."
-#~ msgstr ""
-#~ "From Order: a draft invoice will be pre-generated based on the purchase "
-#~ "order. The accountant will just have to validate this invoice for control.\n"
-#~ "From Picking: a draft invoice will be pre-generated based on validated "
-#~ "receptions.\n"
-#~ "Manual: no invoice will be pre-generated. The accountant will have to encode "
-#~ "manually."
-
-#~ msgid "Quotation Request"
-#~ msgstr "Requisição de Cotação"
-
-#~ msgid "This Year"
-#~ msgstr "Este Ano"
-
-#~ msgid "Launch"
-#~ msgstr "Executar"
-
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ " Please note that:\n"
-#~ "\n"
-#~ "   Orders will only be merged if: \n"
-#~ "   * Purchase Orders are in draft \n"
-#~ "   * Purchase Orders belong to the same supplier \n"
-#~ "   * Purchase Orders are have same stock location, same pricelist \n"
-#~ "\n"
-#~ "    Lines will only be merged if: \n"
-#~ "   * Order lines are exactly the same except for the product,quantity and "
-#~ "unit \n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ " Please note that:\n"
-#~ "\n"
-#~ "   Orders will only be merged if: \n"
-#~ "   * Purchase Orders are in draft \n"
-#~ "   * Purchase Orders belong to the same supplier \n"
-#~ "   * Purchase Orders are have same stock location, same pricelist \n"
-#~ "\n"
-#~ "    Lines will only be merged if: \n"
-#~ "   * Order lines are exactly the same except for the product,quantity and "
-#~ "unit \n"
-#~ "\n"
-
-#~ msgid "Total Quantity per product"
-#~ msgstr "Total Quantity per product"
-
 #~ msgid "You cannot have 2 pricelist versions that overlap!"
 #~ msgstr "You cannot have 2 pricelist versions that overlap!"
 
-#~ msgid "Purchase Lines not Invoiced"
-#~ msgstr "Linhas de Ordens de Compras não Faturadas"
-
-#~ msgid "# of Products"
-#~ msgstr "# de Produtos"
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalid XML for View Architecture!"
-
-#~ msgid "Draft Purchases"
-#~ msgstr "Compras em Rascunho"
-
-#~ msgid "An invoice generated for a purchase order"
-#~ msgstr "An invoice generated for a purchase order"
-
-#~ msgid "Purchase  Profile : Install Extra Modules"
-#~ msgstr "Purchase  Profile : Install Extra Modules"
-
-#~ msgid "Inventory Control"
-#~ msgstr "Controle de Inventário"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erro ! Você não pode criar menu recursivo."
-
-#~ msgid "7 Days"
-#~ msgstr "7 Dias"
 
 #~ msgid "Delivery & Invoices"
 #~ msgstr "Entrega & Faturamento"
@@ -2156,22 +2060,6 @@ msgstr "Painel de Compras"
 
 #~ msgid "Scheduled date"
 #~ msgstr "Data Prevista"
-
-#~ msgid ""
-#~ "Manages your Purchase Requisition and allow you to easily keep track and "
-#~ "manage all your purchase orders."
-#~ msgstr ""
-#~ "Manages your Purchase Requisition and allow you to easily keep track and "
-#~ "manage all your purchase orders."
-
-#~ msgid "Picking"
-#~ msgstr "Separação"
-
-#~ msgid "This Month"
-#~ msgstr "Este Mês"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Rules are not supported for osv_memory objects !"
 
 #~ msgid "Purchase Order lines"
 #~ msgstr "Linhas da Ordem de Compra"
@@ -2239,23 +2127,11 @@ msgstr "Painel de Compras"
 #~ msgid "Purchase order is confirmed by the user."
 #~ msgstr "Ordem de compra confirmada pelo usuário."
 
-#~ msgid "Manual in progress"
-#~ msgstr "Em andamento manual"
-
-#~ msgid "Quotation"
-#~ msgstr "Cotação"
-
-#~ msgid "In progress"
-#~ msgstr "Em andamento"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Aguardando Programação"
-
 #~ msgid "Date"
 #~ msgstr "Data"
 
-#~ msgid "To be Invoiced"
-#~ msgstr "A Faturar"
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Linhas não faturadas do Pedido de Compra"
 
-#~ msgid "Product UoM"
-#~ msgstr "UdM do Produto"
+#~ msgid "From Picking"
+#~ msgstr "Do recebimento (separação)"

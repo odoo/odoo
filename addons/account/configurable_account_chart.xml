@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <!-- Types -->
-        <record model="account.account.type" id="conf_account_type_receivable" >
+        <record model="account.account.type" id="conf_account_type_receivable">
           <field name="name">Receivable</field>
           <field name="code">receivable</field>
           <field name="report_type">income</field>
           <field name="close_method">unreconciled</field>
         </record>
 
-        <record model="account.account.type" id="conf_account_type_payable" >
+        <record model="account.account.type" id="conf_account_type_payable">
           <field name="name">Payable</field>
           <field name="code">payable</field>
           <field name="report_type">expense</field>
@@ -43,7 +42,7 @@
 	        <field name="report_type">liability</field>
 	    </record>
 
-        <record model="account.account.type" id="conf_account_type_income" >
+        <record model="account.account.type" id="conf_account_type_income">
           <field name="name">Income</field>
           <field name="code">income</field>
           <field name="report_type">income</field>
@@ -187,8 +186,8 @@
 			            <field name="code">1104</field>
 			            <field name="name">Bank Current Account</field>
 			            <field ref="conf_cas" name="parent_id"/>
-			            <field name="type">liquidity</field>
-			            <field name="user_type" ref="conf_account_type_asset"/>
+			            <field name="type">view</field>
+			            <field name="user_type" ref="account_type_asset_view1"/>
 			        </record>
 
 			        <record id="conf_o_income" model="account.account.template">
@@ -447,7 +446,7 @@
             <field name="property_account_expense_categ" ref="conf_a_expense"/>
             <field name="property_account_income_categ" ref="conf_a_sale"/>
             <field name="property_account_income_opening" ref="conf_o_income"/>
-            <field name="property_account_expense_opening" ref="conf_o_expense"/>            
+            <field name="property_account_expense_opening" ref="conf_o_expense"/>
             <field name="property_reserve_and_surplus_account" ref="conf_a_reserve_and_surplus"/>
         </record>
 
@@ -591,15 +590,15 @@
 
 
     	<record id="fiscal_position_normal_taxes" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_normal_taxes_template1" />
-            <field name="tax_src_id" ref="itaxs" />
-            <field name="tax_dest_id" ref="otaxs" />
+            <field name="position_id" ref="fiscal_position_normal_taxes_template1"/>
+            <field name="tax_src_id" ref="itaxs"/>
+            <field name="tax_dest_id" ref="otaxs"/>
         </record>
 
     	<record id="fiscal_position_tax_exempt" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_tax_exempt_template2" />
-            <field name="tax_src_id" ref="itaxx" />
-            <field name="tax_dest_id" ref="otaxx" />
+            <field name="position_id" ref="fiscal_position_tax_exempt_template2"/>
+            <field name="tax_src_id" ref="itaxx"/>
+            <field name="tax_dest_id" ref="otaxx"/>
         </record>
 
 
@@ -616,8 +615,8 @@
 		<record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
 			<field name="name">Generate Chart of Accounts from a Chart Template</field>
 			<field name="action_id" ref="account.action_wizard_multi_chart"/>
-			<field name="state">open</field>
-			<field name="restart">onskip</field>
+			<field name="category_id" ref="account.category_accounting_configuration"/>
+			<field name="type">automatic</field>
 		</record>
 
 

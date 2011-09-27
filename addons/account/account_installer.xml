@@ -19,11 +19,11 @@
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
                 </xpath>
-                <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='rowspan'>23</attribute>
-                    <attribute name='string'></attribute>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="rowspan">23</attribute>
+                    <attribute name="string"/>
                 </xpath>
-                <group colspan="8">
+                <group colspan="8" position="inside">
                     <group colspan="4" width="600">
                         <field name="charts"/>
                             <group colspan="4" groups="base.group_extended">
@@ -45,35 +45,20 @@
 
         <record id="view_account_modules_installer" model="ir.ui.view">
             <field name="name">account.installer.modules.form</field>
-            <field name="model">account.installer.modules</field>
+            <field name="model">base.setup.installer</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
             <field name="arch" type="xml">
                 <data>
-                    <form position="attributes">
-                        <attribute name="string">Accounting Application Configuration</attribute>
-                    </form>
-                    <separator string="title" position="attributes">
-                         <attribute name="string">Configure Your Accounting Application</attribute>
-
-                    </separator>
-                    <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">Add extra Accounting functionalities to the ones already installed.</attribute>
+                    <xpath expr="//group[@name='account_accountant']" position="replace">
+                    <newline/>
+                    <separator string="Accounting &amp; Finance Features" colspan="4"/>
+                    <field name="account_followup"/>
+                    <field name="account_payment"/>
+                    <field name="account_analytic_plans"/>
+                    <field name="account_anglo_saxon"/>
+                    <field name="account_asset"/>
                     </xpath>
-                    <xpath expr="//button[@string='Install Modules']" position="attributes">
-                        <attribute name="string">Configure</attribute>
-                    </xpath>
-                    <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='string'></attribute>
-                    </xpath>
-                    <group colspan="8">
-                        <field name="account_voucher"/>
-                        <field name="account_followup"/>
-                        <field name="account_payment"/>
-                        <field name="account_analytic_plans"/>
-                        <field name="account_anglo_saxon"/>
-<!--                    <field name="account_voucher_payment"/>-->
-                    </group>
                 </data>
             </field>
         </record>
@@ -88,28 +73,70 @@
             <field name="target">new</field>
         </record>
 
-        <record id="action_account_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Application Configuration</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.installer.modules</field>
-            <field name="view_id" ref="view_account_modules_installer"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
+        <record id="category_accounting_configuration" model="ir.actions.todo.category">
+            <field name="name">Accounting</field>
+            <field name="sequence">5</field>
+        </record>    
 
         <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_configuration_installer"/>
+            <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
-            <field name="restart">onskip</field>
+            <field name="type">automatic</field>
         </record>
 
-        <record id="account_installer_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_account_installer"/>
-            <field name="sequence">5</field>
-            <field name="restart">always</field>
-            <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
+        <record id="action_bank_account_configuration_installer" model="ir.actions.act_window">
+            <field name="name">Define your Bank Account</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
         </record>
 
+        <record id="bank_account_configuration_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_bank_account_configuration_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+        </record>
+
+        <record id="action_view_financial_accounts_installer" model="ir.actions.act_window">
+            <field name="name">Review your Financial Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_financial_accounts_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_view_financial_accounts_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
+
+        <record id="action_review_financial_journals_installer" model="ir.actions.act_window">
+            <field name="name">Review your Financial Journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="review_financial_journals_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_review_financial_journals_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
+        <record id="action_review_payment_terms_installer" model="ir.actions.act_window">
+            <field name="name">Review your Payment Terms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment.term</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="review_payment_terms_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_review_payment_terms_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
     </data>
 </openerp>

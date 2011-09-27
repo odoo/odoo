@@ -6,20 +6,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-01-28 00:58+0000\n"
-"PO-Revision-Date: 2010-01-26 12:00+0000\n"
-"Last-Translator: Freerk Kalsbeek (Mindswitch BV) <f.kalsbeek@mindswitch.nl>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-03-10 20:02+0000\n"
+"Last-Translator: Wouter Schrijvers <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-04-24 04:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-03-11 06:00+0000\n"
+"X-Generator: Launchpad (build 12559)\n"
+
+#. module: base_module_doc_rst
+#: view:ir.module.module:0
+msgid "You can save this image as .png file"
+msgstr "Deze weergave kan als .png bestand opgeslagen worden"
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0
 msgid "Technical Guide in rst format"
 msgstr "Techische handleiding in rst formaat"
+
+#. module: base_module_doc_rst
+#: wizard_button:create.relation.graph,init,end:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: base_module_doc_rst
+#: wizard_view:create.relation.graph,init:0
+msgid "(Relationship Graphs generated)"
+msgstr "(Relatiegrafiek wordt gegenereerd)"
+
+#. module: base_module_doc_rst
+#: wizard_view:tech.guide.rst,init:0
+msgid "Please choose a file where the Technical Guide will be written."
+msgstr "Kies een bestand waar de Technische handleiding wordt opgeslagen"
+
+#. module: base_module_doc_rst
+#: model:ir.module.module,description:base_module_doc_rst.module_meta_information
+msgid ""
+"\n"
+"    * This module generates the Technical Guides of selected modules in "
+"Restructured Text format (RST)\n"
+"    * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST\n"
+"    * It creates a tarball (.tgz file suffix) containing an index file and "
+"one file per module\n"
+"    * Generates Relationship Graph\n"
+"    "
+msgstr ""
+"\n"
+"    * Deze module genereert de Technische Gids voor de geselecteerde modules "
+"in Restructured Text format (RST)\n"
+"    * De Sphinx (http://sphinx.pocoo.org) RST-implementatie wordt gebruikt\n"
+"    * De gecreëerde tarball (.tgz bestandsextensie) bevat een index-bestand "
+"en één bestand per module\n"
+"    * Genereert Relatiegrafiek\n"
+"    "
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,name:0
@@ -32,9 +73,21 @@ msgid "Create RST Technical Guide"
 msgstr "RST Technische handleiding aanmaken"
 
 #. module: base_module_doc_rst
-#: wizard_view:tech.guide.rst,init:0
-msgid "Please choose a file where the Technical Guide will be written."
-msgstr "Kies een bestand waar de Technische handleiding wordt opgeslagen"
+#: model:ir.actions.wizard,name:base_module_doc_rst.wiz_gen_graph
+msgid "Generate Relationship Graph"
+msgstr "Genereer Relatiegrafiek"
+
+#. module: base_module_doc_rst
+#: wizard_view:create.relation.graph,init:0
+#: view:ir.module.module:0
+#: field:ir.module.module,file_graph:0
+msgid "Relationship Graph"
+msgstr "Relatiegrafiek"
+
+#. module: base_module_doc_rst
+#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
+msgid "Module"
+msgstr "Module"
 
 #. module: base_module_doc_rst
 #: wizard_field:tech.guide.rst,init,rst_file:0
@@ -50,6 +103,11 @@ msgstr "Sluiten"
 #: model:ir.module.module,shortdesc:base_module_doc_rst.module_meta_information
 msgid "Module Technical Guide in Restructured Text "
 msgstr "Module Technische Handleiding in Restructured Text (rst) "
+
+#. module: base_module_doc_rst
+#: model:ir.actions.report.xml,name:base_module_doc_rst.report_proximity_graph
+msgid "Proximity graph"
+msgstr ""
 
 #. module: base_module_doc_rst
 #: wizard_view:tech.guide.rst,init:0

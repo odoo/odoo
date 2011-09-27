@@ -6,7 +6,7 @@
         <field name="model">account.invoice.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
+            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
@@ -27,12 +27,11 @@
                 <field name="partner_bank_id" invisible="1"/>
                 <field name="date_due" invisible="1"/>
                 <field name="account_id" invisible="1"/>
+                <field name="account_line_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="Qty"/>
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
-                <field name="price_average" sum="Average Price"/>
                 <field name="price_total" sum="Total Without Tax"/>
-                <field name="price_total_tax" sum="Total With Tax"/>
                 <field name="residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
                 <field name="due_delay"  sum="Avg. Due Delay" invisible="context.get('residual_invisible',False)"/>
                 <field name="delay_to_pay"  sum="Avg. Delay To Pay" invisible="context.get('residual_invisible',False)"/>
@@ -58,7 +57,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Invoices Analysis">
-              <group col="10" colspan="12">
+              <group>
                     <filter string="Draft"
                            icon="terp-document-new"
                            domain="[('state','=','draft')]"
@@ -79,7 +78,6 @@
                             help="Customer Invoices And Refunds"/>
                     <filter icon="terp-personal"
                             string="Supplier"
-                            separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
                             help="Supplier Invoices And Refunds"/>
                    <separator orientation="vertical"/>
@@ -88,7 +86,6 @@
                             help="Customer And Supplier Invoices"/>
                    <filter icon="terp-dolar_ok!"
                             string="Refund"
-                            separator="1"
                             domain="['|', ('type','=','out_refund'),('type','=','in_refund')]"
                             help="Customer And Supplier Refunds"/>
                    <separator orientation="vertical"/>
@@ -103,6 +100,7 @@
                     <separator orientation="vertical"/>
                     <field name="journal_id" widget="selection"/>
                     <field name="account_id"/>
+                    <field name="account_line_id"/>
                     <separator orientation="vertical"/>
                     <field name="date_due"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
@@ -120,6 +118,7 @@
                     <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
+                    <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_line_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
                     <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}"/>

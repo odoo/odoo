@@ -14,17 +14,17 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:24+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Pakalpojums bāzēts uz Darba laika uzskaites Tabelēm"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Wed"
 msgstr "Trešd."
@@ -43,7 +43,7 @@ msgstr "Jūsu lietotājam nav definēts darbinieks!"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupēt pēc..."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
@@ -53,11 +53,14 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Darbinieki var uzskaitīt patērēto laiku dažādos projektos. Projekts ir "
+"analītiskais konts, kurā tiek veikta patērētā laika un izmaksu uzskaite. Tas "
+"nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Today"
-msgstr ""
+msgstr "Šodien"
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
@@ -93,8 +96,8 @@ msgid "janvier"
 msgstr "janvāris"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Mon"
 msgstr "Pirmd."
@@ -112,6 +115,9 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Darbinieki var uzskaitīt patērēto laiku projektos, kuros tie ir darba grupā. "
+"Projekts ir analītiskais konts, kurā tiek veikta patērētā laika un izmaksu "
+"uzskaite. Tas nodrošina apmeklējuma un patērēto stundu vienlaicīgu uzskaiti."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
@@ -121,7 +127,7 @@ msgstr "Minimālais daudzums (Analītiskais)"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr ""
+msgstr "Darbinieka Darba laika uzkaites Tabele (Mēnesis)"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -133,6 +139,7 @@ msgstr "Pēdējie veiktie Darbi"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Kļūda! Nevar izvēlēties nodaļu, kurai darbinieks pats ir nodaļas vadītājs."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,state:0
@@ -144,19 +151,19 @@ msgstr "Statuss"
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Darbinieka Vārds"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
 msgid "Print Employees Timesheet"
-msgstr ""
+msgstr "Drukāt Darbinieka darba laika uzskaites Tabeli"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:174
 #: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Uzmanību!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
@@ -172,8 +179,8 @@ msgid "No cost unit defined for this employee !"
 msgstr "Šim lietotājam nav definēta standarta izmaksu vienība!"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Tue"
 msgstr "Otrd."
@@ -187,7 +194,7 @@ msgstr "Analītiskais Konts"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:42
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Brīdinājums"
 
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
@@ -198,18 +205,18 @@ msgstr "Uzņēmuma Darbinieki (darba laika uzskaite)"
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
 msgid "Sign In/Out By Project"
-msgstr ""
+msgstr "Reģistrēties/Iziet Projekta Ietvaros"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sat"
 msgstr "Sestd."
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sun"
 msgstr "Svētd."
@@ -234,11 +241,13 @@ msgstr "jūlijs"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr ""
+msgstr "Darbinieku darba laika uzskaites Tabele (Mēnesis)"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "July"
 msgstr "Jūlijs"
@@ -252,7 +261,7 @@ msgstr "Sākuma Datums"
 #. module: hr_timesheet
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategorijas"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -266,6 +275,8 @@ msgid ""
 "Through Working Hours you can register your working hours by project every "
 "day."
 msgstr ""
+"Darba stundas paredzētas ikdienas patērētā laika reģistrēšanai projekta "
+"ietvaros."
 
 #. module: hr_timesheet
 #: model:ir.module.module,description:hr_timesheet.module_meta_information
@@ -282,10 +293,20 @@ msgid ""
 "to set up a management by affair.\n"
 "    "
 msgstr ""
+"\n"
+"Modulis nodrošina darba laika uzskaites sistēmu. Katram darbiniekam "
+"iespējams ievadīt un uzskaitīt dažādos projektos patērēto laiku. Projekts ir "
+"analītiskais konts patērētā laika un izmaksu uzskaitei.\n"
+"Tiek nodrošinātas dažādas atskaites darbinieku kontrolei.\n"
+"Tas ir pilnībā integrēts grāmatvedības sistēmā, un nodrošina pilnīgu lietu "
+"kontroli.\n"
+"    "
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "March"
 msgstr "Marts"
@@ -302,8 +323,10 @@ msgid "décembre"
 msgstr "decembris"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "September"
 msgstr "Septembris"
@@ -316,7 +339,7 @@ msgstr "Darba laika uzskaites Tabeles Ieraksts"
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
 msgid "employees"
-msgstr ""
+msgstr "Darbinieki"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -352,8 +375,8 @@ msgid "Sign in / Sign out by project"
 msgstr "Piereģistrēties / Izrakstīties Projekta ietvaros"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Fri"
 msgstr "Piektd."
@@ -370,6 +393,9 @@ msgid ""
 "Analytic journal is not defined for employee %s \n"
 "Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
+"Darbiniekam %s nav definēts analītiskais konts.\n"
+"Definējiet darbinieku attiecīgajam lietotājam un piešķiriet atbilstošo "
+"analītisko kontu."
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -384,7 +410,7 @@ msgstr "Darba uzkaites Tabeles"
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
+msgstr "Definē sistēmā darbinieku kā produktu, kura tips ir \"serviss\"."
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -393,15 +419,19 @@ msgid "août"
 msgstr "augusts"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "August"
 msgstr "Augusts"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "June"
 msgstr "Jūnijs"
@@ -420,11 +450,13 @@ msgstr "marts"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Date"
-msgstr ""
+msgstr "Datums"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "November"
 msgstr "Novembris"
@@ -432,7 +464,7 @@ msgstr "Novembris"
 #. module: hr_timesheet
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Kļūda! Nevar izveidot rekursīvu Darbinieku Hierarhiju."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
@@ -440,15 +472,19 @@ msgid "Closing Date"
 msgstr "Beigu Datums"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "October"
 msgstr "Oktobris"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "January"
 msgstr "Janvāris"
@@ -459,8 +495,8 @@ msgid "Key dates"
 msgstr "Svarīgākie datumi"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:42
-#: code:addons/hr_timesheet/report/users_timesheet.py:76
+#: code:addons/hr_timesheet/report/user_timesheet.py:43
+#: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Thu"
 msgstr "Ceturtd."
@@ -473,13 +509,13 @@ msgstr "Analītiskā statistika"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
-msgstr ""
+msgstr "Drukāt Darbinieka Tabeli un Drukāt personīgo Tabeli"
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
 #: field:hr.sign.out.project,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "Darbinieka ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -489,7 +525,7 @@ msgstr "Vispārīgā informācija"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
 msgid "My Timesheet"
-msgstr ""
+msgstr "Personīgā Darba laika uzskaites Tabele"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -497,8 +533,10 @@ msgid "Analysis summary"
 msgstr "Analītiskās statistikas kopsavilkums"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "December"
 msgstr "Decembris"
@@ -528,13 +566,13 @@ msgstr "februāris"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Information"
-msgstr ""
+msgstr "Informācija"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,employee_id:0
 #: model:ir.model,name:hr_timesheet.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Darbinieks"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -551,12 +589,12 @@ msgstr "Tekošais Datums"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Anlytic account"
-msgstr ""
+msgstr "Analītiskais konts"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "Vednis drukā ikmēneša Darba laika uzskaites Tabeles"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -567,11 +605,13 @@ msgstr "Produkts"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Rēķinu izrakstīšana"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "May"
 msgstr "Maijs"
@@ -601,11 +641,13 @@ msgstr "Darba Stundas"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Reģistrēties Projekta ietvaros"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "February"
 msgstr "Februāris"
@@ -618,12 +660,12 @@ msgstr "Analītiskais ieraksts"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Iziet Projekta Ietvaros"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Employees"
-msgstr ""
+msgstr "Darbinieki"
 
 #. module: hr_timesheet
 #: selection:hr.analytical.timesheet.employee,month:0
@@ -632,8 +674,10 @@ msgid "octobre"
 msgstr "oktobris"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:39
-#: code:addons/hr_timesheet/report/users_timesheet.py:72
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 #, python-format
 msgid "April"
 msgstr "Aprīlis"
@@ -675,7 +719,7 @@ msgstr "Lietotāju statistika"
 #: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:42
 #, python-format
 msgid "No employee defined for this user"
-msgstr ""
+msgstr "Lietotājam nav definēts darbinieks"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.employee,year:0
@@ -686,12 +730,12 @@ msgstr "Gads"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
-msgstr ""
+msgstr "Grāmatvedība"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner Id"
-msgstr ""
+msgstr "Partnera ID"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -741,12 +785,6 @@ msgstr "septembris"
 #~ msgid "User"
 #~ msgstr "Lietotājs"
 
-#~ msgid "Print my timesheet"
-#~ msgstr "Drukāt manu darba laika uzskaites tabeli"
-
-#~ msgid "Employees timesheet"
-#~ msgstr "Darbinieka darba laika uzskaites tabele"
-
 #~ msgid "Employee's name"
 #~ msgstr "Darbinieka vārds"
 
@@ -789,9 +827,6 @@ msgstr "septembris"
 #~ "Error: The default UOM and the purchase UOM must be in the same category."
 #~ msgstr ""
 #~ "Kļūda: Mērv. pēc noklusējuma ir jābūt vienā kategorijā ar iepirkuma mērv."
-
-#~ msgid "Consultancy - Senior Developper"
-#~ msgstr "Konsultācijas - Vecākais Izstrādātājs"
 
 #, python-format
 #~ msgid "UnknownError"

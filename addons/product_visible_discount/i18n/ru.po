@@ -14,20 +14,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:47+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:147
 #, python-format
 msgid "No Purchase Pricelist Found !"
-msgstr "Не найден каталог для закупок !"
+msgstr "Не найден прайс-лист для закупок!"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:155
 #, python-format
 msgid "No Sale Pricelist Found "
-msgstr "Не найден каталог для продаж "
+msgstr "Не найден прайс-лист для продаж "
 
 #. module: product_visible_discount
 #: model:ir.module.module,description:product_visible_discount.module_meta_information
@@ -46,6 +46,18 @@ msgid ""
 "Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
 "    "
 msgstr ""
+"\n"
+"    Этот модуль позволяет вычислять скидки по позициям заказа на продажу и "
+"позициям счёта на основе прайс-листа контрагента.\n"
+"    Для этого в форму «Прайс-лист» добавлен переключатель «Видимая скидка».\n"
+"    Пример:\n"
+"        Для продукта PC1 и контрагента \"Asustek\": если listprice=450 и "
+"цена, вычисленная с помощью  прайс-листа Asustek — 225\n"
+"        Если переключатель установлен, в заказе на продажу мы получим: Цена "
+"единицы = 450, Скидка = 50,00, Чистая цена = 225\n"
+"        Если переключатель не установлен, в заказе на продажу и счёте "
+"получим: Цена единицы = 225, Скидка = 0,00, Чистая цена = 225\n"
+"    "
 
 #. module: product_visible_discount
 #: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
@@ -62,18 +74,18 @@ msgstr "Позиция счета"
 #: code:addons/product_visible_discount/product_visible_discount.py:155
 #, python-format
 msgid "You must first define a pricelist for Customer !"
-msgstr "Сначала вы должны определить каталог для заказчика !"
+msgstr "Сначала требуется определить прайс-лист для заказчика!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_product_pricelist
 msgid "Pricelist"
-msgstr "Каталог"
+msgstr "Прайс-лист"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:147
 #, python-format
 msgid "You must first define a pricelist for Supplier !"
-msgstr "Сначала вы должны определить каталог для поставщика !"
+msgstr "Сначала требуется определить прайс-лист для поставщика!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_sale_order_line
@@ -82,12 +94,3 @@ msgstr "Позиция заказа на продажу"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра структуры!"
-
-#~ msgid "Sale Order Line"
-#~ msgstr "Позиция заказа на продажу"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_ и не должно содержать специальных "
-#~ "символов !"

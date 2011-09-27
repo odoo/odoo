@@ -24,6 +24,7 @@
     'name': 'Human Resources (Timesheet encoding)',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 This module implements a timesheet system.
 ==========================================
@@ -44,6 +45,7 @@ to set up a management by affair.
     'init_xml': ['hr_timesheet_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
         'hr_timesheet_report.xml',
         'hr_timesheet_wizard.xml',
@@ -51,6 +53,7 @@ to set up a management by affair.
         'wizard/hr_timesheet_print_employee_view.xml',
         'wizard/hr_timesheet_print_users_view.xml',
         'wizard/hr_timesheet_sign_in_out_view.xml',
+        'hr_timesheet_installer.xml',
     ],
     'demo_xml': ['hr_timesheet_demo.xml'],
     'test': ['test/test_hr_timesheet.yml',

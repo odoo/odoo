@@ -1,0 +1,20 @@
+<openerp>
+  <data>
+
+    <record model="ir.actions.act_window" id="account_analytic_plan_form_action_installer">
+        <field name="name">Define your Analytic Plans</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.plan</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account_analytic_plans.account_analytic_plan_form"/>
+    </record>
+        
+   <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
+      <field name="category_id" ref="account.category_accounting_configuration"/>
+      <field name="sequence">15</field>
+  </record>
+
+  </data>
+</openerp>

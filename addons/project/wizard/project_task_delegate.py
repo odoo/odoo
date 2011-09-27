@@ -108,6 +108,6 @@ class project_task_delegate(osv.osv_memory):
         delegate_data['user_id'] = delegate_data['user_id'][0]
         delegate_data['name'] = tools.ustr(delegate_data['name'])
         task_pool.do_delegate(cr, uid, task_id, delegate_data, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 project_task_delegate()

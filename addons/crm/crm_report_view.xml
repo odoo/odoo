@@ -69,7 +69,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Type">
-                   <group col="10" colspan="4">
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Team and Type for this year" />
@@ -78,10 +78,10 @@
                                help="Cases by Team and Type for this month" />
                            <separator orientation="vertical"/>
                            <field name="section_id"
-                               select="1" widget="selection" />
-                           <field name="category2_id" select="1"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                               widget="selection" />
+                           <field name="category2_id"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>
@@ -90,6 +90,7 @@
 <!--  Cases by section and category2 of case Action -->
 
     <record model="ir.actions.act_window" id="action_report_crm_case_section_categ_tree">
+        <field name="name">Cases By Section and Category</field>
         <field name="res_model">report.crm.case.section.categ2</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -161,7 +162,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Team and Stage">
-                   <group col="8" colspan="4">
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Team and Stage for this year" />
@@ -169,9 +170,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by Team and Stage for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>
@@ -180,6 +181,7 @@
 <!-- Cases by section and stage Action -->
 
     <record model="ir.actions.act_window" id="action_report_crm_case_section_stage_tree">
+        <field name="name">Cases By Section and Stage</field>
         <field name="res_model">report.crm.case.section.stage</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
@@ -236,7 +238,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Cases by Section, Category and Stage">
-                   <group col='8' colspan='4'>
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by Section, Category and Stage for this year" />
@@ -244,9 +246,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by Section, Category and Stage for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
 
                    </group>
                </search>
@@ -271,6 +273,7 @@
 <!-- Cases by section, category and stage Action -->
 
     <record model="ir.actions.act_window" id="action_report_crm_case_section_categ_stage_tree">
+        <field name="name">Cases By Section ,Category and Stage</field>
         <field name="res_model">report.crm.case.section.categ.stage</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
@@ -329,7 +332,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cases by User">
-                   <group col='12' colspan='4'>
+                   <group>
                            <filter string="This Year" icon="terp-go-year"
                                domain="[('name','=',time.localtime()[0])]"
                                help="Cases by User for this year" />
@@ -337,9 +340,9 @@
                                domain="[('month','=',time.localtime()[1])]"
                                help="Cases by User for this month" />
                            <separator orientation="vertical"/>
-                        <field name="section_id" select="1" widget="selection"/>
-                        <field name="nbr" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="section_id" widget="selection"/>
+                        <field name="nbr"/>
+                        <field name="state"/>
                    </group>
                </search>
             </field>
@@ -363,6 +366,7 @@
 <!--  Cases by section, category and category2 Action -->
 
     <record model="ir.actions.act_window" id="action_report_crm_case_section_categ_categ2_tree">
+        <field name="name">Cases By Section ,Category and Category2</field>
         <field name="res_model">report.crm.case.section.categ.categ2</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>

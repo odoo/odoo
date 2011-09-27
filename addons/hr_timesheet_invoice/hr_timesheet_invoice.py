@@ -66,7 +66,7 @@ class account_analytic_account(osv.osv):
         'pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist',
             help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
-        'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
+        'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Reinvoice Costs',
             help="Fill this field if you plan to automatically generate invoices based " \
@@ -116,7 +116,7 @@ class account_analytic_line(osv.osv):
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
                     raise osv.except_osv(_('Error !'),
-                        _('You can not modify an invoiced analytic line!'))
+                        _('You cannot modify an invoiced analytic line!'))
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
@@ -175,6 +175,21 @@ class account_invoice(osv.osv):
         return iml
 
 account_invoice()
+
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    def create_analytic_lines(self, cr, uid, ids, context=None):
+        res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
+        analytic_line_obj = self.pool.get('account.analytic.line')
+        for move_line in self.browse(cr, uid, ids, context=context):
+            for line in move_line.analytic_lines:
+                toinv = line.account_id.to_invoice.id
+                if toinv:
+                    analytic_line_obj.write(cr, uid, line.id, {'to_invoice': toinv})
+        return res
+
+account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

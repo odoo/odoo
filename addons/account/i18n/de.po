@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-03 09:24+0000\n"
+"PO-Revision-Date: 2011-07-02 08:42+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-04 04:47+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-17 04:56+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -527,8 +527,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -911,7 +909,7 @@ msgstr "Erzeuge 3 Monats Periode"
 #. module: account
 #: report:account.overdue:0
 msgid "Due"
-msgstr "fällig am"
+msgstr "Fällig"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1186,6 +1184,7 @@ msgstr "# Transaktionen"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1375,6 +1374,16 @@ msgstr "Sie können dieses Sachkonto nicht in diesem Journal einsetzen."
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Konten mit Saldo"
 
@@ -2199,6 +2208,8 @@ msgstr "Finanzbuchhaltung Eigenschaften"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Buchungen sortiert nach"
 
@@ -2220,11 +2231,16 @@ msgstr "Vorlage f. Produkte"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2563,6 +2579,7 @@ msgstr "Rabatt (%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2664,7 +2681,7 @@ msgstr ""
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
 #: model:ir.ui.menu,name:account.menu_act_ir_actions_bleble
 msgid "New Company Financial Setting"
-msgstr "Basiskonfiguration Unternehmen"
+msgstr "Neue Firma Financial Rahmen"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
@@ -2828,6 +2845,8 @@ msgstr "Finanzen"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr "Gewinn und Verlust"
 
@@ -3120,7 +3139,6 @@ msgstr "Leer lassen um Aufwandskonto zu verwenden"
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -3134,6 +3152,17 @@ msgstr "Leer lassen um Aufwandskonto zu verwenden"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Buchungsjournale"
 
@@ -3351,6 +3380,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr "Gegenbuchung"
 
@@ -3409,6 +3439,16 @@ msgstr "UST:"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Kontenplan Finanzen"
 
@@ -3874,11 +3914,10 @@ msgid "Analytic Balance"
 msgstr "Saldo Analyt. Konto"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr "Jahresfehlbetrag"
 
@@ -4014,7 +4053,7 @@ msgstr "Fällige Analytische Konten"
 #: selection:account.invoice,state:0
 #: report:account.overdue:0
 msgid "Paid"
-msgstr "bezahlt am"
+msgstr "bezahlt"
 
 #. module: account
 #: field:account.invoice,tax_line:0
@@ -4189,7 +4228,7 @@ msgstr "Storniere Abschreibung"
 #: field:account.model.line,date_maturity:0
 #: report:account.overdue:0
 msgid "Maturity date"
-msgstr "Fälligkeitstermin"
+msgstr "Datum Fällig"
 
 #. module: account
 #: view:report.account.receivable:0
@@ -4732,7 +4771,6 @@ msgid "Analytic Balance -"
 msgstr "Saldo (Anal.)"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4745,10 +4783,8 @@ msgstr "Saldo (Anal.)"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4758,6 +4794,16 @@ msgstr "Saldo (Anal.)"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Filter Buchungen"
 
@@ -4876,6 +4922,8 @@ msgstr "Ergebnis Kontoabstimmung"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr "Bilanz"
 
@@ -5638,6 +5686,19 @@ msgstr "Zentraljournal"
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Kein Filter"
@@ -6604,6 +6665,7 @@ msgstr "Steuern Zuordnung"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7355,7 +7417,7 @@ msgstr "Manueller Kontenausgleich"
 #. module: account
 #: report:account.overdue:0
 msgid "Total amount due:"
-msgstr "Gesamtbetrag (fällig):"
+msgstr "Gesamtbetrag fällig:"
 
 #. module: account
 #: field:account.analytic.chart,to_date:0
@@ -7624,6 +7686,7 @@ msgstr "Betrag (in Worten)"
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7888,6 +7951,19 @@ msgstr "Finanzbuchhaltung"
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Periode"
@@ -7982,14 +8058,6 @@ msgstr "Tel.:"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Betriebl. Währung"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr "Kontenplan"
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -8108,6 +8176,12 @@ msgstr "Journal Gutschriften"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr "Filter nach"
 
@@ -8361,6 +8435,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8681,12 +8756,17 @@ msgstr "Überwachung von Zahlungseingängen"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr "Start Periode"
 
@@ -8741,7 +8821,7 @@ msgstr ""
 #. module: account
 #: report:account.overdue:0
 msgid "Best regards."
-msgstr "Viele Grüsse."
+msgstr "Beste Grüsse."
 
 #. module: account
 #: view:account.invoice:0
@@ -8813,7 +8893,12 @@ msgstr "Leer lassen um das Erlöskonto zu nutzen"
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8832,6 +8917,15 @@ msgstr "Händisch oder automatisch im System erfasst."
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr "Anzeige Konten"
 
@@ -9069,12 +9163,17 @@ msgstr "Saldo Analytisches Konto"
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr "Ende der Periode"
 
@@ -9294,6 +9393,7 @@ msgstr "Buchen"
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -9381,6 +9481,18 @@ msgstr "Sonstige"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9597,13 +9709,10 @@ msgid "Tax Source"
 msgstr "Steuer"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr "Netto Gewinn"
 
@@ -9628,8 +9737,8 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "JNRL"
+msgid "JRNL"
+msgstr "Journal"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9850,6 +9959,7 @@ msgstr "Eingangsrechnungen"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9929,6 +10039,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Konten mit Buchungen"
 
@@ -10241,7 +10361,7 @@ msgstr "Zentrales Journal"
 #. module: account
 #: report:account.overdue:0
 msgid "Maturity"
-msgstr "Fällig am"
+msgstr "überfälllig"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -10323,19 +10443,17 @@ msgstr ""
 "Der verbleibende Saldo auf einem Debitor oder Kreditor nach vorgenommenen "
 "Buchung in der Landeswährung."
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Frei lassen für Periode des Validierungsdatums."
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
 
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Fehler! Sie können keine rekursiven Konten definieren."
-
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Falls Sie Zahlungsbedingungen einsetzen wird das Fälligkeitsdatum für die "
-#~ "Rechnungen automatisch berechnet."
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
 
 #~ msgid "Unpaid Supplier Invoices"
 #~ msgstr "Offene Eingangsrechnungen"
@@ -10355,18 +10473,12 @@ msgstr ""
 #~ msgid "Unreconciled entries"
 #~ msgstr "Offene Posten"
 
-#~ msgid "Print Taxes Report"
-#~ msgstr "Druck Report Steuer"
-
 #, python-format
 #~ msgid "Account move line \"%s\" is not valid"
 #~ msgstr "Buchungsposition \"%s\" ist ungültig"
 
 #~ msgid "Unreconcile entries"
 #~ msgstr "Storno Ausgleich"
-
-#~ msgid "Confirm draft invoices"
-#~ msgstr "Bestätige Entwurf Rechnung"
 
 #~ msgid "Charts of Account"
 #~ msgstr "Kontenplan Finanzkonten"
@@ -10404,18 +10516,6 @@ msgstr ""
 
 #~ msgid "Payment Reconcilation"
 #~ msgstr "Zahlungsausgleich Offener Posten"
-
-#~ msgid "Disc. (%)"
-#~ msgstr "Rabatt (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Sollte Ihre Zahlung erfolgt sein und sich mit dieser Nachricht zeitlich "
-#~ "überschneiden, betrachten Sie diesen Hinweis als gegenstandlos. Bitte fragen "
-#~ "Sie bei Unklarheiten unsere Finanzbuchhaltung."
 
 #~ msgid "Contra"
 #~ msgstr "Gegenposition"
@@ -10455,9 +10555,6 @@ msgstr ""
 
 #~ msgid "Journal Voucher"
 #~ msgstr "Journal Beleg"
-
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
 
 #~ msgid "Analytic Invoice"
 #~ msgstr "Analytische Rechnung"
@@ -10595,9 +10692,6 @@ msgstr ""
 #~ msgid "Close states"
 #~ msgstr "Beende Jahr"
 
-#~ msgid "Crédit"
-#~ msgstr "Haben"
-
 #~ msgid "Income"
 #~ msgstr "Erlöse"
 
@@ -10732,10 +10826,6 @@ msgstr ""
 #~ msgid "Draft Supplier Invoices"
 #~ msgstr "Entwurf Eingangsrechnung"
 
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Konfigurationsfehler!"
-
 #~ msgid ""
 #~ "Exception made of a mistake of our side, it seems that the following bills "
 #~ "stay unpaid. Please, take appropriate measures in order to carry out this "
@@ -10743,9 +10833,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Vorbehaltlich eines Fehlers unsererseits sind folgende Rechnungen unbezahlt. "
 #~ "Bitte bezahlen Sie innerhalb der nächsten 8 Tage."
-
-#~ msgid "Débit"
-#~ msgstr "Soll"
 
 #~ msgid "x Checks Journal"
 #~ msgstr "x Checks Journal"
@@ -10821,9 +10908,6 @@ msgstr ""
 #~ msgid "_Go"
 #~ msgstr "_Gehe zu"
 
-#~ msgid "Partner ID"
-#~ msgstr "Partner Kurzbez."
-
 #~ msgid "New Customer Invoice"
 #~ msgstr "Neue Ausgangrechnung"
 
@@ -10876,9 +10960,6 @@ msgstr ""
 #~ msgid "Document"
 #~ msgstr "Dokument"
 
-#~ msgid "Move name"
-#~ msgstr "Buchung Bezeichnung"
-
 #~ msgid "Cancel selected invoices"
 #~ msgstr "Storniere ausgew. Rechnungen"
 
@@ -10889,9 +10970,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Vorgeschlagene Ausgangsrechnungen müssen geprüft, validiert und gedruckt "
 #~ "werden."
-
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
 
 #~ msgid "By Date and Period"
 #~ msgstr "Nach Datum und Periode"
@@ -10909,10 +10987,6 @@ msgstr ""
 
 #~ msgid "Financial Management"
 #~ msgstr "Finanzen"
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Das Konto zum Ausziffern wurde noch nicht definiert!"
 
 #~ msgid "Additionnal Information"
 #~ msgstr "Zusatzinformation"
@@ -10961,9 +11035,6 @@ msgstr ""
 #~ msgid "Pay and reconcile"
 #~ msgstr "Zahle Rechnung / OP Ausgleich"
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Saldenliste anzeigen"
-
 #~ msgid "New Supplier Refund"
 #~ msgstr "Neue Gutschrift Lieferanten"
 
@@ -10984,9 +11055,6 @@ msgstr ""
 
 #~ msgid "Define Fiscal Years and Select Charts of Account"
 #~ msgstr "Definiere Wirtschaftsjahr und Kontenplan"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Dauer Abschreibung"
 
 #~ msgid "3 Months"
 #~ msgstr "3 Monate"
@@ -11128,9 +11196,6 @@ msgstr ""
 #~ msgid "Unpaid Customer Invoices"
 #~ msgstr "Offene Ausgangsrechnungen"
 
-#~ msgid "Partner name"
-#~ msgstr "Name Partner"
-
 #~ msgid "Journal/Payment Mode"
 #~ msgstr "Journal/Zahlungsbedingung"
 
@@ -11157,6 +11222,9 @@ msgstr ""
 #~ "Trage Anfangssaldo und Endsaldo ein um von einer Eingabeprüfung zu "
 #~ "profitieren."
 
+#~ msgid "JNRL"
+#~ msgstr "JNRL"
+
 #~ msgid "General Ledger -"
 #~ msgstr "Hauptbuch -"
 
@@ -11180,10 +11248,6 @@ msgstr ""
 
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Erfassen Buchungen"
-
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr "Sie können kein Konto deaktivieren welches Buchungen beinhaltet."
 
 #~ msgid "Filter on Partners"
 #~ msgstr "Filter Kunden / Lieferanten"
@@ -11317,9 +11381,6 @@ msgstr ""
 #~ "Selected Move lines does not have any account move enties in draft state"
 #~ msgstr "Ausgewählte Buchungen haben keine Entwurfspositionen"
 
-#~ msgid "All account entries"
-#~ msgstr "Alle Buchungen"
-
 #~ msgid "Date Filter"
 #~ msgstr "Filter Datum"
 
@@ -11442,10 +11503,6 @@ msgstr ""
 #~ msgid "Journal de vente"
 #~ msgstr "Verkaufsjournal"
 
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Soll-Haben ungleiche Buchungen können nicht validiert werden."
-
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Übergeordnetes Analyse Konto"
 
@@ -11466,13 +11523,6 @@ msgstr ""
 
 #~ msgid "Date or Code"
 #~ msgstr "Datum oder Code"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Das Bankkonto des Partner für diese Zahlung.\n"
-#~ "Leer für Standard"
 
 #~ msgid "Journal d'ouverture"
 #~ msgstr "Eröffnungsjournal"
@@ -11496,10 +11546,6 @@ msgstr ""
 
 #~ msgid "Fiscal Position Template Tax Mapping"
 #~ msgstr "Steuerliche Position Vorlage Steuerzuordnung"
-
-#, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "Keine ausgleichbaren Buchungen im alten Geschäftsjahr"
 
 #~ msgid "Maximum Quantity"
 #~ msgstr "Max. Menge"
@@ -11669,226 +11715,13 @@ msgstr ""
 #~ msgid "Statement reconcile"
 #~ msgstr "Beleg OP-Ausgleich"
 
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Analytische Konten für Periodenabschluss"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Entwurf Rechnungen"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Abzurechnende Analytische Konten"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Abzurechnende Kosten"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Anzeigetafel für Rechnungswesen"
-
-#~ msgid "My indicators"
-#~ msgstr "Meine Indikatoren"
-
-#~ msgid "Aged income"
-#~ msgstr "Überfällige Erträge"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Zeige Soll/Haben Information"
-
-#~ msgid "All accounts"
-#~ msgstr "Alle Konten"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Auswahl der Buchungen basiert auf"
-
-#~ msgid "Notification"
-#~ msgstr "Benachrichtigung"
-
-#~ msgid "Financial Period"
-#~ msgstr "Geschäftsjahres Periode"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Periodenauswahl"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Vergleiche ausgewählte Jahre in Bezig auf"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Auswahl der Geschäftsjahre (Max 3)"
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Auswahl des Referenzkontos ( für % Vergleich)"
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Konten Saldo - Jahresvergleich"
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Account Balance erweitert die Funktionalität der Finanz Modules\n"
-#~ "\n"
-#~ "    Mit diesem Modul können verschiedene Darstellungen einer BIlanz gedruckt "
-#~ "werden\n"
-#~ "\n"
-#~ "    1. Jahresvergleiche\n"
-#~ "\n"
-#~ "    2. Vergleichswerte in Geld oder Prozent.\n"
-#~ "\n"
-#~ "    3. Definition des Kontos der 100% Basis\n"
-#~ "\n"
-#~ "    4. Auswahl der Perioden aufgrund Buchungs oder Erstellungsdatum\n"
-#~ "\n"
-#~ "    5. Druck in Hoch oder Querformat\n"
-#~ "    "
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr "Sie müssen \"Querformat\" auswählen."
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Report im Querformat anzeigen"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Zeige Vergleich in %"
-
-#~ msgid "Don't Compare"
-#~ msgstr "NIcht Vergleichen"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Zeige Konten"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. Sie haben jedenfalls mehr als 3 Jahre ausgewählt."
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Buchhaltung und Finanzmanagement - Vergleiche Konten"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "Sie können maximal 3 Jahre auswählen.  Nochmals versuchen!"
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. Sie haben die 'Prozent' Option mit mehr als 2 Jahren ausgewählt, jedoch "
-#~ "nicht \"Querformat\"."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Sie haben möglicherweise folgende Fehler gemacht. Bitte korrigieren und "
-#~ "nochmals versuchen."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Für Vergleich mit übergeordnetem Satz leer lassen"
-
-#~ msgid "Creation Date"
-#~ msgstr "Erzeugt am"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr "2. Sie haben mehr als 2 Jahre ohne \"Prozent\" Option ausgewählt."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "Sie haben die Vergleiche mit mehr als einem Jahr, sowie Soll/Haben Spalten "
-#~ "und der % Option ausgewählt.\r\n"
-#~ "Das könnte dazu führen, das über den Papierrand gedruckt wird. Ändern Sie "
-#~ "bitte die Anforderung."
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr "Sie müssen mindestens 1 Geschäftsjahr auswählen. Nochmals versuchen!"
-
-#~ msgid "Customize Report"
-#~ msgstr "Personalisierung Report"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr "Dieses Module erwietert das Finanz Module um weitere Reports"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Finanz Reporting"
-
-#~ msgid ""
-#~ "Gives the view used when writing or browsing entries in this journal. The "
-#~ "view tell Open ERP which fields should be visible, required or readonly and "
-#~ "in which order. You can create your own view for a faster encoding in each "
-#~ "journal."
-#~ msgstr ""
-#~ "Definiert Felder (sichtbar, zwingend, nur lesen) für die Sicht für dieses "
-#~ "Journal. Für jedes Journal können eingene Sichten erzeugt wrden um scheller "
-#~ "erfassen zu können"
-
 #~ msgid "wizard.company.setup"
 #~ msgstr "wizard.company.setup"
-
-#~ msgid "Fiscal Mapping Template"
-#~ msgstr "Steuer Umschlüsselung Vorlage"
-
-#~ msgid "Accounts Fiscal Mapping"
-#~ msgstr "Konten Steuer Umschlüsselung"
-
-#~ msgid "Fiscal Mapping Templates"
-#~ msgstr "Steuer Umschlüsselung Vorlagen"
-
-#~ msgid "Fiscal Mapping Remark :"
-#~ msgstr "Steuer Umschlüsselung Anmerkung:"
-
-#~ msgid ""
-#~ "The fiscal mapping will determine taxes and the accounts used for the "
-#~ "partner."
-#~ msgstr ""
-#~ "Die Steuerumschlüsselung legt Steuern und Konten für diesen PArtner fest."
-
-#~ msgid "Taxes Fiscal Mapping"
-#~ msgstr "Steuern Umschlüsselung"
-
-#~ msgid "Template Tax Fiscal Mapping"
-#~ msgstr "Steuer Umschlüsselung Vorlage"
-
-#~ msgid "Template for Fiscal Mapping"
-#~ msgstr "Steuerumschlüsselung Vorlage"
-
-#~ msgid "Fiscal Mappings"
-#~ msgstr "Steuer Umschlüsselung"
 
 #, python-format
 #~ msgid "No journal for ending writing has been defined for the fiscal year"
 #~ msgstr ""
 #~ "Es ist kein Journal für die Abschlussbuchungen des Geschäftsjahres definiert"
-
-#~ msgid "supplier"
-#~ msgstr "Lieferant"
-
-#~ msgid "Expenses Credit Notes Journal - (test)"
-#~ msgstr "Gutschriften Lieferanten Journal -(Test)"
-
-#~ msgid ""
-#~ "A journal entry consists of several journal items, each of which is either a "
-#~ "debit or a credit. OpenERP creates automatically one journal entry per "
-#~ "accounting document: invoices, refund, supplier payment, bank statements, "
-#~ "etc."
-#~ msgstr ""
-#~ "Ein Journal besteht aus Buchungssätzen, wobei eine Buchung entweder im Soll "
-#~ "oder im Haben erfolgt. OpenERP erzeugt automatisch Buchungen bei folgenden "
-#~ "Belegen der Finanzbuchhaltung: Rechnung, Gutschrift, Lieferantenzahlung, "
-#~ "Bankauszug, etc."
 
 #, python-format
 #~ msgid "The statement balance is incorrect !\n"
@@ -11898,394 +11731,42 @@ msgstr ""
 #~ msgid "UnknownError"
 #~ msgstr "UnbekannterFehler"
 
-#~ msgid ""
-#~ "Customer Invoices allows you create and manage invoices issued to your "
-#~ "customers. OpenERP generates draft of invoices automatically so that you "
-#~ "only have to confirm them before sending them to your customers."
-#~ msgstr ""
-#~ "Ausgangsrechnungen ermöglichen die Erstellung von Rechnungen an Ihre Kunden. "
-#~ "OpenERP erzeugt Rechnungen im Status 'Entwurf' automatisch, somit müssen Sie "
-#~ "vor dem Versenden der Rechnung nur noch bestätigen."
-
-#~ msgid ""
-#~ "A vendor refund is a credit note from your supplier indicating that he "
-#~ "refunds part or totality of the invoice sent to you."
-#~ msgstr ""
-#~ "Eine Gutschrift ist ein Beleg von Ihrem Lieferanten, der einen Teil oder "
-#~ "sogar den gesamte Rechnungsbetrag auf Ihrem Konto beim Lieferanten als "
-#~ "Gutschrift ausweist .."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die ID für das Zertifikat des Moduls sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "Supplier Invoices allows you to enter and manage invoices issued by your "
-#~ "suppliers. OpenERP generates draft of supplier invoices automatically so "
-#~ "that you can control what you received from your supplier according to what "
-#~ "you purchased or received."
-#~ msgstr ""
-#~ "Eingansrechnungen ermöglicht Ihnen eine Erfassung von Rechnungen Ihrer "
-#~ "Lieferanten. OpenERP erzeugt automatisch Rechnungen im Status Entwurf. "
-#~ "Hierdurch können Sie dann auch einen Abgleich mit dem "
-#~ "Wareneingangslieferschein oder der Bestellung vornehmen."
-
-#~ msgid "Move/Entry label"
-#~ msgstr "Buchungstext"
-
-#~ msgid "Entry No"
-#~ msgstr "Buchung Nr."
-
-#~ msgid ""
-#~ "A recurring entry is a payment related entry that occurs on a recurrent "
-#~ "basis from a specific date corresponding to the signature of a contract or "
-#~ "an agreement with a customer or a supplier. With Define Recurring Entries, "
-#~ "you can create them in the system in order to automate their entries in the "
-#~ "system."
-#~ msgstr ""
-#~ "Eine wiederkehrende Buchung ist eine Zahlung oder Rechnung, die je nach "
-#~ "vertraglichen Konditionen immer wiederkehrend einer bestimmten zeitlichen "
-#~ "Abfolge folgt.Sie können wiederkehrende Buchungen erstellen und automatisch "
-#~ "oder händisch in beliebiger Frequenz vornehmen."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler ! Sie können kein rekursives Menü erzeugen!"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the payment "
-#~ "term without removing it."
-#~ msgstr ""
-#~ "Durch Aktivierung dieser Option, kann die Ansicht dieser Zahlungsbedingung "
-#~ "verhindert werden ohne sie zu löschen."
-
 #, python-format
 #~ msgid "Invoice "
 #~ msgstr "Rechnung "
 
-#~ msgid ""
-#~ "Define your company's fiscal year depending on the period you have chosen to "
-#~ "follow. A fiscal year is a 1 year period over which a company budgets its "
-#~ "spending. It may run over any period of 12 months. The fiscal year is "
-#~ "referred to by the date in which it ends. For example, if a company's fiscal "
-#~ "year ends November 30, 2011, then everything between December 1, 2010 and "
-#~ "November 30, 2011  would be referred to as FY 2011. Not using the actual "
-#~ "calendar year gives many companies an advantage, allowing them to close "
-#~ "their books at a time which is most convenient for them."
-#~ msgstr ""
-#~ "Definieren Sie das Geschäftsjahr in Abhängigkeit der von Ihnen zu "
-#~ "erstellenden Periodenabschlüsse. Ein Geschäftsjahr ist ein 1-Jahres-"
-#~ "Zeitraum, den ein Unternehmen selbst definieren kann. Das Geschäftsjahr "
-#~ "erstreckt sich generell über einen Zeitraum von 12 Monaten. Ein "
-#~ "Geschäftsjahr wird außerdem gekennzeichnet durch den Zeitpunkt, in dem es "
-#~ "endet. Wenn z.B. in einem Unternehmen das Geschäftsjahr am 30. November 2011 "
-#~ "endet, dann entspricht alles zwischen dem 1. Dezember 2010 und 30. November "
-#~ "2011 dem Geschäftsjahr für  2011. Eine Abweichung vom tatsächlichen "
-#~ "Kalenderjahr könnte für viele Unternehmen insofern einen Vorteil bieten, "
-#~ "wenn Sie hierdurch ihre Bücher zu einem Zeitpunkt abschliessen können, der "
-#~ "aus unterschiedlichen internen Gründen für das Unternehmen der günstigste "
-#~ "sein kann."
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr ""
-#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-#~ "vorhanden sein !"
-
-#~ msgid ""
-#~ "This account will be used for invoices instead of the default one to value "
-#~ "expenses for the current product"
-#~ msgstr ""
-#~ "Dieses Konto wird anstelle des Default-Kontos verwendet für die Erfassung "
-#~ "von Aufwendungen für das aktuelle Produkt."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the tax "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Wenn dieses Feld aktiviert ist , kann eine definierte Steuer ausgeblendet "
-#~ "werden, ohne diese vollständig zu entfernen."
 
 #, python-format
 #~ msgid "is validated."
 #~ msgstr "wurde geprüft und gebucht."
 
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the journal "
-#~ "period without removing it."
-#~ msgstr ""
-#~ "Durch Aktivierung dieser Option, kann die Anzeige dieses Journals verhindert "
-#~ "werden ohne das Journal zu löschen."
-
-#~ msgid "Sales Credit Note Journal - (test)"
-#~ msgstr "Verkaufsgutschrift Journal - (test)"
-
-#~ msgid "Cash Journal - (test)"
-#~ msgstr "Barkasse Journal (test)"
-
-#~ msgid ""
-#~ "Here you can personalize and create each view of your financial journals by "
-#~ "selecting the fields you want to appear and the sequence they will appear."
-#~ msgstr ""
-#~ "Sie können hier die Ansicht Ihrer Journale personalisieren, indem Sie die "
-#~ "anzuzeigenden Felder und deren Reihenfolge angeben."
-
-#~ msgid ""
-#~ "Here, you can define a period, an interval of time between successive "
-#~ "closings of the books of your company. An accounting period typically is a "
-#~ "month or a quarter, corresponding to the tax year used by the business. "
-#~ "Create and manage them from here and decide whether a period should be left "
-#~ "open or closed depending on your company's activities over a specific period."
-#~ msgstr ""
-#~ "Sie können hier eine Periode anlegen, d.h. ein Zeitintervall nach deren "
-#~ "Ablauf üblichweise dann der Zeitraum beendet und ausgewertet wird. Eine "
-#~ "Buchungsperiode umfasst normalerweise ein Monat oder ein Quartal, in "
-#~ "Korrespondenz mit den abzugebenden Steuererklärungen. Erzeugen Sie hier Ihre "
-#~ "Perioden und steuern Sie auch inwieweit Perioden geöffnet oder beendet "
-#~ "werden, je nachdem wie die gängige Praxis in Ihrem Unternehmen ist oder die "
-#~ "Steuerbehörden dieses erfordern."
-
-#~ msgid "Bank Journal - (test)"
-#~ msgstr "Bank Journal - (test)"
-
-#~ msgid "Central Journals"
-#~ msgstr "Erstelle  Journale"
-
-#~ msgid ""
-#~ "Cash Register allows you to manage cash entries in your cash journals."
-#~ msgstr ""
-#~ "Die Kassenbuch Anwendung ermöglicht Buchen von Barkassen und Abstimmung von "
-#~ "Bargeldbeständen."
-
-#~ msgid "Default UoM"
-#~ msgstr "Standard Menge (ME)"
-
-#~ msgid "Expenses Journal - (test)"
-#~ msgstr "Aufwendungen Journal - (test)"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"
-
-#~ msgid "Sales Journal - (test)"
-#~ msgstr "Verkauf Journal - (test)"
-
 #~ msgid "Error! You can not create recursive analytic accounts."
 #~ msgstr "Fehler! Sie können keine rekursiven Konten definieren."
 
-#~ msgid ""
-#~ "Create and manage your company's financial journals from this menu. A "
-#~ "journal is a business diary in which all financial data related to the day "
-#~ "to day business transactions of your company is recorded using double-entry "
-#~ "book keeping system. Depending on the nature of its activities and number of "
-#~ "daily transactions, a company may keep several  types of specialized "
-#~ "journals such as a cash journal, purchases journal, and sales journal."
-#~ msgstr ""
-#~ "Erstelle und manage die Finanzjournale des Unternehmens über dieses Menü. "
-#~ "Ein Journal ist eine lückenlose und chronologische Aufzeichnung aller "
-#~ "Geschäftsvorfälle in einem Unternehmen in Form der doppelten Buchhaltung. In "
-#~ "Abhängigkeit des Anwendungsumfangs der Buchhaltung sowie der Anzahl an "
-#~ "täglichen Buchungsvorgängen, kann ein Unternehmen diverse verschiedene "
-#~ "Journale für unterschiedliche Zwecke anlegen, z.B. Journale für diverse "
-#~ "Kassen, Bankkonten, Verkaufslager etc."
+#~ msgid "Chart of Account"
+#~ msgstr "Kontenplan"
 
 #~ msgid ""
-#~ "This account will be used for invoices instead of the default one to value "
-#~ "sales for the current product"
+#~ "Gives the view used when writing or browsing entries in this journal. The "
+#~ "view tell Open ERP which fields should be visible, required or readonly and "
+#~ "in which order. You can create your own view for a faster encoding in each "
+#~ "journal."
 #~ msgstr ""
-#~ "Dieses Konto wird anstelle des Standard Kontos bei der Buchung von "
-#~ "Ausgangsrechnungen für dieses Produkt verwendet"
+#~ "Zeigt an, welche Sicht genutzt wird, wenn Sie dieses Journal durchblättern "
+#~ "oder etwas schreiben. Die Sichten geben Open ERP an, welche Felder sichtbar "
+#~ "sein sollen, zwingend benötigt werden, ob nur lesend auf sie zugegriffen "
+#~ "werden darf und in welcher Reihenfolge Sie erscheinen sollen. Sie können "
+#~ "Ihre eigene Sicht erstellen, um jedes Journal schneller erfassen zu können."
 
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein"
+#~ msgid "Print Taxes Report"
+#~ msgstr "Steuerbericht drucken"
 
+#, python-format
 #~ msgid ""
-#~ "You can look up individual account entries by searching for useful "
-#~ "information. To search for account entries, open a journal, then select a "
-#~ "record line."
+#~ "No period defined for this date !\n"
+#~ "Please create a fiscal year."
 #~ msgstr ""
-#~ "Sie können Details zu bestimmten einzelnen Buchungen durch die Suche in "
-#~ "Finanzjournalen aufspüren. Öffnen Sie hierzu einfach ein Journal und nutzen "
-#~ "Sie die Suche."
-
-#~ msgid ""
-#~ "This account will be used for invoices to value sales for the current "
-#~ "product category"
-#~ msgstr ""
-#~ "Dieses Konto wird gebucht bei Rechnungspositionen zu Produkten aus der "
-#~ "aktuellen Kategorie"
-
-#~ msgid ""
-#~ "This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
-#~ "be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
-#~ "& Loss Report"
-#~ msgstr ""
-#~ "Dieses Konto wird als vorläufiges Konto für einen Gewinn oder Verlust aus "
-#~ "dem Geschäftsjahr verwendet (Bei vorläufigem Gewinn: Betrag wird "
-#~ "gutgeschrieben, bei vorläufigem Verlust: Betrag wird belastet.) Der Betrag "
-#~ "wird durch die Auswertung Gewinn & Verlust generiert."
-
-#~ msgid ""
-#~ "A tax code is a reference of a tax that will be taken out of a gross income "
-#~ "depending on the country and sometimes industry sector. OpenERP allows you "
-#~ "to define and manage them from this menu."
-#~ msgstr ""
-#~ "Ein Steuerkonto repräsentiert die berechnete  Umsatzsteuer oder Vorsteuer "
-#~ "bei Ausgangs- oder Eingangsrechnungen, die in Abhängigkeit von "
-#~ "Ursprungsland, Zielland, Produkt etc. vom Nettobetrag über den Prozentwert "
-#~ "der Steuer errechnet wird und als Aufschlag auf den Nettobetrag Bestandteil "
-#~ "der gesamten Rechnungssumme ist."
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
-
-#~ msgid ""
-#~ "The chart of taxes is used to generate your periodic tax statement. You will "
-#~ "see here the taxes with codes related to your legal statement according to "
-#~ "your country."
-#~ msgstr ""
-#~ "Der Umsatzsteuerkontenplan wird genutzt, um periodisch die "
-#~ "Steuervoranmeldung zu erzeugen. Sie finden hier die Steuern mit den "
-#~ "Kurzbezeichnungen für eine offizielle Umsatzsteuererklärung gemäß der "
-#~ "Anforderungen für Ihr Land."
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Der Name des Moduls muss eindeutig sein."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the analytic "
-#~ "journal without removing it."
-#~ msgstr ""
-#~ "Durch Aktivierung dieser Option, kann die Ansicht dieser analytischen "
-#~ "Journale verhindert werden ohne diese komplett zu löschen."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the account "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Wenn diese Option aktiviert wird, kann das Konto derart zur Weiterverwendung "
-#~ "von Prezi genutzt werden."
-
-#~ msgid ""
-#~ "The best practice here is to use a journal dedicated to contain the opening "
-#~ "entries of all fiscal years. Note that you should define it with default "
-#~ "debit/credit accounts and with a centralized counterpart."
-#~ msgstr ""
-#~ "Ein beste Praxis Ansatz wäre die Definition eines Journals für die Buchungen "
-#~ "der Eröffnungsbilanz. Beachten Sie dabei, dass Sie ein Standard Soll/Haben "
-#~ "Konto hinterlegen, sowie die Option 'Zentrales Gegenkonto' aktivieren."
-
-#~ msgid ""
-#~ "This account will be used for invoices to value expenses for the current "
-#~ "product category"
-#~ msgstr ""
-#~ "Dieses Konto wird gebucht bei Rechnungspositionen zu Produkten aus der "
-#~ "aktuellen Produktkategorie"
-
-#~ msgid "Checks Journal - (test)"
-#~ msgstr "Schecks Journal - (test)"
-
-#~ msgid "Low Level"
-#~ msgstr "Basiskonfiguration"
-
-#~ msgid ""
-#~ "Customer Refunds helps you manage the credit notes issued/to be issued for "
-#~ "your customers. A refund invoice is a document that cancels an invoice or a "
-#~ "part of it. You can easily generate refunds and reconcile them from the "
-#~ "invoice form."
-#~ msgstr ""
-#~ "Kundengutschriften ermöglichen die Erfassung von Gutschriften für Ihre "
-#~ "Kunden. Eine Gutschrift ist ein Beleg, der eine Rechnung teilweise oder ganz "
-#~ "storniert. Sie können sehr einfach Gutschriften zu einer vorhandenen "
-#~ "Rechnung erzeugen und gleichzeitig Rechnung und Gutschrift miteinander "
-#~ "ausgleichen."
-
-#~ msgid ""
-#~ "A bank statement is a summary of all financial transactions occurring over a "
-#~ "given period of time on a deposit account, a credit card, or any other type "
-#~ "of account. Start by encoding the starting and closing balance, then record "
-#~ "all lines of your statement. When you are in the Payment column of the a "
-#~ "line, you can press F1 to open the reconciliation form."
-#~ msgstr ""
-#~ "Ein Bankauszug ist eine Zusammenfassung aller finanziellen Transkationen, "
-#~ "die über eine bestimmten  Zeitraum auf einem anderen Finanzkonto, "
-#~ "Kreditkarte oder Onlinekonto erfasst wurden. Beginnen Sie einen neuen "
-#~ "Bankauszug durch die Erfassung eines Eröffnungs- und Endsaldos, bevor Sie "
-#~ "anschließend alle einzelnen Buchungspositionen eingeben. Wenn Sie in der "
-#~ "Spalte Zahlung sind, können Sie dann per F1 das Fenster für den Ausgleich "
-#~ "offener Posten öffnen."
-
-#~ msgid "Aged receivables"
-#~ msgstr "Überfällige Debitoren"
-
-#~ msgid ""
-#~ "An account type is a name or code given to an account that indicates its "
-#~ "purpose. For example, the account type could be linked to an asset account, "
-#~ "expense account or payable account. From this view, you can create and "
-#~ "manage the account types you need to be used for your company management."
-#~ msgstr ""
-#~ "Durch die Kontoart soll für einen Buchhalter erkennbar sein, welchen Zweck "
-#~ "ein definiertes Konto dieser Art erfüllt. Zum Beispiel, können Kontoarten "
-#~ "wie  z.B. Anlagekonto, Aufwand oder Ertrag zu einzelnen Konten hinterlegt "
-#~ "werden und somit z.B. bei täglichen Buchungen oder Auswertungen als "
-#~ "Suchhilfe dienen. Hier können Sie konkret die Kontoarten definieren, die Sie "
-#~ "in Ihrem Unternehmen für die Finanzbuchhaltung benötigen."
-
-#~ msgid ""
-#~ "Create and manage accounts you will need to record financial entries in. "
-#~ "Accounts are financial records of your company that register all financial "
-#~ "transactions. Companies present their annual accounts in two main parts: the "
-#~ "balance sheet and the income statement (profit and loss account). The annual "
-#~ "accounts of a company are required by law to disclose a certain amount of "
-#~ "information. They have to be certified by an external auditor yearly."
-#~ msgstr ""
-#~ "Erstelle und verwalte Konten für die Finanzbuchhaltung. Finanzkonten sind "
-#~ "vorgesehen für die Aufzeichnung aller Geschäftsvorfälle mit Auswirkungen auf "
-#~ "die Vermögens-, Finanz- und Ertragslage eines Unternehmens. Unternehmen sind "
-#~ "i.d.R. verpflichtet diese finanzielle Situation in Form einer Bilanz und "
-#~ "Gewinn- und Verlustrechnung gegenüber Dritten, wie z.B. den Finanzbehörden "
-#~ "oder Anteilseignern und Kapitalgebern darzustellen. Diese Finanzkonten "
-#~ "bilden die Grundlage für den Jahresabschluss und die  Prüfung eines "
-#~ "Unternehmens."
-
-#~ msgid "End of Year"
-#~ msgstr "Jahresende"
-
-#~ msgid ""
-#~ "A supplier refund is a credit note from your supplier indicating that he "
-#~ "refunds part or totality of the invoice sent to you."
-#~ msgstr ""
-#~ "Eine Gutschrift ist ein Beleg von Ihrem Lieferanten, der einen Teil oder "
-#~ "sogar den gesamte Rechnungsbetrag auf Ihrem Konto beim Lieferanten als "
-#~ "Gutschrift ausweist .."
-
-#~ msgid ""
-#~ "given a period and a journal, the sum of debit will always be equal to the "
-#~ "sum of credit, so there is no point to display it"
-#~ msgstr ""
-#~ "Bezogen auf eine bestimmte Periode, muss der Wert der Soll- und Habenbuchung "
-#~ "übereinstimmen."
-
-#~ msgid "Must be after setLang()"
-#~ msgstr "Sollte nach setLang() folgen"
-
-#~ msgid ""
-#~ "This menu helps you manage the credit notes issued/to be issued for your "
-#~ "customers. A refund invoice is a document that cancels an invoice or a part "
-#~ "of it. You can easily generate refunds and reconcile them from the invoice "
-#~ "form."
-#~ msgstr ""
-#~ "Dieses Menü hilft Ihnen beim Management der erstellten bzw. zu erstellenden "
-#~ "Gutschriften für Ihre Kunden. Eine Gutschrift ist ein Beleg der entweder den "
-#~ "gesamten Rechnungsbetrag oder einen Teilbetrag storniert. Sie können auf "
-#~ "einfache Weise ausgehend vom Rechnungsformular Gutschriften erstellen und "
-#~ "diese zusammen mit der korrespondierenden Rechnung ausgleichen."
-
-#~ msgid ""
-#~ "This Account is used for transferring Profit/Loss(If It is Profit: Amount "
-#~ "will be added, Loss : Amount will be duducted.), Which is calculated from "
-#~ "Profilt & Loss Report"
-#~ msgstr ""
-#~ "Dieses Konto wird als vorläufiges Konto für einen Gewinn oder Verlust aus "
-#~ "dem Geschäftsjahr verwendet (Bei vorläufigem Gewinn: Betrag wird "
-#~ "gutgeschrieben, bei vorläufigem Verlust: Betrag wird belastet.) Der Betrag "
-#~ "wird durch die Auswertung Gewinn & Verlust generiert."
+#~ "Kein Zeitraum für dieses Datum definiert!\n"
+#~ "Bitte erzeugen Sie ein neues Geschäftsjahr."

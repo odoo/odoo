@@ -28,7 +28,7 @@ class account_vat_declaration(osv.osv_memory):
     _columns = {
         'based_on': fields.selection([('invoices', 'Invoices'),
                                       ('payments', 'Payments'),],
-                                      'Based On', required=True),
+                                      'Based on', required=True),
         'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
     }
 

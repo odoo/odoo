@@ -51,7 +51,6 @@ class account_tax_chart(osv.osv_memory):
         """
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        period_obj = self.pool.get('account.period')
         if context is None:
             context = {}
         data = self.browse(cr, uid, ids, context=context)[0]

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-04 04:47+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:48+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -967,7 +967,7 @@ msgid "Close"
 msgstr "Beenden"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Fehler beim Senden der E-Mail: %s"
@@ -1064,7 +1064,7 @@ msgid "Email Mailbox"
 msgstr "EMail Eingang"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1182,7 +1182,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "EMails"
 
@@ -1359,79 +1361,6 @@ msgstr "Hat Dateianhang"
 msgid "No Description"
 msgstr "Keine Beschreibung"
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Fehlerhafte Modellbezeichnung für diese Aktion"
-
-#, python-format
-#~ msgid "Mako templates not installed"
-#~ msgstr "Mako Vorlagen nicht installiert"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Fehlerhafte Einträge"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
-
-#, python-format
-#~ msgid ""
-#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-#~ msgstr ""
-#~ "Extraktion Datum/Zeit fehlgeschlagen.Datum:%s \\n                      \t"
-#~ "Fehler:%s"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#, python-format
-#~ msgid ""
-#~ "Error sending mail: %s\" % str(e)))\n"
-#~ "        \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "        if ids is None:\n"
-#~ "            ids = []\n"
-#~ "        if context is None:\n"
-#~ "            context = {}\n"
-#~ "        filters = [('folder', '=', 'outbox"
-#~ msgstr ""
-#~ "Fehler bei Mailversand: %s\" % str(e)))\n"
-#~ "        \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "        if ids is None:\n"
-#~ "            ids = []\n"
-#~ "        if context is None:\n"
-#~ "            context = {}\n"
-#~ "        filters = [('folder', '=', 'outbox"
-
-#, python-format
-#~ msgid "Django templates not installed"
-#~ msgstr "Django Vorlagen nicht installiert"
-
 #, python-format
 #~ msgid "Copy of template "
 #~ msgstr "Kopie der Vorlage "
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
-#~ "beinhalten !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it based on specific customer "
-#~ "profile fields so that their names or other partner related information can "
-#~ "be automatically inserted in it."
-#~ msgstr ""
-#~ "Eine Email Vorlage ist ein Email die als Bestandteil einer Marketing "
-#~ "Kampagne versendet wird. Sie können eine Personalisierung der Vorlage nach "
-#~ "Ihren Vorstellungen vornehmen, um definierte Platzhalter automatisch mit "
-#~ "Ihren Daten bei dem Emailversand zu füllen."

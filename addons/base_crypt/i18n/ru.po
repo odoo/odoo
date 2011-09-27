@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-17 04:41+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: base_crypt
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
 
 #. module: base_crypt
 #: model:ir.model,name:base_crypt.model_res_users
@@ -31,23 +31,24 @@ msgstr "res.users"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
 #, python-format
 msgid "Please specify the password !"
-msgstr ""
+msgstr "Необходимо указать пароль!"
 
 #. module: base_crypt
 #: model:ir.module.module,shortdesc:base_crypt.module_meta_information
 msgid "Base - Password Encryption"
-msgstr ""
+msgstr "Основной - Шифрование паролей"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: base_crypt
 #: model:ir.module.module,description:base_crypt.module_meta_information
@@ -69,3 +70,15 @@ msgid ""
 "unless you are using a secure protocol such as XML-RPCS.\n"
 "                    "
 msgstr ""
+"Этот модуль заменяет текстовые пароли в базе данных на их хэши,\n"
+"предотвращая хищение оригинальных паролей.\n"
+"Для существующей базы пользователей, удаление текстового пароля происходит "
+"при\n"
+"первом входе пользователя после установки base_crypt.\n"
+"После установки этого модуля станет невозможно восстановление пароля \n"
+"пользователя. Возможна будет только замена пароля.\n"
+"\n"
+"Прим.: установка этого модуля не избавляет от необходимости соблюдать\n"
+"базовые меры безопасности, поскольку пароли всё ещё передаются открытым\n"
+"текстом по сети, если не используется безопасный протокол вроде XML-RPCS.\n"
+"                    "

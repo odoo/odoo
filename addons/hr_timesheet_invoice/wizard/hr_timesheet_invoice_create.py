@@ -47,6 +47,21 @@ class hr_timesheet_invoice_create(osv.osv_memory):
          'name': lambda *args: 1
     }
 
+    def view_init(self, cr, uid, fields, context=None):
+        """
+        This function checks for precondition before wizard executes
+        @param self: The object pointer
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param fields: List of fields for default value
+        @param context: A standard dictionary for contextual values
+        """
+        analytic_obj = self.pool.get('account.analytic.line')
+        data = context and context.get('active_ids', [])
+        for analytic in analytic_obj.browse(cr, uid, data, context=context):
+            if analytic.invoice_id:
+                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+
     def do_create(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         analytic_account_obj = self.pool.get('account.analytic.account')
@@ -108,13 +123,13 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
             context2 = context.copy()
             context2['lang'] = partner.lang
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
+            cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id, tuple(context['active_ids']),))
+                    "GROUP BY product_id,to_invoice,product_uom_id", (account.id, tuple(context['active_ids']),))
 
-            for product_id, factor_id, qty in cr.fetchall():
+            for product_id, factor_id, qty, uom in cr.fetchall():
                 product = product_obj.browse(cr, uid, product_id, context2)
                 if not product:
                     raise osv.except_osv(_('Error'), _('At least one line has no product !'))
@@ -129,15 +144,19 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     data['product'] = data['product'][0]
                     factor_name = product_obj.name_get(cr, uid, [data['product']], context=context)[0][1]
 
+                ctx =  context.copy()
+                ctx.update({'uom':uom})
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id)[pl]
+                    price = pro_price_obj.price_get(cr,uid,[pl], data['product'] or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
                 else:
                     price = 0.0
 
                 taxes = product.taxes_id
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
+                if not account_id:
+                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -147,7 +166,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     'name': factor_name,
                     'product_id': data['product'] or product_id,
                     'invoice_line_tax_id': [(6,0,tax)],
-                    'uos_id': product.uom_id.id,
+                    'uos_id': uom,
                     'account_id': account_id,
                     'account_analytic_id': account.id,
                 }

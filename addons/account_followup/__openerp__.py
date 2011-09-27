@@ -23,6 +23,7 @@
     'name': 'Reminders',
     'version': '1.0',
     'category': 'Finance',
+    'complexity': "normal",
     'description': """
 Modules to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================
@@ -44,9 +45,10 @@ Note that if you want to check the followup level for a given partner/account en
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/follow_ups.jpeg','images/send_followups.jpeg'],
-    'depends': ['account'],
+    'depends': ['account_accountant', 'mail'],
     'init_xml': [],
     'update_xml': [
+        'security/account_followup_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
         'report/account_followup_report.xml',
