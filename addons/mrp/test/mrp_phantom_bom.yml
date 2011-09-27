@@ -97,6 +97,12 @@
     product_uom: product_uom_litre0
     type: phantom
 -
+ changes UOM and name if product change.
+-
+  !python {model: mrp.bom}: |
+    production_id = self.browse(cr, uid, [ref('mrp_bom_orangejuice0')], context=context)[0]
+    self.onchange_product_id(cr, uid, [ref('mrp_bom_orangejuice0')], production_id.product_id.id, False)
+-
   I create bom lines for BoM for Orange Juice.
 -
   !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
