@@ -5,5 +5,5 @@
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": [],
     'active': False,
-    'web_auto_load': True,
+    'web_preload': True,
 }

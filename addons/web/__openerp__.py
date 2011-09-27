@@ -2,7 +2,8 @@
     "name" : "web",
     "depends" : [],
     'active': True,
-    'web_auto_load': True,
+    'post_load' : 'wsgi_postload',
+    'web_preload' : True,
     'js' : [
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
@@ -49,5 +50,4 @@
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
     ],
-    'post_load' : 'wsgi_postload',
 }

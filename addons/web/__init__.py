@@ -10,15 +10,14 @@ class Options(object):
     pass
 
 def wsgi_postload():
-    import openerp.wsgi
-    import openerp.tools
+    import openerp
     import os
     import tempfile
     _logger.info("embedded mode")
     o = Options()
     o.dbfilter = openerp.tools.config['dbfilter']
     o.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions")
-    o.addons_path = os.path.dirname(os.path.dirname(__file__))
+    o.addons_path = openerp.modules.module.ad_paths
     o.serve_static = True
     o.backend = 'local'
 

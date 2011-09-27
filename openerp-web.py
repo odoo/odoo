@@ -24,7 +24,7 @@ optparser.add_option("--server-port", dest="server_port", default=8069,
                      help="OpenERP server port", type="int", metavar="NUMBER")
 optparser.add_option("--db-filter", dest="dbfilter", default='.*',
                      help="Filter listed database", metavar="REGEXP")
-optparser.add_option('--addons-path', dest='addons_path', default=path_addons,
+optparser.add_option('--addons-path', dest='addons_path', default=[path_addons], action='append',
                     help="Path do addons directory", metavar="PATH")
 
 server_options = optparse.OptionGroup(optparser, "Server configuration")

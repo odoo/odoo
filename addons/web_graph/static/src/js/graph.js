@@ -33,8 +33,20 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.$element.hide();
     },
     start: function() {
+        var self = this;
         this._super();
-        return this.rpc("/web_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return $.when(
+            new openerp.web.DataSet(this, this.model).call('fields_get', []),
+            this.rpc('/web/view/load', {
+                model: this.model,
+                view_id: this.view_id,
+                view_type: 'graph'
+            })).then(function (fields_result, view_result) {
+                self.on_loaded({
+                    all_fields: fields_result[0],
+                    fields_view: view_result[0]
+                });
+        });
     },
     on_loaded: function(data) {
         this.all_fields = data.all_fields;
@@ -49,8 +61,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.operator = [];
         this.group_field = [];
         this.orientation = this.fields_view.arch.attrs.orientation || '';
-        this.elem_id = this.$element[0]['id'];
-
         _.each(this.fields_view.arch.children, function (field) {
             if (field.attrs.operator) {
                 this.operator.push(field.attrs.name);
@@ -98,7 +108,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     },
 
     schedule_chart: function(results) {
-        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'elem_id': this.elem_id}));
+        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'element_id': this.element_id}));
 
         _.each(results, function (result) {
             _.each(result, function (field_value, field_name) {
@@ -304,7 +314,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
         var bar_chart = new dhtmlXChart({
             view: view_chart,
-            container: self.elem_id+"-barchart",
+            container: self.element_id+"-barchart",
             value:"#"+group_list[0]+"#",
             gradient: "3d",
             border: false,
@@ -374,7 +384,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             });
         }
         bar_chart.parse(_.values(abscissa_data), "json");
-        jQuery("#"+self.elem_id+"-barchart").height(jQuery("#"+self.elem_id+"-barchart").height()+50);
+        jQuery("#"+self.element_id+"-barchart").height(jQuery("#"+self.element_id+"-barchart").height()+50);
         bar_chart.attachEvent("onItemClick", function(id) {
             self.open_list_view(bar_chart.get(id));
         });
@@ -383,7 +393,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         var self = this;
         var chart =  new dhtmlXChart({
             view:"pie3D",
-            container:self.elem_id+"-piechart",
+            container:self.element_id+"-piechart",
             value:"#"+self.operator_field+"#",
             pieInnerText:function(obj) {
                 var sum = chart.sum("#"+self.operator_field+"#");
