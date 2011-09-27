@@ -20,94 +20,129 @@
 ##############################################################################
 
 {
-    "name":"Master Procurement Schedule",
-    "version":"1.1",
-    "author":["OpenERP SA",  "Grzegorz Grzelak (Cirrus)"],
-    "category":"Warehouse",
-    "images":["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
-    "depends":["hr","stock","sale"],
+    "name": "Master Procurement Schedule",
+    "version": "1.2",
+    "author": "OpenERP SA and Grzegorz Grzelak (OpenGLOBE)",
+    "category": "Warehouse",
+    "images": ["images/master_procurement_schedule.jpeg","images/sales_forecast.jpeg","images/stock_planning_line.jpeg","images/stock_sales_period.jpeg"],
+    "depends": ["crm", "stock","sale"],
+    "complexity": "expert",
     "description": """
-Purpose of MPS is to allow create a manual procurement apart of MRP scheduler (which works automatically on minimum stock rules).
-=================================================================================================================================
+MPS allows to create a manual procurement plan apart of the normal MRP scheduling, which works automatically based on minimum stock rules
+=========================================================================================================================================
 
-This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.
-Terms used in the module:
-- Stock and Sales Period - is the time (between Start Date and End Date) for which you plan Stock and Sales Forecast and make Procurement Planning.
-- Stock and Sales Forecast - is the quantity of products you plan to sell in the Period.
-- Stock Planning - is the quantity of products you plan to purchase or produce for the Period.
+Quick Glossary
+--------------
+- Stock Period - the time boundaries (between Start Date and End Date) for your Sales and Stock forecasts and planning
+- Sales Forecast - the quantity of products you plan to sell during the related Stock Period.
+- Stock Planning - the quantity of products you plan to purchase or produce for the related Stock Period.
 
-Because we have another module sale_forecast which uses terms "Sales Forecast" and "Planning" as amount values we will use terms "Stock and Sales Forecast" and "Stock Planning" to emphasize that we use quantity values.
+To avoid confusion with the terms used by the ``sale_forecast`` module, ("Sales Forecast" and "Planning" are amounts) we use terms "Stock and Sales Forecast" and "Stock Planning" to emphasize that we use quantity values.
 
-Activity with this module is divided to three steps:
-- Creating Periods. Mandatory step.
-- Creating Sale Forecasts and entering quantities to them. Optional step but useful for further planning.
-- Creating Planning lines, entering quantities to them and making Procurement. Making procurement is the final step for the Period.
+Where to begin
+--------------
+Using this module is done in three steps:
 
-Periods
--------
-You have two menu items for Periods in "Sales Management - Configuration". There are:
-- "Create Sales Periods" - Which automates creating daily, weekly or monthly periods.
-- "Stock and sales Periods" - Which allows to create any type of periods, change the dates and change the State of period.
+ * Create Stock Periods via the Warehouse>Configuration>Stock Periods menu (Mandatory step)
+ * Create Sale Forecasts fill them with forecast quantities, via the Sales>Sales Forecast menu. (Optional step but useful for further planning)
+ * Create the actual MPS plan, check the balance and trigger the procurements as required. The actual procurement is the final step for the Stock Period.
 
-Creating periods is the first step you have to do to use modules features. You can create custom periods using "New" button in "Stock and Sales Periods" form or view but it is recommended to use automating tool.
+Stock Period configuration
+--------------------------
+You have two menu items for Periods in "Warehouse > Configuration > Stock Periods". There are:
 
-Remarks:
-- These periods (officially Stock and Sales Periods) are separated of Financial or other periods in the system.
-- Periods are not assigned to companies (when you use multicompany feature at all). Module suppose that you use the same periods across companies. If you wish to use different periods for different companies define them as you wish (they can overlap). Later on in this text will be indications how to use such periods.
-- When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock.
-- If you use overlapping periods for the same product, warehouse and company results can be unpredictable.
-- If current date doesn't belong to any period or you have holes between periods results can be unpredictable.
+ * "Create Stock Periods" - can automatically creating daily, weekly or monthly periods.
+ * "Stock Periods" - allows to create any type of periods, change the dates and change the state of period.
 
-Sales Forecasts
----------------
-You have few menus for Sales forecast in "Sales Management - Sales Forecasts".
-- "Create Sales Forecasts for Sales Periods" - which automates creating forecasts lines according to some parameters.
-- "Sales Forecasts" - few menus for working with forecasts lists and forms.
-
-Menu "Create Sales Forecasts for Sales Periods" creates Forecasts for products from selected Category, for selected Period and for selected Warehouse. It is an option "Copy Last Forecast" to copy forecast and other settings of period before this one to created one.
-
-Remarks:
-- This tool doesn't create lines, if relevant lines (for the same Product, Period, Warehouse and validated or created by you) already exists. If you wish to create another forecast, if relevant lines exists you have to do it manually using menus described bellow.
-- When created lines are validated by someone else you can use this tool to create another lines for the same Period, Product and Warehouse.
-- When you choose "Copy Last Forecast" created line takes quantity and some settings from your (validated by you or created by you if not validated yet) forecast which is for last period before period of created forecast. If there are few your forecasts for period before this one (it is possible) system takes one of them (no rule which of them).
-
-
-Menus "Sales Forecasts"
-On "Sales Forecast" form mainly you have to enter a forecast quantity in "Product Quantity". Further calculation can work for draft forecasts. But validation can save your data against any accidental changes. You can click "Validate" button but it is not mandatory.
-
-Instead of forecast quantity you can enter amount of forecast sales in field "Product Amount". System will count quantity from amount according to Sale price of the Product.
-
-All values on the form are expressed in unit of measure selected on form. You can select one of unit of measure from default category or from second category. When you change unit of measure the quanities will be recalculated according to new UoM: editable values (blue fields) immediately, non edited fields after clicking of "Calculate Planning" button.
-
-To find proper value for Sale Forecast you can use "Sales History" table for this product. You have to enter parameters to the top and left of this table and system will count sale quantities according to these parameters. So you can select your department (at the top) then (to the left): last period, period before last and period year ago.
+Creating periods is the first step. You can create custom periods using the "New" button in "Stock Periods", but it is recommended to use the automatic assistant "Create Stock Periods".
 
 Remarks:
 
+ - These periods (Stock Periods) are completely distinct from Financial or other periods in the system.
+ - Periods are not assigned to companies (when you use multicompany). Module suppose that you use the same periods across companies. If you wish to use different periods for different companies define them as you wish (they can overlap). Later on in this text will be indications how to use such periods.
+ - When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. When you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock.
+ - If you use overlapping periods for the same product, warehouse and company results can be unpredictable.
+ - If current date doesn't belong to any period or you have holes between periods results can be unpredictable.
 
-Procurement Planning
---------------------
-Menu for Planning you can find in "Warehouse - Stock Planning".
-- "Create Stock Planning Lines" - allows you to automate creating planning lines according to some parameters.
-- "Master Procurement Scheduler" - is the most important menu of the module which allows to create procurement.
+Sales Forecasts configuration
+-----------------------------
+You have few menus for Sales forecast in "Sales > Sales Forecasts":
 
-As Sales forecast is phase of planning sales. The Procurement Planning (Planning) is the phase of scheduling Purchasing or Producing. You can create Procurement Planning quickly using tool from menu "Create Stock Planning Lines", then you can review created planning and make procurement using menu "Master Procurement Schedule".
+ - "Create Sales Forecasts" - can automatically create forecast lines according to your needs
+ - "Sales Forecasts" - for managing the Sales forecasts
 
-Menu "Create Stock Planning Lines" allows you to create quickly Planning lines for products from selected Category, for selected Period, and for selected Warehouse. When you check option "All Products with Forecast" system creates lines for all products having forecast for selected Period and Warehouse. Selected Category will be ignored in this case.
+Menu "Create Sales Forecasts" creates Forecasts for products from selected Category, for selected Period and for selected Warehouse.
+It is also possible to copy the previous forecast.
 
-Under menu "Master Procurement Scheduler" you can generally change the values "Planned Out" and "Planned In" to observe the field "Stock Simulation" and decide if this value would be accurate for end of the Period.
-"Planned Out" can be based on "Warehouse Forecast" which is the sum of all forecasts for Period and Warehouse. But your planning can be based on any other information you have. It is not necessary to have any forecast.
-"Planned In" quantity is used to calculate field "Incoming Left" which is the quantity to be procured to make stock as indicated in "Stock Simulation" at the end of Period. You can compare "Stock Simulation" quantity to minimum stock rules visible on the form. But you can plan different quantity than in Minimum Stock Rules. Calculation is made for whole Warehouse by default. But if you want to see values for Stock location of calculated warehouse you can use check box "Stock Location Only".
+Remarks:
 
-If after few tries you decide that you found correct quantities for "Planned Out" and "Planned In" and you are satisfied with end of period stock calculated in "Stock Simulation" you can click "Procure Incoming Left" button to procure quantity of field "Incoming Left" into the Warehouse. System creates appropriate Procurement Order. You can decide if procurement will be made to Stock or Input location of calculated Warehouse.
+ - This tool doesn't duplicate lines if you already have an entry for the same Product, Period, Warehouse, created or validated by the same user. If you wish to create another forecast, if relevant lines exists you have to do it manually as described below.
+ - When created lines are validated by someone else you can use this tool to create another line for the same Period, Product and Warehouse.
+ - When you choose "Copy Last Forecast", created line take quantity and other settings from your (validated by you or created by you if not validated yet) forecast which is for last period before period of created forecast.
 
-If you don't want to Produce or Buy the product but just pick calculated quantity from another warehouse you can click "Supply from Another Warehouse" (instead of "Procure Incoming Left"). System creates pick list with move from selected source Warehouse to calculated Warehouse (as destination). You can also decide if this pick should be done from Stock or Output location of source warehouse. Destination location (Stock or Input) of destination warehouse will be used as set for "Procure Incoming Left".
+On "Sales Forecast" form mainly you have to enter a forecast quantity in "Product Quantity".
+Further calculation can work for draft forecasts. But validation can save your data against any accidental changes.
+You can click "Validate" button but it is not mandatory.
 
-To see proper quantities in fields "Confirmed In", "Confirmed Out", "Confirmed In Before", "Planned Out Before" and "Stock Simulation" you have to click button "Calculate Planning".
+Instead of forecast quantity you may enter the amount of forecast sales via the "Product Amount" field.
+The system will count quantity from amount according to Sale price of the Product.
 
-All values on the form are expressed in unit of measure selected on form. You can select one of unit of measure from default category or from second category. When you change unit of measure the quanities will be recalculated according to new UoM: editable values (blue fields) immediately, non edited fields after clicking of "Calculate Planning" button.
+All values on the form are expressed in unit of measure selected on form.
+You can select a unit of measure from the default category or from secondary category.
+When you change unit of measure the forecast product quantity will be re-computed according to new UoM.
 
-How Stock Simulation field is calculated:
-Generally Stock Simulation shows the stock for end of the calculated period according to some planned or confirmed stock moves. Calculation always starts with quantity of real stock of beginning of current period. Then calculation adds or subtracts quantities of calculated period or periods before calculated.
+To work out your Sale Forecast you can use the "Sales History" of the product.
+You have to enter parameters to the top and left of this table and system will count sale quantities according to these parameters.
+So you can get results for a given sales team or period.
+
+
+MPS or Procurement Planning
+---------------------------
+An MPS planning consists in Stock Planning lines, used to analyze and possibly drive the procurement of 
+products for each relevant Stock Period and Warehouse.
+The menu is located in "Warehouse > Schedulers > Master Procurement Schedule":
+
+ - "Create Stock Planning Lines" - a wizard to help automatically create many planning lines
+ - "Master Procurement Schedule" - management of your planning lines
+
+Similarly to the way Sales forecast serves to define your sales planning, the MPS lets you plan your procurements (Purchase/Manufacturing).
+You can quickly populate the MPS with the "Create Stock Planning Lines" wizard, and then proceed to review them via the "Master Procurement Schedule" menu.
+
+The "Create Stock Planning Lines" wizard lets you to quickly create all MPS lines for a given Product Category, and a given Period and Warehouse.
+When you enable the "All Products with Forecast" option of the wizard, the system creates lines for all products having sales forecast for selected
+Period and Warehouse (the selected Category will be ignored in this case).
+
+Under menu "Master Procurement Schedule" you will usually change the "Planned Out" and "Planned In" quantities and observe the resulting "Stock Simulation" value
+to decide if you need to procure more products for the given Period.
+"Planned Out" will be initially based on "Warehouse Forecast" which is the sum of all outgoing stock moves already planned for the Period and Warehouse.
+Of course you can alter this value to provide your own quantities. It is not necessary to have any forecast.
+"Planned In" quantity is used to calculate field "Incoming Left" which is the quantity to be procured to reach the "Stock Simulation" at the end of Period.
+You can compare "Stock Simulation" quantity to minimum stock rules visible on the form.
+And you can plan different quantity than in Minimum Stock Rules. Calculations are done for whole Warehouse by default,
+if you want to see values for Stock location of calculated warehouse you can check "Stock Location Only".
+
+When you are satisfied with the "Planned Out", "Planned In" and end of period "Stock Simulation",
+you can click on "Procure Incoming Left" to create a procurement for the "Incoming Left" quantity.
+You can decide if procurement will go to the to Stock or Input location of the Warehouse.
+
+If you don't want to Produce or Buy the product but just transfer the calculated quantity from another warehouse
+you can click "Supply from Another Warehouse" (instead of "Procure Incoming Left") and the system will
+create the appropriate picking list (stock moves).
+You can choose to take the goods from the Stock or the Output location of the source warehouse.
+Destination location (Stock or Input) in the destination warehouse will be taken as for the procurement case.
+
+To see update the quantities of "Confirmed In", "Confirmed Out", "Confirmed In Before", "Planned Out Before"
+and "Stock Simulation" you can press "Calculate Planning".
+
+All values on the form are expressed in unit of measure selected on form.
+You can select one of unit of measure from default category or from secondary category.
+When you change unit of measure the editable quantities will be re-computed according to new UoM. The others will be updated after pressing "Calculate Planning".
+
+Computation of Stock Simulation quantities
+------------------------------------------
+The Stock Simulation value is the estimated stock quantity at the end of the period.
+The calculation always starts with the real stock on hand at the beginning of the current period, then
+adds or subtracts the computed quantities.
 When you are in the same period (current period is the same as calculated) Stock Simulation is calculated as follows:
 
 Stock Simulation =
@@ -124,9 +159,12 @@ Stock Simulation =
 	- Planned Out of calculated Period
 	+ Planned In of calculated Period .
 
-As you see calculated Period is taken the same way like in case above. But calculation of current Period are made a little bit different. First you should note that system takes for current Period only Confirmed In moves. It means that you have to make planning and procurement for current Period before this calculation (for Period next to current).
+As you see the calculated Period is taken the same way as in previous case, but the calculation in the current
+Period is a little bit different. First you should note that system takes for only Confirmed moves for the
+current period. This means that you should complete the planning and procurement of the current Period before
+going to the next one.
 
-When you calculate Period ahead:
+When you plan for future Periods:
 
 Stock Simulation =
 	Stock of beginning of current Period
@@ -135,15 +173,23 @@ Stock Simulation =
 	- Planned Out of calculated Period
 	+ Planned In of calculated Period.
 
-Periods before calculated means periods starting from current till period before calculated.
+Here "Periods before calculated" designates all periods starting with the current until the period before the one being calculated.
 
 Remarks:
-- Remember to make planning for all periods before calculated because omitting these quantities and procurements can cause wrong suggestions for procurements few periods ahead.
-- If you made planning few periods ahead and you find that real Confirmed Out is bigger than Planned Out in some periods before you can repeat Planning and make another procurement. You should do it in the same planning line. If you create another planning line the suggestions can be wrong.
-- When you wish to work with different periods for some part of products define two kinds of periods (fe. Weekly and Monthly) and use them for different products. Example: If you use always Weekly periods for Products A, and Monthly periods for Products B your all calculations will work correctly. You can also use different kind of periods for the same products from different warehouse or companies. But you cannot use overlapping periods for the same product, warehouse and company because results can be unpredictable. The same apply to Forecasts lines.
+
+ - Remember to make the proceed with the planning of each period in chronological order, otherwise the numbers will not reflect the
+   reality
+ - If you planned for future periods and find that real Confirmed Out is larger than Planned Out in some periods before,
+   you can repeat Planning and make another procurement. You should do it in the same planning line.
+   If you create another planning line the suggestions can be wrong.
+ - When you wish to work with different periods for some products, define two kinds of periods (e.g. Weekly and Monthly) and use
+   them for different products. Example: If you use always Weekly periods for Product A, and Monthly periods for Product B
+   all calculations will work correctly. You can also use different kind of periods for the same product from different warehouse
+   or companies. But you cannot use overlapping periods for the same product, warehouse and company because results
+   can be unpredictable. The same applies to Forecasts lines.
 """,
-    "demo_xml":[],
-    "update_xml": [
+    "data": [
+        "security/stock_planning_security.xml",
         "security/ir.model.access.csv",
         "stock_planning_view.xml",
         "wizard/stock_planning_create_periods_view.xml",

@@ -1,18 +1,32 @@
 <openerp>
-  <data>
- <record model="ir.actions.act_window" id="view_lunch_product_form_installer">
-           <field name="name">Define Your Lunch Products</field>
-           <field name="type">ir.actions.act_window</field>
-           <field name="res_model">lunch.product</field>
-           <field name="view_type">form</field>
-           <field name="view_mode">tree,form</field>
-           <field name="view_id" ref="lunch.view_lunch_product_form"/>
-       </record>
-       
-       <record id="view_lunch_product_form_todo" model="ir.actions.todo">
-           <field name="action_id" ref="view_lunch_product_form_installer"/>
-           <field name="category_id" ref="base.category_tools_customization_config"/>
-           <field name="sequence">50</field>
-       </record>
+    <data>
+        <record model="ir.actions.act_window" id="view_lunch_product_form_installer">
+            <field name="name">Define Your Lunch Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">lunch.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="lunch.view_lunch_product_form"/>
+        </record>
+
+        <record id="view_lunch_product_form_todo" model="ir.actions.todo">
+            <field name="action_id" ref="view_lunch_product_form_installer"/>
+            <field name="category_id" ref="base.category_tools_customization_config"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_create_cashbox">
+            <field name="name">Create CashBox</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">lunch.cashbox</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="action_create_cashbox_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_create_cashbox" />
+            <field name="category_id" ref="base.category_tools_customization_config" />
+            <field name="sequence">51</field>
+        </record>
     </data>
 </openerp>

@@ -83,9 +83,9 @@
                             <field name="description" nolabel="1" colspan="4"/>
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
-                            <field name="state" />
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_open" string="Solve" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
@@ -100,11 +100,11 @@
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
-		                            <button
-		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-		                                name="%(mail.action_email_compose_message_wizard)d"
-		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                icon="terp-mail-replied" type="action" />
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                        icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -118,10 +118,10 @@
                                         <page string="Details">
                                             <group attrs="{'invisible': [('email_from', '=', False)]}">
                                                 <field name="body_text" colspan="4" nolabel="1" height="250"/>
-		                                        <button colspan="4" string="Reply"
-		                                            name="%(mail.action_email_compose_message_wizard)d"
-		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                            icon="terp-mail-replied" type="action"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -138,9 +138,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-		                    <button string="Send New Email"
-		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        icon="terp-mail-message-new" type="action"/>
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                         </page>
                            <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -208,15 +208,13 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft','pending'))]" help="New, pending and to do" icon="terp-check"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
+                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
+                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="user_id">
-                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                         </field>
                         <field name="project_id"/>
                         <field name="id"/>
@@ -298,17 +296,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <filter icon="terp-go-today" string="Today" separator="1"
+                    <filter icon="terp-go-today" string="Today" 
                         domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's features"/>
                     <separator orientation="vertical"/>
                     <group>
-                        <field name="name" select='1' string="Feature description"/>
-                        <field name="user_id" select="1"/>
-                        <field name="state" select="1">
+                        <field name="name" string="Feature description"/>
+                        <field name="user_id"/>
+                        <field name="state">
                             <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" string="Project"/>
+                        <field name="project_id" string="Project"/>
                     </group>
                 </search>
             </field>

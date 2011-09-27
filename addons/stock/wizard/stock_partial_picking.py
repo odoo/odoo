@@ -170,7 +170,7 @@ class stock_partial_picking(osv.osv_memory):
                     move_id = move.move_id.id
                 
                 partial_datas['move%s' % (move_id)] = {
-                    'product_id': move.id, 
+                    'product_id': move.product_id.id, 
                     'product_qty': move.quantity, 
                     'product_uom': move.product_uom.id, 
                     'prodlot_id': move.prodlot_id.id, 

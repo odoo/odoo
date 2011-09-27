@@ -27,7 +27,8 @@ class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
     _columns = {
-        'task_id': fields.many2one('project.task', 'Task')
+        'task_id': fields.many2one('project.task', 'Task'),
+        'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
     def check_produce_service(self, cr, uid, procurement, context=None):
         return True
@@ -50,7 +51,7 @@ class procurement_order(osv.osv):
                 'state': 'draft',
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id],{'task_id':task_id}) 
+            self.write(cr, uid, [procurement.id],{'task_id':task_id})
         return task_id
 
 procurement_order()

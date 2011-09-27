@@ -78,6 +78,22 @@ class fetchmail_server(osv.osv):
         'attach': True,
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+
+        result = super(fetchmail_server, self).default_get(cr, uid, fields, context=context)
+
+        model = context.pop('fetchmail_model', False) or False
+
+        if isinstance(model, basestring):
+            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)
+            result.update(
+                object_id = model_id[0],
+            )
+
+        return result
+
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
         port = 0
         if server_type == 'pop':
