@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-	<report id="account_invoices_1"
-			string="Invoices with Layout"
-			model="account.invoice"
-			name="account.invoice.layout"
-			rml="account_invoice_layout/report/report_account_invoice_layout.rml"
-			auto="False"/>
-	
-	<report id="account_invoices_layout_message"
-			menu="False"
-			string="Invoices with Layout and Message"
-			model="account.invoice"
-			name="notify_account.invoice"
-			rml="account_invoice_layout/report/special_message_invoice.rml"
-			auto="False"/>
+    <report id="account_invoices_1"
+            string="Invoices"
+            model="account.invoice"
+            name="account.invoice.layout"
+            rml="account_invoice_layout/report/report_account_invoice_layout.rml"
+            auto="False"/>
+    
+    <report id="account_invoices_layout_message"
+            menu="False"
+            string="Invoices and Message"
+            model="account.invoice"
+            name="notify_account.invoice"
+            rml="account_invoice_layout/report/special_message_invoice.rml"
+            auto="False"/>
 
-	</data>
+    </data>
 </openerp>

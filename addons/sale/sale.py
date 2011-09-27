@@ -199,7 +199,7 @@ class sale_order(osv.osv):
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
+            ('manual', 'To Invoice'),
             ('progress', 'In Progress'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
@@ -479,6 +479,7 @@ class sale_order(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         invoice = self.pool.get('account.invoice')
         obj_sale_order_line = self.pool.get('sale.order.line')
+        partner_currency = {}
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -486,6 +487,13 @@ class sale_order(osv.osv):
         if date_inv:
             context['date_inv'] = date_inv
         for o in self.browse(cr, uid, ids, context=context):
+            currency_id = o.pricelist_id.currency_id.id
+            if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
+                raise osv.except_osv(
+                    _('Error !'),
+                    _('You cannot group sales having different currencies for the same partner.'))
+
+            partner_currency[o.partner_id.id] = currency_id
             lines = []
             for line in o.order_line:
                 if line.invoiced:

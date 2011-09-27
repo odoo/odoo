@@ -44,6 +44,7 @@
     partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking',
                                                    'active_ids':[ref('stock_picking_out0')]})
     self.do_partial(cr, uid, [partial_id])
+
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -

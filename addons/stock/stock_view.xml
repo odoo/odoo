@@ -799,7 +799,7 @@
                                 </form>
                             </field>
                             <group col="10" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
@@ -990,7 +990,7 @@
                                 </form>
                             </field>
                             <group col="12" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
@@ -1210,7 +1210,7 @@
                                 </form>
                             </field>
                             <group col="10" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
@@ -1467,7 +1467,7 @@
                     </group>
 
                     <separator colspan="4"/>
-                    <field name="state"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="4" colspan="2">
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
@@ -1944,6 +1944,10 @@
             id="menu_action_stock_journal_form"
             groups="base.group_extended"
             parent="menu_warehouse_config" />
+
+        <record model="ir.actions.todo.category" id="category_stock_management_config">
+            <field name="name">Stock Management</field>
+        </record>
 
     </data>
 </openerp>

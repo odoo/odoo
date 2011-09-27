@@ -7,16 +7,19 @@
     duration: 2.0
     section_id: crm.section_sales_department
 -
-  Now , I select partner by click on "Create a Partner" button.
+  I select partner by click on "Create a Partner" button.
 -
   !record {model: crm.phonecall2partner, id: crm_phonecall2partner_1}:
     action: exist
     partner_id: base.res_partner_9
 
 -
-  Now, click on "Continue" button of this wizard.
+  I click on "Continue" button of this wizard and make partner.
 -
   !python {model: crm.phonecall2partner}: |
+
+    self._select_partner(cr, uid,{"active_ids": [ref("crm_phonecall_interviewcall0")]})
+    self.open_create_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.make_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
 
 - |
@@ -28,31 +31,28 @@
     partner_id: base.res_partner_9
     planned_revenue: 0.0
     probability: 0.0
--
-   Now, I click on "Convert" button of this wizard.
--
-  !python {model: crm.phonecall2opportunity}: |
-     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
-
 - |
   I can see that a business opportunity is now assigned to this phonecall
 -
   !assert {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
      - opportunity_id != False
-
+-
+   I click on "Convert" button of this wizard.
+-
+  !python {model: crm.phonecall2opportunity}: |
+     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_interviewcall0")], {"active_id": ref("crm_phonecall_interviewcall0")})
 - |
   And I check that the phonecall and the newly created business opportunity is linked
-  to same  partner
+  to same  partner.
 -
   !python {model:  crm.phonecall}: |
     obj_phonecall = self.browse(cr, uid, ref('crm_phonecall_interviewcall0'))
     ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
     obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
     assert obj_phonecall.partner_id == obj_opp.partner_id
-
 - |
   I schedule Meeting on this current phonecall by clicking on "schedule
-  Meeting"
+  Meeting".
 -
    !python {model: crm.phonecall}: |
      self.action_make_meeting(cr, uid, [ref('crm_phonecall_interviewcall0')])
@@ -60,7 +60,7 @@
 -  |
    I can see that Meeting's calendar view is shown.
    then I click on the date on which I want schedule meeting.
-   I fill proper data for that meeting and save it
+   I fill proper data for that meeting and save it.
 -
   !record {model: crm.meeting, id: crm_meeting_interviewcall0}:
     alarm_id: base_calendar.alarm3
@@ -85,9 +85,32 @@
     name: Interview call
     section_id: crm.section_sales_department
     user_id: base.user_root
+    action: schedule
+    categ_id: crm.categ_phone1
+-
+  I click on "schedule other call" button. and plan for other call.
+-
+  !record {model: crm.phonecall2phonecall, id: crm_phonecall2phonecall_interviewcall1}:
+    date: !eval "'%s-%s-%s 19:49:00' %(datetime.now().year,datetime.now().month,datetime.now().day)"
+    name: Interview call
+    section_id: crm.section_sales_department
+    user_id: base.user_root
+    action: log
     categ_id: crm.categ_phone1
 - |
   I click on "Schedule" button of this  wizard.
 -
   !python {model: crm.phonecall2phonecall}: |
+    fields = {
+              'name': 'Interview call',
+              'section_id': ref('crm.section_sales_department'),
+              'user_id': ref('base.user_root'),
+              'categ_id': ref('crm.categ_phone1')
+             }
+    self.default_get(cr, uid, fields,{'active_id': ref('crm_phonecall_interviewcall0')})
     self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall0')], {'active_id': ref('crm_phonecall_interviewcall0')})
+- |
+  I click on "Schedule" button of this  wizard with log option.
+-
+  !python {model: crm.phonecall2phonecall}: |
+        self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall1')], {'active_id': ref('crm_phonecall_interviewcall0')})

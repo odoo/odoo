@@ -68,6 +68,7 @@ class account_common_report(osv.osv_memory):
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
+                               AND p.special = false
                                ORDER BY p.date_start ASC, p.special ASC
                                LIMIT 1) AS period_start
                 UNION
@@ -76,6 +77,7 @@ class account_common_report(osv.osv_memory):
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                AND p.date_start < NOW()
+                               AND p.special = false
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]
