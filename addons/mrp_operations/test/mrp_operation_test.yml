@@ -22,7 +22,7 @@
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','draft')])
-    assert order_id, _('No Work order define for this production order!')
+    assert order_id, _('No work order defined for this production order!')
 -
   The scheduler runs.
 -
@@ -35,7 +35,7 @@
   !python {model: mrp.production}: |
     from tools.translate import _
     pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
-    assert pick_ids.picking_id.id, _('No Internal Pickings!')
+    assert pick_ids.picking_id.id, _('No Internal Picking generated!')
 -
   In order to cancel the MO, first cancel its picking
 -
@@ -48,9 +48,9 @@
 -
   !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
 -
-  I check that there is one Work order generated related to the production order that is cancel or not.
+  I check that there is one Work order generated related to the production order that is cancelled or not.
 -
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo1')),('state','=','cancel')])
-    assert order_id, _('Work order is not cancel for this production order!')
+    assert order_id, _('Work order is not cancelled for this production order!')
