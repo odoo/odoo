@@ -941,7 +941,18 @@ class orm_template(object):
                             else:
                                 r = d['name']
                         else:
-                            break
+                            postfix = 0
+                            while True:
+                                n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                                if not model_data.search(cr, uid, [('name', '=', n)]):
+                                    break
+                                postfix += 1
+                            model_data.create(cr, uid, {
+                                'name': n,
+                                'model': self._name,
+                                'res_id': r['id'],
+                            })
+                            r = n
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
