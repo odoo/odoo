@@ -116,19 +116,18 @@ def wsgi_xmlrpc(environ, start_response):
             service = path[0]
 
             if service == 'common':
-                if method in ('create_database', 'list', 'server_version'):
-                    return xmlrpc_return(start_response, 'db', method, params)
-                else:
-                    return xmlrpc_return(start_response, 'common', method, params)
+                if method in ('server_version',):
+                    service = 'db'
+            return xmlrpc_return(start_response, service, method, params)
+
         # A db segment must be given.
         elif len(path) == 2:
             service, db_name = path
             params = (db_name,) + params
 
             if service == 'model':
-                return xmlrpc_return(start_response, 'object', method, params)
-            elif service == 'report':
-                return xmlrpc_return(start_response, 'report', method, params)
+                service = 'object'
+            return xmlrpc_return(start_response, service, method, params)
 
         # TODO the body has been read, need to raise an exception (not return None).
 
