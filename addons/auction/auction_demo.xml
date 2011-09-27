@@ -39,7 +39,7 @@
         <field name="name">Auction Adjudications</field>
         <field name="code">A7x*</field>
         <field name="user_type" ref="account.account_type_income"/> 
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_income_view"/>
     </record>
@@ -48,7 +48,7 @@
         <field name="name">Auction Adjudication Expenses</field>
         <field name="code">A6x*</field>
         <field name="user_type" ref="account.account_type_expense"/>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_expense_view"/>
     </record>
@@ -56,7 +56,7 @@
     <record model="account.account" id="auction_income_costs">
         <field name="name">Auction Buyer Costs</field>
         <field name="code">A8x*</field>
-        <field name="type">payable</field>
+        <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_income_view"/>
         <field name="user_type" ref="account.account_type_tax"/>
@@ -64,7 +64,7 @@
     <record model="account.account" id="auction_expense_costs">
         <field name="name">Auction Seller Costs</field>
         <field name="code">A9x*</field>
-        <field name="type">receivable</field>
+        <field name="type">other</field>
         <field name="currency_id" search="[('name','=','EUR')]"/>
         <field name="parent_id" eval="auction_expense_view"/>
         <field name="user_type" ref="account.account_type_tax"/>
@@ -251,7 +251,7 @@
     </record>
 
     <record id="auction_tax20" model="account.tax">
-       <field name="name">Frais de vente</field>
+       <field name="name">Frais de vente0</field>
        <field name="amount">0</field>
        <field name="domain">auction</field>
        <field name="base_code_id" ref="account_tax_code_id2"/>

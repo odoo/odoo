@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_configure_email_server">
+            <field name="name">Configure Email Server</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.mail_server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record model="ir.actions.todo" id="config_wizard_action_configure_email_server">
+            <field name="action_id" ref="action_configure_email_server" />
+            <field name="category_id" ref="base.category_administration_config" />
+        </record>
+    </data>
+</openerp>

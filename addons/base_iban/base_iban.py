@@ -83,14 +83,14 @@ class res_partner_bank(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         #overwrite to format the iban number correctly
-        if 'iban' in vals and vals['iban']:
-            vals['iban'] = _format_iban(vals['iban'])
+        if (vals.get('state',False)=='iban') and vals.get('acc_number', False):
+            vals['acc_number'] = _format_iban(vals['acc_number'])
         return super(res_partner_bank, self).create(cr, uid, vals, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         #overwrite to format the iban number correctly
-        if 'iban' in vals and vals['iban']:
-            vals['iban'] = _format_iban(vals['iban'])
+        if (vals.get('state',False)=='iban') and vals.get('acc_number', False):
+            vals['acc_number'] = _format_iban(vals['acc_number'])
         return super(res_partner_bank, self).write(cr, uid, ids, vals, context)
 
     def check_iban(self, cr, uid, ids, context=None):
@@ -98,9 +98,9 @@ class res_partner_bank(osv.osv):
         Check the IBAN number
         '''
         for bank_acc in self.browse(cr, uid, ids, context=context):
-            if not bank_acc.iban:
+            if bank_acc.state<>'iban':
                 continue
-            iban = _format_iban(bank_acc.iban).lower()
+            iban = _format_iban(bank_acc.acc_number).lower()
             if iban[:2] in _iban_len and len(iban) != _iban_len[iban[:2]]:
                 return False
             #the four first digits have to be shifted to the end
@@ -122,39 +122,17 @@ class res_partner_bank(osv.osv):
         def default_iban_check(iban_cn):
             return iban_cn[0] in string.ascii_lowercase and iban_cn[1] in string.ascii_lowercase
 
-        iban_country = self.browse(cr, uid, ids)[0].iban[:2]
+        iban_country = self.browse(cr, uid, ids)[0].acc_number[:2].lower()
         if default_iban_check(iban_country):
             iban_example = iban_country in _ref_iban and _ref_iban[iban_country] + ' \nWhere A = Account number, B = National bank code, S = Branch code, C = account No, N = branch No, K = National check digits....' or ''
             return _('The IBAN does not seem to be correct. You should have entered something like this %s'), (iban_example)
-        return _('The IBAN is invalid, It should begin with the country code'), ()
+        return _('The IBAN is invalid, it should begin with the country code'), ()
 
-    def name_get(self, cr, uid, ids, context=None):
-        res = []
-        to_check_ids = []
-        for val in self.browse(cr, uid, ids, context=context):
-            if val.state=='iban':
-                iban = _pretty_iban(val.iban or '')
-                bic = val.bank.bic or ''
-                res.append((val.id, _('IBAN: %s / BIC: %s') % (iban, bic)))
-            else:
-                to_check_ids.append(val.id)
-        res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
-        return res
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-    #overwrite the search method in order to search not only on bank type == basic account number but also on type == iban
-        res = super(res_partner_bank,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
-        if filter(lambda x:x[0]=='acc_number' ,args):
-            #get the value of the search
-            iban_value = filter(lambda x:x[0]=='acc_number' ,args)[0][2]
-            #get the other arguments of the search
-            args1 =  filter(lambda x:x[0]!='acc_number' ,args)
-            #add the new criterion
-            args1 += [('iban','ilike',iban_value)]
-            #append the results to the older search
-            res += super(res_partner_bank,self).search(cr, uid, args1, offset, limit,
-                order, context=context, count=count)
-        return res
+    def _check_bank(self, cr, uid, ids, context=None):
+        for partner_bank in self.browse(cr, uid, ids, context=context):
+            if partner_bank.state == 'iban' and not partner_bank.bank.bic:
+                return False
+        return True
 
     def get_bban_from_iban(self, cr, uid, ids, context=None):
         '''
@@ -169,21 +147,26 @@ class res_partner_bank(osv.osv):
             'gb': lambda x: x[14:],
         }
         for record in self.browse(cr, uid, ids, context=context):
-            if not record.iban:
+            if not record.acc_number:
                 res[record.id] = False
                 continue
             res[record.id] = False
             for code, function in mapping_list.items():
-                if record.iban.lower().startswith(code):
-                    res[record.id] = function(record.iban)
+                if record.acc_number.lower().startswith(code):
+                    res[record.id] = function(record.acc_number)
                     break
         return res
 
     _columns = {
-        'iban': fields.char('IBAN', size=34, readonly=True, help="International Bank Account Number"),
+        # Deprecated: we keep it for backward compatibility, to be removed in v7
+        # We use acc_number instead of IBAN since v6.1, but we keep this field
+        # to not break community modules.
+        'iban': fields.related('acc_number', string='IBAN', size=34, readonly=True, help="International Bank Account Number", type="char"),
     }
-
-    _constraints = [(check_iban, _construct_constraint_msg, ["iban"])]
+    _constraints = [
+        (check_iban, _construct_constraint_msg, ["iban"]),
+        (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['bic'])
+    ]
 
 res_partner_bank()
 

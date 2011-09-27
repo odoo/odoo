@@ -20,7 +20,6 @@
                     <field name="nbr" string="#Claim" sum="#Claim"/>
                     <field name="email" sum="# Mails"/>
                     <field name="delay_close" avg="Avg Closing Delay"/>
-                    <field name="probability" widget="progressbar"/>
                     <field name="delay_expected"/>
                     <field name="state" invisible="1"/>
                     <field name="stage_id" invisible="1"/>
@@ -54,7 +53,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="8">
+                  <group>
                        <filter string="  Year  " icon="terp-go-year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                                help="Claims created in current year"/>
@@ -63,13 +62,13 @@
                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                            help="Claims created in current month"/>
 
-                       <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                       <filter icon="terp-go-month" string="    Month-1    " 
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Claims created in last month"/>
 
                         <separator orientation="vertical" />
                         <filter icon="terp-document-new"
-                            string="Draft"
+                            string="New"
                             domain="[('state','=','draft')]"/>
                         <filter icon="terp-camera_test"
                             string="Open"
@@ -95,7 +94,7 @@
                                 help="My company"/>
                         </field>
 
-                        <field name="user_id" string="Salesman" select="1">
+                        <field name="user_id" string="Salesman">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
                     </group>
@@ -110,7 +109,7 @@
                         <separator orientation="vertical"/>
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'claim')]"/>
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
                         <separator orientation="vertical"/>
                         <field name="priority" />

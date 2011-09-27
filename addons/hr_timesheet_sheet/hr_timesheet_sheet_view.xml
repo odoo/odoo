@@ -33,7 +33,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="sheet_id" />
                         <field name="name" groups="analytic.group_analytic_accounting"/>
                         <field name="invoice_rate"/>
@@ -62,17 +62,17 @@
             <field name="arch" type="xml">
                 <form string="Timesheet">
                     <group colspan="4" col="6">
-                        <field name="name"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company"/>
-                        <field name="department_id" groups="base.group_extended"/>
-                        <newline/>
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
+                        <newline/>
+                        <field name="name"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company"/>
+                        <field name="department_id" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Daily View">
+                        <page string="Daily">
                             <group col="6" colspan="4">
                                 <button name="button_dummy" string="Go to:" type="object" icon="terp-gtk-jump-to-ltr"/>
                                 <field name="date_current" nolabel="1"/>
@@ -89,19 +89,19 @@
                                     <field invisible="1" name="employee_id"/>
                                 </tree>
                             </field>
-                            <group col="1" colspan="1">
-                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
-                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                            <group col="4" colspan="1">
+				    <field name="state_attendance"/>
+				<button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('state_attendance','&lt;&gt;','absent')]}"/>
+				<button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl" attrs="{'invisible':[('state_attendance','&lt;&gt;','present')]}"/>
+				    <field name="total_attendance_day" widget="float_time" colspan="4"/>
                             </group>
-                            <field name="state_attendance"/>
-                            <field name="total_attendance_day" widget="float_time"/>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
-                                    <field name="to_invoice"/>
+                                    <field name="to_invoice" widget="selection"/>
                                     <field invisible="1" name="journal_id"/>
                                     <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
@@ -126,7 +126,7 @@
                             <field name="total_difference_day" widget="float_time"/>
                             <field name="total_timesheet_day" widget="float_time"/>
                         </page>
-                        <page string="By Day">
+                        <page string="Summary">
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
@@ -143,8 +143,8 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                        <field name="state"/>
-                        <button name="button_confirm" states="draft" string="Submit to Manager" type="object" icon="terp-check"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
+                        <button name="button_confirm" states="draft" string="Submited to Manager" type="object" icon="terp-check"/>
                         <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                         <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_user"/>
                         <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_user"/>
@@ -159,11 +159,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+"
@@ -306,7 +306,7 @@
             <field name="type">tree</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>

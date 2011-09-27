@@ -112,7 +112,7 @@
     <blockTable colWidths="110.0,110.0,110.0,110.0,128.0,93.0,110.0" style="Table8">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Chart of Account</para>
+          <para style="terp_tblheader_General_Centre">Chart of Accounts</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Fiscal Year</para>
@@ -196,25 +196,25 @@
           <para style="Total">Account Total</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_direction('6')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_direction('6'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_for_period('4')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('4'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_for_period('3')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('3'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_for_period('2')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('2'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_for_period('1')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('1'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_for_period('0')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_for_period('0'), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="Total_right">[[ formatLang(get_total('5')) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="Total_right">[[ formatLang(get_total('5'), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
 
@@ -224,25 +224,25 @@
           <para style="P2_content">[[ partner['name'] ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['direction']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['direction'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['4'])]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['4'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['3'])]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['3'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['2']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['2'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['1'])  ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['1'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['0']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['0'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(partner['total']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(partner['total'], currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -251,25 +251,25 @@
           <para style="P2_content">[[ not_partner['name'] ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['direction']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['direction'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['4'])]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['4'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['3'])]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['3'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['2']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['2'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['1'])  ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['1'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['0']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['0'], currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
-          <para style="content">[[ formatLang(not_partner['total']) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="content">[[ formatLang(not_partner['total'], currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

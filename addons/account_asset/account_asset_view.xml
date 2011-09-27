@@ -29,7 +29,7 @@
                     <separator string="Depreciation Method" colspan="2"/>
                     <field name="method"/>
                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                    <field name="prorata" attrs="{'invisible':[('method','&lt;&gt;','linear')]}"/>
+                    <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
         	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
@@ -109,9 +109,9 @@
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Method" colspan="2"/>
-                        <field name="method" on_change="onchange_method_time(method)"/>
+                        <field name="method"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                        <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
+                        <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
                     </group>
                     <newline/>
                     <separator string="" colspan="4"/>
@@ -314,7 +314,7 @@
     <menuitem parent="menu_finance_config_assets" id="menu_action_account_asset_asset_list_normal" action="action_account_asset_asset_list_normal"/>
     
     <record model="ir.actions.act_window" id="action_account_asset_asset_form_normal">
-        <field name="name">Asset Categories</field>
+        <field name="name">Review Asset Categories</field>
         <field name="res_model">account.asset.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
