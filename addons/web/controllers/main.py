@@ -119,7 +119,7 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         %(javascript)s
         <script type="text/javascript">
             $(function() {
-                var c = new openerp.init();
+                var c = new openerp.init(%(modules)s);
                 var wc = new c.web.WebClient("oe");
                 wc.start();
             });
@@ -166,9 +166,11 @@ class WebClient(openerpweb.Controller):
         if req.debug:
             csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(None, 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+
         r = home_template % {
             'javascript': js,
-            'css': css
+            'css': css,
+            'modules': simplejson.dumps(manifest_preload()),
         }
         return r
 
