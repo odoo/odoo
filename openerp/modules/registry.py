@@ -89,10 +89,10 @@ class Registry(object):
 
         res = []
 
-        # Instantiate registered classes (via metamodel discovery or via explicit
-        # constructor call), and add them to the pool.
+        # Instantiate registered classes (via the MetaModel automatic discovery
+        # or via explicit constructor call), and add them to the pool.
         for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
-            res.append(cls.createInstance(self, cr))
+            res.append(cls.create_instance(self, cr))
 
         return res
 
