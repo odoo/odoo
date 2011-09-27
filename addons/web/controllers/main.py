@@ -170,7 +170,7 @@ class WebClient(openerpweb.Controller):
         r = home_template % {
             'javascript': js,
             'css': css,
-            'modules': repr(manifest_preload()),   # XXX good js-ification ?
+            'modules': simplejson.dumps(manifest_preload()),
         }
         return r
 
