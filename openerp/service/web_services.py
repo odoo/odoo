@@ -623,9 +623,9 @@ class wizard(netsvc.ExportService):
             if self.wiz_uid[wiz_id] == uid:
                 return self._execute(db, uid, wiz_id, datas, action, context)
             else:
-                raise Exception, 'AccessDenied'
+                raise openerp.exceptions.AccessDenied()
         else:
-            raise Exception, 'WizardNotFound'
+            raise openerp.exceptions.Warning('Wizard not found.')
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks

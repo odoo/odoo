@@ -42,22 +42,40 @@ import openerp.modules
 import openerp.tools.config as config
 import service.websrv_lib as websrv_lib
 
+# XML-RPC fault codes. Some care must be taken when changing these: the
+# constants are also defined client-side and must remain in sync.
+# User code must use the exceptions defined in ``openerp.exceptions`` (not
+# create directly ``xmlrpclib.Fault`` objects).
+XML_RPC_FAULT_CODE_APPLICATION_ERROR = 2
+XML_RPC_FAULT_CODE_ACCESS_DENIED = 3
+XML_RPC_FAULT_CODE_WARNING = 4
+XML_RPC_FAULT_CODE_ACCESS_ERROR = 5
+
 def xmlrpc_return(start_response, service, method, params):
-    """ Helper to call a service's method with some params, using a
-    wsgi-supplied ``start_response`` callback."""
-    # This mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for exception
-    # handling.
+    """
+    Helper to call a service's method with some params, using a wsgi-supplied
+    ``start_response`` callback.
+
+    This is the place to look at to see the mapping between core exceptions
+    and XML-RPC fault codes.
+    """
+    # Map OpenERP core exceptions to XML-RPC fault codes. Specific exceptions
+    # defined in ``openerp.exceptions`` are mapped to specific fault codes;
+    # all the other exceptions are mapped to the generic
+    # XML_RPC_FAULT_CODE_APPLICATION_ERROR value.
+    # This also mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for
+    # exception handling.
     try:
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
     except openerp.exceptions.AccessError, e:
-        fault = xmlrpclib.Fault(5, str(e))
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except openerp.exceptions.Warning, e:
-        fault = xmlrpclib.Fault(4, str(e))
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except openerp.exceptions.AccessDenied, e:
-        fault = xmlrpclib.Fault(3, str(e))
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_DENIED, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except openerp.netsvc.OpenERPDispatcherException, e:
         # TODO collapse this case with the next one.
