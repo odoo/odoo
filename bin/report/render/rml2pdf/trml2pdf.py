@@ -118,7 +118,7 @@ class PageCount(platypus.Flowable):
     def draw(self):
         self.canv.beginForm("pageCount")
         self.canv.setFont("Helvetica", utils.unit_get(str(8)))
-        self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
+        self.canv.drawString(0, 0, str(self.canv._pageCount))
         self.canv.endForm()
 
 class PageReset(platypus.Flowable):
