@@ -72,7 +72,7 @@
         </record>
 
         <record id="action_delivery_carrier_form1" model="ir.actions.act_window">
-            <field name="name">Delivery Method</field>
+            <field name="name">Define Delivery Methods</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
@@ -332,8 +332,36 @@
 
        <record id="delivery_method_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="action_delivery_carrier_form1"/>
+           <field name="category_id" ref="stock.category_stock_management_config" />
            <field name="sequence">10</field>
        </record>
 
+        <record model="ir.ui.view" id="define_delivery_steps_form">
+            <field name="name">delivery.define_delivery_steps</field>
+            <field name="model">delivery.define.delivery.steps.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Define Delivery Steps">
+                    <label string="" />
+                    <field name="picking_policy" />
+                    <group colspan="4">
+                        <button string="Cancel" icon="gtk-cancel" special="cancel" />
+                        <button string="Apply" icon="gtk-apply" name="apply_cb" type="object" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_define_delivery_steps">
+            <field name="name">Setup Your Delivery Steps</field>
+            <field name="res_model">delivery.define.delivery.steps.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.actions.todo" id="todo_define_delivery_steps">
+            <field name="action_id" ref="action_define_delivery_steps" />
+        </record>
     </data>
 </openerp>

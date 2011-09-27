@@ -13,51 +13,47 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order POS">
-                    <group col="6" colspan="4">
+                    <group col="7" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="shop_id" widget="selection"/>
-                        <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" groups="base.group_extended"/>
-                        <field name="contract_number" groups="base.group_extended"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)" groups="base.group_extended"/>
+                        <button name="invoice" string="Invoice" icon="gtk-apply" type="workflow" states="paid" attrs="{'invisible': ['|',('partner_id','=',False),('state','&lt;&gt;','paid')]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
                             <field name="lines" colspan="4" nolabel="1">
                                 <tree string="Order lines" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
-                                    <field name="qty" on_change="onchange_qty(discount, qty, price_unit)"/>
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
-                                    <field name="price_unit"/>
-                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_subtotal" />
-                                    <field name="price_subtotal_incl" sum="Subtotal"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                    <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="price_subtotal_incl"/>
                                 </tree>
                                 <form string="Order lines">
-                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275"/>
-                                    <field name="qty"/>
-                                    <field name="qty_rfd" groups="base.group_extended"/>
-                                    <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="price_ded" on_change="onchange_ded(price_ded, price_unit)" />
-                                    <field name="price_unit"/>
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)"/>
+                                    <field name="qty" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="discount"  on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_unit" on_change="onchange_qty(product_id, discount, qty, price_unit, context)"/>
+                                    <field name="price_subtotal" invisible="1"/>
+                                    <field name="price_subtotal_incl" invisible="1"/>
                                     <field name="notice"/>
-                                    <field name="serial_number"/>
-                                    <field name="prodlot_id" domain="[('product_id','=',product_id)]"/>
                                 </form>
                             </field>
                             <group colspan="4" col="7">
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
+                                <button name="button_dummy" string="Update" icon="gtk-execute" states="draft" />
+                                <button name="%(action_pos_discount)d" string="Discount" icon="gtk-remove" type="action" states="draft" />
                             </group>
 
                             <separator colspan="4"/>
                             <group colspan="4" col="8">
                                 <field name="state" />
-                                <button name="%(action_add_product)d" string="Add product" type="action" icon="gtk-ok" states="advance" groups="base.group_extended"/>
-                                <button name="%(action_pos_payment)d" string="Make Payment" icon="terp-dolar" type="action" states="draft,advance" />
+                                <button name="%(action_pos_payment)d" string="Payment" icon="gtk-apply" type="action" states="draft"/>
+                                <button name="refund" string="Return Products" type="object" icon="gtk-ok"
+                                    attrs="{'invisible':[('state','=','draft')]}"/>
                                 <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
-                                <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />
-                                <button name="%(action_view_pos_return)d" string="Return Picking" type="action" icon="gtk-ok" states="paid"
-                                    attrs="{'invisible':[('state','!=','paid'),('state','!=','invoiced')]}" context="{'return':'return'}" />
                             </group>
                         </page>
                         <page string="Payment">
@@ -74,22 +70,25 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Extra Info">
-                            <group colspan="2" col="2" name="Type">
-                                <separator string="Other Information" colspan="4"/>
-                                <field name="user_salesman_id" />
+                        <page string="Extra Info" groups="base.group_extended">
+                            <group colspan="2" col="2">
+                                <separator string="General Information" colspan="2"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
-                                <field name="price_type" />
-                                <field name="user_id" string="Salesman" groups="base.group_extended"/>
+                                <field name="shop_id" widget="selection"/>
+                                <field name="user_id"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]"/>
+                                <field name="picking_id" readonly="1" groups="base.group_extended"/>
                             </group>
-                            <group colspan="2" col="2" name="Type">
-                                <separator string="Dates" colspan="4"/>
-                                <field name="date_validation" />
-                                <field name="date_payment" groups="base.group_extended"/>
-                            </group>
-                            <group colspan="4">
-                                <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="0"/>
+                            <group colspan="2" col="3">
+                                <separator string="Accounting Information" colspan="3"/>
+                                <field name="sale_journal" domain="[('type','=','sale')]"/>
+                                <button name="done" string="Post Entries" icon="gtk-apply" type="workflow" states="paid"/>
+                                <field name="invoice_id" colspan="2" readonly="1"
+                                    attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                <button name="%(pos_invoice_report)d" string="Re-Print"
+                                    icon="gtk-print" type="action" attrs="{'invisible':[('state','&lt;&gt;','invoiced')]}"/>
+                                <field name="account_move" colspan="3" readonly="1"
+                                    attrs="{'invisible':[('state','&lt;&gt;','done')]}"/>
                             </group>
                         </page>
                         <page string="Notes" >
@@ -116,8 +115,6 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="date_order"/>
-                    <field name="date_validation"/>
-                    <field name="date_payment"/>
                     <field name="user_id"/>
                     <field name="invoice_id"/>
                     <field name="amount_total" sum="Amount total"/>
@@ -132,15 +129,19 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-check" string="Running" domain="[('state','in',('payment','advance'))]"/>
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
+                    <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-go-month" string="Today" domain="[('date_order','&gt;=',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&lt;=',datetime.date.today().strftime('%%Y-%%m-%%d 23:59:59'))]"/>
+                    <filter icon="gtk-go-forward" string="Yesterday" domain="[('date_order','&lt;',datetime.date.today().strftime('%%Y-%%m-%%d 00:00:00')),('date_order','&gt;=',(datetime.date.today() - relativedelta(days=1)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
-                    <field name="partner_id"/>
                     <field name="user_id"/>
-                    <field name="date_order" string="Order date"/>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator string="" orientation="vertical"/>
@@ -153,64 +154,10 @@
         </record>
 
         <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
-        <menuitem name="Sales Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
+        <menuitem name="New Sale Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
         <menuitem action="product.product_normal_action" id="menu_pos_products" parent="menu_point_of_sale_product" sequence="2" name="Products"/>
-
-        <!--  POS Order view (date_payment)  -->
-         <record model="ir.actions.act_window" id="action_pos_pos_form_user">
-            <field name="name">Point of Sale</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_pos_order_tree"/>
-            <field name="domain">['|',('state','=','advance')]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-
-        </record>
-
-        <record model="ir.actions.act_window" id="action_pos_order_accepted">
-            <field name="name">Accepted Sales</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=', 'paid')]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-        </record>
-        <record model="ir.actions.act_window" id="action_pos_order_tree2">
-            <field name="name">Point of Sale</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('date_order','&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_pos_order_tree3">
-            <field name="name">Point of Sale</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-        </record>
-        <record model="ir.actions.act_window" id="action_pos_order_tree_open">
-            <field name="name">Opened Sales</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">pos.order</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="context">{"search_default_user_id":uid}</field>
-            <field name="search_view_id" ref="view_pos_order_filter"/>
-        </record>
 
         <record model="ir.ui.view" id="view_pos_order_line">
             <field name="name">Sale lines</field>
@@ -632,20 +579,6 @@
             <field name="view_mode">tree,calendar,form,graph</field>
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
-        <!--  Sales by margin ends -->
-        <record model="ir.ui.view" id="view_company_form_pos">
-            <field name="name">view.company.form.pos</field>
-            <field name="model">res.company</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                    <separator string="Point of Sale" colspan="4"/>
-                    <field  name="company_discount" />
-                    <field  name="max_diff" />
-                </field>
-            </field>
-           </record>
 
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
@@ -657,8 +590,6 @@
                   <separator string="Point of Sale" colspan="2"/>
                       <field name="income_pdt"/>
                       <field name="expense_pdt"/>
-                      <field name="am_out"/>
-                      <field name="disc_controle"/>
                   </field>
             </field>
         </record>
@@ -693,7 +624,6 @@
                               <separator string="Miscelleanous" colspan="2"/>
                                   <field name="income_pdt"/>
                                   <field name="expense_pdt"/>
-                            <field name="am_out"/>
                           <field name="disc_controle"/>
                                   <field name="company_id" groups="base.group_extended,base.group_multi_company"/>
                               </group>
@@ -712,7 +642,7 @@
             id="menu_point_config_product" sequence="25" groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_input">
-            <field name="name">Products</field>
+            <field name="name">Products 'Take Money Out'</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
@@ -731,14 +661,14 @@
             <field name="view_id" ref="product_input_output_form_view"/>
             <field name="act_window_id" ref="action_product_input"/>
         </record>
-        <menuitem name="Products for Input Operations"
-                    parent="menu_point_config_product"
-                    action="action_product_input"
-                    id="products_for_input_operations"
-                    groups="group_pos_manager"/>
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_product_input"
+            id="products_for_input_operations"
+            groups="group_pos_manager"/>
 
         <record model="ir.actions.act_window" id="action_product_output">
-            <field name="name">Products</field>
+            <field name="name">Products 'Put Money In'</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
@@ -757,23 +687,36 @@
             <field name="view_id" ref="product_input_output_form_view"/>
             <field name="act_window_id" ref="action_product_output"/>
         </record>
-        <menuitem name="Products for Output Operations"
-                    parent="menu_point_config_product"
-                    action="action_product_output"
-                    id="products_for_output_operations"
-                    groups="group_pos_manager"/>
+        <menuitem
+            parent="menu_point_config_product"
+            action="action_product_output"
+            id="products_for_output_operations"
+            groups="group_pos_manager"/>
 
         <menuitem
-            name="Input Operations" parent="menu_point_of_sale"
-            string="Refloat"
+            parent="menu_point_of_sale"
             action="action_box_entries"
             id="menu_wizard_enter_jrnl" sequence="2" />
 
         <menuitem
-            name="Output Operations" parent="menu_point_of_sale"
-            string="Refloat"
+            parent="menu_point_of_sale"
             action="action_box_out"
             id="menu_wizard_enter_jrnl2" sequence="3" />
+
+        <record id="action_account_journal_form" model="ir.actions.act_window">
+            <field name="name">Payment Methods</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_journal_user': 1}</field>
+            <field name="domain">[('journal_user','=', 1)]</field>
+            <field name="help">Payment methods are defined by accounting journals having the field Payment Method checked.</field>
+        </record>
+
+        <menuitem action="action_account_journal_form"
+            id="menu_action_account_journal_form_open"
+            parent="menu_point_config_product"
+            sequence="20"/>
 
         <record model="ir.ui.view" id="view_pos_order_tree_all_sales_lines">
             <field name="name">POS Sales Lines</field>
@@ -782,7 +725,6 @@
             <field name="arch" type="xml">
                 <tree string="POS Orders lines">
                     <field name="order_id" />
-                    <field name="serial_number" />
                     <field name="create_date" />
                     <field name="product_id" />
                     <field name="qty" />
@@ -801,6 +743,16 @@
         <!--  Miscelleanous Operations/Reporting -->
         <menuitem name="Reporting" parent="menu_point_root" id="menu_point_rep" sequence="20" groups="group_pos_manager"/>
         <!-- Invoice -->
+
+        <record model="ir.actions.act_window" id="action_pos_sale_all">
+            <field name="name">All Sales Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+        <menuitem parent="menu_point_rep" id="menu_point_ofsale_all" action="action_pos_sale_all" sequence="1"/>
 
         <record model="ir.actions.act_window" id="action_pos_invoice">
             <field name="name">Invoices</field>

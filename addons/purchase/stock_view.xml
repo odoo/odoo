@@ -73,7 +73,8 @@
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
                             domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar"
+                        <separator orientation="vertical"/>
+                        <filter string="To Invoice" name="to_invoice" icon="terp-dolar"
                             domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -109,7 +110,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner_address',"search_default_available":1}</field>
+            <field name="context">{'contact_display': 'partner_address',"search_default_done":1, "search_default_to_invoice":1}</field>
             <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
             <field name="help">Create invoice from reception of products. If you selected this invoice control method in the purchase order, all receptions done are available here to be invoiced.</field>
        </record>

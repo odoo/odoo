@@ -113,14 +113,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Lines to Invoice">
-                   <group col="12" colspan="4">
+                   <group>
                         <filter string="This Year" icon="terp-go-year" domain="[('name','=',time.localtime()[0])]"/>
                         <filter string="This Month" icon="terp-go-month" domain="[('month','=',time.localtime()[1])]"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="month" select="1"/>
-                        <field name="product_id" select="1"/>
-                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="product_id"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
                    </group>
                </search>
             </field>

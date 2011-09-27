@@ -42,46 +42,48 @@ class pos_open_statement(osv.osv_memory):
         journal_obj = self.pool.get('account.journal')
         if context is None:
             context = {}
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
-                    "WHERE user_id = %s ORDER BY journal_id"% (uid, ))
-        j_ids = map(lambda x1: x1[0], cr.fetchall())
-        journal_ids = journal_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
 
-        for journal in journal_obj.browse(cr, uid, journal_ids, context=context):
+        st_ids = []
+        j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+
+        for journal in journal_obj.browse(cr, uid, j_ids, context=context):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
             if len(ids):
-                raise osv.except_osv(_('Message'), _('You can not open a Cashbox for "%s".\nPlease close its related cash register.') %(journal.name))
+                st_ids += ids
+                continue
 
-            number = ''
             if journal.sequence_id:
                 number = sequence_obj.get_id(cr, uid, journal.sequence_id.id)
             else:
                 number = sequence_obj.get(cr, uid, 'account.cash.statement')
 
-            data.update({'journal_id': journal.id,
-                         'company_id': company_id,
-                         'user_id': uid,
-                         'state': 'draft',
-                         'name': number })
+            data.update({
+                'journal_id': journal.id,
+                'user_id': uid,
+                'state': 'draft',
+                'name': number 
+            })
             statement_id = statement_obj.create(cr, uid, data, context=context)
-            statement_obj.button_open(cr, uid, [statement_id], context)
+            st_ids.append(statement_id)
 
-        tree_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_tree')
+            if journal.auto_cash:
+                statement_obj.button_open(cr, uid, [statement_id], context)
+
+        tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')
         tree_id = tree_res and tree_res[1] or False
         form_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_bank_statement_form2')
         form_id = form_res and form_res[1] or False
         search_id = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_pos_open_cash_statement_filter')
 
         return {
-            'domain': "[('state', '=', 'open'),('user_id', '=', "+ str(uid) +")]",
-            'name': 'Open Statement',
+            'domain': "[('id', 'in',[ "+','.join(map(str,st_ids))+"])]",
+            'name': _('Open Cash Registers'),
             'view_type': 'form',
             'view_mode': 'tree, form',
             'search_view_id': search_id and search_id[1] or False ,
             'res_model': 'account.bank.statement',
             'views': [(tree_id, 'tree'), (form_id, 'form')],
-            'context': {'search_default_open': 1},
+            'context': {},
             'type': 'ir.actions.act_window'
         }
 pos_open_statement()
