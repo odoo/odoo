@@ -3306,17 +3306,20 @@ class orm(orm_template):
 
         self._columns = self._columns.copy()
         for store_field in self._columns:
-            f = self._columns[store_field]
-            if hasattr(f, 'digits_change'):
-                f.digits_change(cr)
-            if not isinstance(f, fields.function):
+            store_field_obj = self._columns[store_field]
+            if hasattr(store_field_obj, 'digits_change'):
+                store_field_obj.digits_change(cr)
+            fncts = self.pool._store_function.get(self._name, [])
+            for x, y, z, e, f, l in copy.copy(fncts):
+                 if ((x == self._name) and (y == store_field)):
+                     fncts.remove((x, y, z, e, f, l))
+            if not isinstance(store_field_obj, fields.function):
                 continue
-            if not f.store:
+            if not store_field_obj.store:
                 continue
-            if self._columns[store_field].store is True:
+            sm = store_field_obj.store
+            if store_field_obj.store is True:
                 sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
-            else:
-                sm = self._columns[store_field].store
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -3327,14 +3330,8 @@ class orm(orm_template):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                ok = True
-                for x, y, z, e, f, l in self.pool._store_function[object]:
-                    if (x==self._name) and (y==store_field) and (e==fields2):
-                        if f == order:
-                            ok = False
-                if ok:
-                    self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
