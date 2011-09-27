@@ -96,14 +96,17 @@ def preload_registry(dbname):
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
-    db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+    try:
+        db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        cr = db.cursor()
+        logger = logging.getLogger('server')
+        logger.info('loading test file %s', test_file)
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+        cr.rollback()
+        cr.close()
+    except Exception:
+        logging.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
 
-    cr = db.cursor()
-    logger = logging.getLogger('server')
-    logger.info('loading test file %s', test_file)
-    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
-    cr.rollback()
-    cr.close()
 
 def export_translation():
     config = openerp.tools.config
@@ -235,11 +238,14 @@ if __name__ == "__main__":
         sys.exit(0)
 
     for m in openerp.conf.server_wide_modules:
-        __import__(m)
-        # Call any post_load hook.
-        info = openerp.modules.module.load_information_from_description_file(m)
-        if info['post_load']:
-            getattr(sys.modules[m], info['post_load'])()
+        try:
+            __import__(m)
+            # Call any post_load hook.
+            info = openerp.modules.module.load_information_from_description_file(m)
+            if info['post_load']:
+                getattr(sys.modules[m], info['post_load'])()
+        except Exception:
+            logging.exception('Failed to load server-wide module `%s`', m)
 
     setup_pid_file()
     logger = logging.getLogger('server')
