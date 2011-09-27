@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:38+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -29,6 +29,9 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Totes les quantitats de producte han de ser superiors a zero.\n"
+"Heu d'instal·lar el mòdul mrp_subproduct si voleu gestionar productes extra "
+"en les LdM!"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -38,13 +41,15 @@ msgstr "sub productes"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Ordre de fabricació"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
 msgid ""
 "MRP Sub Product - To produce several products from one production order"
 msgstr ""
+"MRP Sub producte - Per produir diversos productes des d'una ordre de "
+"fabricació"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
@@ -64,7 +69,7 @@ msgstr "Tipus de quantitat"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Llista de material"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,description:mrp_subproduct.module_meta_information
@@ -79,6 +84,15 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul us permet produir diversos productes des d'una ordre de "
+"producció.\n"
+"Podeu configurar els sub-productes en la llista de materials.\n"
+"Sense aquest mòdul:\n"
+"    A + B + C -> D\n"
+"Amb aquest mòdul:\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -93,7 +107,7 @@ msgstr "Llista de materials (LdM)"
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr ""
+msgstr "Error! No podeu crear llistes de material recursives."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -108,12 +122,12 @@ msgstr "Variable"
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "La quantitat ordenada no pot ser negativa o zero!"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "Sub producte"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0

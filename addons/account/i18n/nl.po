@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:05+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-17 04:56+0000\n"
+"X-Generator: Launchpad (build 13955)\n"
 
 #. module: account
 #: code:addons/account/account.py:1167
@@ -525,8 +525,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1180,6 +1178,7 @@ msgstr "# van de transactie"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1368,6 +1367,16 @@ msgstr "Deze grootboekkaart kan niet worden gebruikt in dit dagboek"
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Met saldo ongelijk aan 0"
 
@@ -2185,6 +2194,8 @@ msgstr "Administratieve instellingen"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Boekingen gesorteerd op"
 
@@ -2206,11 +2217,16 @@ msgstr "Product sjabloon"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2547,6 +2563,7 @@ msgstr "Korting. (%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2809,6 +2826,8 @@ msgstr "Financiële administratie"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr "Winst en verlies"
 
@@ -2877,7 +2896,7 @@ msgstr "De verantwoordelijke gebruiker voor dit dagboek"
 #. module: account
 #: view:account.period:0
 msgid "Search Period"
-msgstr ""
+msgstr "Periode zoeken"
 
 #. module: account
 #: view:account.change.currency:0
@@ -3095,7 +3114,6 @@ msgstr "Laat leeg om de uitgaven grootboekkaart te gebruiken"
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -3109,6 +3127,17 @@ msgstr "Laat leeg om de uitgaven grootboekkaart te gebruiken"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Dagboeken"
 
@@ -3328,6 +3357,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr "Tegenboeking"
 
@@ -3386,6 +3416,16 @@ msgstr "BTW"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Grootboekschema"
 
@@ -3628,7 +3668,7 @@ msgstr "Kon belasting niet wijzigen!"
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "#Entries"
-msgstr ""
+msgstr "Mutaties"
 
 #. module: account
 #: code:addons/account/invoice.py:1422
@@ -3778,11 +3818,14 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Deze rapportage geeft een overzicht van de uitstaande bedragen gefactureerd "
+"aan uw klanten, en van de overschrijdingen van de betalingstermijnen. De "
+"zoekopties geven de mogelijkheid om de analyses aan te passen."
 
 #. module: account
 #: view:account.invoice.confirm:0
 msgid "Confirm Invoices"
-msgstr ""
+msgstr "Facturen bevestigen"
 
 #. module: account
 #: selection:account.account,currency_mode:0
@@ -3840,11 +3883,10 @@ msgid "Analytic Balance"
 msgstr "Analytische balans"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr "Nettoverlies"
 
@@ -3854,6 +3896,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Als het veld \"actief\" uitstaat, kunt u de grootboekrekening verbergen "
+"zonder deze te verwijderen."
 
 #. module: account
 #: view:account.tax.template:0
@@ -3957,7 +4001,7 @@ msgstr "Maand"
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referentie meeteenheid"
 
 #. module: account
 #: field:account.account,note:0
@@ -4127,18 +4171,18 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Factuur statistieken"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
 msgid "Bank statements are entered in the system."
-msgstr ""
+msgstr "Bankafschriften zijn in het systeem geladen"
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:133
 #, python-format
 msgid "Reconcile Writeoff"
-msgstr ""
+msgstr "Afschrijving afletteren"
 
 #. module: account
 #: field:account.model.line,date_maturity:0
@@ -4198,7 +4242,7 @@ msgstr ""
 #. module: account
 #: view:account.unreconcile:0
 msgid "Unreconciliate transactions"
-msgstr ""
+msgstr "Afletteren transactief ongedaan maken"
 
 #. module: account
 #: view:account.use.model:0
@@ -4664,7 +4708,7 @@ msgstr "Onderliggende belastingrekeningen"
 #: code:addons/account/account.py:940
 #, python-format
 msgid "Start period should be smaller then End period"
-msgstr ""
+msgstr "Beginperiode moet voor de eindperiode liggen"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4677,7 +4721,6 @@ msgid "Analytic Balance -"
 msgstr "Analytisch Saldo -"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4690,10 +4733,8 @@ msgstr "Analytisch Saldo -"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4703,6 +4744,16 @@ msgstr "Analytisch Saldo -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Doelrekening"
 
@@ -4813,6 +4864,8 @@ msgstr "Afletterresultaat"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr "Balans"
 
@@ -4832,7 +4885,7 @@ msgstr "Boekingen"
 #. module: account
 #: view:account.entries.report:0
 msgid "This Period"
-msgstr ""
+msgstr "Deze periode"
 
 #. module: account
 #: field:account.analytic.line,product_uom_id:0
@@ -5529,6 +5582,19 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Geen filter"
@@ -6444,6 +6510,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -6586,7 +6653,7 @@ msgstr ""
 #: field:account.invoice,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Bron document"
 
 #. module: account
 #: help:account.account.type,sign:0
@@ -6884,7 +6951,7 @@ msgstr "Maak boekingen aan"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
 msgid "Reporting"
-msgstr "Overzichten"
+msgstr "Rapportages"
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -7363,6 +7430,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7617,6 +7685,19 @@ msgstr ""
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Periode"
@@ -7700,14 +7781,6 @@ msgstr "Tel.:"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Bedrijfsvaluta"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr ""
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7820,6 +7893,12 @@ msgstr "Creditnota dagboek"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr ""
 
@@ -7896,7 +7975,7 @@ msgstr "Vervaldatum"
 #: model:ir.ui.menu,name:account.menu_account_supplier
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
-msgstr ""
+msgstr "Leveranciers"
 
 #. module: account
 #: constraint:account.move:0
@@ -8061,6 +8140,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8344,12 +8424,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr ""
 
@@ -8469,7 +8554,12 @@ msgstr "Laat leeg om de inkomsten rekening te gebruiken"
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8488,6 +8578,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr ""
 
@@ -8706,12 +8805,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr ""
 
@@ -8843,7 +8947,7 @@ msgstr ""
 #. module: account
 #: field:account.installer.modules,account_payment:0
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Crediteurenbeheer"
 
 #. module: account
 #: field:account.period,name:0
@@ -8916,6 +9020,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8997,6 +9102,18 @@ msgstr "Algemeen"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9203,16 +9320,13 @@ msgstr "Dag van de maand"
 #: field:account.fiscal.position.tax,tax_src_id:0
 #: field:account.fiscal.position.tax.template,tax_src_id:0
 msgid "Tax Source"
-msgstr "Bron belastingen"
+msgstr "BTW code"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr ""
 
@@ -9236,8 +9350,8 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "JNRL"
+msgid "JRNL"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9444,6 +9558,7 @@ msgstr "Inkoopfactuur"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9521,6 +9636,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Met mutaties"
 
@@ -9891,8 +10016,17 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Laat dit veld leeg wanneer je de huidige datum wilt gebruiken."
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
 
 #, python-format
 #~ msgid ""
@@ -9901,9 +10035,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Geen periode ingesteld voor deze datum !\n"
 #~ "Maak een boekjaar aan."
-
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Fout! U kunt geen reeds gemaakte rekening aanmaken."
 
 #, python-format
 #~ msgid ""
@@ -9924,16 +10055,6 @@ msgstr ""
 #~ "%(date)s : Voor de datum\n"
 #~ "\n"
 #~ "Bijv. Mijn model op %(date)s"
-
-#~ msgid ""
-#~ "If you use payment terms, the due date will be computed automatically at the "
-#~ "generation of accounting entries. If you keep the payment term and the due "
-#~ "date empty, it means direct payment."
-#~ msgstr ""
-#~ "Indien u betalingstermijnen hanteert zal de vervaldatum automatisch worden "
-#~ "berekend bij het aanmaken van de boekhoudmutaties. Wanneer u de "
-#~ "betaaltermijn en de vervaldatum leeg laat zal deze als directe betaling "
-#~ "worden geboekt"
 
 #~ msgid "Unpaid Supplier Invoices"
 #~ msgstr "Onbetaalde inkoopfacturen"
@@ -10008,17 +10129,6 @@ msgstr ""
 #~ msgid "Payment Reconcilation"
 #~ msgstr "Aflettering betalingen"
 
-#~ msgid "Disc. (%)"
-#~ msgstr "Korting (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Als de betaling is uitgevoerd terwijl u dit bericht al verzonden is, "
-#~ "beschouw deze dan als niet-verzonden."
-
 #~ msgid "Contra"
 #~ msgstr "Tegenover"
 
@@ -10055,9 +10165,6 @@ msgstr ""
 
 #~ msgid "Journal Voucher"
 #~ msgstr "Dagboekoverzicht"
-
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
 
 #~ msgid "Analytic Invoice"
 #~ msgstr "Analitische Factuur"
@@ -10193,9 +10300,6 @@ msgstr ""
 #~ msgid "Close states"
 #~ msgstr "Afsluit statuscodes"
 
-#~ msgid "Crédit"
-#~ msgstr "Credit"
-
 #~ msgid "Income"
 #~ msgstr "Inkomen"
 
@@ -10320,10 +10424,6 @@ msgstr ""
 #~ msgid "Draft Supplier Invoices"
 #~ msgstr "Concept-inkoopfacturen"
 
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Instellings-fout"
-
 #~ msgid ""
 #~ "Exception made of a mistake of our side, it seems that the following bills "
 #~ "stay unpaid. Please, take appropriate measures in order to carry out this "
@@ -10332,9 +10432,6 @@ msgstr ""
 #~ "Uigezonders bij fouten van onze kant, is bij controle is gebleken dat de "
 #~ "volgende facturen nog niet zijn betaald. Wij verzoeken u maatregelen te "
 #~ "nemen om deze betalingen binnen de komende 8 dagen uit te voeren."
-
-#~ msgid "Débit"
-#~ msgstr "Debet"
 
 #~ msgid "x Checks Journal"
 #~ msgstr "x Controleert Journal"
@@ -10410,9 +10507,6 @@ msgstr ""
 #~ msgid "_Go"
 #~ msgstr "_Ga naar"
 
-#~ msgid "Partner ID"
-#~ msgstr "Partner ID"
-
 #~ msgid "New Customer Invoice"
 #~ msgstr "Nieuwe verkoopfactuur"
 
@@ -10463,9 +10557,6 @@ msgstr ""
 #~ msgid "Document"
 #~ msgstr "Document"
 
-#~ msgid "Move name"
-#~ msgstr "Boekingsnaam"
-
 #~ msgid "Cancel selected invoices"
 #~ msgstr "Annuleer de geselecteerde facturen"
 
@@ -10475,9 +10566,6 @@ msgstr ""
 #~ msgid "Proposed invoice to be checked, validated and printed"
 #~ msgstr ""
 #~ "Voorgestelde factuur wordt gecontroleerd, akkoord gegeven en geprint."
-
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
 
 #~ msgid "By Date and Period"
 #~ msgstr "Op datum en periode"
@@ -10497,10 +10585,6 @@ msgstr ""
 
 #~ msgid "Financial Management"
 #~ msgstr "Financiële administratie"
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Deze grootboekkaart is en gedefineerd als af te letteren!"
 
 #~ msgid "Additionnal Information"
 #~ msgstr "Extra Informatie"
@@ -10541,9 +10625,6 @@ msgstr ""
 #~ msgid "Pay and reconcile"
 #~ msgstr "Betaal en letter af"
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Voortgebracht saldo"
-
 #~ msgid "New Supplier Refund"
 #~ msgstr "Nieuwe credit inkoopfactuur"
 
@@ -10564,9 +10645,6 @@ msgstr ""
 
 #~ msgid "Define Fiscal Years and Select Charts of Account"
 #~ msgstr "Stel boekjaar in en kies een grootboek rekeningschema"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Afboekingsperiode"
 
 #~ msgid "3 Months"
 #~ msgstr "3 maanden"
@@ -10687,9 +10765,6 @@ msgstr ""
 #~ msgid "Unpaid Customer Invoices"
 #~ msgstr "Onbetaalde verkoopfacturen"
 
-#~ msgid "Partner name"
-#~ msgstr "Relatie"
-
 #~ msgid "Journal/Payment Mode"
 #~ msgstr "Dagboek/Betaal modus"
 
@@ -10717,6 +10792,9 @@ msgstr ""
 #~ msgid "Set starting and ending balance for control"
 #~ msgstr "Geeft het begin en eind saldo voor controle"
 
+#~ msgid "JNRL"
+#~ msgstr "JNRL"
+
 #~ msgid "General Ledger -"
 #~ msgstr "Grootboek"
 
@@ -10740,10 +10818,6 @@ msgstr ""
 
 #~ msgid "Entries Encoding by Move"
 #~ msgstr "Boekingen maken per journaalpost"
-
-#, python-format
-#~ msgid "You can not deactivate an account that contains account moves."
-#~ msgstr "U kunt een rekening met mutaties niet de-activeren"
 
 #~ msgid "Filter on Partners"
 #~ msgstr "Filteren op"
@@ -10866,9 +10940,6 @@ msgstr ""
 #~ msgid ""
 #~ "Selected Move lines does not have any account move enties in draft state"
 #~ msgstr "Geselecteerde mutaties hebben geen boekingen in de concept status"
-
-#~ msgid "All account entries"
-#~ msgstr "Alle boekingsregels"
 
 #~ msgid "Date Filter"
 #~ msgstr "Datumfilter"
@@ -11018,10 +11089,6 @@ msgstr ""
 #~ "Als een standaard-belasting is ingesteld bij de relatie, dan overschrijft "
 #~ "deze alleen belastingen van rekeningen (of producten) in dezelfde groep."
 
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "U kunt een niet-gebalanceerde post niet valideren!"
-
 #~ msgid ""
 #~ "Check this box if you don't want new account moves to pass through the "
 #~ "'draft' state and instead goes directly to the 'posted state' without any "
@@ -11037,10 +11104,6 @@ msgstr ""
 
 #~ msgid "Import Invoices in Statement"
 #~ msgstr "Importeer facturen in bankafschrift"
-
-#, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "Het oude boekjaar heeft geen enkele af te letteren post meer!"
 
 #, python-format
 #~ msgid "Date not in a defined fiscal year"
@@ -11124,13 +11187,6 @@ msgstr ""
 
 #~ msgid "Fiscal Position Template Account Mapping"
 #~ msgstr "Vervangingstabel belastingpositie-sjabloon"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "De bankrekening van de relatie voor betaling.\n"
-#~ "Laat leeg voor de standaardwaarde."
 
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "Fout: Referentie omzetbelasting is verplicht."
@@ -11288,163 +11344,6 @@ msgstr ""
 #~ msgstr ""
 #~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
-#~ msgid "My indicators"
-#~ msgstr "Mijn indicatoren"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Concept-facturen"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Te factureren kosten"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Te factureren rekeningen"
-
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Af te sluiten kostenplaatsen"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Dashboard voor accountant"
-
-#~ msgid "Aged receivables"
-#~ msgstr "Te late debiteuren"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Keuze gebaseerd op"
-
-#~ msgid "Notification"
-#~ msgstr "Mededeling"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Toon debet-/credit informatie"
-
-#~ msgid "All accounts"
-#~ msgstr "Alle rekeningen"
-
-#~ msgid "Aged income"
-#~ msgstr "Te late inkomsten"
-
-#~ msgid "Financial Period"
-#~ msgstr "Boekingsperiode"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Kies periode(n)"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Toon vergelijking in %"
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Toon overzicht in liggend formaat"
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr ""
-#~ "U dient de 'Liggend' afdrukstand te kiezen. Controleer dit alstublieft."
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Account Balans is een uitbreiding van de Financieel Beheer module.\n"
-#~ "    Deze module geeft u meerder mogelijkheden om een balans af te drukken.\n"
-#~ "    1. U kunt de balans van verschillende boekjaren met elkaar vergelijken\n"
-#~ "    2. U kunt een vergelijking uitdrukken in percentages of bedragen.\n"
-#~ "    3. U kunt referentierekeningen gebruiken voor de vergelijking van "
-#~ "specifieke boekjaren.\n"
-#~ "    4. U kunt perioden kiezen op basis van effectieve datum of op basis van "
-#~ "aanmaakdatum.\n"
-#~ "    5. U krijgt een optie om het gewenste overzicht in liggend formaat af te "
-#~ "drukken.\n"
-#~ "    "
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Rekening saldi-Vergelijk boekjaren"
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Kies referentie rekening (voor % vergelijking)"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Kies boekjaren (max. 3 jaar)"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Vergelijk geselecteerde jaren in termen van"
-
-#~ msgid "Don't Compare"
-#~ msgstr "Niet vergelijken"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Toon rekeningen"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. U hebt meer dan 3 boekjaren geselecteerd"
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Boekhouding en financieel beheer-Vergelijk rekeningen"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "U  kunt maximaal 3 boekjaren selecteren. Probeer opnieuw."
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. U heeft de 'Percentage' optie gebruikt met meer dan 2 boekjaren, maar u "
-#~ "hebt niet het liggend formaat gekozen."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Het kan zijn dat u één van onderstaande vergissingen hebt gemaakt. Corrigeer "
-#~ "deze alstublieft en probeer het dan opnieuw."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Leeg laten voor vergelijking met de bovenliggende"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr ""
-#~ "2. U heeft de 'Percentage' optie niet gekozen, maar u hebt meer dan 2 "
-#~ "boekjaren geselecteerd."
-
-#~ msgid "Creation Date"
-#~ msgstr "Aanmaakdatum"
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr "U dient tenminste 1 boekjaar te selecteren. Probeer opnieuw."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "Misschien heeft u de vergelijk optie gebruikt met meer dan 1 jaar met "
-#~ "credit/debet kolommen en % optie. Dit kan er toe leiden dat er buiten de "
-#~ "marges van het papier wordt afgedrukt. Probeer het opnieuw."
-
-#~ msgid "Customize Report"
-#~ msgstr "Overzicht aanpassen"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr "Een module die nieuwe overzichten toevoegt aan de account-module"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Financiële overzichten - Overzichten"
-
 #~ msgid "Header"
 #~ msgstr "Koptekst"
 
@@ -11501,67 +11400,8 @@ msgstr ""
 #~ msgid "COL 2"
 #~ msgstr "KOL 2"
 
-#~ msgid "Fiscal Mapping Template"
-#~ msgstr "Sjabloon fiscale toewijzing"
-
-#~ msgid ""
-#~ "The fiscal mapping will determine taxes and the accounts used for the "
-#~ "partner."
-#~ msgstr ""
-#~ "De fiscale toewijzing bepaalt de gebruikte belastingen en "
-#~ "grootboekrekeningen voor de relatie."
-
-#~ msgid "Accounts Fiscal Mapping"
-#~ msgstr "Fiscale toewijzing grootboekrekeningen"
-
-#~ msgid "Taxes Fiscal Mapping"
-#~ msgstr "Toewijzing belastingen"
-
-#~ msgid "Fiscal Mapping Templates"
-#~ msgstr "Sjablonen fiscale toewijzing"
-
-#~ msgid "Fiscal Mapping Remark :"
-#~ msgstr "Fiscale toewijzing opmerking:"
-
-#~ msgid "Template for Fiscal Mapping"
-#~ msgstr "Sjabloon voor fiscale toewijzing"
-
-#~ msgid "Template Tax Fiscal Mapping"
-#~ msgstr "Sjabloon fiscale toewijzing belasting"
-
-#~ msgid "Fiscal Mappings"
-#~ msgstr "Fiscale toewijzingen"
-
 #~ msgid "asgfas"
 #~ msgstr "asgfas"
-
-#~ msgid "supplier"
-#~ msgstr "leverancier"
-
-#~ msgid "Expenses Credit Notes Journal - (test)"
-#~ msgstr "Uitgaven creditnota dagboek - (test)"
-
-#~ msgid ""
-#~ "Customer Invoices allows you create and manage invoices issued to your "
-#~ "customers. OpenERP generates draft of invoices automatically so that you "
-#~ "only have to confirm them before sending them to your customers."
-#~ msgstr ""
-#~ "Klant facturen laat u facturen aan klanten maken en beheren. OpenERP "
-#~ "genereert automatisch concept facturen dus u hoeft ze alleen te bevestigen "
-#~ "voor ze naar uw klanten te sturen."
-
-#~ msgid "End of Year"
-#~ msgstr "Eind jaar"
-
-#~ msgid ""
-#~ "given a period and a journal, the sum of debit will always be equal to the "
-#~ "sum of credit, so there is no point to display it"
-#~ msgstr ""
-#~ "gegeven een periode en een dagboek is het debettotaal altijd gelijk aan het "
-#~ "credittotaal, dus het heeft geen zin om het af te beelden"
-
-#~ msgid "Ansicht"
-#~ msgstr "Weergave"
 
 #, python-format
 #~ msgid "Invoice "

@@ -131,7 +131,7 @@ class mrp_production_workcenter_line(osv.osv):
                elif prod_obj.state =='in_production':
                    return
                else:
-                   raise osv.except_osv(_('Error!'),_('Production Order Cannot start in [%s] state') % (prod_obj.state,))
+                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot start in state "%s"!') % (prod_obj.state,))
         else:
             oper_ids = self.search(cr,uid,[('production_id','=',prod_obj.id)])
             obj = self.browse(cr,uid,oper_ids)
@@ -458,30 +458,30 @@ class mrp_operations_operation(osv.osv):
                  code_lst.append(oper.code_id.start_stop)
             if code.start_stop=='start':
                     if 'start' in code_lst:
-                        raise osv.except_osv(_('Sorry!'),_('Operation has already started !' 'You  can either Pause /Finish/Cancel the operation'))
+                        raise osv.except_osv(_('Sorry!'),_('Operation has already started !' 'Youcan either Pause/Finish/Cancel the operation'))
                         return False
             if code.start_stop=='pause':
                     if  code_lst[len(code_lst)-1]!='resume' and code_lst[len(code_lst)-1]!='start':
-                        raise osv.except_osv(_('Error!'),_('You cannot Pause the Operation other then Start/Resume state !'))
+                        raise osv.except_osv(_('Error!'),_('In order to Pause the operation, it must be in the Start or Resume state!'))
                         return False
             if code.start_stop=='resume':
                 if code_lst[len(code_lst)-1]!='pause':
-                   raise osv.except_osv(_('Error!'),_(' You cannot Resume the operation other then Pause state !'))
+                   raise osv.except_osv(_('Error!'),_('In order to Resume the operation, it must be in the Pause state!'))
                    return False
 
             if code.start_stop=='done':
                if code_lst[len(code_lst)-1]!='start' and code_lst[len(code_lst)-1]!='resume':
-                  raise osv.except_osv(_('Sorry!'),_('You cannot finish the operation without Starting/Resuming it !'))
+                  raise osv.except_osv(_('Sorry!'),_('In order to Finish the operation, it must be in the Start or Resume state!'))
                   return False
                if 'cancel' in code_lst:
-                  raise osv.except_osv(_('Sorry!'),_('Operation is Already Cancelled  !'))
+                  raise osv.except_osv(_('Sorry!'),_('Operation is Already Cancelled!'))
                   return False
             if code.start_stop=='cancel':
                if  not 'start' in code_lst :
-                   raise osv.except_osv(_('Error!'),_('There is no Operation to be cancelled !'))
+                   raise osv.except_osv(_('Error!'),_('There is no Operation to be cancelled!'))
                    return False
                if 'done' in code_lst:
-                  raise osv.except_osv(_('Error!'),_('Operation is already finished !'))
+                  raise osv.except_osv(_('Error!'),_('Operation is already finished!'))
                   return False
         return True
 

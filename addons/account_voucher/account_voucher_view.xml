@@ -6,7 +6,7 @@
             <field name="model">account.voucher</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');gray:state in ('cancel');red:audit" string="Voucher Entries">
+                <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
@@ -43,7 +43,7 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
@@ -102,7 +102,7 @@
                         </page>
                     </notebook>
                     <group col="10" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                         <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
                         <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
                         <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
@@ -119,7 +119,7 @@
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                         <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
                         <separator orientation="vertical"/>
@@ -130,12 +130,12 @@
                         <field name="partner_id"/>
                     </group>
                     <newline/>
-                    <group col='8' colspan='4'>
+                    <group>
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="10">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>

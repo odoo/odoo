@@ -80,6 +80,7 @@ Thanks to the double entry management, the inventory controlling is powerful and
     ],
     'test': ['test/stock_test.yml',
              'test/stock_report.yml',
+             'test/stock_test_wizard.yml',
              ],
     'installable': True,
     'active': False,

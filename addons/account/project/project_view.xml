@@ -28,15 +28,15 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
                         <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-go-today" string="Overdue Account" domain="[('date','&lt;',time.strftime('%%Y-%%m-%%d'))]" help="Analytic Accounts with a past deadline."/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="partner_id" select="1"/>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="partner_id"/>
                         <field name="user_id" widget="selection"/>
                     </group>
                     <newline/>
@@ -57,7 +57,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                <tree colors="blue:type == 'view';red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>
@@ -204,7 +204,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
-                    <group col='6' colspan='4'>
+                    <group>
                         <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
                         <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
                         <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
@@ -430,13 +430,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Entries Stats">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-go-year" string="This Year" domain="[('name','=',time.strftime('%%Y'))]" help="Sale journal in this year"/>
                            <filter icon="terp-go-month" string="This Month" domain="[('month','=',time.strftime('%%m'))]" help="Sale journal in this month"/>
                            <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
-                           <field name="month" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="name"/>
+                           <field name="month"/>
+                        <field name="account_id"/>
                     </group>
                 </search>
             </field>

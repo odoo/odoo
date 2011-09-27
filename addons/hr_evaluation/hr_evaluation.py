@@ -24,7 +24,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 from osv import fields, osv
-import tools
 from tools.translate import _
 
 class hr_evaluation_plan(osv.osv):
@@ -159,7 +158,7 @@ class hr_evaluation(osv.osv):
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
-            ('draft','Draft'),
+            ('draft','New'),
             ('wait','Plan In Progress'),
             ('progress','Waiting Appreciation'),
             ('done','Done'),
@@ -193,6 +192,7 @@ class hr_evaluation(osv.osv):
         return {'value': {'plan_id':evaluation_plan_id}}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
+        mail_message = self.pool.get('mail.message')
         hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
         if context is None:
             context = {}
@@ -229,7 +229,7 @@ class hr_evaluation(osv.osv):
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           tools.email_send(evaluation.employee_id.work_email, dest, sub, body)
+                           mail_message.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, context=context)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
