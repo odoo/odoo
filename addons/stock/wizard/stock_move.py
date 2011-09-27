@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-
+from tools.translate import _
 import decimal_precision as dp
 
 class stock_move_consume(osv.osv_memory):
@@ -192,7 +192,7 @@ class split_in_production_lot(osv.osv_memory):
         """
         if context is None:
             context = {}
-        self.split(cr, uid, ids, context.get('active_ids'), context=context)
+        res = self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
@@ -231,7 +231,8 @@ class split_in_production_lot(osv.osv_memory):
                     uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
                     if quantity_rest < 0:
                         quantity_rest = quantity
-                        break
+                        self.pool.get('stock.move').log(cr, uid, move.id, _('Unable to assign all lots to this move!'))
+                        return False
                     default_val = {
                         'product_qty': quantity,
                         'product_uos_qty': uos_qty,
