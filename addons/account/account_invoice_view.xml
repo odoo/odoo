@@ -205,7 +205,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -234,7 +234,6 @@
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
-                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name" groups="base.group_extended"/>
                                     <field name="journal_id"/>
@@ -300,7 +299,7 @@
                                 <field name="amount_tax"/>
                                 <field name="reconciled"/>
                                 <field name="amount_total"/>
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                                 <field name="residual"/>
                                 <group col="8" colspan="4" groups="base.group_user">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
@@ -333,7 +332,6 @@
                             <field name="payment_ids" colspan="4" nolabel="1">
                                 <tree string="Payments">
                                     <field name="date"/>
-                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
                                     <field name="journal_id" groups="base.group_user"/>

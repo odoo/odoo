@@ -85,5 +85,58 @@
             <field name="type">automatic</field>
         </record>
 
+        <record id="action_bank_account_configuration_installer" model="ir.actions.act_window">
+            <field name="name">Define your Bank Account</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+        </record>
+
+        <record id="bank_account_configuration_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_bank_account_configuration_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+        </record>
+
+        <record id="action_view_financial_accounts_installer" model="ir.actions.act_window">
+            <field name="name">Review your Financial Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="view_financial_accounts_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_view_financial_accounts_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
+
+        <record id="action_review_financial_journals_installer" model="ir.actions.act_window">
+            <field name="name">Review your Financial Journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="review_financial_journals_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_review_financial_journals_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
+        <record id="action_review_payment_terms_installer" model="ir.actions.act_window">
+            <field name="name">Review your Payment Terms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.payment.term</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="review_payment_terms_todo" model="ir.actions.todo">
+            <field name="action_id" ref="action_review_payment_terms_installer" />
+            <field name="category_id" ref="category_accounting_configuration" />
+            <field name="groups_id" eval="[(6, 0, [ref('account.group_account_user')])]" />
+        </record>
     </data>
 </openerp>

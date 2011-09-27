@@ -158,7 +158,7 @@ class hr_evaluation(osv.osv):
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
-            ('draft','Draft'),
+            ('draft','New'),
             ('wait','Plan In Progress'),
             ('progress','Waiting Appreciation'),
             ('done','Done'),
