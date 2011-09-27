@@ -247,7 +247,7 @@
                 </page>
             </notebook>
             <group colspan="4" col="6">
-                <field name="state"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,open,close"/>
                 <button name="idea_open" string="Open" states="draft" icon="gtk-go-forward"/>
                 <button name="idea_close" string="Accept" states="open" icon="gtk-jump-to"/>
                 <button name="idea_cancel" string="Refuse" states="open"  icon="gtk-cancel"/>
@@ -289,8 +289,9 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group>
-                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
-                    <filter icon="terp-camera_test" string="Accepted"
+                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
+                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
+                    <filter icon="terp-check" string="Accepted"
                         domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
                     <field name="name"/>

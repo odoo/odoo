@@ -139,7 +139,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'sign': fields.selection([(-1, 'Negative'), (1, 'Positive')], 'Sign on Reports', required=True, help='Allows you to change the sign of the balance amount displayed in the reports, so that you can see positive figures instead of negative ones in expenses accounts.'),
+        'sign': fields.selection([(-1, 'Reverse balance sign'), (1, 'Preserve balance sign')], 'Sign on Reports', required=True, help='For accounts that are typically more debited than credited and that you would like to print as negative amounts in your reports, you should reverse the sign of the balance; e.g.: Expense account. The same applies for  accounts that are typically more credited than debited and that you would like to print as positive amounts in your reports; e.g.: Income account.'),
         'report_type':fields.selection([
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
@@ -250,6 +250,7 @@ class account_account(osv.osv):
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
@@ -306,12 +307,11 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-            null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
             for id in ids:
-                res[id] = 0.0
+                res[id] = null_result
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -722,8 +722,6 @@ class account_journal(osv.osv):
             name = rs.name
             if rs.currency:
                 name = "%s (%s)" % (rs.name, rs.currency.name)
-            else:
-                name = "%s (%s)" % (rs.name, rs.company_id.currency_id.name)
             res += [(rs.id, name)]
         return res
 
@@ -932,17 +930,10 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
-        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
-        if context.get('company_id', False):
-            args.append(('company_id', '=', context['company_id']))
-        else:
-            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-            args.append(('company_id', '=', company_id))
-        ids = self.search(cr, uid, args, context=context)
+        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
         return ids
@@ -2637,6 +2628,10 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
+# ---------------------------------------------------------
+# Account Financial Report
+# ---------------------------------------------------------
+
 class account_financial_report(osv.osv):
     _name = "account.financial.report"
     _description = "Account Report"
@@ -2691,17 +2686,19 @@ class account_financial_report(osv.osv):
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
+        'note': fields.text('Notes'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
         'type': fields.selection([
-            ('sum','Sum'),
+            ('sum','View'),
             ('accounts','Accounts'),
-            ('account_report','Account Report'),
+            ('account_type','Account Type'),
+            ('account_report','Report Value'),
             ],'Type'),
         'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
-        'note': fields.text('Notes'),
-        'account_report_id':  fields.many2one('account.financial.report', 'Account Report'),
-        'balance': fields.function(_get_balance, 'Balance'),
-        'display_detail': fields.boolean('Display the account list'),
-        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'display_detail': fields.boolean('Display details', help='Display every account with its balance instead of the sum.'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Report Value'),
+        'account_type_ids': fields.many2many('account.account.type', 'account_account_financial_report_type', 'report_id', 'account_type_id', 'Account Types'),
     }
 
     _defaults = {
@@ -2710,7 +2707,9 @@ class account_financial_report(osv.osv):
 
 account_financial_report()
 
-    # Multi charts of Accounts wizard
+# ---------------------------------------------------------
+# Account generation from template wizards
+# ---------------------------------------------------------
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """

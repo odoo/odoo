@@ -96,8 +96,8 @@ You can use the demo data as follow:
     ],
     'installable': True,
     'test':[
-#            'test/stock_location_pull_flow.yml',
-#            'test/stock_location_push_flow.yml',
+            'test/stock_location_pull_flow.yml',
+            'test/stock_location_push_flow.yml',
     ],
     'active': False,
     'certificate': '0046505115101',

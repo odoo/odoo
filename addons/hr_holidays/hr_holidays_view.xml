@@ -8,10 +8,9 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <group>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/>
                         <filter string="This Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
@@ -84,7 +83,7 @@
                             <separator string="Reasons" colspan="4"/>
                             <field name="notes" nolabel="1" colspan="4"/>
                             <newline/>
-                            <field name="state" colspan="2"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                             <group colspan="2" col="6">
                                 <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user,base.group_hr_manager"/>
                                 <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
@@ -127,7 +126,7 @@
                         <separator string="Reasons" colspan="4"/>
                         <field name="notes" nolabel="1" colspan="4"/>
                         <newline/>
-                        <field name="state" colspan="2"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}' colspan="2"/>
                         <group colspan="2" col="6">
                             <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
@@ -446,7 +445,7 @@
         </record>  
 
         <record model="ir.actions.act_window" id="hr_holidays_leaves_assign_legal">
-           <field name="name">Assign Legal Leaves to Employees</field>
+           <field name="name">Allocate Leaves for Employees</field>
            <field name="type">ir.actions.act_window</field>
            <field name="res_model">hr.employee</field>
            <field name="view_type">form</field>
