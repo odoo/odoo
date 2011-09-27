@@ -236,7 +236,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
             $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
             this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
-             this.secondary.start();
+            this.secondary.start();
         }else{
             $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
         }
@@ -250,9 +250,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
     start: function(ev, id) {
         var self = this;
         var v = { menu : this.data };
-
         this.$element.html(QWeb.render("Menu.secondary", v));
-
         this.$element.find("[data-role=header]").find("h1").html(this.data.name);
         this.$element.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
         this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
@@ -276,22 +274,50 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
         this.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
         });
-
         $.mobile.changePage("#"+this.element_id, "slide", false, true);
     },
     on_menu_click: function(ev, id) {
-        var $menu = $(ev.currentTarget);
+        $menu = $(ev.currentTarget);
         id = $menu.data('menu');
+        name = $menu.data('name');
         ev.preventDefault();
         ev.stopPropagation();
-
-        if(!$('[id^="oe_list_'+id+'"]').html()){
+        var child_len = 0;
+        for (var i = 0; i < this.data.children.length; i++) {
+        	for (var j=0; j < this.data.children[i].children.length; j++) {
+        		if (this.data.children[i].children[j].id == id) {
+        			this.children = this.data.children[i].children[j];
+        			child_len = this.children.children.length;
+        		}
+        	}
+        }
+        if (child_len > 0) {
+            this.$element
+            .addClass("secondary_menu");
+	        if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
+	            $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
+	            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
+	            this.secondary.start();
+	        }else{
+	            $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
+	        }
+        }
+        else {
+            if(!$('[id^="oe_list_'+id+'"]').html()){
+                $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
+                this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
+                this.listview.start();
+            }else{
+                $.mobile.changePage('#oe_list_'+id, "slide", false, true);
+            }
+        }
+/*        if(!$('[id^="oe_list_'+id+'"]').html()){
             $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
             this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
             this.listview.start();
         }else{
             $.mobile.changePage('#oe_list_'+id, "slide", false, true);
-        }
+        }*/
         jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
 });

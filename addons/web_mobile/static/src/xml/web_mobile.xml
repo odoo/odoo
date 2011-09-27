@@ -95,12 +95,19 @@
         <t t-foreach="menu.children" t-as="menu1" >
             <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview">
                 <li data-role="list-divider">
-                    <t t-esc="menu1.name"/>
+                	<t t-if="(menu1.children.length)">
+                		<t t-esc="menu1.name"/>
+                    </t>
+                    <t t-if="!(menu1.children.length)">
+                    	<a href="#" t-attf-id="menu_#{menu1.id}" t-att-data-menu="menu1.id" t-att-data-name="menu1.name">
+                			<t t-esc="menu1.name"/>
+                		</a>
+                	</t>
                 </li>
                 <t t-if="menu1.children.length">
                     <li data-theme="c" t-foreach="menu1.children" t-as="childmenu" >
                         <a href="#" t-attf-id="menu_#{childmenu.id}" t-att-data-menu="childmenu.id" t-att-data-name="childmenu.name">
-                          <t t-esc="childmenu.name" />
+                        	<t t-esc="childmenu.name" />
                         </a>
                     </li>
                 </t>
