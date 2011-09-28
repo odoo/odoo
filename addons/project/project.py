@@ -79,20 +79,37 @@ class project(osv.osv):
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
         return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
 
-    def get_childs(self, cr, uid, ids, context=None):
+    def _get_childs(self, cr, uid, ids, childs,context=None):
         cr.execute("""SELECT id FROM project_project WHERE analytic_account_id IN (
                         SELECT id FROM account_analytic_account WHERE parent_id = (
 	                        SELECT  analytic_account_id FROM project_project project
 		                        LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
 		                        WHERE project.id = %s
                             )
-                        )"""%(ids))            
-        return cr.fetchall()
+                        )"""%(ids)) 
+        for child in cr.fetchall():
+            if child:
+                if child[0] not in childs: childs.append(child[0])
+                self._get_childs( cr, uid, child[0], childs,context)
+        return childs
+
+
+    def _get_parents(self, cr, uid, ids, parents,context=None):
+        for project in self.read(cr, uid, ids, ['id', 'parent_id'],context):
+            if project.get('parent_id'):
+                cr.execute('''SELECT id FROM project_project WHERE analytic_account_id = '%s' '''%project.get('parent_id')[0])
+                for child in cr.fetchall():
+                    if child[0] not in parents: parents.append(child[0])
+                    child_rec= self.read(cr, uid, child[0], ['id', 'parent_id'],context)
+                    if child_rec.get('parent_id'):
+                        parents = self._get_parents(cr, uid, [child[0]], parents,context)
+        return parents
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
             return res
+        parents = self._get_parents(cr, uid, ids, ids,context)
         cr.execute('''SELECT
                 project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
             FROM
@@ -103,31 +120,41 @@ class project(osv.osv):
             GROUP BY
                 project_id''', (tuple(ids),))
         progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
-        for project in self.browse(cr, uid, ids, context=context):
-            childs = self.get_childs( cr, uid, project.id, context)
-            project_ids = [project.id]
-            if childs:
-                project_ids += [ child[0] for child in childs ]
+        for project in self.browse(cr, uid, parents, context=context):
+            childs = []
+            childs = self._get_childs(cr, uid, project.id, childs,context)
+            s = progress.get(project.id, (0.0,0.0,0.0,0.0))
             res[project.id] = {
-                    'planned_hours':0.0,
-                    'effective_hours': 0.0, 
-                    'total_hours': 0.0, 
-                    'progress_rate':0.0
+                'planned_hours': s[0],
+                'effective_hours': s[2],
+                'total_hours': s[1],
+                'progress_rate': s[1] and round(100.0*s[2]/s[1],2) or 0.0
             }
             planned_hours, effective_hours, total_hours= 0.0, 0.0,0.0
-            for child in project_ids:
-                s = progress.get(child, (0.0,0.0,0.0,0.0))
-                planned_hours, effective_hours, total_hours = planned_hours+s[0] or 0.0, effective_hours+s[2] or 0.0, total_hours+s[1] or 0.0
-            if planned_hours == 0: 
-                rnd = 0.0
-            else:
-                rnd = round((effective_hours/planned_hours)*100,2) or 0.0
-            res[project.id] = {
-                'planned_hours': res.get(project.id).get('planned_hours')+ planned_hours,
-                'effective_hours': res.get(project.id).get('effective_hours')+ effective_hours,
-                'total_hours': res.get(project.id).get('total_hours')+ total_hours,
-                'progress_rate': rnd
-            }
+            if childs:
+                cr.execute('''SELECT
+                    project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
+                FROM
+                    project_task
+                WHERE
+                    project_id in %s AND
+                    state<>'cancelled'
+                GROUP BY
+                    project_id''', (tuple(childs),))
+                progress2 = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
+                for child in childs:
+                    s2 = progress2.get(child, (0.0,0.0,0.0,0.0))
+                    planned_hours, effective_hours, total_hours = planned_hours+s2[0], effective_hours+s2[2] , total_hours+s2[1]
+                if planned_hours == 0: 
+                    rnd = 0.0
+                else:
+                    rnd = round((effective_hours/planned_hours)*100,2) or 0.0
+                res[project.id] = {
+                    'planned_hours': res.get(project.id).get('planned_hours')+ planned_hours,
+                    'effective_hours': res.get(project.id).get('effective_hours')+ effective_hours,
+                    'total_hours': res.get(project.id).get('total_hours')+ total_hours,
+                    'progress_rate': res.get(project.id).get('progress_rate')+ rnd
+                }
         return res
 
     def _get_project_task(self, cr, uid, ids, context=None):
@@ -166,13 +193,13 @@ class project(osv.osv):
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
+                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks', 'parent_id'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
+                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks','parent_id'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
