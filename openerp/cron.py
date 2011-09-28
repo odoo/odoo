@@ -176,6 +176,7 @@ def runner_body():
             timestamp, db_name, canceled = task
             if canceled:
                 continue
+            del _wakeup_by_db[db_name]
             registry = openerp.pooler.get_pool(db_name)
             if not registry._init:
                 _logger.debug("Database '%s' wake-up! Firing multi-threaded cron job processing", db_name)
