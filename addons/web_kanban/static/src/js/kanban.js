@@ -33,9 +33,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         var self = this;
         this.fields_view = data;
         this.add_qweb_template();
-        if (this.qweb.has_template('kanban-box')) {
-            this.do_actual_search();
-        }
     },
     add_qweb_template: function() {
         var group_operator = ["avg", "max", "min", "sum", "count"]

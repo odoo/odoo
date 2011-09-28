@@ -26,7 +26,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.view_id = view_id;
     },
     do_show: function () {
-        // TODO: re-trigger search
         this.$element.show();
     },
     do_hide: function () {

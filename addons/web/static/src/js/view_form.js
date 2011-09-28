@@ -443,9 +443,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().then(success).resolve(_.extend(r, {created: true}));
         }
     },
-    do_search: function (domains, contexts, groupbys) {
-        console.debug("Searching form");
-    },
     on_action: function (action) {
         console.debug('Executing action', action);
     },

@@ -353,9 +353,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
-        if (!_(this.dataset.ids).isEmpty()) {
-            this.reload_content();
-        }
     },
     do_hide: function () {
         this.$element.hide();
