@@ -166,6 +166,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         this.model = dataset.model;
         this.dataset = dataset;
         this.searchview = null;
+        this.last_search = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
@@ -233,9 +234,9 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             this.views[view_type].controller = controller;
         }
 
-
-        if (this.searchview && !this.searchview.hidden) {
-            this.searchview[view.controller.searchable === false ? 'hide' : 'show']();
+        if (this.searchview) {
+            this.do_searchview_search();
+            this.searchview[view.controller.searchable === false || this.searchview.hidden ? 'hide' : 'show']();
         }
 
         this.$element
@@ -254,6 +255,33 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             }
         }
         return view_promise;
+    },
+    /**
+     * Sets up the current viewmanager's search view.
+     *
+     * @param {Number|false} view_id the view to use or false for a default one
+     * @returns {jQuery.Deferred} search view startup deferred
+     */
+    setup_search_view: function(view_id, search_defaults) {
+        var self = this;
+        if (this.searchview) {
+            this.searchview.stop();
+        }
+        this.searchview = new db.web.SearchView(
+                this, this.dataset,
+                view_id, search_defaults, this.flags.search_view === false);
+
+        this.searchview.on_search.add(this.do_searchview_search);
+        return this.searchview.appendTo($("#" + this.element_id + "_search"));
+    },
+    do_searchview_search: function(domains, contexts, groupbys) {
+        if (domains) {
+            this.last_search = [domains, contexts, groupbys];
+        }
+        if (this.last_search) {
+            var controller = this.views[this.active_view].controller;
+            controller.do_search.apply(controller, this.last_search);
+        }
     },
     /**
      * Event launched when a controller has been inited.
@@ -307,7 +335,6 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
             // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
-        this.last_search = false;
 
         // setup storage for session-wise menu hiding
         if (this.session.hidden_menutips) {
@@ -382,37 +409,9 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         return $.when(
             this._super(view_type),
             this.shortcut_check(this.views[view_type])).then(function () {
-                self.do_searchview_search();
                 var view_id = self.views[self.active_view].controller.fields_view.view_id;
                 self.$element.find('.oe_get_xml_view span').text(view_id);
         });
-    },
-    /**
-     * Sets up the current viewmanager's search view.
-     *
-     * @param {Number|false} view_id the view to use or false for a default one
-     * @returns {jQuery.Deferred} search view startup deferred
-     */
-    setup_search_view: function(view_id, search_defaults) {
-        var self = this;
-        if (this.searchview) {
-            this.searchview.stop();
-        }
-        this.searchview = new db.web.SearchView(
-                this, this.dataset,
-                view_id, search_defaults, this.flags.search_view === false);
-
-        this.searchview.on_search.add(this.do_searchview_search);
-        return this.searchview.appendTo($("#" + this.element_id + "_search"));
-    },
-    do_searchview_search: function(domains, contexts, groupbys) {
-        if (domains) {
-            this.last_search = [domains, contexts, groupbys];
-        }
-        if (this.last_search) {
-            var controller = this.views[this.active_view].controller;
-            controller.do_search.apply(controller, this.last_search);
-        }
     },
     shortcut_check : function(view) {
         var self = this;
