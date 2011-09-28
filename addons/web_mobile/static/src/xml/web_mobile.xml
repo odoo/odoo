@@ -41,7 +41,6 @@
     <div data-role="footer" data-theme="b" data-position="fixed">
         <h1>Powered by openerp.com</h1>
     </div>
-
 </t>
 
 <t t-name="Header">
@@ -75,6 +74,7 @@
    </div>
    <t t-call="Footer" />
 </t>
+
 <t t-name="Menu">
     <t t-call="Header" />
     <div id="content" data-role="content">
@@ -95,19 +95,19 @@
         <t t-foreach="menu.children" t-as="menu1" >
             <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview">
                 <li data-role="list-divider">
-                	<t t-if="(menu1.children.length)">
-                		<t t-esc="menu1.name"/>
+                    <t t-if="(menu1.children.length)">
+                        <t t-esc="menu1.name"/>
                     </t>
                     <t t-if="!(menu1.children.length)">
-                    	<a href="#" t-attf-id="menu_#{menu1.id}" t-att-data-menu="menu1.id" t-att-data-name="menu1.name">
-                			<t t-esc="menu1.name"/>
-                		</a>
-                	</t>
+                        <a href="#" t-attf-id="menu_#{menu1.id}" t-att-data-menu="menu1.id" t-att-data-name="menu1.name">
+                            <t t-esc="menu1.name"/>
+                        </a>
+                    </t>
                 </li>
                 <t t-if="menu1.children.length">
                     <li data-theme="c" t-foreach="menu1.children" t-as="childmenu" >
                         <a href="#" t-attf-id="menu_#{childmenu.id}" t-att-data-menu="childmenu.id" t-att-data-name="childmenu.name">
-                        	<t t-esc="childmenu.name" />
+                            <t t-esc="childmenu.name" />
                         </a>
                     </li>
                 </t>
@@ -116,6 +116,7 @@
     </div>
      <t t-call="Footer" />
 </t>
+
 <t t-name="Options">
     <t t-call="Header" />
     <div data-role="content">
@@ -141,11 +142,11 @@
     </div>
     <t t-call="Footer" />
 </t>
+
 <t t-name="FormView">
     <t t-if="temp_flag">
         <t t-call="Header" />
     </t>
-
     <div data-role="content">
         <form>
             <t t-foreach="get_fields" t-as="field">
@@ -181,19 +182,18 @@
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
                         <t t-if="values[field.attrs.name] and field.attrs.name=='progress_rate'">
-                        	<div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
+                            <div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
                         </t>
                         <t t-if="!(values[field.attrs.name]) and field.attrs.name=='progress_rate'">
-                        	<div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
+                            <div id="progress" value="" title="Percent of tasks closed according to total of tasks to do..."></div>
                         </t>
                          <t t-if="values[field.attrs.name] and field.attrs.name!='progress_rate'">
                             <input id="" type="text" t-att-value="values[field.attrs.name]"/>
                         </t>
                         <t t-if="!values[field.attrs.name] and field.attrs.name!='progress_rate'">
-                       		<input id="" type="text" value=""/>
+                            <input id="" type="text" value=""/>
                          </t>
                     </t>
-
                     <t t-if="fields[field.attrs.name].type == 'date'">
                         <label for="">
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
@@ -276,23 +276,17 @@
                      </t>
                 </div>
             </t>
-           <t t-if="notebooks">
+            <t t-if="notebooks">
                 <div data-role="collapsible-set">
                     <t t-foreach="notebooks.children" t-as="page">
                         <t t-if="page.attrs.invisible">
                             <div style="display:none;" data-collapsed="true" data-role="collapsible" t-att-id="page.attrs.string">
-                                <h3>
-                                        <t t-esc="page.attrs.string"></t>
-                                </h3>
-                                <p></p>
+                                <h3><t t-esc="page.attrs.string"></t></h3>
                             </div>
                         </t>
                         <t t-if="!page.attrs.invisible">
                             <div data-collapsed="true" data-role="collapsible" t-att-id="page.attrs.string">
-                                <h3>
-                                        <t t-esc="page.attrs.string"></t>
-                                </h3>
-                                <p></p>
+                                <h3><t t-esc="page.attrs.string"></t></h3>
                             </div>
                         </t>
                     </t>

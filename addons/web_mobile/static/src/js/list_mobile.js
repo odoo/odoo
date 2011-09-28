@@ -10,8 +10,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         this.list_id = list_id;
     },
     start: function() {
-        this.rpc('/web/menu/action', {'menu_id': this.list_id},
-                    this.on_menu_action_loaded);
+        this.rpc('/web/menu/action', {'menu_id': this.list_id}, this.on_menu_action_loaded);
     },
     on_menu_action_loaded: function(data) {
         var self = this;
@@ -30,11 +29,10 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                 $.mobile.changePage("#oe_menu", "slide", false, true);
             });
             self.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
-                if(!$('#oe_shortcuts').html().length){
+                if (!$('#oe_shortcuts').html().length) {
                     this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
                     this.shortcuts.start();
-                }
-                else{
+                }else{
                     $.mobile.changePage("#oe_shortcuts", "slide", false, true);
                 }
             });
@@ -42,8 +40,7 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
                 if(!$('#oe_options').html().length){
                     this.options = new openerp.web_mobile.Options(self, "oe_options");
                     this.options.start();
-                }
-                else{
+                }else{
                     $.mobile.changePage("#oe_options", "slide", false, true);
                 }
             });
@@ -58,7 +55,6 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         ev.stopPropagation();
         id = $record.data('id');
         head_title = $.trim($record.text());
-
         if(!$('[id^="oe_form_'+id+this.action.res_model+'"]').html()){
             $('<div id="oe_form_'+id+this.action.res_model+'" data-role="page" data-url="oe_form_'+id+this.action.res_model+'"> </div>').appendTo('#moe');
             this.formview = new openerp.web_mobile.FormView(this, "oe_form_"+id+this.action.res_model, id, this.action, head_title, '' ,'');

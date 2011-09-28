@@ -33,20 +33,16 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
 
 openerp.web_mobile.Login =  openerp.web.Widget.extend({
     start: function() {
-
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.remember_creditentials = true;
         this.selected_login = null;
         this.selected_password = null;
-
         if (this.has_local_storage && this.remember_creditentials) {
             this.selected_login = localStorage.getItem('last_login_login_success');
             this.selected_password = localStorage.getItem('last_password_login_success');
         }
-
         var self = this;
         jQuery("#oe_header").children().remove();
-
         this.rpc("/web/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
@@ -66,7 +62,6 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         var db = $e.find("div select[name=database]").val();
         var login = $e.find("div input[name=login]").val();
         var password = $e.find("div input[name=password]").val();
-
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
@@ -116,6 +111,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         });
     }
 });
+
 openerp.web_mobile.Header =  openerp.web.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
@@ -142,7 +138,6 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
             self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
-
             self.$element.find("[data-role=header]").find('h1').html('Favourite');
             self.$element.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -167,7 +162,6 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         $shortcut = $(ev.currentTarget);
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
-
         if(!$('[id^="oe_list_'+res_id+'"]').html()){
             $('<div id="oe_list_'+res_id+'" data-role="page" data-url="oe_list_'+res_id+'"> </div>').appendTo('#moe');
             this.listview = new openerp.web_mobile.ListView(self, "oe_list_"+res_id, res_id);
@@ -198,7 +192,6 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.header.start();
         this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
         this.footer.start();
-
         this.$element.html(QWeb.render("Menu", this.data));
         this.$element.find("[data-role=header]").find('h1').html('Application');
         this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
@@ -235,7 +228,6 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.$element
             .removeClass("login_valid")
             .addClass("secondary_menu");
-
         if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
             $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
             this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
@@ -245,6 +237,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         }
     }
 });
+
 openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
@@ -287,23 +280,23 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
         ev.stopPropagation();
         var child_len = 0;
         for (var i = 0; i < this.data.children.length; i++) {
-        	for (var j=0; j < this.data.children[i].children.length; j++) {
-        		if (this.data.children[i].children[j].id == id) {
-        			this.children = this.data.children[i].children[j];
-        			child_len = this.children.children.length;
-        		}
-        	}
+            for (var j=0; j < this.data.children[i].children.length; j++) {
+                if (this.data.children[i].children[j].id == id) {
+                    this.children = this.data.children[i].children[j];
+                    child_len = this.children.children.length;
+                }
+            }
         }
         if (child_len > 0) {
             this.$element
             .addClass("secondary_menu");
-	        if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
-	            $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
-	            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
-	            this.secondary.start();
-	        }else{
-	            $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
-	        }
+            if(!$('[id^="oe_sec_menu_'+id+'"]').html()){
+                $('<div id="oe_sec_menu_'+id+'" data-role="page" data-url="oe_sec_menu_'+id+'"> </div>').appendTo('#moe');
+                this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_"+id, this.children);
+                this.secondary.start();
+            }else{
+                $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
+            }
         }
         else {
             if(!$('[id^="oe_list_'+id+'"]').html()){
@@ -314,13 +307,6 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
                 $.mobile.changePage('#oe_list_'+id, "slide", false, true);
             }
         }
-/*        if(!$('[id^="oe_list_'+id+'"]').html()){
-            $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
-            this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
-            this.listview.start();
-        }else{
-            $.mobile.changePage('#oe_list_'+id, "slide", false, true);
-        }*/
         jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
 });
@@ -328,7 +314,6 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
 openerp.web_mobile.Options =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
-
         this.$element.html(QWeb.render("Options", this));
         this.$element.find("[data-role=header]").find('h1').html('Preference');
         this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
