@@ -173,7 +173,7 @@ class RegistryManager(object):
                 cr.close()
 
             if pooljobs:
-                registry.registry.start_cron_thread()
+                registry.schedule_cron_jobs()
 
             return registry
 
