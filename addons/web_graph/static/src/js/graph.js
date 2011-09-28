@@ -178,6 +178,9 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             // columns on top of one another instead of side by side), but it
             // does not handle clustered stacked bar charts
             if (this.columns.length > 1) {
+                this.$element.text(
+                    'OpenERP Web does not support combining grouping and '
+                  + 'multiple columns in graph at this time.');
                 throw new Error(
                     'dhtmlx can not handle columns counts of that magnitude');
             }
