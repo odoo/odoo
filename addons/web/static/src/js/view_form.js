@@ -1878,6 +1878,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 switch (command[0]) {
                     case commands.CREATE:
                         obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                        obj.defaults = {};
                         self.dataset.to_create.push(obj);
                         self.dataset.cache.push(_.clone(obj));
                         ids.push(obj.id);
@@ -1907,6 +1908,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             _.each(value, function(command) {
                 var obj = {values: command};
                 obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                obj.defaults = {};
                 self.dataset.to_create.push(obj);
                 self.dataset.cache.push(_.clone(obj));
                 ids.push(obj.id);
