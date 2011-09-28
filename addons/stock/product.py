@@ -452,7 +452,7 @@ class product_category(osv.osv):
         'property_stock_variation': fields.property('account.account',
             type='many2one',
             relation='account.account',
-            string="Stock Variation Account",
+            string="Stock Valuation Account",
             view_load=True,
             help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",),
     }
