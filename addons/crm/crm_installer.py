@@ -30,6 +30,7 @@ class crm_installer(osv.osv_memory):
         'crm_helpdesk': fields.boolean('Helpdesk', help="Manages a Helpdesk service."),
         'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fundraising process and tracking."),
         'crm_claim': fields.boolean('Claims', help="Manages the suppliers and customers claims, including your corrective or preventive actions."),
+        'import_sugarcrm': fields.boolean('Import Data from SugarCRM', help="Help you to import and update data from SugarCRM to OpenERP"),
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
         'sale_crm': fields.boolean('Opportunity to Quotation', help="Create a Quotation from an Opportunity."),
         'fetchmail': fields.boolean('Fetch Emails', help="Allows you to receive E-Mails from POP/IMAP server."),
@@ -49,6 +50,7 @@ class crm_installer(osv.osv_memory):
             nodes = doc.xpath("//field[@name='sale_crm']")
             for node in nodes:
                 node.set('invisible', '0')
+                node.set('modifiers', '{}')
             res['arch'] = etree.tostring(doc)
         return res
 

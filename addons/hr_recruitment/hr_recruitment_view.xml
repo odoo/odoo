@@ -132,7 +132,7 @@
                         </group>
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
-                            <field name="state"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
@@ -172,7 +172,7 @@
                                                 icon="terp-mail-replied" type="action"/>
                                         </group>
                                         <group attrs="{'invisible': [('email_from', '!=', False)]}">
-                                            <field name="body_text" colspan="4" nolabel="1"  height="250"/>
+                                            <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                         </group>
                                     </page>
                                     <page string="Attachments">
@@ -217,12 +217,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-check" string="Current"
-                   domain="[('state','in',('draft','open'))]"
-                   help="All new and in progress jobs"
-                   name="current"
-               />
-               <separator orientation="vertical"/>
                <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"

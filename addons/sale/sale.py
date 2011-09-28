@@ -199,7 +199,7 @@ class sale_order(osv.osv):
         'state': fields.selection([
             ('draft', 'Quotation'),
             ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
+            ('manual', 'To Invoice'),
             ('progress', 'In Progress'),
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
@@ -321,6 +321,16 @@ class sale_order(osv.osv):
             message = _("The sales order '%s' has been set in draft state.") %(name,)
             self.log(cr, uid, id, message)
         return True
+
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+        print order_lines
+        if (not pricelist_id) or (not order_lines):
+            return {}
+        warning = {
+            'title': _('Pricelist Warning!'),
+            'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
+        }
+        return {'warning': warning}
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
@@ -469,6 +479,7 @@ class sale_order(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         invoice = self.pool.get('account.invoice')
         obj_sale_order_line = self.pool.get('sale.order.line')
+        partner_currency = {}
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -476,6 +487,13 @@ class sale_order(osv.osv):
         if date_inv:
             context['date_inv'] = date_inv
         for o in self.browse(cr, uid, ids, context=context):
+            currency_id = o.pricelist_id.currency_id.id
+            if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
+                raise osv.except_osv(
+                    _('Error !'),
+                    _('You cannot group sales having different currencies for the same partner.'))
+
+            partner_currency[o.partner_id.id] = currency_id
             lines = []
             for line in o.order_line:
                 if line.invoiced:
@@ -710,6 +728,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
+                        'price_unit': line.product_id.standard_price or 0.0
                     })
                     
                 if line.product_id:

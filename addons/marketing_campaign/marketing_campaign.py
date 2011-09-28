@@ -113,7 +113,7 @@ this campaign to be run"),
 Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.
 With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled'),],
@@ -267,7 +267,7 @@ class marketing_campaign_segment(osv.osv):
                                            '"No duplicates" prevents selecting records which have already entered the campaign previously.'\
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
                                            'the same value for the unique field as other records that already entered the campaign.'),
-        'state': fields.selection([('draft', 'Draft'),
+        'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
                                    ('done', 'Done'),
                                    ('cancelled', 'Cancelled')],

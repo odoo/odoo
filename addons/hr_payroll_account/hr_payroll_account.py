@@ -125,7 +125,7 @@ class hr_payslip(osv.osv):
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
                 if credit_account_id:
                     line_ids.append(credit_line)
-                    credit_sum += credit_line[2]['credit'] - credit_line['debit']
+                    credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
             if debit_sum > credit_sum:
                 adjust_credit = (0, 0, {
