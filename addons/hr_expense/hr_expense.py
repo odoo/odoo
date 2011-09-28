@@ -82,6 +82,7 @@ class hr_expense_expense(osv.osv):
             ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
             ('paid', 'Reimbursed'),
+            ('invoice_except', 'Invoice Exception'),
             ('cancelled', 'Refused')],
             'State', readonly=True, help='When the expense request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Confirmation\'.\
             \nIf the admin accepts it, the state is \'Accepted\'.\n If an invoice is made for the expense request, the state is \'Invoiced\'.\n If the expense is paid to user, the state is \'Reimbursed\'.'),
@@ -223,6 +224,10 @@ class hr_expense_expense(osv.osv):
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res
+
+    def action_invoice_cancel(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
+        return True
 
 hr_expense_expense()
 
