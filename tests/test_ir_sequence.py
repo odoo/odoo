@@ -6,6 +6,7 @@
 #      OPENERP_DATABASE=yy nosetests tests/test_ir_sequence.py
 #    > OPENERP_ADDONS_PATH='../../../addons/trunk' OPENERP_PORT=8069 \
 #      OPENERP_DATABASE=yy PYTHONPATH=../:. unit2 test_ir_sequence
+# This assume an existing database.
 import os
 import psycopg2
 import time
@@ -149,6 +150,47 @@ class test_ir_sequence_change_implementation(unittest2.TestCase):
         registry('ir.sequence').unlink(cr, ADMIN_USER_ID, ids, {})
         cr.commit()
         cr.close()
+
+class test_ir_sequence_generate(unittest2.TestCase):
+    """ Create sequence objects and generate some values. """
+
+    def test_ir_sequence_create(self):
+        """ Try to create a sequence object. """
+        cr = cursor()
+        d = dict(code='test_sequence_type_5', name='Test sequence type')
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
+        assert c
+        d = dict(code='test_sequence_type_5', name='Test sequence')
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
+        assert c
+        cr.commit()
+        cr.close()
+
+        cr = cursor()
+        f = lambda *a: registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
+        assert all(str(x) == f() for x in xrange(1,1000))
+        cr.commit()
+        cr.close()
+
+    def test_ir_sequence_create_no_gap(self):
+        """ Try to create a sequence object. """
+        cr = cursor()
+        d = dict(code='test_sequence_type_6', name='Test sequence type',
+            implementation='no_gap')
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
+        assert c
+        d = dict(code='test_sequence_type_6', name='Test sequence')
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
+        assert c
+        cr.commit()
+        cr.close()
+
+        cr = cursor()
+        f = lambda *a: registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
+        assert all(str(x) == f() for x in xrange(1,1000))
+        cr.commit()
+        cr.close()
+        
 
 
 if __name__ == '__main__':
