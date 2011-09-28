@@ -242,7 +242,23 @@
         </table>
     </form>
 </t>
+
+<t t-name="Login_dblist">
+    <select name="db">
+        <t t-foreach="db_list" t-as="db">
+            <t t-if="selected_db === db">
+                <option t-att-value="db" selected="true">
+                    <t t-esc="db"/></option>
+            </t>
+            <t t-if="selected_db !== db">
+                <option t-att-value="db"><t t-esc="db"/></option>
+            </t>
+        </t>
+    </select>
+</t>
+
 <t t-name="Login">
+    <div>
     <form class="oe_forms">
         <fieldset>
             <legend style="">
@@ -253,22 +269,7 @@
                     <tr>
                         <td><label for="db">Database:</label></td>
                         <td>
-                            <t t-if="!db_list">
-                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
-                            </t>
-                            <t t-if="db_list">
-                                <select name="db">
-                                    <t t-foreach="db_list" t-as="db">
-                                        <t t-if="selected_db === db">
-                                            <option t-att-value="db" selected="true">
-                                                <t t-esc="db"/></option>
-                                        </t>
-                                        <t t-if="selected_db !== db">
-                                            <option t-att-value="db"><t t-esc="db"/></option>
-                                        </t>
-                                    </t>
-                                </select>
-                            </t>
+                            <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
                         </td>
                     </tr>
                     <tr>
@@ -329,6 +330,7 @@
             </tbody>
         </table>
 
+    </div>
     </div>
 </t>
 <t t-name="Header">
