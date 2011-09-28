@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,28 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import tools
+import time
+from osv import osv
+from osv import fields
 
-from partner import *
-from crm import *
-
-import wizard
-import report
-
-
+class res_partner_event(osv.osv):
+    _name = "res.partner.event"
+    _columns = {
+        'name': fields.char('Events', size=64, required=True),
+        'description': fields.text('Description'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=True),
+        'date': fields.datetime('Date', size=16),
+        'user_id': fields.many2one('res.users', 'User'),
+    }
+    _order = 'date desc'
+    _defaults = {
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'user_id': lambda self, cr, uid, context: uid,
+    }
+res_partner_event()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

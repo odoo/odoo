@@ -34,9 +34,9 @@
       try:
           self.test_00(our_cr, uid) # this will commit using the passed cursor
           import openerp.cron
-          openerp.cron._thread_count = 4
+          openerp.cron._thread_slots = 4
           # Wake up this db as soon as the master cron thread starts.
-          openerp.cron.schedule_in_advance(1, self.pool.db.dbname)
+          openerp.cron.schedule_wakeup(1, self.pool.db.dbname)
           # Pretend to be the master thread, for 4 iterations.
           openerp.cron.runner_body()
           openerp.cron.runner_body()

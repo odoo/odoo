@@ -24,6 +24,10 @@
                         <page string="Users">
                             <field colspan="4" name="users" nolabel="1"/>
                         </page>
+                        <page string="Inherited">
+                            <label colspan="4" string="Users added to this group are automatically added in the following groups."/>
+                            <field colspan="4" name="implied_ids" nolabel="1"/>
+                        </page>
                         <page string="Menus">
                             <field colspan="4" name="menu_access" nolabel="1"/>
                         </page>
@@ -71,31 +75,29 @@
     -->
 
         <record id="view_users_form_simple_modif" model="ir.ui.view">
-            <field name="name">res.users.form.modif</field>
+            <field name="name">res.users.preferences.form</field>
             <field name="model">res.users</field>
             <field name="type">form</field>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <notebook colspan="4">
-                        <page string="Current Activity">
-                            <field name="company_id" widget="selection" readonly="0"
-                                    groups="base.group_multi_company"
-                                    on_change="on_change_company_id(company_id)" />
-                            <field name="view" readonly="0"/>
-                            <label string="" colspan="2"/>
-                            <separator string="Default Filters" colspan="4"/>
-                            <newline/>
-                        </page>
-                         <page string="Preferences">
-                            <field name="context_lang" completion="1" readonly="0"/>
-                            <field name="context_tz" completion="1" readonly="0"/>
-                            <field name="menu_tips" colspan="2" readonly="0"/>
-                            <separator string="Email &amp; Signature" colspan="4"/>
-                            <group colspan="4"><field name="user_email" widget="email" readonly="0"/></group>
-                            <field colspan="4" name="signature" readonly="0" nolabel="1"/>
-                          </page>
-                    </notebook>
+                    <field name="name" readonly="1"/>
+                    <newline/>
+                    <group colspan="2" col="2">
+                        <separator string="Preferences" colspan="2"/>
+                        <field name="view" readonly="0"/>
+                        <field name="context_lang" readonly="0"/>
+                        <field name="context_tz" readonly="0"/>
+                        <field name="menu_tips" readonly="0"/>
+                    </group>
+                    <group name="default_filters" colspan="2" col="2">
+                        <separator string="Default Filters" colspan="2"/>
+                        <field name="company_id" widget="selection" readonly="0"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                    </group>
+                    <separator string="Email Preferences" colspan="4"/>
+                    <field colspan="4" name="user_email" widget="email" readonly="0"/>
+                    <field colspan="4" name="signature" readonly="0"/>
                 </form>
             </field>
         </record>
@@ -106,47 +108,46 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field name="login" select="1"/>
-                    <field name="new_password" password="True"/>
-                    <newline/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="login" select="1"/>
+                        <field name="id" invisible="1"/>
+                        <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
+                        <field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="User">
-                            <group colspan="1" col="2">
-                                <separator string="Contact" colspan="2"/>
-                                <field name="company_id" required="1"
-                                    context="{'user_preference': 0}"
-                                    groups="base.group_multi_company"
-                                    />
-                                <field name="address_id"/>
-                                <field name="user_email" widget="email"/>
-                            </group>
-                            <group colspan="1" col="2" groups="base.group_extended">
-                                <separator string="Action" colspan="2"/>
-                                <field name="action_id"/>
-                                <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
-                            </group>
-                            <group colspan="1" col="2">
-                                <separator string="Preferences" colspan="2"/>
-                                <field name="context_lang"/>
-                                <field name="context_tz"/>
-                                <group colspan="2" col="4">
-                                     <field name="view" readonly="0"/>
-                                     <field name="menu_tips" colspan="2"/>
+                          <group colspan="4" col="6">
+                            <!-- Second nested group to avoid misalignment with email prefs groups
+                                 in simplified view -->
+                            <group colspan="6" col="6">
+                                <group col="2" colspan="2">
+                                    <separator string="Preferences" colspan="2"/>
+                                    <field name="context_lang"/>
+                                    <field name="context_tz"/>
+                                    <field name="menu_tips"/>
+                                </group>
+                                <group name="default_filters" colspan="2" col="2">
+                                    <separator string="Default Filters" colspan="2"/>
+                                    <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                                </group>
+                                <group colspan="2" col="2" groups="base.group_extended">
+                                    <separator string="Action" colspan="2"/>
+                                    <field name="action_id"/>
+                                    <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                                 </group>
                             </group>
-                            <newline/>
-                            <group colspan="2" col="2">
-                                <separator string="Signature" colspan="2"/>
-                                <field colspan="2" name="signature" nolabel="1"/>
+                            <group colspan="6" col="2">
+                                <separator string="Email Preferences" colspan="2"/>
+                                <field name="user_email" widget="email"/>
+                                <field name="signature"/>
                             </group>
-                            <group colspan="2" col="2" expand="1">
-                                <separator string="Groups" colspan="2"/>
-                                <field colspan="2" nolabel="1" name="groups_id"/>
-                            </group>
+                          </group>
                         </page>
-                        <page string="Companies" groups="base.group_multi_company">
+                        <page string="Access Rights">
+                            <field nolabel="1" name="groups_id"/>
+                        </page>
+                        <page string="Allowed Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
                         </page>
                     </notebook>
@@ -175,7 +176,6 @@
                 <search string="Users">
                     <field name="name"/>
                     <field name="login"/>
-                    <field name="address_id" string="Address"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -189,6 +189,16 @@
 
         <report id="preview_report" model="res.company" name="preview.report" multi="True"
             rml="base/report/preview_report.rml" string="Preview Report"/>
+
+        <record id="bank_account_update" model="ir.actions.act_window">
+            <field name="name">Company Bank Accounts</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context" eval="{'default_partner_id':ref('base.main_partner'), 'company_hide':False, 'default_company_id':ref('base.main_company'), 'search_default_my_bank':1}"/>
+        <field name="help">Configure your company's bank account and select those that must appear on the report footer. You can drag &amp; drop bank in the list view to reorder bank accounts. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+        </record>
+
 
         <record id="view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
@@ -217,19 +227,28 @@
                             <field name="state_id"/>
                             <field name="phone"/>
                             <field name="email"/>
+                            <field name="fax"/>
+                            <field name="website"/>
+                            <field name="vat"/>
+                            <field name="company_registry"/>
                             <separator string="Header/Footer of Reports" colspan="4"/>
-                            <field name="rml_header1" colspan="4"/>
-                            <field name="rml_footer1" colspan="4"/>
-                            <field name="rml_footer2" colspan="4"/>
-                            <group colspan="4" col="8">
-                                <label string="" colspan="7"/>
-                                <button name="%(preview_report)d" string="Preview Report" type="action" icon="gtk-print"/>
+                            <group colspan="4" col="3">
+                                <field name="rml_header1" colspan="3"/>
+                                <newline/>
+                                <field name="rml_footer1" colspan="2"/>
+                                <button name="generate_header" string="Generate" type="object" icon="gtk-go-forward"/>
+                                <newline/>
+                                <field name="rml_footer2" colspan="2"/>
+                                <button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward"/>
+                                <newline/>
+                                <label string="" colspan="2"/>
+                                <button name="%(preview_report)d" string="Preview Header" type="action" icon="gtk-print"/>
                             </group>
                         </page>
-                        <page string="Header/Footer" groups="base.group_extended">
+                        <page string="External Template" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
-                        <page string="Internal Header/Footer" groups="base.group_extended">
+                        <page string="Internal Template" groups="base.group_extended">
                             <separator string="Portrait" colspan="2"/>
                             <separator string="Landscape" colspan="2"/>
                             <field colspan="2" name="rml_header2" nolabel="1"/>
@@ -256,60 +275,10 @@
                 </tree>
             </field>
         </record>
-
-        <record id="view_confirm_simple_view_form" model="ir.ui.view">
-            <field name="name">Configure Your Interface</field>
-            <field name="model">res.config.view</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Configure Your Interface</attribute>
-                </form>
-                <xpath expr="//label[@string='description']"
-                     position="attributes">
-                <attribute name="string">If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences.</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="title"]' position='attributes'>
-                    <attribute name='string'>Configure Your Interface</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
-                    <attribute name='rowspan'>12</attribute>
-              </xpath>
-               <group string="res_config_contents" position="replace">
-                      <group colspan="4">
-                          <field colspan="4" name="view" nolabel="1"/>
-                    </group>
-                </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_config_simple_view_form" model="ir.actions.act_window">
-            <field name="name">Configure Your Interface</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.view</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_confirm_simple_view_form"/>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
         
         <record id="category_administration_config" model="ir.actions.todo.category">
             <field name="name">Administration</field>
             <field name="sequence">1</field>
-        </record>         
-
-        <record id="config_wizard_simple_view" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_simple_view_form"/>
-            <field name="category_id" ref="category_administration_config"/>
-            <field name="type">special</field>
-            <field name="sequence">1</field>
-            <field name="state">skip</field>
         </record>
-
     </data>
 </openerp>

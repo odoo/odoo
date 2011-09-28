@@ -147,9 +147,11 @@ class res_partner(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
+        'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
     }
+
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
@@ -222,8 +224,10 @@ class res_partner(osv.osv):
         return True
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
-        cr.execute('select type,id from res_partner_address where partner_id IN %s',(tuple(ids),))
-        res = cr.fetchall()
+        address_obj = self.pool.get('res.partner.address')
+        address_ids = address_obj.search(cr, uid, [('partner_id', '=', ids)])
+        address_rec = address_obj.read(cr, uid, address_ids, ['type'])
+        res = list(tuple(addr.values()) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
@@ -310,14 +314,13 @@ class res_partner_address(osv.osv):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
-                addr = r['name'] or ''
-                if r['name'] and (r['city'] or r['country_id']):
-                    addr += ', '
-                addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
+                # make a comma-separated list with the following non-empty elements
+                elems = [r['name'], r['country_id'] and r['country_id'][1], r['city'], r['street']]
+                addr = ', '.join(filter(bool, elems))
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
-                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr.strip() or '/')))
+                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '/')))
                 else:
-                    res.append((r['id'], addr.strip() or '/'))
+                    res.append((r['id'], addr or '/'))
         return res
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -343,119 +346,6 @@ class res_partner_address(osv.osv):
         return self.browse(cr, uid, id).city
 
 res_partner_address()
-
-class res_partner_bank_type(osv.osv):
-    _description='Bank Account Type'
-    _name = 'res.partner.bank.type'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'code': fields.char('Code', size=64, required=True),
-        'field_ids': fields.one2many('res.partner.bank.type.field', 'bank_type_id', 'Type fields'),
-    }
-res_partner_bank_type()
-
-class res_partner_bank_type_fields(osv.osv):
-    _description='Bank type fields'
-    _name = 'res.partner.bank.type.field'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Field Name', size=64, required=True, translate=True),
-        'bank_type_id': fields.many2one('res.partner.bank.type', 'Bank Type', required=True, ondelete='cascade'),
-        'required': fields.boolean('Required'),
-        'readonly': fields.boolean('Readonly'),
-        'size': fields.integer('Max. Size'),
-    }
-res_partner_bank_type_fields()
-
-
-class res_partner_bank(osv.osv):
-    '''Bank Accounts'''
-    _name = "res.partner.bank"
-    _rec_name = "acc_number"
-    _description = __doc__
-    _order = 'sequence,name'
-
-    def _bank_type_get(self, cr, uid, context=None):
-        bank_type_obj = self.pool.get('res.partner.bank.type')
-
-        result = []
-        type_ids = bank_type_obj.search(cr, uid, [])
-        bank_types = bank_type_obj.browse(cr, uid, type_ids, context=context)
-        for bank_type in bank_types:
-            result.append((bank_type.code, bank_type.name))
-        return result
-
-    def _default_value(self, cursor, user, field, context=None):
-        if field in ('country_id', 'state_id'):
-            value = False
-        else:
-            value = ''
-        if not context.get('address', False):
-            return value
-        for ham, spam, address in context['address']:
-            if address.get('type', False) == 'default':
-                return address.get(field, value)
-            elif not address.get('type', False):
-                value = address.get(field, value)
-        return value
-
-    _columns = {
-        'name': fields.char('Description', size=128),
-        'acc_number': fields.char('Account Number', size=64, required=False),
-        'bank': fields.many2one('res.bank', 'Bank', required=True),
-        'owner_name': fields.char('Account Owner', size=64),
-        'street': fields.char('Street', size=128),
-        'zip': fields.char('Zip', change_default=True, size=24),
-        'city': fields.char('City', size=128),
-        'country_id': fields.many2one('res.country', 'Country',
-            change_default=True),
-        'state_id': fields.many2one("res.country.state", 'State',
-            change_default=True, domain="[('country_id','=',country_id)]"),
-        'partner_id': fields.many2one('res.partner', 'Partner', required=True,
-            ondelete='cascade', select=True),
-        'state': fields.selection(_bank_type_get, 'Bank Type', required=True,
-            change_default=True),
-        'sequence': fields.integer('Sequence'),
-    }
-    _defaults = {
-        'owner_name': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'name', context=context),
-        'street': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'street', context=context),
-        'city': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'city', context=context),
-        'zip': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'zip', context=context),
-        'country_id': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'country_id', context=context),
-        'state_id': lambda obj, cursor, user, context: obj._default_value(
-            cursor, user, 'state_id', context=context),
-    }
-
-    def fields_get(self, cr, uid, fields=None, context=None):
-        res = super(res_partner_bank, self).fields_get(cr, uid, fields, context)
-        bank_type_obj = self.pool.get('res.partner.bank.type')
-        type_ids = bank_type_obj.search(cr, uid, [])
-        types = bank_type_obj.browse(cr, uid, type_ids)
-        for type in types:
-            for field in type.field_ids:
-                if field.name in res:
-                    res[field.name].setdefault('states', {})
-                    res[field.name]['states'][type.code] = [
-                            ('readonly', field.readonly),
-                            ('required', field.required)]
-        return res
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        res = []
-        for id in self.browse(cr, uid, ids):
-            res.append((id.id,id.acc_number))
-        return res
-
-res_partner_bank()
 
 class res_partner_category(osv.osv):
     _inherit = 'res.partner.category'

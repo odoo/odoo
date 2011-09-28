@@ -24,36 +24,34 @@
 
 """
 
-import os, sys, imp
-from os.path import join as opj
+import base64
+import imp
 import itertools
+import logging
+import os
+import re
+import sys
+import zipfile
 import zipimport
 
-import openerp
-
-import openerp.osv as osv
-import openerp.tools as tools
-import openerp.tools.osutil as osutil
-from openerp.tools.safe_eval import safe_eval as eval
-import openerp.pooler as pooler
-from openerp.tools.translate import _
-
-import openerp.netsvc as netsvc
-
-import zipfile
-import openerp.release as release
-
-import re
-import base64
-from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
+from os.path import join as opj
+from zipfile import PyZipFile, ZIP_DEFLATED
 
-import logging
 
+import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
+import openerp.netsvc as netsvc
+import openerp.osv as osv
+import openerp.pooler as pooler
+import openerp.release as release
+import openerp.tools as tools
+import openerp.tools.osutil as osutil
 
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 from openerp.modules.module import \
     get_modules, get_modules_with_version, \
     load_information_from_description_file, \
@@ -81,6 +79,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
+    logger = logging.getLogger('init.load')
     def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
@@ -88,28 +87,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if new_query:
                 cr.execute(new_query)
 
-    def load_init_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'init_xml')
+    load_init_xml = lambda *args: _load_data(cr, *args, kind='init_xml')
+    load_update_xml = lambda *args: _load_data(cr, *args, kind='update_xml')
+    load_demo_xml = lambda *args: _load_data(cr, *args, kind='demo_xml')
+    load_data = lambda *args: _load_data(cr, *args, kind='data')
+    load_demo = lambda *args: _load_data(cr, *args, kind='demo')
 
-    def load_update_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'update_xml')
-
-    def load_demo_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'demo_xml')
-
-    def load_data(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'data')
-
-    def load_demo(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'demo')
-
-    def load_test(cr, module_name, idref, mode):
+    def load_test(module_name, idref, mode):
         cr.commit()
         if not tools.config.options['test_disable']:
             try:
                 _load_data(cr, module_name, idref, mode, 'test')
             except Exception, e:
-                logging.getLogger('test').exception('Tests failed to execute in module %s', module_name)
+                logging.getLogger('init.test').exception(
+                    'Tests failed to execute in module %s', module_name)
             finally:
                 if tools.config.options['test_commit']:
                     cr.commit()
@@ -126,8 +117,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         """
         for filename in package.data[kind]:
-            log = logging.getLogger('init')
-            log.info("module %s: loading %s", module_name, filename)
+            logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
             fp = tools.file_open(pathname)
@@ -153,28 +143,27 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     processed_modules = []
     loaded_modules = []
-    statusi = 0
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
+    logger.debug('loading %d packages...', len(graph))
 
     # register, instantiate and initialize models for each modules
-    for package in graph:
+    for index, package in enumerate(graph):
         module_name = package.name
         module_id = package.id
 
         if skip_modules and module_name in skip_modules:
             continue
 
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
+        logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
-        models = pool.instanciate(package.name, cr)
+        models = pool.load(cr, package)
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
 
-        status['progress'] = float(statusi) / len(graph)
+        status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
         # registered by init_module_models() above.
@@ -193,20 +182,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
-            load_init_xml(cr, module_name, idref, mode)
-            load_update_xml(cr, module_name, idref, mode)
-            load_data(cr, module_name, idref, mode)
+            load_init_xml(module_name, idref, mode)
+            load_update_xml(module_name, idref, mode)
+            load_data(module_name, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
-                status['progress'] = (float(statusi)+0.75) / len(graph)
-                load_demo_xml(cr, module_name, idref, mode)
-                load_demo(cr, module_name, idref, mode)
+                status['progress'] = (index + 0.75) / len(graph)
+                load_demo_xml(module_name, idref, mode)
+                load_demo(module_name, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(cr, module_name, idref, mode)
+                load_test(module_name, idref, mode)
 
             processed_modules.append(package.name)
 
@@ -224,7 +213,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
-        statusi += 1
 
     cr.commit()
 
@@ -285,8 +273,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
 
-        processed_modules = [] # for cleanup step after install
-        loaded_modules = [] # to avoid double loading
         report = tools.assertion_report()
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -297,8 +283,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        loaded, processed = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
-        processed_modules.extend(processed)
+
+        # processed_modules: for cleanup step after install
+        # loaded_modules: to avoid double loading
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
@@ -351,16 +339,16 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if model_obj and not isinstance(model_obj, osv.osv.osv_memory):
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'object %s (%s) has no access rules!' % (model, name))
+                if model_obj and not model_obj.is_transient():
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'Model %s (%s) has no access rules!' % (model, name))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights
             cr.execute("""select distinct mod.model, mod.name from ir_model_access acc, ir_model mod where acc.model_id = mod.id""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
-                if isinstance(model_obj, osv.osv.osv_memory):
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'In-memory object %s (%s) should not have explicit access rules!' % (model, name))
+                if model_obj and model_obj.is_transient():
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, 'The transient model %s (%s) should not have explicit access rules!' % (model, name))
 
             cr.execute("SELECT model from ir_model")
             for (model,) in cr.fetchall():
@@ -368,7 +356,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 if obj:
                     obj._check_removed_columns(cr, log=True)
                 else:
-                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
+                    logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)" % model)
 
             # Cleanup orphan records
             pool.get('ir.model.data')._process_end(cr, 1, processed_modules)

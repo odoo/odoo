@@ -37,7 +37,8 @@ __all__ = ['db_connect', 'close_db']
 
 from threading import currentThread
 import logging
-from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE,\
+    ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.psycopg1 import cursor as psycopg1cursor
 from psycopg2.pool import PoolError
 
@@ -79,12 +80,64 @@ re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 sql_counter = 0
 
 class Cursor(object):
-    """ Cursor is an open transaction to Postgres, utilizing a TCP connection
-    
-        A lightweight wrapper around psycopg2's `psycopg1cursor` objects
-        
-        This is the object behind the `cr` variable used all over the OpenERP
-        code.
+    """Represents an open transaction to the PostgreSQL DB backend,
+       acting as a lightweight wrapper around psycopg2's
+       ``psycopg1cursor`` objects.
+
+        ``Cursor`` is the object behind the ``cr`` variable used all
+        over the OpenERP code.
+
+        .. rubric:: Transaction Isolation
+
+        One very important property of database transactions is the
+        level of isolation between concurrent transactions.
+        The SQL standard defines four levels of transaction isolation,
+        ranging from the most strict *Serializable* level, to the least
+        strict *Read Uncommitted* level. These levels are defined in
+        terms of the phenomena that must not occur between concurrent
+        transactions, such as *dirty read*, etc.
+        In the context of a generic business data management software
+        such as OpenERP, we need the best guarantees that no data
+        corruption can ever be cause by simply running multiple
+        transactions in parallel. Therefore, the preferred level would
+        be the *serializable* level, which ensures that a set of
+        transactions is guaranteed to produce the same effect as
+        running them one at a time in some order.
+
+        However, most database management systems implement a limited
+        serializable isolation in the form of
+        `snapshot isolation <http://en.wikipedia.org/wiki/Snapshot_isolation>`_,
+        providing most of the same advantages as True Serializability,
+        with a fraction of the performance cost.
+        With PostgreSQL up to version 9.0, this snapshot isolation was
+        the implementation of both the ``REPEATABLE READ`` and
+        ``SERIALIZABLE`` levels of the SQL standard.
+        As of PostgreSQL 9.1, the previous snapshot isolation implementation
+        was kept for ``REPEATABLE READ``, while a new ``SERIALIZABLE``
+        level was introduced, providing some additional heuristics to
+        detect a concurrent update by parallel transactions, and forcing
+        one of them to rollback.
+
+        OpenERP implements its own level of locking protection
+        for transactions that are highly likely to provoke concurrent
+        updates, such as stock reservations or document sequences updates.
+        Therefore we mostly care about the properties of snapshot isolation,
+        but we don't really need additional heuristics to trigger transaction
+        rollbacks, as we are taking care of triggering instant rollbacks
+        ourselves when it matters (and we can save the additional performance
+        hit of these heuristics).
+
+        As a result of the above, we have selected ``REPEATABLE READ`` as
+        the default transaction isolation level for OpenERP cursors, as
+        it will be mapped to the desired ``snapshot isolation`` level for
+        all supported PostgreSQL version (8.3 - 9.x).
+
+        Note: up to psycopg2 v.2.4.2, psycopg2 itself remapped the repeatable
+        read level to serializable before sending it to the database, so it would
+        actually select the new serializable mode on PostgreSQL 9.1. Make
+        sure you use psycopg2 v2.4.2 or newer if you use PostgreSQL 9.1 and
+        the performance hit is a concern for you.
+
     """
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
     __logger = None
@@ -100,7 +153,7 @@ class Cursor(object):
             return f(self, *args, **kwargs)
         return wrapper
 
-    def __init__(self, pool, dbname, serialized=False):
+    def __init__(self, pool, dbname, serialized=True):
         if self.__class__.__logger is None:
             self.__class__.__logger = logging.getLogger('db.cursor')
         self.sql_from_log = {}
@@ -115,7 +168,11 @@ class Cursor(object):
                                 # is raised by any of the following initialisations
         self._pool = pool
         self.dbname = dbname
+
+        # Whether to enable snapshot isolation level for this cursor.
+        # see also the docstring of Cursor.  
         self._serialized = serialized
+
         self._cnx = pool.borrow(dsn(dbname))
         self._obj = self._cnx.cursor(cursor_factory=psycopg1cursor)
         self.__closed = False   # real initialisation value
@@ -125,6 +182,8 @@ class Cursor(object):
         else:
             self.__caller = False
         self.__closer = False
+
+        self._default_log_exceptions = True
 
     def __del__(self):
         if not self.__closed:
@@ -142,7 +201,7 @@ class Cursor(object):
             self._close(True)
 
     @check
-    def execute(self, query, params=None, log_exceptions=True):
+    def execute(self, query, params=None, log_exceptions=None):
         if '%d' in query or '%f' in query:
             self.__logger.warn(query)
             self.__logger.warn("SQL queries cannot contain %d or %f anymore. "
@@ -155,11 +214,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if log_exceptions:
+            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
                 self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if log_exceptions:
+            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
                 self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
@@ -227,9 +286,6 @@ class Cursor(object):
             self.__closer = frame_codeinfo(currentframe(),3)
         self.print_log()
 
-        if not self._serialized:
-            self.rollback() # Ensure we close the current transaction.
-
         self._obj.close()
 
         # This force the cursor to be freed, and thus, available again. It is
@@ -240,6 +296,9 @@ class Cursor(object):
         del self._obj
         self.__closed = True
 
+        # Clean the underlying connection.
+        self._cnx.rollback()
+
         if leak:
             self._cnx.leaked = True
         else:
@@ -248,8 +307,23 @@ class Cursor(object):
 
     @check
     def autocommit(self, on):
-        offlevel = [ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_SERIALIZABLE][bool(self._serialized)]
-        self._cnx.set_isolation_level([offlevel, ISOLATION_LEVEL_AUTOCOMMIT][bool(on)])
+        if on:
+            isolation_level = ISOLATION_LEVEL_AUTOCOMMIT
+        else:
+            # If a serializable cursor was requested, we
+            # use the appropriate PotsgreSQL isolation level
+            # that maps to snaphsot isolation.
+            # For all supported PostgreSQL versions (8.3-9.x),
+            # this is currently the ISOLATION_REPEATABLE_READ.
+            # See also the docstring of this class.
+            # NOTE: up to psycopg 2.4.2, repeatable read
+            #       is remapped to serializable before being
+            #       sent to the database, so it is in fact
+            #       unavailable for use with pg 9.1.
+            isolation_level = ISOLATION_LEVEL_REPEATABLE_READ \
+                                  if self._serialized \
+                                  else ISOLATION_LEVEL_READ_COMMITTED
+        self._cnx.set_isolation_level(isolation_level)
 
     @check
     def commit(self):
@@ -361,6 +435,7 @@ class ConnectionPool(object):
                     self._debug('Put connection to %r in pool', cnx.dsn)
                 else:
                     self._debug('Forgot connection to %r', cnx.dsn)
+                    cnx.close()
                 break
         else:
             raise PoolError('This connection does not below to the pool')
@@ -383,13 +458,13 @@ class Connection(object):
         self.dbname = dbname
         self._pool = pool
 
-    def cursor(self, serialized=False):
+    def cursor(self, serialized=True):
         cursor_type = serialized and 'serialized ' or ''
         self.__logger.log(logging.DEBUG_SQL, 'create %scursor to %r', cursor_type, self.dbname)
         return Cursor(self._pool, self.dbname, serialized=serialized)
 
-    def serialized_cursor(self):
-        return self.cursor(True)
+    # serialized_cursor is deprecated - cursors are serialized by default
+    serialized_cursor = cursor
 
     def __nonzero__(self):
         """Check if connection is possible"""

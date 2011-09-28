@@ -19,9 +19,21 @@
 #
 ##############################################################################
 
+import logging
+import threading
+import time
+
 import http_server
 import netrpc_server
 import web_services
+import websrv_lib
+
+import openerp.cron
+import openerp.modules
+import openerp.netsvc
+import openerp.osv
+import openerp.tools
+import openerp.wsgi
 
 #.apidoc title: RPC Services
 
@@ -33,6 +45,61 @@ import web_services
     implement an extension to the network protocols, or need to debug some
     low-level behavior of the wire.
 """
+
+def start_services():
+    """ Start all services.
+
+    Services include the different servers and cron threads.
+
+    """
+    # Instantiate local services (this is a legacy design).
+    openerp.osv.osv.start_object_proxy()
+    # Export (for RPC) services.
+    web_services.start_web_services()
+
+    # Initialize the HTTP stack.
+    #http_server.init_servers()
+    #http_server.init_xmlrpc()
+    #http_server.init_static_http()
+    netrpc_server.init_servers()
+
+    # Start the main cron thread.
+    openerp.cron.start_master_thread()
+
+    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
+    openerp.netsvc.Server.startAll()
+
+
+    # Start the WSGI server.
+    openerp.wsgi.start_server()
+
+
+def stop_services():
+    """ Stop all services. """
+    # stop scheduling new jobs; we will have to wait for the jobs to complete below
+    openerp.cron.cancel_all()
+
+    openerp.netsvc.Server.quitAll()
+    openerp.wsgi.stop_server()
+    config = openerp.tools.config
+    logger = logging.getLogger('server')
+    logger.info("Initiating shutdown")
+    logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
+    logging.shutdown()
+
+    # Manually join() all threads before calling sys.exit() to allow a second signal
+    # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
+    # threading.Thread.join() should not mask signals (at least in python 2.5).
+    for thread in threading.enumerate():
+        if thread != threading.currentThread() and not thread.isDaemon():
+            while thread.isAlive():
+                # Need a busyloop here as thread.join() masks signals
+                # and would prevent the forced shutdown.
+                thread.join(0.05)
+                time.sleep(0.05)
+
+    openerp.modules.registry.RegistryManager.delete_all()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
