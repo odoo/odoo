@@ -104,7 +104,7 @@ class ir_sequence(openerp.osv.osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         ids = ids if isinstance(ids, (list, tuple)) else [ids]
         new_implementation = values.get('implementation')
-        rows = self.read(cr, uid, ids, ['id,' 'implementation',
+        rows = self.read(cr, uid, ids, ['implementation',
             'number_increment', 'number_next'], context)
         super(ir_sequence, self).write(cr, uid, ids, values, context)
         
