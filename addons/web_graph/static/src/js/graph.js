@@ -162,18 +162,57 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     schedule_bar: function(results) {
         var self = this;
 
-        this.group_field = false;
-        var view_chart = (this.orientation === 'horizontal')
-                ? (this.group_field ? 'stackedBarH' : 'barH')
-                : (this.group_field ? 'stackedBar' : 'bar');
-
-        var group_list = _(this.columns).map(function (column, index) {
-            return {
-                group: column.name,
-                text: self.fields[column.name].string,
-                color: COLOR_PALETTE[index % (COLOR_PALETTE.length)]
+        var group_list, view_chart;
+        if (!this.group_field) {
+            view_chart = (this.orientation === 'horizontal') ? 'barH' : 'bar';
+            group_list = _(this.columns).map(function (column, index) {
+                return {
+                    group: column.name,
+                    text: self.fields[column.name].string,
+                    color: COLOR_PALETTE[index % (COLOR_PALETTE.length)]
+                }
+            });
+        } else {
+            // dhtmlx handles clustered bar charts (> 1 column per abscissa
+            // value) and stacked bar charts (basically the same but with the
+            // columns on top of one another instead of side by side), but it
+            // does not handle clustered stacked bar charts
+            if (this.columns.length > 1) {
+                throw new Error(
+                    'dhtmlx can not handle columns counts of that magnitude');
             }
-        });
+            // transform series for clustered charts into series for stacked
+            // charts
+            view_chart = (this.orientation === 'horizontal')
+                    ? 'stackedBarH' : 'stackedBar';
+            group_list = _(results).chain()
+                    .pluck(this.group_field)
+                    .uniq()
+                    .map(function (value, index) {
+                        return {
+                            group: self.ordinate + '_' +
+                                    value.toLowerCase().replace(/\s/g, '_'),
+                            text: value,
+                            color: COLOR_PALETTE[index % COLOR_PALETTE.length]
+                        };
+                    }).value();
+
+            results = _(results).chain()
+                .groupBy(function (record) { return record[self.abscissa]; })
+                .map(function (records) {
+                    var r = {};
+                    // second argument is coerced to a str, no good for boolean
+                    r[self.abscissa] = records[0][self.abscissa];
+                    _(records).each(function (record) {
+                        var key = _.sprintf('%s_%s',
+                            self.ordinate,
+                            record[self.group_field].toLowerCase().replace(/\s/g, '_'));
+                        r[key] = record[self.ordinate];
+                    });
+                    return r;
+                })
+                .value();
+        }
 
         var abscissa_description = {
             title: "<b>" + this.fields[this.abscissa].string + "</b>",
