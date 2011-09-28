@@ -30,6 +30,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
     },
     start: function() {
         this._super();
+        this.$element.hide();
         this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
         return this.ready.promise();
     },
@@ -137,10 +138,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             'defaults': this.defaults
         });
 
-        // We don't understand why the following commented line does not work in Chrome but
-        // the non-commented line does. As far as we investigated, only God knows.
-        //this.$element.html(render);
-        jQuery(render).appendTo(this.$element);
+        this.$element.html(render);
         this.$element.find(".oe_search-view-custom-filter-btn").click(ext.on_activate);
 
         var f = this.$element.find('form');

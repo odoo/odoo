@@ -166,6 +166,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         this.model = dataset.model;
         this.dataset = dataset;
         this.searchview = null;
+        this.searchview_visible = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
@@ -225,20 +226,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
-            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
-                // In case the search view is not instantiated: manually call ListView#search
-                var domains = !_(self.action.domain).isEmpty()
-                                ? [self.action.domain] : [],
-                   contexts = !_(self.action.context).isEmpty()
-                                ? [self.action.context] : [];
-                controller.on_loaded.add({
-                    callback: function () {
-                        controller.do_search(domains, contexts, []);
-                    },
-                    position: 'last',
-                    unique: true
-                });
-            }
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
             $.when(view_promise).then(function() {
@@ -249,7 +236,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
 
 
         if (this.searchview) {
-            if (view.controller.searchable === false) {
+            if (this.searchview_visible === false || view.controller.searchable === false) {
                 this.searchview.hide();
             } else {
                 this.searchview.show();
@@ -346,6 +333,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
             // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
+        this.searchview_visible = !!this.flags.search_view;
 
         // setup storage for session-wise menu hiding
         if (this.session.hidden_menutips) {
@@ -360,23 +348,19 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * launches an initial search after both views are done rendering.
      */
     start: function() {
-        var self = this;
+        var self = this,
+            searchview_loaded,
+            search_defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value;
+            }
+        });
+        // init search view
+        var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-        var searchview_loaded;
-        if (this.flags.search_view !== false) {
-            var search_defaults = {};
-            _.each(this.action.context, function (value, key) {
-                var match = /^search_default_(.*)$/.exec(key);
-                if (match) {
-                    search_defaults[match[1]] = value;
-                }
-            });
-            // init search view
-            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
-
-            searchview_loaded = this.setup_search_view(
-                    searchview_id || false, search_defaults);
-        }
+        searchview_loaded = this.setup_search_view(searchview_id || false, search_defaults);
 
         var main_view_loaded = this._super();
 
@@ -815,6 +799,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         this.options.sidebar = false;
     },
     do_switch_view: function(view) {
+    },
+    do_search: function(view) {
     },
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_section('customize', "Customize", [
