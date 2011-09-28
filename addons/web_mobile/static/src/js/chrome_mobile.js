@@ -14,6 +14,9 @@ openerp.web_mobile.mobilewebclient = function(element_id) {
 openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
     init: function(element_id) {
         this._super(null, element_id);
+        if(document.URL.length>59){
+            window.location.replace('/mobile');
+        }
         QWeb.add_template("xml/web_mobile.xml");
         var params = {};
         this.$element.html(QWeb.render("WebClient", {}));
