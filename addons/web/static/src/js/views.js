@@ -775,14 +775,17 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                action.context = action.context || {};
-                _.extend(action.context, {
-                    active_id: record_id || false,
-                    active_ids: [record_id || false],
-                    active_model: dataset.model
+                self.rpc('/web/session/eval_domain_and_context', {
+                    contexts: [dataset.get_context(), action.context || {}, {
+                        active_id: record_id || false,
+                        active_ids: [record_id || false],
+                        active_model: dataset.model
+                    }],
+                    domains: []
+                }, function (results) {
+                    action.context = results.context
+                    self.do_action(action, result_handler);
                 });
-                action.context = new db.web.CompoundContext(dataset.get_context(), action.context);
-                self.do_action(action, result_handler);
             } else {
                 result_handler();
             }
