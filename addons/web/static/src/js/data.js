@@ -233,6 +233,7 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
 });
 
 openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet# */{
+    identifier_prefix: "dataset",
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
@@ -242,15 +243,11 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(source_controller, model, context) {
-        // we don't want the dataset to be a child of anything!
-        this._super(null);
-        this.session = source_controller ? source_controller.session : undefined;
+    init: function(parent, model, context) {
+        this._super(parent);
         this.model = model;
         this.context = context || {};
         this.index = null;
-    },
-    start: function() {
     },
     previous: function () {
         this.index -= 1;
@@ -549,13 +546,11 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             sort: this.sort(),
             offset: offset,
             limit: options.limit || false
-        }, function (result) {
+        }).pipe(function (result) {
             self.ids = result.ids;
             self.offset = offset;
-            if (callback) {
-                callback(result.records);
-            }
-        });
+            return result.records;
+        }).then(callback);
     },
     get_domain: function (other_domain) {
         if (other_domain) {

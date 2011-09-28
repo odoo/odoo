@@ -163,7 +163,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
      */
     init: function(parent, dataset, views) {
         this._super(parent);
-        this.model = dataset.model;
+        this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
@@ -184,7 +184,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
     start: function() {
         this._super();
         var self = this;
-        this.dataset.start();
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
@@ -332,6 +331,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         // dataset initialization will take the session from ``this``, so if we
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
+        this._super(parent, null, action.views);
         this.session = parent.session;
         this.action = action;
         var dataset = new db.web.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -339,7 +339,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
             dataset.ids.push(action.res_id);
             dataset.index = 0;
         }
-        this._super(parent, dataset, action.views);
+        this.dataset = dataset;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid form chrome (pager, save/new

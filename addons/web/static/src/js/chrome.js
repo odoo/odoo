@@ -129,6 +129,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         // Destroy widget
         this.close();
         this.$dialog.dialog('destroy');
+        this._super();
     }
 });
 
@@ -253,7 +254,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                 .removeClass("database_block")
             .end()
             .empty();
-
+        this._super();
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding

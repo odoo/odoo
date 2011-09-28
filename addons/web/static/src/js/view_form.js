@@ -72,6 +72,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.each(this.widgets, function(w) {
             w.stop();
         });
+        this._super();
     },
     on_loaded: function(data) {
         var self = this;
@@ -655,11 +656,6 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     },
     start: function() {
         this.$element = $('#' + this.element_id);
-    },
-    stop: function() {
-        if (this.$element) {
-            this.$element.remove();
-        }
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
