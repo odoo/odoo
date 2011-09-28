@@ -210,6 +210,13 @@ class product_pricelist(osv.osv):
                 else:
                     categ_where = '(categ_id IS NULL)'
 
+                if partner:
+                    partner_where = 'base <> -2 OR %s IN (SELECT name FROM product_supplierinfo WHERE product_id = %s) '
+                    partner_args = (partner, product_id)
+                else:
+                    partner_where = 'base <> -2 '
+                    partner_args = ()
+
                 cr.execute(
                     'SELECT i.*, pl.currency_id '
                     'FROM product_pricelist_item AS i, '
@@ -217,11 +224,12 @@ class product_pricelist(osv.osv):
                     'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %s) '
                         'AND (product_id IS NULL OR product_id = %s) '
                         'AND (' + categ_where + ' OR (categ_id IS NULL)) '
+                        'AND (' + partner_where + ') '
                         'AND price_version_id = %s '
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
                         'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                     'ORDER BY sequence',
-                    (tmpl_id, product_id, plversion_ids[0], qty))
+                    (tmpl_id, product_id) + partner_args + (plversion_ids[0], qty))
                 res1 = cr.dictfetchall()
                 uom_price_already_computed = False
                 for res in res1:
@@ -365,6 +373,12 @@ class product_pricelist(osv.osv):
                 categ_where = '(categ_id IN (' + ','.join(categ_ids) + '))'
             else:
                 categ_where = '(categ_id IS NULL)'
+            
+            if partner:
+                partner_where = 'base <> -2 OR %s IN (SELECT name FROM product_supplierinfo WHERE product_id = %s) '
+                sqlargs = sqlargs + (partner, prod_id)
+            else:
+                partner_where = 'base <> -2 '
 
             cr.execute(
                 'SELECT i.*, pl.currency_id '
@@ -373,6 +387,7 @@ class product_pricelist(osv.osv):
                 'WHERE (product_tmpl_id IS NULL OR product_tmpl_id = %s) '
                     'AND (product_id IS NULL OR product_id = %s) '
                     'AND (' + categ_where + ' OR (categ_id IS NULL)) '
+                    'AND (' + partner_where + ') '
                     'AND price_version_id = %s '
                     'AND (min_quantity IS NULL OR min_quantity <= %s) '
                     'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
