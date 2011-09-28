@@ -22,8 +22,7 @@
 {
     'name': 'Sales Management',
     'version': '1.0',
-    'category': 'Sales',
-    'category': 'Generic Modules/Sales & Purchases',
+    'category': 'Sales Management',
     'complexity': "easy",
     'description': """
 The base module to manage quotations and sales orders.

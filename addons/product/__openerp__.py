@@ -24,7 +24,7 @@
     "name" : "Products & Pricelists",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Warehouse",
+    "category" : "Sales Management",
     "depends" : ["base", "process", "decimal_precision"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],

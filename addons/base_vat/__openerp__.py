@@ -22,7 +22,7 @@
 {
     'name': 'VAT Number Validation',
     'version': '1.0',
-    'category': 'Finance',
+    'category': 'Accounting & Finance',
     'complexity': "easy",
     'description': """
 VAT validation for Partners' VAT numbers

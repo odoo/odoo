@@ -21,7 +21,7 @@
 
 
 {
-    'category': 'Sales', 
+    'category': 'Customer Relationship Management', 
     'name': 'CRM Helpdesk',
     'version': '1.0',
     'complexity': "easy",

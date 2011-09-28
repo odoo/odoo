@@ -22,7 +22,7 @@
 {
     "name" : "Double Validation for Purchase",
     "version" : "1.1",
-    "category": 'Purchases',
+    "category": 'Purchase Management',
     'complexity': "easy",
     "images" : ["images/purchase_validation.jpeg"],
     "depends" : ["base","purchase"],

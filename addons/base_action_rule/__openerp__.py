@@ -22,9 +22,8 @@
 {
     'name': 'Action Rule',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Base',
     'complexity': "expert",
-    'category': 'Generic Modules/Others',
     'description': """
 This module allows to implement action rules for any object.
 ============================================================

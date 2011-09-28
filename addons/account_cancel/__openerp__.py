@@ -23,7 +23,7 @@
     "name" : "Cancel Entries",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Finance',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Allows cancelling accounting entries.

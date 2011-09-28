@@ -22,7 +22,7 @@
     "name" : "Accountant Access",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Finance',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting Access Rights.

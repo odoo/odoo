@@ -22,7 +22,7 @@
 {
     'name': 'Document Management - Wiki - Quality Manual',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Knowledge Management',
     'complexity': "easy",
     'description': """
 Quality Manual Template.
