@@ -13,25 +13,35 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param view_id
      * @param defaults
      */
-    init: function(parent, dataset, view_id, defaults) {
+    init: function(parent, dataset, view_id, defaults, hidden) {
         this._super(parent);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
 
         this.defaults = defaults || {};
+        this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
         this.enabled_filters = [];
 
         this.has_focus = false;
 
+        this.hidden = !!hidden;
+        this.headless = this.hidden && !this.has_defaults;
+
         this.ready = $.Deferred();
     },
     start: function() {
         this._super();
-        this.$element.hide();
-        this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        if (this.hidden) {
+            this.$element.hide();
+        }
+        if (this.headless) {
+            this.ready.resolve();
+        } else {
+            this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        }
         return this.ready.promise();
     },
     show: function () {
@@ -244,10 +254,13 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
+        if (this.headless && !this.has_defaults) {
+            return this.on_search([], [], []);
+        }
         // reset filters management
         var select = this.$element.find(".oe_search-view-filters-management");
         select.val("_filters");
-        
+
         if (e && e.preventDefault) { e.preventDefault(); }
 
         var data = this.build_search_data();
