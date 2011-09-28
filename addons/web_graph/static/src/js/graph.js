@@ -291,14 +291,14 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         var chart =  new dhtmlXChart({
             view:"pie3D",
             container:self.element_id+"-piechart",
-            value:"#"+self.operator_field+"#",
+            value:"#"+self.ordinate+"#",
             pieInnerText:function(obj) {
-                var sum = chart.sum("#"+self.operator_field+"#");
-                var val = obj[self.operator_field] / sum * 100 ;
+                var sum = chart.sum("#"+self.ordinate+"#");
+                var val = obj[self.ordinate] / sum * 100 ;
                 return val.toFixed(1) + "%";
             },
             tooltip:{
-                template:"#"+self.chart_info_fields+"#"+"="+"#"+self.operator_field+"#"
+                template:"#"+self.abscissa+"#"+"="+"#"+self.ordinate+"#"
             },
             gradient:"3d",
             height: 20,
@@ -313,9 +313,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                     width:12
                 },
                 template:function(obj){
-                    var val = obj[self.chart_info_fields];
-                    val = (typeof val == 'object')?val[1]:val;
-                    return val;
+                    return obj[self.abscissa] || 'Undefined';
                 }
             }
         });
@@ -329,18 +327,13 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         if($(".dhx_tooltip").is(":visible")) {
             $(".dhx_tooltip").remove('div');
         }
-        id = id[this.chart_info_fields];
+        id = id[this.abscissa];
         if (typeof id == 'object'){
             id = id[0];
         }
 
-        var record_id;
-        if (typeof this.chart_info_fields == 'object'){
-            record_id = this.chart_info_fields[0];
-        }else{
-            record_id = this.chart_info_fields;
-        }
-        var modes = !!modes ? modes.split(",") : ["list", "form", "graph"];
+        var record_id = this.abscissa;
+        var modes = ["list", "form", "graph"];
         var views = [];
         _.each(modes, function(mode) {
             var view = [false, mode];
