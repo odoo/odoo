@@ -13,7 +13,7 @@ openerp.web_process = function (openerp) {
             grandparent = this.widget_parent && this.widget_parent.widget_parent,
             view = this.views[this.views_src[0].view_type],
             $process_view = this.$element.find('.oe-process-view');
-            
+
             this.process_model = this.model;
             if (!(grandparent instanceof openerp.web.WebClient) ||
                 !(view.view_type === this.views_src[0].view_type
@@ -25,13 +25,13 @@ openerp.web_process = function (openerp) {
                 $.when(self.load_process()).then(self.get_process_id());
             });
         },
-        
+
         process_subflow : function() {
             var self = this;
-            new openerp.web.DataSetSearch(this, 
+            new openerp.web.DataSetSearch(this,
                 "ir.actions.act_window",this.session.context,[])
-            .read_slice(['help'], 
-                { domain: 
+            .read_slice(['help'],
+                { domain:
                     [
                         ['res_model','=',this.process_action_model],
                         ['name','ilike', this.process_action_name]
@@ -42,14 +42,14 @@ openerp.web_process = function (openerp) {
                         self.process_help = res[0]['help'] || 'Help: Not Defined';
                     }
                     $.when(self.load_process()).then(self.render_process_view());
-                    
+
             });
         },
-        
+
         load_process: function() {
             this.$element.html(QWeb.render("ProcessView", this));
         },
-        
+
         get_process_id: function() {
             var self = this;
             this.process_dataset = new openerp.web.DataSetStatic(this, "process.process", this.session.context);
@@ -79,7 +79,7 @@ openerp.web_process = function (openerp) {
                 }
             }
         },
-        
+
         render_process_view: function() {
             var self = this;
             this.p_id = parseInt(this.p_id, 10);
@@ -96,36 +96,35 @@ openerp.web_process = function (openerp) {
                     }
             );
         },
-        
         draw_process_graph: function(res) {
             var self = this;
             var process_graph = new Graph();
-            
+
             var process_renderer = function(r, n) {
                 var process_node,
                     process_node_text,
                     process_node_desc,
                     process_set;
-                
+
                 var node_button,
                     node_menu,
                     img_src;
-                
+
                 var bg = "node",
                     clip_rect = "".concat(n.node.x,",",n.node.y,",150,100"),
 //                    text_position_x  = n.node.x + (n.node.y/2)
-                    
+
                 //Image part
                 bg = n.node.kind == "subflow" ? "node-subflow" : "node";
                 bg = n.node.gray ? bg + "-gray" : bg;
                 img_src = '/web_process/static/src/img/'+ bg + '.png';
-                
+
                 r['image'](img_src, n.node.x, n.node.y,150, 100)
                     .attr({"clip-rect": clip_rect})
                     .mousedown(function(){
                         return false;
                 });
-                
+
                 //Node
                 process_node = r['rect'](n.node.x, n.node.y, 150, 100).attr({stroke: "none"});
                 // Node text
@@ -140,16 +139,30 @@ openerp.web_process = function (openerp) {
                         self.process_subflow();
                     });
                 }
-                
+
                 //Node Description
-                process_node_desc = r.text(n.node.x+75, n.node.y+50, (n.node.notes));
-                
+                new_notes = n.node.notes;
+                if(n.node.notes.length > 25) {
+                    var new_notes= temp_str = '';
+                    var from = to = 0;
+                    while (1){
+                        from = 25;
+                        temp_str = n.node.notes.substr(to ,25);
+                        if (temp_str.lastIndexOf(" ") < 25 && temp_str.length >= 25) {
+                            from  =  temp_str.lastIndexOf(" ");
+                        }
+                        new_notes += "\n" + n.node.notes.substr(to , from);
+                        if(new_notes.length > n.node.notes.length) break;
+                        to += from;
+                    }
+                }
+                process_node_desc = r.text(n.node.x+85, n.node.y+50, (new_notes));
                 r['image']('/web/static/src/img/icons/gtk-info.png', n.node.x+20, n.node.y+70, 16, 16)
                     .attr({"cursor": "pointer", "title": "Help"})
                     .click(function() {
                         window.open(n.node.url || "http://doc.openerp.com/v6.0/index.php?model=" + n.node.model);
                     });
-                
+
                 if(n.node.menu) {
                     r['image']('/web/static/src/img/icons/gtk-jump-to.png', n.node.x+115, n.node.y+70, 16, 16)
                     .attr({"cursor": "pointer", "title": n.node.menu.name})
@@ -157,21 +170,21 @@ openerp.web_process = function (openerp) {
                         self.jump_to_view(n.node.res_model, n.node.menu.id);
                     });
                 }
-                
+
                 process_set = r.set().push(process_node);
 	            process_set.mousedown(function() {
                     return false;
                 });
                 return process_set;
             };
-            
+
             _.each(res['nodes'],function(node, node_id) {
                 node['res_model'] = self.model,
                 node['res_id'] = false,
                 node['id'] = node_id;
                 process_graph.addNode(node['name'], {node: node,render: process_renderer});
             });
-            
+
             _.each(res['transitions'], function(transitions) {
                 var src = res['nodes'][transitions['source']];
                 var dst = res['nodes'][transitions['target']];
@@ -179,11 +192,11 @@ openerp.web_process = function (openerp) {
                 transitions['active'] = src.active && !dst.gray;
                 process_graph.addEdge(src['name'], dst['name'], {directed : true});
             });
-            
+
             var layouter = new Graph.Layout.Ordered(process_graph);
             var render_process_graph = new Graph.Renderer.Raphael('process_canvas', process_graph, $('#process_canvas').width(), $('#process_canvas').height());
         },
-        
+
         jump_to_view: function(model, id) {
             var self = this;
             var dataset = new openerp.web.DataSetStatic(this, 'ir.values', this.session.context);
