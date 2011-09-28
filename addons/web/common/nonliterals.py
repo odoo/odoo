@@ -41,6 +41,9 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
                 '__eval_context': object.get_eval_context()
             }
         raise TypeError('Could not encode unknown non-literal %s' % object)
+    
+_ALLOWED_KEYS = frozenset(['__ref', "__id", '__domains',
+                           '__contexts', '__eval_context', 'own_values'])
 
 def non_literal_decoder(dct):
     """ Decodes JSON dicts into :class:`Domain` and :class:`Context` based on
@@ -50,6 +53,9 @@ def non_literal_decoder(dct):
     ``own_values`` dict key.
     """
     if '__ref' in dct:
+        for x in dct.keys():
+            if not x in _ALLOWED_KEYS:
+                raise ValueError("'%s' key not allowed in non literal domain/context" % x)
         if dct['__ref'] == 'domain':
             domain = Domain(None, key=dct['__id'])
             if 'own_values' in dct:
