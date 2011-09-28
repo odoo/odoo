@@ -65,7 +65,7 @@ class ir_sequence(openerp.osv.osv.osv):
         'suffix': openerp.osv.fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
         'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
-        'padding' : openerp.osv.fields.integer('Number padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
+        'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
     }
     _defaults = {
