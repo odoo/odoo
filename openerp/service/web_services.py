@@ -38,6 +38,7 @@ import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
+import openerp.exceptions
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
@@ -93,7 +94,7 @@ class db(netsvc.ExportService):
 
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
             'change_admin_password', 'migrate_databases',
@@ -161,7 +162,7 @@ class db(netsvc.ExportService):
                 self.actions.pop(id)
                 return (1.0, users)
             else:
-                e = self.actions[id]['exception']
+                e = self.actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
                 self.actions.pop(id)
                 raise Exception, e
 
@@ -302,7 +303,7 @@ class db(netsvc.ExportService):
 
     def exp_list(self, document=False):
         if not tools.config['list_db'] and not document:
-            raise Exception('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -356,7 +357,7 @@ class db(netsvc.ExportService):
             except except_orm, inst:
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
-                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -368,20 +369,14 @@ class common(netsvc.ExportService):
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         logger = netsvc.Logger()
         if method == 'login':
-            # At this old dispatcher, we do NOT update the auth proxy
             res = security.login(params[0], params[1], params[2])
             msg = res and 'successful login' or 'bad login or password'
             # TODO log the client ip address..
             logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
             return res or False
-        elif method == 'logout':
-            if auth:
-                auth.logout(params[1]) # TODO I didn't see any AuthProxy implementing this method.
-            logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
-            return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
                         'login_message','get_stats', 'check_connectivity',
                         'list_http_services']:
@@ -562,7 +557,7 @@ class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
         netsvc.ExportService.__init__(self,name)
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method == 'obj_list':
@@ -595,7 +590,7 @@ class wizard(netsvc.ExportService):
         self.wiz_name = {}
         self.wiz_uid = {}
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method not in ['execute','create']:
@@ -628,9 +623,9 @@ class wizard(netsvc.ExportService):
             if self.wiz_uid[wiz_id] == uid:
                 return self._execute(db, uid, wiz_id, datas, action, context)
             else:
-                raise Exception, 'AccessDenied'
+                raise openerp.exceptions.AccessDenied()
         else:
-            raise Exception, 'WizardNotFound'
+            raise openerp.exceptions.Warning('Wizard not found.')
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -639,12 +634,6 @@ class wizard(netsvc.ExportService):
 #     False -> True
 #
 
-class ExceptionWithTraceback(Exception):
-    def __init__(self, msg, tb):
-        self.message = msg
-        self.traceback = tb
-        self.args = (msg, tb)
-
 class report_spool(netsvc.ExportService):
     def __init__(self, name='report'):
         netsvc.ExportService.__init__(self, name)
@@ -652,7 +641,7 @@ class report_spool(netsvc.ExportService):
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method not in ['report', 'report_get', 'render_report']:
@@ -683,7 +672,7 @@ class report_spool(netsvc.ExportService):
             (result, format) = obj.create(cr, uid, ids, datas, context)
             if not result:
                 tb = sys.exc_info()
-                self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
             self._reports[id]['result'] = result
             self._reports[id]['format'] = format
             self._reports[id]['state'] = True
@@ -695,9 +684,9 @@ class report_spool(netsvc.ExportService):
             logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                     'Exception: %s\n%s' % (str(exception), tb_s))
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
-                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
             self._reports[id]['state'] = True
         cr.commit()
         cr.close()
@@ -726,7 +715,7 @@ class report_spool(netsvc.ExportService):
                 (result, format) = obj.create(cr, uid, ids, datas, context)
                 if not result:
                     tb = sys.exc_info()
-                    self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
@@ -738,9 +727,9 @@ class report_spool(netsvc.ExportService):
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()
             cr.close()

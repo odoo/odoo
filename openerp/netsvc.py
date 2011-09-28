@@ -37,6 +37,7 @@ from pprint import pformat
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
+import openerp.exceptions
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
@@ -60,11 +61,12 @@ def close_socket(sock):
 #.apidoc title: Common Services: netsvc
 #.apidoc module-mods: member-order: bysource
 
-def abort_response(error, description, origin, details):
-    if not tools.config['debug_mode']:
-        raise Exception("%s -- %s\n\n%s"%(origin, description, details))
+def abort_response(dummy_1, description, dummy_2, details):
+    # TODO Replace except_{osv,orm} with these directly.
+    if description == 'AccessError':
+        raise openerp.exceptions.AccessError(details)
     else:
-        raise
+        raise openerp.exceptions.Warning(details)
 
 class Service(object):
     """ Base class for *Local* services
@@ -96,12 +98,9 @@ def LocalService(name):
 class ExportService(object):
     """ Proxy for exported services.
 
-    All methods here should take an AuthProxy as their first parameter. It
-    will be appended by the calling framework.
-
     Note that this class has no direct proxy, capable of calling
     eservice.method(). Rather, the proxy should call
-    dispatch(method,auth,params)
+    dispatch(method, params)
     """
 
     _services = {}
@@ -118,7 +117,7 @@ class ExportService(object):
 
     # Dispatch a RPC call w.r.t. the method name. The dispatching
     # w.r.t. the service (this class) is done by OpenERPDispatcher.
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         raise Exception("stub dispatch at %s" % self.__name)
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
@@ -371,11 +370,6 @@ class Server:
     def _close_socket(self):
         close_socket(self.socket)
 
-class OpenERPDispatcherException(Exception):
-    def __init__(self, exception, traceback):
-        self.exception = exception
-        self.traceback = traceback
-
 def replace_request_password(args):
     # password is always 3rd argument in a request, we replace it in RPC logs
     # so it's easier to forward logs for diagnostics/debugging purposes...
@@ -393,7 +387,7 @@ def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
             logger.log(channel, indent+line)
             indent=indent_after
 
-def dispatch_rpc(service_name, method, params, auth):
+def dispatch_rpc(service_name, method, params):
     """ Handle a RPC call.
 
     This is pure Python code, the actual marshalling (from/to XML-RPC or
@@ -408,7 +402,7 @@ def dispatch_rpc(service_name, method, params, auth):
             _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
         if logger.isEnabledFor(logging.DEBUG_RPC):
             start_time = time.time()
-        result = ExportService.getService(service_name).dispatch(method, auth, params)
+        result = ExportService.getService(service_name).dispatch(method, params)
         if logger.isEnabledFor(logging.DEBUG_RPC):
             end_time = time.time()
         if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
@@ -416,13 +410,24 @@ def dispatch_rpc(service_name, method, params, auth):
         _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
         _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
         return result
+    except openerp.exceptions.AccessError:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.DeferredException, e:
+        _log('exception', tools.exception_to_unicode(e))
+        post_mortem(e.traceback)
+        raise
     except Exception, e:
         _log('exception', tools.exception_to_unicode(e))
-        tb = getattr(e, 'traceback', sys.exc_info())
-        tb_s = "".join(traceback.format_exception(*tb))
-        if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
-            import pdb
-            pdb.post_mortem(tb[2])
-        raise OpenERPDispatcherException(e, tb_s)
+        post_mortem(sys.exc_info())
+        raise
+
+def post_mortem(info):
+    if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
+        import pdb
+        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

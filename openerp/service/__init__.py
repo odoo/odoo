@@ -57,7 +57,6 @@ def start_services():
 
     # Initialize the HTTP stack.
     #http_server.init_servers()
-    #http_server.init_xmlrpc()
     #http_server.init_static_http()
     netrpc_server.init_servers()
 
@@ -66,7 +65,6 @@ def start_services():
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
-
 
     # Start the WSGI server.
     openerp.wsgi.start_server()
