@@ -99,6 +99,7 @@ class ir_sequence(openerp.osv.osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         super(ir_sequence, self).unlink(cr, uid, ids, context)
         self._drop_sequence(cr, ids)
+        return True
 
     def write(self, cr, uid, ids, values, context=None):
         ids = ids if isinstance(ids, (list, tuple)) else [ids]
@@ -151,7 +152,7 @@ class ir_sequence(openerp.osv.osv.osv):
         argument, which can be a code or an id (as controlled by the
         ``code_or_id`` argument.
         """
-        # TODO there is no access rights check on the sequence itself.
+        self.check_read(cr, uid)
         res = self._select_by_code_or_id(cr, uid, sequence_code_or_id,
             code_or_id, False, context)
 
