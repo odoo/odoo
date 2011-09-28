@@ -998,11 +998,15 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     focus: function() {
     },
     _build_view_fields_values: function() {
-        var a_dataset = this.view.dataset || {};
+        var a_dataset = this.view.dataset;
         var fields_values = this.view.get_fields_values();
         var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
         fields_values.parent = parent_values;
         return fields_values;
+    },
+    _build_eval_context: function() {
+        var a_dataset = this.view.dataset;
+        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
     /**
      * Builds a new context usable for operations related to fields by merging
@@ -1016,7 +1020,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         var v_context = new openerp.web.CompoundContext();
         _.each(v_contexts, function(x) {v_context.add(x);});
         if (_.detect(v_contexts, function(x) {return !!x.__ref;})) {
-            var fields_values = this._build_view_fields_values();
+            var fields_values = this._build_eval_context();
             v_context.set_eval_context(fields_values);
         }
         // if there is a context on the node, overrides the model's context
@@ -1027,7 +1031,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         var f_domain = this.field.domain || null;
         var v_domain = this.node.attrs.domain || [];
         if (!(v_domain instanceof Array) || true) { //TODO niv: remove || true
-            var fields_values = this._build_view_fields_values();
+            var fields_values = this._build_eval_context();
             v_domain = new openerp.web.CompoundDomain(v_domain).set_eval_context(fields_values);
         }
         // if there is a domain on the node, overrides the model's domain
