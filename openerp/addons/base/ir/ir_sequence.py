@@ -153,7 +153,7 @@ class ir_sequence(openerp.osv.osv.osv):
         """
         # TODO there is no access rights check on the sequence itself.
         res = self._select_by_code_or_id(cr, uid, sequence_code_or_id,
-            code_or_id, context)
+            code_or_id, False, context)
 
         if not res:
             return False
@@ -164,6 +164,9 @@ class ir_sequence(openerp.osv.osv.osv):
                 """ % res['id'])
             res['number_next'] = cr.fetchone()
         else:
+            # Read again with FOR UPDATE NO WAIT.
+            res = self._select_by_code_or_id(cr, uid, sequence_code_or_id,
+                code_or_id, True, context)
             cr.execute("""
                 UPDATE ir_sequence
                 SET number_next=number_next+number_increment
@@ -187,7 +190,8 @@ class ir_sequence(openerp.osv.osv.osv):
         """
         return self.get_id(cr, uid, code, 'code', context)
 
-    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id, context=None):
+    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id,
+            for_update_no_wait, context=None):
         """ Read a sequence object.
 
         There is no access rights check on the sequence itself.
@@ -195,6 +199,7 @@ class ir_sequence(openerp.osv.osv.osv):
         assert code_or_id in ('code', 'id')
         res_company = self.pool.get('res.company')
         company_ids = res_company.search(cr, uid, [], context=context)
+        funw = 'FOR UPDATE NOWAIT' if for_update_no_wait else ''
         cr.execute("""
             SELECT id, number_next, prefix, suffix, padding, implementation
             FROM ir_sequence
@@ -203,8 +208,9 @@ class ir_sequence(openerp.osv.osv.osv):
               AND (company_id in %%s or company_id is NULL)
             ORDER BY company_id, id
             LIMIT 1
-            FOR UPDATE NOWAIT
-            """ % code_or_id, (sequence_code_or_id, tuple(company_ids)))
+            %s
+            """ % (code_or_id, funw),
+            (sequence_code_or_id, tuple(company_ids)))
         return cr.dictfetchone()
 
     def _create_sequence(self, cr, id, number_increment, number_next):
