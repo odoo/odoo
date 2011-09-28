@@ -21,6 +21,12 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this._super(parent);
         this.dataset = dataset;
         this.view_id = view_id;
+
+        this.first_field = null;
+        this.abscissa = null;
+        this.ordinate = null;
+        this.columns = [];
+        this.group_field = null;
     },
     do_show: function () {
         // TODO: re-trigger search
@@ -48,317 +54,192 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.chart = this.fields_view.arch.attrs.type || 'pie';
         this.orientation = this.fields_view.arch.attrs.orientation || 'vertical';
 
-        this.chart_info_fields = [];
-        this.operator_field = '';
-        this.operator_field_one = '';
-        this.operator = [];
-        this.group_field = [];
         _.each(this.fields_view.arch.children, function (field) {
-            if (field.attrs.operator) {
-                this.operator.push(field.attrs.name);
-            }
-            else if (field.attrs.group) {
-                this.group_field.push(field.attrs.name);
-            }
-            else {
-                this.chart_info_fields.push(field.attrs.name);
+            var attrs = field.attrs;
+            if (attrs.group) {
+                this.group_field = attrs.name;
+            } else if(!this.abscissa) {
+                this.first_field = this.abscissa = attrs.name;
+            } else {
+                this.columns.push({
+                    name: attrs.name,
+                    operator: attrs.operator || '+'
+                });
             }
         }, this);
-
-        this.operator_field = this.operator[0];
-        if(this.operator.length > 1){
-            this.operator_field_one = this.operator[1];
-        }
-        if(this.operator == ''){
-            this.operator_field = this.chart_info_fields[1];
-        }
-        this.x_title = this.fields[this.chart_info_fields[0]].string;
-        this.y_title = this.fields[this.operator_field]['string'];
+        this.ordinate = this.columns[0].name;
 
         this.dataset.read_slice([], {}, $.proxy(this, 'schedule_chart'));
     },
     schedule_chart: function(results) {
+        var self = this;
         this.$element.html(QWeb.render("GraphView", {
             "fields_view": this.fields_view,
             "chart": this.chart,
             'element_id': this.element_id
         }));
 
-        _.each(results, function (result) {
-            _.each(result, function (field_value, field_name) {
-                if (typeof field_value == 'object') {
-                    result[field_name] = field_value[field_value.length - 1];
+        var fields = _(this.columns).pluck('name').concat([this.first_field]);
+        if (this.group_field) { fields.push(this.group_field); }
+        // transform search result into usable records
+        var records = _(results).map(function (result) {
+            var point = {};
+            _(result).each(function (value, field) {
+                if (!_(fields).contains(field)) { return; }
+                if (value === false) { point[field] = false; return; }
+                switch (self.fields[field].type) {
+                case 'selection':
+                    point[field] = _(self.fields[field].selection).detect(function (choice) {
+                        return choice[0] === value;
+                    })[1];
+                    break;
+                case 'many2one':
+                    point[field] = value[1];
+                    break;
+                case 'integer': case 'float': case 'char':
+                case 'date': case 'datetime':
+                    point[field] = value;
+                    break;
+                default:
+                    throw new Error(
+                        "Unknown field type " + self.fields[field].type
+                        + "for field " + field + " (" + value + ")");
                 }
-                if (typeof field_value == 'string') {
-                    var choices = this.fields[field_name]['selection'];
-                    _.each(choices, function (choice) {
-                        if (field_value == choice[0]) {
-                            result[field_name] = choice;
-                        }
-                    });
-                }
-            }, this);
-        }, this);
+            });
+            return point;
+        });
+        // aggregate data, because dhtmlx is crap. Aggregate on abscissa field,
+        // leave split on group field => max m*n records where m is the # of
+        // values for the abscissa and n is the # of values for the group field
+        var graph_data = [];
+        _(records).each(function (record) {
+            var abscissa = record[self.abscissa],
+                group = record[self.group_field];
+            var r = _(graph_data).detect(function (potential) {
+                return potential[self.abscissa] === abscissa
+                        && (!self.group_field
+                            || potential[self.group_field] === group);
+            });
+            var datapoint = r || {};
 
-        var graph_data = {};
-        _.each(results, function (result) {
-            var group_key = [];
-            if(this.group_field.length){
-                _.each(this.group_field, function (res) {
-                        result[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                        group_key.push(result[res]);
-                });
-            }else{
-                group_key.push(result[this.group_field]);
-            }
-            var column_key = result[this.chart_info_fields] + "_" + group_key;
-            var column_descriptor = {};
-            if (graph_data[column_key] == undefined) {
-                column_descriptor[this.operator_field] = result[this.operator_field];
-                if (this.operator.length > 1) {
-                    column_descriptor[this.operator_field_one] = result[this.operator_field_one];
+            datapoint[self.abscissa] = abscissa;
+            if (self.group_field) { datapoint[self.group_field] = group; }
+            _(self.columns).each(function (column) {
+                var val = record[column.name],
+                    aggregate = datapoint[column.name];
+                switch(column.operator) {
+                case '+':
+                    datapoint[column.name] = (aggregate || 0) + val;
+                    return;
+                case '*':
+                    datapoint[column.name] = (aggregate || 1) * val;
+                    return;
+                case 'min':
+                    datapoint[column.name] = (aggregate || Infinity) > val
+                                           ? val
+                                           : aggregate;
+                    return;
+                case 'max':
+                    datapoint[column.name] = (aggregate || -Infinity) < val
+                                           ? val
+                                           : aggregate;
                 }
-                column_descriptor[this.chart_info_fields] = result[this.chart_info_fields];
-                if(this.group_field.length){
-                    _.each(this.group_field, function (res) {
-                        column_descriptor[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                    });
-                }
-            } else {
-                column_descriptor = graph_data[column_key];
-                column_descriptor[this.operator_field] += result[this.operator_field];
-                if (this.operator.length > 1) {
-                    column_descriptor[this.operator_field_one] += result[this.operator_field_one];
-                }
-            }
-            graph_data[column_key] = column_descriptor;
-        }, this);
+            });
+
+            if (!r) { graph_data.push(datapoint); }
+        });
+        graph_data = _(graph_data).sortBy(function (point) {
+            return point[self.abscissa] + '[[--]]' + point[self.group_field];
+        });
 
         if (this.chart == 'bar') {
-            return this.schedule_bar(_.values(graph_data));
+            return this.schedule_bar(graph_data);
         } else if (this.chart == "pie") {
-            return this.schedule_pie(_.values(graph_data));
+            return this.schedule_pie(graph_data);
         }
     },
 
     schedule_bar: function(results) {
         var self = this;
-        var view_chart = '';
-        var group_list = [];
-        var legend_list = [];
-        var newkey = '', newkey_one;
-        var string_legend = '';
 
-        if((self.group_field.length) && (this.operator.length <= 1)){
-            view_chart = self.orientation == 'horizontal'? 'stackedBarH' : 'stackedBar';
-        }else{
-            view_chart = self.orientation == 'horizontal'? 'barH' : 'bar';
-        }
+        this.group_field = false;
+        var view_chart = (this.orientation === 'horizontal')
+                ? (this.group_field ? 'stackedBarH' : 'barH')
+                : (this.group_field ? 'stackedBar' : 'bar');
 
-        _.each(results, function (result) {
-            if ((self.group_field.length) && (this.operator.length <= 1)) {
-                var legend_key = '';
-                _.each(self.group_field, function (res) {
-                    result[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                    legend_key += result[res];
-                });
-                newkey = legend_key.replace(/\s+/g,'_').replace(/[^a-zA-Z 0-9]+/g,'_');
-                string_legend = legend_key;
-            } else {
-                newkey = string_legend = "val";
+        var group_list = _(this.columns).map(function (column, index) {
+            return {
+                group: column.name,
+                text: self.fields[column.name].string,
+                color: COLOR_PALETTE[index % (COLOR_PALETTE.length)]
             }
-
-            if (_.contains(group_list, newkey) && _.contains(legend_list, string_legend)) {
-                return;
-            }
-            group_list.push(newkey);
-            legend_list.push(string_legend);
-
-            if (this.operator.length > 1) {
-                newkey_one = "val1";
-                group_list.push(newkey_one);
-                legend_list.push(newkey_one);
-            }
-        }, this);
-
-        if (group_list.length <=1){
-            group_list = [];
-            legend_list = [];
-            newkey = string_legend = "val";
-            group_list.push(newkey);
-            legend_list.push(string_legend);
-        }
-
-        var abscissa_data = {};
-        _.each(results, function (result) {
-            var label = result[self.chart_info_fields],
-              section = {};
-            if ((self.group_field.length) && (group_list.length > 1) && (self.operator.length <= 1)){
-                var legend_key_two = '';
-                _.each(self.group_field, function (res) {
-                    result[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                    legend_key_two += result[res];
-                });
-                newkey = legend_key_two.replace(/\s+/g,'_').replace(/[^a-zA-Z 0-9]+/g,'_');
-            }else{
-                newkey = "val";
-            }
-            if (abscissa_data[label] == undefined){
-                section[self.chart_info_fields] = label;
-                _.each(group_list, function (group) {
-                    section[group] = 0;
-                });
-            } else {
-                section = abscissa_data[label];
-            }
-            section[newkey] = result[self.operator_field];
-            if (self.operator.length > 1){
-                section[newkey_one] = result[self.operator_field_one];
-            }
-            abscissa_data[label] = section;
         });
 
-        //for legend color
-        var grp_color = _.map(legend_list, function (group_legend, index) {
-            var legend = {color: COLOR_PALETTE[index]};
-            if (group_legend == "val"){
-                legend['text'] = self.fields[self.operator_field]['string']
-            }else if(group_legend == "val1"){
-                legend['text'] = self.fields[self.operator_field_one]['string']
-            }else{
-                legend['text'] = group_legend;
-            }
-            return legend;
-        });
-
-        //for axis's value and title
-        var max,min,step;
-        var maximum,minimum;
-        if(_.isEmpty(abscissa_data)){
-            max = 9;
-            min = 0;
-            step=1;
-        }else{
-            var max_min = [];
-            _.each(abscissa_data, function (abscissa_datas) {
-                _.each(group_list, function(res){
-                    max_min.push(abscissa_datas[res]);
-                });
-            });
-            maximum = Math.max.apply(Math,max_min);
-            minimum = Math.min.apply(Math,max_min);
-            if (maximum == minimum){
-                if (maximum == 0){
-                    max = 9;
-                    min = 0;
-                    step=1;
-                }else if(maximum > 0){
-                    max = maximum + (10 - maximum % 10);
-                    min = 0;
-                    step = Math.round(max/10);
-                }else{
-                    max = 0;
-                    min = minimum - (10 + minimum % 10);
-                    step = Math.round(Math.abs(min)/10);
-                }
-            }
-        }
         var abscissa_description = {
-            template: self.chart_info_fields,
-            title: "<b>"+self.x_title+"</b>"
+            title: "<b>" + this.fields[this.abscissa].string + "</b>",
+            template: function (obj) {
+                return obj[self.abscissa] || 'Undefined';
+            }
         };
 
         var ordinate_description = {
             lines: true,
-            title: "<b>"+self.y_title+"</b>",
-            start: min,
-            step: step,
-            end: max
+            title: "<b>" + this.fields[this.ordinate].string + "</b>"
         };
 
-        var x_axis, y_axis, tooltip;
-        if (self.orientation == 'horizontal'){
-             x_axis = ordinate_description;
-             y_axis = abscissa_description;
-        }else{
-             x_axis = abscissa_description;
-             y_axis = ordinate_description;
+        var x_axis, y_axis;
+        if (self.orientation == 'horizontal') {
+            x_axis = ordinate_description;
+            y_axis = abscissa_description;
+        } else {
+            x_axis = abscissa_description;
+            y_axis = ordinate_description;
         }
-        tooltip = self.chart_info_fields;
-
+        
         var bar_chart = new dhtmlXChart({
             view: view_chart,
-            container: self.element_id+"-barchart",
-            value:"#"+group_list[0]+"#",
+            container: this.element_id+"-barchart",
+            value:"#"+group_list[0].group+"#",
             gradient: "3d",
             border: false,
             width: 1024,
             tooltip:{
-                template:"#"+tooltip+"#"+","+grp_color[0]['text']+"="+"#"+group_list[0]+"#"
+                template: _.sprintf("#%s#, %s=#%s#",
+                    this.abscissa, group_list[0].text, group_list[0].group)
             },
             radius: 0,
-            color:grp_color[0]['color'],
+            color:group_list[0].color,
             origin:0,
-            xAxis:{
-                template:function(obj){
-                    if(x_axis['template']){
-                        var val = obj[x_axis['template']];
-                        val = (typeof val == 'object')?val[1]:(!val?'Undefined':val);
-                        if(val.length > 12){
-                            val = val.substring(0,12);
-                        }
-                        return val;
-                    }else{
-                        return obj;
-                    }
-                },
-                title:x_axis['title'],
-                lines:x_axis['lines']
-            },
-            yAxis:{
-                template:function(obj){
-                    if(y_axis['template']){
-                        var vals = obj[y_axis['template']];
-                        vals = (typeof vals == 'object')?vals[1]:(!vals?'Undefined':vals);
-                        if(vals.length > 12){
-                            vals = vals.substring(0,12);
-                        }
-                        return vals;
-                    }else{
-                        return obj;
-                    }
-                },
-                title:y_axis['title'],
-                lines: y_axis['lines'],
-                start:y_axis['start'],
-                step:y_axis['step'],
-                end:y_axis['end']
-            },
+            xAxis: x_axis,
+            yAxis: y_axis,
             padding: {
                 left: 75
             },
             legend: {
-                values: grp_color,
+                values: group_list,
                 align:"left",
                 valign:"top",
                 layout: "x",
-                marker:{
+                marker: {
                     type:"round",
                     width:12
                 }
             }
         });
         for (var m = 1; m<group_list.length;m++){
+            var column = group_list[m];
+            if (column.group === this.group_field) { continue; }
             bar_chart.addSeries({
-                value: "#"+group_list[m]+"#",
+                value: "#"+column.group+"#",
                 tooltip:{
-                    template:"#"+tooltip+"#"+","+grp_color[m]['text']+"="+"#"+group_list[m]+"#"
+                    template: _.sprintf("#%s#, %s=#%s#",
+                        this.abscissa, column.text, column.group)
                 },
-                color: grp_color[m]['color']
+                color: column.color
             });
         }
-        bar_chart.parse(_.values(abscissa_data), "json");
-        jQuery("#"+self.element_id+"-barchart").height(jQuery("#"+self.element_id+"-barchart").height()+50);
+        bar_chart.parse(results, "json");
+        jQuery("#"+this.element_id+"-barchart").height(jQuery("#"+this.element_id+"-barchart").height()+50);
         bar_chart.attachEvent("onItemClick", function(id) {
             self.open_list_view(bar_chart.get(id));
         });
@@ -446,9 +327,9 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }, function (results) {
             // TODO: handle non-empty results.group_by with read_group
             if(!_(results.group_by).isEmpty()){
-                self.x_title = results.group_by[0];
+                self.abscissa = results.group_by[0];
             } else {
-                self.x_title = self.chart_info_fields[0].string;
+                self.abscissa = self.first_field;
             }
             self.dataset.read_slice([],{
                 context: results.context,
