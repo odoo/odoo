@@ -45,6 +45,7 @@ import threading
 import time
 
 import openerp
+import tools
 
 # Heapq of database wake-ups. Note that 'database wake-up' meaning is in
 # the context of the cron management. This is not originally about loading
@@ -177,7 +178,7 @@ def runner_body():
                 continue
             registry = openerp.pooler.get_pool(db_name)
             if not registry._init:
-                _logger.debug("Database '%s' wake-up! Firing cron jobs in multithreads", db_name)
+                _logger.debug("Database '%s' wake-up! Firing multi-threaded cron job processing", db_name)
                 registry['ir.cron']._run_jobs_multithread()
     amount = MAX_SLEEP
     with _wakeups_lock:
@@ -197,6 +198,11 @@ def start_master_thread():
     """
     global _thread_slots
     _thread_slots = openerp.conf.max_cron_threads
+    db_maxconn = tools.config['db_maxconn']
+    if _thread_slots >= tools.config.get('db_maxconn', 64):
+        _logger.warning("Connection pool size (%s) is set lower than max number of cron threads (%s), "
+                        "this may cause trouble if you reach that number of parallel cron tasks.",
+                        db_maxconn, _thread_slots)
     t = threading.Thread(target=runner, name="openerp.cron.master_thread")
     t.setDaemon(True)
     t.start()
