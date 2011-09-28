@@ -282,11 +282,13 @@
                         <t t-if="page.attrs.invisible">
                             <div style="display:none;" data-collapsed="true" data-role="collapsible" t-att-id="page.attrs.string">
                                 <h3><t t-esc="page.attrs.string"></t></h3>
+                                <div id="page_content" />
                             </div>
                         </t>
                         <t t-if="!page.attrs.invisible">
                             <div data-collapsed="true" data-role="collapsible" t-att-id="page.attrs.string">
                                 <h3><t t-esc="page.attrs.string"></t></h3>
+                                <div id="page_content" />
                             </div>
                         </t>
                     </t>
