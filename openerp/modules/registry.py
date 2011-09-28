@@ -105,7 +105,7 @@ class Registry(object):
         monitor the ir.cron model for future jobs. See openerp.cron for
         details.
         """
-        openerp.cron.schedule_in_advance(1, self.db.dbname)
+        openerp.cron.schedule_wakeup(openerp.cron.WAKE_UP_NOW, self.db.dbname)
 
     def clear_caches(self):
         """ Clear the caches

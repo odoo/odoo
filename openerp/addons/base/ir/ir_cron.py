@@ -25,12 +25,15 @@ import threading
 import psycopg2
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import netsvc
-import tools
-from tools.safe_eval import safe_eval as eval
-import pooler
-from osv import fields, osv
 import openerp
+import pooler
+import tools
+from openerp.cron import WAKE_UP_NOW
+from osv import fields, osv
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
+from tools.safe_eval import safe_eval as eval
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
@@ -47,6 +50,12 @@ _intervalTypes = {
 class ir_cron(osv.osv):
     """ Model describing cron jobs (also called actions or tasks).
     """
+
+    # TODO: perhaps in the future we could consider a flag on ir.cron jobs
+    # that would cause database wake-up even if the database has not been
+    # loaded yet or was already unloaded (e.g. 'force_db_wakeup' or something)
+    # See also openerp.cron
+
     _name = "ir.cron"
     _order = 'name'
     _columns = {
@@ -66,7 +75,7 @@ class ir_cron(osv.osv):
     }
 
     _defaults = {
-        'nextcall' : lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'nextcall' : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
         'priority' : lambda *a: 5,
         'user_id' : lambda obj,cr,uid,context: uid,
         'interval_number' : lambda *a: 1,
@@ -135,15 +144,15 @@ class ir_cron(osv.osv):
     def _run_job(self, cr, job, now):
         """ Run a given job taking care of the repetition.
 
-        The cursor has a lock on the job (aquired by _run_jobs()) and this
-        method is run in a worker thread (spawned by _run_jobs())).
+        The cursor has a lock on the job (aquired by _run_jobs_multithread()) and this
+        method is run in a worker thread (spawned by _run_jobs_multithread())).
 
         :param job: job to be run (as a dictionary).
         :param now: timestamp (result of datetime.now(), no need to call it multiple time).
 
         """
         try:
-            nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
+            nextcall = datetime.strptime(job['nextcall'], DEFAULT_SERVER_DATETIME_FORMAT)
             numbercall = job['numbercall']
 
             ok = False
@@ -158,20 +167,19 @@ class ir_cron(osv.osv):
             addsql = ''
             if not numbercall:
                 addsql = ', active=False'
-            cr.execute("update ir_cron set nextcall=%s, numbercall=%s"+addsql+" where id=%s", (nextcall.strftime('%Y-%m-%d %H:%M:%S'), numbercall, job['id']))
+            cr.execute("UPDATE ir_cron SET nextcall=%s, numbercall=%s"+addsql+" WHERE id=%s", (nextcall.strftime(DEFAULT_SERVER_DATETIME_FORMAT), numbercall, job['id']))
 
             if numbercall:
                 # Reschedule our own main cron thread if necessary.
                 # This is really needed if this job runs longer than its rescheduling period.
-                print ">>> advance at", nextcall
                 nextcall = time.mktime(nextcall.timetuple())
-                openerp.cron.schedule_in_advance(nextcall, cr.dbname)
+                openerp.cron.schedule_wakeup(nextcall, cr.dbname)
         finally:
             cr.commit()
             cr.close()
-            openerp.cron.inc_thread_count()
+            openerp.cron.release_thread_slot()
 
-    def _run_jobs(self):
+    def _run_jobs_multithread(self):
         # TODO remove 'check' argument from addons/base_action_rule/base_action_rule.py
         """ Process the cron jobs by spawning worker threads.
 
@@ -184,61 +192,69 @@ class ir_cron(osv.osv):
         thread (which has to close it itself).
 
         """
-        print ">>> _run_jobs"
         db = self.pool.db
         cr = db.cursor()
         db_name = db.dbname
         try:
             jobs = {} # mapping job ids to jobs for all jobs being processed.
-            now = datetime.now()
-            cr.execute('select * from ir_cron where numbercall<>0 and active and nextcall<=now() order by priority')
+            now = datetime.now() 
+            cr.execute("""SELECT * FROM ir_cron
+                          WHERE numbercall != 0
+                              AND active AND nextcall<=now()
+                          ORDER BY priority""")
             for job in cr.dictfetchall():
-                print ">>>", openerp.cron.get_thread_count(), "threads"
-                if not openerp.cron.get_thread_count():
+                if not openerp.cron.get_thread_slots():
                     break
-                task_cr = db.cursor()
-                task_job = None
                 jobs[job['id']] = job
 
+                task_cr = db.cursor()
                 try:
-                    # Try to lock the job...
-                    task_cr.execute('select * from ir_cron where id=%s for update nowait', (job['id'],), log_exceptions=False)
-                    task_job = task_cr.dictfetchall()[0]
+                    # Try to grab an exclusive lock on the job row from within the task transaction
+                    acquired_lock = False
+                    task_cr.execute("""SELECT *
+                                       FROM ir_cron
+                                       WHERE id=%s
+                                       FOR UPDATE NOWAIT""",
+                                   (job['id'],), log_exceptions=False)
+                    acquired_lock = True
                 except psycopg2.OperationalError, e:
                     if e.pgcode == '55P03':
                         # Class 55: Object not in prerequisite state; 55P03: lock_not_available
-                        # ... and fail (in a good way for our purpose).
-                        print ">>>", job['name'], " is already being processed"
+                        self._logger.debug('Another process/thread is already busy executing job `%s`, skipping it.', job['name'])
                         continue
                     else:
-                        # ... and fail (badly).
+                        # Unexpected OperationalError
                         raise
                 finally:
-                    if not task_job:
+                    if not acquired_lock:
+                        # we're exiting due to an exception while acquiring the lot
                         task_cr.close()
 
-                # ... and succeed.
-                print ">>> taking care of", job['name']
-                task_thread = threading.Thread(target=self._run_job, name=task_job['name'], args=(task_cr, task_job, now))
+                # Got the lock on the job row, now spawn a thread to execute it in the transaction with the lock
+                task_thread = threading.Thread(target=self._run_job, name=job['name'], args=(task_cr, job, now))
                 # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
                 task_thread.setDaemon(False)
-                openerp.cron.dec_thread_count()
+                openerp.cron.take_thread_slot()
                 task_thread.start()
+                self._logger.debug('Cron execution thread for job `%s` spawned', job['name'])
 
-            # Wake up time, without considering the currently processed jobs.
-            if jobs.keys():
-                cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active and id not in %s', (tuple(jobs.keys()),))
+            # Find next earliest job ignoring currently processed jobs (by this and other cron threads)
+            find_next_time_query = """SELECT min(nextcall) AS min_next_call
+                                      FROM ir_cron WHERE numbercall != 0 AND active""" 
+            if jobs:
+                cr.execute(find_next_time_query + " AND id NOT IN %s", (tuple(jobs.keys()),))
             else:
-                cr.execute('select min(nextcall) as min_next_call from ir_cron where numbercall<>0 and active')
+                cr.execute(find_next_time_query)
             next_call = cr.dictfetchone()['min_next_call']
-            print ">>> possibility at ", next_call
 
             if next_call:
-                next_call = time.mktime(time.strptime(next_call, '%Y-%m-%d %H:%M:%S'))
+                next_call = time.mktime(time.strptime(next_call, DEFAULT_SERVER_DATETIME_FORMAT))
             else:
-                next_call = int(time.time()) + 3600   # if do not find active cron job from database, it will run again after 1 day
+                # no matching cron job found in database, re-schedule arbitrarily in 1 day,
+                # this delay will likely be modified when running jobs complete their tasks
+                next_call = time.time() + (24*3600)
 
-            openerp.cron.schedule_in_advance(next_call, db_name)
+            openerp.cron.schedule_wakeup(next_call, db_name)
 
         except Exception, ex:
             self._logger.warning('Exception in cron:', exc_info=True)
@@ -258,7 +274,7 @@ class ir_cron(osv.osv):
         # when the server is only starting or loading modules (hence the test on pool._init).
         if not self.pool._init:
             cr.commit()
-            openerp.cron.schedule_in_advance(1, self.pool.db.dbname)
+            openerp.cron.schedule_wakeup(WAKE_UP_NOW, self.pool.db.dbname)
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
