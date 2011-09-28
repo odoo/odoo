@@ -54,7 +54,7 @@ class ir_sequence(openerp.osv.osv.osv):
     _order = 'name'
     _columns = {
         'name': openerp.osv.fields.char('Name', size=64, required=True),
-        'code': openerp.osv.fields.selection(_code_get, 'Code', size=64, required=True), # TODO should it be unique?
+        'code': openerp.osv.fields.selection(_code_get, 'Code', size=64, required=True),
         'implementation': openerp.osv.fields.selection( # TODO update the view
             IMPLEMENTATION_SELECTION, 'Implementation', required=True,
             help="Two sequence object implementations are offered: Standard "
@@ -79,8 +79,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
     def create(self, cr, uid, values, context=None):
         values = self._add_missing_default_values(cr, uid, values, context)
-        go = super(ir_sequence, self).create_postgres \
-            if values['implementation'] == 'standard' else self.create
+        go = super(ir_sequence, self).create \
+            if values['implementation'] == 'no_gap' else self.create_postgres
         return go(cr, uid, values, context)
 
     def create_postgres(self, cr, uid, values, context=None):
@@ -92,7 +92,7 @@ class ir_sequence(openerp.osv.osv.osv):
         :return: id of the newly created record
         """
         id = super(ir_sequence, self).create(cr, uid, values, context)
-        self._create_sequence(cr,
+        self._create_sequence(cr, id,
             values['number_increment'], values['number_next'])
         return id
 
@@ -161,7 +161,7 @@ class ir_sequence(openerp.osv.osv.osv):
         if res['implementation'] == 'standard':
             cr.execute("""
                 SELECT nextval('ir_sequence_%03d')
-                """, (res['id'],))
+                """ % res['id'])
             res['number_next'] = cr.fetchone()
         else:
             cr.execute("""
@@ -207,14 +207,15 @@ class ir_sequence(openerp.osv.osv.osv):
             """ % code_or_id, (sequence_code_or_id, tuple(company_ids)))
         return cr.dictfetchone()
 
-    def _create_sequence(self, cr, number_increment, number_next):
+    def _create_sequence(self, cr, id, number_increment, number_next):
         """ Create a PostreSQL sequence.
 
         There is no access rights check.
         """
+        assert isinstance(id, (int, long))
         cr.execute("""
-            CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %s START WITH %s
-            """, (id, number_increment, number_next))
+            CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s
+            """ % id, (number_increment, number_next))
 
     def _drop_sequence(self, cr, ids):
         """ Drop the PostreSQL sequence if it exists.
@@ -238,9 +239,10 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        assert isinstance(id, (int, long))
         cr.execute("""
-            ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %s RESTART WITH %s
-            """, (id, number_increment, number_next))
+            ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
+            """ % id, (number_increment, number_next))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
