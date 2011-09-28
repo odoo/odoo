@@ -955,9 +955,9 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     start: function() {
         this.header.appendTo($("#oe_header"));
+        this.session.start();
         this.login.appendTo($('#oe_login'));
         this.menu.start();
-        this.session.start();
     },
     on_logged: function() {
         if(this.action_manager)

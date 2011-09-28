@@ -269,18 +269,18 @@
                     <tr>
                         <td><label for="db">Database:</label></td>
                         <td>
-                            <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
+                            <input type="text" name="db" t-att-value="widget.selected_db || ''" autofocus="true"/>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="login">User:</label></td>
                         <td><input type="text" name="login"
-                            t-att-value="selected_login || ''" autofocus="true"/></td>
+                            t-att-value="widget.selected_login || ''" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
                         <td><input type="password" name="password"
-                                t-att-value="selected_password || ''"/></td>
+                                t-att-value="widget.selected_password || ''"/></td>
                     </tr>
                     <tr>
                         <td></td>
