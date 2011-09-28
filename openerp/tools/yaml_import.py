@@ -307,7 +307,7 @@ class YamlInterpreter(object):
         import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-        if isinstance(model, osv.osv.osv_memory):
+        if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)

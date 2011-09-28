@@ -91,7 +91,7 @@ class res_currency(osv.osv):
                           (name, (COALESCE(company_id,-1)))""")
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        res = super(res_currency, self).read(cr, user, ids, fields, context, load)
         currency_rate_obj = self.pool.get('res.currency.rate')
         for r in res:
             if r.__contains__('rate_ids'):

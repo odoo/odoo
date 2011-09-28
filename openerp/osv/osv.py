@@ -21,16 +21,17 @@
 
 #.apidoc title: Objects Services (OSV)
 
+import logging
+from psycopg2 import IntegrityError, errorcodes
+
 import orm
+import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import logging
-from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import MetaModel
-
+from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -198,17 +199,10 @@ class object_proxy():
             cr.close()
         return res
 
-
-class osv_memory(orm.orm_memory):
-    """ Deprecated class. """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
-
-
-class osv(orm.orm):
-    """ Deprecated class. """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
+# deprecated - for backward compatibility.
+osv = Model
+osv_memory = TransientModel
+osv_abstract = AbstractModel # ;-)
 
 
 def start_object_proxy():
