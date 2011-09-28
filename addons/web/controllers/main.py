@@ -494,6 +494,9 @@ def clean_action(req, action):
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
 
+    if 'type' not in action:
+       action['type'] = 'ir.actions.act_window_close'
+
     if action['type'] == 'ir.actions.act_window':
         return fix_view_modes(action)
     return action
