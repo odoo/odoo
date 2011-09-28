@@ -230,12 +230,16 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             view_promise = controller.appendTo(container);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
+                if (self.searchview) {
+                    self.do_searchview_search();
+                }
             });
             this.views[view_type].controller = controller;
+        } else if (this.searchview) {
+            self.do_searchview_search();
         }
 
         if (this.searchview) {
-            this.do_searchview_search();
             this.searchview[view.controller.searchable === false || this.searchview.hidden ? 'hide' : 'show']();
         }
 
