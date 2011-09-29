@@ -239,7 +239,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         }
 
         if (this.searchview) {
-            this.searchview[view.controller.searchable === false || this.searchview.hidden ? 'hide' : 'show']();
+            this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
         }
 
         this.$element
