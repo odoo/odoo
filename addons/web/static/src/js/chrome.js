@@ -1,7 +1,6 @@
 /*---------------------------------------------------------
  * OpenERP Web chrome
  *---------------------------------------------------------*/
-
 openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
@@ -300,9 +299,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
             var admin = result[1][0];
             setTimeout(function () {
-                self.stop();
                 self.widget_parent.do_login(
                         info.db, admin.login, admin.password);
+                self.stop();
                 $.unblockUI();
             });
         });
