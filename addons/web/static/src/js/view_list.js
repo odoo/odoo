@@ -142,11 +142,16 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     color_for: function (record) {
         if (!this.colors) { return ''; }
+        var context = _.extend({}, record.attributes, {
+            uid: this.session.uid,
+            current_date: new Date().toString('yyyy-MM-dd')
+            // TODO: time, datetime, relativedelta
+        });
         for(var i=0, len=this.colors.length; i<len; ++i) {
             var pair = this.colors[i],
                 color = pair[0],
                 expression = pair[1];
-            if (py.evaluate(expression, record.attributes)) {
+            if (py.evaluate(expression, context)) {
                 return 'color: ' + color + ';';
             }
         }
