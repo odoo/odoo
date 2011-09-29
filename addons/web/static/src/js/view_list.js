@@ -1391,10 +1391,10 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
      * @returns {Object} record displayable in a form view
      */
     toForm: function () {
-        var form_data = {};
-        _(this.attributes).each(function (value, key) {
-            form_data[key] = {value: value};
-        });
+        var form_data = {}, attrs = this.attributes;
+        for(var k in attrs) {
+            form_data[k] = {value: attrs[k]};
+        }
 
         return {data: form_data};
     }
