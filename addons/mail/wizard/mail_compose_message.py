@@ -82,9 +82,9 @@ class mail_compose_message(osv.osv_memory):
         else:
             # default mode
             result['model'] = context.get('active_model', False)
-        if vals:
-            for field in fields:
-                result.update({field : vals.get(field, False)})
+        for field in vals:
+            if field in fields:
+                result.update({field : vals[field]})
 
         # link to model and record if not done yet
         if not result.get('model') or not result.get('res_id'):
