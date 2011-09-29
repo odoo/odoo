@@ -44,14 +44,14 @@
                     <p><t t-esc="process_help"/></p>
                 </td>
             </tr>
-            <tr t-if="selection">
+            <tr t-if="process_selection">
                 <td>
                     <fieldset>
                         <legend>
                             Select Process
                             </legend>
                         <select id="select_process">
-                            <t t-foreach="selection" t-as="prc">
+                            <t t-foreach="process_selection" t-as="prc">
                                 <option t-att-value="prc[0]">
                                     <t t-esc="prc[1]"/>
                                 </option>
@@ -69,7 +69,37 @@
             <tr t-if="process_id">
                 <td>
                     <button id="edit_process">Edit Process</button>
-                    
+                    <button class="toggle_fields">
+                        <span>Show Fields</span>
+                        <span>Hide Fields</span>
+                    </button>
+                </td>
+            </tr>
+            <tr t-if="process_id">
+                <td class="process_fields">
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                        <t t-foreach="process_fields" t-as="field">
+                            <tr>
+                                <td>
+                                    <t t-esc="field"/>
+                                </td>
+                                <td>
+                                    <table cellspacing="0" cellpadding="0" width="100%">
+                                        <t t-foreach="process_fields[field]" t-as="fld">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="fld"/>:
+                                                </td>
+                                                <td>
+                                                    <t t-esc="process_fields[field][fld]"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
                 </td>
             </tr>
         </table>
