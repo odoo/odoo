@@ -291,7 +291,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.do_execute_action(
             button_attrs, dataset,
             record_id, function () {
-                self.do_actual_search();
+                self.on_reload_record(record_id);
             }
         );
     },
