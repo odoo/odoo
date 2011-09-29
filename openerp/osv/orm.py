@@ -2069,8 +2069,9 @@ class BaseModel(object):
                     context)
             resprint = map(clean, resprint)
             resaction = map(clean, resaction)
-            resaction = filter(lambda x: not x.get('multi', False), resaction)
-            resprint = filter(lambda x: not x.get('multi', False), resprint)
+            if view_type != 'tree':
+                resaction = filter(lambda x: not x.get('multi'), resaction)
+                resprint = filter(lambda x: not x.get('multi'), resprint)
             resrelate = map(lambda x: x[2], resrelate)
 
             for x in resprint + resaction + resrelate:
