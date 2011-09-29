@@ -2,6 +2,7 @@
 import optparse
 import os
 import sys
+import json
 import tempfile
 import logging
 import logging.config
@@ -48,7 +49,7 @@ logging_opts = optparse.OptionGroup(optparser, "Logging")
 logging_opts.add_option("--log-level", dest="log_level", type="choice",
                         default='debug', help="Global logging level", metavar="LOG_LEVEL",
                         choices=['debug', 'info', 'warning', 'error', 'critical'])
-logging_opts.add_option("--log-config", dest="log_config",
+logging_opts.add_option("--log-config", dest="log_config", default=os.path.join(os.path.dirname(__file__), "logging.json"),
                         help="Logging configuration file", metavar="FILE")
 optparser.add_option_group(logging_opts)
 
@@ -60,10 +61,13 @@ if __name__ == "__main__":
 
     os.environ["TZ"] = "UTC"
 
-    if not options.log_config:
-        logging.basicConfig(level=getattr(logging, options.log_level.upper()))
+    if sys.version_info >= (2, 7):
+        with open(options.log_config) as file:
+            dct = json.load(file)
+        logging.config.dictConfig(dct)
+        logging.getLogger("").setLevel(getattr(logging, options.log_level.upper()))
     else:
-        logging.config.fileConfig(options.log_config)
+        logging.basicConfig(level=getattr(logging, options.log_level.upper()))
 
     app = web.common.dispatch.Root(options)
 
