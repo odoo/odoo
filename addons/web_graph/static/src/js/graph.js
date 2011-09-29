@@ -50,6 +50,17 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
                 self.on_loaded();
         });
     },
+    /**
+     * Returns all object fields involved in the graph view
+     */
+    list_fields: function () {
+        var fs = [this.abscissa];
+        fs.push.apply(fs, _(this.columns).pluck('name'));
+        if (this.group_field) {
+            fs.push(this.group_field);
+        }
+        return fs;
+    },
     on_loaded: function() {
         this.chart = this.fields_view.arch.attrs.type || 'pie';
         this.orientation = this.fields_view.arch.attrs.orientation || 'vertical';
@@ -69,7 +80,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         }, this);
         this.ordinate = this.columns[0].name;
 
-        this.dataset.read_slice([], {}, $.proxy(this, 'schedule_chart'));
+        this.dataset.read_slice(
+            this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
     },
     schedule_chart: function(results) {
         var self = this;
@@ -81,7 +93,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
         var fields = _(this.columns).pluck('name').concat([this.first_field]);
         if (this.group_field) { fields.push(this.group_field); }
-        // transform search result into usable records
+        // transform search result into usable records (convert from OpenERP
+        // value shapes to usable atomic types
         var records = _(results).map(function (result) {
             var point = {};
             _(result).each(function (value, field) {
@@ -360,13 +373,13 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             contexts: contexts,
             group_by_seq: groupbys
         }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
+            // TODO: handle non-empty results.group_by with read_group?
             if(!_(results.group_by).isEmpty()){
                 self.abscissa = results.group_by[0];
             } else {
                 self.abscissa = self.first_field;
             }
-            self.dataset.read_slice([],{
+            self.dataset.read_slice(self.list_fields(), {
                 context: results.context,
                 domain: results.domain
             }, $.proxy(self, 'schedule_chart'));
