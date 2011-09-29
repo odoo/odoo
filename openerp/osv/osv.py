@@ -39,7 +39,7 @@ except_osv = openerp.exceptions.Warning
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service
