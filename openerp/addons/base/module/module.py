@@ -42,13 +42,13 @@ from osv import fields, osv, orm
 
 
 ACTION_DICT = {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.upgrade',
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-            'nodestroy':True,
-        }
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'base.module.upgrade',
+    'target': 'new',
+    'type': 'ir.actions.act_window',
+    'nodestroy':True,
+}
 
 class module_category(osv.osv):
     _name = "ir.module.category"
@@ -70,11 +70,25 @@ class module_category(osv.osv):
                              result.get(id, 0))
         return result
 
+    def name_get(self, cr, uid, ids, context=None):
+        result = []
+
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
+        for record in reads:
+            name = record['name']
+            if record['parent_id']:
+                name = record['parent_id'][1] + ' / ' + name
+            result.append((record['id'], name,))
+
+        return result
+
     _columns = {
         'name': fields.char("Name", size=128, required=True, select=True),
         'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
-        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer')
+        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
+        'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
+        'description' : fields.text("Description"),
     }
     _order = 'name'
 module_category()
