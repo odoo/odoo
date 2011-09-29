@@ -226,8 +226,7 @@ class hr_expense_expense(osv.osv):
         return res
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
-        return True
+        return self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
 
 hr_expense_expense()
 
