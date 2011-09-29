@@ -227,10 +227,13 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             controller.do_switch_view.add_last(this.on_mode_switch);
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
+            this.views[view_type].controller = controller;
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
+                if (self.searchview && view.controller.searchable !== false) {
+                    self.do_searchview_search();
+                }
             });
-            this.views[view_type].controller = controller;
         } else if (this.searchview && view.controller.searchable !== false) {
             self.do_searchview_search();
         }
