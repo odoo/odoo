@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
+import logging
 import time
 
 import openerp
+
+_logger = logging.getLogger('ir_sequence')
 
 class ir_sequence_type(openerp.osv.osv.osv):
     _name = 'ir.sequence.type'
@@ -39,9 +42,6 @@ def _code_get(self, cr, uid, context={}):
     cr.execute('select code, name from ir_sequence_type')
     return cr.fetchall()
 
-IMPLEMENTATION_SELECTION = \
-    [('standard', 'Standard'), ('no_gap', 'No gap')]
-
 class ir_sequence(openerp.osv.osv.osv):
     """ Sequence model.
 
@@ -56,7 +56,8 @@ class ir_sequence(openerp.osv.osv.osv):
         'name': openerp.osv.fields.char('Name', size=64, required=True),
         'code': openerp.osv.fields.selection(_code_get, 'Code', size=64, required=True),
         'implementation': openerp.osv.fields.selection( # TODO update the view
-            IMPLEMENTATION_SELECTION, 'Implementation', required=True,
+            [('standard', 'Standard'), ('no_gap', 'No gap')],
+            'Implementation', required=True,
             help="Two sequence object implementations are offered: Standard "
             "and 'No gap'. The later is slower than the former but forbids any"
             " gap in the sequence (while they are possible in the former)."),
@@ -144,52 +145,70 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    # TODO rename 'test' to 'code_or_id' in account/sequence.
+    def next_by_id(self, cr, uid, sequence_id, context=None):
+        """ Draw an interpolated string using the specified sequence."""
+        self.check_read(cr, uid)
+        res = self._select_by_code_or_id(cr, uid, sequence_id,
+            'id', False, context)
+        return self._next(cr, uid, res, context)
+
+    def next_by_code(self, cr, uid, sequence_code, context=None):
+        """ Draw an interpolated string using the specified sequence."""
+        self.check_read(cr, uid)
+        res = self._select_by_code_or_id(cr, uid, sequence_code,
+            'code', False, context)
+        return self._next(cr, uid, res, context)
+
     def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):
         """ Draw an interpolated string using the specified sequence.
 
         The sequence to use is specified by the ``sequence_code_or_id``
         argument, which can be a code or an id (as controlled by the
-        ``code_or_id`` argument.
+        ``code_or_id`` argument. This method is deprecated.
         """
-        self.check_read(cr, uid)
-        res = self._select_by_code_or_id(cr, uid, sequence_code_or_id,
-            code_or_id, False, context)
-
-        if not res:
-            return False
-
-        if res['implementation'] == 'standard':
-            cr.execute("""
-                SELECT nextval('ir_sequence_%03d')
-                """ % res['id'])
-            res['number_next'] = cr.fetchone()
+        _logger.warning("ir_sequence.get() and ir_sequence.get_id() are deprecated. "
+            "Please use ir_sequence.next_by_code() or ir_sequence.next_by_id().")
+        if code_or_id == 'id':
+            return self.next_by_id(cr, uid, sequence_code_or_id, context)
         else:
-            # Read again with FOR UPDATE NO WAIT.
-            res = self._select_by_code_or_id(cr, uid, sequence_code_or_id,
-                code_or_id, True, context)
-            cr.execute("""
-                UPDATE ir_sequence
-                SET number_next=number_next+number_increment
-                WHERE id=%s
-                """, (res['id'],))
-
-        d = self._interpolation_dict()
-        interpolated_prefix = self._interpolate(res['prefix'], d)
-        interpolated_suffix = self._interpolate(res['suffix'], d)
-        if res['number_next']:
-            return interpolated_prefix + '%%0%sd' % res['padding'] % \
-                res['number_next'] + interpolated_suffix
-        else:
-            # TODO what is this case used for ?
-            return interpolated_prefix + interpolated_suffix
+            return self.next_by_code(cr, uid, sequence_code_or_id, context)
 
     def get(self, cr, uid, code, context=None):
         """ Draw an interpolated string using the specified sequence.
 
-        The sequence to use is specified by its code.
+        The sequence to use is specified by its code. This method is
+        deprecated.
         """
         return self.get_id(cr, uid, code, 'code', context)
+
+    def _next(self, cr, uid, sequence, context=None):
+        if not sequence:
+            return False
+
+        if sequence['implementation'] == 'standard':
+            cr.execute("""
+                SELECT nextval('ir_sequence_%03d')
+                """ % sequence['id'])
+            sequence['number_next'] = cr.fetchone()
+        else:
+            # Read again with FOR UPDATE NO WAIT.
+            sequence = self._select_by_code_or_id(cr, uid, sequence['id'],
+                'id', True, context)
+            cr.execute("""
+                UPDATE ir_sequence
+                SET number_next=number_next+number_increment
+                WHERE id=%s
+                """, (sequence['id'],))
+
+        d = self._interpolation_dict()
+        interpolated_prefix = self._interpolate(sequence['prefix'], d)
+        interpolated_suffix = self._interpolate(sequence['suffix'], d)
+        if sequence['number_next']:
+            return interpolated_prefix + '%%0%sd' % sequence['padding'] % \
+                sequence['number_next'] + interpolated_suffix
+        else:
+            # TODO what is this case used for ?
+            return interpolated_prefix + interpolated_suffix
 
     def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id,
             for_update_no_wait, context=None):
