@@ -23,7 +23,7 @@
 {
     'name': 'Sales Order Dates',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Sales Management',
     'complexity': "easy",
     'description': """
 Add additional date information to the sales order.

@@ -65,21 +65,6 @@ class account_installer(osv.osv_memory):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
 
-    def _get_default_charts(self, cr, uid, context=None):
-        module_name = False
-        company_id = self._default_company(cr, uid, context=context)
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-        address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
-        if address_id['default']:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
-            code = address.country_id.code
-            module_name = (code and 'l10n_' + code.lower()) or False
-        if module_name:
-            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)], context=context)
-            if module_id:
-                return module_name
-        return 'configurable'
-
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
         'date_stop': lambda *a: time.strftime('%Y-12-31'),
@@ -87,7 +72,7 @@ class account_installer(osv.osv_memory):
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
         'company_id': _default_company,
-        'charts': _get_default_charts
+        'charts': 'configurable'
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

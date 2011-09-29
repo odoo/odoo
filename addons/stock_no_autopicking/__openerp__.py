@@ -23,7 +23,7 @@
 {
     'name': 'Stock No Auto-Picking',
     'version': '1.0',
-    'category': 'Warehouse',
+    'category': 'Warehouse Management',
     'description': """
 This module allows an intermediate picking process to provide raw materials to production orders.
 =================================================================================================

@@ -36,7 +36,7 @@ It gives you the possibility to
 
     """,
     "website" : "http://www.openerp.com",
-    "category" : "Sales",
+    "category" : "Sales Management",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [

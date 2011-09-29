@@ -62,6 +62,7 @@ class base_setup_installer2(osv.osv_memory):
                 'type' : 'boolean',
                 'string' : category.name,
                 'name' : category_name,
+                'help' : category.description,
             }
 
         module_proxy = self.pool.get('ir.module.module')
@@ -101,7 +102,7 @@ class base_setup_installer2(osv.osv_memory):
         result = super(base_setup_installer2, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         module_category_proxy = self.pool.get('ir.module.category')
-        module_category_ids = module_category_proxy.search(cr, uid, [('name', '!=', 'Base')], context=context, order='name asc')
+        module_category_ids = module_category_proxy.search(cr, uid, [], context=context, order='name asc')
         arch = ['<form string="Automatic Base Setup">']
         arch.append('<separator string="Categories" colspan="4" />')
         for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
@@ -116,18 +117,18 @@ class base_setup_installer2(osv.osv_memory):
                 arch.append('<field name="category_%d" />' % (module_category.id,))
 
 
-        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
-            if not module_category.module_ids:
-                continue
+        #for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+        #    if not module_category.module_ids:
+        #        continue
 
-            modifiers = {
-                'invisible' : [('category_%d' % (module_category.id), '=', False)],
-                'readonly' : module.state == 'installed',
-            }
-            modifiers = simplejson.dumps(modifiers)
-            arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
-            for module in module_category.module_ids: 
-                arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
+        #    modifiers = {
+        #        'invisible' : [('category_%d' % (module_category.id), '=', False)],
+        #        'readonly' : module.state == 'installed',
+        #    }
+        #    modifiers = simplejson.dumps(modifiers)
+        #    arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
+        #    for module in module_category.module_ids: 
+        #        arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
 
         arch.append(
             '<separator colspan="4" />'
@@ -628,7 +629,7 @@ class specify_partner_terminology(osv.osv_memory):
                 field_ref = f_id.model_id.model + ',' + f_id.name
                 self.make_translations(cr, uid, ids, field_ref, 'field', f_id.field_description, _case_insensitive_replace(f_id.field_description,'Customer',o.partner), context=context)
             #translate help tooltip of field
-            for obj in self.pool.obj_pool.values():
+            for obj in self.pool.models.values():
                 for field_name, field_rec in obj._columns.items():
                     if field_rec.help.lower().count('customer'):
                         field_ref = obj._name + ',' + field_name

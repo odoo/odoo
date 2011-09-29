@@ -27,7 +27,7 @@
                  "crm",
                 ],
     "author" : "OpenERP SA",
-    "category": 'Sales',
+    "category": 'Sales Management',
     "description": """
 Demo data for the module marketing_campaign.
 ============================================

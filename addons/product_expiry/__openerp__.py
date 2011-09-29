@@ -21,7 +21,7 @@
     "name" : "Products Expiry Date",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Warehouse",
+    "category" : "Warehouse Management",
     'complexity': "easy",
     "depends" : ["stock"],
     "init_xml" : [],

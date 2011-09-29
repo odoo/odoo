@@ -23,7 +23,7 @@
     "name" : "Mexico - Chart of Account",
     "version" : "1.0",
     "author" : "RelTek Mexico",
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 This is the module to manage the accounting chart for Mexico in OpenERP.
 ========================================================================

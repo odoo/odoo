@@ -22,7 +22,7 @@
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Finance',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting and Financial Management.

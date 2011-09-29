@@ -24,7 +24,7 @@
     "version": "1.1",
     "author" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Finance",
+    "category" : "Accounting & Finance",
     "depends" : ["base", "decimal_precision"],
     "description": """
 Module for defining analytic accounting object.

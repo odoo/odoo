@@ -29,7 +29,7 @@
     those assets. And it allows to create Move's of the depreciation lines.
     """,
     "website" : "http://www.openerp.com",
-    "category" : "Generic Modules/Accounting",
+    "category" : "Accounting & Finance",
     "init_xml" : [
     ],
     "demo_xml" : [ 'account_asset_demo.xml'

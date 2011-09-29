@@ -23,7 +23,7 @@
 {
     'name': 'Google user',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Others',
     'description': """The module adds google user  in res user""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
