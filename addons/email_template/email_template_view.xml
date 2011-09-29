@@ -127,7 +127,7 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Templates">
-                    <group col="13" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="model_id"/>
                         <field name="email_to"/>
@@ -137,7 +137,7 @@
                         <field name="report_name"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group by..." colspan="4" col="10">
+                    <group expand="0" string="Group by...">
                         <filter string="SMTP Server" domain="[]" context="{'group_by':'smtp_server_id'}" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
                         <filter string="Model" domain="[]" context="{'group_by':'model_id'}" icon="terp-accessories-archiver"/>

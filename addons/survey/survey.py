@@ -58,7 +58,7 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'state': fields.selection([('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
@@ -70,16 +70,12 @@ class survey(osv.osv):
         'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
-        'state': lambda * a: "draft",
+        'state': lambda * a: "open",
         'tot_start_survey': lambda * a: 0,
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
         'response_user': lambda * a:1,
     }
-
-    def survey_draft(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'draft'})
-        return True
 
     def survey_open(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
@@ -92,7 +88,7 @@ class survey(osv.osv):
     def survey_cancel(self, cr, uid, ids, arg):
         self.write(cr, uid, ids, {'state': 'cancel' })
         return True
-        
+
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
@@ -181,9 +177,7 @@ class survey_page(osv.osv):
         if context is None:
             context = {}
         data = super(survey_page, self).default_get(cr, uid, fields, context)
-        if context.get('line_order',False):
-            if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
-                data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
+        self.pool.get('survey.question').data_get(cr,uid,data,context)
         if context.has_key('survey_id'):
             data['survey_id'] = context.get('survey_id', False)
         return data
@@ -504,14 +498,21 @@ class survey_question(osv.osv):
             'context': context
         }
 
+    def data_get(self, cr, uid, data, context):
+        if data and context:
+            if context.get('line_order', False):
+                lines =  context.get('line_order')
+                seq = data.get('sequence', 0)
+                for line in  lines:
+                    seq = seq + 1
+                data.update({'sequence': seq})
+        return data
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
-        if context.get('line_order',False):
-            if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
-                data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
-
+        self.data_get(cr,uid,data,context)
         if context.has_key('page_id'):
             data['page_id']= context.get('page_id', False)
         return data
@@ -604,9 +605,7 @@ class survey_answer(osv.osv):
         if context is None:
             context = {}
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
-        if context.get('line_order', False):
-            if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
-                data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
+        self.pool.get('survey.question').data_get(cr,uid,data,context)
         return data
 
 survey_answer()

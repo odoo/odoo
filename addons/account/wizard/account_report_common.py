@@ -35,7 +35,7 @@ class account_common_report(osv.osv_memory):
         'filter': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
         'period_from': fields.many2one('account.period', 'Start Period'),
         'period_to': fields.many2one('account.period', 'End Period'),
-        'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
+        'journal_ids': fields.many2many('account.journal', string='Journals', required=True),
         'date_from': fields.date("Start Date"),
         'date_to': fields.date("End Date"),
         'target_move': fields.selection([('posted', 'All Posted Entries'),
@@ -68,6 +68,7 @@ class account_common_report(osv.osv_memory):
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
+                               AND p.special = false
                                ORDER BY p.date_start ASC, p.special ASC
                                LIMIT 1) AS period_start
                 UNION
@@ -76,6 +77,7 @@ class account_common_report(osv.osv_memory):
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                AND p.date_start < NOW()
+                               AND p.special = false
                                ORDER BY p.date_stop DESC
                                LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]

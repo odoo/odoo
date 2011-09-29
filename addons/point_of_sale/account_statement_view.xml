@@ -11,35 +11,22 @@
                     <page string="Point of Sale">
                         <group col="6" colspan="4">
                             <separator colspan="6" string="Extended Configuration"/>
-                            <field name="check_dtls" groups="point_of_sale.group_pos_manager" string="Check Cash Balance"/>
+                            <field name="journal_user"/>
                             <field name="auto_cash"/>
-                            <field name="special_journal"/>
+                            <field name="check_dtls"/>
                         </group>
-                        <separator colspan="4" string="POS Users"/>
-                        <field name="journal_users" nolabel="1" colspan="4"/>
                     </page>
                 </xpath>
             </field>
         </record>
 
-        <menuitem name="Cash Register" parent="point_of_sale.menu_point_root" id="menu_cash_register" 
-                sequence="4" groups="point_of_sale.group_pos_manager"/>
-
-        <!--<menuitem
-            name="All Cash Registers"
-            parent="menu_cash_register"
-            action="account.action_view_bank_statement_tree"
-            id="menu_all_menu_cash_register"
-            sequence="4"
-        />-->
-        
         <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit</field>
             <field name="model">account.bank.statement</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
@@ -64,9 +51,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
-                        <filter string="Confirm" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                        <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
                         <separator orientation="vertical"/>
                         <field name="date"/>
                         <field name="name"/>
@@ -141,14 +128,6 @@
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
 
-        <menuitem
-            name="Cash Registers"
-            parent="menu_cash_register"
-            action="action_new_bank_statement_all_tree"
-            id="menu_all_menu_all_register"
-            sequence="4"
-        />
-
         <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
             id="menu_point_open_config" sequence="1"/>
         <menuitem
@@ -162,6 +141,21 @@
             string="Close Cash Registers"
             action="action_pos_close_statement"
             id="menu_close_statement" sequence="2" />
+
+        <menuitem
+            parent="menu_point_open_config"
+            action="action_pos_confirm"
+            id="menu_wizard_pos_confirm" sequence="8" />
+
+
+        <menuitem
+            name="List of Cash Registers"
+            parent="menu_point_open_config"
+            action="action_new_bank_statement_all_tree"
+            id="menu_all_menu_all_register"
+            sequence="4"
+        />
+
 
     </data>
 </openerp>

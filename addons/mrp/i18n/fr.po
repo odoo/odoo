@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-05-24 16:08+0000\n"
+"PO-Revision-Date: 2011-09-26 12:16+0000\n"
 "Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 04:59+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-09-27 04:47+0000\n"
+"X-Generator: Launchpad (build 14028)\n"
 
 #. module: mrp
 #: field:mrp.bom,product_uos:0
@@ -91,8 +91,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
-"La \"règle de stock minimum\" permet au système d'enregistrer "
-"automatiquement les besoins dès que le stock minimum est atteint."
+"La \"règle de stock minimum\" permet au système de créer automatiquement les "
+"approvisionnements dès que le stock minimum est atteint."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -232,8 +232,8 @@ msgid ""
 "In case the Supply method of the product is Produce, the system creates a "
 "production order."
 msgstr ""
-"Dans le cas où la méthode d'approvisionnement de ce produit est Produire, le "
-"système crée un ordre de fabrication"
+"Dans le cas où la méthode de fourniture de ce produit est \"Produire\", le "
+"système crée un ordre de fabrication."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -293,7 +293,7 @@ msgstr "["
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
-msgstr "Besoin de services"
+msgstr "Approvisionnement de services"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -322,8 +322,8 @@ msgid ""
 "products are typically procured manually or through a minimum stock rule."
 msgstr ""
 "Le système attend que les produits soient disponibles en stock. Typiquement, "
-"les besoins en ces produits sont traités manuellement ou avec une règle de "
-"stock minimum."
+"les approvisionnements de ces produits sont traités manuellement ou avec une "
+"règle de stock minimum."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -389,7 +389,7 @@ msgstr "Coût des composants de "
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
-msgstr "Besoin de produit stocké"
+msgstr "Approvisionnement de produit stocké"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -621,7 +621,7 @@ msgstr "Fabriquer"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
-msgstr ""
+msgstr "Précisez le coût du poste de charge par cycle"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -852,9 +852,9 @@ msgid ""
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
 msgstr ""
-"En fonction de la méthode choisie pour \"l'approvisionnement\" du service, "
-"le besoin va générer un appel d'offres pour une commande de sous-traitance, "
-"ou va attendre jusqu'à ce que le service soit effectué (= la livraison des "
+"En fonction de la méthode de fourniture du service, l'approvisionnement va "
+"générer un appel d'offres pour une commande de sous-traitance, ou va "
+"attendre jusqu'à ce que le service soit effectué (= la livraison des "
 "produits)."
 
 #. module: mrp
@@ -866,7 +866,7 @@ msgstr "Urgent"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "Utilisation du poste de charge"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -876,7 +876,7 @@ msgstr "Ordre de fabrication"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
-msgstr "Besoin de matière première"
+msgstr "Approvisionnement de matière première"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,hour_nbr:0
@@ -1043,6 +1043,9 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Nombre d'opérations simultanées que ce poste de charge peut réaliser. Si ce "
+"poste de charge représente une équipe de 5 personnes, la capacité par cycle "
+"est de 5."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
@@ -1050,8 +1053,8 @@ msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
 msgstr ""
-"Si la méthode d'approvisionnement du service est \"Acheter\", ceci va créer "
-"un appel d'offres, par exemple une demande de sous-traitance."
+"Si la méthode de fourniture du service est \"Acheter\", ceci va créer un "
+"appel d'offres, par exemple une demande de sous-traitance."
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
@@ -1066,7 +1069,7 @@ msgstr "En retard"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr "Sur stock"
+msgstr "Production sur stock"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
@@ -1139,7 +1142,7 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
-"Permet le calcul en Juste-à-temps des besoins.\n"
+"Permet le calcul en Juste-à-temps des approvisionnements.\n"
 "\n"
 "Bien que cela soit plus gourmand en ressources que le fonctionnement "
 "standard, le calcul en Juste-à-Temps permet d'éviter d'attendre l'activation "
@@ -1225,6 +1228,41 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    Ceci est la module de base de la gestion de fabrication d'OpenERP.\n"
+"\n"
+"    Fonctionnalités :\n"
+"    * Fabrication pour stockage / Fabrication pour commande (par ligne)\n"
+"    * Nomenclatures multi-niveaux (sans limitations)\n"
+"    * Gammes multi-niveaux (sans limitations)\n"
+"    * Gamme et poste de charge intégrés avec la comptabilité analytique\n"
+"    * Re-planification périodique / module juste à temps\n"
+"    * Multi-points de vente, multi-stocks\n"
+"    * Différentes Stratégies d'ordonnancement\n"
+"    * Méthode des coûts par produit : prix standard , prix moyen\n"
+"    * Analyse facilitée des besoins et des incidents\n"
+"    * Grande flexibilité\n"
+"    * Permet de parcourir la totalité des nomenclatures\n"
+"        y compris les nomenclatures filles et les nomenclatures fantômes\n"
+"    Il intègre complètement la planification des marchandises stockables,\n"
+"    et des services consommables. Les services sont integratés avec le "
+"reste\n"
+"    du logiciel. Par exemple, on peut placer un service dans une "
+"nomenclature\n"
+"    afin de déclencher automatiquement un achat lors d'un ordre de "
+"fabrication.\n"
+"\n"
+"    Rapports fournis par ce module :\n"
+"    * Structure et composants de nomenclature\n"
+"    * Pévision de la charge pour les postes de charge\n"
+"    * Impression des ordres de fabrication\n"
+"    * Prévision des stocks\n"
+"    Tableau de bord de ce module :\n"
+"    * Liste des prochains ordres de production\n"
+"    * Liste des livraisons (en sortie de colisage)\n"
+"    * Graphique de charge des postes de charge\n"
+"    * Liste des approvisionnements en défaut\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1359,9 +1397,10 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
-"La règle du stock minimum est une règle de gestion automatique des besoins, "
-"basée sur des quantités minimum et maximum. Cette règle est disponible dans "
-"le menu de gestion des stocks, et paramétrable pour chaque produit."
+"La règle du stock minimum est une règle de gestion automatique des "
+"approvisionnements, basée sur des quantités minimum et maximum. Cette règle "
+"est disponible dans le menu de gestion des stocks, et paramétrable pour "
+"chaque produit."
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1455,13 +1494,13 @@ msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
 "purchase order."
 msgstr ""
-"Dans le cas où la méthode d'approvisionnement est \"Acheter\", le système va "
-"créer un Ordre d'Achat"
+"Dans le cas où la méthode de fourniture est \"Acheter\", le système va créer "
+"un ordre d'achat."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
-msgstr "Besoin"
+msgstr "Approvisionnement"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1542,7 +1581,7 @@ msgstr "Actif"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr "Satisfaire le besoin de produit"
+msgstr "Approvisionner les produits"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
@@ -1592,7 +1631,7 @@ msgstr "Modifier les quantités de produit"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr "Pilote la gestion des besoins de matières premières"
+msgstr "Pilote la gestion des approvisionnement en matières premières"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1719,7 +1758,7 @@ msgstr "Produits consommés"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Fabrication à la commande"
+msgstr "Production à la demande"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
@@ -1914,7 +1953,7 @@ msgstr "Ordre de Production"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
-msgstr "Règle de gestion automatique des besoins"
+msgstr "Règle de gestion automatique des approvisionnements"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -2110,7 +2149,7 @@ msgstr "Information de coût"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
-msgstr "Besoins"
+msgstr "Ordre d'approvisionnement"
 
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
@@ -2315,6 +2354,8 @@ msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
+"Description du poste de charge. Expliquer ici ce qu'est un cycle pour un tel "
+"poste de charge."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing
@@ -2368,7 +2409,7 @@ msgstr "Production"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr "Besoins en exception"
+msgstr "Approvisionnements en exception"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -2443,7 +2484,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr "Le moyen de satisfaire le besoin dépend du type de produit"
+msgstr "Le moyen d’approvisionnement dépend du type de produit"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -2477,8 +2518,8 @@ msgid ""
 "Depending on the chosen method to supply the stockable products, the "
 "procurement order creates a RFQ, a production order, ... "
 msgstr ""
-"Selon la méthode d'approvisionnement choisie pour les produits suivis en "
-"stock, le besoin générera un appel d'offres, un ordre de fabrication, ... "
+"Selon la méthode de fourniture choisie pour les produits suivis en stock, "
+"l'approvisionnement générera un appel d'offres, un ordre de fabrication, ... "
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2496,8 +2537,8 @@ msgid ""
 "If the service has a 'Produce' supply method, this creates a task in the "
 "project management module of OpenERP."
 msgstr ""
-"Si la méthode d'approvisionnement du service est \"Produire\", ceci va créer "
-"une tâche dans le module de gestion de projets."
+"Si la méthode de fourniture du service est \"Produire\", ceci va créer une "
+"tâche dans le module de gestion de projets."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
@@ -2506,9 +2547,9 @@ msgid ""
 "production order creates as much procurement orders as components listed in "
 "the BOM, through a run of the schedulers (MRP)."
 msgstr ""
-"Afin de s'approvisionner en matières premières (à acheter ou à fabriquer), "
-"l'ordre de fabrication crée autant de besoins que de composants présents "
-"dans la nomenclature, par le biais des planificateurs (MRP)."
+"Afin de fournir les matières premières (à acheter ou à fabriquer), l'ordre "
+"de fabrication crée autant d'ordres d'approvisionnement que de composants "
+"présents dans la nomenclature, par le biais des planificateurs (MRP)."
 
 #. module: mrp
 #: help:mrp.product_price,number:0
@@ -3324,6 +3365,15 @@ msgstr "Année"
 #~ msgstr "Spécifie le coût par cycle d'un poste de charges."
 
 #~ msgid ""
+#~ "Routing indicates all the workcenters used, for how long and/or cycles.If "
+#~ "Routing is indicated then,the third tab of a production order (workcenters) "
+#~ "will be automatically pre-completed."
+#~ msgstr ""
+#~ "La gamme indique tous les postes de charge utilisés, la durée et/ou le "
+#~ "nombre de cycles. Quand \"Gamme\" est indiqué, le troisième onglet des "
+#~ "ordres de fabrication (postes de charge) est automatiquement pré-rempli."
+
+#~ msgid ""
 #~ "\n"
 #~ "    This is the base module to manage the manufacturing process in OpenERP.\n"
 #~ "\n"
@@ -3364,7 +3414,7 @@ msgstr "Année"
 #~ "fabrication.\n"
 #~ "\n"
 #~ "    Fonctionnalités:\n"
-#~ "    * Fabrication pour stock/ Fabrication à la commande (par ligne)\n"
+#~ "    * Production sur stock / à la demande (par ligne)\n"
 #~ "    * Nomenclatures multi-niveaux, sans limitation\n"
 #~ "    * Gammes multi-niveaux, sans limitation\n"
 #~ "    * Gammes et postes de charge intégrés dans la comptabilité analytique\n"
@@ -3396,12 +3446,3 @@ msgstr "Année"
 #~ "    * Graphique de la charge des postes\n"
 #~ "    * Liste des approvisionnements ayant subit un incident\n"
 #~ "    "
-
-#~ msgid ""
-#~ "Routing indicates all the workcenters used, for how long and/or cycles.If "
-#~ "Routing is indicated then,the third tab of a production order (workcenters) "
-#~ "will be automatically pre-completed."
-#~ msgstr ""
-#~ "La gamme indique tous les postes de charge utilisés, la durée et/ou le "
-#~ "nombre de cycles. Quand \"Gamme\" est indiqué, le troisième onglet des "
-#~ "ordres de fabrication (postes de charge) est automatiquement pré-rempli."

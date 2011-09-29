@@ -228,18 +228,18 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Events">
-                    <group col="10" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                    <group>
+                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
-                        <field name="name" select="1"/>
+                        <field name="name"/>
                         <field name="user_id" widget="selection">
                         <filter icon="terp-personal"
                               string="My Events"
                                 help="My Events"
                               domain="[('user_id','=',uid)]"/>
                         </field>
-                        <field name="date_begin" select="1"/>
+                        <field name="date_begin"/>
                         <field name="section_id" widget="selection" groups="base.group_extended">
                           <filter icon="terp-personal+"
                                   context="{'invisible_section': False}"
@@ -249,7 +249,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="12">
+                    <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
@@ -392,11 +392,11 @@
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
                                     <field name="email_from" invisible="1"/>
-		                            <button
-		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
-		                                name="%(mail.action_email_compose_message_wizard)d"
-		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                icon="terp-mail-replied" type="action" />
+                                    <button
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                        icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
                                     <group col="4" colspan="4">
@@ -410,10 +410,10 @@
                                         <page string="Details">
                                             <group attrs="{'invisible': [('email_from', '=', False)]}">
                                                 <field name="body_text" colspan="4" nolabel="1" height="250"/>
-		                                        <button colspan="4" string="Reply"
-		                                            name="%(mail.action_email_compose_message_wizard)d"
-		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
-		                                            icon="terp-mail-replied" type="action"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                             </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
@@ -429,9 +429,9 @@
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
-		                    <button string="Send New Email"
-		                        name="%(mail.action_email_compose_message_wizard)d"
-		                        icon="terp-mail-message-new" type="action"/>
+                            <button string="Send New Email"
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                            </page>
                     </notebook>
                 </form>
@@ -474,8 +474,8 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
-                    <group col="12" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
+                    <group>
+                        <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
@@ -486,7 +486,7 @@
                                 help="My Registrations"
                               domain="[('user_id','=',uid)]"/>
                         </field>
-                        <field name="state" select="1"/>
+                        <field name="state"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">

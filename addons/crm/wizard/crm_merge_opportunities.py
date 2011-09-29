@@ -49,14 +49,9 @@ class crm_merge_opportunity(osv.osv_memory):
 
 
     def get_attachments(self, cr, uid, id, context=None):
-        attach_obj = self.pool.get('ir.attachment')
-        attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)])
-        return attach_ids
-
-    def set_attachements_res_id(self, cr, uid, op_id, attach_ids, context=None):
-        attach_obj = self.pool.get('ir.attachment')
-        attach_obj.write(cr, uid, attach_ids, {'res_id' : op_id})
-
+        proxy = self.pool.get('ir.attachment')
+        ids = proxy.search(cr, uid, [('res_model', '=', 'crm.lead'), ('res_id', '=', id)], context=context)
+        return proxy.browse(cr, uid, ids, context=context)
 
     def find_oldest(self, cr, uid, op_ids, context=None):
         if not context:
@@ -129,15 +124,25 @@ class crm_merge_opportunity(osv.osv_memory):
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
-
         data = self._update_data(op_ids, oldest_opp)
-        #copy message into the first opportunity + merge attachement
 
-        for opp in tail_opportunities + [first_opportunity]:
-            attach_ids = self.get_attachments(cr, uid, opp, context=context)
-            self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
-            for mail_msg in opp.message_ids:
-                message_obj.write(cr, uid, mail_msg.id, {'res_id': first_opportunity.id, 'subject' : _("From %s : %s") % (opp.name, mail_msg.subject) }, context=context)
+        #copy message into the first opportunity + merge attachement
+        count = 1
+        first_attachments = self.get_attachments(cr, uid, first_opportunity, context=context)
+        for opp in tail_opportunities:
+            attachments = self.get_attachments(cr, uid, opp, context=context)
+            for first in first_attachments:
+                for attachment in attachments:
+                    if attachment.name == first.name:
+                        values = dict(
+                            name = "%s (%s)" % (attachment.name, count,),
+                            res_id = first_opportunity.id,
+                        )
+                        attachment.write(values)
+                        count+=1
+                    
+            for history in opp.message_ids:
+                message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'subject' : _("From %s : %s") % (opp.name, history.subject) }, context=context)
 
         #Notification about loss of information
         details = []
@@ -171,7 +176,7 @@ class crm_merge_opportunity(osv.osv_memory):
 
         opp_obj.message_append(cr, uid, [first_opportunity], subject, body_text=details)
         #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
-        opp_obj.write(cr, uid, [first_opportunity.id], data)
+        opp_obj.write(cr, uid, [first_opportunity.id], data, context=context)
         unlink_ids = map(lambda x: x.id, tail_opportunities)
         opp_obj.unlink(cr, uid, unlink_ids, context=context)
 

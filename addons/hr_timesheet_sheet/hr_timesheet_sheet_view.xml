@@ -33,7 +33,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Account">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="sheet_id" />
                         <field name="name" groups="analytic.group_analytic_accounting"/>
                         <field name="invoice_rate"/>
@@ -62,7 +62,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet">
                     <group colspan="4" col="6">
-                        <field name="employee_id"/>
+                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
                         <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
@@ -143,8 +143,8 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                        <field name="state"/>
-                        <button name="button_confirm" states="draft" string="Submit to Manager" type="object" icon="terp-check"/>
+                        <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
+                        <button name="button_confirm" states="draft" string="Submited to Manager" type="object" icon="terp-check"/>
                         <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                         <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_user"/>
                         <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_user"/>
@@ -159,11 +159,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="employee_id" select="1"/>
+                        <field name="employee_id"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+"

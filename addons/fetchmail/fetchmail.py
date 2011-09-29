@@ -78,6 +78,22 @@ class fetchmail_server(osv.osv):
         'attach': True,
     }
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+
+        result = super(fetchmail_server, self).default_get(cr, uid, fields, context=context)
+
+        model = context.pop('fetchmail_model', False) or False
+
+        if isinstance(model, basestring):
+            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model)], context=context)
+            result.update(
+                object_id = model_id[0],
+            )
+
+        return result
+
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False):
         port = 0
         if server_type == 'pop':
@@ -120,7 +136,7 @@ class fetchmail_server(osv.osv):
                 server.write({'state':'done'})
             except Exception, e:
                 logger.exception("Failed to connect to %s server %s", server.type, server.name)
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % e)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if connection:
