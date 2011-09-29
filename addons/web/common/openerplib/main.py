@@ -368,7 +368,7 @@ class Model(object):
                     index = {}
                     for r in result:
                         index[r['id']] = r
-                    result = [index[x] for x in args[0]]
+                    result = [index[x] for x in args[0] if x in index]
             self.__logger.debug('result: %r', result)
             return result
         return proxy
