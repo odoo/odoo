@@ -153,7 +153,7 @@ openerp.web_process = function (openerp) {
                     img_src;
 
                 var bg = "node",
-                    clip_rect = "".concat(n.node.x,",",n.node.y,",150,100"),
+                    clip_rect = "".concat(n.node.x,",",n.node.y,",150,100");
 //                    text_position_x  = n.node.x + (n.node.y/2)
 
                 //Image part
@@ -172,7 +172,7 @@ openerp.web_process = function (openerp) {
                 // Node text
                 process_node_text =  r.text(n.node.x, n.node.y, (n.node.name))
                     .attr({"fill": "#fff", "font-weight": "bold", "cursor": "pointer"});
-                process_node_text.translate(n.node.x / 2, 10)
+                process_node_text.translate((process_node.getBBox().width/ 2) + 5, 10)
                 if(n.node.subflow) {
                     process_node_text.click(function() {
                         self.process_id = n.node.subflow[0];
