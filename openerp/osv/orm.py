@@ -1848,7 +1848,7 @@ class BaseModel(object):
 
         field_group = etree.SubElement(search_view, "group")
         for field_name in fields_to_search:
-            etree.SubElement(field_group, "field", name=field_name))
+            etree.SubElement(field_group, "field", name=field_name)
 
         return search_view
 
@@ -2092,8 +2092,10 @@ class BaseModel(object):
             resrelate = ir_values_obj.get(cr, user, 'action',
                     'client_action_relate', [(self._name, False)], False,
                     context)
-            resaction = [clean(action) for action in resaction if view_type == 'tree' or not action.get('multi')]
-            resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_.get('multi')]
+            resaction = [clean(action) for action in resaction
+                         if view_type == 'tree' or not action[2].get('multi')]
+            resprint = [clean(print_) for print_ in resprint
+                        if view_type == 'tree' or not print_[2].get('multi')]
             resrelate = map(lambda x: x[2], resrelate)
 
             for x in itertools.chain(resprint, resaction, resrelate):
