@@ -264,7 +264,7 @@ class crm_segmentation(osv.osv):
         }
 
     _constraints = [
-        (orm.orm._check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
     ]
 
     def process_continue(self, cr, uid, ids, start=False):

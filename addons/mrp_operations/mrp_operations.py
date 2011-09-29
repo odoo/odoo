@@ -235,6 +235,8 @@ class mrp_production(osv.osv):
         obj = self.browse(cr, uid, ids)[0]
         wf_service = netsvc.LocalService("workflow")
         for workcenter_line in obj.workcenter_lines:
+            if workcenter_line.state == 'draft':
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
             wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
         return super(mrp_production,self).action_production_end(cr, uid, ids)
 
@@ -243,9 +245,11 @@ class mrp_production(osv.osv):
         @return: True
         """
         obj = self.browse(cr, uid, ids)[0]
+        workcenter_pool = self.pool.get('mrp.production.workcenter.line')
         wf_service = netsvc.LocalService("workflow")
-        for workcenter_line in obj.workcenter_lines:
-            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
+        for prod in self.browse(cr, uid, ids):
+            if prod.workcenter_lines:
+                wf_service.trg_validate(uid, 'mrp.production.workcenter.line', prod.workcenter_lines[0].id, 'button_start_working', cr)
         return super(mrp_production,self).action_in_production(cr, uid, ids)
     
     def action_cancel(self, cr, uid, ids, context=None):
