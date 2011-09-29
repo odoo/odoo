@@ -34,6 +34,7 @@ from openerp.cron import WAKE_UP_NOW
 from osv import fields, osv
 from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from tools.safe_eval import safe_eval as eval
+from tools.translate import _
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
@@ -278,17 +279,32 @@ class ir_cron(osv.osv):
             cr.commit()
             openerp.cron.schedule_wakeup(WAKE_UP_NOW, self.pool.db.dbname)
 
+    def _try_lock(self, cr, uid, ids, context=None):
+        """Try to grab a dummy exclusive write-lock to the rows with the given ids,
+           to make sure a following write() or unlink() will not block due
+           to a process currently executing those cron tasks"""
+        try:
+            cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
+                       (tuple(ids),), log_exceptions=False)
+        except psycopg2.OperationalError:
+            cr.rollback() # early rollback to allow translations to work for the user feedback
+            raise osv.except_osv(_("Record cannot be modified right now"),
+                                 _("This cron task is currently being executed and may not be modified, "
+                                  "please try again in a few minutes"))
+
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
         self.update_running_cron(cr)
         return res
 
-    def write(self, cr, user, ids, vals, context=None):
-        res = super(ir_cron, self).write(cr, user, ids, vals, context=context)
+    def write(self, cr, uid, ids, vals, context=None):
+        self._try_lock(cr, uid, ids, context)
+        res = super(ir_cron, self).write(cr, uid, ids, vals, context=context)
         self.update_running_cron(cr)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
+        self._try_lock(cr, uid, ids, context)
         res = super(ir_cron, self).unlink(cr, uid, ids, context=context)
         self.update_running_cron(cr)
         return res
