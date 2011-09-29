@@ -104,7 +104,8 @@ class base_module_record(osv.osv):
         for key,val in data.items():
             if not (val or (fields[key]['type']=='boolean')):
                 continue
-            if fields[key]['type'] in ('integer','float'):
+            if (fields[key]['type'] in ('integer','float') or
+                fields[key]['type'] == 'selection' and isinstance(val, int)):
                 field = doc.createElement('field')
                 field.setAttribute("name", key)
                 field.setAttribute("eval", val and str(val) or 'False' )
