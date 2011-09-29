@@ -105,11 +105,80 @@
                 </form>
             </field>
         </record>
+        
+        <record model="ir.ui.view" id="contacts_kanban_view">
+        <field name="name">res.partner.address.kanban</field>
+        <field name="model">res.partner.address</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban >
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
+                        <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <field name="name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td valign="top" width="22" align="left">
+                                                <img src="/web/static/src/img/persons.png"/>
+                                            </td>
+                                            <td valign="top" align="left">
+                                                <div class="oe_kanban_title2">
+                                                    <field name="title"/>
+                                                    <t t-if="record.title.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                    <field name="function"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="partner_id"/>
+                                                    <t t-if="record.partner_id.raw_value &amp;&amp; record.country_id.raw_value">,</t>
+                                                    <field name="country_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="email"/>
+                                                    <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                    <field name="phone"/></i>
+                                                </div>
+                                            </td>
+                                         </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                            <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
+                                        </a>
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+            
         <record id="action_partner_address_form" model="ir.actions.act_window">
             <field name="name">Addresses</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.address</field>
             <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_address_filter"/>
             <field name="help">Customers (also called Partners in other areas of the system) helps you manage your address book of companies whether they are prospects, customers and/or suppliers. The partner form allows you to track and record all the necessary information to interact with your partners from the company address to their contacts as well as pricelists, and much more. If you installed the CRM, with the history tab, you can track all the interactions with a partner such as opportunities, emails, or sales orders issued.</field>
@@ -353,12 +422,81 @@
                </search>
             </field>
         </record>
+        
+        <!-- Partner Kanban View -->
+        <record model="ir.ui.view" id="res_partner_kanban_view">
+            <field name="name">RES - PARTNER KANBAN</field>
+            <field name="model">res.partner</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td class="oe_kanban_title1" align="left" valign="middle">
+                                                    <field name="name"/>
+                                                </td>
+                                                <td valign="top" width="22">
+                                                    <img t-att-src="kanban_gravatar(record.email.value, 22)" class="oe_kanban_gravatar"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" width="22" align="left">
+                                                    <img src="/web/static/src/img/partner.png"/>
+                                                </td>
+                                                <td valign="top" align="left">
+                                                    <div class="oe_kanban_title2">
+                                                        <field name="title"/>
+                                                        <t t-if="record.title.raw_value &amp;&amp; record.country.raw_value">,</t>
+                                                        <field name="country"/>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <field name="subname"/>
+                                                        <t t-if="record.subname.raw_value &amp;&amp; record.function.raw_value">,</t>
+                                                        <field name="function"/>
+                                                    </div>
+                                                    <div class="oe_kanban_title3">
+                                                        <i><field name="email"/>
+                                                        <t t-if="record.phone.raw_value &amp;&amp; record.email.raw_value">,</t>
+                                                        <field name="phone"/></i>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a title="Mail" t-att-href="'mailto:'+record.email.value" style="text-decoration: none;" >
+                                                <img src="/web/static/src/img/icons/terp-mail-message-new.png" border="0" width="16" height="16"/>
+                                            </a>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
+            <field name="view_mode">kanban</field>
             <field name="context">{"search_default_customer":1}</field>
             <field name="search_view_id" ref="view_res_partner_filter"/>
             <field name="help">A customer is an entity you do business with, like a company or an organization. A customer can have several contacts or addresses which are the people working for this company. You can use the history tab, to follow all transactions related to a customer: sales order, emails, opportunities, claims, etc. If you use the email gateway, the Outlook or the Thunderbird plugin, don't forget to register emails to each contact so that the gateway will automatically attach incoming emails to the right partner.</field>
