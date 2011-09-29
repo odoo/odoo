@@ -3469,7 +3469,7 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise orm.except_orm(_('AccessError'), '%s access is '
+                raise except_orm(_('AccessError'), '%s access is '
                     'restricted to your own records for transient models '
                     '(except for the super-user).' % operation.capitalize())
         else:

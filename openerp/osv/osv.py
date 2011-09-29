@@ -118,8 +118,8 @@ class object_proxy():
                 if inst.name == 'AccessError':
                     self.logger.debug("AccessError", exc_info=True)
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
+            except except_osv:
+                raise
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():
