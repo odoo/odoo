@@ -27,22 +27,27 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         this.dataset.read_slice([],{}, function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
-                    var data = result[i];
+                    self.datarecord = result[i];
                 }
             }
-            self.rpc("/web/view/load", {"model": model, "view_id": view_id, "view_type": "form", context: context}, function (result) {
+            self.rpc("/web/view/load", {"model": model, "view_id": view_id, "view_type": "form", context: context}, self.on_loaded)
+        });
+    },
+    on_loaded: function(result) {
+                var self = this;
                 var fields = result.fields;
                 var view_fields = result.arch.children;
-                var get_fields = self.get_fields(view_fields);
+                var get_fields = this.get_fields(view_fields);
+
                 for (var j = 0; j < view_fields.length; j++) {
                     if (view_fields[j].tag == 'notebook') {
                         var notebooks = view_fields[j];
                     }
                 }
-                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data ,'temp_flag':'1'}));
+                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : self.datarecord ,'temp_flag':'1'}));
                 for(var i=0;i<get_fields.length;i++) {
                     if (get_fields[i].attrs.widget=="progressbar") {
-                        $("#progress").progressbar({value:data[get_fields[i].attrs.name]})
+                        $("#progress").progressbar({value:self.datarecord[get_fields[i].attrs.name]})
                     }
                 }
                 self.$element.find("[data-role=header]").find('h1').html(self.head_title);
@@ -95,9 +100,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             }
                         }
                         if(notebook){
-                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
+                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord,'til': notebook.attrs.string }));
                         }else{
-                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
+                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
                         }
                         $(this).find('div#page_content').find('#formbutton').click(function(){
                             var head = $(this).prev().find('select').find("option:selected").text();
@@ -131,7 +136,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     if(result.fields[relational]){
                         var head = $.trim($(this).text());
                         var dataset = new openerp.web.DataSetStatic(self, result.fields[relational].relation, result.fields[relational].context);
-                        dataset.domain=[['id', 'in', data[relational]]];
+                        dataset.domain=[['id', 'in', self.datarecord[relational]]];
                         dataset.name_search('', dataset.domain, 'in',false ,function(res){
                             for(var i=0;i<res.length;i++){
                                 var splited_data = res[i][1].split(',');
@@ -238,8 +243,6 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     }
                 });
                 $.mobile.changePage("#"+self.element_id, "slide", false, true);
-            });
-        });
     },
     get_fields: function(view_fields, fields) {
         this.fields = fields || [];
