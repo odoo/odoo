@@ -61,9 +61,15 @@
                     </fieldset>
                 </td>
             </tr>
-            <tr t-if="p_id">
+            <tr t-if="process_id">
                 <td>
                     <div id="process_canvas" style="overflow: auto;"></div>
+                </td>
+            </tr>
+            <tr t-if="process_id">
+                <td>
+                    <button id="edit_process">Edit Process</button>
+                    
                 </td>
             </tr>
         </table>

@@ -6,7 +6,7 @@ openerp.web_process = function (openerp) {
             this._super();
             var self = this;
             this.process_check();
-            this.process_help = this.action.help || 'Help: Not Defined';
+            this.process_help = this.action ? this.action.help : 'Help: Not Defined';
         },
         process_check: function() {
             var self = this,
@@ -47,7 +47,49 @@ openerp.web_process = function (openerp) {
         },
 
         load_process: function() {
+            var self = this;
             this.$element.html(QWeb.render("ProcessView", this));
+            this.$element.find('#edit_process').click(function() {
+                self.edit_process_view();
+            });
+        },
+        
+        edit_process_view: function() {
+            var self = this;
+            var action_manager = new openerp.web.ActionManager(this);
+            var dialog = new openerp.web.Dialog(this, {
+                width: 800,
+                height: 600,
+                buttons : {
+                    Cancel : function() {
+                        $(this).dialog('destroy');
+                    },
+                    Save : function() {
+                        var form_view = action_manager.inner_viewmanager.views.form.controller;
+    
+                        form_view.do_save(function() {
+                            self.process_renderer([[self.process_id]]);
+                        });
+                        $(this).dialog('destroy');
+                    }
+                }
+            }).start().open();
+            
+            action_manager.appendTo(dialog.$element);
+            action_manager.do_action({
+                res_model : 'process.process',
+                res_id: self.process_id,
+                views : [[false, 'form']],
+                type : 'ir.actions.act_window',
+                auto_search : false,
+                flags : {
+                    search_view: false,
+                    sidebar : false,
+                    views_switcher : false,
+                    action_buttons : false,
+                    pager: false
+                }
+            });
         },
 
         get_process_id: function() {
@@ -69,12 +111,12 @@ openerp.web_process = function (openerp) {
                         var $parent = self.widget_parent.$element;
                         $parent.find('#change_process').click(function() {
                             self.selection = false;
-                            self.p_id = $parent.find('#select_process').val();
+                            self.process_id = $parent.find('#select_process').val();
                             $.when(self.load_process()).then(self.render_process_view());
                         });
                     });
                 } else {
-                    this.p_id = res[0][0];
+                    this.process_id = res[0][0];
                     $.when(this.load_process()).then(this.render_process_view());
                 }
             }
@@ -82,9 +124,9 @@ openerp.web_process = function (openerp) {
 
         render_process_view: function() {
             var self = this;
-            this.p_id = parseInt(this.p_id, 10);
+            this.process_id = parseInt(this.process_id, 10);
             this.process_dataset.call("graph_get",
-                    [self.p_id, self.model, false, [80,80,150,100]],
+                    [self.process_id, self.model, false, [80,80,150,100]],
                     function(res) {
                         res['title'] = res.resource ? res.resource : res.name;
                         self.process_dataset.call("search_by_model",
@@ -133,7 +175,7 @@ openerp.web_process = function (openerp) {
                 process_node_text.translate(n.node.x / 2, 10)
                 if(n.node.subflow) {
                     process_node_text.click(function() {
-                        self.p_id = n.node.subflow[0];
+                        self.process_id = n.node.subflow[0];
                         self.process_action_model =  n.node.model;
                         self.process_action_name = n.node.name;
                         self.process_subflow();
