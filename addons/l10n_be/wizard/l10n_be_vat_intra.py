@@ -83,9 +83,10 @@ class partner_vat_intra(osv.osv_memory):
         else:
             data_cmpny = obj_user.browse(cursor, user, user).company_id
         data  = self.read(cursor, user, ids)[0]
-        company_vat = data_cmpny.partner_id.vat.replace(' ','').upper()
+        company_vat = data_cmpny.partner_id.vat
         if not company_vat:
             raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+        company_vat = company_vat.replace(' ','').upper()
 
         seq_controlref = obj_sequence.get(cursor, user, 'controlref')
         seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
