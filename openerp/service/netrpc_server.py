@@ -59,8 +59,7 @@ class TinySocketClientThread(threading.Thread):
         while self.running:
             try:
                 msg = ts.myreceive()
-                auth = getattr(self, 'auth_provider', None)
-                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:], auth)
+                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:])
                 ts.mysend(result)
             except socket.timeout:
                 #terminate this channel because other endpoint is gone
