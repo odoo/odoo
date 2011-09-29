@@ -27,8 +27,8 @@ class sale_advance_payment_inv(osv.osv_memory):
     _columns = {
         'product_id': fields.many2one('product.product', 'Advance Product', required=True,
             help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
-        'amount': fields.float('Advance Amount', size=(16, 2), required=True, help="The amount to be invoiced in advance."),
-        'qtty': fields.float('Quantity', size=(16, 2), required=True),
+        'amount': fields.float('Advance Amount', digits=(16, 2), required=True, help="The amount to be invoiced in advance."),
+        'qtty': fields.float('Quantity', digits=(16, 2), required=True),
     }
     _defaults = {
         'qtty': 1.0
