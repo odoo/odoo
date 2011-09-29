@@ -91,7 +91,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             'element_id': this.element_id
         }));
 
-        var fields = _(this.columns).pluck('name').concat([this.first_field]);
+        var fields = _(this.columns).pluck('name').concat([this.abscissa]);
         if (this.group_field) { fields.push(this.group_field); }
         // transform search result into usable records (convert from OpenERP
         // value shapes to usable atomic types
