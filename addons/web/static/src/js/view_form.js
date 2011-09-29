@@ -89,7 +89,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         _.each(this.widgets, function(w) {
             w.start();
         });
-        this.$form_header = this.$element.find('.oe_form_header');
+        this.$form_header = this.$element.find('.oe_form_header:first');
         this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
