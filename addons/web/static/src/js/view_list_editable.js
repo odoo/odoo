@@ -58,8 +58,8 @@ openerp.web.list_editable = function (openerp) {
         /**
          * Replace do_search to handle editability process
          */
-        do_search: function() {
-            this.set_editable(results.context['set_editable']);
+        do_search: function(domain, context, group_by) {
+            this.set_editable(context['set_editable']);
             this._super.apply(this, arguments);
         },
         /**
