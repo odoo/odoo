@@ -230,9 +230,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             view_promise = controller.appendTo(container);
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
-                if (self.searchview && view.controller.searchable !== false) {
-                    self.do_searchview_search();
-                }
             });
             this.views[view_type].controller = controller;
         } else if (this.searchview && view.controller.searchable !== false) {
@@ -279,11 +276,19 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         return this.searchview.appendTo($("#" + this.element_id + "_search"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
-        if (domains) {
-            this.last_search = [domains, contexts, groupbys];
-        }
-        if (this.last_search) {
-            var controller = this.views[this.active_view].controller;
+        var self = this,
+            controller = this.views[this.active_view].controller;
+        if (domains || contexts) {
+            //if ((!domains || !domains.length) && (!contexts || !contexts.length) && (!groupbys || !groupbys.length) { }
+            this.rpc('/web/session/eval_domain_and_context', {
+                domains: domains || [],
+                contexts: contexts || [],
+                group_by_seq: groupbys || []
+            }, function (results) {
+                controller.do_search(results.domain, results.context, results.group_by);
+                self.last_search = [results.domain, results.context, results.group_by];
+            });
+        } else if (this.last_search) {
             controller.do_search.apply(controller, this.last_search);
         }
     },
