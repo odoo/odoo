@@ -5,7 +5,7 @@ var py = {};
         NAME = /^[a-zA-Z0-9_]$/;
 
     var create = function (o, props) {
-        function F() {};
+        function F() {}
         F.prototype = o;
         var inst = new F;
         for(var name in props) {
@@ -13,7 +13,7 @@ var py = {};
             inst[name] = props[name];
         }
         return inst;
-    }
+    };
 
     var symbols = {};
     var comparators = {};
@@ -26,17 +26,17 @@ var py = {};
             } else if (this.id === '(end)') {
                 return '(end)';
             } else if (this.id === '(comparator)' ) {
-                var out = ['(comparator', this.expressions[0]];
+                var repr = ['(comparator', this.expressions[0]];
                 for (var i=0;i<this.operators.length; ++i) {
-                    out.push(this.operators[i], this.expressions[i+1]);
+                    repr.push(this.operators[i], this.expressions[i+1]);
                 }
-                return out.join(' ') + ')';
+                return repr.join(' ') + ')';
             }
             var out = [this.id, this.first, this.second, this.third]
                 .filter(function (r){return r}).join(' ');
             return '(' + out + ')';
         }
-    }
+    };
     function symbol(id, bp) {
         bp = bp || 0;
         var s = symbols[id];
@@ -57,7 +57,7 @@ var py = {};
             this.value = id;
             return this;
         };
-    };
+    }
     function prefix(id, bp, nud) {
         symbol(id).nud = nud || function () {
             this.first = expression(bp);
@@ -149,7 +149,7 @@ var py = {};
     infix('*', 120); infix('/', 120);
     infix('//', 120), infix('%', 120);
 
-    prefix('-', 130); prefix('+', 130); prefix('~', 130)
+    prefix('-', 130); prefix('+', 130); prefix('~', 130);
 
     infixr('**', 140);
 
@@ -170,7 +170,7 @@ var py = {};
                 if (token.id === ')') {
                     break;
                 }
-                this.first.push(expression())
+                this.first.push(expression());
                 if (token.id !== ',') {
                     break;
                 }
@@ -202,11 +202,11 @@ var py = {};
 
     };
     infix('[', 150, function (left) {
-        this.first = left
-        this.second = expression()
-        advance("]")
+        this.first = left;
+        this.second = expression();
+        advance("]");
         return this;
-    })
+    });
     symbol('[').nud = function () {
         this.first = [];
         if (token.id !== ']') {
@@ -253,8 +253,8 @@ var py = {};
         '!': ['='],
         '=': ['='],
         '/': ['/']
-    }
-    function Tokenizer(str) {
+    };
+    function Tokenizer() {
         this.states = ['initial'];
         this.tokens = [];
     }
@@ -369,17 +369,18 @@ var py = {};
             this.builder().push(character);
             return index + 1;
         }
-    }
+    };
 
     exports.tokenize = function tokenize(str) {
         var index = 0,
-            str = str + '\0',
             tokenizer = new Tokenizer(str);
+        str += '\0';
+
         do {
             index = tokenizer.feed(str, index);
-        } while (index !== str.length)
+        } while (index !== str.length);
         return tokenizer.tokens;
-    }
+    };
 
     var token, next;
     function expression(rbp) {
@@ -403,6 +404,7 @@ var py = {};
     }
 
     exports.object = create({}, {});
+    exports.bool = function (arg) { return !!arg; };
     exports.tuple = create(exports.object, {
         __contains__: function (value) {
             for(var i=0, len=this.values.length; i<len; ++i) {
@@ -411,6 +413,15 @@ var py = {};
                 }
             }
             return false;
+        },
+        toJSON: function () {
+            return this.values;
+        }
+    });
+    exports.list = exports.tuple;
+    exports.dict = create(exports.object, {
+        toJSON: function () {
+            return this.values;
         }
     });
 
@@ -420,7 +431,7 @@ var py = {};
         next = function () { return toks[++index]; };
         return expression();
     };
-    evaluate_operator = function (operator, a, b) {
+    var evaluate_operator = function (operator, a, b) {
         switch (operator) {
         case '==': case 'is': return a === b;
         case '!=': case 'is not': return a !== b;
@@ -428,11 +439,19 @@ var py = {};
         case '<=': return a <= b;
         case '>': return a > b;
         case '>=': return a >= b;
-        case 'in': return b.__contains__(a);
-        case 'not in': return !b.__contains__(a);
+        case 'in':
+            if (typeof b === 'string') {
+                return b.indexOf(a) !== -1;
+            }
+            return b.__contains__(a);
+        case 'not in':
+            if (typeof b === 'string') {
+                return b.indexOf(a) === -1;
+            }
+            return !b.__contains__(a);
         }
         throw new Error('SyntaxError: unknown comparator [[' + operator + ']]');
-    }
+    };
     exports.evaluate = function (expr, context) {
         switch (expr.id) {
         case '(name)':
@@ -444,6 +463,14 @@ var py = {};
         case '(string)':
         case '(number)':
             return expr.value;
+        case '(constant)':
+            if (expr.value === 'None')
+                return null;
+            else if (expr.value === 'False')
+                return false;
+            else if (expr.value === 'True')
+                return true;
+            throw new Error("SyntaxError: unknown constant '" + expr.value + "'");
         case '(comparator)':
             var result, left = exports.evaluate(expr.expressions[0], context);
             for(var i=0; i<expr.operators.length; ++i) {
@@ -455,10 +482,12 @@ var py = {};
             }
             return true;
         case '-':
-            if (this.second) {
+            if (expr.second) {
                 throw new Error('SyntaxError: binary [-] not implemented yet');
             }
             return -(exports.evaluate(expr.first, context));
+        case 'not':
+            return !(exports.evaluate(expr.first, context));
         case 'and':
             return (exports.evaluate(expr.first, context)
                     && exports.evaluate(expr.second, context));
@@ -466,16 +495,43 @@ var py = {};
             return (exports.evaluate(expr.first, context)
                     || exports.evaluate(expr.second, context));
         case '(':
-            if (this.second) {
-                throw new Error('SyntaxError: functions not implemented yet');
+            if (expr.second) {
+                var fn = exports.evaluate(expr.first, context), args=[];
+                for (var jj=0; jj<expr.second.length; ++jj) {
+                    args.push(exports.evaluate(
+                        expr.second[jj], context));
+                }
+                return fn.apply(null, args);
             }
             var tuple_exprs = expr.first,
                 tuple_values = [];
-            for (var i=0, len=tuple_exprs.length; i<len; ++i) {
+            for (var j=0, len=tuple_exprs.length; j<len; ++j) {
                 tuple_values.push(exports.evaluate(
-                    tuple_exprs[i], context));
+                    tuple_exprs[j], context));
             }
             return create(exports.tuple, {values: tuple_values});
+        case '[':
+            if (expr.second) {
+                throw new Error('SyntaxError: indexing not implemented yet');
+            }
+            var list_exprs = expr.first, list_values = [];
+            for (var k=0; k<list_exprs.length; ++k) {
+                list_values.push(exports.evaluate(
+                    list_exprs[k], context));
+            }
+            return create(exports.list, {values: list_values});
+        case '{':
+            var dict_exprs = expr.first, dict_values = {};
+            for(var l=0; l<dict_exprs.length; ++l) {
+                dict_values[exports.evaluate(dict_exprs[l][0], context)] =
+                    exports.evaluate(dict_exprs[l][1], context);
+            }
+            return create(exports.dict, {values: dict_values});
+        case '.':
+            if (expr.second.id !== '(name)') {
+                throw new Error('SyntaxError: ' + expr);
+            }
+            return exports.evaluate(expr.first, context)[expr.second.value];
         default:
             throw new Error('SyntaxError: Unknown node [[' + expr.id + ']]');
         }
@@ -485,6 +541,6 @@ var py = {};
             exports.parse(
                 exports.tokenize(
                     str)),
-            context);;
+            context);
     }
-})(typeof exports === 'undefined' ? py : exports)
+})(typeof exports === 'undefined' ? py : exports);
