@@ -28,7 +28,7 @@ class stock_invoice_onshipping(osv.osv_memory):
     def _get_journal(self, cr, uid, context=None):
         res = self._get_journal_id(cr, uid, context=context)
         if res:
-            return res[0]
+            return res[0][0]
         return False
     
     def _get_journal_id(self, cr, uid, context=None):
