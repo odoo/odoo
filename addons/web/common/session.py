@@ -5,6 +5,9 @@ import time
 import openerplib
 
 import nonliterals
+
+import logging
+_logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
@@ -41,12 +44,7 @@ class OpenERPSession(object):
         self.client_timezone = False
 
     def build_connection(self):
-        if self.config.backend == 'local':
-            conn = openerplib.get_connection(protocol='local', database=self._db,
-                   login=self._login, user_id=self._uid, password=self._password)
-        else:
-            conn = openerplib.get_connection(hostname=self.config.server_host,
-                   port=self.config.server_port, database=self._db, login=self._login,
+        conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
                    user_id=self._uid, password=self._password)
         return conn
 

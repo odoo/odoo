@@ -311,6 +311,13 @@ class Root(object):
     def __init__(self, options):
         self.root = werkzeug.urls.Href('/web/webclient/home')
         self.config = options
+        
+        if self.config.backend == 'local':
+            conn = openerplib.get_connector(protocol='local')
+        else:
+            conn = openerplib.get_connector(hostname=self.config.server_host,
+                   port=self.config.server_port)
+        self.config.connector = conn
 
         self.session_cookie = 'sessionid'
         self.addons = {}
