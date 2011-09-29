@@ -78,6 +78,20 @@ class ir_sequence(openerp.osv.osv.osv):
         'padding' : 0,
     }
 
+    def init(self, cr):
+        # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
+        # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
+        # only support field names in constraint definitions, and we need a function here:
+        # we need to special-case company_id to treat all NULL company_id as equal, otherwise
+        # we would allow duplicate (code, NULL) ir_sequences.
+        cr.execute("""
+            SELECT indexname FROM pg_indexes WHERE indexname =
+            'ir_sequence_unique_code_company_id_idx'""")
+        if not cr.fetchone():
+            cr.execute("""
+                CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
+                ON ir_sequence (code, (COALESCE(company_id,-1)))""")
+
     def create(self, cr, uid, values, context=None):
         values = self._add_missing_default_values(cr, uid, values, context)
         go = super(ir_sequence, self).create \
@@ -226,8 +240,6 @@ class ir_sequence(openerp.osv.osv.osv):
             WHERE %s=%%s
               AND active=true
               AND (company_id in %%s or company_id is NULL)
-            ORDER BY company_id, id
-            LIMIT 1
             %s
             """ % (code_or_id, funw),
             (sequence_code_or_id, tuple(company_ids)))
