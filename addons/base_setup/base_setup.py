@@ -70,7 +70,7 @@ class base_setup_installer2(osv.osv_memory):
         module_proxy = self.pool.get('ir.module.module')
         module_ids = module_proxy.search(cr, uid, [], context=context)
         for module in module_proxy.browse(cr, uid, module_ids, context=context):
-            module_name = 'module_%s' % (module.name,)
+            module_name = 'module_%d' % (module.id,)
             module_is_installed = module.state == 'installed'
             fields[module_name] = {
                 'type' : 'boolean',
@@ -93,7 +93,7 @@ class base_setup_installer2(osv.osv_memory):
             module_proxy = self.pool.get('ir.module.module')
             module_ids = module_proxy.search(cr, uid, [], context=context)
             for module in module_proxy.browse(cr, uid, module_ids, context=context):
-                result['module_%s' % (module.name,)] = module.state == 'installed'
+                result['module_%d' % (module.id,)] = module.state == 'installed'
                 category_name = 'category_%d' % (module.category_id.id,)
                 if not result.get('category_name'):
                     result[category_name] = module.state == 'installed'
@@ -116,10 +116,16 @@ class base_setup_installer2(osv.osv_memory):
                 if module.state == 'installed':
                     readonly=True
 
+
+            attributes = {
+                'name' : 'category_%d' % (module_category.id,),
+                'on_change' : 'on_change_selection("category_%d")' % (module_category.id,),
+            }
             if readonly:
-                arch.append("""<field name="category_%d" modifiers='%s'/>""" % (module_category.id, simplejson.dumps({'readonly' : True}),))
-            else:
-                arch.append('<field name="category_%d" />' % (module_category.id,))
+                attributes['modifiers'] = simplejson.dumps({'readonly' : True})
+
+            arch.append("""<field %s />""" % (" ".join(["%s='%s'" % (key, value,)
+                                                        for key, value in attributes.iteritems()]),))
 
         # Compute the module to show
         for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
@@ -132,8 +138,8 @@ class base_setup_installer2(osv.osv_memory):
             }
             modifiers = simplejson.dumps(modifiers)
             arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
-            for module in module_category.module_ids: 
-                arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
+            for module in module_category.module_ids:
+                arch.append("""<field name="module_%d" modifiers='%s' />""" % (module.id, modifiers))
 
         arch.append(
             '<separator colspan="4" />'
@@ -146,24 +152,93 @@ class base_setup_installer2(osv.osv_memory):
         arch.append('</form>')
 
         result['arch'] = ''.join(arch)
+        from pprint import pprint as pp
+        pp(result['arch'])
 
         return result
 
+    def on_change_selection(self, cr, uid, ids, item, context=None):
+        if not isinstance(item, basestring):
+            return {}
+
+        if item.startswith('category_') or item.startswith('module_'):
+            object_name, identifier = item.split('_')
+        else:
+            return {}
+
+        values = {
+        }
+
+        #if object_name == 'category':
+        #    module_ids = self.pool.get('ir.module.module').search(cr, uid, [('category_id', '=', int(identifier))], context=context)
+        #    for module_id in module_ids:
+        #        values['module_%d' % module_id] = 1
+
+        return {'value': values}
+
     def create(self, cr, uid, values, context=None):
-        modules_to_install = [ key[len('module_'):] for key, value in values.iteritems() if value == 1 and key.startswith('module_')]
+        module_ids_to_install = [
+            key.split('_')[1]
+            for key, value in values.iteritems()
+            if value == 1 and key.startswith('module_')
+        ]
+
         values = {
             'modules' : simplejson.dumps(modules_to_install),
         }
-        print "values: %r" % (values,)
         context.update(dont_compute_virtual_attributes=True)
         return super(base_setup_installer2, self).create(cr, uid, values, context=context)
 
-    def apply_cb(self, cr, uid, ids, context=None): 
+    def _get_modules_to_install(self, cr, uid, selected_modules, context=None):
+        STATES = ('installed',)
+
+        module_proxy = self.pool.get('ir.module.module')
+        module_ids = module_proxy.search(cr, uid, [], context=context)
+
+        modules = {}
+        for module in module_proxy.browse(cr, uid, module_ids, context=context):
+            modules[module.name] = {
+                'state' : module.state,
+                'depends' : module.depends,
+            }
+
+        installed_modules = []
+        for module, info in modules.iteritems():
+            info.setdefault('depends', [] if module == 'base' else ['base',])
+
+            if info['state'] in STATES:
+                installed_modules.append(module)
+                info['counter'] = 0
+            else:
+                info['counter'] = - len(set(info['depends']))
+
+        selected_modules = set(selected_modules + installed_modules) - set(['base'])
+
+        for selected_module in selected_modules:
+            for module, info in modules.iteritems():
+                if info['state'] not in STATES and \
+                   (selected_module in info['depends'] or selected_module == module):
+                    info['counter'] += 1
+
+        to_install_modules = set(module
+                                 for module, info in modules.iteritems()
+                                 if info['counter'] == 0 and
+                                    info['state'] not in STATES)
+
+        return to_install_modules
+
+    def apply_cb(self, cr, uid, ids, context=None):
         for installer in self.browse(cr, uid, ids, context=context):
             modules_to_install = simplejson.loads(installer.modules)
             proxy = self.pool.get('ir.module.module')
 
-            module_ids = proxy.search(cr, uid, [('name', 'in', modules_to_install)], context=context)
+            module_ids = proxy.search(cr, uid, [('id', 'in', modules_to_install)], context=context)
+            modules = set(record['name']
+                          for record in proxy.read(cr, uid, module_ids, ['name'], context=context))
+
+            modules = self._get_modules_to_install(cr, uid, modules, context=context)
+
+            module_ids = proxy.search(cr, uid, [('name', 'in', modules)], context=context)
 
             need_update = False
             for module in proxy.browse(cr, uid, module_ids, context=context):
