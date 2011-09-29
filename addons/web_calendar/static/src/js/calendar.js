@@ -13,6 +13,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
+        this.fields_view = {};
         this.view_id = view_id;
         this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
@@ -92,9 +93,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
 
         this.init_scheduler();
         this.has_been_loaded.resolve();
-        if (this.dataset.ids.length) {
-            this.dataset.read_ids(this.dataset.ids, _.keys(this.fields), this.on_events_loaded);
-        }
     },
     init_scheduler: function() {
         var self = this;
@@ -293,26 +291,21 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
         return data;
     },
-    do_search: function(domains, contexts, groupbys) {
+    do_search: function(domain, context, group_by) {
         var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded).then(function() {
-            self.rpc('/web/session/eval_domain_and_context', {
-                domains: domains,
-                contexts: contexts,
-                group_by_seq: groupbys
-            }, function (results) {
-                // TODO: handle non-empty results.group_by with read_group
-                self.dataset.context = self.context = results.context;
-                self.dataset.domain = self.domain = results.domain;
-                self.dataset.read_slice(_.keys(self.fields), {
-                        offset:0,
-                        limit: self.limit
-                    }, function(events) {
-                        self.dataset_events = events;
-                        self.on_events_loaded(events);
-                    }
-                );
+            // TODO: handle non-empty results.group_by with read_group
+            self.context = context;
+            self.domain = domain;
+            self.dataset.read_slice(_.keys(self.fields), {
+                offset: 0,
+                context: context,
+                domain: domain,
+                limit: self.limit
+            }, function(events) {
+                self.dataset_events = events;
+                self.on_events_loaded(events);
             });
         });
     },
