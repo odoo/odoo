@@ -5,6 +5,9 @@
 openerp.web_mobile.form_mobile = function (openerp) {
 
 openerp.web_mobile.FormView = openerp.web.Widget.extend({
+
+    template: 'FormView',
+
     init: function(session, element_id, list_id, action, head_title, resmodel, viewid) {
         this._super(session, element_id);
         this.list_id = list_id;
@@ -44,7 +47,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                         var notebooks = view_fields[j];
                     }
                 }
-                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : self.datarecord ,'temp_flag':'1'}));
+                self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : self.datarecord ,'temp_flag':'1'}));
                 for(var i=0;i<get_fields.length;i++) {
                     if (get_fields[i].attrs.widget=="progressbar") {
                         $("#progress").progressbar({value:self.datarecord[get_fields[i].attrs.name]})
@@ -100,9 +103,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             }
                         }
                         if(notebook){
-                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord,'til': notebook.attrs.string }));
+                            $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord,'til': notebook.attrs.string }));
                         }else{
-                            $(this).find('div#page_content').html(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
+                            $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
                         }
                         $(this).find('div#page_content').find('#formbutton').click(function(){
                             var head = $(this).prev().find('select').find("option:selected").text();
@@ -144,7 +147,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             }
                             if(!$('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html()){
                                 $('<div id="oe_list_'+relational+'_'+self.element_id+'" data-role="page" data-url="oe_list_'+relational+'_'+self.element_id+'"> </div>').appendTo('#moe');
-                                $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(QWeb.render("ListView", {'records' : res}));
+                                $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').html(openerp.web.qweb.render("ListView", {'records' : res}));
                                 $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('h1').html(head);
                                 $('[id^="oe_list_'+relational+'_'+self.element_id+'"]').find("[data-role=header]").find('#home').click(function(){
                                     $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -194,7 +197,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                                     }
                                                 }
                                             }
-                                            $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(QWeb.render("FormView", {'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
+                                            $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html(self.render({'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational, 'temp_flag':'1' }));
                                             $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('h1').html(head_title);
                                             $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find("[data-role=header]").find('#home').click(function(){
                                                 $.mobile.changePage("#oe_menu", "slide", false, true);
