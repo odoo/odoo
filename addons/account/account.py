@@ -1214,7 +1214,7 @@ class account_move(osv.osv):
                 else:
                     if journal.sequence_id:
                         c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = obj_sequence.get_id(cr, uid, journal.sequence_id.id, context=c)
+                        new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
                     else:
                         raise osv.except_osv(_('Error'), _('No sequence defined on the journal !'))
 
