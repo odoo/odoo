@@ -424,20 +424,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         return new_record;
     },
-    do_search: function (domains, contexts, group_by) {
+    do_search: function (domain, context, group_by) {
         var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
-            domains: [this.dataset.get_domain()].concat(domains),
-            contexts: [this.dataset.get_context()].concat(contexts),
-            group_by_seq: group_by
-        }, function (results) {
-            self.domain = results.domain;
-            self.context = results.context;
-            self.group_by = results.group_by;
-            self.do_actual_search();
-        });
-    },
-    do_actual_search : function () {
+        self.domain = domain;
+        self.context = context;
+        self.group_by = group_by;
         var self = this,
             group_by = self.group_by;
         if (!group_by.length && this.fields_view.arch.attrs.default_group_by) {
