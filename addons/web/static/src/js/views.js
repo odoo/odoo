@@ -281,8 +281,8 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         if (domains || contexts) {
             //if ((!domains || !domains.length) && (!contexts || !contexts.length) && (!groupbys || !groupbys.length) { }
             this.rpc('/web/session/eval_domain_and_context', {
-                domains: domains || [],
-                contexts: contexts || [],
+                domains: [this.dataset.get_domain()].concat(domains || []),
+                contexts: [this.dataset.get_context()].concat(contexts || []),
                 group_by_seq: groupbys || []
             }, function (results) {
                 controller.do_search(results.domain, results.context, results.group_by);
