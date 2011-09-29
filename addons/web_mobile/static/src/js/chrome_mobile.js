@@ -103,8 +103,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         if(!$('#oe_menu').html().length){
             this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
             this.menu.start();
-        }
-        else{
+        }else{
             $.mobile.changePage("#oe_menu", "slide", false, true);
         }
     },
@@ -145,13 +144,14 @@ openerp.web_mobile.Footer =  openerp.web.Widget.extend({
 openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
 
     template: "Shortcuts",
+
     init: function(session, element_id) {
         this._super(session, element_id);
     },
     start: function() {
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
-            self.$element.html(this.render({'sc' : res}))
+            self.$element.html(self.render({'sc' : res}))
             self.$element.find("[data-role=header]").find('h1').html('Favourite');
             self.$element.find("[data-role=header]").find('#home').click(function(){
                 $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -161,8 +161,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
                 if(!$('#oe_options').html().length){
                     this.options = new openerp.web_mobile.Options(self, "oe_options");
                     this.options.start();
-                }
-                else{
+                }else{
                     $.mobile.changePage("#oe_options", "slide", false, true);
                 }
             });
@@ -215,8 +214,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
                 this.shortcuts.start();
-            }
-            else{
+            }else{
                 $.mobile.changePage($("#oe_shortcuts"), "slide", false, true);
             }
         });
@@ -224,8 +222,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
             if(!$('#oe_options').html().length){
                 this.options = new openerp.web_mobile.Options(self, "oe_options");
                 this.options.start();
-            }
-            else{
+            }else{
                 $.mobile.changePage("#oe_options", "slide", false, true);
             }
         });
@@ -273,8 +270,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
                 this.shortcuts.start();
-            }
-            else{
+            }else{
                 $.mobile.changePage("#oe_shortcuts", "slide", false, true);
             }
         });
@@ -282,8 +278,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
             if(!$('#oe_options').html().length){
                 this.options = new openerp.web_mobile.Options(self, "oe_options");
                 this.options.start();
-            }
-            else{
+            }else{
                 $.mobile.changePage("#oe_options", "slide", false, true);
             }
         });
@@ -317,8 +312,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
             }else{
                 $.mobile.changePage('#oe_sec_menu_'+id, "slide", false, true);
             }
-        }
-        else {
+        }else {
             if(!$('[id^="oe_list_'+id+'"]').html()){
                 $('<div id="oe_list_'+id+'" data-role="page" data-url="oe_list_'+id+'"> </div>').appendTo('#moe');
                 this.listview = new openerp.web_mobile.ListView(this, "oe_list_"+id, id);
@@ -343,8 +337,7 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
                 this.shortcuts.start();
-            }
-            else{
+            }else{
                 $.mobile.changePage("#oe_shortcuts", "slide", false, true);
             }
         });
