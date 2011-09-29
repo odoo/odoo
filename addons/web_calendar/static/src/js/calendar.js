@@ -35,6 +35,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     },
     stop: function() {
         scheduler.clearAll();
+        this._super();
     },
     on_loaded: function(data) {
         this.fields_view = data;

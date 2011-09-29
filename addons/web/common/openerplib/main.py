@@ -38,6 +38,7 @@ Code repository: https://code.launchpad.net/~niv-openerp/openerp-client-lib/trun
 import xmlrpclib
 import logging 
 import socket
+import sys
 
 try:
     import cPickle as pickle
@@ -208,10 +209,7 @@ class LocalConnector(Connector):
         # OpenERPWarning code 1
         # OpenERPException code 2
         try:
-            result = openerp.netsvc.dispatch_rpc(service_name, method, args, None)
-        except openerp.netsvc.OpenERPDispatcherException, e:
-            fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
-            raise fault
+            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
         except:
             exc_type, exc_value, exc_tb = sys.exc_info()
             fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
@@ -370,7 +368,7 @@ class Model(object):
                     index = {}
                     for r in result:
                         index[r['id']] = r
-                    result = [index[x] for x in args[0]]
+                    result = [index[x] for x in args[0] if x in index]
             self.__logger.debug('result: %r', result)
             return result
         return proxy

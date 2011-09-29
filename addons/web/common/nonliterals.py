@@ -237,7 +237,10 @@ class CompoundContext(BaseContext):
     
     def evaluate(self, context=None):
         ctx = dict(context or {})
-        ctx.update(self.get_eval_context() or {})
+        eval_context = self.get_eval_context()
+        if eval_context:
+            eval_context = self.session.eval_context(eval_context)
+            ctx.update(eval_context)
         final_context = {}
         for context_to_eval in self.contexts:
             if not isinstance(context_to_eval, (dict, BaseContext)):
