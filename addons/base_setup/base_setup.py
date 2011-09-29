@@ -53,9 +53,11 @@ class base_setup_installer2(osv.osv_memory):
         if fields is None:
             fields = {}
 
-        fields = {} #super(base_setup_installer2, self).fields_get(cr, uid, fields, context=context)
+        fields = {} 
         category_proxy = self.pool.get('ir.module.category')
-        category_ids = category_proxy.search(cr, uid, [], context=context)
+        domain = [('parent_id', '=', False),
+                  ('name', '!=', 'Localization')]
+        category_ids = category_proxy.search(cr, uid, domain, context=context)
         for category in category_proxy.browse(cr, uid, category_ids, context=context):
             category_name = 'category_%d' % (category.id,)
             fields[category_name] = {
@@ -102,9 +104,12 @@ class base_setup_installer2(osv.osv_memory):
         result = super(base_setup_installer2, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         module_category_proxy = self.pool.get('ir.module.category')
-        module_category_ids = module_category_proxy.search(cr, uid, [], context=context, order='name asc')
-        arch = ['<form string="Automatic Base Setup">']
-        arch.append('<separator string="Categories" colspan="4" />')
+        domain = [('parent_id', '=', False),
+                  ('name', '!=', 'Localization')]
+        module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='name asc')
+
+        arch = ['<form string="%s">' % _('Automatic Base Setup')]
+        arch.append('<separator string="%s" colspan="4" />' % _('Categories'))
         for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
             readonly = False
             for module in module_category.module_ids:
@@ -116,19 +121,19 @@ class base_setup_installer2(osv.osv_memory):
             else:
                 arch.append('<field name="category_%d" />' % (module_category.id,))
 
+        # Compute the module to show
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            if not module_category.module_ids:
+                continue
 
-        #for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
-        #    if not module_category.module_ids:
-        #        continue
-
-        #    modifiers = {
-        #        'invisible' : [('category_%d' % (module_category.id), '=', False)],
-        #        'readonly' : module.state == 'installed',
-        #    }
-        #    modifiers = simplejson.dumps(modifiers)
-        #    arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
-        #    for module in module_category.module_ids: 
-        #        arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
+            modifiers = {
+                'invisible' : [('category_%d' % (module_category.id), '=', False)],
+                'readonly' : module.state == 'installed',
+            }
+            modifiers = simplejson.dumps(modifiers)
+            arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
+            for module in module_category.module_ids: 
+                arch.append("""<field name="module_%s" modifiers='%s' />""" % (module.name, modifiers))
 
         arch.append(
             '<separator colspan="4" />'
@@ -142,13 +147,7 @@ class base_setup_installer2(osv.osv_memory):
 
         result['arch'] = ''.join(arch)
 
-        from pprint import pprint as pp
-        pp(result['arch'])
-
         return result
-
-    def write(self, cr, uid, ids, values, context=None):
-        return True
 
     def create(self, cr, uid, values, context=None):
         modules_to_install = [ key[len('module_'):] for key, value in values.iteritems() if value == 1 and key.startswith('module_')]
