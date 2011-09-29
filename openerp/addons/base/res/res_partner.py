@@ -304,6 +304,7 @@ class res_partner_address(osv.osv):
         'active': fields.boolean('Active', help="Uncheck the active field to hide the contact."),
 #        'company_id': fields.related('partner_id','company_id',type='many2one',relation='res.company',string='Company', store=True),
         'company_id': fields.many2one('res.company', 'Company',select=1),
+        'color': fields.integer('Color Index'),
     }
     _defaults = {
         'active': lambda *a: 1,
