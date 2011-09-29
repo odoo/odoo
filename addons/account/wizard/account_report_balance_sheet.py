@@ -40,11 +40,9 @@ class account_bs_report(osv.osv_memory):
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
         'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',
-                                      required=True,
-                                      help='This Account is used for transfering Profit/Loss ' \
-                                           '(Profit: Amount will be added, Loss: Amount will be duducted), ' \
-                                           'which is calculated from Profilt & Loss Report',
+                                      help='This account is used for transferring Profit/Loss (If It is Profit: Amount will be added, Loss : Amount will be deducted.), as calculated in Profit & Loss Report',
                                       domain = [('type','=','other')]),
+        'journal_ids': fields.many2many('account.journal', 'account_bs_report_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
 
     _defaults={
