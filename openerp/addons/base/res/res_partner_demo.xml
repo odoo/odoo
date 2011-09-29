@@ -90,36 +90,44 @@
 
         <record id="res_partner_asus" model="res.partner">
             <field name="name">ASUStek</field>
-            <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.asustek.com</field>
         </record>
         <record id="res_partner_agrolait" model="res.partner">
             <field name="name">Agrolait</field>
-            <field eval="[(6, 0, [ref('res_partner_category_8')])]" name="category_id"/>
+            <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.agrolait.com</field>
         </record>
         <record id="res_partner_c2c" model="res.partner">
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="user_id" ref="base.user_root"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.camptocamp.com</field>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
-            <field name="website">http://www.syleam.fr</field>
+            <field name="website">www.syleam.fr</field>
             <field name="name">Syleam</field>
             <field eval="[(6, 0, [ref('res_partner_category_5')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
         </record>
         <record id="res_partner_thymbra" model="res.partner">
             <field name="name">Thymbra</field>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.thymbra.com/</field>
         </record>
         <record id="res_partner_desertic_hispafuentes" model="res.partner">
             <field name="name">Axelor</field>
@@ -127,41 +135,54 @@
             <field name="supplier">1</field>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
+            <field name="website">www.axelor.com/</field>
         </record>
         <record id="res_partner_tinyatwork" model="res.partner">
             <field name="name">Tiny AT Work</field>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.tinyatwork.com/</field>
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="website">www.wealthyandsons.com/</field>
         </record>
         <record id="res_partner_3" model="res.partner">
             <field name="name">China Export</field>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="website">www.chinaexport.com/</field>
         </record>
         <record id="res_partner_4" model="res.partner">
             <field name="name">Distrib PC</field>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="website">www.distribpc.com/</field>
         </record>
         <record id="res_partner_5" model="res.partner">
             <field name="name">Ecole de Commerce de Liege</field>
             <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
+            <field name="website">www.eci-liege.info//</field>
         </record>
         <record id="res_partner_6" model="res.partner">
             <field name="name">Elec Import</field>
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
         </record>
@@ -171,6 +192,7 @@
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
         </record>
@@ -192,11 +214,11 @@
             <field name="opt_out" eval="True"/>
         </record>
         <record id="res_partner_9" model="res.partner">
-            <field name="website">http://balmerinc.com</field>
+            <field name="website">www.balmerinc.com</field>
             <field name="name">BalmerInc S.A.</field>
             <field eval="12000.00" name="credit_limit"/>
             <field name="ref">or</field>
-            <field name="user_id" ref="user_demo"/>
+            <field name="user_id" ref="base.user_root"/>
             <field eval="[(6, 0, [ref('res_partner_category_1')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
@@ -207,6 +229,7 @@
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
         </record>
         <record id="res_partner_11" model="res.partner">
             <field name="name">Leclerc</field>
@@ -224,6 +247,7 @@
             <field eval="[(6, 0, [ref('res_partner_category_11')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
         </record>
         <record id="res_partner_15" model="res.partner">
             <field name="name">Magazin BML 1</field>
@@ -240,6 +264,8 @@
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="opt_out" eval="True"/>
+            <field name="user_id" ref="user_demo"/>
+            <field name="website">http://www.ulg.ac.be/</field>
         </record>
 
     <!--
@@ -251,16 +277,19 @@
             <field model="res.users" name="user_id" search="[('name', '=', u'Thomas Lebrun')]"/>
             <field name="name">Dubois sprl</field>
             <field name="address" eval="[]"/>
+            <field name="website">http://www.dubois.be/</field>
         </record>
 
         <record id="res_partner_ericdubois0" model="res.partner">
             <field name="name">Eric Dubois</field>
             <field name="address" eval="[]"/>
+            <field name="user_id" ref="user_demo"/>
         </record>
 
         <record id="res_partner_fabiendupont0" model="res.partner">
             <field name="name">Fabien Dupont</field>
             <field name="address" eval="[]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
 
         <record id="res_partner_lucievonck0" model="res.partner">
@@ -271,32 +300,41 @@
         <record id="res_partner_notsotinysarl0" model="res.partner">
             <field name="name">NotSoTiny SARL</field>
             <field name="address" eval="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="website">notsotiny.be</field>
         </record>
 
         <record id="res_partner_theshelvehouse0" model="res.partner">
             <field name="name">The Shelve House</field>
             <field eval="[(6,0,[ref('res_partner_category_retailers0')])]" name="category_id"/>
             <field name="address" eval="[]"/>
+            <field name="user_id" ref="base.user_root"/>
         </record>
 
         <record id="res_partner_vickingdirect0" model="res.partner">
             <field name="name">Vicking Direct</field>
             <field eval="[(6,0,[ref('res_partner_category_miscellaneoussuppliers0')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="customer">0</field>
             <field name="address" eval="[]"/>
+            <field name="website">vicking-direct.be</field>
         </record>
 
         <record id="res_partner_woodywoodpecker0" model="res.partner">
             <field name="name">Wood y Wood Pecker</field>
             <field eval="[(6,0,[ref('res_partner_category_woodsuppliers0')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
+            <field name="website">woodywoodpecker.com</field>
         </record>
 
         <record id="res_partner_zerooneinc0" model="res.partner">
             <field name="name">ZeroOne Inc</field>
             <field eval="[(6,0,[ref('res_partner_category_consumers0')])]" name="category_id"/>
             <field name="address" eval="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="website">http://www.zerooneinc.com/</field>
         </record>
 
         <!--
@@ -333,6 +371,7 @@
             <field name="email">info@axelor.com</field>
             <field name="phone">+33 1 64 61 04 01</field>
             <field name="street">12 rue Albert Einstein</field>
+            <field name="type">default</field>
             <field name="partner_id" ref="res_partner_desertic_hispafuentes"/>
         </record>
         <record id="res_partner_address_3" model="res.partner.address">
@@ -350,6 +389,8 @@
             <field name="zip">23410</field>
             <field model="res.country" name="country_id" search="[('name','=','Taiwan')]"/>
             <field name="street">31 Hong Kong street</field>
+            <field name="email">info@asustek.com</field>
+            <field name="phone">+ 1 64 61 04 01</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_asus"/>
         </record>
@@ -359,6 +400,8 @@
             <field name="zip">23540</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">56 Beijing street</field>
+            <field name="email">info@maxtor.com</field>
+            <field name="phone">+ 11 8528 456 789</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_maxtor"/>
         </record>
@@ -369,6 +412,8 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">23 rue du Vieux Bruges</field>
             <field name="type">default</field>
+            <field name="email">info@elecimport.com</field>
+            <field name="phone">+ 32 025 897 456</field>
             <field name="partner_id" ref="res_partner_6"/>
         </record>
         <record id="res_partner_address_7" model="res.partner.address">
@@ -378,6 +423,8 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">42 rue de la Lesse</field>
             <field name="type">default</field>
+            <field name="email">info@distribpc.com</field>
+            <field name="phone">+ 32 081256987</field>
             <field name="partner_id" ref="res_partner_4"/>
         </record>
         <record id="res_partner_address_8" model="res.partner.address">
@@ -387,7 +434,10 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
             <field name="type">default</field>
+	    <field name="email">s.l@agrolait.be</field>
+	    <field name="phone">003281588558</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
+            <field name="title" ref="base.res_partner_title_madam"/>
         </record>
         <record id="res_partner_address_8delivery" model="res.partner.address">
             <field name="city">Wavre</field>
@@ -396,7 +446,10 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">71 rue de Chimay</field>
             <field name="type">delivery</field>
+	    <field name="email">p.l@agrolait.be</field>
+	    <field name="phone">003281588557</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
+            <field name="title" ref="base.res_partner_title_sir"/>
         </record>
         <record id="res_partner_address_8invoice" model="res.partner.address">
             <field name="city">Wavre</field>
@@ -405,7 +458,10 @@
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">69 rue de Chimay</field>
             <field name="type">invoice</field>
+	    <field name="email">serge.l@agrolait.be</field>
+	    <field name="phone">003281588556</field>
             <field name="partner_id" ref="res_partner_agrolait"/>
+            <field name="title" ref="base.res_partner_title_sir"/>
         </record>
         <record id="res_partner_address_9" model="res.partner.address">
             <field name="city">Paris</field>
@@ -414,7 +470,10 @@
             <field model="res.country" name="country_id" search="[('name','=','France')]"/>
             <field name="street">1 rue Rockfeller</field>
             <field name="type">default</field>
+	    <field name="email">a.g@wealthyandsons.com</field>
+	    <field name="phone">003368978776</field>
             <field name="partner_id" ref="res_partner_2"/>
+            <field name="title" ref="base.res_partner_title_sir"/>
         </record>
         <record id="res_partner_address_11" model="res.partner.address">
             <field name="city">Alencon</field>
@@ -433,48 +492,84 @@
             <field name="zip">6985</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="street">2 Impasse de la Soif</field>
+	    <field name="email">k.lesbrouffe@eci-liege.info</field>
+	    <field name="phone">+32 421 52571</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_5"/>
         </record>
         <record id="res_partner_address_zen" model="res.partner.address">
             <field name="city">Shanghai</field>
             <field name="name">Zen</field>
-            <field name="zip">4785552</field>
+            <field name="zip">478552</field>
             <field model="res.country" name="country_id" search="[('name','=','China')]"/>
             <field name="street">52 Chop Suey street</field>
             <field name="type">default</field>
+	    <field name="email">zen@chinaexport.com</field>
+	    <field name="phone">+86-751-64845671</field>
             <field name="partner_id" ref="res_partner_3"/>
         </record>
         <record id="res_partner_address_12" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Centrale</field>
+  	    <field name="city">Grenoble</field>
+            <field name="name">Loïc Dupont</field>
+            <field name="zip">38100</field>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="street">Rue Lavoisier 145</field>
+            <field name="type">default</field>
+	    <field name="email">l.dupont@tecsas.fr</field>
+	    <field name="phone">+33-658-256545</field>
             <field name="partner_id" ref="res_partner_10"/>
         </record>
         <record id="res_partner_address_13" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Centrale d'achats 1</field>
+            <field name="name">Carl François</field>
+	    <field name="city">Bruxelles</field>
+            <field name="zip">1000</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">89 Chaussée de Waterloo</field>
+	    <field name="email">carl.françois@bml.be</field>
+	    <field name="phone">+32-258-256545</field>
             <field name="partner_id" ref="res_partner_14"/>
         </record>
         <record id="res_partner_address_14" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Shop 1</field>
+            <field name="name">Lucien Ferguson</field>
+            <field name="street">89 Chaussée de Liège</field>
+	    <field name="city">Namur</field>
+            <field name="zip">5000</field>
+	    <field name="email">lucien.ferguson@bml.be</field>
+	    <field name="phone">+32-621-568978</field>
             <field name="partner_id" ref="res_partner_15"/>
         </record>
         <record id="res_partner_address_15" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Shop 2</field>
+            <field name="name">Marine Leclerc</field>
+            <field name="street">rue Grande</field>
+	    <field name="city">Brest</field>
+            <field name="zip">29200</field>
+	    <field name="email">marine@leclerc.fr</field>
+	    <field name="phone">+33-298.334558</field>
             <field name="partner_id" ref="res_partner_11"/>
         </record>
         <record id="res_partner_address_16" model="res.partner.address">
-            <field name="type">default</field>
-            <field name="name">Shop 3</field>
+            <field name="type">invoice</field>
+            <field name="name">Claude Leclerc</field>
+            <field name="street">rue Grande</field>
+	    <field name="city">Brest</field>
+            <field name="zip">29200</field>
+	    <field name="email">claude@leclerc.fr</field>
+	    <field name="phone">+33-298.334598</field>
             <field name="partner_id" ref="res_partner_11"/>
         </record>
 
         <record id="res_partner_address_accent" model="res.partner.address">
             <field name="type">default</field>
-            <field name="city">Liège</field>
-            <field name="street">Université de Liège</field>
+            <field name="name">Martine Ohio</field>
+            <field name="street">Place du 20Août</field>
+	    <field name="city">Liège</field>
+            <field name="zip">4000</field>
+	    <field name="email">martine.ohio@ulg.ac.be</field>
+	    <field name="phone">+32-45895245</field>
             <field name="partner_id" ref="res_partner_accent"/>
         </record>
         <record id="res_partner_address_Camptocamp" model="res.partner.address">
@@ -493,6 +588,8 @@
             <field name="zip">95014</field>
             <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
             <field name="street">10200 S. De Anza Blvd</field>
+            <field name="email">info@seagate.com</field>
+            <field name="phone">+1 408 256987</field>
             <field name="type">default</field>
             <field name="partner_id" ref="res_partner_seagate"/>
         </record>
@@ -573,7 +670,12 @@
 
         <record id="res_partner_address_brussels0" model="res.partner.address">
             <field eval="'Brussels'" name="city"/>
-            <field eval="'Brussels'" name="name"/>
+            <field eval="'Leen Vandenloep'" name="name"/>
+            <field eval="'Puurs'" name="city"/>
+            <field eval="'2870'" name="zip"/>
+            <field name="country_id" ref="base.be"/>
+            <field eval="'(+32).70.12.85.00'" name="phone"/>
+            <field eval="'Schoonmansveld 28'" name="street"/>
             <field name="partner_id" ref="res_partner_vickingdirect0"/>
             <field name="country_id" ref="base.be"/>
         </record>
@@ -583,6 +685,7 @@
             <field eval="'Kainuu'" name="city"/>
             <field eval="'Roger Pecker'" name="name"/>
             <field name="partner_id" ref="res_partner_woodywoodpecker0"/>
+            <field eval="'(+358).9.589 689'" name="phone"/>
             <field name="country_id" ref="base.fi"/>
         </record>
 
@@ -618,10 +721,13 @@
 
         <record id="res_partner_address_ericdubois0" model="res.partner.address">
             <field eval="'Mons'" name="city"/>
+            <field eval="'Eric Dubois'" name="name"/>
             <field eval="'7000'" name="zip"/>
             <field name="partner_id" ref="res_partner_ericdubois0"/>
             <field name="country_id" ref="base.be"/>
             <field eval="'Chaussée de Binche, 27'" name="street"/>
+            <field eval="'e.dubois@gmail.com'" name="email"/>
+            <field eval="'(+32).758 958 789'" name="phone"/>
         </record>
 
 

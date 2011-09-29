@@ -38,40 +38,38 @@
           - classicals (varchar, integer, boolean, ...)
           - relations (one2many, many2one, many2many)
           - functions
- 
+
 """
 
 import calendar
 import copy
 import datetime
 import logging
-import warnings
 import operator
 import pickle
 import re
+import simplejson
 import time
 import traceback
 import types
-import simplejson
-
-import openerp.netsvc as netsvc
+import warnings
 from lxml import etree
-from openerp.tools.config import config
-from openerp.tools.translate import _
 
 import fields
-from query import Query
+import openerp
+import openerp.netsvc as netsvc
 import openerp.tools as tools
+from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
+from openerp import SUPERUSER_ID
+from query import Query
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
-
-# Super-user identifier (aka Administrator aka root)
-ROOT_USER_ID = 1
 
 def transfer_field_to_modifiers(field, modifiers):
     default_values = {}
@@ -165,7 +163,7 @@ def modifiers_tests():
     test_modifiers({}, '{}')
     test_modifiers({"invisible": True}, '{"invisible": true}')
     test_modifiers({"invisible": False}, '{}')
-    
+
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -212,6 +210,19 @@ def last_day_of_current_month():
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
+def fix_import_export_id_paths(fieldname):
+    """
+    Fixes the id fields in import and exports, and splits field paths
+    on '/'.
+
+    :param str fieldname: name of the field to import/export
+    :return: split field name
+    :rtype: list of str
+    """
+    fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
+    fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
+    return fixed_external_id.split('/')
+
 class except_orm(Exception):
     def __init__(self, name, value):
         self.name = name
@@ -252,7 +263,7 @@ class browse_null(object):
 #
 class browse_record_list(list):
     """ Collection of browse objects
-    
+
         Such an instance will be returned when doing a ``browse([ids..])``
         and will be iterable, yielding browse() objects
     """
@@ -267,9 +278,9 @@ class browse_record_list(list):
 class browse_record(object):
     """ An object that behaves like a row of an object's table.
         It has attributes after the columns of the corresponding object.
-        
+
         Examples::
-        
+
             uobj = pool.get('res.users')
             user_rec = uobj.browse(cr, uid, 104)
             name = user_rec.name
@@ -572,22 +583,36 @@ class MetaModel(type):
         self.module_to_models.setdefault(self._module, []).append(self)
 
 
-class orm_template(object):
+# Definition of log access columns, automatically added to models if
+# self._log_access is True
+LOG_ACCESS_COLUMNS = {
+    'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+    'create_date': 'TIMESTAMP',
+    'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+    'write_date': 'TIMESTAMP'
+}
+# special columns automatically created by the ORM
+MAGIC_COLUMNS =  ['id'] + LOG_ACCESS_COLUMNS.keys()
+
+class BaseModel(object):
     """ Base class for OpenERP models.
 
-    OpenERP models are created by inheriting from this class (although
-    not directly; more specifically by inheriting from osv or
-    osv_memory). The constructor is called once, usually directly
-    after the class definition, e.g.:
+    OpenERP models are created by inheriting from this class' subclasses:
 
-        class user(osv):
-            ...
-        user()
+        * Model: for regular database-persisted models
+        * TransientModel: for temporary data, stored in the database but automatically
+                          vaccuumed every so often
+        * AbstractModel: for abstract super classes meant to be shared by multiple
+                        _inheriting classes (usually Models or TransientModels)
 
-    The system will later instanciate the class once per database (on
+    The system will later instantiate the class once per database (on
     which the class' module is installed).
 
+    To create a class that should not be instantiated, the _register class attribute
+    may be set to False.
     """
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
     _name = None
     _columns = {}
     _constraints = []
@@ -600,22 +625,42 @@ class orm_template(object):
     _order = 'id'
     _sequence = None
     _description = None
+
+    # Transience
+    _transient = False # True in a TransientModel
+    _transient_max_count = None
+    _transient_max_hours = None
+    _transient_check_time = 20
+
+    # structure:
+    #  { 'parent_model': 'm2o_field', ... }
     _inherits = {}
-    # Mapping from inherits'd field name to triple (m, r, f)
-    # where m is the model from which it is inherits'd,
-    # r is the (local) field towards m,
-    # and f is the _column object itself.
+
+    # Mapping from inherits'd field name to triple (m, r, f, n) where m is the
+    # model from which it is inherits'd, r is the (local) field towards m, f
+    # is the _column object itself, and n is the original (i.e. top-most)
+    # parent model.
+    # Example:
+    #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
+    #                   field_column_obj, origina_parent_model), ... }
     _inherit_fields = {}
+
     # Mapping field name/column_info object
     # This is similar to _inherit_fields but:
     # 1. includes self fields,
     # 2. uses column_info instead of a triple.
     _all_columns = {}
+
     _table = None
     _invalids = set()
     _log_create = False
+    _sql_constraints = []
+    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
+    __logger = logging.getLogger('orm')
+    __schema = logging.getLogger('orm.schema')
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
+
     def log(self, cr, uid, id, message, secondary=False, context=None):
         if context and context.get('disable_log'):
             return True
@@ -632,9 +677,6 @@ class orm_template(object):
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
-
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
         """ Create entries in ir_model_fields for all the model's fields.
@@ -738,19 +780,12 @@ class orm_template(object):
                         break
         cr.commit()
 
-    def _auto_init(self, cr, context=None):
-        raise_on_invalid_object_name(self._name)
-        self._field_create(cr, context=context)
-
-    def _auto_end(self, cr, context=None):
-        pass
-
     #
     # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
     #
     @classmethod
-    def makeInstance(cls, pool, cr, attributes):
+    def create_instance(cls, pool, cr):
         """ Instanciate a given model.
 
         This class method instanciates the class of some model (i.e. a class
@@ -765,6 +800,9 @@ class orm_template(object):
         this method. This is probably unnecessary.
 
         """
+        attributes = ['_columns', '_defaults', '_inherits', '_constraints',
+            '_sql_constraints']
+
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
@@ -820,7 +858,10 @@ class orm_template(object):
 
         This doesn't create an instance but simply register the model
         as being part of the module where it is defined.
+
         """
+
+
         # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
@@ -837,7 +878,15 @@ class orm_template(object):
         return None
 
     def __init__(self, pool, cr):
-        """ Initialize a model and make it part of the given registry."""
+        """ Initialize a model and make it part of the given registry.
+
+        - copy the stored fields' functions in the osv_pool,
+        - update the _columns with the fields found in ir_model_fields,
+        - ensure there is a many2one for each _inherits'd parent,
+        - update the children's _columns,
+        - give a chance to each field to initialize itself.
+
+        """
         pool.add(self._name, self)
         self.pool = pool
 
@@ -854,26 +903,96 @@ class orm_template(object):
         if not self._table:
             self._table = self._name.replace('.', '_')
 
-    def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
-        """Fetch records as objects allowing to use dot notation to browse fields and relations
+        if not hasattr(self, '_log_access'):
+            # If _log_access is not specified, it is the same value as _auto.
+            self._log_access = getattr(self, "_auto", True)
 
-        :param cr: database cursor
-        :param user: current user id
-        :param select: id or list of ids.
-        :param context: context arguments, like lang, time zone
-        :rtype: object or list of objects requested
+        self._columns = self._columns.copy()
+        for store_field in self._columns:
+            f = self._columns[store_field]
+            if hasattr(f, 'digits_change'):
+                f.digits_change(cr)
+            if not isinstance(f, fields.function):
+                continue
+            if not f.store:
+                continue
+            if self._columns[store_field].store is True:
+                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+            else:
+                sm = self._columns[store_field].store
+            for object, aa in sm.items():
+                if len(aa) == 4:
+                    (fnct, fields2, order, length) = aa
+                elif len(aa) == 3:
+                    (fnct, fields2, order) = aa
+                    length = None
+                else:
+                    raise except_orm('Error',
+                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
+                self.pool._store_function.setdefault(object, [])
+                ok = True
+                for x, y, z, e, f, l in self.pool._store_function[object]:
+                    if (x==self._name) and (y==store_field) and (e==fields2):
+                        if f == order:
+                            ok = False
+                if ok:
+                    self.pool._store_function[object].append( (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
-        """
-        self._list_class = list_class or browse_record_list
-        cache = {}
-        # need to accepts ints and longs because ids coming from a method
-        # launched by button in the interface have a type long...
-        if isinstance(select, (int, long)):
-            return browse_record(cr, uid, select, self, cache, context=context, list_class=self._list_class, fields_process=fields_process)
-        elif isinstance(select, list):
-            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context=context)
-        else:
-            return browse_null()
+        for (key, _, msg) in self._sql_constraints:
+            self.pool._sql_error[self._table+'_'+key] = msg
+
+        # Load manual fields
+
+        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
+        if cr.fetchone():
+            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
+            for field in cr.dictfetchall():
+                if field['name'] in self._columns:
+                    continue
+                attrs = {
+                    'string': field['field_description'],
+                    'required': bool(field['required']),
+                    'readonly': bool(field['readonly']),
+                    'domain': eval(field['domain']) if field['domain'] else None,
+                    'size': field['size'],
+                    'ondelete': field['on_delete'],
+                    'translate': (field['translate']),
+                    'manual': True,
+                    #'select': int(field['select_level'])
+                }
+
+                if field['ttype'] == 'selection':
+                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
+                elif field['ttype'] == 'reference':
+                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+                elif field['ttype'] == 'many2one':
+                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+                elif field['ttype'] == 'one2many':
+                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+                elif field['ttype'] == 'many2many':
+                    _rel1 = field['relation'].replace('.', '_')
+                    _rel2 = field['model'].replace('.', '_')
+                    _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
+                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+                else:
+                    self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+        self._inherits_check()
+        self._inherits_reload()
+        if not self._sequence:
+            self._sequence = self._table + '_id_seq'
+        for k in self._defaults:
+            assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
+        for f in self._columns:
+            self._columns[f].restart()
+
+        # Transience
+        if self.is_transient():
+            self._transient_check_count = 0
+            self._transient_max_count = config.get('osv_memory_count_limit')
+            self._transient_max_hours = config.get('osv_memory_age_limit')
+            assert self._log_access, "TransientModels must have log_access turned on, "\
+                                     "in order to implement their access rights policy"
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -885,7 +1004,7 @@ class orm_template(object):
             elif field_type == 'integer':
                 return 0
             elif field_type == 'boolean':
-                return False
+                return 'False'
             return ''
 
         def selection_field(in_field):
@@ -918,7 +1037,18 @@ class orm_template(object):
                             else:
                                 r = d['name']
                         else:
-                            break
+                            postfix = 0
+                            while True:
+                                n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                                if not model_data.search(cr, uid, [('name', '=', n)]):
+                                    break
+                                postfix += 1
+                            model_data.create(cr, uid, {
+                                'name': n,
+                                'model': self._name,
+                                'res_id': r['id'],
+                            })
+                            r = n
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
@@ -997,11 +1127,7 @@ class orm_template(object):
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        def fsplit(fieldname):
-            fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
-            fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
-            return fixed_external_id.split('/')
-        fields_to_export = map(fsplit, fields_to_export)
+        fields_to_export = map(fix_import_export_id_paths, fields_to_export)
         datas = []
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
@@ -1010,17 +1136,6 @@ class orm_template(object):
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         """
         Import given data in given module
-
-        :param cr: database cursor
-        :param uid: current user id
-        :param fields: list of fields
-        :param data: data to import
-        :param mode: 'init' or 'update' for record creation
-        :param current_module: module name
-        :param noupdate: flag for record creation
-        :param context: context arguments, like lang, time zone,
-        :param filename: optional file to store partial import state for recovery
-        :rtype: tuple
 
         This method is used when importing data via client menu.
 
@@ -1034,13 +1149,26 @@ class orm_template(object):
             order_line/price_unit,
             order_line/product_uom_qty,
             order_line/product_uom/id    (=xml_id)
+
+        This method returns a 4-tuple with the following structure:
+
+        * The first item is a return code, it returns either ``-1`` in case o
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param fields: list of fields
+        :param data: data to import
+        :param mode: 'init' or 'update' for record creation
+        :param current_module: module name
+        :param noupdate: flag for record creation
+        :param context: context arguments, like lang, time zone,
+        :param filename: optional file to store partial import state for recovery
+        :returns: 4-tuple of a return code, an errored resource, an error message and ???
+        :rtype: (int, dict|0, str|0, ''|0)
         """
         if not context:
             context = {}
-        def _replace_field(x):
-            x = re.sub('([a-z0-9A-Z_])\\.id$', '\\1/.id', x)
-            return x.replace(':id','/id').split('/')
-        fields = map(_replace_field, fields)
+        fields = map(fix_import_export_id_paths, fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
 
@@ -1102,7 +1230,7 @@ class orm_template(object):
                     if line[i] and skip:
                         return False
                     continue
-                
+
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
                     mode = False
@@ -1115,7 +1243,7 @@ class orm_template(object):
                     for db_id in line.split(config.get('csv_internal_sep')):
                         res.append(_get_id(relation, db_id, current_module, mode))
                     return [(6,0,res)]
-                    
+
                 # ID of the record using a XML ID
                 if field[len(prefix)]=='id':
                     try:
@@ -1139,9 +1267,9 @@ class orm_template(object):
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
-                    
+
                     res = many_ids(line[i], relation, current_module, mode)
-                    
+
                     first = 0
                     while pos < len(datas):
                         res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
@@ -1151,15 +1279,15 @@ class orm_template(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
-                        
+
                         if data_res_id2:
                             res.append((4, data_res_id2))
-                                
+
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-                        
+
 
                 elif fields_def[field[len(prefix)]]['type']=='many2one':
                     relation = fields_def[field[len(prefix)]]['relation']
@@ -1188,7 +1316,7 @@ class orm_template(object):
 
                 else:
                     res = line[i]
-                    
+
                 row[field[len(prefix)]] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
@@ -1202,7 +1330,7 @@ class orm_template(object):
         position = 0
         while position<len(datas):
             res = {}
-            
+
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
@@ -1214,7 +1342,7 @@ class orm_template(object):
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                return (-1, res, 'Line ' + str(position) +' : ' + str(e), '')
+                return (-1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), '')
 
             if config.get('import_partial', False) and filename and (not (position%100)):
                 data = pickle.load(file(config.get('import_partial')))
@@ -1227,30 +1355,6 @@ class orm_template(object):
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
         return (position, 0, 0, 0)
-
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        """
-        Read records with given ids with the given fields
-
-        :param cr: database cursor
-        :param user: current user id
-        :param ids: id or list of the ids of the records to read
-        :param fields: optional list of field names to return (default: all fields would be returned)
-        :type fields: list (example ['field_name_1', ...])
-        :param context: optional context dictionary - it may contains keys for specifying certain options
-                        like ``context_lang``, ``context_tz`` to alter the results of the call.
-                        A special ``bin_size`` boolean flag may also be passed in the context to request the
-                        value of all fields.binary columns to be returned as the size of the binary instead of its
-                        contents. This can also be selectively overriden by passing a field-specific flag
-                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
-                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
-        :return: list of dictionaries((dictionary per record asked)) with requested field values
-        :rtype: [{‘name_of_the_field’: value, ...}, ...]
-        :raise AccessError: * if user has no read rights on the requested object
-                            * if user tries to bypass access rules for read on the requested object
-
-        """
-        raise NotImplementedError(_('The read method is not implemented on this object !'))
 
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
@@ -1384,19 +1488,6 @@ class orm_template(object):
                 defaults[key[8:]] = context[key]
         return defaults
 
-
-    def perm_read(self, cr, user, ids, context=None, details=True):
-        raise NotImplementedError(_('The perm_read method is not implemented on this object !'))
-
-    def unlink(self, cr, uid, ids, context=None):
-        raise NotImplementedError(_('The unlink method is not implemented on this object !'))
-
-    def write(self, cr, user, ids, vals, context=None):
-        raise NotImplementedError(_('The write method is not implemented on this object !'))
-
-    def create(self, cr, user, vals, context=None):
-        raise NotImplementedError(_('The create method is not implemented on this object !'))
-
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
         # TODO I believe this loop can be replace by
@@ -1404,56 +1495,6 @@ class orm_template(object):
         for parent in self._inherits:
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
-
-
-    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ Return the definition of each field.
-
-            The returned value is a dictionary (indiced by field name) of
-            dictionaries. The _inherits'd fields are included. The string,
-            help, and selection (if present) attributes are translated.
-
-        """
-        if context is None:
-            context = {}
-
-        res = {}
-
-        translation_obj = self.pool.get('ir.translation')
-        for parent in self._inherits:
-            res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
-
-        for f, field in self._columns.iteritems():
-            if allfields and f not in allfields:
-                continue
-
-            res[f] = fields.field_to_dict(self, cr, user, context, field)
-
-            if not write_access:
-                res[f]['readonly'] = True
-                res[f]['states'] = {}
-
-            if 'string' in res[f]:
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-                if res_trans:
-                    res[f]['string'] = res_trans
-            if 'help' in res[f]:
-                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                if help_trans:
-                    res[f]['help'] = help_trans
-            if 'selection' in res[f]:
-                if isinstance(field.selection, (tuple, list)):
-                    sel = field.selection
-                    sel2 = []
-                    for key, val in sel:
-                        val2 = None
-                        if val:
-                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                        sel2.append((key, val2 or val))
-                    res[f]['selection'] = sel2
-
-        return res
-
 
     #
     # Overload this method if you need a window title which depends on the context
@@ -1490,8 +1531,8 @@ class orm_template(object):
             """ Set invisible to true if the user is not in the specified groups. """
             if node.get('groups'):
                 groups = node.get('groups').split(',')
-                access_pool = self.pool.get('ir.model.access')
-                can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
+                ir_model_access = self.pool.get('ir.model.access')
+                can_see = any(ir_model_access.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
                     modifiers['invisible'] = True
@@ -1569,7 +1610,7 @@ class orm_template(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
- 
+
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1900,22 +1941,20 @@ class orm_template(object):
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
             return source
 
-        def apply_view_inheritance(source, inherit_id):
+        def apply_view_inheritance(cr, user, source, inherit_id):
             """ Apply all the (directly and indirectly) inheriting views.
 
             :param source: a parent architecture to modify (with parent
                 modifications already applied)
-            :param inherit_id: the database id of the parent view
+            :param inherit_id: the database view_id of the parent view
             :return: a modified source where all the modifying architecture
                 are applied
 
             """
-            # get all views which inherit from (ie modify) this view
-            cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
-            sql_inherit = cr.fetchall()
-            for (inherit, id) in sql_inherit:
-                source = apply_inheritance_specs(source, inherit, id)
-                source = apply_view_inheritance(source, id)
+            sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, user, inherit_id, self._name)
+            for (view_arch, view_id) in sql_inherit:
+                source = apply_inheritance_specs(source, view_arch, view_id)
+                source = apply_view_inheritance(cr, user, source, view_id)
             return source
 
         result = {'type': view_type, 'model': self._name}
@@ -1958,7 +1997,7 @@ class orm_template(object):
             result['view_id'] = sql_res['id']
 
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_view_inheritance(source, result['view_id'])
+            result['arch'] = apply_view_inheritance(cr, user, source, result['view_id'])
 
             result['name'] = sql_res['name']
             result['field_parent'] = sql_res['field_parent'] or False
@@ -2098,17 +2137,6 @@ class orm_template(object):
         """
         return self._search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
-    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-        """
-        Private implementation of search() method, allowing specifying the uid to use for the access right check.
-        This is useful for example when filling in the selection list for a drop-down and avoiding access rights errors,
-        by specifying ``access_rights_uid=1`` to bypass access rights check, but not ir.rules!
-
-        :param access_rights_uid: optional user ID to use when checking access rights
-                                  (not for ir.rules, this is only for ir.model.access)
-        """
-        raise NotImplementedError(_('The search method is not implemented on this object !'))
-
     def name_get(self, cr, user, ids, context=None):
         """Returns the preferred display value (text representation) for the records with the
            given ``ids``. By default this will be the value of the ``name`` column, unless
@@ -2179,28 +2207,10 @@ class orm_template(object):
         res = self.name_get(cr, access_rights_uid, ids, context)
         return res
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        raise NotImplementedError(_('The copy method is not implemented on this object !'))
-
-    def exists(self, cr, uid, ids, context=None):
-        """Checks whether the given id or ids exist in this model,
-           and return the list of ids that do. This is simple to use for
-           a truth test on a browse_record::
-
-               if record.exists():
-                   pass
-
-           :param ids: id or list of ids to check for existence
-           :type ids: int or [int]
-           :return: the list of ids that currently exist, out of
-                    the given `ids`
-        """
-        raise NotImplementedError(_('The exists method is not implemented on this object !'))
-
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
+        self.pool.get('ir.translation').check_read(cr, uid)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2224,7 +2234,7 @@ class orm_template(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+        self.pool.get('ir.translation').check_write(cr, uid)
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2236,9 +2246,6 @@ class orm_template(object):
             if cols:
                 self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
         return True
-
-    def _check_removed_columns(self, cr, log=False):
-        raise NotImplementedError()
 
     def _add_missing_default_values(self, cr, uid, values, context=None):
         missing_defaults = []
@@ -2281,262 +2288,6 @@ class orm_template(object):
         except AttributeError:
             pass
 
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        """Verifies that the operation given by ``operation`` is allowed for the user
-           according to ir.rules.
-
-           :param operation: one of ``write``, ``unlink``
-           :raise except_orm: * if current ir.rules do not permit this operation.
-           :return: None if the operation is allowed
-        """
-        raise NotImplementedError(_('The check_access_rule method is not implemented on this object !'))
-
-class orm_memory(orm_template):
-
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    _inherit_fields = {}
-    _max_count = None
-    _max_hours = None
-    _check_time = 20
-
-    @classmethod
-    def createInstance(cls, pool, cr):
-        return cls.makeInstance(pool, cr, ['_columns', '_defaults'])
-
-    def __init__(self, pool, cr):
-        super(orm_memory, self).__init__(pool, cr)
-        self.datas = {}
-        self.next_id = 0
-        self.check_id = 0
-        self._max_count = config.get('osv_memory_count_limit')
-        self._max_hours = config.get('osv_memory_age_limit')
-        cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
-
-    def _check_access(self, uid, object_id, mode):
-        if uid != 1 and self.datas[object_id]['internal.create_uid'] != uid:
-            raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects except for the super-user' % mode.capitalize())
-
-    def vaccum(self, cr, uid, force=False):
-        """Run the vaccuum cleaning system, expiring and removing old records from the
-        virtual osv_memory tables if the "max count" or "max age" conditions are enabled
-        and have been reached. This method can be called very often (e.g. everytime a record
-        is created), but will only actually trigger the cleanup process once out of
-        "_check_time" times (by default once out of 20 calls)."""
-        self.check_id += 1
-        if (not force) and (self.check_id % self._check_time):
-            return True
-        tounlink = []
-
-        # Age-based expiration
-        if self._max_hours:
-            max = time.time() - self._max_hours * 60 * 60
-            for k,v in self.datas.iteritems():
-                if v['internal.date_access'] < max:
-                    tounlink.append(k)
-            self.unlink(cr, ROOT_USER_ID, tounlink)
-
-        # Count-based expiration
-        if self._max_count and len(self.datas) > self._max_count:
-            # sort by access time to remove only the first/oldest ones in LRU fashion
-            records = self.datas.items()
-            records.sort(key=lambda x:x[1]['internal.date_access'])
-            self.unlink(cr, ROOT_USER_ID, [x[0] for x in records[:len(self.datas)-self._max_count]])
-
-        return True
-
-    def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
-        if not context:
-            context = {}
-        if not fields_to_read:
-            fields_to_read = self._columns.keys()
-        result = []
-        if self.datas:
-            ids_orig = ids
-            if isinstance(ids, (int, long)):
-                ids = [ids]
-            for id in ids:
-                r = {'id': id}
-                for f in fields_to_read:
-                    record = self.datas.get(id)
-                    if record:
-                        self._check_access(user, id, 'read')
-                        r[f] = record.get(f, False)
-                        if r[f] and isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
-                            r[f] = len(r[f])
-                result.append(r)
-                if id in self.datas:
-                    self.datas[id]['internal.date_access'] = time.time()
-            fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
-            for f in fields_post:
-                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
-                for record in result:
-                    record[f] = res2[record['id']]
-            if isinstance(ids_orig, (int, long)):
-                return result[0]
-        return result
-
-    def write(self, cr, user, ids, vals, context=None):
-        if not ids:
-            return True
-        vals2 = {}
-        upd_todo = []
-        for field in vals:
-            if self._columns[field]._classic_write:
-                vals2[field] = vals[field]
-            else:
-                upd_todo.append(field)
-        for object_id in ids:
-            self._check_access(user, object_id, mode='write')
-            self.datas[object_id].update(vals2)
-            self.datas[object_id]['internal.date_access'] = time.time()
-            for field in upd_todo:
-                self._columns[field].set_memory(cr, self, object_id, field, vals[field], user, context)
-        self._validate(cr, user, [object_id], context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_write(user, self._name, object_id, cr)
-        return object_id
-
-    def create(self, cr, user, vals, context=None):
-        self.vaccum(cr, user)
-        self.next_id += 1
-        id_new = self.next_id
-
-        vals = self._add_missing_default_values(cr, user, vals, context)
-
-        vals2 = {}
-        upd_todo = []
-        for field in vals:
-            if self._columns[field]._classic_write:
-                vals2[field] = vals[field]
-            else:
-                upd_todo.append(field)
-        self.datas[id_new] = vals2
-        self.datas[id_new]['internal.date_access'] = time.time()
-        self.datas[id_new]['internal.create_uid'] = user
-
-        for field in upd_todo:
-            self._columns[field].set_memory(cr, self, id_new, field, vals[field], user, context)
-        self._validate(cr, user, [id_new], context)
-        if self._log_create and not (context and context.get('no_store_function', False)):
-            message = self._description + \
-                " '" + \
-                self.name_get(cr, user, [id_new], context=context)[0][1] + \
-                "' "+ _("created.")
-            self.log(cr, user, id_new, message, True, context=context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_create(user, self._name, id_new, cr)
-        return id_new
-
-    def _where_calc(self, cr, user, args, active_test=True, context=None):
-        if not context:
-            context = {}
-        args = args[:]
-        res = []
-        # if the object has a field named 'active', filter out all inactive
-        # records unless they were explicitely asked for
-        if 'active' in self._columns and (active_test and context.get('active_test', True)):
-            if args:
-                active_in_args = False
-                for a in args:
-                    if a[0] == 'active':
-                        active_in_args = True
-                if not active_in_args:
-                    args.insert(0, ('active', '=', 1))
-            else:
-                args = [('active', '=', 1)]
-        if args:
-            import expression
-            e = expression.expression(args)
-            e.parse(cr, user, self, context)
-            res = e.exp
-        return res or []
-
-    def _search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
-        if not context:
-            context = {}
-
-        # implicit filter on current user except for superuser
-        if user != 1:
-            if not args:
-                args = []
-            args.insert(0, ('internal.create_uid', '=', user))
-
-        result = self._where_calc(cr, user, args, context=context)
-        if result == []:
-            return self.datas.keys()
-
-        res = []
-        counter = 0
-        #Find the value of dict
-        f = False
-        if result:
-            for id, data in self.datas.items():
-                counter = counter + 1
-                data['id'] = id
-                if limit and (counter > int(limit)):
-                    break
-                f = True
-                for arg in result:
-                    if arg[1] == '=':
-                        val = eval('data[arg[0]]'+'==' +' arg[2]', locals())
-                    elif arg[1] in ['<', '>', 'in', 'not in', '<=', '>=', '<>']:
-                        val = eval('data[arg[0]]'+arg[1] +' arg[2]', locals())
-                    elif arg[1] in ['ilike']:
-                        val = (str(data[arg[0]]).find(str(arg[2]))!=-1)
-
-                    f = f and val
-
-                if f:
-                    res.append(id)
-        if count:
-            return len(res)
-        return res or []
-
-    def unlink(self, cr, uid, ids, context=None):
-        for id in ids:
-            self._check_access(uid, id, 'unlink')
-            self.datas.pop(id, None)
-        if len(ids):
-            cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
-        return True
-
-    def perm_read(self, cr, user, ids, context=None, details=True):
-        result = []
-        credentials = self.pool.get('res.users').name_get(cr, user, [user])[0]
-        create_date = time.strftime('%Y-%m-%d %H:%M:%S')
-        for id in ids:
-            self._check_access(user, id, 'read')
-            result.append({
-                'create_uid': credentials,
-                'create_date': create_date,
-                'write_uid': False,
-                'write_date': False,
-                'id': id,
-                'xmlid' : False,
-            })
-        return result
-
-    def _check_removed_columns(self, cr, log=False):
-        # nothing to check in memory...
-        pass
-
-    def exists(self, cr, uid, ids, context=None):
-        if isinstance(ids, (long,int)):
-            ids = [ids]
-        return [id for id in ids if id in self.datas]
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        # ir.rules do not currently apply for orm.memory instances, 
-        # only the implicit visibility=owner one.
-        for id in ids:
-            self._check_access(uid, id, operation)
-
-class orm(orm_template):
-    _sql_constraints = []
-    _table = None
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    __logger = logging.getLogger('orm')
-    __schema = logging.getLogger('orm.schema')
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2564,7 +2315,7 @@ class orm(orm_template):
 
         """
         context = context or {}
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
+        self.check_read(cr, uid)
         if not fields:
             fields = self._columns.keys()
 
@@ -2657,20 +2408,22 @@ class orm(orm_template):
             del d['id']
         return data
 
-    def _inherits_join_add(self, parent_model_name, query):
+    def _inherits_join_add(self, current_table, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
-
+        :param current_table: current model object
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = self._inherits[parent_model_name]
+        inherits_field = current_table._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
         parent_table_name = parent_model._table
         quoted_parent_table_name = '"%s"' % parent_table_name
         if quoted_parent_table_name not in query.tables:
             query.tables.append(quoted_parent_table_name)
-            query.where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
+            query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
+
+
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2685,7 +2438,7 @@ class orm(orm_template):
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
-            self._inherits_join_add(parent_model_name, query)
+            self._inherits_join_add(current_table, parent_model_name, query)
             current_table = parent_table
         return '"%s".%s' % (current_table._table, field)
 
@@ -2726,7 +2479,7 @@ class orm(orm_template):
         while ids_lst:
             iids = ids_lst[:40]
             ids_lst = ids_lst[40:]
-            res = f.get(cr, self, iids, k, ROOT_USER_ID, {})
+            res = f.get(cr, self, iids, k, SUPERUSER_ID, {})
             for key, val in res.items():
                 if f._multi:
                     val = val[k]
@@ -2747,7 +2500,7 @@ class orm(orm_template):
                 pass
             if not val_id:
                 raise except_orm(_('ValidateError'),
-                                 _('Invalid value for reference field "%s" (last part must be a non-zero integer): "%s"') % (field, value))
+                                 _('Invalid value for reference field "%s.%s" (last part must be a non-zero integer): "%s"') % (self._table, field, value))
             val = val_model
         else:
             val = value
@@ -2757,13 +2510,13 @@ class orm(orm_template):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-                         _('The value "%s" for the field "%s" is not in the selection') % (value, field))
+			_('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
         # of fields which were required but have been removed (or will be added by another module)
         columns = [c for c in self._columns if not (isinstance(self._columns[c], fields.function) and not self._columns[c].store)]
-        columns += ('id', 'write_uid', 'write_date', 'create_uid', 'create_date') # openerp access columns
+        columns += MAGIC_COLUMNS
         cr.execute("SELECT a.attname, a.attnotnull"
                    "  FROM pg_class c, pg_attribute a"
                    " WHERE c.relname=%s"
@@ -2780,6 +2533,25 @@ class orm(orm_template):
                 cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, column['attname']))
                 self.__schema.debug("Table '%s': column '%s': dropped NOT NULL constraint",
                                     self._table, column['attname'])
+
+    # checked version: for direct m2o starting from `self`
+    def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
+        assert self.is_transient() or not dest_model.is_transient(), \
+            'Many2One relationships from non-transient Model to TransientModel are forbidden'
+        if self.is_transient() and not dest_model.is_transient():
+            # TransientModel relationships to regular Models are annoying
+            # usually because they could block deletion due to the FKs.
+            # So unless stated otherwise we default them to ondelete=cascade.
+            ondelete = ondelete or 'cascade'
+        self._foreign_keys.append((self._table, source_field, dest_model._table, ondelete or 'set null'))
+        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                                        self._table, source_field, dest_model._table, ondelete)
+
+    # unchecked version: for custom cases, such as m2m relationships
+    def _m2o_add_foreign_key_unchecked(self, source_table, source_field, dest_model, ondelete):
+        self._foreign_keys.append((source_table, source_field, dest_model._table, ondelete or 'set null'))
+        self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
+                                        source_table, source_field, dest_model._table, ondelete)
 
     def _auto_init(self, cr, context=None):
         """
@@ -2830,7 +2602,7 @@ class orm(orm_template):
             column_data = self._select_column_data(cr)
 
             for k, f in self._columns.iteritems():
-                if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
+                if k in MAGIC_COLUMNS:
                     continue
                 # Don't update custom (also called manual) fields
                 if f.manual and not update_custom_fields:
@@ -2923,7 +2695,7 @@ class orm(orm_template):
                                         cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" DROP NOT NULL' % (self._table, k))
                                     cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (self._table, k, newname))
                                     cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                                    cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
+                                    cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
                                     self.__schema.debug("Table '%s': column '%s' has changed type (DB=%s, def=%s), data moved to column %s !",
                                         self._table, k, f_pg_type, f._type, newname)
 
@@ -2932,7 +2704,7 @@ class orm(orm_template):
                                 # set the field to the default value if any
                                 if k in self._defaults:
                                     if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, ROOT_USER_ID, context)
+                                        default = self._defaults[k](self, cr, SUPERUSER_ID, context)
                                     else:
                                         default = self._defaults[k]
 
@@ -2979,7 +2751,8 @@ class orm(orm_template):
                                 self.__schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
-                                ref = self.pool.get(f._obj)._table
+                                dest_model = self.pool.get(f._obj)
+                                ref = dest_model._table
                                 if ref != 'ir_actions':
                                     cr.execute('SELECT confdeltype, conname FROM pg_constraint as con, pg_class as cl1, pg_class as cl2, '
                                                 'pg_attribute as att1, pg_attribute as att2 '
@@ -2998,9 +2771,9 @@ class orm(orm_template):
                                                 "AND con.contype = 'f'", (self._table, ref, k, 'id'))
                                     res2 = cr.dictfetchall()
                                     if res2:
-                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
+                                        if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get((f.ondelete or 'set null').upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            self._foreign_keys.append((self._table, k, ref, f.ondelete))
+                                            self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
@@ -3010,14 +2783,14 @@ class orm(orm_template):
                         if not isinstance(f, fields.function) or f.store:
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
-                            cr.execute("COMMENT ON COLUMN %s.%s IS '%s'" % (self._table, k, f.string.replace("'", "''")))
+                            cr.execute("COMMENT ON COLUMN %s.\"%s\" IS %%s" % (self._table, k), (f.string,))
                             self.__schema.debug("Table '%s': added column '%s' with definition=%s",
                                 self._table, k, get_pg_type(f)[1])
 
                             # initialize it
                             if not create and k in self._defaults:
                                 if callable(self._defaults[k]):
-                                    default = self._defaults[k](self, cr, ROOT_USER_ID, context)
+                                    default = self._defaults[k](self, cr, SUPERUSER_ID, context)
                                 else:
                                     default = self._defaults[k]
 
@@ -3038,12 +2811,11 @@ class orm(orm_template):
                             if isinstance(f, fields.many2one):
                                 if not self.pool.get(f._obj):
                                     raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
-                                ref = self.pool.get(f._obj)._table
+                                dest_model = self.pool.get(f._obj)
+                                ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
-                                    self._foreign_keys.append((self._table, k, ref, f.ondelete))
-                                    self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
-                                        self._table, k, ref, f.ondelete)
+                                    self._m2o_add_foreign_key_checked(k, dest_model, f.ondelete)
                             if f.select:
                                 cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (self._table, k, self._table, k))
                             if f.required:
@@ -3093,7 +2865,7 @@ class orm(orm_template):
 
     def _create_table(self, cr):
         cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
-        cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
+        cr.execute(("COMMENT ON TABLE \"%s\" IS %%s" % self._table), (self._description,))
         self.__schema.debug("Table '%s': created", self._table)
 
 
@@ -3132,23 +2904,17 @@ class orm(orm_template):
 
 
     def _add_log_columns(self, cr):
-        logs = {
-            'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-            'create_date': 'TIMESTAMP',
-            'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-            'write_date': 'TIMESTAMP'
-        }
-        for k in logs:
+        for field, field_def in LOG_ACCESS_COLUMNS.iteritems():
             cr.execute("""
                 SELECT c.relname
                   FROM pg_class c, pg_attribute a
                  WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-                """, (self._table, k))
+                """, (self._table, field))
             if not cr.rowcount:
-                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
+                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, field, field_def))
                 cr.commit()
                 self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                    self._table, k, logs[k])
+                                    self._table, field, field_def)
 
 
     def _select_column_data(self, cr):
@@ -3171,20 +2937,28 @@ class orm(orm_template):
 
 
     def _m2m_raise_or_create_relation(self, cr, f):
-        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
+        m2m_tbl, col1, col2 = f._sql_names(self)
+        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
             if not self.pool.get(f._obj):
-                raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
-            ref = self.pool.get(f._obj)._table
-            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, f._id2, f._id1, f._id2))
-            self._foreign_keys.append((f._rel, f._id1, self._table, 'CASCADE'))
-            self._foreign_keys.append((f._rel, f._id2, ref, 'CASCADE'))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
-            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
-            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
+                raise except_orm('Programming Error', ('Many2Many destination model does not exist: `%s`') % (f._obj,))
+            dest_model = self.pool.get(f._obj)
+            ref = dest_model._table
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (m2m_tbl, col1, col2, col1, col2))
+
+            # create foreign key references with ondelete=cascade, unless the targets are SQL views
+            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (ref,))
+            if not cr.fetchall():
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col2, dest_model, 'cascade')
+            cr.execute("SELECT relkind FROM pg_class WHERE relkind IN ('v') AND relname=%s", (self._table,))
+            if not cr.fetchall():
+                self._m2o_add_foreign_key_unchecked(m2m_tbl, col1, self, 'cascade')
+
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col1, m2m_tbl, col1))
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (m2m_tbl, col2, m2m_tbl, col2))
+            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (m2m_tbl, self._table, ref))
             cr.commit()
-            self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
-                                f._rel, self._table, ref)
+            self.__schema.debug("Create table '%s': m2m relation between '%s' and '%s'", m2m_tbl, self._table, ref)
 
 
     def _add_sql_constraints(self, cr):
@@ -3252,109 +3026,6 @@ class orm(orm_template):
                     cr.execute(line2)
                     cr.commit()
 
-
-    @classmethod
-    def createInstance(cls, pool, cr):
-        return cls.makeInstance(pool, cr, ['_columns', '_defaults',
-            '_inherits', '_constraints', '_sql_constraints'])
-
-    def __init__(self, pool, cr):
-        """
-
-        - copy the stored fields' functions in the osv_pool,
-        - update the _columns with the fields found in ir_model_fields,
-        - ensure there is a many2one for each _inherits'd parent,
-        - update the children's _columns,
-        - give a chance to each field to initialize itself.
-
-        """
-        super(orm, self).__init__(pool, cr)
-
-        if not hasattr(self, '_log_access'):
-            # if not access is not specify, it is the same value as _auto
-            self._log_access = getattr(self, "_auto", True)
-
-        self._columns = self._columns.copy()
-        for store_field in self._columns:
-            f = self._columns[store_field]
-            if hasattr(f, 'digits_change'):
-                f.digits_change(cr)
-            if not isinstance(f, fields.function):
-                continue
-            if not f.store:
-                continue
-            if self._columns[store_field].store is True:
-                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
-            else:
-                sm = self._columns[store_field].store
-            for object, aa in sm.items():
-                if len(aa) == 4:
-                    (fnct, fields2, order, length) = aa
-                elif len(aa) == 3:
-                    (fnct, fields2, order) = aa
-                    length = None
-                else:
-                    raise except_orm('Error',
-                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
-                self.pool._store_function.setdefault(object, [])
-                ok = True
-                for x, y, z, e, f, l in self.pool._store_function[object]:
-                    if (x==self._name) and (y==store_field) and (e==fields2):
-                        if f == order:
-                            ok = False
-                if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, fields2, order, length))
-                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
-
-        for (key, _, msg) in self._sql_constraints:
-            self.pool._sql_error[self._table+'_'+key] = msg
-
-        # Load manual fields
-
-        cr.execute("SELECT id FROM ir_model_fields WHERE name=%s AND model=%s", ('state', 'ir.model.fields'))
-        if cr.fetchone():
-            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
-            for field in cr.dictfetchall():
-                if field['name'] in self._columns:
-                    continue
-                attrs = {
-                    'string': field['field_description'],
-                    'required': bool(field['required']),
-                    'readonly': bool(field['readonly']),
-                    'domain': eval(field['domain']) if field['domain'] else None,
-                    'size': field['size'],
-                    'ondelete': field['on_delete'],
-                    'translate': (field['translate']),
-                    'manual': True,
-                    #'select': int(field['select_level'])
-                }
-
-                if field['ttype'] == 'selection':
-                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
-                elif field['ttype'] == 'reference':
-                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
-                elif field['ttype'] == 'many2one':
-                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
-                elif field['ttype'] == 'one2many':
-                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
-                elif field['ttype'] == 'many2many':
-                    _rel1 = field['relation'].replace('.', '_')
-                    _rel2 = field['model'].replace('.', '_')
-                    _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
-                else:
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
-        self._inherits_check()
-        self._inherits_reload()
-        if not self._sequence:
-            self._sequence = self._table + '_id_seq'
-        for k in self._defaults:
-            assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
-        for f in self._columns:
-            self._columns[f].restart()
-
-    __init__.__doc__ = orm_template.__init__.__doc__ + __init__.__doc__
-
     #
     # Update objects that uses this one to update their _inherits fields
     #
@@ -3376,9 +3047,9 @@ class orm(orm_template):
         for table in self._inherits:
             other = self.pool.get(table)
             for col in other._columns.keys():
-                res[col] = (table, self._inherits[table], other._columns[col])
+                res[col] = (table, self._inherits[table], other._columns[col], table)
             for col in other._inherit_fields.keys():
-                res[col] = (table, self._inherits[table], other._inherit_fields[col][2])
+                res[col] = (table, self._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
         self._inherit_fields = res
         self._all_columns = self._get_column_infos()
         self._inherits_reload_src()
@@ -3389,8 +3060,8 @@ class orm(orm_template):
            inherited field via _inherits) to a ``column_info`` struct
            giving detailed columns """
         result = {}
-        for k, (parent, m2o, col) in self._inherit_fields.iteritems():
-            result[k] = fields.column_info(k, col, parent, m2o)
+        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
+            result[k] = fields.column_info(k, col, parent, m2o, original_parent)
         for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
         return result
@@ -3433,9 +3104,12 @@ class orm(orm_template):
     #    return _proxy
 
 
-    def fields_get(self, cr, user, fields=None, context=None):
-        """
-        Get the description of list of fields
+    def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
+        """ Return the definition of each field.
+
+        The returned value is a dictionary (indiced by field name) of
+        dictionaries. The _inherits'd fields are included. The string, help,
+        and selection (if present) attributes are translated.
 
         :param cr: database cursor
         :param user: current user id
@@ -3445,15 +3119,74 @@ class orm(orm_template):
         :raise AccessError: * if user has no create/write rights on the requested object
 
         """
-        ira = self.pool.get('ir.model.access')
-        write_access = ira.check(cr, user, self._name, 'write', False) or \
-                       ira.check(cr, user, self._name, 'create', False)
-        return super(orm, self).fields_get(cr, user, fields, context, write_access)
+        if context is None:
+            context = {}
+
+        write_access = self.check_write(cr, user, False) or \
+            self.check_create(cr, user, False)
+
+        res = {}
+
+        translation_obj = self.pool.get('ir.translation')
+        for parent in self._inherits:
+            res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
+
+        for f, field in self._columns.iteritems():
+            if allfields and f not in allfields:
+                continue
+
+            res[f] = fields.field_to_dict(self, cr, user, context, field)
+
+            if not write_access:
+                res[f]['readonly'] = True
+                res[f]['states'] = {}
+
+            if 'string' in res[f]:
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                if res_trans:
+                    res[f]['string'] = res_trans
+            if 'help' in res[f]:
+                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                if help_trans:
+                    res[f]['help'] = help_trans
+            if 'selection' in res[f]:
+                if isinstance(field.selection, (tuple, list)):
+                    sel = field.selection
+                    sel2 = []
+                    for key, val in sel:
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
+                        sel2.append((key, val2 or val))
+                    res[f]['selection'] = sel2
+
+        return res
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        """ Read records with given ids with the given fields
+
+        :param cr: database cursor
+        :param user: current user id
+        :param ids: id or list of the ids of the records to read
+        :param fields: optional list of field names to return (default: all fields would be returned)
+        :type fields: list (example ['field_name_1', ...])
+        :param context: optional context dictionary - it may contains keys for specifying certain options
+                        like ``context_lang``, ``context_tz`` to alter the results of the call.
+                        A special ``bin_size`` boolean flag may also be passed in the context to request the
+                        value of all fields.binary columns to be returned as the size of the binary instead of its
+                        contents. This can also be selectively overriden by passing a field-specific flag
+                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
+                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
+        :return: list of dictionaries((dictionary per record asked)) with requested field values
+        :rtype: [{‘name_of_the_field’: value, ...}, ...]
+        :raise AccessError: * if user has no read rights on the requested object
+                            * if user tries to bypass access rules for read on the requested object
+
+        """
+
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
+        self.check_read(cr, user)
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3494,7 +3227,7 @@ class orm(orm_template):
         res = []
         if len(fields_pre):
             def convert_field(f):
-                f_qual = "%s.%s" % (self._table, f) # need fully-qualified references in case len(tables) > 1
+                f_qual = '%s."%s"' % (self._table, f) # need fully-qualified references in case len(tables) > 1
                 if f in ('create_date', 'write_date'):
                     return "date_trunc('second', %s) as %s" % (f_qual, f)
                 if f == self.CONCURRENCY_CHECK_FIELD:
@@ -3627,6 +3360,7 @@ class orm(orm_template):
                             vals[field] = False
         return res
 
+    # TODO check READ access
     def perm_read(self, cr, user, ids, context=None, details=True):
         """
         Returns some metadata about the given records.
@@ -3696,6 +3430,23 @@ class orm(orm_template):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to the access rights."""
+        return self.pool.get('ir.model.access').check(cr, uid, self._name, operation, raise_exception)
+
+    def check_create(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'create', raise_exception)
+
+    def check_read(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'read', raise_exception)
+
+    def check_unlink(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'unlink', raise_exception)
+
+    def check_write(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'write', raise_exception)
+
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to ir.rules.
@@ -3704,17 +3455,35 @@ class orm(orm_template):
            :raise except_orm: * if current ir.rules do not permit this operation.
            :return: None if the operation is allowed
         """
-        where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
-        if where_clause:
-            where_clause = ' and ' + ' and '.join(where_clause)
-            for sub_ids in cr.split_for_in_conditions(ids):
-                cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
-                           ' WHERE ' + self._table + '.id IN %s' + where_clause,
-                           [sub_ids] + where_params)
-                if cr.rowcount != len(sub_ids):
-                    raise except_orm(_('AccessError'),
-                                     _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
-                                     % (operation, self._description))
+        if uid == SUPERUSER_ID:
+            return
+
+        if self.is_transient:
+            # Only one single implicit access rule for transient models: owner only!
+            # This is ok to hardcode because we assert that TransientModels always
+            # have log_access enabled and this the create_uid column is always there.
+            # And even with _inherits, these fields are always present in the local
+            # table too, so no need for JOINs.
+            cr.execute("""SELECT distinct create_uid
+                          FROM %s
+                          WHERE id IN %%s""" % self._table, (tuple(ids),))
+            uids = [x[0] for x in cr.fetchall()]
+            if len(uids) != 1 or uids[0] != uid:
+                raise orm.except_orm(_('AccessError'), '%s access is '
+                    'restricted to your own records for transient models '
+                    '(except for the super-user).' % operation.capitalize())
+        else:
+            where_clause, where_params, tables = self.pool.get('ir.rule').domain_get(cr, uid, self._name, operation, context=context)
+            if where_clause:
+                where_clause = ' and ' + ' and '.join(where_clause)
+                for sub_ids in cr.split_for_in_conditions(ids):
+                    cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
+                               ' WHERE ' + self._table + '.id IN %s' + where_clause,
+                               [sub_ids] + where_params)
+                    if cr.rowcount != len(sub_ids):
+                        raise except_orm(_('AccessError'),
+                                         _('Operation prohibited by access rules, or performed on an already deleted document (Operation: %s, Document type: %s).')
+                                         % (operation, self._description))
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -3739,7 +3508,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
+        self.check_unlink(cr, uid)
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
@@ -3765,10 +3534,10 @@ class orm(orm_template):
             # Note: following steps performed as admin to avoid access rights restrictions, and with no context
             #       to avoid possible side-effects during admin calls.
             # Step 1. Calling unlink of ir_model_data only for the affected IDS
-            reference_ids = pool_model_data.search(cr, ROOT_USER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
+            reference_ids = pool_model_data.search(cr, SUPERUSER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
             # Step 2. Marching towards the real deletion of referenced records
             if reference_ids:
-                pool_model_data.unlink(cr, ROOT_USER_ID, reference_ids)
+                pool_model_data.unlink(cr, SUPERUSER_ID, reference_ids)
 
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
@@ -3876,7 +3645,7 @@ class orm(orm_template):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+        self.check_write(cr, user)
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4085,7 +3854,11 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+
+        if self.is_transient():
+            self._transient_vacuum(cr, user)
+
+        self.check_create(cr, user)
 
         vals = self._add_missing_default_values(cr, user, vals, context)
 
@@ -4099,7 +3872,7 @@ class orm(orm_template):
         upd_todo = []
         for v in vals.keys():
             if v in self._inherit_fields:
-                (table, col, col_detail) = self._inherit_fields[v]
+                (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
             else:
@@ -4238,6 +4011,27 @@ class orm(orm_template):
         wf_service.trg_create(user, self._name, id_new, cr)
         return id_new
 
+    def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
+        """Fetch records as objects allowing to use dot notation to browse fields and relations
+
+        :param cr: database cursor
+        :param user: current user id
+        :param select: id or list of ids.
+        :param context: context arguments, like lang, time zone
+        :rtype: object or list of objects requested
+
+        """
+        self._list_class = list_class or browse_record_list
+        cache = {}
+        # need to accepts ints and longs because ids coming from a method
+        # launched by button in the interface have a type long...
+        if isinstance(select, (int, long)):
+            return browse_record(cr, uid, select, self, cache, context=context, list_class=self._list_class, fields_process=fields_process)
+        elif isinstance(select, list):
+            return self._list_class([browse_record(cr, uid, id, self, cache, context=context, list_class=self._list_class, fields_process=fields_process) for id in select], context=context)
+        else:
+            return browse_null()
+
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
            an update operation on ``fields`` of records with ``ids``,
@@ -4246,44 +4040,52 @@ class orm(orm_template):
 
            :return: [(priority, model_name, [record_ids,], [function_fields,])]
         """
-        # FIXME: rewrite, cleanup, use real variable names
-        # e.g.: http://pastie.org/1222060
-        result = {}
-        fncts = self.pool._store_function.get(self._name, [])
-        for fnct in range(len(fncts)):
-            if fncts[fnct][3]:
-                ok = False
-                if not fields:
-                    ok = True
-                for f in (fields or []):
-                    if f in fncts[fnct][3]:
-                        ok = True
-                        break
-                if not ok:
-                    continue
+        if fields is None: fields = []
+        stored_functions = self.pool._store_function.get(self._name, [])
 
-            result.setdefault(fncts[fnct][0], {})
+        # use indexed names for the details of the stored_functions:
+        model_name_, func_field_to_compute_, id_mapping_fnct_, trigger_fields_, priority_ = range(5)
 
+        # only keep functions that should be triggered for the ``fields``
+        # being written to.
+        to_compute = [f for f in stored_functions \
+                if ((not f[trigger_fields_]) or set(fields).intersection(f[trigger_fields_]))]
+
+        mapping = {}
+        for function in to_compute:
             # use admin user for accessing objects having rules defined on store fields
-            ids2 = fncts[fnct][2](self, cr, ROOT_USER_ID, ids, context)
-            for id in filter(None, ids2):
-                result[fncts[fnct][0]].setdefault(id, [])
-                result[fncts[fnct][0]][id].append(fnct)
-        dict = {}
-        for object in result:
-            k2 = {}
-            for id, fnct in result[object].items():
-                k2.setdefault(tuple(fnct), [])
-                k2[tuple(fnct)].append(id)
-            for fnct, id in k2.items():
-                dict.setdefault(fncts[fnct[0]][4], [])
-                dict[fncts[fnct[0]][4]].append((fncts[fnct[0]][4], object, id, map(lambda x: fncts[x][1], fnct)))
-        result2 = []
-        tmp = dict.keys()
-        tmp.sort()
-        for k in tmp:
-            result2 += dict[k]
-        return result2
+            target_ids = [id for id in function[id_mapping_fnct_](self, cr, SUPERUSER_ID, ids, context) if id]
+
+            # the compound key must consider the priority and model name
+            key = (function[priority_], function[model_name_])
+            for target_id in target_ids:
+                mapping.setdefault(key, {}).setdefault(target_id,set()).add(tuple(function))
+
+        # Here mapping looks like:
+        # { (10, 'model_a') : { target_id1: [ (function_1_tuple, function_2_tuple) ], ... }
+        #   (20, 'model_a') : { target_id2: [ (function_3_tuple, function_4_tuple) ], ... }
+        #   (99, 'model_a') : { target_id1: [ (function_5_tuple, function_6_tuple) ], ... }
+        # }
+
+        # Now we need to generate the batch function calls list
+        # call_map =
+        #   { (10, 'model_a') : [(10, 'model_a', [record_ids,], [function_fields,])] }
+        call_map = {}
+        for ((priority,model), id_map) in mapping.iteritems():
+            functions_ids_maps = {}
+            # function_ids_maps =
+            #   { (function_1_tuple, function_2_tuple) : [target_id1, target_id2, ..] }
+            for id, functions in id_map.iteritems():
+                functions_ids_maps.setdefault(tuple(functions), []).append(id)
+            for functions, ids in functions_ids_maps.iteritems():
+                call_map.setdefault((priority,model),[]).append((priority, model, ids,
+                                                                 [f[func_field_to_compute_] for f in functions]))
+        ordered_keys = call_map.keys()
+        ordered_keys.sort()
+        result = []
+        if ordered_keys:
+            result = reduce(operator.add, (call_map[k] for k in ordered_keys))
+        return result
 
     def _store_set_values(self, cr, uid, ids, fields, context):
         """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
@@ -4319,7 +4121,7 @@ class orm(orm_template):
             val = todo[key]
             if key:
                 # use admin user for accessing objects having rules defined on store fields
-                result = self._columns[val[0]].get(cr, self, ids, val, ROOT_USER_ID, context=context)
+                result = self._columns[val[0]].get(cr, self, ids, val, SUPERUSER_ID, context=context)
                 for id, value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -4345,7 +4147,7 @@ class orm(orm_template):
             else:
                 for f in val:
                     # use admin user for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, ROOT_USER_ID, context=context)
+                    result = self._columns[f].get(cr, self, ids, f, SUPERUSER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -4394,9 +4196,7 @@ class orm(orm_template):
                 domain = [('active', '=', 1)]
 
         if domain:
-            import expression
-            e = expression.expression(domain)
-            e.parse(cr, user, self, context)
+            e = expression.expression(cr, user, domain, self, context)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = where_clause and [where_clause] or []
@@ -4421,7 +4221,7 @@ class orm(orm_template):
                 if parent_model and child_object:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    child_object._inherits_join_add(parent_model, query)
+                    child_object._inherits_join_add(child_object, parent_model, query)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
@@ -4510,7 +4310,7 @@ class orm(orm_template):
                     else:
                         continue # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
-                    parent_obj = self.pool.get(self._inherit_fields[order_field][0])
+                    parent_obj = self.pool.get(self._inherit_fields[order_field][3])
                     order_column = parent_obj._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = self._inherits_join_calc(order_field, query)
@@ -4541,7 +4341,11 @@ class orm(orm_template):
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
+        self.check_read(cr, access_rights_uid or user)
+
+        # For transient models, restrict acces to the current user, except for the super-user
+        if self.is_transient() and self._log_access and user != SUPERUSER_ID:
+            args = expression.AND(([('create_uid', '=', user)], args or []))
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)
@@ -4617,7 +4421,7 @@ class orm(orm_template):
         for f in fields:
             ftype = fields[f]['type']
 
-            if self._log_access and f in ('create_date', 'create_uid', 'write_date', 'write_uid'):
+            if self._log_access and f in LOG_ACCESS_COLUMNS:
                 del data[f]
 
             if f in default:
@@ -4654,9 +4458,13 @@ class orm(orm_template):
         # force a clean recompute!
         for parent_column in ['parent_left', 'parent_right']:
             data.pop(parent_column, None)
-
-        for v in self._inherits:
-            del data[self._inherits[v]]
+        # Remove _inherits field's from data recursively, missing parents will
+        # be created by create() (so that copy() copy everything).
+        def remove_ids(inherits_dict):
+            for parent_table in inherits_dict:
+                del data[inherits_dict[parent_table]]
+                remove_ids(self.pool.get(parent_table)._inherits)
+        remove_ids(self._inherits)
         return data
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
@@ -4728,6 +4536,18 @@ class orm(orm_template):
         return new_id
 
     def exists(self, cr, uid, ids, context=None):
+        """Checks whether the given id or ids exist in this model,
+           and return the list of ids that do. This is simple to use for
+           a truth test on a browse_record::
+
+               if record.exists():
+                   pass
+
+           :param ids: id or list of ids to check for existence
+           :type ids: int or [int]
+           :return: the list of ids that currently exist, out of
+                    the given `ids`
+        """
         if type(ids) in (int, long):
             ids = [ids]
         query = 'SELECT id FROM "%s"' % (self._table)
@@ -4812,5 +4632,98 @@ class orm(orm_template):
                 results[k] = ''
         return results
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    # Transience
+    def is_transient(self):
+        """ Return whether the model is transient.
 
+        See TransientModel.
+
+        """
+        return self._transient
+
+    def _transient_clean_rows_older_than(self, cr, seconds):
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        cr.execute("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, now())::timestamp <"
+            " (now() - interval %s)", ("%s seconds" % seconds,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, SUPERUSER_ID, ids)
+
+    def _transient_clean_old_rows(self, cr, count):
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        cr.execute(
+            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            " AS t FROM " + self._table +
+            " ORDER BY t LIMIT %s", (count,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, SUPERUSER_ID, ids)
+
+    def _transient_vacuum(self, cr, uid, force=False):
+        """Clean the transient records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_transient_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_transient_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        """
+        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        self._transient_check_count += 1
+        if (not force) and (self._transient_check_count % self._transient_check_time):
+            self._transient_check_count = 0
+            return True
+
+        # Age-based expiration
+        if self._transient_max_hours:
+            self._transient_clean_rows_older_than(cr, self._transient_max_hours * 60 * 60)
+
+        # Count-based expiration
+        if self._transient_max_count:
+            self._transient_clean_old_rows(cr, self._transient_max_count)
+
+        return True
+
+# keep this import here, at top it will cause dependency cycle errors
+import expression
+
+class Model(BaseModel):
+    """Main super-class for regular database-persisted OpenERP models.
+
+    OpenERP models are created by inheriting from this class::
+
+        class user(Model):
+            ...
+
+    The system will later instantiate the class once per database (on
+    which the class' module is installed).
+    """
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = False # True in a TransientModel
+
+class TransientModel(BaseModel):
+    """Model super-class for transient records, meant to be temporarily
+       persisted, and regularly vaccuum-cleaned.
+ 
+       A TransientModel has a simplified access rights management,
+       all users can create new records, and may only access the
+       records they created. The super-user has unrestricted access
+       to all TransientModel records.
+    """
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+    _transient = True
+
+class AbstractModel(BaseModel):
+    """Abstract Model super-class for creating an abstract class meant to be
+       inherited by regular models (Models or TransientModels) but not meant to
+       be usable on its own, or persisted.
+
+       Technical note: we don't want to make AbstractModel the super-class of
+       Model or BaseModel because it would not make sense to put the main
+       definition of persistence methods such as create() in it, and still we
+       should be able to override them within an AbstractModel.
+       """
+    _auto = False # don't create any database backend for AbstractModels
+    _register = False # not visible in ORM registry, meant to be python-inherited only
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1274,7 +1274,7 @@
 
 
         <record id="action_model_model" model="ir.actions.act_window">
-            <field name="name">Objects</field>
+            <field name="name">Models</field>
             <field name="res_model">ir.model</field>
             <field name="view_type">form</field>
             <field name="context">{'manual':True}</field>
@@ -1740,7 +1740,7 @@
             <field name="name">Property multi-company</field>
             <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
+            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 
         <!--server action view-->
@@ -1766,7 +1766,9 @@
                         <page string="Trigger" attrs="{'invisible':[('state','!=','trigger')]}">
                             <separator colspan="4" string="Trigger Configuration"/>
                             <field name="wkf_model_id" attrs="{'required':[('state','=','trigger')]}"/>
-                            <field name="trigger_obj_id" context="{'key':''}" domain="[('model_id','=',model_id)]" attrs="{'required':[('state','=','trigger')]}"/>
+                            <field name="trigger_obj_id" context="{'key':''}" 
+                                   domain="[('model_id','=',model_id),('ttype','in',['many2one','int'])]"
+                                   attrs="{'required':[('state','=','trigger')]}"/>
                             <field name="trigger_name" attrs="{'required':[('state','=','trigger')]}"/>
                         </page>
                         <page string="Action to Launch" attrs="{'invisible':[('state','!=','client_action')]}">
