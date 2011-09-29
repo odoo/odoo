@@ -326,23 +326,16 @@ class hr_payslip(osv.osv):
             other_pay = slip.other_pay
             #Process all Reambuse Entries
             for line in slip.line_ids:
-                if line.type == 'otherpay' and line.expanse_id.invoice_id:
-                    if not line.expanse_id.invoice_id.move_id:
-                        raise osv.except_osv(_('Warning !'), _('Please Confirm all Expense Invoice appear for Reimbursement'))
-                    invids = [line.expanse_id.invoice_id.id]
+                if line.type == 'otherpay':
                     amount = line.total
                     acc_id = slip.bank_journal_id.default_credit_account_id and slip.bank_journal_id.default_credit_account_id.id
                     period_id = slip.period_id.id
                     journal_id = slip.bank_journal_id.id
                     name = '[%s]-%s' % (slip.number, line.name)
-                    invoice_pool.pay_and_reconcile(cr, uid, invids, amount, acc_id, period_id, journal_id, False, period_id, False, context, name)
                     other_pay -= amount
                     #TODO: link this account entries to the Payment Lines also Expense Entries to Account Lines
                     l_ids = movel_pool.search(cr, uid, [('name','=',name)], context=context)
                     line_ids += l_ids
-
-                    l_ids = movel_pool.search(cr, uid, [('invoice','=',line.expanse_id.invoice_id.id)], context=context)
-                    exp_ids += l_ids
 
             #Process for Other payment if any
             other_move_id = False
@@ -642,7 +635,6 @@ class hr_payslip(osv.osv):
                         'category_id':exp.category_id.id,
                         'amount':exp.amount,
                         'slip_id':slip.id,
-                        'expanse_id':exp.id,
                         'account_id':acc
                     }
                     payslip_pool.create(cr, uid, exp_res, context=context)
