@@ -143,6 +143,9 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
         'company_registry': fields.char('Company Registry', size=64),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The company name must be unique !')
+    ]
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -242,9 +245,7 @@ class res_company(osv.osv):
             return False
 
     def _get_logo(self, cr, uid, ids):
-        return open(os.path.join(
-            tools.config['root_path'], '..', 'pixmaps', 'your_logo.png'),
-                    'rb') .read().encode('base64')
+        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
     _header = """
 <header>

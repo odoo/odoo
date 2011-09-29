@@ -56,14 +56,14 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
 
 class ir_model(osv.osv):
     _name = 'ir.model'
-    _description = "Objects"
+    _description = "Models"
     _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = isinstance(self.pool.get(model.model), osv.osv_memory)
+            res[model.id] = self.pool.get(model.model).is_transient()
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -85,8 +85,8 @@ class ir_model(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Object Name', size=64, translate=True, required=True),
-        'model': fields.char('Object', size=64, required=True, select=1),
+        'name': fields.char('Model Description', size=64, translate=True, required=True),
+        'model': fields.char('Model', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
@@ -97,12 +97,12 @@ class ir_model(osv.osv):
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
-    
+
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    
+
     def _check_model_name(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
@@ -114,8 +114,12 @@ class ir_model(osv.osv):
 
     def _model_name_msg(self, cr, uid, ids, context=None):
         return _('The Object name must start with x_ and not contain any special character !')
+
     _constraints = [
         (_check_model_name, _model_name_msg, ['model']),
+    ]
+    _sql_constraints = [
+        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -161,7 +165,7 @@ class ir_model(osv.osv):
             pass
         x_custom_model._name = model
         x_custom_model._module = False
-        a = x_custom_model.createInstance(self.pool, cr)
+        a = x_custom_model.create_instance(self.pool, cr)
         if (not a._columns) or ('x_name' in a._columns.keys()):
             x_name = 'x_name'
         else:
@@ -477,14 +481,12 @@ class ir_model_access(osv.osv):
 
         if isinstance(model, browse_record):
             assert model._table_name == 'ir.model', 'Invalid model object'
-            model_name = model.name
+            model_name = model.model
         else:
             model_name = model
 
-        # osv_memory objects can be read by everyone, as they only return
-        # results that belong to the current user (except for superuser)
-        model_obj = self.pool.get(model_name)
-        if isinstance(model_obj, osv.osv_memory):
+        # TransientModel records have no access rights, only an implicit access rule
+        if self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
@@ -519,7 +521,7 @@ class ir_model_access(osv.osv):
             }
 
             raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
-        return r
+        return r or False
 
     __cache_clearing_methods = []
 

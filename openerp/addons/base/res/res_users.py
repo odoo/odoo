@@ -35,6 +35,7 @@ from osv import fields,osv
 from osv.orm import browse_record
 from service import security
 from tools.translate import _
+import openerp.exceptions
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -338,7 +339,7 @@ class users(osv.osv):
     }
 
     # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
+    SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email', 'name']
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -437,14 +438,14 @@ class users(osv.osv):
         if passwd == tools.config['admin_passwd']:
             return True
         else:
-            raise security.ExceptionNoTb('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
 
     def check(self, db, uid, passwd):
         """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
            raise an exception if it is not."""
         if not passwd:
             # empty passwords disallowed for obvious security reasons
-            raise security.ExceptionNoTb('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
         if self._uid_cache.get(db, {}).get(uid) == passwd:
             return
         cr = pooler.get_db(db).cursor()
@@ -453,7 +454,7 @@ class users(osv.osv):
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not res:
-                raise security.ExceptionNoTb('AccessDenied')
+                raise openerp.exceptions.AccessDenied()
             if self._uid_cache.has_key(db):
                 ulist = self._uid_cache[db]
                 ulist[uid] = passwd
@@ -470,7 +471,7 @@ class users(osv.osv):
             cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, passwd))
             res = cr.fetchone()
             if not res:
-                raise security.ExceptionNoTb('Bad username or password')
+                raise openerp.exceptions.AccessDenied()
             return res[0]
         finally:
             cr.close()
@@ -481,7 +482,7 @@ class users(osv.osv):
         password is not used to authenticate requests.
 
         :return: True
-        :raise: security.ExceptionNoTb when old password is wrong
+        :raise: openerp.exceptions.AccessDenied when old password is wrong
         :raise: except_osv when new password is not set or empty
         """
         self.check(cr.dbname, uid, old_passwd)
@@ -553,7 +554,7 @@ class users_implied(osv.osv):
     _inherit = 'res.users'
 
     def create(self, cr, uid, values, context=None):
-        groups = values.pop('groups_id')
+        groups = values.pop('groups_id', None)
         user_id = super(users_implied, self).create(cr, uid, values, context)
         if groups:
             # delegate addition of groups to add implied groups
@@ -700,7 +701,7 @@ class users_view(osv.osv):
         self._process_values_groups(cr, uid, values, context)
         return super(users_view, self).write(cr, uid, ids, values, context)
 
-    def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         if not fields:
             group_fields, fields = [], self.fields_get(cr, uid, context).keys()
         else:

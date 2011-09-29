@@ -1,80 +1,116 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
-import os
-import re
-import sys
-from setuptools import setup
+import glob, os, re, setuptools, sys
+from os.path import join, isfile
 
-execfile('addons/web/common/release.py')
+execfile(join('openerp', 'release.py'))
 
-version_dash_incompatible = False
-if 'bdist_rpm' in sys.argv:
-    version_dash_incompatible = True
-try:
+py2exe_keywords = {}
+if os.name == 'nt':
     import py2exe
-    from py2exe_utils import opts
-    version_dash_incompatible = True
-except ImportError:
-    opts = {}
-if version_dash_incompatible:
-    version = version.split('-')[0]
+    py2exe_keywords['console'] = [
+        { "script": "openerp-server",
+          "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
+        }]
+    py2exe_keywords['options'] = {
+        "py2exe": {
+            "skip_archive": 1,
+            "optimize": 2,
+            "dist_dir": 'dist',
+            "packages": [
+                "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+                "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+                "encodings", "dateutil", "pychart", "PIL", "pyparsing",
+                "pydot", "asyncore","asynchat", "reportlab", "vobject",
+                "HTMLParser", "select", "mako", "poplib",
+                "imaplib", "smtplib", "email", "yaml", "DAV",
+                "uuid", "commands", "openerp", "simplejson", "vatnumber"
+            ],
+            "excludes" : ["Tkconstants","Tkinter","tcl"],
+        }
+    }
 
-FILE_PATTERNS = \
-    r'.+\.(py|cfg|po|pot|mo|txt|rst|gif|png|jpg|ico|mako|html|js|css|htc|swf)$'
-def find_data_files(source, patterns=FILE_PATTERNS):
-    file_matcher = re.compile(patterns, re.I)
-    out = []
-    for base, _, files in os.walk(source):
-        cur_files = []
-        for f in files:
-            if file_matcher.match(f):
-                cur_files.append(os.path.join(base, f))
-        if cur_files:
-            out.append(
-                (base, cur_files))
+# List all data files
+def data():
+    files = []
+    for root, dirnames, filenames in os.walk('openerp'):
+        for filename in filenames:
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
+                files.append(os.path.join(root, filename))
+    d = {}
+    for v in files:
+        k=os.path.dirname(v)
+        if k in d:
+            d[k].append(v)
+        else:
+            d[k]=[v]
+    r = d.items()
+    return r
 
-    return out
+def gen_manifest():
+    file_list="\n".join(data())
+    open('MANIFEST','w').write(file_list)
 
-setup(
-    name=name,
-    version=version,
-    description=description,
-    long_description=long_description,
-    author=author,
-    author_email=author_email,
-    url=url,
-    download_url=download_url,
-    license=license,
-    install_requires=[
-        "Babel >= 0.9.6",
-        "simplejson >= 2.0.9",
-        "python-dateutil >= 1.4.1",
-        "pytz",
-        "werkzeug == 0.7",
-    ],
-    tests_require=[
-        'unittest2',
-        'mock',
-    ],
-    test_suite = 'unittest2.collector',
-    zip_safe=False,
-    packages=[
-        'addons',
-        'addons.base',
-        'addons.base.controllers',
-        'addons.base_calendar',
-        'addons.base_hello',
-        'openerpweb',
-    ],
-    classifiers=[
-        'Development Status :: 6 - Production/Stable',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Environment :: Web Environment',
-        'Topic :: Office/Business :: Financial',
-        ],
-    scripts=['scripts/openerp-web'],
-    data_files=(find_data_files('addons')
-              + opts.pop('data_files', [])
-    ),
-    **opts
+setuptools.setup(
+      name             = name,
+      version          = version,
+      description      = description,
+      long_description = long_desc,
+      url              = url,
+      author           = author,
+      author_email     = author_email,
+      classifiers      = filter(None, classifiers.split("\n")),
+      license          = license,
+      scripts          = ['openerp-server'],
+      data_files       = data(),
+      packages         = setuptools.find_packages(),
+      #include_package_data = True,
+      install_requires = [
+       # We require the same version as caldav for lxml.
+          'lxml==2.1.5',
+          'mako',
+          'python-dateutil',
+          'psycopg2',
+        # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
+        # It seems there is a single difference, which is a spurious print in generate_docs.py.
+        # It is probably safe to move to PyChart 1.39 (the latest one).
+        # (Let setup.py choose the latest one, and we should check we can remove pychart from
+        # our tree.)
+        # http://download.gna.org/pychart/
+          'pychart',
+          'pydot',
+          'pytz',
+          'reportlab',
+          'caldav',
+          'pyyaml',
+          'pywebdav',
+          'feedparser',
+          'simplejson >= 2.0',
+          'vatnumber', # required by base_vat module
+      ],
+      extras_require = {
+          'SSL' : ['pyopenssl'],
+      },
+      **py2exe_keywords
 )
+

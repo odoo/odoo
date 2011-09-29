@@ -36,7 +36,7 @@ import openerp.netsvc as netsvc
 import openerp.tiny_socket as tiny_socket
 import openerp.tools as tools
 
-class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
+class TinySocketClientThread(threading.Thread):
     def __init__(self, sock, threads):
         spn = sock and sock.getpeername()
         spn = 'netrpc-client-%s:%s' % spn[0:2]
@@ -59,26 +59,18 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         while self.running:
             try:
                 msg = ts.myreceive()
-                result = self.dispatch(msg[0], msg[1], msg[2:])
+                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:])
                 ts.mysend(result)
             except socket.timeout:
                 #terminate this channel because other endpoint is gone
                 break
-            except netsvc.OpenERPDispatcherException, e:
-                try:
-                    new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
-                    logging.getLogger('web-services').debug("netrpc: rpc-dispatching exception", exc_info=True)
-                    ts.mysend(new_e, exception=True, traceback=e.traceback)
-                except Exception:
-                    #terminate this channel if we can't properly send back the error
-                    logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
-                    break
             except Exception, e:
                 try:
+                    new_e = Exception(tools.exception_to_unicode(e)) # avoid problems of pickeling
                     tb = getattr(e, 'traceback', sys.exc_info())
                     tb_s = "".join(traceback.format_exception(*tb))
                     logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
-                    ts.mysend(e, exception=True, traceback=tb_s)
+                    ts.mysend(new_e, exception=True, traceback=tb_s)
                     break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error
@@ -107,7 +99,7 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.socket.listen(5)
         self.threads = []
         netsvc.Logger().notifyChannel("web-services", netsvc.LOG_INFO, 
-                         "starting NET-RPC service at %s port %d" % (interface or '0.0.0.0', port,))
+                         "starting NET-RPC service on %s:%s" % (interface or '0.0.0.0', port,))
 
     def run(self):
         try:
