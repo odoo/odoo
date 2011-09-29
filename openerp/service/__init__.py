@@ -28,6 +28,8 @@ import netrpc_server
 import web_services
 import websrv_lib
 
+import openerp.cron
+import openerp.modules
 import openerp.netsvc
 import openerp.osv
 import openerp.tools
@@ -61,7 +63,7 @@ def start_services():
     netrpc_server.init_servers()
 
     # Start the main cron thread.
-    openerp.netsvc.start_agent()
+    openerp.cron.start_master_thread()
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
@@ -72,7 +74,9 @@ def start_services():
 
 def stop_services():
     """ Stop all services. """
-    openerp.netsvc.Agent.quit()
+    # stop scheduling new jobs; we will have to wait for the jobs to complete below
+    openerp.cron.cancel_all()
+
     openerp.netsvc.Server.quitAll()
     openerp.wsgi.stop_server()
     config = openerp.tools.config
@@ -91,6 +95,8 @@ def stop_services():
                 # and would prevent the forced shutdown.
                 thread.join(0.05)
                 time.sleep(0.05)
+
+    openerp.modules.registry.RegistryManager.delete_all()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

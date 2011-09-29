@@ -167,9 +167,8 @@ class db(netsvc.ExportService):
                 raise Exception, e
 
     def exp_drop(self, db_name):
+        openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
-        openerp.modules.registry.RegistryManager.clear_caches(db_name)
-        openerp.netsvc.Agent.cancel(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
@@ -271,9 +270,8 @@ class db(netsvc.ExportService):
         return True
 
     def exp_rename(self, old_name, new_name):
+        openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
-        openerp.modules.registry.RegistryManager.clear_caches(old_name)
-        openerp.netsvc.Agent.cancel(old_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
