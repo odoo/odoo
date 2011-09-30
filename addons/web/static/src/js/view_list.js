@@ -154,6 +154,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             if (py.evaluate(expression, context)) {
                 return 'color: ' + color + ';';
             }
+            // TODO: handle evaluation errors
         }
         return '';
     },
@@ -186,13 +187,14 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.name = "" + this.fields_view.arch.attrs.string;
 
         if (this.fields_view.arch.attrs.colors) {
-            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).map(
-                function (color_pair) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+                .compact()
+                .map(function(color_pair) {
                     var pair = color_pair.split(':'),
                         color = pair[0],
                         expr = pair[1];
-                    return [color, py.parse(py.tokenize(expr))];
-                });
+                    return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
         }
 
         this.setup_columns(this.fields_view.fields, grouped);
