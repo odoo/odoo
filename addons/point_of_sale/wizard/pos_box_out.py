@@ -92,7 +92,7 @@ class pos_box_out(osv.osv_memory):
                         am += s.amount
             if (-data['amount'] or 0.0) + am < -(res_obj.browse(cr, uid, uid, context=context).company_id.max_diff or 0.0) and amount_check:
                 val = (res_obj.browse(cr, uid, uid).company_id.max_diff or 0.0) + am
-                raise osv.except_osv(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %d ')%(val))
+                raise osv.except_osv(_('Error !'), _('The maximum value you can still withdraw is exceeded. \n Remaining value is equal to %s ')%(val))
 
             acc_id = product_obj.browse(cr, uid, data['product_id'], context=context).property_account_income
             if not acc_id:
