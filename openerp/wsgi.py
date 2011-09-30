@@ -48,12 +48,15 @@ import service.websrv_lib as websrv_lib
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
 # create directly ``xmlrpclib.Fault`` objects).
 XML_RPC_FAULT_CODE_APPLICATION_ERROR = 1
+# Unused, deferred errors are indistinguishable from normal application
+# errors. We keep them so we can use the word 'indistinguishable' twice
+# in the same comment.
 XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR = 2
 XML_RPC_FAULT_CODE_ACCESS_DENIED = 3
 XML_RPC_FAULT_CODE_ACCESS_ERROR = 4
 XML_RPC_FAULT_CODE_WARNING = 5
 
-def xmlrpc_return(start_response, service, method, params):
+def xmlrpc_return(start_response, service, method, params, legacy_exceptions=False):
     """
     Helper to call a service's method with some params, using a wsgi-supplied
     ``start_response`` callback.
@@ -70,6 +73,20 @@ def xmlrpc_return(start_response, service, method, params):
     try:
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+    except Exception, e:
+        if legacy_exceptions:
+            response = xmlrpc_handle_exception_legacy(e)
+        else:
+            response = xmlrpc_handle_exception(e)
+    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+    return [response]
+
+def xmlrpc_handle_exception(e):
+    try:
+        raise e
+    except openerp.osv.osv.except_osv, e: # legacy
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except openerp.exceptions.Warning, e:
         fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
@@ -84,17 +101,47 @@ def xmlrpc_return(start_response, service, method, params):
         # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
         #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR, formatted_info)
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except Exception, e:
+        if hasattr(e, 'message') and e.message == 'AccessDenied': # legacy
+            fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_DENIED, str(e))
+            response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+        else:
+            info = sys.exc_info()
+            # Which one is the best ?
+            formatted_info = "".join(traceback.format_exception(*info))
+            #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+            fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+            response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+    return response
+
+def xmlrpc_handle_exception_legacy(e):
+    try:
+        raise e
+    except openerp.osv.osv.except_osv, e:
+        fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.Warning, e:
+        fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.AccessError, e:
+        fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.AccessDenied, e:
+        fault = xmlrpclib.Fault('AccessDenied', str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except openerp.exceptions.DeferredException, e:
+        info = e.traceback
+        formatted_info = "".join(traceback.format_exception(*info))
+        fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
     except Exception, e:
         info = sys.exc_info()
-        # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
-        #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+        fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-    return [response]
+    return response
 
 def wsgi_xmlrpc(environ, start_response):
     """ The main OpenERP WSGI handler."""
@@ -138,7 +185,7 @@ def legacy_wsgi_xmlrpc(environ, start_response):
         path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ...
 
         params, method = xmlrpclib.loads(data)
-        return xmlrpc_return(start_response, path, method, params)
+        return xmlrpc_return(start_response, path, method, params, True)
 
 def wsgi_jsonrpc(environ, start_response):
     pass
