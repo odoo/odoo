@@ -38,7 +38,7 @@ server_options.add_option('--no-serve-static', dest='serve_static',
                           default=True, action='store_false',
                           help="Do not serve static files via this server")
 server_options.add_option('--multi-threaded', dest='threaded',
-                          default=False, action='store_true',
+                          default=True, action='store_true',
                           help="Spawn one thread per HTTP request")
 server_options.add_option('--proxy-mode', dest='proxy_mode',
                           default=False, action='store_true',
