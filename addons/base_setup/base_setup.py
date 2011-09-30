@@ -113,7 +113,7 @@ class base_setup_installer2(osv.osv_memory):
 
             attributes = {
                 'name' : 'category_%d' % (module_category.id,),
-                'on_change' : 'on_change_selection("category_%d")' % (module_category.id,),
+                'on_change' : 'on_change_%s_%d(category_%d)' % ('category', module_category.id, module_category.id,),
             }
             if readonly:
                 attributes['modifiers'] = simplejson.dumps({'readonly' : True})
@@ -151,8 +151,17 @@ class base_setup_installer2(osv.osv_memory):
 
         return result
 
-    def on_change_selection(self, cr, uid, ids, item, context=None):
-        if not isinstance(item, basestring):
+    def __getattr__(self, name):
+        if name.startswith('on_change_category_'):
+            def proxy(cr, uid, ids, value, context=None):
+                item = 'category_%s' % name[len('on_change_category_'):]
+                return self._on_change_selection(cr, uid, ids, item, value, context=context)
+            return proxy
+        return getattr(super(base_setup_installer2, self), name)
+
+    def _on_change_selection(self, cr, uid, ids, item, value, context=None):
+        print "on_change_selection: %r" % (item,) 
+        if not isinstance(item, basestring) or not value:
             return {}
 
         if item.startswith('category_') or item.startswith('module_'):
@@ -208,6 +217,7 @@ class base_setup_installer2(osv.osv_memory):
                 info['counter'] = - len(set(info['depends']))
 
         selected_modules = set(selected_modules + installed_modules) - set(['base'])
+        print "selected_modules: %r" % (selected_modules,)
 
         for selected_module in selected_modules:
             for module, info in modules.iteritems():
@@ -219,6 +229,8 @@ class base_setup_installer2(osv.osv_memory):
                                  for module, info in modules.iteritems()
                                  if info['counter'] == 0 and
                                     info['state'] not in STATES)
+
+        print "to_install_modules: %r" % (to_install_modules,)
 
         return to_install_modules
 
