@@ -152,7 +152,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Leaves" >
+                <tree colors="red:state in ('refuse');blue:state in ('draft');black:state in ('confirm','validate','validate1')" string="Allocation Requests" >
                     <field name="employee_id"/>
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
@@ -230,7 +230,7 @@
             <field name="model">hr.holidays</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')">
+                <tree colors="red:state in ('refuse');blue:state in (' draft');black:state in ('confirm','validate','validate1')" string="Leave Requests">
                     <field name="employee_id"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
                     <field name="holiday_status_id"/>
