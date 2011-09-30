@@ -47,18 +47,12 @@ class ir_sequence(osv.osv):
             'sequence_main_id', 'Sequences')
     }
 
-    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id,
-            for_update_no_wait, context=None):
-        res = super(ir_sequence, self)._select_by_code_or_id(cr, uid,
-            sequence_code_or_id, code_or_id, False, context)
-        if not res:
-            return
-        for line in self.browse(cr, uid, res['id'], context).fiscal_ids:
-            if line.fiscalyear_id.id == context.get('fiscalyear_id'):
-                return super(ir_sequence, self)._select_by_code_or_id(cr, uid,
-                    line.sequence_id.id, 'id', False, context)
-        return super(ir_sequence, self)._select_by_code_or_id(cr, uid,
-            res['id'], 'id', False, context)
+    def _next(self, cr, uid, seq_ids, context=None):
+        for seq in self.browse(cr, uid, seq_ids, context):
+            for line in seq.fiscal_ids:
+                if line.fiscalyear_id.id == context.get('fiscalyear_id'):
+                    return super(ir_sequence, self)._next(cr, uid, [line.sequence_id.id], context)
+        return super(ir_sequence, self)._next(cr, uid, seq_ids, context)
 
 ir_sequence()
 
