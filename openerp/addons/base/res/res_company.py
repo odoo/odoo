@@ -116,7 +116,7 @@ class res_company(osv.osv):
 
 
     _columns = {
-        'name': fields.char('Company Name', size=64, required=True),
+        'name': fields.related('partner_id', 'name', string='Company Name', size=64, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
