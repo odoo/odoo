@@ -28,15 +28,6 @@ from osv import fields, osv
 from tools.translate import _
 from lxml import etree
 
-class ir_module_category(osv.osv):
-    _inherit = 'ir.module.category'
-
-    _columns = {
-        'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
-    }
-ir_module_category()
-
-
 #Application and feature chooser, this could be done by introspecting ir.modules
 class base_setup_installer2(osv.osv_memory):
     _name = 'base.setup.installer2'
@@ -72,9 +63,12 @@ class base_setup_installer2(osv.osv_memory):
         for module in module_proxy.browse(cr, uid, module_ids, context=context):
             module_name = 'module_%d' % (module.id,)
             module_is_installed = module.state == 'installed'
+            title = "%s (%s)" % (module.shortdesc, module.complexity,)
+            title = "%s (%s)" % (module.name, module.complexity,)
+
             fields[module_name] = {
                 'type' : 'boolean',
-                'string' : module.shortdesc,
+                'string' : title,
                 'name' : module_name,
                 'help' : module.description,
             }
@@ -152,8 +146,8 @@ class base_setup_installer2(osv.osv_memory):
         arch.append('</form>')
 
         result['arch'] = ''.join(arch)
-        from pprint import pprint as pp
-        pp(result['arch'])
+        #from pprint import pprint as pp
+        #pp(result['arch'])
 
         return result
 
@@ -184,7 +178,7 @@ class base_setup_installer2(osv.osv_memory):
         ]
 
         values = {
-            'modules' : simplejson.dumps(modules_to_install),
+            'modules' : simplejson.dumps(module_ids_to_install),
         }
         context.update(dont_compute_virtual_attributes=True)
         return super(base_setup_installer2, self).create(cr, uid, values, context=context)
@@ -197,9 +191,10 @@ class base_setup_installer2(osv.osv_memory):
 
         modules = {}
         for module in module_proxy.browse(cr, uid, module_ids, context=context):
+            depends = [ depend.name for depend in module.dependencies_id ]
             modules[module.name] = {
                 'state' : module.state,
-                'depends' : module.depends,
+                'depends' : depends,
             }
 
         installed_modules = []
@@ -236,9 +231,13 @@ class base_setup_installer2(osv.osv_memory):
             modules = set(record['name']
                           for record in proxy.read(cr, uid, module_ids, ['name'], context=context))
 
-            modules = self._get_modules_to_install(cr, uid, modules, context=context)
+            modules = self._get_modules_to_install(cr, uid, list(modules), context=context)
 
-            module_ids = proxy.search(cr, uid, [('name', 'in', modules)], context=context)
+            module_ids = proxy.search(cr, uid, [('name', 'in', list(modules))], context=context)
+
+            print "modules: %r" % (modules,)
+
+            break
 
             need_update = False
             for module in proxy.browse(cr, uid, module_ids, context=context):
