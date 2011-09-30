@@ -795,7 +795,7 @@ class orm_template(object):
                         continue
                     done[field[len(prefix)]] = True
                     relation_obj = self.pool.get(fields_def[field[len(prefix)]]['relation'])
-                    newfd = relation_obj.fields_get( cr, uid, context=context )
+                    newfd = relation_obj.fields_get(cr, uid, context=context)
                     pos = position
                     res = []
                     first = 0
@@ -2170,7 +2170,7 @@ class orm(orm_template):
             groupby_def = self._columns.get(groupby) or (self._inherit_fields.get(groupby) and self._inherit_fields.get(groupby)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
-        fget = self.fields_get(cr, uid, fields)
+        fget = self.fields_get(cr, uid, fields, context=context)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
         group_count = group_by = groupby
