@@ -1,6 +1,27 @@
 -
   In order to test Bank Statement feature of account I create a bank statement line and confirm it and check it's move created
 -
+  I select the journal for bank statement
+-
+  !python {model: account.bank.statement}: |
+    journal = self._default_journal_id(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+      'journal_type': 'bank', 'period_id': 9, 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
+    assert journal, _('Journal has not been selected')
+-
+  I select the date
+-
+  !python {model: account.bank.statement}: |
+    import time
+    date = self.onchange_date(cr, uid, [], time.strftime('%Y-%m-%d'), context=None)
+    assert date, _('Date has not been selected')
+-
+  I select the period for bank statement
+-
+  !python {model: account.bank.statement}: |
+    period = self._get_period(cr, uid, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+      'journal_type': 'bank', 'period_id': 9, 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
+    assert period, _('Period has not been selected')
+-
   I create a bank statement with Opening and Closing balance 0.
 -
   !record {model: account.bank.statement, id: account_bank_statement_0}:
@@ -8,16 +29,34 @@
     balance_start: 0.0
     date: !eval time.strftime('%Y-%m-%d')
     journal_id: account.bank_journal
-    name: /
+    name: / Test bank statement
     period_id: account.period_10
-    line_ids:
-      - account_id: account.a_recv
-        amount: 1000.0
-        date: !eval time.strftime('%Y-%m-%d')
-        name: a
-        partner_id: base.res_partner_4
-        sequence: 0.0
-        type: general
+-
+  I create bank statement line
+-
+  !python {model: account.bank.statement.line}: |
+    import time
+    vals = {}
+    partner = self.onchange_partner_id(cr, uid, [], ref('base.res_partner_4'), context=None)
+    vals = {
+        'account_id': partner['value']['account_id'],
+        'amount': 1000.0,
+        'date': time.strftime('%Y-%m-%d'),
+        'name': 'test bank statement line',
+        'partner_id': ref('base.res_partner_4'),
+        'sequence': 1,
+        'type': partner['value']['type'],
+        'statement_id': ref('account_bank_statement_0')
+    }
+    line_id = self.create(cr, uid, vals)
+    assert line_id, "Account bank statement line has not been created"
+
+-
+  Then I change the journal
+-
+  !python {model: account.bank.statement}: |
+    journal = self.onchange_journal_id(cr, uid, [ref('account_bank_statement_0')], ref('account.check_journal'), context=None)
+    assert journal['value'], _('Journal has not been changed')
 -
   I check that Initially bank statement is in the "Draft" state
 -
@@ -61,3 +100,12 @@
     assert bank_data.move_line_ids, "Move lines not created for bank statement"
     for line in bank_data.move_line_ids:
       assert line.move_id.state == 'posted', "Move state is not posted"
+-
+  Then I cancel Bank Statements and verifies that it raises a warning
+-
+  !python {model: account.bank.statement}: |
+    try:
+      self.button_cancel(cr, uid, [ref("account_bank_statement_0")], {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+        'journal_type': 'bank', 'active_ids': [ref('menu_bank_statement_tree')], 'active_id': ref('menu_bank_statement_tree')})
+    except Exception, e:
+      assert e, "Warning message has not been raised"
