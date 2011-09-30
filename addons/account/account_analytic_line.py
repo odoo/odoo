@@ -123,7 +123,7 @@ class account_analytic_line(osv.osv):
             ctx['uom'] = unit
         amount_unit = prod.price_get(pricetype.field, context=ctx)[prod.id]
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        amount = amount_unit * quantity
+        amount = amount_unit * quantity or 0.0
         result = round(amount, prec)
         if not flag:
             result *= -1
