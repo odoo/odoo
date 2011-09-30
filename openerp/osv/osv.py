@@ -32,17 +32,14 @@ import openerp.sql_db as sql_db
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
+import openerp.exceptions
 
-class except_osv(Exception):
-    def __init__(self, name, value, exc_type='warning'):
-        self.name = name
-        self.exc_type = exc_type
-        self.value = value
-        self.args = (exc_type, name)
+# For backward compatibility
+except_osv = openerp.exceptions.Warning
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service
@@ -121,8 +118,8 @@ class object_proxy():
                 if inst.name == 'AccessError':
                     self.logger.debug("AccessError", exc_info=True)
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
+            except except_osv:
+                raise
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():

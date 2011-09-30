@@ -27,6 +27,10 @@ common_proxy_60 = None
 db_proxy_60 = None
 object_proxy_60 = None
 
+common_proxy_61 = None
+db_proxy_61 = None
+model_proxy_61 = None
+
 def setUpModule():
     """
     Start the OpenERP server similary to the openerp-server script and
@@ -40,11 +44,24 @@ def setUpModule():
     global db_proxy_60
     global object_proxy_60
 
+    global common_proxy_61
+    global db_proxy_61
+    global model_proxy_61
+
     # Use the old (pre 6.1) API.
     url = 'http://%s:%d/xmlrpc/' % (HOST, PORT)
     common_proxy_60 = xmlrpclib.ServerProxy(url + 'common')
     db_proxy_60 = xmlrpclib.ServerProxy(url + 'db')
     object_proxy_60 = xmlrpclib.ServerProxy(url + 'object')
+
+    # Use the new (6.1) API.
+    url = 'http://%s:%d/openerp/6.1/xmlrpc/' % (HOST, PORT)
+    common_proxy_61 = xmlrpclib.ServerProxy(url + 'common')
+    db_proxy_61 = xmlrpclib.ServerProxy(url + 'db')
+    model_proxy_61 = xmlrpclib.ServerProxy(url + 'model/' + DB)
+
+    # Mmm need to make sure the server is listening for XML-RPC requests.
+    time.sleep(10)
 
 def tearDownModule():
     """ Shutdown the OpenERP server similarly to a single ctrl-c. """
@@ -52,7 +69,7 @@ def tearDownModule():
 
 class test_xmlrpc(unittest2.TestCase):
 
-    def test_xmlrpc_create_database_polling(self):
+    def test_00_xmlrpc_create_database_polling(self):
         """
         Simulate a OpenERP client requesting the creation of a database and
         polling the server until the creation is complete.
@@ -78,6 +95,13 @@ class test_xmlrpc(unittest2.TestCase):
         assert ids
         ids = object_proxy_60.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD,
             'ir.model', 'search', [], {})
+        assert ids
+
+    def test_xmlrpc_61_ir_model_search(self):
+        """ Try a search on the object service. """
+        ids = model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
+        assert ids
+        ids = model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
         assert ids
 
 if __name__ == '__main__':

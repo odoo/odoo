@@ -1531,8 +1531,8 @@ class BaseModel(object):
             """ Set invisible to true if the user is not in the specified groups. """
             if node.get('groups'):
                 groups = node.get('groups').split(',')
-                access_pool = self.pool.get('ir.model.access')
-                can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
+                ir_model_access = self.pool.get('ir.model.access')
+                can_see = any(ir_model_access.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
                     modifiers['invisible'] = True
@@ -2069,8 +2069,9 @@ class BaseModel(object):
                     context)
             resprint = map(clean, resprint)
             resaction = map(clean, resaction)
-            resaction = filter(lambda x: not x.get('multi', False), resaction)
-            resprint = filter(lambda x: not x.get('multi', False), resprint)
+            if view_type != 'tree':
+                resaction = filter(lambda x: not x.get('multi'), resaction)
+                resprint = filter(lambda x: not x.get('multi'), resprint)
             resrelate = map(lambda x: x[2], resrelate)
 
             for x in resprint + resaction + resrelate:
@@ -2210,7 +2211,7 @@ class BaseModel(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
+        self.pool.get('ir.translation').check_read(cr, uid)
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2234,7 +2235,7 @@ class BaseModel(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
+        self.pool.get('ir.translation').check_write(cr, uid)
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2315,7 +2316,7 @@ class BaseModel(object):
 
         """
         context = context or {}
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
+        self.check_read(cr, uid)
         if not fields:
             fields = self._columns.keys()
 
@@ -3122,9 +3123,8 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        ira = self.pool.get('ir.model.access')
-        write_access = ira.check(cr, user, self._name, 'write', False) or \
-                       ira.check(cr, user, self._name, 'create', False)
+        write_access = self.check_write(cr, user, False) or \
+            self.check_create(cr, user, False)
 
         res = {}
 
@@ -3187,7 +3187,7 @@ class BaseModel(object):
 
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
+        self.check_read(cr, user)
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3431,6 +3431,23 @@ class BaseModel(object):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
+    def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to the access rights."""
+        return self.pool.get('ir.model.access').check(cr, uid, self._name, operation, raise_exception)
+
+    def check_create(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'create', raise_exception)
+
+    def check_read(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'read', raise_exception)
+
+    def check_unlink(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'unlink', raise_exception)
+
+    def check_write(self, cr, uid, raise_exception=True):
+        return self.check_access_rights(cr, uid, 'write', raise_exception)
+
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to ir.rules.
@@ -3453,7 +3470,7 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise orm.except_orm(_('AccessError'), '%s access is '
+                raise except_orm(_('AccessError'), '%s access is '
                     'restricted to your own records for transient models '
                     '(except for the super-user).' % operation.capitalize())
         else:
@@ -3492,7 +3509,7 @@ class BaseModel(object):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
+        self.check_unlink(cr, uid)
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
@@ -3629,7 +3646,7 @@ class BaseModel(object):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
+        self.check_write(cr, user)
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -3842,7 +3859,7 @@ class BaseModel(object):
         if self.is_transient():
             self._transient_vacuum(cr, user)
 
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
+        self.check_create(cr, user)
 
         vals = self._add_missing_default_values(cr, user, vals, context)
 
@@ -4325,7 +4342,7 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
+        self.check_read(cr, access_rights_uid or user)
 
         # For transient models, restrict acces to the current user, except for the super-user
         if self.is_transient() and self._log_access and user != SUPERUSER_ID:

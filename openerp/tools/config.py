@@ -261,8 +261,12 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
+                         help="Maximum number of threads processing concurrently cron jobs.",
+                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -365,7 +369,7 @@ class configmanager(object):
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
         ]
 
         for arg in keys:
@@ -446,6 +450,8 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        openerp.conf.max_cron_threads = self.options['max_cron_threads']
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
         openerp.conf.server_wide_modules = \
