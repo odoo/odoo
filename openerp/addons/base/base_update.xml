@@ -225,18 +225,17 @@
                             <field name="city"/>
                             <field name="country_id"/>
                             <field name="state_id"/>
-                            <field name="phone"/>
-                            <field name="email"/>
-                            <field name="fax"/>
-                            <field name="website"/>
-                            <field name="vat"/>
-                            <field name="company_registry"/>
+                            <field name="phone" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                            <field name="email" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                            <field name="fax" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                            <field name="website" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                            <field name="vat" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
+                            <field name="company_registry" on_change="on_change_header(phone, email, fax, website, vat, company_registry)"/>
                             <separator string="Header/Footer of Reports" colspan="4"/>
                             <group colspan="4" col="3">
                                 <field name="rml_header1" colspan="3"/>
                                 <newline/>
-                                <field name="rml_footer1" colspan="2"/>
-                                <button name="generate_header" string="Generate" type="object" icon="gtk-go-forward"/>
+                                <field name="rml_footer1" colspan="3" groups="base.group_extended"/>
                                 <newline/>
                                 <field name="rml_footer2" colspan="2"/>
                                 <button name="%(bank_account_update)d" string="Set Bank Accounts" type="action" icon="gtk-go-forward"/>
@@ -245,10 +244,10 @@
                                 <button name="%(preview_report)d" string="Preview Header" type="action" icon="gtk-print"/>
                             </group>
                         </page>
-                        <page string="External Template" groups="base.group_extended">
+                        <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
                         </page>
-                        <page string="Internal Template" groups="base.group_extended">
+                        <page string="Internal Header/Footer" groups="base.group_extended">
                             <separator string="Portrait" colspan="2"/>
                             <separator string="Landscape" colspan="2"/>
                             <field colspan="2" name="rml_header2" nolabel="1"/>
