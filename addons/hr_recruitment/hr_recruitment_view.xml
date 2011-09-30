@@ -277,7 +277,81 @@
         </field>
     </record>
 
+	<!-- hr Applicant Kanban View -->
 
+	<record model="ir.ui.view" id="hr_kanban_view_applicant">
+        <field name="name">Hr Applicants kanban</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
+                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                                <field name="partner_name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td>
+                                                <div class="oe_kanban_right oe_kanban_small">
+                                                    <field name="user_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title2">
+                                                    <field name="job_id"/>
+                                                    <t t-if="record.priority.raw_value == 0"></t>
+                                                    <t t-if="record.priority.raw_value == 5">(Not Good)</t>
+                                                    <t t-if="record.priority.raw_value == 4">(On Average)</t>
+                                                    <t t-if="record.priority.raw_value == 3">(Good)</t>
+                                                    <t t-if="record.priority.raw_value == 2">(Very Good)</t>
+                                                    <t t-if="record.priority.raw_value == 1">(Excellent)</t>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="type_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="date_action"/><field name="title_action"/></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
+                                        <a name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-redo" />
+                                        <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
+                                    </div>
+                                    <div class="oe_kanban_right">
+                                        <a name="case_open" string="Mark Won" states="pending,draft" type="object" icon="lead-stage-won" />
+                                        <a name="case_pending" string="Mark Lost" states="draft,open" type="object" icon="lead-stage-lost" />
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     # ------------------------------------------------------
     # HR Job
     # ------------------------------------------------------

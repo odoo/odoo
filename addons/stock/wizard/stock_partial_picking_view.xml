@@ -9,5 +9,59 @@
             <field name="target">new</field>
         </record>
 
+        <record id="stock_partial_picking_form" model="ir.ui.view">
+            <field name="name">stock.partial.picking.form</field>
+            <field name="model">stock.partial.picking</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <separator colspan="4" string="Products"/>
+                    <field name="move_ids" colspan="4" nolabel="1" mode="tree,form" width="550" height="200"/>
+                    <separator string="" colspan="4" />
+                    <label string="" colspan="2"/>
+                    <group col="2" colspan="2">
+                        <button icon='gtk-cancel' special="cancel" string="_Cancel" />
+                        <button name="do_partial" string="_Validate" colspan="1" type="object" icon="gtk-go-forward" />
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="stock_partial_picking_line_list" model="ir.ui.view">
+            <field name="name">stock.partial.picking.line.list</field>
+            <field name="model">stock.partial.picking.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="update_cost" invisible="1"/>
+                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                </tree>
+            </field>
+        </record>
+        <record id="stock_partial_picking_line_form" model="ir.ui.view">
+            <field name="name">stock.partial.picking.line.form</field>
+            <field name="model">stock.partial.picking.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="update_cost" invisible="1"/>
+                    <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                    <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                 </form>
+            </field>
+        </record>
     </data>
 </openerp>

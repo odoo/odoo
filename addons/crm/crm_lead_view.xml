@@ -372,13 +372,15 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="New"
-                    name="current" help="New Leads"
+                    name="new" help="New Leads"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
+                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"
+                    name="pending"
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
@@ -675,13 +677,15 @@
             <search string="Search Opportunities">
                 <filter icon="terp-check"
                     string="New"  help="New Opportunities"
-                    name="current"
+                    name="new"
                     domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
+                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"  help="Pending Opportunities"
+                    name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity"/>

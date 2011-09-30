@@ -718,7 +718,7 @@ class account_move_line(osv.osv):
             )
         return cr.fetchone()
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
         merges = []
         unmerge = []
@@ -747,7 +747,7 @@ class account_move_line(osv.osv):
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
-            res = self.reconcile(cr, uid, merges+unmerge, context=context)
+            res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
@@ -812,7 +812,7 @@ class account_move_line(osv.osv):
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
+                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off/exchange difference entry !'))
             if writeoff > 0:
                 debit = writeoff
                 credit = 0.0
@@ -1249,7 +1249,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and not vals.get('ammount_currency') and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:
@@ -1273,7 +1273,7 @@ class account_move_line(osv.osv):
                         'user_id': uid
             })]
 
-        result = super(osv.osv, self).create(cr, uid, vals, context=context)
+        result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
