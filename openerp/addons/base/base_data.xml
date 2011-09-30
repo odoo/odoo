@@ -1010,14 +1010,7 @@
         </record>
         <record id="main_address" model="res.partner.address">
             <field name="partner_id" ref="main_partner"/>
-            <field name="name">Company contact name</field>
-            <field name="street">Company street, number</field>
-            <field name="zip">Company zip</field>
-            <field name="city">Company city</field>
-            <field name="phone">+1-212-555-12345</field>
             <field name="type">default</field>
-            <field model="res.country" name="country_id" ref="us"/>
-            <!-- Company ID will be set later -->
             <field name="company_id" eval="None"/>
         </record>
 
