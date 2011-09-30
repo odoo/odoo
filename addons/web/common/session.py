@@ -35,13 +35,9 @@ class OpenERPSession(object):
         self._uid = False
         self._login = False
         self._password = False
-        self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
-        self._lang = {}
-        self.remote_timezone = 'utc'
-        self.client_timezone = False
 
     def build_connection(self):
         conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
@@ -101,15 +97,6 @@ class OpenERPSession(object):
         self.context = self.model('res.users').context_get(self.context)
         self.context = self.context or {}
 
-        self.client_timezone = self.context.get("tz", False)
-        # invalid code, anyway we decided the server will be in UTC
-        #if self.client_timezone:
-        #    self.remote_timezone = self.execute('common', 'timezone_get')
-
-        self._locale = self.context.get('lang','en_US')
-        lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
-        if lang_ids:
-            self._lang = self.execute('res.lang', 'read',lang_ids[0], [])
         return self.context
 
     @property
