@@ -862,6 +862,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     template: 'WidgetButton',
     init: function(view, node) {
         this._super(view, node);
+        this.force_disabled = false;
         if (this.string) {
             // We don't have button key bindings in the webclient
             this.string = this.string.replace(/_/g, '');
@@ -877,42 +878,59 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     on_click: function() {
         var self = this;
+        this.force_disabled = true;
+        this.check_disable();
+        this.execute_action().always(function() {
+            self.force_disabled = false;
+            self.check_disable();
+        });
+    },
+    execute_action: function() {
+        var self = this;
         var exec_action = function() {
             if (self.node.attrs.confirm) {
+                var def = $.Deferred();
                 var dialog = $('<div>' + self.node.attrs.confirm + '</div>').dialog({
                     title: 'Confirm',
                     modal: true,
                     buttons: {
                         Ok: function() {
-                            self.on_confirmed();
+                            self.on_confirmed().then(function() {
+                                def.resolve();
+                            });
                             $(self).dialog("close");
                         },
                         Cancel: function() {
+                            def.resolve();
                             $(self).dialog("close");
                         }
                     }
                 });
+                return def.promise();
             } else {
-                self.on_confirmed();
+                return self.on_confirmed();
             }
         };
         if ((!this.node.attrs.special && this.view.dirty_for_user) || !this.view.datarecord.id) {
-            this.view.recursive_save().then(exec_action);
+            return this.view.recursive_save().pipe(exec_action);
         } else {
-            exec_action();
+            return exec_action();
         }
     },
     on_confirmed: function() {
         var self = this;
 
-        this.view.do_execute_action(
+        return this.view.do_execute_action(
             this.node.attrs, this.view.dataset, this.view.datarecord.id, function () {
                 self.view.reload();
             });
     },
     update_dom: function() {
         this._super();
-        if (!this.view.is_interactible_record()) {
+        this.check_disable();
+    },
+    check_disable: function() {
+        if (this.force_disabled || !this.view.is_interactible_record()) {
             this.$element.find("button").attr("disabled", "disabled");
             this.$element.find("button").css("color", "grey");
         } else {
