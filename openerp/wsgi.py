@@ -144,17 +144,18 @@ def wsgi_jsonrpc(environ, start_response):
     pass
 
 def wsgi_webdav(environ, start_response):
-    if environ['REQUEST_METHOD'] == 'OPTIONS' and environ['PATH_INFO'] == '*':
+    pi = environ['PATH_INFO']
+    if environ['REQUEST_METHOD'] == 'OPTIONS' and pi in ['*','/']:
         return return_options(environ, start_response)
-
-    http_dir = websrv_lib.find_http_service(environ['PATH_INFO'])
-    if http_dir:
-        path = environ['PATH_INFO'][len(http_dir.path):]
-        if path.startswith('/'):
-            environ['PATH_INFO'] = path
-        else:
-            environ['PATH_INFO'] = '/' + path
-        return http_to_wsgi(http_dir)(environ, start_response)
+    elif pi.startswith('/webdav'):
+        http_dir = websrv_lib.find_http_service(pi)
+        if http_dir:
+            path = pi[len(http_dir.path):]
+            if path.startswith('/'):
+                environ['PATH_INFO'] = path
+            else:
+                environ['PATH_INFO'] = '/' + path
+            return http_to_wsgi(http_dir)(environ, start_response)
 
 def return_options(environ, start_response):
     # Microsoft specific header, see
