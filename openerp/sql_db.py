@@ -214,11 +214,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if self._default_log_exceptions or log_exceptions:
+            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
                 self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if self._default_log_exceptions or log_exceptions:
+            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
                 self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
@@ -504,7 +504,7 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
-    """ You might want to call openerp.netsvc.Agent.cancel(db_name) along this function."""
+    """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
     _Pool.close_all(dsn(db_name))
     ct = currentThread()
     if hasattr(ct, 'dbname'):

@@ -24,7 +24,7 @@ tearDownModule = common.tearDownModule
 
 class test_xmlrpc(unittest2.TestCase):
 
-    def test_xmlrpc_create_database_polling(self):
+    def test_00_xmlrpc_create_database_polling(self):
         """
         Simulate a OpenERP client requesting the creation of a database and
         polling the server until the creation is complete.
@@ -50,6 +50,13 @@ class test_xmlrpc(unittest2.TestCase):
         assert ids
         ids = common.object_proxy_60.execute(DB, ADMIN_USER_ID, ADMIN_PASSWORD,
             'ir.model', 'search', [], {})
+        assert ids
+
+    def test_xmlrpc_61_ir_model_search(self):
+        """ Try a search on the object service. """
+        ids = common.model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
+        assert ids
+        ids = common.model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
         assert ids
 
 if __name__ == '__main__':

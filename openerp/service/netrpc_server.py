@@ -59,27 +59,18 @@ class TinySocketClientThread(threading.Thread):
         while self.running:
             try:
                 msg = ts.myreceive()
-                auth = getattr(self, 'auth_provider', None)
-                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:], auth)
+                result = netsvc.dispatch_rpc(msg[0], msg[1], msg[2:])
                 ts.mysend(result)
             except socket.timeout:
                 #terminate this channel because other endpoint is gone
                 break
-            except netsvc.OpenERPDispatcherException, e:
-                try:
-                    new_e = Exception(tools.exception_to_unicode(e.exception)) # avoid problems of pickeling
-                    logging.getLogger('web-services').debug("netrpc: rpc-dispatching exception", exc_info=True)
-                    ts.mysend(new_e, exception=True, traceback=e.traceback)
-                except Exception:
-                    #terminate this channel if we can't properly send back the error
-                    logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
-                    break
             except Exception, e:
                 try:
+                    new_e = Exception(tools.exception_to_unicode(e)) # avoid problems of pickeling
                     tb = getattr(e, 'traceback', sys.exc_info())
                     tb_s = "".join(traceback.format_exception(*tb))
                     logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
-                    ts.mysend(e, exception=True, traceback=tb_s)
+                    ts.mysend(new_e, exception=True, traceback=tb_s)
                     break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error

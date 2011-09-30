@@ -20,6 +20,10 @@ common_proxy_60 = None
 db_proxy_60 = None
 object_proxy_60 = None
 
+common_proxy_61 = None
+db_proxy_61 = None
+model_proxy_61 = None
+
 def setUpModule():
     """
     Start the OpenERP server similary to the openerp-server script and
@@ -38,6 +42,17 @@ def setUpModule():
     common_proxy_60 = xmlrpclib.ServerProxy(url + 'common')
     db_proxy_60 = xmlrpclib.ServerProxy(url + 'db')
     object_proxy_60 = xmlrpclib.ServerProxy(url + 'object')
+
+    global common_proxy_61
+    global db_proxy_61
+    global model_proxy_61
+
+    # Use the new (6.1) API.
+    url = 'http://%s:%d/openerp/6.1/xmlrpc/' % (HOST, PORT)
+    common_proxy_61 = xmlrpclib.ServerProxy(url + 'common')
+    db_proxy_61 = xmlrpclib.ServerProxy(url + 'db')
+    model_proxy_61 = xmlrpclib.ServerProxy(url + 'model/' + DB)
+
 
     # Ugly way to ensure the server is listening.
     time.sleep(2)

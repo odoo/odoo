@@ -2069,8 +2069,9 @@ class BaseModel(object):
                     context)
             resprint = map(clean, resprint)
             resaction = map(clean, resaction)
-            resaction = filter(lambda x: not x.get('multi', False), resaction)
-            resprint = filter(lambda x: not x.get('multi', False), resprint)
+            if view_type != 'tree':
+                resaction = filter(lambda x: not x.get('multi'), resaction)
+                resprint = filter(lambda x: not x.get('multi'), resprint)
             resrelate = map(lambda x: x[2], resrelate)
 
             for x in resprint + resaction + resrelate:
@@ -3135,7 +3136,7 @@ class BaseModel(object):
             if allfields and f not in allfields:
                 continue
 
-            res[f] = fields.field_to_dict(self, cr, user, context, field)
+            res[f] = fields.field_to_dict(self, cr, user, field, context=context)
 
             if not write_access:
                 res[f]['readonly'] = True
@@ -3469,7 +3470,7 @@ class BaseModel(object):
                           WHERE id IN %%s""" % self._table, (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
-                raise orm.except_orm(_('AccessError'), '%s access is '
+                raise except_orm(_('AccessError'), '%s access is '
                     'restricted to your own records for transient models '
                     '(except for the super-user).' % operation.capitalize())
         else:
