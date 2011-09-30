@@ -260,7 +260,7 @@ class pos_order(osv.osv):
             args['name'] = args['name'] + ': ' + data['payment_name']
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = order.partner_id and order.partner_id.property_account_receivable \
-                             and order.partner_id.property_account_receivable.id or account_def and account_def.id
+                             and order.partner_id.property_account_receivable.id or account_def and account_def.id or False
         args['partner_id'] = order.partner_id and order.partner_id.id or None
 
         if not args['account_id']:
@@ -268,7 +268,7 @@ class pos_order(osv.osv):
             if args['partner_id']:
                 msg += ' for this partner: "%s" (id:%d)' % \
                         (order.partner_id.name, order.partner_id.id,)
-            raise osv.except_osv(_('Error !'), _('%s' %msg))
+            raise osv.except_osv(_('Configuration Error !'), _('%s' %msg))
         
         statement_id = statement_obj.search(cr,uid, [
                                                      ('journal_id', '=', int(data['journal'])),
