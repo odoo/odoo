@@ -29,13 +29,27 @@ from tools.translate import _
 from lxml import etree
 
 #Application and feature chooser, this could be done by introspecting ir.modules
+DEFAULT_MODULES = {
+    'Customer Relationship Management' : ['crm',],
+    'Sales Management' : ['sale',],
+    'Project Management' : ['project',],
+    'Knowledge Management' : ['document',],
+    'Warehouse Management' : ['stock',],
+    'Manufacturing' : ['mrp',],
+    'Accounting & Finance' : ['account,'],
+    'Purchase Management' : ['purchase,'],
+    'Human Resources' : ['hr',],
+    'Point of Sales' : ['pos',],
+    'Marketing' : ['marketing',],
+}
+
 class base_setup_installer2(osv.osv_memory):
     _name = 'base.setup.installer2'
 
     _inherit = 'res.config.installer'
 
     _columns = {
-        'modules' : fields.text('Modules'),
+        'selection' : fields.text('Selection'),
     }
 
     def fields_get(self, cr, uid, fields=None, context=None):
@@ -47,7 +61,7 @@ class base_setup_installer2(osv.osv_memory):
         fields = {} 
         category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', '!=', 'Localization')]
+                  ('name', 'not in', ('Localization', 'Others', 'Tools'))]
         category_ids = category_proxy.search(cr, uid, domain, context=context)
         for category in category_proxy.browse(cr, uid, category_ids, context=context):
             category_name = 'category_%d' % (category.id,)
@@ -64,7 +78,7 @@ class base_setup_installer2(osv.osv_memory):
             module_name = 'module_%d' % (module.id,)
             module_is_installed = module.state == 'installed'
             title = "%s (%s)" % (module.shortdesc, module.complexity,)
-            title = "%s (%s)" % (module.name, module.complexity,)
+            title = "%s %s (%s)" % (module.shortdesc, module.name, module.complexity,)
 
             fields[module_name] = {
                 'type' : 'boolean',
@@ -94,22 +108,47 @@ class base_setup_installer2(osv.osv_memory):
 
         return result
 
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='from', context=None, toolbar=False, submenu=False):
+
+        def in_extended_view_group(cr, uid, context=None):
+            try:
+                model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_extended')
+            except ValueError:
+                return False
+            return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+
         result = super(base_setup_installer2, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         module_category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', '!=', 'Localization')]
-        module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='name asc')
+                  ('name', 'not in', ('Localization', 'Others', 'Tools', 'Base'))]
+        module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='sequence asc')
 
         arch = ['<form string="%s">' % _('Automatic Base Setup')]
-        arch.append('<separator string="%s" colspan="4" />' % _('Categories'))
-        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
-            readonly = False
-            for module in module_category.module_ids:
-                if module.state == 'installed':
-                    readonly=True
+        arch.append('<separator string="%s" colspan="4" />' % _('Install Applications'))
+        module_proxy = self.pool.get('ir.module.module')
 
+        extended_view = in_extended_view_group(cr, uid, context=context)
+
+        print "extended_view: %r" % (extended_view,)
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            domain = [('installable', '=', True),
+                      ('category_id', '=', module_category.id)]
+            if not extended_view:
+                domain.append(('complexity', '!=', 'expert'))
+
+            default_modules = DEFAULT_MODULES.get(module_category.name, False)
+            if default_modules:
+                domain.append(('name', 'not in', default_modules))
+
+            print "domain: %r" % (domain,)
+
+            modules = module_proxy.browse(cr, uid, module_proxy.search(cr, uid, domain, context=context), context=context)
+            if not modules:
+                continue
+
+            readonly = any(module.state == 'installed' for module in modules)
 
             attributes = {
                 'name' : 'category_%d' % (module_category.id,),
@@ -122,18 +161,43 @@ class base_setup_installer2(osv.osv_memory):
                                                         for key, value in attributes.iteritems()]),))
 
         # Compute the module to show
+
         for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
-            if not module_category.module_ids:
+            domain = [('installable', '=', True),
+                      ('category_id', '=', module_category.id)]
+
+            if not extended_view:
+                domain.append(('complexity', '!=', 'expert'))
+
+            default_modules = DEFAULT_MODULES.get(module_category.name, False)
+            if default_modules:
+                domain.append(('name', 'not in', default_modules))
+
+            print "domain2: %r" % (domain,)
+
+            modules = module_proxy.browse(cr, uid, module_proxy.search(cr, uid, domain, context=context), context=context)
+
+            if not modules:
                 continue
 
             modifiers = {
                 'invisible' : [('category_%d' % (module_category.id), '=', False)],
-                'readonly' : module.state == 'installed',
             }
-            modifiers = simplejson.dumps(modifiers)
-            arch.append("""<separator string="%s" colspan="4" modifiers='%s'/>""" % (cgi.escape(module_category.name), modifiers))
-            for module in module_category.module_ids:
-                arch.append("""<field name="module_%d" modifiers='%s' />""" % (module.id, modifiers))
+            module_modifiers = dict(modifiers)
+
+            arch.append("""<separator string="%s Features" colspan="4" modifiers='%s'/>""" % (
+                cgi.escape(module_category.name),
+                simplejson.dumps(modifiers))
+            )
+
+            for module in modules:
+                #module_modifiers['readonly'] = module.state == 'installed'
+                #print "module_modifiers: %r %r" % (module.name, module_modifiers,)
+
+                arch.append("""<field name="module_%d" modifiers='%s' />""" % (
+                    module.id,
+                    simplejson.dumps(module_modifiers))
+                )
 
         arch.append(
             '<separator colspan="4" />'
@@ -160,7 +224,7 @@ class base_setup_installer2(osv.osv_memory):
         return getattr(super(base_setup_installer2, self), name)
 
     def _on_change_selection(self, cr, uid, ids, item, value, context=None):
-        print "on_change_selection: %r" % (item,) 
+        #print "on_change_selection: %r" % (item,) 
         if not isinstance(item, basestring) or not value:
             return {}
 
@@ -180,14 +244,18 @@ class base_setup_installer2(osv.osv_memory):
         return {'value': values}
 
     def create(self, cr, uid, values, context=None):
-        module_ids_to_install = [
-            key.split('_')[1]
-            for key, value in values.iteritems()
-            if value == 1 and key.startswith('module_')
-        ]
+        to_install = {'categories' : [], 'modules' : []}
+
+        for key, value in values.iteritems():
+            if value == 1 and (key.startswith('module_') or key.startswith('category_')):
+                kind, identifier = key.split('_')
+                if kind == 'category':
+                    to_install['categories'].append(long(identifier))
+                if kind == 'module':
+                    to_install['modules'].append(long(identifier))
 
         values = {
-            'modules' : simplejson.dumps(module_ids_to_install),
+            'selection' : simplejson.dumps(to_install),
         }
         context.update(dont_compute_virtual_attributes=True)
         return super(base_setup_installer2, self).create(cr, uid, values, context=context)
@@ -196,7 +264,7 @@ class base_setup_installer2(osv.osv_memory):
         STATES = ('installed',)
 
         module_proxy = self.pool.get('ir.module.module')
-        module_ids = module_proxy.search(cr, uid, [], context=context)
+        module_ids = module_proxy.search(cr, uid, [('installable', '=', False)], context=context)
 
         modules = {}
         for module in module_proxy.browse(cr, uid, module_ids, context=context):
@@ -235,15 +303,35 @@ class base_setup_installer2(osv.osv_memory):
         return to_install_modules
 
     def apply_cb(self, cr, uid, ids, context=None):
+        category_proxy = self.pool.get('ir.module.category')
         for installer in self.browse(cr, uid, ids, context=context):
-            modules_to_install = simplejson.loads(installer.modules)
+            to_install = simplejson.loads(installer.selection)
+
             proxy = self.pool.get('ir.module.module')
 
-            module_ids = proxy.search(cr, uid, [('id', 'in', modules_to_install)], context=context)
+            module_ids = proxy.search(cr, uid, [('id', 'in', to_install['modules'])], context=context)
             modules = set(record['name']
                           for record in proxy.read(cr, uid, module_ids, ['name'], context=context))
 
-            modules = self._get_modules_to_install(cr, uid, list(modules), context=context)
+            category_ids = category_proxy.search(cr, uid, [('id', 'in', to_install['categories'])], context=context)
+            selected_categories = set(record['name']
+                                      for record in category_proxy.read(cr, uid, category_ids, ['name'], context=context))
+
+            # Workaround :(
+            # FIXME: Use a workaround, but can do better
+            #import pdb
+            #pdb.set_trace()
+            for category_name, default_modules in DEFAULT_MODULES.iteritems():
+                if category_name in selected_categories:
+                    modules.update(default_modules)
+
+            if 'sale' in modules and 'crm' in modules:
+                modules.add('sale_crm')
+            if 'sale' in modules and 'project' in modules:
+                modules.add('project_mrp')
+
+            # The current code has a bug
+            # modules = self._get_modules_to_install(cr, uid, list(modules), context=context)
 
             module_ids = proxy.search(cr, uid, [('name', 'in', list(modules))], context=context)
 
