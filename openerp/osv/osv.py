@@ -39,7 +39,7 @@ except_osv = openerp.exceptions.Warning
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service
@@ -118,8 +118,8 @@ class object_proxy():
                 if inst.name == 'AccessError':
                     self.logger.debug("AccessError", exc_info=True)
                 netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
+            except except_osv:
+                raise
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():

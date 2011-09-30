@@ -1285,7 +1285,7 @@ class property(function):
         self.field_id = {}
 
 
-def field_to_dict(self, cr, user, context, field):
+def field_to_dict(model, cr, user, field, context=None):
     """ Return a dictionary representation of a field.
 
     The string, help, and selection attributes (if any) are untranslated.  This
@@ -1308,8 +1308,9 @@ def field_to_dict(self, cr, user, context, field):
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
         res['func_obj'] = field._obj or False
     if isinstance(field, many2many):
-        res['related_columns'] = list((field._id1, field._id2))
-        res['third_table'] = field._rel
+        (table, col1, col2) = field._sql_names(model)
+        res['related_columns'] = [col1, col2]
+        res['third_table'] = table
     for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
             'change_default', 'translate', 'help', 'select', 'selectable'):
         if getattr(field, arg):
@@ -1328,7 +1329,7 @@ def field_to_dict(self, cr, user, context, field):
             res['selection'] = field.selection
         else:
             # call the 'dynamic selection' function
-            res['selection'] = field.selection(self, cr, user, context)
+            res['selection'] = field.selection(model, cr, user, context)
     if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain
