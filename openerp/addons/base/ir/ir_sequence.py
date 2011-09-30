@@ -79,6 +79,7 @@ class ir_sequence(openerp.osv.osv.osv):
     }
 
     def init(self, cr):
+        return # Don't do the following index yet.
         # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
         # /!\ The unique constraint 'unique_name_company_id' is not sufficient, because SQL92
         # only support field names in constraint definitions, and we need a function here:
