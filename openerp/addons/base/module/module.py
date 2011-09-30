@@ -89,6 +89,7 @@ class module_category(osv.osv):
         'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description' : fields.text("Description"),
+        'sequence' : fields.integer('Sequence'),
     }
     _order = 'name'
 module_category()
