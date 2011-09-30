@@ -196,11 +196,24 @@
                     <table:table-column table:style-name="Table2.A"/>
                     <table:table-column table:style-name="Table2.B"/>
                     <table:table-row>
-                        <table:table-cell table:style-name="Table2.A1" table:value-type="string">
-                            <text:p text:style-name="P1">[[ company.partner_id.name ]]</text:p>
+                     	<table:table-cell table:style-name="Table2.A1" table:value-type="string">
+                            <text:p text:style-name="P2"></text:p>
                         </table:table-cell>
                         <table:table-cell table:style-name="Table2.A1" table:value-type="string">
                             <text:p text:style-name="P2">[[ company.rml_header1 ]]</text:p>
+                        </table:table-cell>
+                    </table:table-row>
+                </table:table>
+                
+                <table:table table:name="Table3" table:style-name="Table3">
+                    <table:table-column table:style-name="Table3.AA"/>
+                    <table:table-column table:style-name="Table3.BB"/>
+                	<table:table-row>
+                        <table:table-cell table:style-name="Table3.AA" table:value-type="string">
+                            <text:p text:style-name="P4">[[ company.partner_id.name ]]</text:p>
+                        </table:table-cell>
+                        <table:table-cell table:style-name="Table3.AA" table:value-type="string">
+                            <text:p text:style-name="P5"></text:p>
                         </table:table-cell>
                     </table:table-row>
                 </table:table>
