@@ -63,8 +63,6 @@ XML_RPC_PATH_1 = '/openerp/xmlrpc/1'
 JSON_RPC_PATH = '/openerp/jsonrpc'
 JSON_RPC_PATH_1 = '/openerp/jsonrpc/1'
 
-XML_RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
-
 def xmlrpc_return(start_response, service, method, params, legacy_exceptions=False):
     """
     Helper to call a service's method with some params, using a wsgi-supplied
@@ -208,9 +206,7 @@ def wsgi_xmlrpc(environ, start_response):
         # All routes are hard-coded.
 
         if len(path) == 1 and path[0] == '' and method in ('version',):
-            response = xmlrpclib.dumps((XML_RPC_VERSION_1,), methodresponse=1, allow_none=False, encoding=None)
-            start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-            return [response]
+            return xmlrpc_return(start_response, 'common', method, ())
 
         # The body has been read, need to raise an exception (not return None).
         fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_CLIENT_ERROR, '')
