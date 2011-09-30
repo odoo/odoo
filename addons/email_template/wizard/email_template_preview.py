@@ -87,6 +87,8 @@ class email_template_preview(osv.osv_memory):
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             description += '\n' + signature
         vals['body_text'] = description
+        if template.body_html:
+            vals['body_html'] = self.render_template(cr, uid, template.body_html, model, res_id, context) or ''
         vals['report_name'] = self.render_template(cr, uid, template.report_name, model, res_id, context)
         return {'value': vals}
 
