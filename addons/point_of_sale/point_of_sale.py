@@ -264,7 +264,7 @@ class pos_order(osv.osv):
         args['partner_id'] = order.partner_id and order.partner_id.id or None
 
         if not args['account_id']:
-            msg = 'There is no receivable account defined'
+            msg = 'There is no receivable account defined to make payment'
             if args['partner_id']:
                 msg += ' for this partner: "%s" (id:%d)' % \
                         (order.partner_id.name, order.partner_id.id,)
