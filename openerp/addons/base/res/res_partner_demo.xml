@@ -277,6 +277,7 @@
             <field model="res.users" name="user_id" search="[('name', '=', u'Thomas Lebrun')]"/>
             <field name="name">Dubois sprl</field>
             <field name="address" eval="[]"/>
+            <field name="opt_out" eval="True"/>
             <field name="website">http://www.dubois.be/</field>
         </record>
 
@@ -284,17 +285,20 @@
             <field name="name">Eric Dubois</field>
             <field name="address" eval="[]"/>
             <field name="user_id" ref="user_demo"/>
+            <field name="opt_out" eval="True"/>
         </record>
 
         <record id="res_partner_fabiendupont0" model="res.partner">
             <field name="name">Fabien Dupont</field>
             <field name="address" eval="[]"/>
+            <field name="opt_out" eval="True"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
 
         <record id="res_partner_lucievonck0" model="res.partner">
             <field name="name">Lucie Vonck</field>
             <field name="address" eval="[]"/>
+            <field name="opt_out" eval="True"/>
         </record>
 
         <record id="res_partner_notsotinysarl0" model="res.partner">
@@ -302,6 +306,7 @@
             <field name="address" eval="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="website">notsotiny.be</field>
+            <field name="opt_out" eval="True"/>
         </record>
 
         <record id="res_partner_theshelvehouse0" model="res.partner">
@@ -309,6 +314,7 @@
             <field eval="[(6,0,[ref('res_partner_category_retailers0')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="user_id" ref="base.user_root"/>
+            <field name="opt_out" eval="True"/>
         </record>
 
         <record id="res_partner_vickingdirect0" model="res.partner">
@@ -317,6 +323,7 @@
             <field name="supplier">1</field>
             <field name="customer">0</field>
             <field name="address" eval="[]"/>
+            <field name="opt_out" eval="True"/>
             <field name="website">vicking-direct.be</field>
         </record>
 
@@ -326,6 +333,7 @@
             <field name="supplier">1</field>
             <field eval="0" name="customer"/>
             <field name="address" eval="[]"/>
+            <field name="opt_out" eval="True"/>
             <field name="website">woodywoodpecker.com</field>
         </record>
 
@@ -334,6 +342,7 @@
             <field eval="[(6,0,[ref('res_partner_category_consumers0')])]" name="category_id"/>
             <field name="address" eval="[]"/>
             <field name="user_id" ref="base.user_root"/>
+            <field name="opt_out" eval="True"/>
             <field name="website">http://www.zerooneinc.com/</field>
         </record>
 

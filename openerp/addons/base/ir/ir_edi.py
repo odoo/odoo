@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -44,108 +44,107 @@ def safe_unique_id(database_id, model, record_id):
     digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
     # finally, use the b64-encoded folded digest as ID part of the unique ID:
     digest = base64.urlsafe_b64encode(digest)
-        
     return '%s-%s' % (model.replace('.','_'), digest)
 
 class ir_edi_document(osv.osv):
     _name = 'ir.edi.document'
-    _description = 'To represent the EDI Document of any OpenERP record.'
+    _description = 'EDI Document'
     _columns = {
-                'name': fields.char("EDI token", size = 128, help="EDI Token is a unique identifier for the EDI document."),
-                'document': fields.text("Document", help="hold the serialization of the EDI document.")
-                
+                'name': fields.char("EDI token", size = 128, help="Unique identifier for retrieving an EDI document."),
+                'document': fields.text("Document", help="EDI document content")
     }
     _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'The EDI Token must be unique!')
+        ('name_uniq', 'unique (name)', 'EDI Tokens must be unique!')
     ]
-    
-    
+
     def new_edi_token(self, cr, uid, record):
-        """
-        Return a new, random unique token to identify an edi.document
-        :param record: It's a object of browse_record of any model
+        """Return a new, random unique token to identify this model record,
+        and to be used as token when exporting it as an EDI document.
+
+        :param browse_record record: model record for which a token is needed
         """
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-
         edi_token = hashlib.sha256('%s-%s-%s-%s' % (time.time(), db_uuid, record._name, record.id)).hexdigest()
         return edi_token
-    
+
     def serialize(self, edi_documents):
-        """Serialize the list of dictionaries using json dumps method
-        perform a JSON serialization of a list of dicts prepared by generate_edi() and return a UTF-8 encoded string that could be passed to deserialize()
-        :param edi_dicts: it's list of edi_dict
+        """Serialize the given EDI document structures (Python dicts holding EDI data),
+        using JSON serialization.
+
+        :param [dict] edi_documents: list of EDI document structures to serialize
+        :return: UTF-8 encoded string containing the serialized document
         """
         serialized_list = json.dumps(edi_documents)
         return serialized_list
-    
+
     def generate_edi(self, cr, uid, records, context=None):
+        """Generates a final EDI document containing the EDI serialization
+        of the given records, which should all be instances of a Model
+        that has the :meth:`~.edi` mixin. The document is not saved in the
+        database, this is done by :meth:`~.export_edi`.
+
+        :param list(browse_record) records: records to export as EDI
+        :return: UTF-8 encoded string containing the serialized records
         """
-        Generate the list of dictionaries using edi_export method of edi class 
-        :param records: it's a object of browse_record_list of any model
-        """
-        
         edi_list = []
         for record in records:
             record_model_obj = self.pool.get(record._name)
             edi_list += record_model_obj.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
-    
-    def get_document(self, cr, uid, edi_token, context=None):
-        """
-        Get the edi document from database using given edi token 
-        returns the string serialization that is in the database (column: document) for the given edi_token or raise.
-        """
-        
-        records = self.name_search(cr, uid, edi_token, operator='=', context=context)
-        if records:
-            record = records[0][0]
-            edi = self.browse(cr, uid, record, context=context)
-            return edi.document
-        else:  
-            pass
-    
-    def load_edi(self, cr, uid, edi_documents, context=None):
-        """
-        loads the values from list of dictionaries to the corresponding OpenERP records
-        using the edi_import method of edi class
-        For each edi record (dict) in the list, call the corresponding osv.edi_import() method, based on the __model attribute (see section 2.4 of  for spec of 
-        osv.edi_import)
 
-        :param edi_dicts: list of edi_dict
+    def get_document(self, cr, uid, edi_token, context=None):
+        """Retrieve the EDI document corresponding to the given edi_token.
+
+        :return: EDI document string
+        :raise: ValueError if requested EDI token does not match any know document
         """
-        module_obj =self.pool.get('ir.module.module')
+        edi_ids = self.search(cr, uid, [('name','=', edi_token)], context=context)
+        if not edi_ids:
+            raise ValueError('Invalid EDI token: %s' % edi_token)
+        edi = self.browse(cr, uid, edi_ids[0], context=context)
+        return edi.document
+
+    def load_edi(self, cr, uid, edi_documents, context=None):
+        """Import the given EDI document structures into the system, using
+        :meth:`~.import_edi`.
+
+        :param edi_documents: list of Python dicts containing the deserialized
+                              version of EDI documents
+        :return: list of (model, id) pairs containing the model and database ID
+                 of all records that were imported in the system
+        """
+        ir_module = self.pool.get('ir.module.module')
         res = []
         for edi_document in edi_documents:
             module = edi_document.get('__module')
-            module_ids = module_obj.search(cr, uid, [('name','=',module),('state','not in',['uninstalled', 'uninstallable', 'to remove'])])
-            if not module_ids:
-                raise osv.except_osv(_('Invalid action !'),
-                            _('The document you are trying to import requires the OpenERP "%s" application. The OpenERP configuration assistant will help with this if you are connected as an administrator.')%(module))
+            if not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
+                raise osv.except_osv(_('Missing Application'),
+                            _("The document you are trying to import requires the OpenERP `%s` application. "
+                              "The OpenERP configuration assistant will help with this if you are connected as an administrator.")%(module,))
             model = edi_document.get('__model')
-            assert model, _('model should be provided in EDI Dict')
+            assert model, '__model attribute is required in each EDI document'
             model_obj = self.pool.get(model)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
-            res.append((model,record_id))
+            res.append((model, record_id))
         return res
-    
-    def deserialize(self, edi_document_string):
-        """ Deserialized the edi document string
-        perform JSON deserialization from an edi document string, and returns a list of dicts
-        """
-        edi_document = json.loads(edi_document_string)
-        
-        return edi_document
-    
-    def export_edi(self, cr, uid, records, context=None):
-        """
-        The method handles the flow of the edi document generation and store it in 
-            the database and return the edi_token of the particular document
-        Steps: 
-        * call generate_edi() to get a serialization and new_edi_token() to get a unique ID
-        * serialize the list returned by generate_edi() using serialize(), and save it in database with unique ID.
-        * return the unique ID
 
-        : param records: list of browse_record of any model
+    def deserialize(self, edi_documents_string):
+        """Return deserialized version of the given EDI Document string.
+
+        :param str|unicode edi_documents_string: UTF-8 string (or unicode) containing
+                                                 JSON-serialized EDI document(s)
+        :return: Python object representing the EDI document(s) (usually a list of dicts) 
+        """
+        return json.loads(edi_documents_string)
+
+    def export_edi(self, cr, uid, records, context=None):
+        """Export the given database records as EDI documents, stores them
+        permanently with a new unique EDI token, for later retrieval via :meth:`~.get_document`,
+        and returns the list of the new corresponding ``ir.edi.document`` records.
+
+        :param records: list of browse_record of any model
+        :return: list of IDs of the new ``ir.edi.document`` entries, in the same 
+                 order as the provided ``records``.
         """
         exported_ids = []
         for record in records:
@@ -155,40 +154,35 @@ class ir_edi_document(osv.osv):
                          'name': token,
                          'document': document
                         }, context=context)
-        
             exported_ids.append(token)
         return exported_ids
-    
+
     def import_edi(self, cr, uid, edi_document=None, edi_url=None, context=None):
+        """Import a JSON serialized EDI Document string into the system, first retrieving it
+        from the given ``edi_url`` if provided.
+
+        :param str|unicode edi_document: UTF-8 string or unicode containing JSON-serialized
+                                         EDI Document to import. Must not be provided if 
+                                         ``edi_url`` is given.
+        :param str|unicode edi_url: URL where the EDI document (same format as ``edi_document``)
+                                    may be retrieved, without authentication.
         """
-        The method handles the flow of importing particular edi document and 
-        updates the database values on the basis of the edi document using 
-        edi_loads method
-        
-        * N: a serialized edi.document or the URL to download a serialized document
-        * If a URL is provided, download it first to get the document
-        * Calls deserialize() to get the resulting list of dicts from the document
-        * Call load_edi() with the list of dicts, to create or update the corresponding OpenERP records based on the edi.document.
-        """
-        
-        if edi_url and not edi_document:
+        if edi_url:
+            assert not edi_document, 'edi_document must not be provided if edi_url is given'
             edi_document = urllib2.urlopen(edi_url).read()
-        assert edi_document, _('EDI Document should be provided')
+        assert edi_document, 'EDI Document is empty!'
         edi_documents = self.deserialize(edi_document)
         return self.load_edi(cr, uid, edi_documents, context=context)
-    
-ir_edi_document()
+
 
 class edi(object):
-    _name = 'edi'
-    _description = 'edi document handler'
-    
-    """Mixin class for OSV objects that want be exposed as EDI documents.
-       Classes that inherit from this mixin class should override the 
+    """Mixin class for Model objects that want be exposed as EDI documents.
+       Classes that inherit from this mixin class should override the
        ``edi_import()`` and ``edi_export()`` methods to implement their
-       specific behavior, based on the primitives provided by this superclass."""
+       specific behavior, based on the primitives provided by this mixin."""
 
     def record_xml_id(self, cr, uid, record, context=None):
+        #TODO: remove this -> use ir.model.data directly
         model_data_pool = self.pool.get('ir.model.data')
         data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
         if not data_ids:
@@ -233,12 +227,12 @@ class edi(object):
                 'module': module,
                 'res_id': record.id}, context=context)
         return xml_id
-    
+
     def edi_metadata(self, cr, uid, records, context=None):
         """Return a list representing the boilerplate EDI structure for
            exporting the record in the given browse_rec_list, including
            the metadata fields
-        
+
         The metadata fields MUST always include:
         - __model': the OpenERP model name
         - __module': the OpenERP module containing the model
@@ -270,8 +264,8 @@ class edi(object):
                         'content': base64.encodestring(attachment.datas),
                         'file_name': attachment.datas_fname,
                 })
-            
-            
+
+
             uuid = self.edi_xml_id(cr, uid, record, context=context)
             edi_dict = {
                 '__id': uuid,
@@ -285,7 +279,7 @@ class edi(object):
                     '__attachments': attachment_dict_list
                 })
             edi_dict_list.append(edi_dict)
-            
+
         return edi_dict_list
 
     def edi_m2o(self, cr, uid, record, context=None):
@@ -296,11 +290,11 @@ class edi(object):
         """
         # generic implementation!
         db_uuid = self.edi_xml_id(cr, uid, record, context=context)
-        relation_model_pool = self.pool.get(record._name)  
+        relation_model_pool = self.pool.get(record._name)
         name = relation_model_pool.name_get(cr, uid, [record.id], context=context)
         name = name and name[0][1] or False
         return [db_uuid, name]
-        
+
     def edi_o2m(self, cr, uid, records, edi_struct=None, context=None):
         """Return a list representing a O2M EDI value for
            the browse_records from the given browse_record_list.
@@ -320,17 +314,17 @@ class edi(object):
         ctx = context.copy()
         ctx.update({'o2m_export':True})
         for record in records:
-            
+
             model_obj = self.pool.get(record._name)
             dict_list += model_obj.edi_export(cr, uid, [record], edi_struct=edi_struct, context=ctx)
-        
+
         return dict_list
-        
+
     def edi_m2m(self, cr, uid, records, context=None):
         """Return a list representing a M2M EDI value for
            the browse_records from the given browse_record_list.
 
-        Example: 
+        Example:
         'related_tasks': [                 # M2M fields would exported as a list of pairs,
                   ['db-uuid:xml-id1',      # similar to a list of M2O values.
                    'Task 01: bla bla'],
@@ -340,10 +334,10 @@ class edi(object):
         """
         # generic implementation!
         dict_list = []
-        
+
         for record in records:
             dict_list.append(self.edi_m2o(cr, uid, record, context=None))
-      
+
         return dict_list
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
@@ -366,7 +360,7 @@ class edi(object):
                               be included in the exported data.
         """
         # generic implementation!
-        
+
         if context is None:
             context = {}
         if edi_struct is None:
@@ -380,7 +374,7 @@ class edi(object):
             edi_dict.update(self.edi_metadata(cr, uid, [row], context=context)[0])
             for field in fields_to_export:
                 _column = _columns[field].column
-                _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
+                _column_dict = fields.field_to_dict(self, cr, uid, _column, context=context)
                 record = getattr(row, field)
                 if not record:
                     continue
@@ -423,7 +417,7 @@ class edi(object):
     def edi_create_relation(self, cr, uid, relation_model, relation_value, context=None):
         relation_model = self.pool.get(relation_model)
         values = {} #relation_model.default_get(cr, uid, fields, context=context)
-        values[relation_model._rec_name] = relation_value            
+        values[relation_model._rec_name] = relation_value
         return relation_model.create(cr, uid, values, context=context)
 
     def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
@@ -442,13 +436,13 @@ class edi(object):
             xml_id = '%s.%s' % (module, xml_id)
         if not xml_id:
             xml_id = self.edi_xml_id(cr, uid, relation, context=context)
-        
+
         #TODO: update record from values ?
         #relation_id = model_data._update(cr, uid, relation_model, module, values, xml_id=xml_id, context=context)
         return relation and relation.id or False
-        
+
     def edi_import(self, cr, uid, edi_document, context=None):
-    
+
         """Imports a list of dicts representing an edi.document, using the
            generic algorithm.
 
@@ -492,7 +486,7 @@ class edi(object):
              For each pair in the M2M:
                  a. Perform the same steps as for a Many2One (see 1.2.1.1)
                  b. After finding the database ID of the final record in the database,
-                    connect it to the parent record via a write value like (4, db_id).        
+                    connect it to the parent record via a write value like (4, db_id).
         """
         # generic implementation!
         model_data = self.pool.get('ir.model.data')
@@ -508,8 +502,8 @@ class edi(object):
                     continue
                 if not field.startswith('__'):
                     _column = _columns[field].column
-                    _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
-                
+                    _column_dict = fields.field_to_dict(self, cr, uid, _column, context=context)
+
                     edi_field_value = datas[field]
                     field_type = _column_dict['type']
                     relation_model = _column_dict.get('relation')
@@ -544,21 +538,21 @@ class edi(object):
                         for edi_parent_document in edi_parent_documents:
                             relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], edi_parent_document[0], context=context)
                             parent_lines.append(relation_id)
-                            
-                        if len(parent_lines):   
+
+                        if len(parent_lines):
                             if field_type == 'many2one':
                                 values[field] = parent_lines[0]
-                                
+
                             else:
                                 many2many_ids = []
                                 for m2m_id in parent_lines:
                                     many2many_ids.append((4, m2m_id))
                                 values[field] = many2many_ids
-                    
+
                     else:
                         values[field] = edi_field_value
             return module, xml_id2, values
-        
+
         module, xml_id, data_values = process(edi_document, self._name)
         return model_data._update(cr, uid, self._name, module, data_values, xml_id=xml_id, context=context)
 # vim: ts=4 sts=4 sw=4 si et

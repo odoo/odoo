@@ -87,7 +87,6 @@ class edi(netsvc.ExportService):
 
     def __init__(self, name="edi"):
         netsvc.ExportService.__init__(self, name)
-        self.joinGroup("web-services")
 
     def dispatch(self, method, auth, params):
         if method in ['import_edi_document',  'import_edi_url']:
