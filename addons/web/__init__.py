@@ -16,6 +16,7 @@ def wsgi_postload():
     _logger.info("embedded mode")
     o = Options()
     o.dbfilter = openerp.tools.config['dbfilter']
+    o.server_wide_modules = openerp.conf.server_wide_modules or ['web']
     o.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions")
     o.addons_path = openerp.modules.module.ad_paths
     o.serve_static = True

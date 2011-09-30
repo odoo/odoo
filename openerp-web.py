@@ -27,6 +27,8 @@ optparser.add_option("--db-filter", dest="dbfilter", default='.*',
                      help="Filter listed database", metavar="REGEXP")
 optparser.add_option('--addons-path', dest='addons_path', default=[path_addons], action='append',
                     help="Path do addons directory", metavar="PATH")
+optparser.add_option('--load', dest='server_wide_modules', default=['web'], action='append',
+                    help="Load a additional module before login (by default only 'web' is loaded)", metavar="MODULE")
 
 server_options = optparse.OptionGroup(optparser, "Server configuration")
 server_options.add_option("-p", "--port", dest="socket_port", default=8002,

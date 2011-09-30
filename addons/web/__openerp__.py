@@ -3,7 +3,6 @@
     "depends" : [],
     'active': True,
     'post_load' : 'wsgi_postload',
-    'web_preload' : True,
     'js' : [
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
