@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:52+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:55+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -31,6 +31,10 @@ msgid ""
 "format is HOST:PORT and the default host (localhost) is only suitable for "
 "access from the server machine itself.."
 msgstr ""
+"Указывает сетевой адрес, на котором сервер OpenERP должен быть доступен для "
+"конечных пользователей. Это зависит от конфигурации и топологии сети и "
+"влияет только на отображение ссылок. Формат АДРЕС:ПОРТ и адрес по умолчанию "
+"(localhost) подходит только для доступа с самого сервера."
 
 #. module: document_ftp
 #: field:document.ftp.configuration,progress:0
@@ -72,11 +76,17 @@ msgid ""
 "using the\n"
 "    FTP client.\n"
 msgstr ""
+"Это поддержка интерфейса FTP к системе управления документами.\n"
+"    С помощью этого модуля вы не только получите доступ к документам через "
+"OpenERP,\n"
+"    но вы также сможете соединяться с ней через файловую систему, используя "
+"\n"
+"    FTP-клиент.\n"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
 msgid "_Browse"
-msgstr ""
+msgstr "_Обзор"
 
 #. module: document_ftp
 #: help:document.ftp.configuration,host:0
@@ -94,7 +104,7 @@ msgstr "Общее хранилище (FTP)"
 #. module: document_ftp
 #: view:document.ftp.browse:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отмена"
 
 #. module: document_ftp
 #: view:document.ftp.configuration:0
@@ -109,7 +119,7 @@ msgstr "Сервер FTP интегрированный  с системой у�
 #. module: document_ftp
 #: view:document.ftp.configuration:0
 msgid "title"
-msgstr ""
+msgstr "title"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse

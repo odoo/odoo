@@ -18,7 +18,7 @@
             <field name="model">timesheet.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('cancel')" string="Timesheet">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'cancel'" string="Timesheet">
                     <field name="date_current" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="user_id" invisible="1"/>
@@ -48,7 +48,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group col="10" colspan="12">
+                    <group>
                         <filter icon="terp-go-year" string=" Year "
                                 domain="[('date_current','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_current','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
                                 help="Timesheet in current year"/>

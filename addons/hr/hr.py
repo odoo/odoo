@@ -97,6 +97,11 @@ class hr_job(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
     }
+    
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+    ]
+
 
     def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
         if context is None:
@@ -149,7 +154,9 @@ class hr_employee(osv.osv):
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
         'photo': fields.binary('Photo'),
-        'passport_id':fields.char('Passport No', size=64)
+        'passport_id':fields.char('Passport No', size=64),
+        'color': fields.integer('Color Index'),
+        'city': fields.related('address_id', 'city', type='char', string='City'),
     }
 
     def unlink(self, cr, uid, ids, context=None):
@@ -197,6 +204,8 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
+        'marital': 'single',
+        'color': 0,
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

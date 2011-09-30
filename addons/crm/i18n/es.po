@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:59+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:08+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -124,7 +124,7 @@ msgid "The code of the sales team must be unique !"
 msgstr "¡El código del equipo de ventas debe ser único!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
 msgstr "La inicaitiva '%s' ha sido convertida en oportunidad"
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "No repetir"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -550,9 +550,9 @@ msgstr "Primer contacto con nueva prospección"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -842,8 +842,8 @@ msgid "Statistics Dashboard"
 msgstr "Tablero de estadísticas"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -1154,7 +1154,7 @@ msgstr "Acepta recibir emails"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -2097,7 +2097,7 @@ msgstr "Convertir en oportunidad"
 #: view:crm.phonecall.report:0
 #: view:res.partner:0
 msgid "Held"
-msgstr "Ocupado"
+msgstr "Realizada"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2305,7 +2305,7 @@ msgstr "MS-Outlook"
 #: view:crm.phonecall.report:0
 #: view:res.partner:0
 msgid "Not Held"
-msgstr "No ocupado"
+msgstr "Pendiente"
 
 #. module: crm
 #: field:crm.lead.report,probability:0
@@ -2732,7 +2732,7 @@ msgid "Meeting Type"
 msgstr "Tipo de reunión"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr "Fusinar con oportunidad existente"
@@ -3277,8 +3277,8 @@ msgid "Schedule Call"
 msgstr "Planificar llamada"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr ""
@@ -4479,13 +4479,6 @@ msgstr "Boletín de noticias"
 #~ msgid "Conditions on Priority Range"
 #~ msgstr "Condiciones sobre intervalo de prioridades"
 
-#~ msgid ""
-#~ "If the partner has not purchased (or buied) during a period, decrease the "
-#~ "state of mind by this factor. It's a multiplication"
-#~ msgstr ""
-#~ "Si la empresa no ha comprado (o pedido) durante un período, decrementar el "
-#~ "grado de satisfacción por este factor. Es una multiplicación."
-
 #~ msgid "All "
 #~ msgstr "Todos "
 
@@ -4533,9 +4526,6 @@ msgstr "Boletín de noticias"
 
 #~ msgid "Mail to watchers (Cc)"
 #~ msgstr "Enviar correo a observadores (CC)"
-
-#~ msgid "crm.case.section.open"
-#~ msgstr "crm.case.section.open"
 
 #~ msgid "Actions"
 #~ msgstr "Acciones"
@@ -4610,91 +4600,17 @@ msgstr "Boletín de noticias"
 #~ "Es posible que desee crear un nuevo menú padre para poner todos los menús "
 #~ "creados en él."
 
-#~ msgid "Send to"
-#~ msgstr "Enviar a"
-
-#~ msgid "TRANSPARENT"
-#~ msgstr "Transparente"
-
 #~ msgid "Button Pressed"
 #~ msgstr "Botón oprimido"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 días    "
-
-#~ msgid "Manages an Helpdesk service."
-#~ msgstr "Gestiona un servicio de mesa de ayuda"
-
-#~ msgid "Pending Jobs"
-#~ msgstr "Trabajos pendientes"
-
-#~ msgid "Cases by section and category2"
-#~ msgstr "Casos por sección y categoria2"
-
-#~ msgid ""
-#~ "Check this if you want the rule to send an email to the responsible person."
-#~ msgstr ""
-#~ "Revise esto si quiere la regla para enviar un correo a la persona "
-#~ "responsable."
-
-#~ msgid "Amount"
-#~ msgstr "Cantidad"
-
-#~ msgid "Human Resources"
-#~ msgstr "Recursos humanos"
-
-#~ msgid "Cases by Opportunities, Category and Type"
-#~ msgstr "Casos por oportunidades, categoria y tipo"
-
-#~ msgid ""
-#~ "Manages the supplier and customers claims, including your corrective or "
-#~ "preventive actions."
-#~ msgstr ""
-#~ "Gestiona los reclamos de proveedores y clientes, incluyendon sus acciones "
-#~ "prevenivas ó correctivas."
-
-#~ msgid ""
-#~ "Section to which Case belongs to. Define Responsible user and Email account "
-#~ "for mail gateway."
-#~ msgstr ""
-#~ "Sección a la cual pertenece el caso. Definir usuario responsable y cuenta de "
-#~ "correo para correo de salida."
-
-#, python-format
-#~ msgid "Please specify user's email address !"
-#~ msgstr "Por favor especiificar el nombre de usuario de correo"
-
-#~ msgid "Fixed"
-#~ msgstr "Reparado"
-
-#~ msgid "Duration (Hours)"
-#~ msgstr "Duración (Horas)"
 
 #~ msgid "Mail to these emails"
 #~ msgstr "Correo a estos correos electronicos"
 
-#~ msgid "Gives the sequence order when displaying a list of case sections."
-#~ msgstr ""
-#~ "Dar orden de la secuencia cuando se muestre la lista de casos de sección."
-
 #~ msgid "Special Keywords to Be Used in The Body"
 #~ msgstr "Palabras claves especiales para ser usadas en el cuerpo del mensaje."
 
-#~ msgid "Proposed Salary"
-#~ msgstr "Salario sugerido"
-
 #~ msgid "My Histories"
 #~ msgstr "Mis historias"
-
-#~ msgid "Tracks identified business opportunities for your sales pipeline."
-#~ msgstr ""
-#~ "Temas de oportunidades de negocio identificadas para su canal de ventas."
-
-#~ msgid "Appreciation"
-#~ msgstr "Reconocimiento"
-
-#~ msgid "Subscribe to a Remote calendar"
-#~ msgstr "Suscribirse a un calendario remoto"
 
 #~ msgid "Last Action Date"
 #~ msgstr "Fechas de ultima acción"
@@ -4702,294 +4618,8 @@ msgstr "Boletín de noticias"
 #~ msgid "Delay type"
 #~ msgstr "Tipo de retraso"
 
-#~ msgid "Description Information"
-#~ msgstr "Información de descripción"
-
-#~ msgid "Next Interview"
-#~ msgstr "Próxima entrevista"
-
-#~ msgid "Second Interview"
-#~ msgstr "Segunda entrevista"
-
-#~ msgid ""
-#~ "Describes the action name.eg:on which object which ation to be taken on "
-#~ "basis of which condition"
-#~ msgstr ""
-#~ "Describe el nombre de la acción, ej: sobre que objeto que acción debe "
-#~ "realizarse en base a que condiciones"
-
-#~ msgid "Close Lead"
-#~ msgstr "Cerrar"
-
-#~ msgid ""
-#~ "This property defines the list                 of date/time exceptions for "
-#~ "arecurring calendar component."
-#~ msgstr ""
-#~ "Esta propiedad define la lista de excepciones (días/horas) para un evento de "
-#~ "calendario recurrente"
-
-#~ msgid "Exception Rules"
-#~ msgstr "Reglas de Excepción"
-
-#~ msgid "Accepted as Claim"
-#~ msgstr "Aceptado como reclamación"
-
-#~ msgid "Dead"
-#~ msgstr "Muerto"
-
-#~ msgid "Confirm Meeting"
-#~ msgstr "Confirmar reunión"
-
-#~ msgid "Exception Dates"
-#~ msgstr "Fechas de excepción"
-
-#~ msgid "Email Add CC"
-#~ msgstr "Email añadir CC"
-
-#~ msgid "Existing Customer"
-#~ msgstr "Cliente existente"
-
-#~ msgid "Cases by Section, Category and Stage"
-#~ msgstr "Casos por sección, categoría y fase"
-
-#~ msgid ""
-#~ "Check this if you want the rule to mark CC(mail to any other person defined "
-#~ "in actions)."
-#~ msgstr ""
-#~ "Active esta casilla en caso que quiera que la regla sea marcada CC ( copia "
-#~ "de email para cualquier otra persona definida en las acciones)"
-
-#~ msgid "All Meetings"
-#~ msgstr "Todas las reuniones"
-
-#~ msgid "Meetings Tree"
-#~ msgstr "Árbol de reuniones"
-
-#~ msgid "Policy Claims"
-#~ msgstr "Política de reclamaciones"
-
-#~ msgid "   Today   "
-#~ msgstr "   Hoy   "
-
-#~ msgid "Allows to show calendar"
-#~ msgstr "Permite mostrar el calendario"
-
-#~ msgid "Phone Call Description"
-#~ msgstr "Descripción de la llamada"
-
-#~ msgid "New Business"
-#~ msgstr "Nuevo negocio"
-
-#~ msgid "Value Proposition"
-#~ msgstr "Propuesta de valor"
-
-#~ msgid "Refused by Company"
-#~ msgstr "Rechazado por la compañía"
-
-#~ msgid "Meetings Form"
-#~ msgstr "Formulario de reuniones"
-
-#~ msgid "Contract Proposed"
-#~ msgstr "Contrato propuesto"
-
-#~ msgid "Assigned to"
-#~ msgstr "Asignada a"
-
-#~ msgid "Related Cases"
-#~ msgstr "Casos Relacionados"
-
-#~ msgid "Jobs - Hiring Process"
-#~ msgstr "Trabajos - Proceso de selección de personal"
-
-#~ msgid "New Claims"
-#~ msgstr "Nuevas Reclamaciones"
-
-#~ msgid "Cases by Opportunities and Stage"
-#~ msgstr "Casos por oportunidades y fase"
-
-#~ msgid "Negotiation/Review"
-#~ msgstr "Negociación/Revisión"
-
-#~ msgid "Emails"
-#~ msgstr "Emails"
-
-#~ msgid "Leads Cases"
-#~ msgstr "Casos Oportunidades"
-
-#~ msgid "Contract Signed"
-#~ msgstr "Contrato firmado"
-
-#~ msgid "Date of Claim"
-#~ msgstr "Fecha de reclamación"
-
-#~ msgid "All Leads"
-#~ msgstr "Todas las iniciativas"
-
-#~ msgid "Subscribe to Remote ICS"
-#~ msgstr "Subcribirse a ICS remotos"
-
-#~ msgid "Existing Business"
-#~ msgstr "Negocio existente"
-
-#~ msgid "Save in .ics format"
-#~ msgstr "Salvar en formato .ics"
-
-#~ msgid "Factual Claims"
-#~ msgstr "Reclamaciones objetivas"
-
-#~ msgid "Radio"
-#~ msgstr "Radio"
-
-#~ msgid "Search Histories"
-#~ msgstr "Buscar en Historial"
-
-#, python-format
-#~ msgid "There is no mail to reply!"
-#~ msgstr "Este correo no puede ser contestado"
-
-#~ msgid "Set State to"
-#~ msgstr "Establecer estado a"
-
-#~ msgid ""
-#~ "These people will receive a copy of the future communication between partner "
-#~ "and users by email"
-#~ msgstr ""
-#~ "Estas personas recibirán una copia de toda comunicación entre el partner y "
-#~ "los usuarios."
-
-#~ msgid "Server Action to be Triggered"
-#~ msgstr "Acción del servidor a ser ejecutada"
-
-#~ msgid "Export ICS"
-#~ msgstr "Exportar ICS"
-
-#~ msgid "Preventive"
-#~ msgstr "﻿Preventivo"
-
-#~ msgid "My Funds"
-#~ msgstr "Mis donaciones"
-
-#~ msgid "Junior Developer"
-#~ msgstr "Desarrollador junior"
-
-#, python-format
-#~ msgid "You can not assign Closed Case."
-#~ msgstr "No se puede asignar un caso cerrado."
-
-#~ msgid "Print"
-#~ msgstr "Imprimir"
-
-#~ msgid "Pending Claims"
-#~ msgstr "Reclamaciones Pendientes"
-
-#~ msgid "Category Name"
-#~ msgstr "Nombre de Categoría"
-
-#~ msgid "Recurrency Rule"
-#~ msgstr "Regla concurrente"
-
-#~ msgid "Candidate Refused"
-#~ msgstr "Candidato rechazado"
-
-#~ msgid "Closed Won"
-#~ msgstr "Cerrado-Ganado"
-
-#~ msgid "Cases by section, Category and Category2"
-#~ msgstr "Casos por sección, categoría y categoría2"
-
-#~ msgid "Learning And Education"
-#~ msgstr "Aprendizaje y educación"
-
-#~ msgid "Are you sure you want to create a partner based on this phonecall ?"
-#~ msgstr "Estas seguro que deseas crear una empresa basado en esta llamada?"
-
-#~ msgid "Add CC"
-#~ msgstr "Añadir CC"
-
-#~ msgid "Cases by section and stage"
-#~ msgstr "Casos por sección y fase"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the case "
-#~ "section without removing it."
-#~ msgstr ""
-#~ "Si el campo activo está marcado, podrá ocultar la sección del caso sin "
-#~ "eliminarla."
-
-#~ msgid "Cases by Opportunities, Category and Stage"
-#~ msgstr "Casos por oportunidades, categoría y fase"
-
-#~ msgid "Cases by Section and Stage"
-#~ msgstr "Casos por sección y fase"
-
-#~ msgid "Cases By Stage and Estimates"
-#~ msgstr "Casos por fases y estimaciones"
-
-#~ msgid "Sales Stage: "
-#~ msgstr "Fase de ventas: "
-
-#~ msgid "Cases by section, Category and stage"
-#~ msgstr "Casos por sección, categoría y fase"
-
-#~ msgid "Stage: "
-#~ msgstr "Fase: "
-
-#~ msgid "Cases by Leads and Stage"
-#~ msgstr "Casos por iniciativas y fase"
-
-#~ msgid "Direction"
-#~ msgstr "Dirección"
-
-#~ msgid "Plan Meeting"
-#~ msgstr "Planear reunión"
-
-#~ msgid "Home"
-#~ msgstr "Particular"
-
-#~ msgid "Regex on Case Name"
-#~ msgstr "Expresión regular del nombre del caso"
-
-#, python-format
-#~ msgid "Email!"
-#~ msgstr "Correo electrónico!"
-
-#~ msgid "crm.opportunity.assign_wizard"
-#~ msgstr "crm.opportunity.assign_wizard"
-
-#~ msgid ""
-#~ "The channels represent the different communication modes available with the "
-#~ "customer. With each commercial opportunity, you can indicate the canall "
-#~ "which is this opportunity source."
-#~ msgstr ""
-#~ "Los canales representan las diferentes maneras que existen de comunicación "
-#~ "con el cliente. A cada oportunidad se le puede indicar de que canal provino."
-
 #~ msgid "%(case_description)s = Case description"
 #~ msgstr "%(case_description)s = Descripción del caso"
-
-#~ msgid "crm.phonecall.assign_wizard"
-#~ msgstr "crm.phonecall.assign_wizard"
-
-#~ msgid "Message..."
-#~ msgstr "Mensaje..."
-
-#~ msgid "Meeting Date"
-#~ msgstr "Fecha de reunión"
-
-#~ msgid "Convert to Partner"
-#~ msgstr "Convertir a empresa"
-
-#~ msgid "Next Meetings"
-#~ msgstr "Próximas reuniones"
-
-#~ msgid "_Subscribe"
-#~ msgstr "_Suscribir"
-
-#~ msgid "Meeting Generic Wizard"
-#~ msgstr "Asistente genérico de reuniones"
-
-#~ msgid "Value Claims"
-#~ msgstr "Valor reclamaciones"
 
 #~ msgid "Planned revenue"
 #~ msgstr "Ingresos previstos"
@@ -5000,900 +4630,14 @@ msgstr "Boletín de noticias"
 #~ msgid "Planned costs"
 #~ msgstr "Costos previstos"
 
-#~ msgid "Funds"
-#~ msgstr "Fondos"
-
-#~ msgid "Self Generated"
-#~ msgstr "Auto generado"
-
-#~ msgid "Website"
-#~ msgstr "Sitio web"
-
-#~ msgid "Awaiting Response"
-#~ msgstr "Esperando respuesta"
-
-#~ msgid "Cases by Section and Category2"
-#~ msgstr "Casos por sección y 2ª categoría"
-
-#~ msgid "Type of claim"
-#~ msgstr "Tipo de reclamación"
-
-#~ msgid "Jobs - Recruitment Tree"
-#~ msgstr "Trabajos - selección de personal"
-
-#~ msgid "Won't fix"
-#~ msgstr "No será corregido"
-
-#~ msgid "Converted"
-#~ msgstr "Convertido"
-
-#~ msgid "Search Claims"
-#~ msgstr "Búsqueda reclamaciones"
-
-#~ msgid "Manages the calendar of meetings of the users."
-#~ msgstr "Gestiona el calendario de reuniones de los usuarios."
-
-#~ msgid "Mail"
-#~ msgstr "Correo electrónico"
-
-#~ msgid "Needs Analysis"
-#~ msgstr "Necesita análisis"
-
-#~ msgid "Claim Cost"
-#~ msgstr "Coste reclamación"
-
-#~ msgid "Schedule a Phone Call"
-#~ msgstr "Programar una llamada"
-
-#~ msgid "In Progress Claims"
-#~ msgstr "Reclamaciones en progreso"
-
-#~ msgid "Sales Stage"
-#~ msgstr "Fase de ventas"
-
-#~ msgid "Bug Tracking"
-#~ msgstr "Seguimiento de errores"
-
-#~ msgid "Next Meeting"
-#~ msgstr "Próxima reunión"
-
-#~ msgid "Campaign Type"
-#~ msgstr "Tipo campaña"
-
-#~ msgid "Web"
-#~ msgstr "Web"
-
-#~ msgid "Graduate"
-#~ msgstr "Graduado"
-
-#~ msgid ""
-#~ "Note that you can also use the calendar view to graphically schedule your "
-#~ "next meeting."
-#~ msgstr ""
-#~ "Observe que también puede utilizar la vista de calendario para programar "
-#~ "gráficamente su siguiente reunión."
-
-#~ msgid "crm.meeting.generic_wizard"
-#~ msgstr "crm.reunion.asistente_generico"
-
-#~ msgid "Histories"
-#~ msgstr "Historial"
-
-#~ msgid "Leads Tree"
-#~ msgstr "Árbol de iniciativas"
-
-#~ msgid "Error ! You cannot create recursive sections."
-#~ msgstr "¡Error! No puede crear secciones recursivas."
-
-#~ msgid "This Year"
-#~ msgstr "Este año"
-
-#~ msgid ""
-#~ " Will allow you to synchronise your Open ERP calendars with your phone, "
-#~ "outlook, Sunbird, ical, ..."
-#~ msgstr ""
-#~ " Le permite sincronizar sus calendarios OpenERP con su teléfono, Outlook, "
-#~ "Sunbird, iCal, ..."
-
-#~ msgid "Contract Data"
-#~ msgstr "Datos contrato"
-
-#~ msgid "Cases by Leads and Type"
-#~ msgstr "Casos por iniciativas y tipo"
-
-#~ msgid "Shared Calendar"
-#~ msgstr "Calendario compartido"
-
-#~ msgid "Fund Raising"
-#~ msgstr "Obtención de fondos"
-
-#~ msgid "Est.Revenue"
-#~ msgstr "Retorno est."
-
-#~ msgid "Initial Jobs Demand"
-#~ msgstr "Solicitudes de trabajo iniciales"
-
-#~ msgid "Claims Info"
-#~ msgstr "Info reclamaciones"
-
-#~ msgid "Helpdesk Supports"
-#~ msgstr "Asistencia técnica"
-
 #~ msgid "Telesales"
 #~ msgstr "Ventas a distancia"
-
-#~ msgid "Payment Mode"
-#~ msgstr "Forma de pago"
-
-#~ msgid "Source"
-#~ msgstr "Origen"
-
-#~ msgid "Convert To Partner"
-#~ msgstr "Convertir en empresa"
-
-#~ msgid "Jobs"
-#~ msgstr "Trabajos"
-
-#~ msgid "Job Info"
-#~ msgstr "Info. trabajo"
-
-#~ msgid "Cancel Meeting"
-#~ msgstr "Cancelar reunión"
-
-#~ msgid "Employee Email"
-#~ msgstr "Email empleado"
-
-#~ msgid "Prospecting"
-#~ msgstr "Prospección"
-
-#~ msgid "Import ICS File"
-#~ msgstr "Importar fichero ICS"
-
-#~ msgid "Send Email"
-#~ msgstr "Enviar correo"
-
-#~ msgid "Corrective"
-#~ msgstr "Correctivo"
-
-#~ msgid "Jobs - Recruitment Form"
-#~ msgstr "Trabajo - Formulario de selección"
-
-#~ msgid "Helpdesk Support"
-#~ msgstr "Asistencia técnica"
-
-#~ msgid "Delay Close"
-#~ msgstr "Retrasar cierre"
-
-#~ msgid "Credit Card"
-#~ msgstr "Tarjeta de crédito"
-
-#~ msgid ""
-#~ "This may help associations in their fund raising process and tracking."
-#~ msgstr ""
-#~ "Esto puede ayudar a las organizaciones en su proceso de obtención de fondos "
-#~ "y seguimiento."
-
-#~ msgid ""
-#~ "Allows you to track and manage leads which are pre-sales requests or "
-#~ "contacts, the very first contact with a customer request."
-#~ msgstr ""
-#~ "Le permite seguir y gestionar iniciativas que son peticiones de pre-ventas o "
-#~ "contactos, el primer contacto de una solicitud de un posible cliente."
-
-#~ msgid "Events"
-#~ msgstr "Eventos"
-
-#~ msgid "crm.menu.config_wizard"
-#~ msgstr "crm.menu.asistente_config"
-
-#~ msgid "Cheque"
-#~ msgstr "Cheque"
-
-#~ msgid "Recycled"
-#~ msgstr "Reciclado"
-
-#, python-format
-#~ msgid "A partner is already existing with the same name."
-#~ msgstr "Ya existe una empresa con el mismo nombre."
-
-#~ msgid "All Opportunities"
-#~ msgstr "Todas las oportunidades"
-
-#~ msgid "Sales"
-#~ msgstr "Ventas"
-
-#~ msgid "Assigned"
-#~ msgstr "Asignado"
-
-#~ msgid ""
-#~ "Category related to the section.Subdivide the CRM cases independently or "
-#~ "section-wise."
-#~ msgstr ""
-#~ "Categoria relacionada a la seccion. subdividido independientemente los casos "
-#~ "CRM  o modo-seccion"
-
-#~ msgid "Gives Location of Meeting"
-#~ msgstr "Dando la ubicacion de la reunion"
-
-#~ msgid "Helpdesk Support Tree"
-#~ msgstr "Arbol de soporte tecnico"
-
-#~ msgid ""
-#~ "Helps you to organise the jobs hiring process: evaluation, meetings, email "
-#~ "integration..."
-#~ msgstr ""
-#~ "Te ayuda a organizar los procesos para emplear trabajos: evaluacion, "
-#~ "reunion, integracion de correo electronico"
-
-#~ msgid "Lead Email"
-#~ msgstr "Dirigir correo electronico"
-
-#~ msgid "Search Funds"
-#~ msgstr "buscar fondos"
-
-#~ msgid "Regular Expression on Case Name"
-#~ msgstr "Expresion regular en nombre de caso"
-
-#~ msgid "Job Cases"
-#~ msgstr "casos de trabajos"
-
-#~ msgid "Reply to Last Email"
-#~ msgstr "Responder el ultimo correo electronico"
-
-#~ msgid "Set RRULE"
-#~ msgstr "Establecer RRULE"
-
-#~ msgid "Mail to watchers (CC)"
-#~ msgstr "correo a los observadores (CC)"
-
-#~ msgid "Add a CC"
-#~ msgstr "Agregar un CC"
-
-#, python-format
-#~ msgid "Email Fail!"
-#~ msgstr "Correo electronico fallo"
-
-#~ msgid "Other Info"
-#~ msgstr "Otra información"
-
-#~ msgid "Proposal/Price Quote"
-#~ msgstr "Propuesta/Precio cuota"
-
-#~ msgid "Candidate Name"
-#~ msgstr "Nombre candidato"
-
-#~ msgid "OPAQUE"
-#~ msgstr "opaco"
-
-#~ msgid "Attendee"
-#~ msgstr "Asistente"
-
-#~ msgid "Closed Lost"
-#~ msgstr "Cerrado perdido"
-
-#~ msgid "Used by companies to track bugs and support requests on software"
-#~ msgstr ""
-#~ "Utilizado por las empresas para realizar seguimiento de errores y "
-#~ "solicitudes de soporte de Software"
-
-#~ msgid "Case Category2 Name"
-#~ msgstr "Nombre categoría2 de casos"
-
-#~ msgid "Search Jobs"
-#~ msgstr "Buscar empleos"
-
-#~ msgid "Close job request"
-#~ msgstr "Cerrar solicitud de empleo"
-
-#~ msgid "Support Query"
-#~ msgstr "Petición de soporte"
-
-#~ msgid "Set case state to"
-#~ msgstr "Establecer estado del caso a"
-
-#~ msgid "Meeting Cases"
-#~ msgstr "Casos reuniones"
-
-#~ msgid "Opportunity Cases"
-#~ msgstr "Casos oportunidades"
-
-#~ msgid "%(case_date)s = Creation date"
-#~ msgstr "%(case_date)s = Fecha de creación"
-
-#~ msgid "Candidate Name2"
-#~ msgstr "Nombre 2 candidato"
-
-#~ msgid "FreeBusy"
-#~ msgstr "LibreOcupado"
-
-#~ msgid "Candidate Phone"
-#~ msgstr "Teléfono candidato"
-
-#~ msgid "Attachment1"
-#~ msgstr "Adjunto 1"
-
-#~ msgid "Degree"
-#~ msgstr "Grado"
-
-#~ msgid "Attachment3"
-#~ msgstr "Adjunto 3"
-
-#~ msgid "Attachment2"
-#~ msgstr "Adjunto 2"
-
-#~ msgid "To Assign"
-#~ msgstr "Para asignar"
-
-#~ msgid "Phonecall Cases"
-#~ msgstr "Casos llamadas"
-
-#~ msgid "Are you sure you want to create a partner based on this job request ?"
-#~ msgstr ""
-#~ "Está seguro de que desea crear una empresa basada en esta solicitud laboral ?"
-
-#~ msgid "History of Events"
-#~ msgstr "Histórico de eventos"
-
-#~ msgid "Category2 of case"
-#~ msgstr "Categoría 2 del caso"
-
-#~ msgid "Employee's Name"
-#~ msgstr "Nombre del empleado"
-
-#~ msgid "Lead Name"
-#~ msgstr "Nombre iniciativa"
-
-#~ msgid "Set Meeting"
-#~ msgstr "Fijar reunión"
-
-#~ msgid "Invalid"
-#~ msgstr "Inválido"
-
-#~ msgid "Calendar of Meetings"
-#~ msgstr "Calendario de reuniones"
-
-#~ msgid "Refused by Employee"
-#~ msgstr "Rechazado por el empleado"
-
-#~ msgid "All Claims"
-#~ msgstr "Todas las reclamaciones"
-
-#~ msgid "Server Action"
-#~ msgstr "Acción servidor"
-
-#~ msgid "Related Case"
-#~ msgstr "Caso relacionado"
-
-#~ msgid "Email Address"
-#~ msgstr "Correo electrónico"
-
-#~ msgid "Open Jobs"
-#~ msgstr "Trabajos abiertos"
-
-#~ msgid "Availability (weeks)"
-#~ msgstr "Disponibilidad (semanas)"
-
-#~ msgid "Opportunities Tree"
-#~ msgstr "Árbol de oportunidades"
-
-#~ msgid "First Interview"
-#~ msgstr "Primera entrevista"
-
-#~ msgid "This Month"
-#~ msgstr "Este mes"
-
-#, python-format
-#~ msgid "Please provide Proper URL !"
-#~ msgstr "Por favor, ¡provea una URL adecuada!"
-
-#~ msgid "PUBLIC"
-#~ msgstr "PÚBLICO"
-
-#~ msgid "Search Case"
-#~ msgstr "Buscar caso"
-
-#~ msgid "Demand Draft"
-#~ msgstr "Borrador demanda"
-
-#~ msgid "Regex on Communication History"
-#~ msgstr "Exp. reg. en histórico de comunicaciones"
-
-#~ msgid "Close Phonecall"
-#~ msgstr "Cerrar llamada"
-
-#, python-format
-#~ msgid "Email not sent !"
-#~ msgstr "¡Correo no enviado!"
-
-#~ msgid "Claim/Action Description"
-#~ msgstr "Descripción Reclamación/Acción"
-
-#~ msgid "Meeting For Leads Generation"
-#~ msgstr "Reunión para generación de iniciativas"
-
-#~ msgid "Funds Form"
-#~ msgstr "Formulario fondos"
-
-#~ msgid "PRIVATE"
-#~ msgstr "PRIVADO"
-
-#~ msgid "Provide path for Remote Calendar"
-#~ msgstr "Provea un camino para el calendario remoto"
-
-#~ msgid "Jobs Hiring Process"
-#~ msgstr "Proceso de selección de personal"
-
-#~ msgid "Lead Source"
-#~ msgstr "Origen iniciativa"
-
-#~ msgid "Goals"
-#~ msgstr "Objetivos"
-
-#~ msgid "In Process"
-#~ msgstr "En curso"
-
-#~ msgid "After-Sale Services"
-#~ msgstr "Servicios post-venta"
-
-#~ msgid "Cases by Section and Type"
-#~ msgstr "Casos por sección y tipo"
-
-#~ msgid "File name"
-#~ msgstr "Nombre fichero"
-
-#~ msgid "Ok"
-#~ msgstr "Aceptar"
-
-#~ msgid "crm.claim.assign_wizard"
-#~ msgstr "crm.reclamación.asistente_asignación"
-
-#~ msgid "All Jobs Requests"
-#~ msgstr "Todas las peticiones de trabajo"
-
-#~ msgid ""
-#~ "defines a rule or repeating pattern                                 for "
-#~ "anexception to a recurrence set"
-#~ msgstr ""
-#~ "define una regla o patrón repetitivo para una excepción a un conjunto "
-#~ "recurrente"
-
-#~ msgid "Relevant"
-#~ msgstr "Relevante"
-
-#~ msgid "Applied Job"
-#~ msgstr "Trabajo solicitado"
-
-#~ msgid "Import ICS"
-#~ msgstr "Importar ICS"
-
-#~ msgid "Claim Cases"
-#~ msgstr "Casos de reclamaciones"
-
-#~ msgid "Email-id of the persons whom mail is to be sent"
-#~ msgstr "Email-id de las personas a las que se mandará el correo"
-
-#, python-format
-#~ msgid "A partner is already defined on this job request."
-#~ msgstr "Una empresa ya está definida para esta petición de trabajo"
-
-#~ msgid "Social Rehabilitation And Rural Upliftment"
-#~ msgstr "Rehabilitación social y recuperación rural"
-
-#~ msgid "Cases by Opportunities and Type"
-#~ msgstr "Casos por oportunidades y tipo"
-
-#~ msgid "Generic Wizard"
-#~ msgstr "Asistente genérico"
-
-#~ msgid "Reporting"
-#~ msgstr "Informes"
-
-#~ msgid "Word of mouth"
-#~ msgstr "De palabra"
-
-#~ msgid "Planned"
-#~ msgstr "Planificado"
-
-#~ msgid "Lead Subject"
-#~ msgstr "Asunto iniciativa"
-
-#~ msgid "Expected Salary"
-#~ msgstr "Salario esperado"
-
-#~ msgid "Send New Mail"
-#~ msgstr "Enviar nuevo correo"
 
 #~ msgid "Invalid arguments"
 #~ msgstr "Argumentos inválidos"
 
-#~ msgid "Trensparent"
-#~ msgstr "Transparente"
-
-#~ msgid "My Cases"
-#~ msgstr "Mis casos"
-
-#~ msgid "Funds Tree"
-#~ msgstr "Árbol de fondos"
-
-#~ msgid "HelpDesk"
-#~ msgstr "Ayuda/Asistencia"
-
-#~ msgid "Search Cases by User"
-#~ msgstr "Buscar casos por usuario"
-
-#~ msgid "Type of Action"
-#~ msgstr "Tipo de acción"
-
-#~ msgid "Meeting With Candidates"
-#~ msgstr "Reunión con candidatos"
-
-#~ msgid "Candidate Email"
-#~ msgstr "Email candidato"
-
-#~ msgid "Customer Office"
-#~ msgstr "Oficina cliente"
-
-#~ msgid "All Funds"
-#~ msgstr "Todos los fondos"
-
-#~ msgid "Change RRule"
-#~ msgstr "Cambiar regla"
-
-#~ msgid "Lead Details"
-#~ msgstr "Detalles iniciativa"
-
-#~ msgid "Arts And Culture"
-#~ msgstr "Arte y cultura"
-
-#~ msgid "Qualication"
-#~ msgstr "Cualificación"
-
-#~ msgid "Cases by Section, Category and Type"
-#~ msgstr "Casos por sección, categoría y tipo"
-
-#~ msgid "Licenced"
-#~ msgstr "Licenciado"
-
-#~ msgid "Fund Raising Cases"
-#~ msgstr "Casos de reunión de fondos"
-
-#~ msgid "Office"
-#~ msgstr "Oficina"
-
-#~ msgid "Assign"
-#~ msgstr "Asignar"
-
-#~ msgid "Healthcare"
-#~ msgstr "Servicios sanitarios"
-
-#~ msgid "Employee"
-#~ msgstr "Empleado"
-
-#~ msgid "% = The '%' Character"
-#~ msgstr "% = EL '%' caracter"
-
-#~ msgid "Internal Notes"
-#~ msgstr "Notas internas"
-
-#~ msgid "CONFIDENTIAL"
-#~ msgstr "CONFIDENCIAL"
-
-#~ msgid "Meeting date"
-#~ msgstr "Fecha reunión"
-
-#~ msgid "crm.helpdesk.assign_wizard"
-#~ msgstr "crm.asistencia.aistente_asignación"
-
-#~ msgid "Not fixed"
-#~ msgstr "No corregido"
-
-#~ msgid "Content of mail"
-#~ msgstr "Contenido del correo"
-
-#~ msgid "_Import"
-#~ msgstr "_Importar"
-
-#~ msgid "Mass Mailing"
-#~ msgstr "Envío masivo de correo"
-
-#~ msgid "Funds by Categories"
-#~ msgstr "Fondos por categorías"
-
-#~ msgid "Cash"
-#~ msgstr "Efectivo"
-
-#~ msgid "Future"
-#~ msgstr "Futuro"
-
-#~ msgid "Import Message"
-#~ msgstr "Importar mensaje"
-
-#~ msgid "New Jobs"
-#~ msgstr "Nuevos trabajos"
-
-#~ msgid "Fund Raising Operations"
-#~ msgstr "Operaciones de obtención de fondos"
-
-#~ msgid "Save ICS file"
-#~ msgstr "Guardar archivo ICS"
-
-#~ msgid "Helpdesk Cases"
-#~ msgstr "Casos de asistencia"
-
-#~ msgid "Provide path for remote calendar"
-#~ msgstr "Provea una ruta para el calendario remoto"
-
-#~ msgid "Select ICS file"
-#~ msgstr "Exportar archivo ICS"
-
-#~ msgid " > Bac +5"
-#~ msgstr " > Bac +5"
-
-#~ msgid "Candidate Hired"
-#~ msgstr "Candidato contratado"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the case rule "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Si el campo activo está establecido a verdadero, le permitirá ocultar la "
-#~ "regla de caso sin eliminarla."
-
-#~ msgid "Export ICS File"
-#~ msgstr "Exportar archivo ICS"
-
-#~ msgid ""
-#~ "Helps you to encode the result of a phone call or to plan a list of phone "
-#~ "calls to process."
-#~ msgstr ""
-#~ "Le ayuda a registrar el resultado de una llamada telefónica o planear una "
-#~ "lista de llamadas a procesar."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the case "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Si el campo activo está establecido a verdadero, le permitirá ocultar el "
-#~ "caso sin eliminarlo."
-
-#~ msgid "Lead Information"
-#~ msgstr "Información iniciativa"
-
-#~ msgid "Gives the sequence order when displaying a list of case rules."
-#~ msgstr ""
-#~ "Establece el orden de secuencia cuando se muestra una lista de reglas de "
-#~ "casos."
-
 #~ msgid "Send Partner & Historize"
 #~ msgstr "Enviar a empresa y añadir al historial"
 
-#~ msgid "Attendee Detail"
-#~ msgstr "Detalle de los asistentes"
-
-#~ msgid ""
-#~ "The minds states allow to define a value scale which representsthe partner "
-#~ "mentality in relation to our services.The scale hasto be created with a "
-#~ "factor for each level from 0 (Very dissatisfied) to 10 (Extremely satisfied)."
-#~ msgstr ""
-#~ "Los estados de satisfacción permiten definir una escala de valores que "
-#~ "representan la mentalidad de las empresas respecto a nuestros servicios. La "
-#~ "escala tiene que ser creada con un factor para cada nivel empezando desde 0 "
-#~ "(muy insatisfecho) hasta 10 (muy satisfecho)."
-
-#~ msgid "Resource's Calendar"
-#~ msgstr "Calendario del recurso"
-
-#, python-format
-#~ msgid "is converted to Opportunity."
-#~ msgstr "ha sido convertida a oportunidad"
-
-#~ msgid "Repeat every x"
-#~ msgstr "Repetir cada x"
-
-#~ msgid "Interval"
-#~ msgstr "Intervalo"
-
-#~ msgid "Opportunities By Categories"
-#~ msgstr "Oportunidades por categoría"
-
-#~ msgid "Custom"
-#~ msgstr "Personalización"
-
 #~ msgid "Mail Campaign 1"
 #~ msgstr "Campaña mail 1"
-
-#~ msgid "Seconds"
-#~ msgstr "Segundos"
-
-#~ msgid "Exclude range"
-#~ msgstr "Excluir rango"
-
-#~ msgid "Case Meeting"
-#~ msgstr "Caso reunión"
-
-#~ msgid "Extended Options..."
-#~ msgstr "Opciones extendidas..."
-
-#, python-format
-#~ msgid "Lead "
-#~ msgstr "Iniciativa "
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "¡Error! No puede crear menús recursivos."
-
-#, python-format
-#~ msgid "There is no stage for won opportunities defined for this Sale Team."
-#~ msgstr ""
-#~ "No se ha definido una etapa para las oportunidades ganadas para este equipo "
-#~ "de ventas."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#~ msgid ""
-#~ "Create specific phone call categories to better sort the type of calls "
-#~ "tracked in the system."
-#~ msgstr ""
-#~ "Cree categorías específicas de llamadas telefónicas para ordenar y trazar "
-#~ "mejor el tipo de llamadas en el sistema"
-
-#~ msgid "Repeat max that times"
-#~ msgstr "Repetir max. estas veces"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "¡El nombre del módulo debe ser único!"
-
-#~ msgid "Shortcut for this menu already exists!"
-#~ msgstr "¡El acceso rápido para este menú ya existe!"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#~ msgid "Custom Recurrency Rule"
-#~ msgstr "Regla de recurrencia personalizada"
-
-#~ msgid "of"
-#~ msgstr "de"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
-
-#~ msgid ""
-#~ "Create specific categories that fit your company's  activities in order to "
-#~ "better classify and analyse them after they have been maintained in your "
-#~ "leads and opportunities. You can use categories to reflect your product "
-#~ "structure or the different types of sales you do."
-#~ msgstr ""
-#~ "Cree categorías específicas que encajen en las actividades de su compañía "
-#~ "para clasificar y analizarlas mejor tras mantenerlas en sus iniciativas y "
-#~ "oportunidades. Puede usar categorías para reflejar su estructura de "
-#~ "productos o los diferentes tipos de ventas que realiza."
-
-#~ msgid ""
-#~ "Sales team allows you to organize your different salesmen or departments "
-#~ "into separate teams. Each team will work in his own list of opportunities, "
-#~ "sales orders, eso. Each user can set a team by default in his preferences. "
-#~ "The opportunities and sales order he will see, will be automatically "
-#~ "filtered according to his team."
-#~ msgstr ""
-#~ "Los equipos de ventas le permiten organizar los diferentes comerciales o "
-#~ "departamentos en equipos separados. Cada equipo trabajará en su propia lista "
-#~ "de oportunidades, pedidos, etc. Cada usuario puede indicar un equipo por "
-#~ "defecto en sus preferencias. Las oportunidades y pedidos que verá, se "
-#~ "filtrarán automáticamente de acuerdo a su equipo."
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the event "
-#~ "alarm information without removing it."
-#~ msgstr ""
-#~ "Si el campo activo se desmarca, permite ocultar la información de alarma del "
-#~ "evento sin eliminarla."
-
-#~ msgid ""
-#~ "Opportunities allows you to manage and keep track of your sales pipeline by "
-#~ "creating specific customer or prospect related sales documents in order to "
-#~ "follow up potential sales. Information such as the expected revenue, "
-#~ "opportunity stage, expected closing date, communication history and so on "
-#~ "can be maintained in them. Opportunities can be connected with the email "
-#~ "gateway: new emails create opportunities, each of them automatically gets "
-#~ "the history of the conversation with the customer.\n"
-#~ "\n"
-#~ "You and your team(s) will be able to plan meetings and phone calls from "
-#~ "opportunities, convert them into quotations, manage related documents, track "
-#~ "all customer related activities, and much more."
-#~ msgstr ""
-#~ "Las oportunidades le permiten gestionar y llevar un control de su proceso de "
-#~ "ventas creando documentos de ventas sobre clientes específicos o sobre "
-#~ "perspectivas para hacer un seguimiento de las ventas potenciales. Puede "
-#~ "mantener información como el beneficio previsto, etapa de la oportunidad, "
-#~ "fecha de cierre prevista, historial de comunicaciones, ... Las oportunidades "
-#~ "se pueden conectar con la pasarela de correo electrónico: los nuevos correos "
-#~ "crean oportunidades, cada uno de ellos obtiene automáticamente el historial "
-#~ "de comunicaciones con el cliente.\n"
-#~ "Usted y su equipo serán capaces de planificar reuniones y llamadas "
-#~ "telefónicas desde oportunidades, convertirlas en presupuestos, gestionar "
-#~ "documentos relacionados, llevar un control de todas las actividades "
-#~ "asociadas con el cliente y mucho más."
-
-#~ msgid ""
-#~ "Create specific partner categories that you will then be able to assign to "
-#~ "your partners to better manage your interactions with them. The segmentation "
-#~ "tool will assign categories to partners based on defined criteria."
-#~ msgstr ""
-#~ "Cree categorías de empresa específicas que pueda asignar posteriormente a "
-#~ "sus empresas para manejar mejor su interacción con ellas. La herramienta de "
-#~ "segmentación asignará categorías a empresas basándose en criterios definidos."
-
-#~ msgid ""
-#~ "Outbound Calls lists all the calls to be performed by your sales team. They "
-#~ "can record the information about the call on the form view. These "
-#~ "information will appear on the partner form for the traceability of every "
-#~ "contact you get with a customer. You can import a .CSV file with a list of "
-#~ "calls to be done for your sales team."
-#~ msgstr ""
-#~ "Las llamadas salientes muestra todas las llamadas a realizar por su equipo "
-#~ "de ventas. Pueden registrar la información acerca de la llamada en la vista "
-#~ "formulario. Esta información aparecerá en el formulario de la empresa para "
-#~ "la trazabilidad de cada contacto que realice con un cliente. Puede importar "
-#~ "un fichero .CSV con una lista de llamadas a realizar por su equipo de ventas."
-
-#~ msgid ""
-#~ "'Meeting Invitations' allows you to create and manage the meeting "
-#~ "invitations sent/to be sent to your colleagues/partners."
-#~ msgstr ""
-#~ "Las 'Invitaciones de reunión' le permiten crear y administrar las "
-#~ "invitaciones de reunión enviadas o programadas para su envío a sus colegas o "
-#~ "empresas."
-
-#~ msgid "Count"
-#~ msgstr "Total"
-
-#~ msgid ""
-#~ "The Inbound Calls tool allows you to log your inbound calls on the fly. Each "
-#~ "call you get will appear on the partner form for the traceability of every "
-#~ "contact you get with a partner. From the call record, you can trigger a "
-#~ "request for another call, a meeting or a business opportunity."
-#~ msgstr ""
-#~ "La herramienta de llamadas entrantes le permite registrar sus llamadas "
-#~ "entrantes al momento. Cada llamada que recibe aparecerá en el formulario de "
-#~ "la empresa para la trazabilidad de todos los contactos que haga con un "
-#~ "cliente. Desde el registro de llamadas, puede crear una petición para otra "
-#~ "llamada, una reunión o una oportunidad de negocio."
-
-#~ msgid ""
-#~ "'Leads' allows you to manage and keep track of all first potential interests "
-#~ "of a partner in one of your products or services. A lead is a first, "
-#~ "unqualified, contact with a prospect or customer. After being qualified, a "
-#~ "lead can be converted into a business opportunity with the creation of the "
-#~ "related partner for further detailed tracking of any linked activities. You "
-#~ "can use leads when you import a database of prospects or to integrate your "
-#~ "website's contact form with OpenERP."
-#~ msgstr ""
-#~ "Las 'iniciativas' le permiten gestionar y llevar un seguimiento de todos los "
-#~ "intereses de un cliente por uno de sus productos o servicios. Una iniciativa "
-#~ "es un primer contacto, sin cualificar, con un posible cliente o cliente. "
-#~ "Tras ser cualificada, una iniciativa se puede convertir en una oportunidad "
-#~ "de negocio con la creación de la empresa relacionada para un futuro "
-#~ "seguimiento detallado de cualquier actividad asociada. Puede usar "
-#~ "iniciativas cuando importa una base de datos de clientes potenciales o "
-#~ "integrar el formulario de contacto de su página web con OpenERP."
-
-#~ msgid ""
-#~ "Create specific stages that will help your sales better organise their sales "
-#~ "pipeline by maintaining them to their leads and sales opportunities. It will "
-#~ "allow them to easily track how is positioned a specific lead or opportunity "
-#~ "in the sales cycle."
-#~ msgstr ""
-#~ "Cree etapas específicas para ayudar a su equipo de ventas a organizar mejor "
-#~ "su flujo de ventas dentro de sus iniciativas y oportunidades. Les permitirá "
-#~ "saber con facilidad en que etapa está cada iniciativa u oportunidad dentro "
-#~ "del ciclo de ventas."
-
-#~ msgid "Claim"
-#~ msgstr "Reclamación"
-
-#~ msgid "Repeat interval"
-#~ msgstr "intervalo de repetición"

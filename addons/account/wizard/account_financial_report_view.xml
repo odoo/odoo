@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="accounting_report_view" model="ir.ui.view">
+            <field name="name">Accounting Report</field>
+            <field name="model">accounting.report</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.account_common_report_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="account_report_id" domain="[('parent_id','=',False)]"/>
+                    <field name="enable_filter"/>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                        <field name="fiscalyear_id_cmp"/><newline/>
+                        <field name="filter_cmp"/>
+                        <separator string="Dates" colspan="4"/>
+                        <field name="date_from_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}" colspan="4"/>
+                        <field name="date_to_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}"  colspan="4"/>
+                        <separator string="Periods" colspan="4"/>
+                        <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                   </page>
+                </xpath>
+                <xpath expr="//notebook/page[@string='Journals']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_report" model="ir.actions.act_window">
+             <field name="name">Financial Reports</field>
+             <field name="res_model">accounting.report</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="accounting_report_view"/>
+             <field name="target">new</field>
+       </record>
+
+       <menuitem icon="STOCK_PRINT"
+            name="Financial Report"
+            action="action_account_report"
+            groups="group_account_user,group_account_manager"
+            id="menu_account_report"
+            parent="final_accounting_reports"
+            sequence="100"/>
+
+    </data>
+</openerp>
