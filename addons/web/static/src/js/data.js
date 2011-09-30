@@ -598,7 +598,6 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
 });
 openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
-    virtual_id_regex: /one2many_v_id_.*/,
     debug_mode: true,
     init: function() {
         this._super.apply(this, arguments);
@@ -719,6 +718,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         return completion.promise();
     }
 });
+openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
+
 openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
