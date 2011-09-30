@@ -18,29 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Live Chat Support',
-    'version': '2.0',
-    'category': 'Tools',
-    'complexity': "easy",
-    'description': """
-Enable live chat support for those who have a maintenance contract.
-===================================================================
 
-Add "Support" button in header from where you can access OpenERP Support.
-    """,
-    'author': 'OpenERP SA',
-    'website': 'http://openerp.com',
+
+{
+    'name': 'OpenID',
+    'version': '2.0',
+    'category': 'Authentification',
+    'description': """Allow users to login through OpenID.""",
+    'author': 'OpenERP s.a.',
+    'maintainer': 'OpenERP s.a.',
+    'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'update_xml': [],
-    'js' : [
-        'static/src/js/web_livechat.js',
+    'data': [
+        'res_users.xml',
     ],
-    'css' : [
-        'static/src/css/lc.css',
+    'js': [
+        'static/src/js/auth_openid.js',
     ],
+    'css': [
+        'static/src/css/openid.css',
+    ],
+    'external_dependencies': {
+        'python' : ['openid'],
+    },
     'installable': True,
     'active': False,
-    'certificate': '0013762192410413',
-    'images': ['static/src/img/web_livechat_support.jpeg'],
+    'web_preload': False,
 }
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
