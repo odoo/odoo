@@ -305,6 +305,7 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
+                  'subtype': 'plain',
         }
         if not template_id:
             return values
@@ -318,6 +319,9 @@ class email_template(osv.osv):
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
+
+        if values['body_html']:
+            values.update(subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
