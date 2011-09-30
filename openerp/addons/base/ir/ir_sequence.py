@@ -93,24 +93,48 @@ class ir_sequence(openerp.osv.osv.osv):
                 CREATE UNIQUE INDEX ir_sequence_unique_code_company_id_idx
                 ON ir_sequence (code, (COALESCE(company_id,-1)))""")
 
-    def create(self, cr, uid, values, context=None):
-        values = self._add_missing_default_values(cr, uid, values, context)
-        go = super(ir_sequence, self).create \
-            if values['implementation'] == 'no_gap' else self.create_postgres
-        return go(cr, uid, values, context)
+    def _create_sequence(self, cr, id, number_increment, number_next):
+        """ Create a PostreSQL sequence.
 
-    def create_postgres(self, cr, uid, values, context=None):
-        """ Create a fast, gaps-allowed PostgreSQL sequence.
-
-        :param values: same argument than for ``create()`` but the keys
-            ``number_increment`` and ``number_next`` must be present.
-            ``_add_missing_default_values()`` can be used to this effect.
-        :return: id of the newly created record
+        There is no access rights check.
         """
-        id = super(ir_sequence, self).create(cr, uid, values, context)
-        self._create_sequence(cr, id,
-            values['number_increment'], values['number_next'])
-        return id
+        assert isinstance(id, (int, long))
+        sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
+        cr.execute(sql, (number_increment, number_next))
+
+    def _drop_sequence(self, cr, ids):
+        """ Drop the PostreSQL sequence if it exists.
+
+        There is no access rights check.
+        """
+
+        ids = ids if isinstance(ids, (list, tuple)) else [ids]
+        assert all(isinstance(i, (int, long)) for i in ids), \
+            "Only ids in (int, long) allowed."
+        names = ','.join('ir_sequence_%03d' % i for i in ids)
+
+        # RESTRICT is the default; it prevents dropping the sequence if an
+        # object depends on it.
+        cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
+
+    def _alter_sequence(self, cr, id, number_increment, number_next):
+        """ Alter a PostreSQL sequence.
+
+        There is no access rights check.
+        """
+        assert isinstance(id, (int, long))
+        cr.execute("""
+            ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
+            """ % id, (number_increment, number_next))
+
+    def create(self, cr, uid, values, context=None):
+        """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
+        """
+        values = self._add_missing_default_values(cr, uid, values, context)
+        values['id'] = super(ir_sequence, self).create(cr, uid, values, context)
+        if values['implementation'] == 'standard':
+            f = self._create_sequence(cr, values['id'], values['number_increment'], values['number_next'])
+        return values['id']
 
     def unlink(self, cr, uid, ids, context=None):
         super(ir_sequence, self).unlink(cr, uid, ids, context)
@@ -118,12 +142,12 @@ class ir_sequence(openerp.osv.osv.osv):
         return True
 
     def write(self, cr, uid, ids, values, context=None):
-        ids = ids if isinstance(ids, (list, tuple)) else [ids]
+        if not isinstance(ids, (list, tuple)):
+            ids = [ids]
         new_implementation = values.get('implementation')
-        rows = self.read(cr, uid, ids, ['implementation',
-            'number_increment', 'number_next'], context)
+        rows = self.read(cr, uid, ids, ['implementation', 'number_increment', 'number_next'], context)
         super(ir_sequence, self).write(cr, uid, ids, values, context)
-        
+
         for row in rows:
             # 4 cases: we test the previous impl. against the new one.
             if row['implementation'] == 'standard':
@@ -142,7 +166,9 @@ class ir_sequence(openerp.osv.osv.osv):
         return True
 
     def _interpolate(self, s, d):
-        return s % d if s else ''
+        if s:
+            return s % d
+        return  ''
 
     def _interpolation_dict(self):
         t = time.localtime() # Actually, the server is always in UTC.
@@ -160,18 +186,62 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
+    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id, for_update_no_wait, context=None):
+        """ Read a sequence object.
+
+        There is no access rights check on the sequence itself.
+        """
+        assert code_or_id in ('code', 'id')
+        res_company = self.pool.get('res.company')
+        company_ids = res_company.search(cr, uid, [], context=context)
+        sql = """
+            SELECT id, number_next, prefix, suffix, padding, implementation
+            FROM ir_sequence
+            WHERE %s=%%s
+              AND active=true
+              AND (company_id in %%s or company_id is NULL)
+            """ % code_or_id
+        if for_update_no_wait:
+            sql += 'FOR UPDATE NOWAIT'
+        cr.execute(sql, (sequence_code_or_id, tuple(company_ids)))
+        return cr.dictfetchone()
+
+    def _next(self, cr, uid, sequence, context=None):
+        if not sequence:
+            return False
+
+        if sequence['implementation'] == 'standard':
+            cr.execute("SELECT nextval('ir_sequence_%03d')" % sequence['id'])
+            sequence['number_next'] = cr.fetchone()
+        else:
+            # Read again with FOR UPDATE NO WAIT.
+            sequence = self._select_by_code_or_id(cr, uid, sequence['id'], 'id', True, context)
+            cr.execute("""
+                UPDATE ir_sequence
+                SET number_next=number_next+number_increment
+                WHERE id=%s
+                """, (sequence['id'],))
+
+        d = self._interpolation_dict()
+        interpolated_prefix = self._interpolate(sequence['prefix'], d)
+        interpolated_suffix = self._interpolate(sequence['suffix'], d)
+        if sequence['number_next']:
+            return interpolated_prefix + '%%0%sd' % sequence['padding'] % \
+                sequence['number_next'] + interpolated_suffix
+        else:
+            # TODO what is this case used for ?
+            return interpolated_prefix + interpolated_suffix
+
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_read(cr, uid)
-        res = self._select_by_code_or_id(cr, uid, sequence_id,
-            'id', False, context)
+        res = self._select_by_code_or_id(cr, uid, sequence_id, 'id', False, context)
         return self._next(cr, uid, res, context)
 
     def next_by_code(self, cr, uid, sequence_code, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_read(cr, uid)
-        res = self._select_by_code_or_id(cr, uid, sequence_code,
-            'code', False, context)
+        res = self._select_by_code_or_id(cr, uid, sequence_code, 'code', False, context)
         return self._next(cr, uid, res, context)
 
     def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):
@@ -195,93 +265,6 @@ class ir_sequence(openerp.osv.osv.osv):
         deprecated.
         """
         return self.get_id(cr, uid, code, 'code', context)
-
-    def _next(self, cr, uid, sequence, context=None):
-        if not sequence:
-            return False
-
-        if sequence['implementation'] == 'standard':
-            cr.execute("""
-                SELECT nextval('ir_sequence_%03d')
-                """ % sequence['id'])
-            sequence['number_next'] = cr.fetchone()
-        else:
-            # Read again with FOR UPDATE NO WAIT.
-            sequence = self._select_by_code_or_id(cr, uid, sequence['id'],
-                'id', True, context)
-            cr.execute("""
-                UPDATE ir_sequence
-                SET number_next=number_next+number_increment
-                WHERE id=%s
-                """, (sequence['id'],))
-
-        d = self._interpolation_dict()
-        interpolated_prefix = self._interpolate(sequence['prefix'], d)
-        interpolated_suffix = self._interpolate(sequence['suffix'], d)
-        if sequence['number_next']:
-            return interpolated_prefix + '%%0%sd' % sequence['padding'] % \
-                sequence['number_next'] + interpolated_suffix
-        else:
-            # TODO what is this case used for ?
-            return interpolated_prefix + interpolated_suffix
-
-    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id,
-            for_update_no_wait, context=None):
-        """ Read a sequence object.
-
-        There is no access rights check on the sequence itself.
-        """
-        assert code_or_id in ('code', 'id')
-        res_company = self.pool.get('res.company')
-        company_ids = res_company.search(cr, uid, [], context=context)
-        funw = 'FOR UPDATE NOWAIT' if for_update_no_wait else ''
-        cr.execute("""
-            SELECT id, number_next, prefix, suffix, padding, implementation
-            FROM ir_sequence
-            WHERE %s=%%s
-              AND active=true
-              AND (company_id in %%s or company_id is NULL)
-            %s
-            """ % (code_or_id, funw),
-            (sequence_code_or_id, tuple(company_ids)))
-        return cr.dictfetchone()
-
-    def _create_sequence(self, cr, id, number_increment, number_next):
-        """ Create a PostreSQL sequence.
-
-        There is no access rights check.
-        """
-        assert isinstance(id, (int, long))
-        cr.execute("""
-            CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s
-            """ % id, (number_increment, number_next))
-
-    def _drop_sequence(self, cr, ids):
-        """ Drop the PostreSQL sequence if it exists.
-
-        There is no access rights check.
-        """
-
-        ids = ids if isinstance(ids, (list, tuple)) else [ids]
-        assert all(isinstance(i, (int, long)) for i in ids), \
-            "Only ids in (int, long) allowed."
-        names = ','.join('ir_sequence_%03d' % i for i in ids)
-
-        # RESTRICT is the default; it prevents dropping the sequence if an
-        # object depends on it.
-        cr.execute("""
-            DROP SEQUENCE IF EXISTS %s RESTRICT
-            """ % names)
-
-    def _alter_sequence(self, cr, id, number_increment, number_next):
-        """ Alter a PostreSQL sequence.
-
-        There is no access rights check.
-        """
-        assert isinstance(id, (int, long))
-        cr.execute("""
-            ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
-            """ % id, (number_increment, number_next))
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
