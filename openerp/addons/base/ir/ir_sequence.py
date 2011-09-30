@@ -186,63 +186,34 @@ class ir_sequence(openerp.osv.osv.osv):
             'sec': time.strftime('%S', t),
         }
 
-    def _select_by_code_or_id(self, cr, uid, sequence_code_or_id, code_or_id, for_update_no_wait, context=None):
-        """ Read a sequence object.
-
-        There is no access rights check on the sequence itself.
-        """
-        assert code_or_id in ('code', 'id')
-        res_company = self.pool.get('res.company')
-        company_ids = res_company.search(cr, uid, [], context=context)
-        sql = """
-            SELECT id, number_next, prefix, suffix, padding, implementation
-            FROM ir_sequence
-            WHERE %s=%%s
-              AND active=true
-              AND (company_id in %%s or company_id is NULL)
-            """ % code_or_id
-        if for_update_no_wait:
-            sql += 'FOR UPDATE NOWAIT'
-        cr.execute(sql, (sequence_code_or_id, tuple(company_ids)))
-        return cr.dictfetchone()
-
-    def _next(self, cr, uid, sequence, context=None):
-        if not sequence:
+    def _next(self, cr, uid, seq_ids, context=None):
+        if not seq_ids:
             return False
-
-        if sequence['implementation'] == 'standard':
-            cr.execute("SELECT nextval('ir_sequence_%03d')" % sequence['id'])
-            sequence['number_next'] = cr.fetchone()
+        seq = self.read(cr, uid, seq_ids[:1], ['implementation','number_next','prefix','suffix','padding'])[0]
+        if seq['implementation'] == 'standard':
+            cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
+            seq['number_next'] = cr.fetchone()
         else:
-            # Read again with FOR UPDATE NO WAIT.
-            sequence = self._select_by_code_or_id(cr, uid, sequence['id'], 'id', True, context)
-            cr.execute("""
-                UPDATE ir_sequence
-                SET number_next=number_next+number_increment
-                WHERE id=%s
-                """, (sequence['id'],))
-
+            cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
+            cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
         d = self._interpolation_dict()
-        interpolated_prefix = self._interpolate(sequence['prefix'], d)
-        interpolated_suffix = self._interpolate(sequence['suffix'], d)
-        if sequence['number_next']:
-            return interpolated_prefix + '%%0%sd' % sequence['padding'] % \
-                sequence['number_next'] + interpolated_suffix
-        else:
-            # TODO what is this case used for ?
-            return interpolated_prefix + interpolated_suffix
+        interpolated_prefix = self._interpolate(seq['prefix'], d)
+        interpolated_suffix = self._interpolate(seq['suffix'], d)
+        return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
 
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_read(cr, uid)
-        res = self._select_by_code_or_id(cr, uid, sequence_id, 'id', False, context)
-        return self._next(cr, uid, res, context)
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
+        return self._next(cr, uid, ids, context)
 
     def next_by_code(self, cr, uid, sequence_code, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_read(cr, uid)
-        res = self._select_by_code_or_id(cr, uid, sequence_code, 'code', False, context)
-        return self._next(cr, uid, res, context)
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        ids = self.search(cr, uid, ['&',('code','=', sequence_code),('company_id','in',company_ids)])
+        return self._next(cr, uid, ids, context)
 
     def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):
         """ Draw an interpolated string using the specified sequence.
