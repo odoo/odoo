@@ -1,77 +1,160 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
-		<!--Export edi document  -->
-		<record id="ir_actions_server_edi_invoice" model="ir.actions.server">
-			<field name="code">context.update({'edi_web_invoice_url_view': '%s/web/view_edi?db=%s&amp;token=%s' %(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),cr.dbname, self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0])})
-if not object.partner_id.opt_out: self.pool.get('email.template').send_mail(cr,
-                      uid,
-                      self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')[1],
-                      object.id,
-                      context=context)</field>
-			<field eval="6" name="sequence"/>
-			<field name="state">code</field>
-			<field name="type">ir.actions.server</field>
-			<field name="model_id" ref="account.model_account_invoice"/>
-			<field name="condition">True</field>
-			<field name="name">EDI Document - Invoice</field>
-		</record>
+    <data>
+        <!-- EDI Export + Send email Action  -->
+        <record id="ir_actions_server_edi_invoice" model="ir.actions.server">
+            <field name="code">
+try:
+    if not object.partner_id.opt_out:
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default="<WEB_ROOT_URL>")
 
-		
-		<!--calling multi action in workflow.activity -->
-		<record id="account.act_open" model="workflow.activity">
-			<field name="action_id" ref="ir_actions_server_edi_invoice"/>
-		</record>
+        # accessing the template will fail if it has been deleted - so we'll skip everything
+        tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'email_template_edi_invoice')[1]
 
-        
-		<!--Email template -->
-		<record id="email_template_edi_invoice" model="email.template">
-            <field name="name">Mail Template of Invoice For EDI Document</field>
-			<field name="reply_to">${object.user_id.user_email or ''}</field>
-            <field name="email_from">${object.user_id.user_email or ''}</field>
-            
-			<field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })</field>
-			<field name="email_to">${object.address_invoice_id.email or ''}</field>
-			<field name="model_id" ref="account.model_account_invoice"/>
+        edi_token = self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0]
+        context.update(edi_web_invoice_url_view='%s/web/view_edi?db=%s&token=%s' %(web_root_url,cr.dbname, edi_token))
+        self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
+except:
+    pass
+            </field>
+            <field eval="6" name="sequence"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="condition">True</field>
+            <field name="name">EDI Document - Invoice</field>
+        </record>
+    </data>
+
+    <!-- Mail template and workflow bindings are done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!-- bind the mailing server action to invoice open activity -->
+        <record id="account.act_open" model="workflow.activity">
+            <field name="action_id" ref="ir_actions_server_edi_invoice"/>
+        </record>
+
+        <!--Email template -->
+        <record id="email_template_edi_invoice" model="email.template">
+            <field name="name">Automated Invoice Notification Mail</field>
+            <field name="email_from">${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })</field>
+            <field name="email_to">${object.address_invoice_id.email or ''}</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
             <field name="body_html">
 &lt;div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); "&gt;
 
-&lt;p&gt;  Hello ${object.address_invoice_id.name and ' ' or ''},&lt;/p&gt;  
-&lt;p&gt;  You can click on the following link to preview, print and pay invoice: &lt;br/&gt;
-    &lt;a href="${object._context.get('edi_web_invoice_url_view')}"&gt;${object._context.get('edi_web_invoice_url_view')} &lt;/a&gt;
-&lt;/p&gt;  
-
-
-&lt;p style="border-left: 1px solid #8e0000; margin-left: 30px;"&gt;  &lt;strong&gt;REFERENCES&lt;/strong&gt;&lt;br /&gt;   Invoice number: &lt;strong&gt;${object.number}&lt;/strong&gt;&lt;br /&gt;   Invoice amount: &lt;strong&gt;${object.amount_total} ${object.currency_id.name}&lt;/strong&gt;&lt;br /&gt;   Invoice date: ${object.date_invoice or 'n/a'}&lt;br /&gt;   Order reference: ${object.origin or 'n/a'}&lt;br /&gt;   Your contact: &lt;a href="mailto:${object.user_id.user_email or ''}?subject=Invoice%20${object.number}"&gt;${object.user_id.name}&lt;/a&gt;&lt;/p&gt;  
-
-${object.company_id.paypal_account and "&lt;p&gt;It is possible to pay with Paypal: &lt;br/&gt;  &lt;a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s\"&gt;&lt;img src=\"https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif\" style=\"margin-left: 100px; border: 0px; padding: 1px; text-decoration: none;\"/&gt;&lt;/a&gt; &lt;/p&gt;"%(object.company_id.paypal_account, object.number and object.number.replace('/','%2f') or '', object.number and object.number.replace('/','%2f') or '', object.amount_total, object.currency_id.name, object.currency_id.name) or ''}
-
-&lt;p&gt;  If you have any question, do not hesitate to reply directly to this e-mail.&lt;/p&gt;  &lt;p&gt;  Thank you for choosing OpenERP!&lt;br /&gt;  &lt;/p&gt;  &lt;div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-image: url(http://www.openerp.com/sites/default/files/red_gradient_bg.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; "&gt;  &lt;h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); "&gt;  &lt;strong&gt;${object.company_id.name}&lt;/strong&gt;&lt;/h3&gt;  &lt;/div&gt;  &lt;div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); "&gt;    &lt;div&gt;  Contact:&lt;a href="mailto:${object.user_id.user_email or ''}?subject=Invoice%20${object.number}"&gt;${object.user_id.name}&lt;/a&gt;&lt;/div&gt;  &lt;div&gt;  &lt;/div&gt;  &lt;/div&gt; &lt;/div&gt; &lt;p&gt;  &lt;/p&gt;
+    &lt;p&gt;Hello${object.address_invoice_id.name and ' ' or ''}${object.address_invoice_id.name or ''},&lt;/p&gt;
+    
+    &lt;p&gt;A new invoice is available for ${object.partner_id.name}: &lt;/p&gt;
+    
+    &lt;p style="border-left: 1px solid #8e0000; margin-left: 30px;"&gt;
+       &nbsp;&nbsp;&lt;strong&gt;REFERENCES&lt;/strong&gt;&lt;br /&gt;
+       &nbsp;&nbsp;Invoice number: &lt;strong&gt;${object.number}&lt;/strong&gt;&lt;br /&gt;
+       &nbsp;&nbsp;Invoice amount: &lt;strong&gt;${object.amount_total} ${object.currency_id.name}&lt;/strong&gt;&lt;br /&gt;
+       &nbsp;&nbsp;Invoice date: ${object.date_invoice or 'n/a'}&lt;br /&gt;
+       &nbsp;&nbsp;Order reference: ${object.origin or 'n/a'}&lt;br /&gt;
+       &nbsp;&nbsp;Your contact: &lt;a href="mailto:${object.user_id.user_email or ''}?subject=Invoice%20${object.number}"&gt;${object.user_id.name}&lt;/a&gt;
+    &lt;/p&gt;  
+    
+    &lt;p&gt;
+    You can view the invoice document, download it and pay online using the following link:
+    &lt;/p&gt;
+            &lt;a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;" 
+               href="${ctx.get('edi_web_invoice_url_view') or ''}"&gt;View Invoice&lt;/a&gt;
+    
+    % if object.company_id.paypal_account:
+    &lt;br/&gt;
+    &lt;p&gt;It is also possible to directly pay with Paypal:&lt;/p&gt;
+        &lt;a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;"
+        href="${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s"%(object.company_id.paypal_account,object.number and object.number.replace('/','%2f') or '', object.number and object.number.replace('/','%2f') or '', object.amount_total, object.currency_id.name, object.currency_id.name)}"
+            &gt;Pay with Paypal&lt;/a&gt;
+    % endif
+    
+    &lt;br/&gt;
+    &lt;p&gt;If you have any question, do not hesitate to contact us.&lt;/p&gt;
+    &lt;p&gt;Thank you for choosing ${object.company_id.name or 'us'}!&lt;/p&gt;
+    &lt;br/&gt;
+    &lt;br/&gt;
+    &lt;div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; "&gt;
+        &lt;h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); "&gt;
+            &lt;strong style="text-transform:uppercase;"&gt;${object.company_id.name}&lt;/strong&gt;&lt;/h3&gt;
+    &lt;/div&gt;
+    &lt;div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); "&gt;
+        &lt;span style="color: rgb(38, 72, 149); margin-bottom: 5px; display: block; "&gt;
+        % if object.company_id.street:
+            ${object.company_id.street}&lt;br/&gt;
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}&lt;br/&gt;
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}&lt;br/&gt;
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}&lt;br/&gt;
+        % endif
+        &lt;/span&gt;
+        % if object.company_id.phone:
+            &lt;div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; "&gt;
+                Phone:&nbsp; ${object.company_id.phone}
+            &lt;/div&gt;
+        % endif
+        % if object.company_id.website:
+            &lt;div&gt;
+                Web :&nbsp;&lt;a href="${object.company_id.website}"&gt;${object.company_id.website}&lt;/a&gt;
+            &lt;/div&gt;
+        %endif
+        &lt;p&gt;&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
             </field>
-			<field name="body_text">
-Hello ${object.address_invoice_id.name and ' ' or ''}, 
+            <field name="body_text">
+Hello${object.address_invoice_id.name and ' ' or ''}${object.address_invoice_id.name or ''},
 
-You can click on the following link to preview, print and pay invoice:
+A new invoice is available for ${object.partner_id.name}:
+       | Invoice Number: *${object.number}*
+       | Amount: *${object.amount_total} ${object.currency_id.name}*
+       | Invoice date: ${object.date_invoice or 'n/a'}
+       | Order reference: ${object.origin or 'n/a'}
+       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
 
-    ${object._context.get('edi_web_invoice_url_view') or 'n/a'} 
+You can view the invoice document, download it and pay online using the following link:
+    ${ctx.get('edi_web_invoice_url_view') or 'n/a'}
 
-Invoice Number: *${object.number}* 
-Amount: *${object.amount_total} ${object.currency_id.name}* 
-Invoice date: ${object.date_invoice or 'n/a'} 
-Order reference: ${object.origin or 'n/a'} 
-Your contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
+% if object.company_id.paypal_account:
+It is also possible to directly pay with Paypal:
+    ${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s"%(object.company_id.paypal_account, object.number and object.number.replace('/','%2f') or '', object.number and object.number.replace('/','%2f') or '', object.amount_total, object.currency_id.name, object.currency_id.name)}
+% endif
 
-${object.company_id.paypal_account and "It is possible to pay with Paypal: https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Invoice%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Invoice_PayNow_%s"%(object.company_id.paypal_account, object.number and object.number.replace('/','%2f') or '', object.number and object.number.replace('/','%2f') or '', object.amount_total, object.currency_id.name, object.currency_id.name) or ''}
+If you have any question, do not hesitate to contact us.
 
-If you have any question, do not hesitate to reply directly to this e-mail. 
 
-Thank you for choosing our service! 
+Thank you for choosing ${object.company_id.name}!
 
--- 
+
+--
+${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
 ${object.company_id.name}
-Contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
-</field>
-			
-		</record>
-	</data>
+% if object.company_id.street:
+${object.company_id.street or ''}
+% endif
+% if object.company_id.street2:
+${object.company_id.street2}
+% endif
+% if object.company_id.city or object.company_id.zip:
+${object.company_id.zip or ''} ${object.company_id.city or ''}
+% endif
+% if object.company_id.country_id:
+${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
+% endif
+% if object.company_id.phone:
+Phone: ${object.company_id.phone}
+% endif
+% if object.company_id.website:
+${object.company_id.website or ''}
+% endif
+            </field>
+        </record>
+    </data>
 </openerp>
