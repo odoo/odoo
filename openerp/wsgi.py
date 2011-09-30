@@ -63,6 +63,8 @@ XML_RPC_PATH_1 = '/openerp/xmlrpc/1'
 JSON_RPC_PATH = '/openerp/jsonrpc'
 JSON_RPC_PATH_1 = '/openerp/jsonrpc/1'
 
+XML_RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+
 def xmlrpc_return(start_response, service, method, params, legacy_exceptions=False):
     """
     Helper to call a service's method with some params, using a wsgi-supplied
@@ -146,7 +148,7 @@ def xmlrpc_handle_exception_legacy(e):
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     return response
 
-def wsgi_xmlrpc(environ, start_response):
+def wsgi_xmlrpc_1(environ, start_response):
     """ The main OpenERP WSGI handler."""
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH_1):
         length = int(environ['CONTENT_LENGTH'])
@@ -187,7 +189,34 @@ def wsgi_xmlrpc(environ, start_response):
         # The body has been read, need to raise an exception (not return None).
         fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_CLIENT_ERROR, '')
         response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-        return response
+        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+        return [response]
+
+def wsgi_xmlrpc(environ, start_response):
+    """ WSGI handler to return the versions."""
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH):
+        length = int(environ['CONTENT_LENGTH'])
+        data = environ['wsgi.input'].read(length)
+
+        params, method = xmlrpclib.loads(data)
+
+        path = environ['PATH_INFO'][len(XML_RPC_PATH):]
+        if path.startswith('/'): path = path[1:]
+        if path.endswith('/'): p = path[:-1]
+        path = path.split('/')
+
+        # All routes are hard-coded.
+
+        if len(path) == 1 and path[0] == '' and method in ('version',):
+            response = xmlrpclib.dumps((XML_RPC_VERSION_1,), methodresponse=1, allow_none=False, encoding=None)
+            start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+            return [response]
+
+        # The body has been read, need to raise an exception (not return None).
+        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_CLIENT_ERROR, '')
+        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+        return [response]
 
 def legacy_wsgi_xmlrpc(environ, start_response):
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
@@ -366,6 +395,7 @@ def application(environ, start_response):
 
     # Try all handlers until one returns some result (i.e. not None).
     wsgi_handlers = [
+        wsgi_xmlrpc_1,
         wsgi_xmlrpc,
         wsgi_jsonrpc,
         legacy_wsgi_xmlrpc,
