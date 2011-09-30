@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+import base64
 import hashlib
 import json
 import time
-import base64
 import urllib2
+
+import openerp
 import openerp.release as release
+from osv import osv,fields
 from tools.translate import _
-import netsvc
 
 def split_xml_id(xml_id):
     assert len(xml_id.split('.'))==2, \
@@ -117,7 +118,7 @@ class ir_edi_document(osv.osv):
         res = []
         for edi_document in edi_documents:
             module = edi_document.get('__module')
-            if not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
+            if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
                 raise osv.except_osv(_('Missing Application'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "The OpenERP configuration assistant will help with this if you are connected as an administrator.")%(module,))
@@ -221,7 +222,7 @@ class edi(object):
                 uuid = safe_unique_id(db_uuid, record._name, record.id)
                 xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
             module, xml_id2 = split_xml_id(xml_id)
-            xml_record_id = model_data_pool.create(cr, uid, {
+            xml_record_id = model_data_pool.create(cr, openerp.SUPERUSER_ID, {
                 'name': xml_id2,
                 'model': record._name,
                 'module': module,
