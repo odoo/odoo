@@ -44,6 +44,42 @@
                     <p><t t-esc="process_help"/></p>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <h2>
+                        <t t-esc="process_title"/> Process
+                    </h2>
+                    <t t-if="process_notes">
+                        <p>
+                            <strong>Notes:</strong> <t t-esc="process_notes"/>
+                        </p>
+                        <p>
+                            <strong>Last modified by:</strong> N/A
+                        </p>
+                        <t t-if="process_subflows">
+                            <strong>Subflows:</strong>
+                            
+                            <t t-foreach="process_subflows" t-as="subflow">
+                                <t t-if="subflow.subflow[0] != process_id">
+                                    <p>
+                                        <a class="process_subflow" t-att-id="subflow.subflow[0]" href="javascript: void(0)">
+                                            <t t-esc="subflow.subflow[1]"/>
+                                        </a>
+                                    </p>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-if="process_related and process_related[0][0] != process_id">
+                            <strong>Related:</strong>
+                            <p>
+                                <a class="process_subflow" t-att-id="process_related[0][0]" href="javascript: void(0)">
+                                    <t t-esc="process_related[0][1]"/>
+                                </a>
+                            </p>
+                        </t>
+                    </t>
+                </td>
+            </tr>
             <tr t-if="process_selection">
                 <td>
                     <fieldset>
@@ -77,21 +113,21 @@
             </tr>
             <tr t-if="process_id">
                 <td class="process_fields">
-                    <table cellspacing="0" cellpadding="0" width="100%">
+                    <table>
                         <t t-foreach="process_fields" t-as="field">
                             <tr>
                                 <td>
                                     <t t-esc="field"/>
                                 </td>
                                 <td>
-                                    <table cellspacing="0" cellpadding="0" width="100%">
-                                        <t t-foreach="process_fields[field]" t-as="fld">
+                                    <table>
+                                        <t t-foreach="field_value" t-as="fld">
                                             <tr>
                                                 <td>
                                                     <t t-esc="fld"/>:
                                                 </td>
                                                 <td>
-                                                    <t t-esc="process_fields[field][fld]"/>
+                                                    <t t-esc="fld_value"/>
                                                 </td>
                                             </tr>
                                         </t>

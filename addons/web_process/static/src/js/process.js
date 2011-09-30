@@ -30,7 +30,6 @@ openerp.web_process = function (openerp) {
         
         initialize_process_view: function() {
             var self = this;
-            var is_ready = $.Deferred();
             $.when(this.fields_get(), this.help(), this.get_process_object()).pipe(function(fields, help, process) {
                 self.process_fields = fields;
                 self.process_help = help;
@@ -38,20 +37,29 @@ openerp.web_process = function (openerp) {
                     if(process.length > 1) {
                         self.process_selection = process;
                     } else {
-                        self.process_id = process[0][0];
+                        self.process_id = process[0][0],
+                        self.process_title = process[0][1];
                     }
                 }
                 return $.Deferred().resolve();
-            }).done(function() {
-                self.render_process_view();
-            }).done(function() {
+            }).pipe(function() {
+                var def = $.Deferred();
                 if(self.process_id) {
                     self.graph_get().done(function(res) {
-                        self.draw_process_graph(res);
+                        self.process_notes = res.notes;
+                        self.process_subflows = _.filter(res.nodes, function(x) {
+                            return x.subflow != false;
+                        });
+                        self.process_related = res.related;
+                        def.resolve(res);
                     });
-                }
+                } else def.resolve();
+                return def.promise();
+            }).done(function(res) {
+                $.when(self.render_process_view()).done(function() {
+                    if(res) self.draw_process_graph(res);
+                });
             });
-            
         },
         
         graph_get: function() {
@@ -140,17 +148,21 @@ openerp.web_process = function (openerp) {
             
             var $parent = this.widget_parent.$element;
             $parent.find('#change_process').click(function() {
-                self.process_selection = false;
-                self.process_id = $parent.find('#select_process').val();
+                self.process_selection = false,
+                self.process_id = $parent.find('#select_process').val(),
+                self.process_title = $.trim($parent.find('#select_process option:selected').text());
                 self.initialize_process_view();
             });
-            
             
             this.$element.find(".toggle_fields").click(function() {
                 $(this).children().toggle();
                 self.$element.find('.process_fields').toggle();
-                
-            })
+            });
+            
+            this.$element.find(".process_subflow").click(function() {
+                self.process_id = this.id;
+                self.initialize_process_view();
+            });
         },
         
         draw_process_graph : function(res) {
