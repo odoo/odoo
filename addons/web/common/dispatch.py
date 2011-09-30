@@ -98,7 +98,8 @@ class WebRequest(object):
         self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.config))
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession())
+        self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
