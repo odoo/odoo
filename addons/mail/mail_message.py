@@ -479,11 +479,22 @@ class mail_message(osv.osv):
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
+
+                body = message.body_html if message.subtype == 'html' else message.body_text
+                body_alternative = None
+                subtype_alternative = None
+                if message.subtype == 'html' and message.body_text:
+                    # we have a plain text alternative prepared, pass it to 
+                    # build_message instead of letting it build one
+                    body_alternative = message.body_text
+                    subtype_alternative = 'plain'
+
                 msg = ir_mail_server.build_email(
                     email_from=message.email_from,
                     email_to=to_email(message.email_to),
                     subject=message.subject,
-                    body=message.body_html if message.subtype == 'html' else message.body_text,
+                    body=body,
+                    body_alternative=body_alternative,
                     email_cc=to_email(message.email_cc),
                     email_bcc=to_email(message.email_bcc),
                     reply_to=message.reply_to,
@@ -491,6 +502,7 @@ class mail_message(osv.osv):
                     references = message.references,
                     object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
                     subtype=message.subtype,
+                    subtype_alternative=subtype_alternative,
                     headers=message.headers and literal_eval(message.headers))
                 res = ir_mail_server.send_email(cr, uid, msg,
                                                 mail_server_id=message.mail_server_id.id,
