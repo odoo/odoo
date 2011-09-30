@@ -23,7 +23,7 @@
 {
     'name': 'Idea Manager',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'complexity': "easy",
     'description': """
 This module allows your user to easily and efficiently participate in enterprise innovation.

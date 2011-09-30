@@ -33,7 +33,7 @@
     """,
     "version": "0.1",
     "depends": ["base_tools"],
-    "category" : "Tools",
+    "category" : "Extra Tools",
     'description': """
     The base module to manage lunch
 

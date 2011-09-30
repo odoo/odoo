@@ -25,7 +25,7 @@
     "version" : "1.1",
     "author" : "Openlabs",
     "website" : "http://openerp.com",
-    "category" : "Tools",
+    "category" : "Marketing",
     'complexity': "expert",
     "depends" : ['mail'],
     "description": """

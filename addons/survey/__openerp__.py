@@ -22,7 +22,7 @@
 {
     'name': 'Survey Module',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 This module is used for surveying.
 ==================================

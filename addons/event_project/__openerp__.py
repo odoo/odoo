@@ -22,7 +22,7 @@
 {
     'name': 'Event Project - Create Retro-Planning to manage your Events',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Associations',
     'complexity': "easy",
     'description': """
 Organization and management of events.

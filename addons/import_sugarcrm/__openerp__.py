@@ -22,7 +22,7 @@
 {
     'name': 'Import SugarCRM Data into OpenERP Module.',
     'version': '1.0',
-    'category': 'Tools/Importation',
+    'category': 'Customer Relationship Management',
     'description': """This Module Import SugarCRM "Leads", "Opportunities", "Users", "Accounts", 
             "Contacts", "Employees", Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.""",
     'author': 'OpenERP SA',

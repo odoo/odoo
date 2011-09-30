@@ -23,7 +23,7 @@
 {
     'name': 'Point Of Sale',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Marketing',
     'description': """
 This module provides a quick and easy sale process.
 ===================================================

@@ -23,7 +23,7 @@
 {
     'name': 'Subscription and recurring operations',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Extra Tools',
     'description': """
 Create recurring documents.
 ===========================

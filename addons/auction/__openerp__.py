@@ -23,7 +23,7 @@
 {
     'name': 'Auction Management',
     'version': '1.0',
-    'category': 'General',
+    'category': 'Associations',
     'complexity': "normal",
     'description': """
 This module manages the records of artists, auction articles, buyers and sellers.
