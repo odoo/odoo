@@ -72,7 +72,7 @@ def gen_manifest():
     open('MANIFEST','w').write(file_list)
 
 setuptools.setup(
-      name             = name,
+      name             = 'openerp',
       version          = version,
       description      = description,
       long_description = long_desc,
