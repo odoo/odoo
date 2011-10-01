@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-name = 'openerp-server'
 version = '6.1-dev'
 major_version = '6.1'
 description = 'OpenERP Server'
@@ -36,7 +35,7 @@ Programming Language :: Python
 url = 'http://www.openerp.com'
 author = 'OpenERP S.A.'
 author_email = 'info@openerp.com'
-support_email = 'support@openerp.com'
 license = 'AGPL-3'
+timestamp = None
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
