@@ -280,6 +280,7 @@
                 <form string="Customer Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="currency_id" invisible="1"/>
                         <field name="amount"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
