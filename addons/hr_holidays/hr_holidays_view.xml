@@ -10,7 +10,7 @@
                     <group>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                         <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"/>
-                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
+                        <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                         <separator orientation="vertical"/>
                         <filter string="This Month" icon="terp-go-month" name="This Month" domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
@@ -21,8 +21,6 @@
                             <filter icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -314,7 +312,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="view_holiday_simple"/>
-            <field name="context">{'search_default_my_leaves': 1, 'search_default_group_type': 1}</field>
+            <field name="context">{'search_default_my_leaves': 1, 'search_default_group_type': 1, 'search_default_validated': 1}</field>
             <field name="domain">[('holiday_type','=','employee')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -437,7 +435,7 @@
             <field name="model">hr.employee</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Assign Leaves" editable="top">
+                <tree string="Assign Leaves" editable="bottom">
                     <field name="name" string="Employee"/>
                     <field name="remaining_leaves" string="Remaining Legal Leaves"/>
                 </tree>
@@ -467,7 +465,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
-                    <field name="remaining_leaves" string="Remaining Legal Leaves"/>
+                    <field name="remaining_leaves" string="Remaining Legal Leaves" readonly="1"/>
                 </field>
             </field>
         </record>
