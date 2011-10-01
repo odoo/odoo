@@ -63,10 +63,7 @@ def close_socket(sock):
 
 def abort_response(dummy_1, description, dummy_2, details):
     # TODO Replace except_{osv,orm} with these directly.
-    if description == 'AccessError':
-        raise openerp.exceptions.AccessError(details)
-    else:
-        raise openerp.exceptions.Warning(details)
+    raise openerp.osv.osv.except_osv(description, details)
 
 class Service(object):
     """ Base class for *Local* services

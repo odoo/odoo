@@ -49,6 +49,8 @@ import openerp.exceptions
     procedures to be called. Each method has its own arguments footprint.
 """
 
+RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(serv, id, db_name, demo, lang, user_password):
     cr = None
@@ -377,7 +379,7 @@ class common(netsvc.ExportService):
             return res or False
         elif method in ['about', 'timezone_get', 'get_server_environment',
                         'login_message','get_stats', 'check_connectivity',
-                        'list_http_services']:
+                        'list_http_services', 'version']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
@@ -388,6 +390,9 @@ class common(netsvc.ExportService):
 
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
+
+    def exp_version(self):
+        return RPC_VERSION_1
 
     def exp_about(self, extended=False):
         """Return information about the OpenERP Server.
