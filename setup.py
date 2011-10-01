@@ -81,27 +81,26 @@ setuptools.setup(
       packages         = setuptools.find_packages(),
       #include_package_data = True,
       install_requires = [
-       # We require the same version as caldav for lxml.
-          'lxml==2.1.5',
-          'mako',
-          'python-dateutil',
-          'psycopg2',
         # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
         # It seems there is a single difference, which is a spurious print in generate_docs.py.
         # It is probably safe to move to PyChart 1.39 (the latest one).
         # (Let setup.py choose the latest one, and we should check we can remove pychart from
-        # our tree.)
-        # http://download.gna.org/pychart/
-          'pychart',
-          'pydot',
-          'pytz',
-          'reportlab',
+        # our tree.) http://download.gna.org/pychart/
+        # TODO  'pychart',
           'caldav',
-          'pyyaml',
-          'pywebdav',
           'feedparser',
-          'simplejson >= 2.0',
-          'vatnumber', # required by base_vat module
+          'lxml',
+          'mako',
+          'psycopg2',
+          'pydot',
+          'python-dateutil',
+          'pytz',
+          'pywebdav',
+          'pyyaml',
+          'reportlab',
+          'simplejson',
+          'vatnumber', # recommended by base_vat
+          'werkzeug',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
