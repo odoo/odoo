@@ -103,6 +103,7 @@ setuptools.setup(
           'reportlab',
           'simplejson',
           'vatnumber', # recommended by base_vat
+          'vobject',
           'werkzeug',
           'zsi',
       ],
