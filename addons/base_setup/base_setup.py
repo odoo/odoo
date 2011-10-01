@@ -259,7 +259,7 @@ class specify_partner_terminology(osv.osv_memory):
                                  'Choose how to call a Customer', required=True ),
     }
     _defaults={
-               'partner' :'Partner',
+        'partner' :'Customer',
     }
 
     def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):

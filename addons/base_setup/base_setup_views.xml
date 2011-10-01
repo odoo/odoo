@@ -225,21 +225,6 @@
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
     </record>
-    <!--   register Upload Logo configuration wizard  -->
-    <record id="base_setup_company_logo_action" model="ir.actions.act_window">
-      <field name="name">Upload Your Company Logo</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">res.company</field>
-      <field name="view_id" ref="base.view_company_form"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="context">{'res_id': user.company_id.id}</field>
-    </record>
-    <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
-        <field name="action_id" ref="base_setup_company_logo_action"/>
-        <field name="category_id" ref="base.category_administration_config"/>
-        <field name="state">done</field>
-    </record>
 
   </data>
 </openerp>
