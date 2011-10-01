@@ -104,6 +104,7 @@ setuptools.setup(
           'simplejson',
           'vatnumber', # recommended by base_vat
           'werkzeug',
+          'zsi',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
