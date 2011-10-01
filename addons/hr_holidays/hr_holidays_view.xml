@@ -449,13 +449,14 @@
            <field name="view_type">form</field>
            <field name="view_mode">tree,form</field>
            <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
+           <field name="help">You can assign remaining Legal Leaves for each employee, OpenERP will automatically create and validate allocation requests.</field>
        </record>
 
        <record id="hr_holidays_leaves_assign_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="hr_holidays_leaves_assign_legal"/>
            <field name="category_id" ref="hr.category_hr_management_config"/>
-       </record>        
-       
+       </record>
+
         <!-- Hr employee inherit Legal Leaves -->
     
         <record id="view_employee_form_leave_inherit" model="ir.ui.view">
