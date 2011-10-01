@@ -23,7 +23,7 @@
 import glob, os, re, setuptools, sys
 from os.path import join, isfile
 
-execfile(join('openerp', 'release.py'))
+execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
 
 py2exe_keywords = {}
 if os.name == 'nt':
