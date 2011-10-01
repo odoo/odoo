@@ -94,7 +94,7 @@ setuptools.setup(
           'psycopg2',
           'pydot',
           'python-dateutil',
-          'python-ldap'
+          'python-ldap',
           'python-openid',
           'pytz',
           'pywebdav',
