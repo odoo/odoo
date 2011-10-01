@@ -2730,7 +2730,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
         "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
@@ -2778,7 +2778,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def _get_default_accounts(self, cr, uid, context=None):
         return [
-            {'acc_name': _('Bank Account'),'account_type':'bank'},
             {'acc_name': _('Cash'),'account_type':'cash'}
         ]
 
