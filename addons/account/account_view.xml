@@ -2388,13 +2388,13 @@
                   </xpath>
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    <field name ="code_digits" groups="base.group_extended"/>
+                    <field name ="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
-                    <field name ="seq_journal" groups="base.group_extended"/>
+                    <field name ="seq_journal" groups="account.group_account_user"/>
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
-                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended">
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="account.group_account_user">
                         <form string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>

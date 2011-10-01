@@ -26,7 +26,7 @@
                 <group colspan="8" position="inside">
                     <group colspan="4" width="600">
                         <field name="charts"/>
-                            <group colspan="4" groups="base.group_extended">
+                            <group colspan="4" groups="account.group_account_user">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
                                 <field name="company_id" colspan="4" widget="selection"/><!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
