@@ -672,32 +672,22 @@ class account_journal(osv.osv):
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
+        """ Create new no_gap entry sequence for every new Joural
         """
-        Create new entry sequence for every new Joural
-        """
-        seq_pool = self.pool.get('ir.sequence')
-        seq_typ_pool = self.pool.get('ir.sequence.type')
-
-        name = vals['name']
-        code = vals['code'].lower()
-
-        types = {
-            'name': name,
-            'code': code
-        }
-        seq_typ_pool.create(cr, uid, types)
+        # in account.journal code is actually the prefix of the sequence
+        # whereas ir.sequence code is a key to lookup global sequences.
+        prefix = vals['code'].upper()
 
         seq = {
-            'name': name,
-            'code': code,
-            'active': True,
-            'prefix': code + "/%(year)s/",
+            'name': vals['name'],
+            'implementation':'no_gap',
+            'prefix': prefix + "/%(year)s/",
             'padding': 4,
             'number_increment': 1
         }
         if 'company_id' in vals:
             seq['company_id'] = vals['company_id']
-        return seq_pool.create(cr, uid, seq)
+        return self.pool.get('ir.sequence').create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
         if not 'sequence_id' in vals or not vals['sequence_id']:
