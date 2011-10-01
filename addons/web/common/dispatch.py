@@ -13,7 +13,6 @@ import xmlrpclib
 import simplejson
 import werkzeug.datastructures
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -310,9 +309,9 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = werkzeug.urls.Href('/web/webclient/home')
+        self.root = '/web/webclient/home?debug=1'
         self.config = options
-        
+
         if self.config.backend == 'local':
             conn = openerplib.get_connector(protocol='local')
         else:
@@ -349,13 +348,10 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
-            return werkzeug.utils.redirect(
-                self.root(dict(request.args, debug='')), 301)(
-                    environ, start_response)
+            return werkzeug.utils.redirect(self.root, 301)(environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(
-                environ, start_response)
+                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
