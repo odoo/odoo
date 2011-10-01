@@ -54,7 +54,7 @@ class ir_sequence(openerp.osv.osv.osv):
     _order = 'name'
     _columns = {
         'name': openerp.osv.fields.char('Name', size=64, required=True),
-        'code': openerp.osv.fields.selection(_code_get, 'Code', size=64, required=True),
+        'code': openerp.osv.fields.selection(_code_get, 'Code', size=64),
         'implementation': openerp.osv.fields.selection( # TODO update the view
             [('standard', 'Standard'), ('no_gap', 'No gap')],
             'Implementation', required=True,
