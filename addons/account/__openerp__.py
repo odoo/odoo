@@ -119,7 +119,7 @@ module named account_voucher.
         'process/statement_process.xml',
         'process/customer_invoice_process.xml',
         'process/supplier_invoice_process.xml',
-        'sequence_view.xml',
+        'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",

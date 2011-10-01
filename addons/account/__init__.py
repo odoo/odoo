@@ -32,7 +32,7 @@ import account_analytic_line
 import wizard
 import report
 import product
-import sequence
+import ir_sequence
 import company
 import res_currency
 
