@@ -2010,23 +2010,19 @@
                         <field name="name"/>
                         <field name="sequence"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Configuration">
-                            <group col="2" colspan="4">
-                                <separator string="Connection Information" colspan="4"/>
-                                <field name="smtp_host"/>
-                                <field name="smtp_port"/>
-                                <field name="smtp_debug"/>
-                             </group>
-                             <group col="2" colspan="4">
-                                <separator string="Security and Authentication" colspan="2"/>
-                                <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
-                                <field name="smtp_user"/>
-                                <field name="smtp_pass" password="True"/>
-                                <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
-                            </group>
-                        </page>
-                    </notebook>
+                    <group col="2" colspan="4">
+                        <separator string="Connection Information" colspan="4"/>
+                        <field name="smtp_host"/>
+                        <field name="smtp_port"/>
+                        <field name="smtp_debug" groups="base.group_extended"/>
+                     </group>
+                     <group col="2" colspan="4">
+                        <separator string="Security and Authentication" colspan="2"/>
+                        <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                        <field name="smtp_user"/>
+                        <field name="smtp_pass" password="True"/>
+                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
