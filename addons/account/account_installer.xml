@@ -85,19 +85,6 @@
             <field name="type">automatic</field>
         </record>
 
-        <record id="action_bank_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Define your Bank Account</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.bank</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-        </record>
-
-        <record id="bank_account_configuration_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_bank_account_configuration_installer" />
-            <field name="category_id" ref="category_accounting_configuration" />
-        </record>
-
         <record id="action_view_financial_accounts_installer" model="ir.actions.act_window">
             <field name="name">Review your Financial Accounts</field>
             <field name="type">ir.actions.act_window</field>
