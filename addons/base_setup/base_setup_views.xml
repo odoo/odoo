@@ -156,14 +156,13 @@
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">res.users</field>
           <field name="view_type">form</field>
-          <field name="view_mode">form</field>
-          <field name="view_id" ref="base.view_users_form"/>
+          <field name="view_mode">tree,form</field>
+          <field name="view_id" eval="False"/>
       </record>
       <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
           <field name="action_id" ref="action_config_access_other_user"/>
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="sequence">1000</field>
-          <field name="state">done</field>
       </record>
 
 

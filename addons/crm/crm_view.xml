@@ -154,12 +154,12 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
-                    <separator string="Stage Definition" colspan="4"/>
-                    <field name="name" select="1"/>
-                    <field name="sequence"/>
-                    <field name="probability"/>
-                    <group colspan="4" col="2" >
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="probability"/>
                         <field name="on_change"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
