@@ -87,9 +87,11 @@ setuptools.setup(
         # (Let setup.py choose the latest one, and we should check we can remove pychart from
         # our tree.) http://download.gna.org/pychart/
         # TODO  'pychart',
+          'babel',
           'feedparser',
           'lxml',
           'mako',
+          'openid',
           'psycopg2',
           'pydot',
           'python-dateutil',
