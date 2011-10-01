@@ -11,7 +11,7 @@
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Accounting Chart</attribute>
+                    <attribute name="string">Configure Your Chart of Accounts</attribute>
                 </separator>
                 <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
@@ -64,7 +64,7 @@
         </record>
 
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Chart Configuration</field>
+            <field name="name">Install your Chart of Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>

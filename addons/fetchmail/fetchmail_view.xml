@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server">
                     <group col="6" colspan="4">
-                        <field name="name" select="1" colspan="4"/>
+                        <field name="name" select="1"/>
                         <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
                         <field name="date" select="1"/>
                     </group>
@@ -44,14 +44,12 @@
                                 <field name="password" password="True" />
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Automated Processing" colspan="2"/>
+                                <separator string="Actions to Perform on Incoming Mails" colspan="2"/>
                                 <field name="object_id"/>
-                                <field name="action_id"/>
+                                <field name="action_id" groups="base.group_extended"/>
                             </group>
-                            <separator string="Description" colspan="4"/>
-                            <field name="note" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Advanced">
+                        <page string="Advanced" groups="base.group_extended">
                             <group colspan="2" col="2">
                                 <separator string="Advanced options" colspan="2"/>
                                 <field name="priority" groups="base.group_extended"/>
@@ -62,7 +60,7 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                        <field name="state" select="1"/>
+                        <field name="state"/>
                         <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
                         <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
                         <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
