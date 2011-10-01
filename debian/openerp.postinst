@@ -1,0 +1,40 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+CONFFILE="/etc/openerp.conf"
+FILESTORE="/var/lib/openerp/filestore"
+LOGFILE="/var/log/openerp.log"
+USERNAME="openerp"
+
+case "${1}" in
+	configure)
+		if ! getent passwd | grep -q "^${USERNAME}" then
+			adduser --system --no-create-home --quiet --gecos 'OpenERP' --group ${USERNAME}
+		fi
+		# Creating log file
+		touch ${LOGFILE}
+		chown ${USERNAME}:${USERNAME} ${LOGFILE}
+		chmod 0640 ${LOGFILE}
+		# Creating local storage directory
+		mkdir -p ${FILESTORE}
+		# Setting ownership and permissions
+		chmod 0640 ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} ${CONFFILE}
+		chown ${_USERNAME}:${_USERNAME} /var/lib/openerp -R
+		;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+		;;
+
+	*)
+		echo "postinst called with unknown argument \`{$1}'" >&2
+		exit 1
+		;;
+esac
+
+#DEBHELPER#
+
+exit 0
