@@ -82,12 +82,6 @@
     </record>
 
     <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
-    <record id="ir_ui_view_sc_configuration" model="ir.ui.view_sc">
-      <field name="name">Add More Features</field>
-      <field name="resource">ir.ui.menu</field>
-      <field name="user_id" ref="base.user_root"/>
-      <field name="res_id" ref="menu_view_base_module_configuration"/>
-    </record>
 
      <!-- Import or create customers configartion view  -->
      <record id="action_import_create_installer" model="ir.actions.act_window">
