@@ -247,16 +247,16 @@ class specify_partner_terminology(osv.osv_memory):
     _name = 'base.setup.terminology'
     _inherit = 'res.config'
     _columns = {
-        'partner': fields.selection([('Customer','Customer'),
-                                  ('Client','Client'),
-                                  ('Member','Member'),
-                                  ('Patient','Patient'),
-                                  ('Partner','Partner'),
-                                  ('Donor','Donor'),
-                                  ('Guest','Guest'),
-                                  ('Tenant','Tenant')
-                                  ],
-                                 'Choose how to call a Customer', required=True ),
+        'partner': fields.selection([
+            ('Customer','Customer'),
+            ('Client','Client'),
+            ('Member','Member'),
+            ('Patient','Patient'),
+            ('Partner','Partner'),
+            ('Donor','Donor'),
+            ('Guest','Guest'),
+            ('Tenant','Tenant')
+        ], 'How do you call a Customer', required=True ),
     }
     _defaults={
         'partner' :'Customer',
