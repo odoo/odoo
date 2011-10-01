@@ -43,7 +43,7 @@ class except_osv(Exception):
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service

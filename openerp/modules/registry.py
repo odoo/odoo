@@ -131,13 +131,11 @@ class RegistryManager(object):
     def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
         """ Return a registry for a given database name."""
-        with cls.registries_lock:
-            if db_name in cls.registries:
-                registry = cls.registries[db_name]
-            else:
-                registry = cls.new(db_name, force_demo, status,
-                                   update_module, pooljobs)
-            return registry
+        try:
+            return cls.registries[db_name]
+        except KeyError:
+            return cls.new(db_name, force_demo, status,
+                           update_module, pooljobs)
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
@@ -172,10 +170,10 @@ class RegistryManager(object):
             finally:
                 cr.close()
 
-            if pooljobs:
-                registry.schedule_cron_jobs()
+        if pooljobs:
+            registry.schedule_cron_jobs()
 
-            return registry
+        return registry
 
     @classmethod
     def delete(cls, db_name):
