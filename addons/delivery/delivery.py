@@ -255,11 +255,8 @@ class define_delivery_steps(osv.osv_memory):
 
     def apply_cb(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
-
         wizard = self.browse(cr, uid, ids, context=context)[0]
-
         ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
-
         return {'type' : 'ir.actions.act_window_close'}
 
 define_delivery_steps()
