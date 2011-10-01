@@ -557,6 +557,21 @@
         </record>
 
         <!-- Task types -->
+        <record id="task_type_search" model="ir.ui.view">
+            <field name="name">project.task.type.search</field>
+            <field name="model">project.task.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Stages">
+                   <group>
+                       <filter icon="terp-check" string="Common" name="common" domain="[('project_default', '=', 1)]" help="Stages common to all projects"/>
+                       <separator orientation="vertical"/>
+                       <field name="name"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="task_type_edit" model="ir.ui.view">
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
@@ -564,7 +579,7 @@
             <field name="arch" type="xml">
                 <form string="Task Stage">
                     <group colspan="4" col="6">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="project_default"/>
                     <field name="sequence"/>
                     </group>
