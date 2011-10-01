@@ -23,33 +23,6 @@
 import glob, os, re, setuptools, sys
 from os.path import join, isfile
 
-execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
-
-py2exe_keywords = {}
-if os.name == 'nt':
-    import py2exe
-    py2exe_keywords['console'] = [
-        { "script": "openerp-server",
-          "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
-        }]
-    py2exe_keywords['options'] = {
-        "py2exe": {
-            "skip_archive": 1,
-            "optimize": 2,
-            "dist_dir": 'dist',
-            "packages": [
-                "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-                "encodings", "dateutil", "pychart", "PIL", "pyparsing",
-                "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                "HTMLParser", "select", "mako", "poplib",
-                "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid", "commands", "openerp", "simplejson", "vatnumber"
-            ],
-            "excludes" : ["Tkconstants","Tkinter","tcl"],
-        }
-    }
-
 # List all data files
 def data():
     files = []
@@ -70,6 +43,28 @@ def data():
 def gen_manifest():
     file_list="\n".join(data())
     open('MANIFEST','w').write(file_list)
+
+def py2exe_options():
+    if os.name == 'nt':
+        import py2exe
+        return {
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))], }],
+            'options' : {
+                "py2exe": {
+                    "skip_archive": 1,
+                    "optimize": 2,
+                    "dist_dir": 'dist',
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber" "vobject", "xml", "xml", "xml.dom", "xml.xpath", "yaml", ],
+                    "excludes" : ["Tkconstants","Tkinter","tcl"],
+                }
+            }
+        }
+    else:
+        return {}
+
+execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
+if timestamp:
+    version = version + "-" + timestamp
 
 setuptools.setup(
       name             = 'openerp',
@@ -111,6 +106,6 @@ setuptools.setup(
       extras_require = {
           'SSL' : ['pyopenssl'],
       },
-      **py2exe_keywords
+      **py2exe_options()
 )
 
