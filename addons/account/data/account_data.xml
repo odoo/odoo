@@ -469,66 +469,48 @@
         Account Journal Sequences
         -->
 
-        <record id="sequence_journal_type" model="ir.sequence.type">
-            <field name="name">Account Journal</field>
-            <field name="code">account.journal</field>
-        </record>
-        <record id="sequence_journal" model="ir.sequence">
-            <field name="name">Account Journal</field>
-            <field name="code">account.journal</field>
-            <field name="prefix"/>
-        </record>
         <record id="sequence_sale_journal" model="ir.sequence">
-            <field name="name">Sale Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Sale Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">SAJ/%(year)s/</field>
         </record>
         <record id="sequence_refund_sales_journal" model="ir.sequence">
-            <field name="name">Sales Credit Note Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Sales Credit Note Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">SCNJ/%(year)s/</field>
         </record>
         <record id="sequence_purchase_journal" model="ir.sequence">
-            <field name="name">Purchase Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Purchase Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">EXJ/%(year)s/</field>
         </record>
         <record id="sequence_refund_purchase_journal" model="ir.sequence">
-            <field name="name">Expenses Credit Notes Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Expenses Credit Notes Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">ECNJ/%(year)s/</field>
         </record>
         <record id="sequence_bank_journal" model="ir.sequence">
-            <field name="name">Bank Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Bank Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">BNK/%(year)s/</field>
         </record>
         <record id="sequence_check_journal" model="ir.sequence">
-            <field name="name">Checks Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Checks Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">CHK/%(year)s/</field>
         </record>
         <record id="sequence_cash_journal" model="ir.sequence">
-            <field name="name">Cash Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Cash Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">CSH/%(year)s/</field>
         </record>
         <record id="sequence_opening_journal" model="ir.sequence">
-            <field name="name">Opening Entries Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Opening Entries Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">OPEJ/%(year)s/</field>
         </record>
         <record id="sequence_miscellaneous_journal" model="ir.sequence">
-            <field name="name">Miscellaneous Journal</field>
-            <field name="code">account.journal</field>
+            <field name="name">Account Default Miscellaneous Journal</field>
             <field eval="3" name="padding"/>
             <field name="prefix">MISJ/%(year)s/</field>
         </record>
@@ -538,7 +520,7 @@
         -->
 
         <record id="sequence_reconcile" model="ir.sequence.type">
-            <field name="name">Account reconcile sequence</field>
+            <field name="name">Account Reconcile</field>
             <field name="code">account.reconcile</field>
         </record>
         <record id="sequence_reconcile_seq" model="ir.sequence">
@@ -550,7 +532,7 @@
         </record>
 
         <record id="sequence_statement_type" model="ir.sequence.type">
-            <field name="name">Bank Statement</field>
+            <field name="name">Account Bank Statement</field>
             <field name="code">account.bank.statement</field>
         </record>
         <record id="sequence_statement" model="ir.sequence">
@@ -562,7 +544,7 @@
         </record>
 
         <record id="cash_sequence_statement_type" model="ir.sequence.type">
-            <field name="name">Cash Statement</field>
+            <field name="name">Account Cash Statement</field>
             <field name="code">account.cash.statement</field>
         </record>
         <record id="cash_sequence_statement" model="ir.sequence">
@@ -572,5 +554,30 @@
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
         </record>
+
+        <!-- 
+        Sequence for analytic account 
+        -->
+        <record id="seq_type_analytic_account" model="ir.sequence.type">
+            <field name="name">Analytic account</field>
+            <field name="code">account.analytic.account</field>
+        </record>
+        <record id="seq_analytic_account" model="ir.sequence">
+            <field name="name">Analytic account sequence</field>
+            <field name="code">account.analytic.account</field>
+            <field eval="3" name="padding"/>
+            <field eval="2708" name="number_next"/>
+        </record>
+
+        <!--
+        Invoice requests (deprecated)
+        -->
+        <record id="req_link_invoice" model="res.request.link">
+            <field name="name">Invoice</field>
+            <field name="object">account.invoice</field>
+        </record>
+
+
+
     </data>
 </openerp>
