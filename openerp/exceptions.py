@@ -33,7 +33,7 @@ class Warning(Exception):
 class AccessDenied(Exception):
     """ Login/password error. No message, no traceback. """
     def __init__(self):
-        super(AccessDenied, self).__init__('AccessDenied.')
+        super(AccessDenied, self).__init__('Access denied.')
         self.traceback = ('', '', '')
 
 class AccessError(Exception):
@@ -52,6 +52,5 @@ class DeferredException(Exception):
     def __init__(self, msg, tb):
         self.message = msg
         self.traceback = tb
-        self.args = (msg, tb)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
