@@ -32,12 +32,12 @@
 
         <!-- employee configure  action -->
         <record id="action_create_hr_employee_installer" model="ir.actions.act_window">
-            <field name="name">Create your employees</field>
+            <field name="name">Create your Employees</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_employee_form"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
 
         <record id="config_wizard_action_create_hr_employee_installer" model="ir.actions.todo">
