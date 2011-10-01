@@ -89,6 +89,7 @@ setuptools.setup(
         # TODO  'pychart',
           'babel',
           'feedparser',
+          'gdata',
           'lxml',
           'mako',
           'psycopg2',
