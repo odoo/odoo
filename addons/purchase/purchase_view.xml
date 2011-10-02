@@ -497,14 +497,14 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">On Purchase Order Line</field>
+            <field name="name">On Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">If you set the invoicing control on a purchase order as "Manual", you can track here all the purchase order lines for which you have not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
+            <field name="help">If you set the invoicing control on a purchase order as "Based on Purchase Order Lines", you can track here all the purchase order lines for which you have not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
