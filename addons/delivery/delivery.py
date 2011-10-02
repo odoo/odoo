@@ -249,7 +249,7 @@ class define_delivery_steps(osv.osv_memory):
     _name = 'delivery.define.delivery.steps.wizard'
 
     _columns = {
-        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once'),],
+        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
     }
     _defaults = {
         'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
