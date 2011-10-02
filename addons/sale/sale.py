@@ -1229,8 +1229,6 @@ class sale_config_picking_policy(osv.osv_memory):
             res.update({'order_policy': 'manual'})
         elif deli:
             res.update({'order_policy': 'picking'})
-        else:
-            return {}
         return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
