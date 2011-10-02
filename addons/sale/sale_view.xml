@@ -528,7 +528,7 @@
         </record>
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
-            <field name="name">Set up your Invoicing Method</field>
+            <field name="name">Setup your Invoicing Method</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.config.picking_policy</field>
             <field name="view_id" ref="view_config_picking_policy"/>
@@ -541,6 +541,7 @@
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="category_id" ref="base.category_sales_management_config"/>
+            <field name="type">once</field>
         </record>
 
     </data>
