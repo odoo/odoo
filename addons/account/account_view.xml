@@ -162,14 +162,18 @@
             <field name="arch" type="xml">
                 <form string="Account">
                     <group col="6" colspan="4">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="parent_id"/>
-                    <field name="type" select="1"/>
-                    <field name="user_type" select="1"/>
-                    <field name="active" groups="base.group_extended" />
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="parent_id"/>
+                        <field name="type" select="1"/>
+                        <field name="user_type" select="1"/>
+                        <field name="active" groups="base.group_extended" />
+                        <newline/>
+                        <field name="debit" invisible="context.get('config_invisible', True)"/>
+                        <field name="credit" invisible="context.get('config_invisible', True)"/>
+                        <field name="balance" invisible="context.get('config_invisible', True)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
