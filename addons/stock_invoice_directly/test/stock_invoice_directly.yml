@@ -38,36 +38,19 @@
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
 -
-  I create a record for partial picking.
--
-  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
--
-  I make picking order Done.
+  I process the delivery
 -
   !python {model: stock.partial.picking}: |
-     pick_obj = self.pool.get('stock.picking')
-     partial = self.browse(cr, uid, ref('stock_partial_picking_0'), context)
-     partial_datas = {
-            'delivery_date' : partial.date
-     }
-     for pick in pick_obj.browse(cr, uid, [ref('stock_picking_out0')]):
-        for m in pick.move_lines:
-           partial_datas['move%s'%(m.id)] = {
-                    'product_id' : m.product_id.id,
-                    'product_qty' : m.product_qty,
-                    'product_uom' : m.product_uom.id
-           }
-     self.do_partial(cr, uid, [ref('stock_partial_picking_0')], {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
-      "active_ids": [ref('stock_picking_out0')], "active_id": ref("stock_picking_out0"),
-      })
+    partial_id = self.create(cr, uid, {}, context={'active_model':'stock.picking',
+                                                   'active_ids':[ref('stock_picking_out0')]})
+    self.do_partial(cr, uid, [partial_id])
+
 -
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
 -
   !python {model: stock.invoice.onshipping}: |
-    wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.bank_journal')},
-      {'active_ids': [ref("stock_picking_out0")]})
+    wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.sales_journal')},
+      {'active_ids': [ref("stock_picking_out0")], "active_model": "stock.picking"})
     self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
       "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})

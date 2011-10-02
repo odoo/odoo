@@ -65,7 +65,9 @@ class mail_compose_message(osv.osv_memory):
 
     _columns = {
         'use_template': fields.boolean('Use Template'),
-        'template_id': fields.selection(_get_templates, 'Template'),
+        'template_id': fields.selection(_get_templates, 'Template',
+                                        size=-1 # means we want an int db column
+                                        ),
     }
 
     def on_change_template(self, cr, uid, ids, use_template, template_id, email_from=None, email_to=None, context=None):

@@ -1,8 +1,8 @@
 -
   In order to test scheduling of tasks, I create four tasks with different sequences and schedule them.
--
+- 
   I create first user.
--
+- 
   !record {model: res.users, id: res_users_user0}:
     company_id: base.main_company
     context_lang: en_US
@@ -12,9 +12,9 @@
     login: user1
     name: User 1
     password: user1
--
+- 
   I create second user.
--
+- 
   !record {model: res.users, id: res_users_user1}:
     company_id: base.main_company
     context_lang: en_US
@@ -23,10 +23,10 @@
       - base.group_user
     login: user2
     name: User 2
-    password: user2
--
+    password: user2    
+- 
   I create a Project.
--
+- 
   !record {model: project.project, id: project_project_projecta0}:
     balance: 0.0
     credit: 0.0
@@ -113,9 +113,9 @@
         state: draft
         total_hours: 5.0
     total_hours: 15.0
--
+- 
   I create first task with highest sequence.
--
+- 
   !record {model: project.task, id: project_task_taska0}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -126,9 +126,9 @@
     sequence: 14
     state: draft
     total_hours: 5.0
--
+- 
   I create second task.
--
+- 
   !record {model: project.task, id: project_task_taskb0}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -139,9 +139,9 @@
     sequence: 13
     state: draft
     total_hours: 5.0
--
+- 
   I create third task.
--
+- 
   !record {model: project.task, id: project_task_taskc0}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -154,7 +154,7 @@
     total_hours: 5.0
 -
   I create fourth task with lowest sequence.
--
+- 
   !record {model: project.task, id: project_task_taskd0}:
     delay_hours: 0.0
     effective_hours: 0.0
@@ -164,25 +164,25 @@
     remaining_hours: 5.0
     state: draft
     total_hours: 5.0
--
+- 
   Now I create a resource for first user.
--
+- 
   !record {model: resource.resource, id: resource_resource_user0}:
     name: User 1
     resource_type: user
     time_efficiency: 1.0
     user_id: res_users_user0
--
+- 
   I create a resource for second user.
--
+- 
   !record {model: resource.resource, id: resource_resource_user1}:
     name: User 2
     resource_type: user
     time_efficiency: 1.0
     user_id: res_users_user1
--
+- 
   Now I create one phase for the project.
--
+- 
   !record {model: project.phase, id: project_phase_phasea0}:
     date_start: '2011-01-06'
     duration: 2.0

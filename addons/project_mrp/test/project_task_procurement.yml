@@ -1,5 +1,5 @@
 -
-  In order to test project_mrp module with OpenERP I want to create sale orders
+  In order to test project_mrp module with OpenERP I want to create sale orders 
   with product type 'service' so when procurement runs one task is created.
 -
   I create record for a service type product.
@@ -8,16 +8,16 @@
     categ_id: product.product_category_7
     cost_method: standard
     mes_type: fixed
-    name: Partners Technical Training
+    name: Partners Training
     procure_method: make_to_order
     supply_method: produce
     type: service
     uom_id: product.uom_day
     uom_po_id: product.uom_day
     warranty: 0.0
--
+- 
   I create a sale order for product Partners Training which has type 'Service'.
--
+- 
   !record {model: sale.order, id: sale_order_so0}:
     date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
@@ -30,7 +30,7 @@
     order_line:
       - state: draft
         delay: 7.0
-        name: Partners Technical Training
+        name: Partners Training
         price_unit: 1.0
         product_id: product_product_partnerstraining0
         product_uom: product.uom_day
@@ -64,16 +64,7 @@
 -
   !python {model: project.task}: |
     order_obj = self.pool.get('sale.order')
-    order = order_obj.browse(cr, uid, ref('sale_order_so0'))
-    task_id = self.search(cr, uid, [('name','like', order.name)])
+    order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
+    task_id = self.search(cr, uid, [('name','like', order.name)]) 
     assert task_id, 'No Task is created!'
--
-  Now I am Closing the Created Task Vis Procurment .
--
-  !python {model: project.task}: |
-    order_obj = self.pool.get('sale.order')
-    order = order_obj.browse(cr, uid, ref('sale_order_so0'))
-    task_id = self.search(cr, uid, [('name','like', order.name)])
-    if task_id:
-      self.do_close(cr, uid, task_id)
-      self.do_cancel(cr, uid, task_id)
+

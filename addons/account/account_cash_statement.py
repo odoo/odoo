@@ -184,10 +184,20 @@ class account_cash_statement(osv.osv):
         res['end'] = end_l
         return res
 
+    def _get_statement(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('account.bank.statement.line').browse(cr, uid, ids, context=context):
+            result[line.statement_id.id] = True
+        return result.keys()
+
     _columns = {
-        'total_entry_encoding': fields.function(_get_sum_entry_encoding, store=True, string="Cash Transaction", help="Total cash transactions"),
+        'total_entry_encoding': fields.function(_get_sum_entry_encoding, string="Cash Transaction", help="Total cash transactions",
+            store = {
+                'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
+                'account.bank.statement.line': (_get_statement, ['amount'], 10),
+            }),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Balance', help="Closing balance based on cashBox"),
+        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Closing Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'user_id': fields.many2one('res.users', 'Responsible', required=False),
@@ -201,14 +211,6 @@ class account_cash_statement(osv.osv):
      }
 
     def create(self, cr, uid, vals, context=None):
-        sql = [
-                ('journal_id', '=', vals.get('journal_id', False)),
-                ('state', '=', 'open')
-        ]
-        open_jrnl = self.search(cr, uid, sql)
-        if open_jrnl:
-            raise osv.except_osv(_('Error'), _('You can not have two open register for the same journal!'))
-
         if self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context).type == 'cash':
             open_close = self._get_cash_open_close_box_lines(cr, uid, context)
             if vals.get('starting_details_ids', False):
@@ -292,15 +294,14 @@ class account_cash_statement(osv.osv):
             if statement.name and statement.name == '/':
                 if statement.journal_id.sequence_id:
                     c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
-                    st_number = obj_seq.get_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
+                    st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.get(cr, uid, 'account.cash.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement')
                 vals.update({
                     'name': st_number
                 })
 
             vals.update({
-                'date': time.strftime("%Y-%m-%d %H:%M:%S"),
                 'state': 'open',
             })
             self.write(cr, uid, [statement.id], vals, context=context)
@@ -310,7 +311,7 @@ class account_cash_statement(osv.osv):
         if journal_type == 'bank':
             return super(account_cash_statement, self).balance_check(cr, uid, cash_id, journal_type, context)
         if not self._equal_balance(cr, uid, cash_id, context):
-            raise osv.except_osv(_('Error !'), _('CashBox Balance is not matching with Calculated Balance !'))
+            raise osv.except_osv(_('Error !'), _('The closing balance should be the same than the computed balance !'))
         return True
 
     def statement_close(self, cr, uid, ids, journal_type='bank', context=None):

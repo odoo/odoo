@@ -664,8 +664,8 @@ class stock_picking(osv.osv):
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
-        partial_id = self.pool.get("stock.partial.picking").create(
-            cr, uid, {}, context=dict(context, active_ids=ids))
+        context = dict(context, active_ids=ids, active_model=self._name)
+        partial_id = self.pool.get("stock.partial.picking").create(cr, uid, {}, context=context)
         return {
             'name':_("Products to Process"),
             'view_mode': 'form',
@@ -677,7 +677,7 @@ class stock_picking(osv.osv):
             'nodestroy': True,
             'target': 'new',
             'domain': '[]',
-            'context': dict(context, active_ids=ids)
+            'context': context,
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -848,7 +848,11 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             todo = []
             for move in pick.move_lines:
-                if move.state == 'assigned':
+                if move.state == 'draft':
+                    self.pool.get('stock.move').action_confirm(cr, uid, [move.id],
+                        context=context)
+                    todo.append(move.id)
+                elif move.state in ('assigned','confirmed'):
                     todo.append(move.id)
             if len(todo):
                 self.pool.get('stock.move').action_done(cr, uid, todo,
@@ -1470,6 +1474,8 @@ class stock_move(osv.osv):
 
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
+        if context.get('active_model') != self._name:
+            context.update(active_ids=ids, active_model=self._name)
         partial_id = self.pool.get("stock.partial.move").create(
             cr, uid, {}, context=context)
         return {
@@ -2123,14 +2129,9 @@ class stock_move(osv.osv):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
         """
-        partial_datas=''
         picking_ids = []
         move_ids = []
-        partial_obj=self.pool.get('stock.partial.picking')
         wf_service = netsvc.LocalService("workflow")
-        partial_id=partial_obj.search(cr,uid,[])
-        if partial_id:
-            partial_datas = partial_obj.read(cr, uid, partial_id, context=context)[0]
         if context is None:
             context = {}
 
@@ -2160,9 +2161,6 @@ class stock_move(osv.osv):
                         self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
-            prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
-            if prodlot_id:
-                self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
             if move.state not in ('confirmed','done','assigned'):
                 todo.append(move.id)
 

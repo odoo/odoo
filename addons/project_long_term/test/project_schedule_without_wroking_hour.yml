@@ -1,14 +1,14 @@
 -
-  I create a project 'Develop yaml Implementation Module'.
+  Create a project 'Develop yaml Implementation Module'.
 -
   !record {model: project.project, id: project_project_developyamlproject_2}:
     name: "Develop Yaml Project Module"
     date_start: !eval time.strftime('%Y-%m-%d')
 
--
-  I create 4 Project phase.
-  First Project Phase 'Analysis Flow for Yaml'.
--
+- 
+  Create 4 Project phase.
+  First Project Phase 'Analysis Flow for Yaml'
+- 
   !record {model: project.phase, id: project_project_developyamlproject_2_phase_1}:
     date_start: !eval time.strftime('%Y-%m-%d')
     duration: 6.0
@@ -17,10 +17,10 @@
     project_id: project_project_developyamlproject_2
     responsible_id: project.res_users_analyst
     state: draft
-
--
-  I create project phase 'Develop yaml'.
--
+    
+- 
+  Create project phase 'Develop yaml'
+- 
   !record {model: project.phase, id: project_project_developyamlproject_2_phase_2}:
     duration: 6.0
     name: "Develop yaml"
@@ -29,42 +29,42 @@
     previous_phase_ids:
       - project_project_developyamlproject_2_phase_1
     state: draft
--
-  I create project phase 'Test Yaml'.
--
+- 
+  Create project phase 'Test Yaml'
+- 
   !record {model: project.phase, id: project_project_developyamlproject_2_phase_3}:
     duration: 6.0
     name: Testing Yaml
     product_uom: product.uom_day
     project_id: project_project_developyamlproject_2
     previous_phase_ids:
-      - project_project_developyamlproject_2_phase_2
+      - project_project_developyamlproject_2_phase_2    
     state: draft
 
--
-  I create project phase 'Implement Yaml'.
--
+- 
+  Create project phase 'Implement Yaml'
+- 
   !record {model: project.phase, id: project_project_developyamlproject_2_phase_4}:
     duration: 6.0
     name: Testing Yaml
     product_uom: product.uom_day
     project_id: project_project_developyamlproject_2
     previous_phase_ids:
-      - project_project_developyamlproject_2_phase_3
+      - project_project_developyamlproject_2_phase_3    
     state: draft
--
-  I compute Schedule of phases For One project .
--
+- 
+  Compute Schedule of phases For One project 
+- 
   !record {model: project.compute.phases, id: project_compute_phases_0}:
     project_id: project_project_developyamlproject_2
     target_project: one
-
--
-  I schedule project phases using Compute Phase Scheduling.
--
+    
+- 
+  Schedule project phases using Compute Phase Scheduling
+- 
   !python {model: project.project}: |
     self.schedule_phases(cr, uid, [ref("project_project_developyamlproject_2")])
-
+      
 -
   After  scheduling, Check that  phases scheduled, check that either of phase's start_date, end_date not null.
 -
@@ -72,4 +72,6 @@
      proj=self.browse(cr, uid, [ref("project_project_developyamlproject_2")])[0]
      for phase in proj.phase_ids:
         if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
-           raise AssertionError("Phases not scheduled")
+           raise AssertionError("Phases not scheduled")      
+      
+

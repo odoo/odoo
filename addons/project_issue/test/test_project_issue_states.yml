@@ -1,45 +1,36 @@
 -
-  I assign an Escalation project as "Study + Prototype".
--
-  !record {model: project.project, id: project.project_project_22}:
-    project_escalation_id: project.project_project_21
--
-  I check escalate the project assign.
--
-  !python {model: project.project}: |
-    self._check_escalation(cr, uid, [ref('project.project_project_22')], context=None)
--
-   I create an issue for "Specific Developments" project.
+   Create an issue
 -
    !record {model: project.issue, id: project_issue_stockmovedates0}:
     categ_id: project_issue.bug_categ
     name: Stock Move dates
-    task_id: project_task_training0
     project_id: project.project_project_22
     working_hours_close: 0.0
     working_hours_open: 0.0
--
-  I check if issue in 'draft' state.
+- 
+  Check if issue in 'draft' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in draft state}:
     - state == 'draft'
--
-  I open the issue.
--
+        
+- 
+  Open the issue
+- 
   !python {model: project.issue}: |
     self.case_open(cr, uid, [ref("project_issue_stockmovedates0")], {"lang":
       "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")], "tz":
       False, "active_model": "ir.ui.menu", "search_default_project_id": False, "search_default_my_bugs":
       1, "search_default_user_id": 1, "search_default_current_bugs": 1, "project_id":
       False, "active_id": ref("project_issue.menu_project_issue_track"), })
--
-  I check if issue in 'open' state.
+- 
+  Check if issue in 'open' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in open state}:
     - state == 'open'
--
-  Keep issue pending.
--
+
+- 
+  Keep issue pending
+- 
   !python {model: project.issue}: |
     self.case_pending(cr, uid, [ref("project_issue_stockmovedates0")],
       {"lang": "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")],
@@ -47,37 +38,32 @@
       False, "search_default_my_bugs": 1, "search_default_user_id": 1, "search_default_current_bugs":
       1, "project_id": False, "active_id": ref("project_issue.menu_project_issue_track"),
       })
--
-  Keep issue in 'Escalate' state.
--
-  !python {model: project.issue}: |
-    self.case_escalate(cr, uid, [ref("project_issue_stockmovedates0")],{"lang": "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")],
-      "tz": False, "active_model": "ir.ui.menu", "search_default_project_id":
-      False, "search_default_my_bugs": 1, "search_default_user_id": 1, "search_default_current_bugs":
-      1, "project_id": False, "active_id": ref("project_issue.menu_project_issue_track"),
-      })
--
-  I check if issue in 'Escalate' state.
+- 
+  Check if issue in 'pending' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in pending state}:
     - state == 'pending'
--
-  I open the issue.
--
+    
+    
+- 
+  Open the issue
+- 
   !python {model: project.issue}: |
     self.case_open(cr, uid, [ref("project_issue_stockmovedates0")], {"lang":
       "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")], "tz":
       False, "active_model": "ir.ui.menu", "search_default_project_id": False, "search_default_my_bugs":
       1, "search_default_user_id": 1, "search_default_current_bugs": 1, "project_id":
       False, "active_id": ref("project_issue.menu_project_issue_track"), })
--
-  I check if issue in 'open' state.
+- 
+  Check if issue in 'open' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in open state}:
     - state == 'open'
--
-  I cancel the issue.
--
+      
+
+- 
+  Cancel the issue
+- 
   !python {model: project.issue}: |
     self.case_cancel(cr, uid, [ref("project_issue_stockmovedates0")],
       {"lang": "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")],
@@ -85,14 +71,16 @@
       False, "search_default_my_bugs": 1, "search_default_user_id": 1, "search_default_current_bugs":
       1, "project_id": False, "active_id": ref("project_issue.menu_project_issue_track"),
       })
--
-  I check if issue in 'cancel' state.
+- 
+  Check if issue in 'cancel' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in cancel state}:
     - state == 'cancel'
--
-  Now, reset the issue.
--
+
+    
+- 
+  Reset the issue 
+- 
   !python {model: project.issue}: |
     self.case_reset(cr, uid, [ref("project_issue_stockmovedates0")],
       {"lang": "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")],
@@ -100,14 +88,16 @@
       False, "search_default_my_bugs": 1, "search_default_user_id": 1, "search_default_current_bugs":
       1, "project_id": False, "active_id": ref("project_issue.menu_project_issue_track"),
       })
--
-  I check if issue in 'draft' state.
+- 
+  Check if issue in 'draft' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in draft state}:
     - state == 'draft'
--
-  I close the issue.
--
+
+
+- 
+  Close the issue
+- 
   !python {model: project.issue}: |
     self.case_close(cr, uid, [ref("project_issue_stockmovedates0")],
       {"lang": "en_US", "active_ids": [ref("project_issue.menu_project_issue_track")],
@@ -115,8 +105,8 @@
       False, "search_default_my_bugs": 1, "search_default_user_id": 1, "search_default_current_bugs":
       1, "project_id": False, "active_id": ref("project_issue.menu_project_issue_track"),
       })
--
-  I check if issue in 'done' state.
+- 
+  Check if issue in 'done' state
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in done state}:
     - state == 'done'

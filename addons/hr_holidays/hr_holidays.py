@@ -358,12 +358,24 @@ class hr_employee(osv.osv):
             leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
         else:
             return False
-        holiday_obj.holidays_confirm(cr, uid, [leave_id])
-        holiday_obj.holidays_validate2(cr, uid, [leave_id])
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
+        wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         return True
 
    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
-        cr.execute("SELECT sum(h.number_of_days_temp) as days, h.employee_id from hr_holidays h join hr_holidays_status s on (s.id=h.holiday_status_id) where h.type='add' and h.state='validate' and s.limit=False group by h.employee_id")
+        cr.execute("""SELECT
+                sum(h.number_of_days) as days,
+                h.employee_id 
+            from
+                hr_holidays h
+                join hr_holidays_status s on (s.id=h.holiday_status_id) 
+            where
+                h.state='validate' and
+                s.limit=False and
+                h.employee_id in (%s)
+            group by h.employee_id"""% (','.join(map(str,ids)),) )
         res = cr.dictfetchall()
         remaining = {}
         for r in res:
@@ -373,9 +385,8 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-
    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
+        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.'),
     }
 
 hr_employee()

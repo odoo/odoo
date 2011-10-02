@@ -184,37 +184,32 @@
     self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
 
 -
-  I create stock.inventory.line.split record.
+  I split the PC3 inventory line to create 5 PC3 with production lot 00002-stock-test
 -
   !record {model: stock.inventory.line.split, id: stock_inventory_line_0}:
     line_ids:
       - name: '00002-stock-test'
         quantity: 5
-    line_exist_ids:
-      - name: '00003-stock-test'
-        quantity: 5
     product_id: product.product_product_pc1
     product_uom: product.product_uom_unit
     use_exist: False
     qty: 10
-
 -
-  I Split stock.inventory.line into production line.
+  I confirm the split operation
 -
-  !python {model: stock.inventory.line.split}: |
-    context = {"lang": 'en_US', "active_model": "stock.inventory.line",
-    "active_ids": [ref("stock_inventory_line_0")], "tz": False, "active_id": ref("stock_inventory_line_0")}
-    self.default_get(cr, uid, ["product_id", "product_uom", "line_exist_ids", "qty",
-     "line_ids", "use_exist"], context)
-    self.split_lot(cr, uid, [ref("stock_inventory_line_0")], context)
-
+  !python {model: stock.inventory.line}: |
+    line_ids = self.search(cr, uid, [('inventory_id','=',ref('stock_inventory_physicalinventoy0')),
+                                     ('product_id','=',ref('product.product_product_pc1'))])
+    assert line_ids, 'Inventory lines are missing'
+    self.pool.get('stock.inventory.line.split').split_lot(cr, uid, [ref("stock_inventory_line_0")],
+                                                            {'active_model': 'stock.inventory.line',
+                                                             'active_ids': [line_ids[0]]})
 -
   I confirm the Inventory for PC3.
 -
   !python {model: stock.inventory}: |
    self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
    self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
-
 -
   I cancel the Inventory for PC3.
 -
@@ -251,7 +246,7 @@
     type: out
 
 -
-  I Performing an osv_memory action split on module stock.split.into
+  I split the picking with a first batch of 20 PCs
 -
   !python {model: stock.picking }: |
     pick=self.browse(cr,uid,ref('stock_picking_0'))
@@ -285,31 +280,15 @@
       ref("stock.menu_action_picking_tree6"), })
 
 -
-  I create a record for stock.partial.move.
+  I process the partial picking with 20 PCE
 -
-  !record {model: stock.partial.move, id: stock_partial_move_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-
--
-  I done stock.partial.move record.
--
-  !python {model: stock.partial.move }: |
-    pick_obj = self.pool.get('stock.picking')
-    move_obj = self.pool.get('stock.move')
-    pick=pick_obj.browse(cr,uid,ref('stock_picking_0'))
-    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick.id)])
-    partial_datas={}
-    for move in pick.move_lines:
-        partial_datas['move%s'%(move.id)]= {
-          'quantity': 20,
-          'product_uom': move.product_uom.id,
-          'prodlot_id': move.prodlot_id and move.prodlot_id.id or False,
-          'wizard_id': ref('stock_partial_move_0'),
-        }
-    context = {"lang": 'en_US', "active_model": "stock.move", "active_ids": search_id, "tz": False, "active_id":search_id[0]}
-    self.fields_view_get(cr, uid, False,"form", context)
-    self.do_partial(cr, uid, [ref('stock_partial_move_0')], context)
-
+  !python {model: stock.picking }: |
+   pick = self.browse(cr,uid,ref('stock_picking_0'))
+   stock_partial_move = self.pool.get('stock.partial.move')
+   partial_id = stock_partial_move.create(cr, uid, {},
+           context={'active_model': 'stock.move',
+                    'active_ids': [x.id for x in pick.move_lines]})
+   stock_partial_move.do_partial(cr, uid, [partial_id])
 -
   I Performing an osv_memory action split_lot on module stock.move.split
 -
@@ -384,34 +363,14 @@
     consume_obj.do_move_consume(cr, uid, [consume_id], context)
 
 -
-  I create a record for stock partial picking.
+  I process the picking with the 80 remaining PCs
 -
-  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-
--
-  I make stock partial picking order Done.
--
-  !python {model: stock.partial.picking}: |
-     pick_obj = self.pool.get('stock.picking')
-     partial = self.browse(cr, uid, ref('stock_partial_picking_0'), context)
-     partial_datas = {
-            'delivery_date' : partial.date
-     }
-     for pick in pick_obj.browse(cr, uid, [ref('stock_picking_0')]):
-        for m in pick.move_lines:
-           partial_datas['move%s'%(m.id)] = {
-                    'product_id' : m.product_id.id,
-                    'product_qty' : 80,
-                    'product_uom' : m.product_uom.id
-           }
-     context = {"lang": "en_US", "search_default_available":
-      1, "tz": False, "active_model": "ir.ui.menu",
-      "active_ids": [ref('stock_picking_0')], "active_id": ref("stock_picking_0"),
-      }
-     self.fields_view_get(cr, uid, False,"form", context)
-     self.do_partial(cr, uid, [ref('stock_partial_picking_0')], context)
-
+  !python {model: stock.picking}: |
+     stock_partial_picking = self.pool.get('stock.partial.picking')
+     partial_id = stock_partial_picking.create(cr, uid, {},
+             context={'active_model': 'stock.picking',
+                      'active_ids': [ref('stock_picking_0')]})
+     stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   I Performing an osv_memory action create_invoice on module stock.invoice.onshipping
 -
@@ -447,35 +406,20 @@
       1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner_address",
       "active_ids": [ref("stock.menu_action_picking_tree4")], "active_id": ref("stock.menu_action_picking_tree4"),
       })
-    pick=self.browse(cr,uid,copy_id)
     self.allow_cancel(cr, uid, [copy_id], context= None)
 
 -
-  I create a record of stock.picking and I reaturn the picking
+  I process a copy of the picking and I return it
 -
   !python {model: stock.picking}: |
     copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
-    ctx = {"lang": "en_US", "active_model":
-      "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
-      "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
-      ref("stock.menu_action_picking_tree6")}
-    self.draft_force_assign(cr, uid, [copy_id], ctx)
-    self.force_assign(cr, uid, [copy_id], ctx)
-    pick=self.browse(cr,uid,copy_id)
-    partial_datas={}
-    for move in pick.move_lines:
-        partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
-          'product_qty': move.product_qty,
-        }
-    self.do_partial(cr, uid, [pick.id],partial_datas)
-    reurn_datas={}
-    context = {"lang": 'en_US', "active_model":
-      "stock.picking", "active_ids": [pick.id], "tz": False, "active_id":pick.id}
+    self.draft_force_assign(cr, uid, [copy_id])
+    self.force_assign(cr, uid, [copy_id])
+    stock_partial_picking = self.pool.get('stock.partial.picking')
+    context = {'active_model': 'stock.picking',
+               'active_ids': [copy_id],
+               'active_id': copy_id}
+    partial_id = stock_partial_picking.create(cr, uid, {}, context=context)
+    stock_partial_picking.do_partial(cr, uid, [partial_id], context)
     return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
-    for move in pick.move_lines:
-      reurn_datas= {
-          'product_id': move.product_id.id,
-          'quantity': move.product_qty,
-      }
     self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)

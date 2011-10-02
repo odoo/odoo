@@ -75,7 +75,7 @@ class product_uom(osv.osv):
     _description = 'Product Unit of Measure'
 
     def _compute_factor_inv(self, factor):
-        return factor and round(1.0 / factor, 6) or 0.0
+        return factor and (1.0 / factor) or 0.0
 
     def _factor_inv(self, cursor, user, ids, name, arg, context=None):
         res = {}
@@ -100,7 +100,7 @@ class product_uom(osv.osv):
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How many times this UoM is smaller than the reference UoM in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
-        'factor_inv': fields.function(_factor_inv, digits_compute=dp.get_precision('Product UoM'),
+        'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
             string='Ratio',
             help='How many times this UoM is bigger than the reference UoM in this category:\n'\
@@ -460,6 +460,7 @@ class product_product(osv.osv):
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
         'price_margin': lambda *a: 1.0,
+        'color': 0,
     }
 
     _name = "product.product"
@@ -486,8 +487,10 @@ class product_product(osv.osv):
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
+        'color': fields.integer('Color Index'),
+        'product_image': fields.binary('Image'),
     }
-
+    
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []

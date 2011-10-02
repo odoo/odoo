@@ -313,62 +313,71 @@
             </field>
         </record>
 
-
-
-        <record id="view_task_kanban" model="ir.ui.view">
+	
+        <!-- Project Task Kanban View  -->
+        <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban>
-                <field name="state"/>
+                <kanban default_group_by="type_id" >
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-set="color">#fff</t>
-                            <t t-if="state.raw_value == 'done'" t-set="color">#dfd</t>
-                            <t t-if="state.raw_value == 'open'" t-set="color">lightcyan</t>
-                            <t t-if="state.raw_value == 'cancel' and total_hours.raw_value gt 0" t-set="color">red</t>
-                            <div t-attf-style="background: #{color}">
-                                <table>
-                                    <tr>
-                                        <td>Title :</td>
-                                        <td><field name="name"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Progress :</td>
-                                        <td><field name="progress"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><button data-type="action" data-name="%(action_project_task_reevaluate)d">Reevaluate</button><button data-type="edit" >Edit</button></td>
-                                        <td><button data-type="object" data-name="prev_type">Previous phase</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Project name:</td>
-                                        <td colspan="2"><field name="project_id"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Phase</td>
-                                        <td colspan="2"><field name="type_id"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Remain Time :</td>
-                                        <td colspan="2"><field name="remaining_hours"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Spent Time :</td>
-                                        <td colspan="2"><field name="remaining_hours"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Remain Time :</td>
-                                        <td colspan="2"><field name="remaining_hours"/></td>
-                                    </tr>
-                                </table>
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>
+                            <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority"/>
+                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                                <field name="name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <div class="oe_kanban_right oe_kanban_small">
+                                            <field name="user_id"/>
+                                        </div>
+                                        <div class="oe_kanban_title2">
+                                            <field name="project_id"/>
+                                        </div>
+                                        <div class="oe_kanban_small">
+                                            <a target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.raw_value.toLowerCase().replace(' ','-')">
+                                                http://pad.openerp.com/<t t-esc="record.name.raw_value.toLowerCase().replace(' ','-')"/>
+                                            </a>
+                                        </div>
+                                        <div class="oe_kanban_small">
+                                            <i><field name="date_deadline"/></i>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                               
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a string="" />
+                                            <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.value" style="text-decoration: none;" >
+                                                <img src="/web/static/src/img/icons/pad-openerp.png" border="0" width="16" height="16"/>
+                                            </a>                                                
+                                            <a name="%(action_project_task_delegate)d" string="Delegate" states="pending,open,draft" type="action" icon="gtk-sort-descending" />
+                                        </div>
+                                        <div class="oe_kanban_right">
+                                            <a name="do_cancel" string="Mark Lost" states="draft,open,pending" type="object" icon="lead-stage-lost"/>
+                                            <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>        
+                                            <a name="action_close" string="Mark Won"  states="pending,open" type="object" icon="lead-stage-won"/>
+                                        </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
                             </div>
                         </t>
                     </templates>
                 </kanban>
             </field>
-        </record>
+         </record>
 
         <record id="view_task_tree2" model="ir.ui.view">
             <field name="name">project.task.tree</field>
@@ -502,6 +511,21 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
+        
+        <record id="action_view_task_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_task_tree2"/>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>
+        
+        <record id="action_view_task_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_task_form2"/>
+            <field name="act_window_id" ref="action_view_task"/>
+        </record>        
+ 
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
@@ -533,6 +557,21 @@
         </record>
 
         <!-- Task types -->
+        <record id="task_type_search" model="ir.ui.view">
+            <field name="name">project.task.type.search</field>
+            <field name="model">project.task.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Stages">
+                   <group>
+                       <filter icon="terp-check" string="Common" name="common" domain="[('project_default', '=', 1)]" help="Stages common to all projects"/>
+                       <separator orientation="vertical"/>
+                       <field name="name"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="task_type_edit" model="ir.ui.view">
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
@@ -540,7 +579,7 @@
             <field name="arch" type="xml">
                 <form string="Task Stage">
                     <group colspan="4" col="6">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="project_default"/>
                     <field name="sequence"/>
                     </group>

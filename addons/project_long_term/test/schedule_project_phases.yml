@@ -1,5 +1,5 @@
 -
-  I create a project 'World Bank's Project'.
+  Create a project 'World Bank's Project'
 -
   !record {model: project.project, id: project_project_worldbanksproject0}:
     name: "World Bank's Project"
@@ -13,7 +13,7 @@
       - project.res_users_tester
 
 -
-  I create a project phase 'Defining Client's Basic Idea of Project'.
+  Create a project phase 'Defining Client's Basic Idea of Project'
 -
   !record {model: project.phase, id: project_phase_definingclientsbasicideaofproject0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -23,7 +23,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I create project phase 'Establishing Project Feasibility'.
+  Create project phase 'Establishing Project Feasibility'
 -
   !record {model: project.phase, id: project_phase_establishingprojectfeasibility0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -38,15 +38,7 @@
   !record {model: project.resource.allocation, id: res_phase1}:
     resource_id: project_long_term.resource_project_manager
     phase_id: project_phase_definingclientsbasicideaofproject0
--
-  call get_name function.
--
-  !python {model: project.resource.allocation}: |
-    arg={}
-    field_name = {
-                 'phase_id': ref('project_phase_definingclientsbasicideaofproject0')
-                 }
-    self.get_name(cr, uid, [ref('res_phase1')], field_name, arg, context=None)
+
 -
  Resource2
 -
@@ -62,7 +54,7 @@
     phase_id: project_phase_definingclientsbasicideaofproject0
 
 -
-  I create the phase task 'Develop GUI for Server Configuration'.
+  Create the phase task 'Develop GUI for Server Configuration'
 -
   !record {model: project.task, id: project_task_t0}:
     name: Develop GUI for Server Configuration
@@ -72,7 +64,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I create the phase task 'Develop GUI for Modules Configuration'.
+  Create the phase task 'Develop GUI for Modules Configuration'
 -
   !record {model: project.task, id: project_task_t1}:
     name: Develop GUI for Modules Configuration
@@ -83,7 +75,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I create project phase 'Preparation of Engineering Designs'.
+  Create project phase 'Preparation of Engineering Designs'
 -
   !record {model: project.phase, id: project_phase_preparationofengineeringdesigns0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -107,7 +99,7 @@
     phase_id: project_phase_preparationofengineeringdesigns0
 
 -
-  I create the phase task 'Develop GUI for Client Configuration'.
+  Create the phase task 'Develop GUI for Client Configuration'
 -
   !record {model: project.task, id: project_task_t2}:
     name: Develop GUI for Server Configuration
@@ -118,7 +110,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I create the phase task 'Develop GUI for Client Module Configuration'.
+  Create the phase task 'Develop GUI for Client Module Configuration'
 -
   !record {model: project.task, id: project_task_t3}:
     name: Develop GUI for Modules Configuration
@@ -130,7 +122,7 @@
 
 
 -
-  I create project phase 'Procurement of Works and Goods'.
+  Create project phase 'Procurement of Works and Goods'
 -
   !record {model: project.phase, id: project_phase_procurementofworksandgoods0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -140,7 +132,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I create project phase 'Project Construction'.
+  Create project phase 'Project Construction'
 -
   !record {model: project.phase, id: project_phase_projectconstruction0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -151,7 +143,7 @@
 
 
 -
-  I create project phase 'Project Completion'.
+  Create project phase 'Project Completion'
 -
   !record {model: project.phase, id: project_phase_projectcompletion0}:
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -161,7 +153,7 @@
     project_id: project_project_worldbanksproject0
 
 -
-  I set previous phase for phase 'Establishing Project Feasibility'.
+  Set previous phase for phase 'Establishing Project Feasibility'
 -
   !record {model: project.phase, id: project_phase_establishingprojectfeasibility0}:
     previous_phase_ids:
@@ -169,21 +161,21 @@
 
 
 -
-  I set previous phase for phase 'Preparation of Engineering Designs'.
+  Set previous phase for phase 'Preparation of Engineering Designs'
 -
   !record {model: project.phase, id: project_phase_preparationofengineeringdesigns0}:
     previous_phase_ids:
       - project_phase_establishingprojectfeasibility0
 
 -
-  I set previous phase for phase 'Procurement of Works and Goods'.
+  Set previous phase for phase 'Procurement of Works and Goods'
 -
   !record {model: project.phase, id: project_phase_procurementofworksandgoods0}:
     previous_phase_ids:
       - project_phase_preparationofengineeringdesigns0
 
 -
-  I set previous phase for phase 'Project Construction'.
+  Set previous phase for phase 'Project Construction'
 -
   !record {model: project.phase, id: project_phase_projectconstruction0}:
     previous_phase_ids:
@@ -191,7 +183,7 @@
 
 
 -
-  I set previous phase for phase 'Project Completion'.
+  Set previous phase for phase 'Project Completion'
 -
   !record {model: project.phase, id: project_phase_projectcompletion0}:
     previous_phase_ids:
@@ -199,7 +191,7 @@
 
 
 -
-  I get the project to schedule phases.
+  Get the project to schedule phases
 -
   !record {model: project.compute.phases, id: project_compute_phases_0}:
     project_id: project_project_worldbanksproject0
@@ -207,16 +199,18 @@
 
 
 -
-  I schedule project phases.
+  Schedule project phases
 -
   !python {model: project.project}: |
     self.schedule_phases(cr, uid, ref("project_project_worldbanksproject0"))
 
 -
-  I check if phases scheduled, check that either of phase's start_date, end_date and user_id is not null.
+  Check if phases scheduled, check that either of phase's start_date, end_date and user_id is not null
 -
   !python {model: project.project}: |
      prj=self.browse(cr, uid, [ref("project_project_worldbanksproject0")])[0]
      for phase in prj.phase_ids:
         if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
      	   raise AssertionError("Tasks not scheduled")
+
+

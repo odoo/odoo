@@ -1,6 +1,6 @@
--
-  I create project 'Develop a thunderbird-openerp synchronization plugin'.
--
+- 
+  Create project 'Develop a thunderbird-openerp synchronization plugin'
+- 
   !record {model: project.project, id: project_project_project1}:
     name: Develop a thunderbird-openerp synchronization plugin
     members:
@@ -11,10 +11,10 @@
       - project.res_users_tester
       - project.res_users_analyst
       - project.res_users_finacial_manager
-
--
-  I create phase 'Develop GUI' in thunderbird.
--
+        
+- 
+  Create phase 'Develop GUI' in thunderbird
+- 
   !record {model: project.phase, id: project_phase_phase1}:
     date_start: !eval time.strftime('%Y-%m-%d')
     duration: 200.0
@@ -29,11 +29,11 @@
         useability: 30.0
       - resource_id: project_long_term.resource_designer
         useability: 30.0
-
-
--
-  I create the phase task 'Develop GUI for Server Configuration'.
--
+    
+    
+- 
+  Create the phase task 'Develop GUI for Server Configuration'
+- 
   !record {model: project.task, id: project_task_t10}:
     name: Develop GUI for Server Configuration
     planned_hours: 20.0
@@ -42,10 +42,10 @@
     phase_id: project_phase_phase1
     project_id: project_project_project1
     user_id: project.res_users_developer
-
--
-  I create the phase task 'Develop GUI for Modules Configuration'.
--
+    
+- 
+  Create the phase task 'Develop GUI for Modules Configuration'
+- 
   !record {model: project.task, id: project_task_t11}:
     name: Develop GUI for Modules Configuration
     planned_hours: 25.0
@@ -54,9 +54,9 @@
     phase_id: project_phase_phase1
     project_id: project_project_project1
     user_id: project.res_users_developer
--
-  I create the phase task 'Develop GUI for OpenERP Synchronisation'.
--
+- 
+  Create the phase task 'Develop GUI for OpenERP Synchronisation'
+- 
   !record {model: project.task, id: project_task_t12}:
     name: Develop GUI for OpenERP Synchronisation
     planned_hours: 30.0
@@ -65,9 +65,9 @@
     phase_id: project_phase_phase1
     project_id: project_project_project1
     user_id: project.res_users_developer
--
-  I create the phase task 'Design required GUI/Menus'.
--
+- 
+  Create the phase task 'Design required GUI/Menus'
+- 
   !record {model: project.task, id: project_task_13}:
     name: Design required GUI/Menus
     planned_hours: 25.0
@@ -76,16 +76,16 @@
     phase_id: project_phase_phase1
     project_id: project_project_project1
     user_id: project.res_users_designer
-
-
--
-  I schedule tasks.
--
+    
+    
+- 
+  Schedule tasks
+- 
   !python {model: project.project}: |
         self.schedule_tasks(cr, uid, ref("project_project_project1"))
 
 -
-  I check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null.
+  Check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null
 -
   !python {model: project.project}: |
      prj = self.browse(cr, uid, [ref("project_project_project1")])[0]

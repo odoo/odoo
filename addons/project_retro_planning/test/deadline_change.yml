@@ -1,13 +1,14 @@
--
-  I create project 'Retro Planning'.
--
+- 
+  Create project 'Retro Planning'
+- 
   !record {model: project.project, id: project_project_retroplanning0}:
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d')
     name: Retro Planning
--
-  I create task 'Plan all projects'.
--
+    
+- 
+  Create task 'Plan all projects'
+- 
   !record {model: project.task, id: project_task_planallprojects0}:
     date_deadline: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month,6)"
     date_end: !eval "'%s-%s-%s %s:%s:%s' %(datetime.now().year,datetime.now().month,3,datetime.now().hour,datetime.now().minute,datetime.now().second)"
@@ -17,14 +18,3 @@
     project_id: project_project_retroplanning0
     remaining_hours: 24.0
     state: draft
--
-  Execute this project for reteo planning.
--
-  !python {model: project.project}: |
-    import time
-    vals = {
-             'company_id': ref('base.main_company'),
-             'date': time.strftime("%Y-%m-%d"),
-             'name': 'Retro Planning',
-           }
-    self.write(cr, uid, [ref('project_project_retroplanning0')], vals)
