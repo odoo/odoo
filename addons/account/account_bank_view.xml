@@ -13,7 +13,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <group name="bank" position="after">
-                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}" groups="account.group_account_user">
+                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}" groups="base.group_extended">
                     <separator string="Accounting Information" colspan="2"/>
                     <field name="journal_id"/>
                 </group>
