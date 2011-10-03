@@ -281,12 +281,13 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         var self = this,
             controller = this.views[this.active_view].controller;
         if (domains || contexts) {
-            //if ((!domains || !domains.length) && (!contexts || !contexts.length) && (!groupbys || !groupbys.length) { }
             this.rpc('/web/session/eval_domain_and_context', {
-                domains: [this.dataset.get_domain()].concat(domains || []),
-                contexts: [this.dataset.get_context()].concat(contexts || []),
+                domains: [this.action.domain || []].concat(domains || []),
+                contexts: [this.action.context || {}].concat(contexts || []),
                 group_by_seq: groupbys || []
             }, function (results) {
+                self.dataset.context = results.context;
+                self.dataset.domain = results.domain;
                 controller.do_search(results.domain, results.context, results.group_by);
                 self.last_search = [results.domain, results.context, results.group_by];
             });

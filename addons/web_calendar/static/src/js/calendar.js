@@ -15,8 +15,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.model = dataset.model;
         this.fields_view = {};
         this.view_id = view_id;
-        this.domain = this.dataset.domain || [];
-        this.context = this.dataset.context || {};
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
@@ -296,12 +294,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.clearAll();
         $.when(this.has_been_loaded).then(function() {
             // TODO: handle non-empty results.group_by with read_group
-            self.context = context;
-            self.domain = domain;
             self.dataset.read_slice(_.keys(self.fields), {
                 offset: 0,
-                context: context,
-                domain: domain,
                 limit: self.limit
             }, function(events) {
                 self.dataset_events = events;

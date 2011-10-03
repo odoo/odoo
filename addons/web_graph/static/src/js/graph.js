@@ -369,10 +369,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         } else {
             this.abscissa = this.first_field;
         }
-        this.dataset.read_slice(this.list_fields(), {
-            context: context,
-            domain: domain
-        }, $.proxy(this, 'schedule_chart'));
+        this.dataset.read_slice(this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
     }
 });
 };
