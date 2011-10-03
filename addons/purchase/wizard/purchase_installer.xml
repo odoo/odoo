@@ -40,21 +40,35 @@
         </record>
 
         <record id="view_purchase_config" model="ir.ui.view">
-            <field name="name">purchase.view_purchase_config</field>
-            <field name="type">form</field>
+            <field name="name">Invoicing Control on Purchases</field>
             <field name="model">purchase.config.wizard</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Purchase Config">
-                    <label string="Set Your Default Invoicing Control Method" />
-                    <field name="default_method" nolabel="1"/>
-
-                    <group colspan="4">
-                        <button special="cancel" icon="gtk-cancel" string="Cancel" />
-                        <button name="validate_cb" string="Validate" icon="gtk-apply" type="object" />
-                    </group>
+              <data>
+                <form position="attributes">
+                  <attribute name="string">Invoicing Control on Purchases</attribute>
                 </form>
+
+                <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                    <attribute name="string">Invoicing Control on Purchases</attribute>
+                </xpath>
+                <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">This tool will help you to select the method you want to use to control supplier invoices.</attribute>
+                </xpath>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="string"/>
+                    <attribute name="rowspan">12</attribute>
+                </xpath>
+                <group string="res_config_contents" position="replace">
+                    <group colspan="4" col="4">
+                       <field name="default_method"/>
+                    </group>
+                 </group>
+              </data>
             </field>
         </record>
+
 
         <record id="action_purchase_config" model="ir.actions.act_window">
             <field name="name">Set the Default Invoicing Control Method</field>
@@ -62,10 +76,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+            <field name="view_id" ref="view_purchase_config"/>
         </record>
 
         <record id="todo_purchase_config" model="ir.actions.todo">
             <field name="action_id" ref="action_purchase_config" />
+            <field name="category_id" ref="category_purchase_config" />
+            <field name="type">once</field>
         </record>
     </data>
 </openerp>

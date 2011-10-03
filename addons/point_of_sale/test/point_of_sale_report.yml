@@ -35,6 +35,11 @@
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
 
 -
+ Create a record for the root user in pos.payment.report.user (used by the next python block).
+-
+  !record {model: pos.payment.report.user, id: pos_payment_report_user_1}:
+    user_id: []
+-
  Print the POS Payment Report through the wizard
 -
   !python {model: ir.ui.menu}: |
