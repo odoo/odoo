@@ -1,5 +1,4 @@
 (function() {
-  var Pos, Store, db;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
@@ -13,12 +12,12 @@
     }
     return -1;
   };
-  db = openerp.init();
+  var db = openerp.init();
   /*
   Local store access. Read once from localStorage upon construction and persist on every change.
   There should only be one store active at any given time to ensure data consistency.
   */
-  Store = (function() {
+  var Store = (function() {
     function Store() {
       var store;
       store = localStorage['pos'];
@@ -36,7 +35,7 @@
   /*
   Gets all the necessary data from the OpenERP web client (session, shop data etc.)
   */
-  Pos = (function() {
+  var Pos = (function() {
     function Pos() {
       this.build_tree = __bind(this.build_tree, this);      this.session.session_login('web-trunk-pos', 'admin', 'admin', __bind(function() {
         return $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']), this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]), this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']), this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type'])).then(this.build_tree);
