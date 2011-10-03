@@ -912,14 +912,17 @@ class BaseModel(object):
             f = self._columns[store_field]
             if hasattr(f, 'digits_change'):
                 f.digits_change(cr)
+            def not_this_field(stored_func):
+                x, y, z, e, f, l = stored_func
+                return x != self._name or y != store_field
+            self.pool._store_function[self._name] = filter(not_this_field, self.pool._store_function.get(self._name, []))
             if not isinstance(f, fields.function):
                 continue
             if not f.store:
                 continue
-            if self._columns[store_field].store is True:
+            sm = f.store
+            if sm is True:
                 sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
-            else:
-                sm = self._columns[store_field].store
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -930,14 +933,8 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                ok = True
-                for x, y, z, e, f, l in self.pool._store_function[object]:
-                    if (x==self._name) and (y==store_field) and (e==fields2):
-                        if f == order:
-                            ok = False
-                if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
