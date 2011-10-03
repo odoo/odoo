@@ -54,9 +54,11 @@ class test_xmlrpc(unittest2.TestCase):
 
     def test_xmlrpc_61_ir_model_search(self):
         """ Try a search on the object service. """
-        ids = common.model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [])
+
+        proxy = xmlrpclib.ServerProxy(common.model_uri_61 + 'model/' + DB + '/ir.model')
+        ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [])
         assert ids
-        ids = common.model_proxy_61.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'ir.model', 'search', [], {})
+        ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [], {})
         assert ids
 
 if __name__ == '__main__':
