@@ -340,6 +340,7 @@ class YamlInterpreter(object):
         return record_dict
 
     def process_ref(self, node, column=None):
+        assert node.search or node.id, '!ref node should have a `search` attribute or `id` attribute'
         if node.search:
             if node.model:
                 model_name = node.model
@@ -377,7 +378,10 @@ class YamlInterpreter(object):
             if column._type in ("many2many", "one2many"):
                 value = [(6, 0, elements)]
             else: # many2one
-                value = self._get_first_result(elements)
+                if isinstance(elements, (list,tuple)):
+                    value = self._get_first_result(elements)
+                else:
+                    value = elements
         elif column._type == "many2one":
             value = self.get_id(expression)
         elif column._type == "one2many":
