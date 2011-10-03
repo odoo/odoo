@@ -1,0 +1,27 @@
+{
+    "version": 1,
+    "formatters": {
+        "simple": {
+            "format": "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+        }
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        }
+    },
+    "loggers": {
+        "web": {
+        },
+        "web.common.openerplib": {
+            "level": "INFO"
+        }
+    },
+    "root": {
+        "level": "DEBUG",
+        "handlers": ["console"]
+    }
+}

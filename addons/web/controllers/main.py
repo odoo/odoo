@@ -68,29 +68,6 @@ class Xml2Json:
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-def manifest_preload():
-    modules = [k for k,v in openerpweb.addons_manifest.items() if v.get('web_preload')]
-    return modules
-
-def manifest_addons(addons):
-    if addons==None:
-        addons = manifest_preload()
-    else:
-        addons = addons.split(',')
-    return addons
-
-def manifest_glob(addons, key):
-    addons = manifest_addons(addons)
-    files = []
-    for addon in addons:
-        manifest = openerpweb.addons_manifest.get(addon, {})
-        addons_path = manifest['addons_path']
-        globlist = manifest.get(key, [])
-        for pattern in globlist:
-            for path in glob.glob(os.path.join(addons_path, addon, pattern)):
-                files.append(path[len(addons_path):])
-    return files
-
 # TODO change into concat_file(addons,key) taking care of addons_path
 def concat_files(addons_path, file_list):
     """ Concatenate file content
@@ -131,24 +108,45 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
+    def server_wide_modules(self, req):
+        addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
+        return addons
+
+    def manifest_glob(self, req, addons, key):
+        if addons==None:
+            addons = self.server_wide_modules(req)
+        else:
+            addons = addons.split(',')
+        files = []
+        for addon in addons:
+            manifest = openerpweb.addons_manifest.get(addon, None)
+            if not manifest:
+                continue
+            addons_path = manifest['addons_path']
+            globlist = manifest.get(key, [])
+            for pattern in globlist:
+                for path in glob.glob(os.path.join(addons_path, addon, pattern)):
+                    files.append(path[len(addons_path):])
+        return files
+
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
-        return manifest_glob(mods, 'css')
+        return self.manifest_glob(req, mods, 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods=None):
-        return manifest_glob(mods, 'js')
+        return self.manifest_glob(req, mods, 'js')
 
     @openerpweb.httprequest
     def css(self, req, mods=None):
-        files = manifest_glob(mods, 'css')
+        files = self.manifest_glob(req, mods, 'css')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
-        files = manifest_glob(mods, 'js')
+        files = self.manifest_glob(req, mods, 'js')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
@@ -158,19 +156,19 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/web/webclient/js']
         if req.debug:
-            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(None, 'js')]
+            jslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/webclient/css']
         if req.debug:
-            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(None, 'css')]
+            csslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
 
         r = home_template % {
             'javascript': js,
             'css': css,
-            'modules': simplejson.dumps(manifest_preload()),
+            'modules': simplejson.dumps(self.server_wide_modules(req)),
         }
         return r
 
@@ -364,7 +362,7 @@ class Session(openerpweb.Controller):
         mods = []
         for name, manifest in openerpweb.addons_manifest.items():
             # TODO replace by ir.module.module installed web
-            if not manifest.get('web_preload') and manifest.get('active', True):
+            if name not in req.config.server_wide_modules and manifest.get('active', True):
                 mods.append(name)
         return mods
 
@@ -493,6 +491,9 @@ def clean_action(req, action):
 
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
+
+    if 'type' not in action:
+       action['type'] = 'ir.actions.act_window_close'
 
     if action['type'] == 'ir.actions.act_window':
         return fix_view_modes(action)

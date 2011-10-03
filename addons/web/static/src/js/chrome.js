@@ -1,7 +1,6 @@
 /*---------------------------------------------------------
  * OpenERP Web chrome
  *---------------------------------------------------------*/
-
 openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
@@ -129,6 +128,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         // Destroy widget
         this.close();
         this.$dialog.dialog('destroy');
+        this._super();
     }
 });
 
@@ -253,7 +253,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                 .removeClass("database_block")
             .end()
             .empty();
-
+        this._super();
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -299,9 +299,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
             var admin = result[1][0];
             setTimeout(function () {
-                self.stop();
                 self.widget_parent.do_login(
                         info.db, admin.login, admin.password);
+                self.stop();
                 $.unblockUI();
             });
         });
@@ -463,6 +463,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
 openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     remember_creditentials: true,
+    
+    template: "Login",
+    identifier_prefix: 'oe-app-login-',
     /**
      * @constructs openerp.web.Login
      * @extends openerp.web.Widget
@@ -471,8 +474,8 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      * @param element_id
      */
 
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+    init: function(parent) {
+        this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
@@ -487,17 +490,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     },
     start: function() {
         var self = this;
-        this.rpc("/web/database/get_list", {}, function(result) {
-            self.db_list = result.db_list;
-            self.display();
-        }, function() {
-            self.display();
-        });
-    },
-    display: function() {
-        var self = this;
-
-        this.$element.html(QWeb.render("Login", this));
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
 
@@ -506,6 +498,17 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         });
 
         this.$element.find("form").submit(this.on_submit);
+
+        this.rpc("/web/database/get_list", {}, function(result) {
+            var tpl = openerp.web.qweb.render('Login_dblist', {db_list: result.db_list, selected_db: self.selected_db});
+            self.$element.find("input[name=db]").replaceWith(tpl)
+        }, 
+        function(error, event) {
+            if (error.data.fault_code === 'AccessDenied') {
+                event.preventDefault();
+            }
+        });
+
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
@@ -933,7 +936,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         openerp.web.Widget.prototype.notification = new openerp.web.Notification(this, "oe_notification");
 
         this.header = new openerp.web.Header(this);
-        this.login = new openerp.web.Login(this, "oe_login");
+        this.login = new openerp.web.Login(this);
         this.header.on_logout.add(this.login.on_logout);
         this.header.on_action.add(this.on_menu_action);
 
@@ -953,7 +956,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     start: function() {
         this.header.appendTo($("#oe_header"));
         this.session.start();
-        this.login.start();
+        this.login.appendTo($('#oe_login'));
         this.menu.start();
     },
     on_logged: function() {

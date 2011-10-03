@@ -13,7 +13,6 @@ import xmlrpclib
 import simplejson
 import werkzeug.datastructures
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -98,7 +97,8 @@ class WebRequest(object):
         self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession(self.config))
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession())
+        self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
@@ -309,8 +309,15 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = werkzeug.urls.Href('/web/webclient/home')
+        self.root = '/web/webclient/home?debug=1'
         self.config = options
+
+        if self.config.backend == 'local':
+            conn = openerplib.get_connector(protocol='local')
+        else:
+            conn = openerplib.get_connector(hostname=self.config.server_host,
+                   port=self.config.server_port)
+        self.config.connector = conn
 
         self.session_cookie = 'sessionid'
         self.addons = {}
@@ -341,13 +348,10 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
-            return werkzeug.utils.redirect(
-                self.root(dict(request.args, debug='')), 301)(
-                    environ, start_response)
+            return werkzeug.utils.redirect(self.root, 301)(environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(
-                environ, start_response)
+                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
