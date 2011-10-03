@@ -1,12 +1,13 @@
+graft debian
+graft doc
+graft install
+graft openerp
+graft tests
+graft win32
 include README
 include LICENSE
 include MANIFEST.in
-include setup.nsi
-include setup.cfg
-include setup_rpm.sh
-recursive-include win32 *.py *.bat
-recursive-include openerp *css *csv *html *png *po *pot *rml *rng *sql *sxw *xml *xsl *yml
-graft install
-graft debian
-graft doc
+include gunicorn.conf.py
+include openerp-server
+include setup*
 global-exclude *pyc *~    # Exclude possible garbage from previous graft.
