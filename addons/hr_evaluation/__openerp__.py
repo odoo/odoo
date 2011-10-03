@@ -39,7 +39,7 @@ level of employee hierarchy fills what and final review and evaluation
 is done by the manager.Every evaluation filled by the employees can be viewed
 in the form of pdf file. Implements a dashboard for My Current Evaluations
          """,
-    "demo": ["hr_evaluation_demo.xml", ],
+    "demo": [],
     "data": [
         "security/ir.model.access.csv",
         "security/hr_evaluation_security.xml",
