@@ -21,6 +21,7 @@
 ##############################################################################
 
 import openerp.modules
+import logging
 
 def is_initialized(cr):
     """ Check if a database has been initialized for the ORM.
@@ -40,6 +41,10 @@ def initialize(cr):
 
     """
     f = openerp.modules.get_module_resource('base', 'base.sql')
+    if not f:
+        m = "File not found: 'base.sql' (provided by module 'base')."
+        logging.getLogger('init').critical(m)
+        raise IOError(m)
     base_sql_file = openerp.tools.misc.file_open(f)
     try:
         cr.execute(base_sql_file.read())
@@ -70,13 +75,14 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, state, certificate, web, license, complexity) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id, state, info['certificate'],
             info['web'],
-            info['license']))
+            info['license'],
+            info['complexity']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
@@ -117,5 +123,15 @@ def create_categories(cr, categories):
         p_id = c_id
         categories = categories[1:]
     return p_id
+
+def has_unaccent(cr):
+    """ Test if the database has an unaccent function.
+
+    The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
+    module but any similar function will be picked by OpenERP.
+
+    """
+    cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
+    return len(cr.fetchall()) > 0
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

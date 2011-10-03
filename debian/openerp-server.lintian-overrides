@@ -1,7 +1,0 @@
-# Add-on directories needs data directories, and sometimes they are
-# (intentionally) empty, hence overriting the lintian warning.
-openerp-server: package-contains-empty-directory
-# Add-on directoires contain images sometimes, but it's nothing that is
-# worthwile to be splittet out to /usr/share as it's all manual work for each
-# release.
-openerp-server: image-file-in-usr-lib

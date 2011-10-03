@@ -1,18 +1,12 @@
-include rpminstall_sh.txt # TODO do we need this file ?
 include README
 include LICENSE
 include MANIFEST.in
 include setup.nsi
 include setup.cfg
-#include openerp/server.cert
-#include openerp/server.pkey
-#include openerp/gpl.txt
-include man/openerp-server.1
-include man/openerp_serverrc.5
-recursive-include pixmaps *bmp *ico *png
+include setup_rpm.sh
 recursive-include win32 *.py *.bat
-recursive-include openerp *css *csv *html *png *po *pot
-recursive-include openerp *rml *rng *sql *sxw *xml *xsl *yml
+recursive-include openerp *css *csv *html *png *po *pot *rml *rng *sql *sxw *xml *xsl *yml
+graft install
 graft debian
 graft doc
 global-exclude *pyc *~    # Exclude possible garbage from previous graft.

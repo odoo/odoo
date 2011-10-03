@@ -28,8 +28,25 @@ parsing, configuration file loading and saving, ...) in this module
 and provide real Python variables, e.g. addons_paths is really a list
 of paths.
 
+To initialize properly this module, openerp.tools.config.parse_config()
+must be used.
+
 """
 
 import deprecation
+
+# Maximum number of threads processing concurrently cron jobs.
+max_cron_threads = 4 # Actually the default value here is meaningless,
+                     # look at tools.config for the default value.
+
+# Paths to search for OpenERP addons.
+addons_paths = []
+
+# List of server-wide modules to load. Those modules are supposed to provide
+# features not necessarily tied to a particular database. This is in contrast
+# to modules that are always bound to a specific database when they are
+# installed (i.e. the majority of OpenERP addons). This is set with the --load
+# command-line option.
+server_wide_modules = []
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

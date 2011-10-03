@@ -113,6 +113,11 @@
 
     <rng:define name="kanban">
         <rng:element name="kanban">
+            <rng:optional>
+                <!-- group-by field to apply in the kanban view when no other
+                     grouping is selected in the search view -->
+                <rng:attribute name="default_group_by" />
+            </rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
@@ -207,6 +212,7 @@
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="width"/></rng:optional>
             <rng:optional><rng:attribute name="wrap"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="notebook"/>
@@ -470,6 +476,8 @@
             <rng:optional><rng:attribute name="selection"/></rng:optional>
             <rng:optional><rng:attribute name="default_focus"/></rng:optional>
             <rng:optional><rng:attribute name="filters"/></rng:optional>
+            <rng:optional><rng:attribute name="statusbar_visible"/></rng:optional>
+            <rng:optional><rng:attribute name="statusbar_colors"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>
