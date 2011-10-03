@@ -3160,7 +3160,7 @@ class BaseModel(object):
             if allfields and f not in allfields:
                 continue
 
-            res[f] = fields.field_to_dict(self, cr, user, context, field)
+            res[f] = fields.field_to_dict(self, cr, user, field, context=context)
 
             if not write_access:
                 res[f]['readonly'] = True

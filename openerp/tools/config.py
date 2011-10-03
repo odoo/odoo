@@ -102,7 +102,7 @@ class configmanager(object):
         group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
-        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules")
+        group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -454,9 +454,10 @@ class configmanager(object):
         openerp.conf.max_cron_threads = self.options['max_cron_threads']
 
         openerp.conf.addons_paths = self.options['addons_path'].split(',')
-        openerp.conf.server_wide_modules = \
-            map(lambda m: m.strip(), opt.server_wide_modules.split(',')) if \
-            opt.server_wide_modules else []
+        if opt.server_wide_modules:
+            openerp.conf.server_wide_modules = map(lambda m: m.strip(), opt.server_wide_modules.split(','))
+        else:
+            openerp.conf.server_wide_modules = ['web']
         if complete:
             openerp.modules.module.initialize_sys_path()
             openerp.modules.loading.open_openerp_namespace()

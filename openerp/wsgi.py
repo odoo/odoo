@@ -47,13 +47,19 @@ import service.websrv_lib as websrv_lib
 # constants are also defined client-side and must remain in sync.
 # User code must use the exceptions defined in ``openerp.exceptions`` (not
 # create directly ``xmlrpclib.Fault`` objects).
-XML_RPC_FAULT_CODE_APPLICATION_ERROR = 1
-XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR = 2
-XML_RPC_FAULT_CODE_ACCESS_DENIED = 3
-XML_RPC_FAULT_CODE_ACCESS_ERROR = 4
-XML_RPC_FAULT_CODE_WARNING = 5
+RPC_FAULT_CODE_CLIENT_ERROR = 1 # indistinguishable from app. error.
+RPC_FAULT_CODE_APPLICATION_ERROR = 1
+RPC_FAULT_CODE_WARNING = 2
+RPC_FAULT_CODE_ACCESS_DENIED = 3
+RPC_FAULT_CODE_ACCESS_ERROR = 4
 
-def xmlrpc_return(start_response, service, method, params):
+# The new (6.1) versioned RPC paths.
+XML_RPC_PATH = '/openerp/xmlrpc'
+XML_RPC_PATH_1 = '/openerp/xmlrpc/1'
+JSON_RPC_PATH = '/openerp/jsonrpc'
+JSON_RPC_PATH_1 = '/openerp/jsonrpc/1'
+
+def xmlrpc_return(start_response, service, method, params, legacy_exceptions=False):
     """
     Helper to call a service's method with some params, using a wsgi-supplied
     ``start_response`` callback.
@@ -64,47 +70,87 @@ def xmlrpc_return(start_response, service, method, params):
     # Map OpenERP core exceptions to XML-RPC fault codes. Specific exceptions
     # defined in ``openerp.exceptions`` are mapped to specific fault codes;
     # all the other exceptions are mapped to the generic
-    # XML_RPC_FAULT_CODE_APPLICATION_ERROR value.
+    # RPC_FAULT_CODE_APPLICATION_ERROR value.
     # This also mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for
     # exception handling.
     try:
         result = openerp.netsvc.dispatch_rpc(service, method, params)
         response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
-    except openerp.exceptions.Warning, e:
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_WARNING, str(e))
+    except Exception, e:
+        if legacy_exceptions:
+            response = xmlrpc_handle_exception_legacy(e)
+        else:
+            response = xmlrpc_handle_exception(e)
+    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+    return [response]
+
+def xmlrpc_handle_exception(e):
+    if isinstance(e, openerp.osv.osv.except_osv): # legacy
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, openerp.tools.ustr(e.value))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except openerp.exceptions.AccessError, e:
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_ERROR, str(e))
+    elif isinstance(e, openerp.exceptions.Warning):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except openerp.exceptions.AccessDenied, e:
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_ACCESS_DENIED, str(e))
+    elif isinstance (e, openerp.exceptions.AccessError):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except openerp.exceptions.DeferredException, e:
+    elif isinstance(e, openerp.exceptions.AccessDenied):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.DeferredException):
         info = e.traceback
         # Which one is the best ?
         formatted_info = "".join(traceback.format_exception(*info))
         #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_DEFERRED_APPLICATION_ERROR, formatted_info)
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
         response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
-    except Exception, e:
-        info = sys.exc_info()
-        # Which one is the best ?
-        formatted_info = "".join(traceback.format_exception(*info))
-        #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(XML_RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
-        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
-    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-    return [response]
+    else:
+        if hasattr(e, 'message') and e.message == 'AccessDenied': # legacy
+            fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
+            response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+        else:
+            info = sys.exc_info()
+            # Which one is the best ?
+            formatted_info = "".join(traceback.format_exception(*info))
+            #formatted_info = openerp.tools.exception_to_unicode(e) + '\n' + info
+            fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+            response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+    return response
 
-def wsgi_xmlrpc(environ, start_response):
+def xmlrpc_handle_exception_legacy(e):
+    if isinstance(e, openerp.osv.osv.except_osv):
+        fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.Warning):
+        fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.AccessError):
+        fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.AccessDenied):
+        fault = xmlrpclib.Fault('AccessDenied', str(e))
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    elif isinstance(e, openerp.exceptions.DeferredException):
+        info = e.traceback
+        formatted_info = "".join(traceback.format_exception(*info))
+        fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    else:
+        info = sys.exc_info()
+        formatted_info = "".join(traceback.format_exception(*info))
+        fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+    return response
+
+def wsgi_xmlrpc_1(environ, start_response):
     """ The main OpenERP WSGI handler."""
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/openerp/6.1/xmlrpc'):
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH_1):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
 
         params, method = xmlrpclib.loads(data)
 
-        path = environ['PATH_INFO'][len('/openerp/6.1/xmlrpc'):]
+        path = environ['PATH_INFO'][len(XML_RPC_PATH_1):]
         if path.startswith('/'): path = path[1:]
         if path.endswith('/'): p = path[:-1]
         path = path.split('/')
@@ -125,36 +171,70 @@ def wsgi_xmlrpc(environ, start_response):
             service, db_name = path
             params = (db_name,) + params
 
-            if service == 'model':
-                service = 'object'
             return xmlrpc_return(start_response, service, method, params)
 
-        # TODO the body has been read, need to raise an exception (not return None).
+        # A db segment and a model segment must be given.
+        elif len(path) == 3 and path[0] == 'model':
+            service, db_name, model_name = path
+            params = (db_name,) + params[:2] + (model_name,) + params[2:]
+            service = 'object'
+            return xmlrpc_return(start_response, service, method, params)
 
-def legacy_wsgi_xmlrpc(environ, start_response):
+        # The body has been read, need to raise an exception (not return None).
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_CLIENT_ERROR, '')
+        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+        return [response]
+
+def wsgi_xmlrpc(environ, start_response):
+    """ WSGI handler to return the versions."""
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith(XML_RPC_PATH):
+        length = int(environ['CONTENT_LENGTH'])
+        data = environ['wsgi.input'].read(length)
+
+        params, method = xmlrpclib.loads(data)
+
+        path = environ['PATH_INFO'][len(XML_RPC_PATH):]
+        if path.startswith('/'): path = path[1:]
+        if path.endswith('/'): p = path[:-1]
+        path = path.split('/')
+
+        # All routes are hard-coded.
+
+        if len(path) == 1 and path[0] == '' and method in ('version',):
+            return xmlrpc_return(start_response, 'common', method, ())
+
+        # The body has been read, need to raise an exception (not return None).
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_CLIENT_ERROR, '')
+        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
+        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+        return [response]
+
+def wsgi_xmlrpc_legacy(environ, start_response):
     if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
         path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ...
 
         params, method = xmlrpclib.loads(data)
-        return xmlrpc_return(start_response, path, method, params)
+        return xmlrpc_return(start_response, path, method, params, True)
 
 def wsgi_jsonrpc(environ, start_response):
     pass
 
 def wsgi_webdav(environ, start_response):
-    if environ['REQUEST_METHOD'] == 'OPTIONS' and environ['PATH_INFO'] == '*':
+    pi = environ['PATH_INFO']
+    if environ['REQUEST_METHOD'] == 'OPTIONS' and pi in ['*','/']:
         return return_options(environ, start_response)
-
-    http_dir = websrv_lib.find_http_service(environ['PATH_INFO'])
-    if http_dir:
-        path = environ['PATH_INFO'][len(http_dir.path):]
-        if path.startswith('/'):
-            environ['PATH_INFO'] = path
-        else:
-            environ['PATH_INFO'] = '/' + path
-        return http_to_wsgi(http_dir)(environ, start_response)
+    elif pi.startswith('/webdav'):
+        http_dir = websrv_lib.find_http_service(pi)
+        if http_dir:
+            path = pi[len(http_dir.path):]
+            if path.startswith('/'):
+                environ['PATH_INFO'] = path
+            else:
+                environ['PATH_INFO'] = '/' + path
+            return http_to_wsgi(http_dir)(environ, start_response)
 
 def return_options(environ, start_response):
     # Microsoft specific header, see
@@ -308,9 +388,10 @@ def application(environ, start_response):
 
     # Try all handlers until one returns some result (i.e. not None).
     wsgi_handlers = [
+        wsgi_xmlrpc_1,
         wsgi_xmlrpc,
         wsgi_jsonrpc,
-        legacy_wsgi_xmlrpc,
+        wsgi_xmlrpc_legacy,
         wsgi_webdav
         ] + module_handlers
     for handler in wsgi_handlers:

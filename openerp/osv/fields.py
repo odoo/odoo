@@ -495,6 +495,15 @@ class one2many(_column):
 class many2many(_column):
     """Encapsulates the logic of a many-to-many bidirectional relationship, handling the
        low-level details of the intermediary relationship table transparently.
+       A many-to-many relationship is always symmetrical, and can be declared and accessed
+       from either endpoint model.
+       If ``rel`` (relationship table name), ``id1`` (source foreign key column name)
+       or id2 (destination foreign key column name) are not specified, the system will
+       provide default values. This will by default only allow one single symmetrical
+       many-to-many relationship between the source and destination model.
+       For multiple many-to-many relationship between the same models and for
+       relationships where source and destination models are the same, ``rel``, ``id1``
+       and ``id2`` should be specified explicitly.
 
        :param str obj: destination model
        :param str rel: optional name of the intermediary relationship table. If not specified,
@@ -1285,7 +1294,7 @@ class property(function):
         self.field_id = {}
 
 
-def field_to_dict(self, cr, user, context, field):
+def field_to_dict(model, cr, user, field, context=None):
     """ Return a dictionary representation of a field.
 
     The string, help, and selection attributes (if any) are untranslated.  This
@@ -1308,8 +1317,9 @@ def field_to_dict(self, cr, user, context, field):
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
         res['func_obj'] = field._obj or False
     if isinstance(field, many2many):
-        res['related_columns'] = list((field._id1, field._id2))
-        res['third_table'] = field._rel
+        (table, col1, col2) = field._sql_names(model)
+        res['related_columns'] = [col1, col2]
+        res['third_table'] = table
     for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
             'change_default', 'translate', 'help', 'select', 'selectable'):
         if getattr(field, arg):
@@ -1328,7 +1338,7 @@ def field_to_dict(self, cr, user, context, field):
             res['selection'] = field.selection
         else:
             # call the 'dynamic selection' function
-            res['selection'] = field.selection(self, cr, user, context)
+            res['selection'] = field.selection(model, cr, user, context)
     if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
         res['relation'] = field._obj
         res['domain'] = field._domain

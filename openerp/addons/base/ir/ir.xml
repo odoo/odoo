@@ -176,6 +176,7 @@
                         <field name="padding"/>
                         <field name="number_increment"/>
                         <field name="number_next"/>
+                        <field name="implementation"/>
                         <separator colspan="4" string="Legend (for prefix, suffix)"/>
                         <group col="8" colspan="4">
                             <group>
@@ -215,6 +216,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="number_next"/>
                     <field name="number_increment"/>
+                    <field name="implementation"/>
                 </tree>
             </field>
         </record>
@@ -571,6 +573,8 @@
                                         <field name="view_id"/>
                                     </tree>
                                 </field>
+                                <separator string="View Ordering" colspan="4"/>
+                                <field colspan="4" name="help" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Security">
@@ -1876,7 +1880,7 @@
             <field name="name">Config Wizard Steps</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Config Wizard Steps">
+                <tree string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
                     <field name="category_id"/>
@@ -2008,23 +2012,19 @@
                         <field name="name"/>
                         <field name="sequence"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Configuration">
-                            <group col="2" colspan="4">
-                                <separator string="Connection Information" colspan="4"/>
-                                <field name="smtp_host"/>
-                                <field name="smtp_port"/>
-                                <field name="smtp_debug"/>
-                             </group>
-                             <group col="2" colspan="4">
-                                <separator string="Security and Authentication" colspan="2"/>
-                                <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
-                                <field name="smtp_user"/>
-                                <field name="smtp_pass" password="True"/>
-                                <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
-                            </group>
-                        </page>
-                    </notebook>
+                    <group col="2" colspan="4">
+                        <separator string="Connection Information" colspan="4"/>
+                        <field name="smtp_host"/>
+                        <field name="smtp_port"/>
+                        <field name="smtp_debug" groups="base.group_extended"/>
+                     </group>
+                     <group col="2" colspan="4">
+                        <separator string="Security and Authentication" colspan="2"/>
+                        <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                        <field name="smtp_user"/>
+                        <field name="smtp_pass" password="True"/>
+                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>

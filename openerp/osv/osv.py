@@ -34,12 +34,16 @@ from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
 import openerp.exceptions
 
-# For backward compatibility
-except_osv = openerp.exceptions.Warning
+# Deprecated.
+class except_osv(Exception):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+        self.args = (name, value)
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service
@@ -115,9 +119,7 @@ class object_proxy():
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
-                if inst.name == 'AccessError':
-                    self.logger.debug("AccessError", exc_info=True)
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
+                raise except_osv(inst.name, inst.value)
             except except_osv:
                 raise
             except IntegrityError, inst:
