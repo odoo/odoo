@@ -143,7 +143,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return {"main_object":main_object,"parent_child_id":parent_child_id};
     },
 
-    parse_xml :function(arch){
+    parse_xml :function(arch,view_id){
         var self = this;
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
@@ -156,7 +156,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');       
         ve_dataset.read_ids([parseInt(view_id)],['arch'],function (arch){
-            one_object = self.parse_xml(arch[0].arch);
+            one_object = self.parse_xml(arch[0].arch,view_id);
             one_object.arch = arch[0].arch; 
             dataset = new openerp.web.DataSetSearch(self,'ir.ui.view', null, null);
             dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
@@ -181,7 +181,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             xpath_list.push(root[0]);
         }
         _.each(xpath_list,function(element){
-            var xpath_object = self.parse_xml(element);
+            var xpath_object = self.parse_xml(element,result.id);
             var expr = $(element).attr('expr');
             var position = $(element).attr('position');
             part_expr = expr.split("/");
@@ -192,39 +192,47 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
             if(part_expr[part_expr.length-1].search("@")!=-1){
                 var part = part_expr[part_expr.length-1];
-                var pp = $.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
+                var xpath_list = $.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
+                one_object['parent_child_id'].push(xpath_object['parent_child_id'][0]);
                 $.each(one_object['main_object'], function(key,val) {
-                   self.search_object(val,pp,[],position,xpath_object['main_object']);
+                    var id = self.search_object(val,xpath_list,[],position,xpath_object['main_object'],[]);
+                    _.detect(one_object['parent_child_id'],function(res){
+                        if(res.key==id){
+                            res.value.push(xpath_object['main_object'][0].id);
+                        }     
+                    });
                 });   
             }
         });
     },
-    search_object:function(val,list,p_list,position,xpath_object){
+    search_object:function(val,list,p_list,position,xpath_object,r_list){
         var self = this;
-        var pp = $.trim(val.name.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
-        var insert = _.intersection(pp,list);
-        if(insert.length == list.length){
-            var level = val.level;            
-            $.each(xpath_object, function(key,val) {
-                self.increase_level(val,level)
-            });   
-            var index = _.indexOf(p_list.child_id,val);
-            if(position == "before"){
-                if(index!=0){index--;}
-            }else if(position == "after"){
-                index++;
-            }
-            var check = _.indexOf(p_list.child_id,xpath_object[0]);
-            if(check == -1){
+        var return_list = r_list;
+        var main_list = $.trim(val.name.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
+        var insert = _.intersection(main_list,list);
+        var check = _.indexOf(p_list.child_id,xpath_object[0]);
+        if(check == -1){
+            if(insert.length == list.length){
+                var level = val.level;            
+                $.each(xpath_object, function(key,val) {
+                    self.increase_level(val,level)
+                });   
+                var index = _.indexOf(p_list.child_id,val);
+                if(position == "before"){
+                    if(index!=0){index--;}
+                }else if(position == "after"){
+                    index++;
+                }
                 p_list.child_id.splice(index,0,xpath_object[0]);
-                return val.id;
+                return_list.push(p_list.id);
+            }else{
+                if(val.child_id.length!=0){p_list = val;}
+                $.each(val.child_id, function(key,val) {
+                   self.search_object(val,list,p_list,position,xpath_object,return_list);
+                });
             }
-        }else{
-            if(val.child_id.length!=0){p_list = val;}
-            $.each(val.child_id, function(key,val) {
-               self.search_object(val,list,p_list,position,xpath_object);
-            });
         }
+        return return_list;
     },
     increase_level :function(val,level){
         var self = this;
@@ -268,7 +276,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             self.on_expand(this);
         }else{
             $(this).attr('src', '/web/static/src/img/collapse.gif');
-            self.on_collapse(this,one_object['parent_child_id']);
+            var id = this.id.split('-')[1];
+            self.on_collapse(this,one_object['parent_child_id'],one_object['main_object']);
         }
     });
     $("img[id^='side-']").click(function() {
@@ -363,7 +372,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }else return nxt_tr;
         }
     },
-    on_collapse: function(self,parent_child_id,id){
+    on_collapse: function(self,parent_child_id,id,main_object){
         var id = self.id.split('-')[1];
         var datas = _.detect(parent_child_id,function(res){
             return res.key == id;
