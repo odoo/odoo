@@ -360,7 +360,6 @@ class audittrail_objects_proxy(object_proxy):
                                     x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
                                     assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
                                     x2m_model = model_pool.browse(cr, uid, x2m_model_id)
-                                    x2m_old_values.update(inline_process_old_data(resource[field], field_obj._obj, x2m_model))
                                     inline_process_new_data(resource[field], x2m_model, x2m_old_values)
                             ret_val = self.get_value_text(cr, uid, pool, resource_pool, method, field, resource[field], False)
                             line = {
