@@ -229,7 +229,7 @@ class res_partner(osv.osv):
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
         address_obj = self.pool.get('res.partner.address')
-        address_ids = address_obj.search(cr, uid, [('partner_id', '=', ids)])
+        address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
         res = list(tuple(addr.values()) for addr in address_rec)
         adr = dict(res)

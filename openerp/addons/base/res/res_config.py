@@ -39,27 +39,6 @@ class res_config_configurable(osv.osv_memory):
     _inherit = 'ir.wizard.screen'
     __logger = logging.getLogger(_name)
 
-    def get_current_progress(self, cr, uid, context=None):
-        '''Return a description the current progress of configuration:
-        a tuple of (non_open_todos:int, total_todos: int)
-        '''
-        return itemgetter('done', 'total')(
-            self.pool.get('ir.actions.todo').progress(cr, uid, context=context))
-
-    def _progress(self, cr, uid, context=None):
-        closed, total = self.get_current_progress(cr, uid, context=context)
-        if total:
-            return round(closed*100./total)
-        return 100.
-
-    _columns = dict(
-        progress = fields.float('Configuration Progress', readonly=True),
-    )
-
-    _defaults = dict(
-        progress = _progress,
-    )
-
     def _next_action(self, cr, uid, context=None):
         Todos = self.pool['ir.actions.todo']
         self.__logger.info('getting next %s', Todos)
@@ -91,11 +70,7 @@ class res_config_configurable(osv.osv_memory):
             res = next.action_launch(context=context)
             res['nodestroy'] = False
             return res
-        self.__logger.info('all configuration actions have been executed')
-
-        current_user_menu = self.pool.get('res.users').browse(cr, uid, uid).menu_id
-        # return the action associated with the menu
-        return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
+        return {'type' : 'ir.actions.act_window_close'}
 
     def start(self, cr, uid, ids, context=None):
         return self.next(cr, uid, ids, context)

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+set -e
+
+case "${1}" in
+    configure)
+        if ! getent passwd | grep -q "^openerp"; then
+            adduser --system --no-create-home --quiet --gecos 'OpenERP' --group openerp
+        fi
+        # Register "openerp" as a postgres superuser 
+        su - postgres -c "createuser -s openerp" 2> /dev/null || true
+        chown openerp:openerp /etc/openerp/openerp-server.conf
+        chmod 0640 /etc/openerp/openerp-server.conf
+        # Creating log file
+        touch /var/log/openerp.log
+        chown openerp:openerp /var/log/openerp.log
+        chmod 0640 /var/log/openerp.log
+        # Creating local storage directory
+        mkdir -p /var/lib/openerp/filestore
+        chown openerp:openerp -R /var/lib/openerp
+        ;;
+    *)
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0
