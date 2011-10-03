@@ -1,9 +1,18 @@
 #!/usr/bin/make -f
 
-EXTRA_MODULES_PATH ?= ../addons
-
 %:
 	dh  ${@}
 
+override_dh_pysupport:
+	echo "rsync"
+	sh -c "[ -d debian/openerp/usr/lib/python2.6 ] && rsync -av openerp/ debian/openerp/usr/lib/python2.6/dist-packages/openerp/" || true
+	sh -c "[ -d debian/openerp/usr/lib/python2.7 ] && rsync -av openerp/ debian/openerp/usr/lib/python2.7/dist-packages/openerp/" || true
+	rm -Rf debian/openerp/usr/openerp debian/openerp/usr/lib/python2.6/dist-packages/tests debian/openerp/usr/lib/python2.7/dist-packages/tests
+	dh_pysupport
+	rm -Rf debian/openerp/usr/lib
+
+
+
 override_dh_installinit:
 	dh_installinit --update-rcd-params='defaults 21'
+
