@@ -486,8 +486,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
-            if (self.uid)
-                self.on_session_valid();
             return true;
         }).then(success_callback);
     },

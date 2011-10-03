@@ -86,7 +86,7 @@ db.web.ActionManager = db.web.Widget.extend({
             console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_close);
+        return this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
         if (action.target === 'new') {
@@ -468,7 +468,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * Intercept do_action resolution from children views
      */
     on_action_executed: function () {
-        new db.web.DataSet(this, 'res.log')
+        return new db.web.DataSet(this, 'res.log')
                 .call('get', [], this.do_display_log);
     },
     /**
@@ -768,31 +768,31 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            self.widget_parent.on_action_executed.apply(null, arguments);
+            return self.widget_parent.on_action_executed.apply(null, arguments);
         };
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                self.rpc('/web/session/eval_domain_and_context', {
+                return self.rpc('/web/session/eval_domain_and_context', {
                     contexts: [dataset.get_context(), action.context || {}, {
                         active_id: record_id || false,
                         active_ids: [record_id || false],
                         active_model: dataset.model
                     }],
                     domains: []
-                }, function (results) {
+                }).pipe(function (results) {
                     action.context = results.context
-                    self.do_action(action, result_handler);
+                    return self.do_action(action, result_handler);
                 });
             } else {
-                result_handler();
+                return result_handler();
             }
         };
 
         var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
         if (action_data.special) {
-            handler({result: {"type":"ir.actions.act_window_close"}});
+            return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
