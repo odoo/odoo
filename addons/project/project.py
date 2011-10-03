@@ -193,13 +193,13 @@ class project(osv.osv):
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks', 'parent_id'], 10),
+                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks', 'parent_id', 'child_ids'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
         'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
-                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks','parent_id'], 10),
+                'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks','parent_id', 'child_ids'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
         'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
