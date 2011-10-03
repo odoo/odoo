@@ -6,7 +6,8 @@
             <field name="res_model">lunch.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="lunch.view_lunch_product_form"/>
+            <field name="view_id" eval="False"/>
+            <field name="help">Define all products that the employees can order for the lunch time. If you order lunch at several places, you can use the product categories to split by supplier. It will be easier for the lunch manager to filter lunch orders by categories.</field>
         </record>
 
         <record id="view_lunch_product_form_todo" model="ir.actions.todo">
@@ -16,11 +17,12 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_create_cashbox">
-            <field name="name">Create CashBox</field>
+            <field name="name">Create Lunch Cash Boxes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">lunch.cashbox</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">You can create on cashbox by employee if you want to keep track of the amount due by employee according to what have been ordered.</field>
         </record>
 
         <record id="action_create_cashbox_todo" model="ir.actions.todo">

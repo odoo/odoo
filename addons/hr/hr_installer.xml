@@ -32,28 +32,27 @@
 
         <!-- employee configure  action -->
         <record id="action_create_hr_employee_installer" model="ir.actions.act_window">
-            <field name="name">Create your employees</field>
+            <field name="name">Create your Employees</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_employee_form"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
         </record>
 
         <record id="config_wizard_action_create_hr_employee_installer" model="ir.actions.todo">
             <field name="action_id" ref="action_create_hr_employee_installer"/>
             <field name="category_id" ref="category_hr_management_config"/>
-        </record>            
-
+        </record>
 
         <record model="ir.actions.act_window" id="view_department_form_installer">
-            <field name="name">Define Your Department Structure</field>
+            <field name="name">Create Your Departments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.department</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="hr.view_department_tree"/>
-            <field name="help">Your Company's Department Structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
+            <field name="help">Your departments structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
         </record>
 
         <record id="view_department_form_todo" model="ir.actions.todo">

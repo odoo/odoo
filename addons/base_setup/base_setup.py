@@ -247,19 +247,19 @@ class specify_partner_terminology(osv.osv_memory):
     _name = 'base.setup.terminology'
     _inherit = 'res.config'
     _columns = {
-        'partner': fields.selection([('Customer','Customer'),
-                                  ('Client','Client'),
-                                  ('Member','Member'),
-                                  ('Patient','Patient'),
-                                  ('Partner','Partner'),
-                                  ('Donor','Donor'),
-                                  ('Guest','Guest'),
-                                  ('Tenant','Tenant')
-                                  ],
-                                 'Choose how to call a Customer', required=True ),
+        'partner': fields.selection([
+            ('Customer','Customer'),
+            ('Client','Client'),
+            ('Member','Member'),
+            ('Patient','Patient'),
+            ('Partner','Partner'),
+            ('Donor','Donor'),
+            ('Guest','Guest'),
+            ('Tenant','Tenant')
+        ], 'How do you call a Customer', required=True ),
     }
     _defaults={
-               'partner' :'Partner',
+        'partner' :'Customer',
     }
 
     def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
@@ -289,7 +289,7 @@ class specify_partner_terminology(osv.osv_memory):
                 field_ref = f_id.model_id.model + ',' + f_id.name
                 self.make_translations(cr, uid, ids, field_ref, 'field', f_id.field_description, _case_insensitive_replace(f_id.field_description,'Customer',o.partner), context=context)
             #translate help tooltip of field
-            for obj in self.pool.obj_pool.values():
+            for obj in self.pool.models.values():
                 for field_name, field_rec in obj._columns.items():
                     if field_rec.help.lower().count('customer'):
                         field_ref = obj._name + ',' + field_name
