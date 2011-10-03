@@ -505,7 +505,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     do_select: function (ids, records) {
         this.$element.find('.oe-list-delete')
             .attr('disabled', !ids.length);
-        if(ids.length > 0) {
+        if(ids.length) {
             this.sidebar.do_unfold();
         } else {
             this.sidebar.do_fold();
