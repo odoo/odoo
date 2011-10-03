@@ -303,7 +303,7 @@ class module(osv.osv):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
-        for module in self.browse(cr, uid, ids):
+        for module in self.browse(cr, uid, ids, context=context):
             mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':
