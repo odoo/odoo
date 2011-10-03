@@ -2,35 +2,25 @@
 
 set -e
 
-CONFFILE="/etc/openerp.conf"
-FILESTORE="/var/lib/openerp/filestore"
-LOGFILE="/var/log/openerp.log"
-USERNAME="openerp"
-
 case "${1}" in
-	configure)
-		if ! getent passwd | grep -q "^${USERNAME}" then
-			adduser --system --no-create-home --quiet --gecos 'OpenERP' --group ${USERNAME}
-		fi
-		# Creating log file
-		touch ${LOGFILE}
-		chown ${USERNAME}:${USERNAME} ${LOGFILE}
-		chmod 0640 ${LOGFILE}
-		# Creating local storage directory
-		mkdir -p ${FILESTORE}
-		# Setting ownership and permissions
-		chmod 0640 ${CONFFILE}
-		chown ${_USERNAME}:${_USERNAME} ${CONFFILE}
-		chown ${_USERNAME}:${_USERNAME} /var/lib/openerp -R
-		;;
-
-	abort-upgrade|abort-remove|abort-deconfigure)
-		;;
-
-	*)
-		echo "postinst called with unknown argument \`{$1}'" >&2
-		exit 1
-		;;
+    configure)
+        if ! getent passwd | grep -q "^openerp"; then
+            adduser --system --no-create-home --quiet --gecos 'OpenERP' --group openerp
+        fi
+        # Register "openerp" as a postgres superuser 
+        su - postgres -c "createuser -s openerp" 2> /dev/null || true
+        chown openerp:openerp /etc/openerp/openerp-server.conf
+        chmod 0640 /etc/openerp/openerp-server.conf
+        # Creating log file
+        touch /var/log/openerp.log
+        chown openerp:openerp /var/log/openerp.log
+        chmod 0640 /var/log/openerp.log
+        # Creating local storage directory
+        mkdir -p /var/lib/openerp/filestore
+        chown openerp:openerp -R /var/lib/openerp
+        ;;
+    *)
+        ;;
 esac
 
 #DEBHELPER#
