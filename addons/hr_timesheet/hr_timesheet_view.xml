@@ -62,7 +62,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group col='8' colspan='4'>
+                    <group>
                         <filter name="today" icon="terp-go-today" domain="[('date', '=', time.strftime('%%Y-%%m-%%d'))]" string="Today"/>
                         <separator orientation="vertical"/>
                         <field name="user_id"/>
@@ -104,8 +104,8 @@
                 <page string="Categories" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
                         <field name="product_id" domain="[('type','=','service')]"/>
-                        <field name="uom_id"/>
                         <field name="journal_id" widget="selection"/>
+                        <field name="uom_id" invisible="1"/>
                     </page>
                 </page>
             </field>

@@ -37,7 +37,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Log Analysis">
-                    <group col="20" colspan="8">
+                    <group>
                     <filter icon="terp-go-year" string="  Year  "
                         domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                         help="Log created in current year"/>
@@ -47,7 +47,6 @@
                         help="Log created in current month"/>
                     <filter icon="terp-go-month"
                          string="    Month-1    "
-                         separator="1"
                          domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Log created in last month"/>
                    </group>
@@ -140,13 +139,11 @@
                 <form string="Administration Dashboard">
                     <hpaned position="100">
                         <child1>
-                            <action width="510" name="%(action_user_connection_tree)d" string="User Connections" />
-                            <action width="510" name="%(action_latest_activities_tree)d" string="Latest Activities" />
+                            <action name="%(board_config_overview)d" string="Configuration Overview"/>
+                            <action name="%(action_latest_activities_tree)d" string="Latest Activities" />
                         </child1>
                         <child2>
-                          <action name="%(board_config_overview)d" string="Configuration Overview"/>
-                            <action  name="%(board_monthly_res_log_report_action)d" string="Monthly Activity per Document"/>
-                            <action  name="%(board_weekly_res_log_report_action)d" string="Weekly Global Activity" />
+                            <action name="%(action_user_connection_tree)d" string="Users" />
                         </child2>
                     </hpaned>
                 </form>

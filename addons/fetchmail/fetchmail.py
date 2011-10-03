@@ -70,10 +70,10 @@ class fetchmail_server(osv.osv):
         'user' : fields.char('Username', size=256, readonly=True, states={'draft':[('readonly', False)]}),
         'user_id' : fields.many2one('res.users', 'User', states={'draft' : [('readonly', False)]}),
         'password' : fields.char('Password', size=1024, required=True, readonly=True, states={'draft':[('readonly', False)]}),
-        'note': fields.text('Description'),
+        'note' : fields.text('Description'),
         'action_id':fields.many2one('ir.actions.server', 'Server Action', help="Optional custom server action to trigger for each incoming mail, "
                                                                                "on the record that was created or updated by this mail"),
-        'object_id': fields.many2one('ir.model', "Target document type", required=True, help="Process each incoming mail as part of a conversation "
+        'object_id': fields.many2one('ir.model', "Create a New Record", required=True, help="Process each incoming mail as part of a conversation "
                                                                                              "corresponding to this document type. This will create "
                                                                                              "new documents for new conversations, or attach follow-up "
                                                                                              "emails to the existing conversations (documents)."),
@@ -86,6 +86,7 @@ class fetchmail_server(osv.osv):
     }
     _defaults = {
         'state': "draft",
+        'type': "pop",
         'active': True,
         'priority': 5,
         'attach': True,
@@ -120,7 +121,6 @@ openerp_mailgate.py -u %(user_id)d -p PASSWORD -o %(model)s -d %(database)s --ho
                 archive_filename = 'openerp-mailgate.zip',
                 archive = base64.encodestring(archive_io.getvalue())
             )
-
         finally:
             archive.close()
             archive_io.close()

@@ -16,6 +16,7 @@
             <field name="wiki_sale_faq" groups="base.group_extended"/>
             <field name="sale_crm" invisible="1" groups="base.group_extended"/>
             <field name="crm_caldav"/>
+            <field name="import_sugarcrm"/>
             <field name="fetchmail"/>
             <field name="thunderbird"/>
             <field name="outlook"/>
@@ -25,7 +26,7 @@
     </record>
     
     <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
-        <field name="name">Create Sales Team</field>
+        <field name="name">Define Sales Team</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">crm.case.section</field>
         <field name="view_type">form</field>
@@ -38,6 +39,7 @@
         <field name="action_id" ref="crm_case_section_view_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
         <field name="sequence">10</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
     </record>
 
     <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
@@ -46,6 +48,7 @@
         <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'default_case_default': 1}</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
         <field name="help">Stages will allow salesmen to easily track how a specific opportunity is positioned in the sales cycle. In order to efficiently manage your sales pipeline, it's important to define conditions to go to the next step. Example: to set an opportunity as 'Qualified', you must set the "Expected Revenue" and the "Expected Closing Date." You should also have a look at the tooltip of the field "Change Probability Automatically".</field>
     </record>
@@ -53,8 +56,8 @@
     <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="crm_case_stage_form_installer"/>
         <field name="category_id" ref="base.category_sales_management_config"/>
-        <field name="sequence">10</field>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
+        <field name="sequence">9</field>
     </record>
-
   </data>
 </openerp>

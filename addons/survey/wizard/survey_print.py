@@ -27,8 +27,7 @@ from tools.translate import _
 class survey_print(osv.osv_memory):
     _name = 'survey.print'
     _columns = {
-        'survey_ids': fields.many2many('survey','survey_print',\
-                            'survey_id','print_id', "Survey", required="1"),
+        'survey_ids': fields.many2many('survey', string="Survey", required="1"),
         'orientation' : fields.selection([('vertical','Portrait(Vertical)'),\
                             ('horizontal','Landscape(Horizontal)')], 'Orientation'),
         'paper_size' : fields.selection([('letter','Letter (8.5" x 11")'),\

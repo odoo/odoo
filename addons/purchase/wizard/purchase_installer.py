@@ -29,4 +29,28 @@ class purchase_installer(osv.osv_memory):
     }
 purchase_installer()
 
+class purchase_config_wizard(osv.osv_memory):
+    _name = 'purchase.config.wizard'
+    _inherit = 'res.config'
+
+    _columns = {
+        'default_method' : fields.selection(
+            [('manual', 'Based on Purchase Order Lines'),
+             ('picking', 'Based on Receptions'),
+             ('order', 'Pre-Generate Draft Invoices on Based Purchase Orders'),
+            ], 'Default Invoicing Control Method', required=True,
+        )
+    }
+    _defaults = {
+        'default_method': lambda s,c,u,ctx: s.pool.get('purchase.order').default_get(c,u,['invoice_method'],context=ctx)['invoice_method']
+    }
+
+    def execute(self, cr, uid, ids, context=None):
+        wizard = self.browse(cr, uid, ids, context=context)[0]
+        proxy = self.pool.get('ir.values')
+        proxy.set(cr, uid, 'default', False, 'invoice_method', ['purchase.order'], wizard.default_method),
+        return {'type' : 'ir.actions.act_window_close'}
+
+purchase_config_wizard()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -650,14 +650,15 @@ class account_move_line(osv.osv):
             id2 =  part.property_account_receivable.id
             if journal:
                 jt = journal_obj.browse(cr, uid, journal).type
-                #FIXME: Bank and cash journal are such a journal we can not assume a account based on this 2 journals
-                # Bank and cash journal can have a payment or receipt transaction, and in both type partner account
-                # will not be same id payment then payable, and if receipt then receivable
-                #if jt in ('sale', 'purchase_refund', 'bank', 'cash'):
                 if jt in ('sale', 'purchase_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
-                elif jt in ('purchase', 'sale_refund', 'expense', 'bank', 'cash'):
+                elif jt in ('purchase', 'sale_refund'):
                     val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
+                elif jt in ('general', 'bank', 'cash'):
+                    if part.customer:
+                        val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id2)
+                    elif part.supplier:
+                        val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
                     d = self.onchange_account_id(cr, uid, ids, val['account_id'])
                     val.update(d['value'])
@@ -717,7 +718,7 @@ class account_move_line(osv.osv):
             )
         return cr.fetchone()
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
         merges = []
         unmerge = []
@@ -746,7 +747,7 @@ class account_move_line(osv.osv):
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
-            res = self.reconcile(cr, uid, merges+unmerge, context=context)
+            res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
@@ -811,7 +812,7 @@ class account_move_line(osv.osv):
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
+                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off/exchange difference entry !'))
             if writeoff > 0:
                 debit = writeoff
                 credit = 0.0
@@ -1021,7 +1022,7 @@ class account_move_line(osv.osv):
                 attrs.append("context=\"{'journal_id': journal_id}\"")
 
             elif field == 'account_id' and journal.id:
-                attrs.append('domain="[(\'journal_id\', \'=\', '+str(journal.id)+'),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+                attrs.append('domain="[(\'journal_id\', \'=\', journal_id),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
 
             elif field == 'partner_id':
                 attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
@@ -1220,7 +1221,7 @@ class account_move_line(osv.osv):
                     vals['move_id'] = res[0]
             if not vals.get('move_id', False):
                 if journal.sequence_id:
-                    #name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'period_id': context['period_id'],
@@ -1231,7 +1232,7 @@ class account_move_line(osv.osv):
                     move_id = move_obj.create(cr, uid, v, context)
                     vals['move_id'] = move_id
                 else:
-                    raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece !\n\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
+                    raise osv.except_osv(_('No piece number !'), _('Can not create an automatic sequence for this piece!\nPut a sequence in the journal definition for automatic numbering or create a sequence manually for this piece.'))
         ok = not (journal.type_control_ids or journal.account_control_ids)
         if ('account_id' in vals):
             account = account_obj.browse(cr, uid, vals['account_id'], context=context)
@@ -1248,7 +1249,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and not vals.get('ammount_currency') and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:
@@ -1256,7 +1257,7 @@ class account_move_line(osv.osv):
                 vals['amount_currency'] = cur_obj.compute(cr, uid, account.company_id.currency_id.id,
                     account.currency_id.id, vals.get('debit', 0.0)-vals.get('credit', 0.0), context=ctx)
         if not ok:
-            raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal !'))
+            raise osv.except_osv(_('Bad account !'), _('You can not use this general account in this journal, check the tab \'Entry Controls\' on the related journal !'))
 
         if vals.get('analytic_account_id',False):
             if journal.analytic_journal_id:
@@ -1272,7 +1273,7 @@ class account_move_line(osv.osv):
                         'user_id': uid
             })]
 
-        result = super(osv.osv, self).create(cr, uid, vals, context=context)
+        result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])

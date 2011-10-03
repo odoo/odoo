@@ -196,7 +196,7 @@ class project_issue(crm.crm_case, osv.osv):
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'New'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('open', 'To Solve'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
@@ -226,6 +226,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'inactivity_days': fields.function(_compute_day, string='Days since last action', \
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
+         'color': fields.integer('Color Index'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
@@ -258,7 +259,22 @@ class project_issue(crm.crm_case, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
         'categ_id' : lambda *a: False,
-    }
+         }
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set lead priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set lead priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set lead priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
 
     def convert_issue_task(self, cr, uid, ids, context=None):
         case_obj = self.pool.get('project.issue')
