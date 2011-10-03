@@ -673,8 +673,7 @@ class sale_order(osv.osv):
                 return False
             return canceled
 
-
-    def _prepare_proc(self, cr, uid, order, line, move_id, date_planned, *args):
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
         return {
             'name': line.name,
             'origin': order.name,
@@ -694,8 +693,7 @@ class sale_order(osv.osv):
             'sale_line_id': line.id,
         }
 
-
-    def _prepare_move(self, cr, uid, order, line, picking_id, date_planned, *args):
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
         location_id = order.shop_id.warehouse_id.lot_stock_id.id
         output_id = order.shop_id.warehouse_id.lot_output_id.id
         return {
@@ -722,9 +720,7 @@ class sale_order(osv.osv):
             'price_unit': line.product_id.standard_price or 0.0
         }
 
-
-
-    def _prepare_picking(self, cr, uid, order, *args):
+    def _prepare_order_picking(self, cr, uid, order, *args):
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         return {
             'name': pick_name,
@@ -739,8 +735,18 @@ class sale_order(osv.osv):
             'company_id': order.company_id.id,
         }
 
-
     def _create_pickings_an_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
+        """
+        Create pickings and procurements for given order lines. Filtering the order lines allows to partition the delivery
+        over several pickings.
+
+        :param cr: database cursor
+        :param uid: current user id
+        :param order: sale order object
+        :param order_lines: sale order line objects
+        :param picking_id: id of picking to use evenually
+        :return: True
+        """
         proc_ids = []
         for line in order_lines:
             if line.state == 'done':
@@ -752,12 +758,12 @@ class sale_order(osv.osv):
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_picking(cr, uid, order, args))
-                    move_id = self.pool.get('stock.move').create(cr, uid, self._prepare_move(cr, uid, order, line, picking_id, date_planned, args))
+                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
+                    move_id = self.pool.get('stock.move').create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, args))
                 else: #a service has no stock move
                     move_id = False
 
-                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_proc(cr, uid, order, line, move_id, date_planned, args))
+                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, args))
                 proc_ids.append(proc_id)
 
                 if order.state == 'shipping_except': #deals with potentially cancelled shipments FIXME seems broken, see below
