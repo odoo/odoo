@@ -3,6 +3,7 @@ from __future__ import with_statement
 
 import functools
 import logging
+import urllib
 import os
 import pprint
 import sys
@@ -309,7 +310,7 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = '/web/webclient/home?debug=1'
+        self.root = '/web/webclient/home'
         self.config = options
 
         if self.config.backend == 'local':
@@ -348,7 +349,9 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
-            return werkzeug.utils.redirect(self.root, 301)(environ, start_response)
+            params = urllib.urlencode(dict(request.args, debug=''))
+            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
+                environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
                 '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
