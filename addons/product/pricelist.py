@@ -248,6 +248,7 @@ class product_pricelist(osv.osv):
                                 product_default_uom = product_template_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
                                 supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
                                 seller_uom = supplier.product_uom and supplier.product_uom.id or False
+                                supplier_currency = supplier.company_id and supplier.company_id.currency_id.id or False
                                 if seller_uom and product_default_uom and product_default_uom != seller_uom:
                                     uom_price_already_computed = True
                                     qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
@@ -258,7 +259,8 @@ class product_pricelist(osv.osv):
                                         'ORDER BY min_quantity DESC LIMIT 1', (tuple(sinfo),qty_in_product_uom,))
                                 res2 = cr.dictfetchone()
                                 if res2:
-                                    price = res2['price']
+                                    price = currency_obj.compute(cr, uid, supplier_currency,\
+                                            res['currency_id'], res2['price'], round=False, context=context)
                         else:
                             price_type = price_type_obj.browse(cr, uid, int(res['base']))
                             price = currency_obj.compute(cr, uid,
