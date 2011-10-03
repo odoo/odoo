@@ -57,21 +57,28 @@
     var Pos = (function() {
         function Pos() {
             this.build_tree = __bind(this.build_tree, this);
-            this.session.session_login('web-trunk-pos', 'admin', 'admin', __bind( function() {
-                return $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']), this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]), this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']), this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type'])).then(this.build_tree);
+            this.session.session_login('trunk', 'admin', 'a', __bind( function() {
+                return $.when(
+                    this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
+                    this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
+                    this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
+                    this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
+                    .then(this.build_tree);
             }, this));
         }
 
         Pos.prototype.ready = $.Deferred();
         Pos.prototype.session = new db.web.Session('DEBUG');
         Pos.prototype.store = new Store;
-        Pos.prototype.fetch = function(osvModel, fields, domain, callback, errorCallback) {
+        Pos.prototype.fetch = function(osvModel, fields, domain) {
+            debugger;
             var dataSetSearch;
-            callback = callback || __bind( function(result) {
-                return this.store.set(osvModel, result);
-            }, this);
-            dataSetSearch = new db.web.DataSetSearch(this, osvModel, null, domain);
-            return dataSetSearch.read_slice(fields, 0, null, callback);
+            var self = this;
+            var callback = function(result) {
+                return self.store.set(osvModel, result);
+            };
+            dataSetSearch = new db.web.DataSetSearch(this, osvModel, {}, domain);
+            return dataSetSearch.read_slice(fields, 0).then(callback);
         };
         Pos.prototype.push = function(osvModel, record, callback, errorCallback) {
             var dataSet;
