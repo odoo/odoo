@@ -1,42 +1,201 @@
-# Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* l10n_br
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-07 06:40+0000\n"
-"PO-Revision-Date: 2011-03-07 18:00+0000\n"
-"Last-Translator: Alexsandro Haag <alexsandro.haag@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0.3\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-09-19 17:22+0000\n"
+"PO-Revision-Date: 2011-09-19 17:22+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_br
+#: field:account.tax,tax_discount:0
+#: field:account.tax.code,tax_discount:0
+#: field:account.tax.code.template,tax_discount:0
+#: field:account.tax.template,tax_discount:0
+msgid "Discount this Tax in Prince"
+msgstr "Descontar Imposto do Preço"
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
+#: view:l10n_br_account.cst:0
+msgid "Tax Situation Code"
+msgstr "Código de Situação Tributária"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code
+#: field:l10n_br_account.cst,tax_code_id:0
+msgid "Tax Code"
+msgstr "Código da taxa"
+
+#. module: l10n_br
+#: help:account.tax.code,domain:0
+#: help:account.tax.code.template,domain:0
+msgid "This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."
+msgstr "Este campo é usado somente se você desenvolver seu proprio modulos para criar impostos ou taxas especificas."
+
+#. module: l10n_br
+#: field:account.tax,amount_mva:0
+#: field:account.tax.template,amount_mva:0
+msgid "MVA Percent"
+msgstr "Percentual MVA"
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,name:0
+#: field:l10n_br_account.cst.template,name:0
+msgid "Description"
+msgstr "Descrição"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_journal
+msgid "Journal"
+msgstr "Diário"
+
+#. module: l10n_br
+#: help:account.tax.template,amount_mva:0
+#: help:account.tax.template,base_reduction:0
+msgid "For taxes of type percentage, enter % ratio between 0-1."
+msgstr "Um percentual decimal em % entre 0-1."
+
+#. module: l10n_br
+#: field:account.tax,base_reduction:0
+#: field:account.tax.template,base_reduction:0
+msgid "Redution"
+msgstr "Redução"
+
+#. module: l10n_br
+#: constraint:account.tax.code.template:0
+msgid "Error ! You can not create recursive Tax Codes."
+msgstr "Erro ! Você não pode criar Códigos de Impostos recursivos"
+
+#. module: l10n_br
+#: help:account.tax,amount_mva:0
+#: help:account.tax,base_reduction:0
+msgid "Um percentual decimal em % entre 0-1."
+msgstr "Um percentual decimal em % entre 0-1."
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "account.tax"
+msgstr "account.tax"
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_template_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst_template
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
+#: view:l10n_br_account.cst.template:0
+msgid "Tax Situation Code Template"
+msgstr "Modelo de Código de Situação Tributária"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"
 
 #. module: l10n_br
 #: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
-msgid ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"    This is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
-msgstr ""
-"Gera o Plano de Contas a partir de um Plano Modelo. Será solicitado que você "
-"informe o nome da empresa, o modelo do plano para seguir, o número de "
-"dígitos para gerar o código de suas contas, a conta bancária e moeda para "
-"criar os diários. Assim, a cópia pura do Plano Modelo é gerada.\n"
-"    Este é o mesmo assistente que roda a partir de Contas/Configuração/Conta "
-"Financeira/Conta/Contas/Gerar Plano de Contas a partir de um Plano Modelo."
+msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
+msgstr "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
 
 #. module: l10n_br
-#: model:ir.module.module,description:l10n_br.module_meta_information
+#: field:account.journal,internal_sequence:0
+msgid "Internal Sequence"
+msgstr "Sequência Interna"
+
+#. module: l10n_br
+#: help:account.tax,tax_discount:0
+#: help:account.tax.code,tax_discount:0
+#: help:account.tax.code.template,tax_discount:0
+#: help:account.tax.template,tax_discount:0
+msgid "Mark it for (ICMS, PIS e etc.)."
+msgstr "Marque no Caso de (ICMS, PIS, COFINS, ISS e etc.)."
+
+#. module: l10n_br
+#: field:account.tax.code,domain:0
+#: field:account.tax.code.template,domain:0
+msgid "Domain"
+msgstr "Domínio"
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,code:0
+#: field:l10n_br_account.cst.template,code:0
+msgid "Code"
+msgstr "Código"
+
+#. module: l10n_br
+#: constraint:account.tax.code:0
+msgid "Error ! You can not create recursive accounts."
+msgstr "Erro ! Você não pode criar contas recursivas"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_template
+msgid "account.tax.template"
+msgstr "account.tax.template"
+
+#. module: l10n_br
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr "O nome do diário deve ser único por empresa !"
+
+#. module: l10n_br
 #: model:ir.module.module,shortdesc:l10n_br.module_meta_information
 msgid "Brazilian Localization"
 msgstr "Localização Brasileira"
+
+#. module: l10n_br
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr "O código do diário deve ser único por empresa!"
+
+#. module: l10n_br
+#: model:ir.module.module,description:l10n_br.module_meta_information
+msgid "Brazilian Localization. This module consists in:\n"
+"- Generic Brazilian chart of accounts\n"
+"- Brazilian taxes such as:\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"- Tax Situation Code (CST) required for the electronic fiscal invoicing (NFe)\n"
+"\n"
+"The field tax_discount has also been added in the account.tax.template and account.tax objects to allow the proper computation of some Brazilian VATs such as ICMS. The chart of account creation wizard has been extended to propagate those new data properly.\n"
+"\n"
+"It's important to note however that this module lack many implementations to use OpenERP properly in Brazil. Those implementations (such as the electronic fiscal Invoicing which is already operational) are brought by more than 15 additional modules of the Brazilian Launchpad localization project https://launchpad.net/openerp.pt-br-localiz and their dependencies in the extra addons branch. Those modules aim at not breaking with the remarkable OpenERP modularity, this is why they are numerous but small. One of the reasons for maintaining those modules apart is that Brazilian Localization leaders need commit rights agility to complete the localization as companies fund the remaining legal requirements (such as soon fiscal ledgers, accounting SPED, fiscal SPED and PAF ECF that are still missing as September 2011). Those modules are also strictly licensed under AGPL V3 and today don't come with any additional paid permission for online use of 'private modules'."
+msgstr "Localização Brasileira, este módulo consiste em:\n"
+"- Plano de contas contábeis genérico para empresas brasileiras;\n"
+"- Cadastro dos impostos brasileiros como:\n"
+"        - IPI\n"
+"        - ICMS\n"
+"        - PIS\n"
+"        - COFINS\n"
+"        - ISS\n"
+"        - IR\n"
+"        - IRPJ\n"
+"        - CSLL\n"
+"- Código de situação tributária, necessário para emissão das notas ficais e nota fiscal eletrônica.\n"
+"\n"
+"Também foi adicionado o campo tax_discount nos objetos account.tax.template e account.tax para calcular alguns impostos brasileiros como o ICMS, PIS, COFINS e ISS por exemplo. Estendido o wizard de criação de plano de contas para copiar essa informação para os impostos da empresa assim como o código de situação tributária destes impostos.\n"
+"\n"
+"E importante notar que esse módulo não conta com a maioria das implementações necessárias para a utilização do OpenERP no Brasil. Essas implementações complementares (como por exemplo a emissão da NFe que já é funcional) estão contidas dentro dos mais 15 de módulos do projeto Launchpad da localização brasileira https://launchpad.net/openerp.pt-br-localiz e as suas dependências que estão na branch extra-addons. Esses módulos procuram não diminuir a grande modularidade do OpenERP, por isso eles são pequenos módulos. Uma das razões para mantê-los num projeto separado é a necessidade dos líderes e desenvolvedores de localização terem agilidade nos commits para melhorar a localização brasileira a medida que clientes financiam a implementação dos vários requerimentos legais como em breve, Livros Fiscais, SPED Contábil, SPED Fiscal e PAF-ECF (que ainda faltam em Setembro de 2011). Esses módulos são apenas sobre licença AGPL v3 e hoje não contem permissões especial paga para módulos 'privados online'."
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code_template
+#: field:l10n_br_account.cst.template,tax_code_template_id:0
+msgid "Tax Code Template"
+msgstr "Modelo de código de taxa"
+
