@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.2\n"
+"Project-Id-Version: OpenERP Server 6.0.3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-09 10:19+0000\n"
+"POT-Creation-Date: 2011-10-03 14:08+0000\n"
+"PO-Revision-Date: 2011-10-03 14:08+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -685,6 +685,13 @@ msgid "Sum of subtotals"
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/wizard/pos_box_out.py:97
+#, python-format
+msgid "The maximum value you can still withdraw is exceeded. \n"
+" Remaining value is equal to %s"
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
 msgid "Payment date"
 msgstr ""
@@ -844,7 +851,6 @@ msgid "Receipt :"
 msgstr ""
 
 #. module: point_of_sale
-#: field:account.bank.statement.line,pos_statement_id:0
 #: field:pos.order,amount_return:0
 msgid "unknown"
 msgstr ""
@@ -1240,9 +1246,9 @@ msgstr ""
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:103
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:107
-#: code:addons/point_of_sale/wizard/pos_box_out.py:95
-#: code:addons/point_of_sale/wizard/pos_box_out.py:99
+#: code:addons/point_of_sale/wizard/pos_box_out.py:97
 #: code:addons/point_of_sale/wizard/pos_box_out.py:101
+#: code:addons/point_of_sale/wizard/pos_box_out.py:103
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -1570,10 +1576,8 @@ msgid "Max Difference for Cashboxes"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.close.statement:0
-#: view:pos.confirm:0
-#: view:pos.open.statement:0
-msgid "Yes"
+#: field:account.bank.statement.line,pos_statement_id:0
+msgid "Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -1698,7 +1702,7 @@ msgstr ""
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:558
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:103
-#: code:addons/point_of_sale/wizard/pos_box_out.py:101
+#: code:addons/point_of_sale/wizard/pos_box_out.py:103
 #, python-format
 msgid "You have to open at least one cashbox"
 msgstr ""
@@ -2179,7 +2183,7 @@ msgid "Please fill these fields for entries to the box:"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:99
+#: code:addons/point_of_sale/wizard/pos_box_out.py:101
 #, python-format
 msgid "please check that account is set to %s"
 msgstr ""
@@ -2259,13 +2263,6 @@ msgid "    Today    "
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:95
-#, python-format
-msgid "The maximum value you can still withdraw is exceeded. \n"
-" Remaining value is equal to %s "
-msgstr ""
-
-#. module: point_of_sale
 #: field:pos.order,remboursed:0
 msgid "Remboursed"
 msgstr ""
@@ -2336,5 +2333,12 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,year:0
 msgid "Year"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.close.statement:0
+#: view:pos.confirm:0
+#: view:pos.open.statement:0
+msgid "Yes"
 msgstr ""
 

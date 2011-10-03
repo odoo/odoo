@@ -23,6 +23,7 @@
 from osv import fields, osv
 from tools.translate import _
 import time
+import decimal_precision as dp
 
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
@@ -166,16 +167,18 @@ class stock_partial_picking(osv.osv_memory):
 
                 #Adding a check whether any move line contains exceeding qty to original moveline
                 if calc_qty > move.move_id.product_qty:
+                    precision = '%0.' + str(dp.get_precision('Product UoM')(cr)[1] or 0) + 'f'
                     raise osv.except_osv(_('Processing Error'),
                     _('Processing quantity %s %s for %s is larger than the available quantity %s %s !')\
-                    %(move.quantity, move.product_uom.name, move.product_id.name,\
-                      move.move_id.product_qty, move.move_id.product_uom.name))
+                    % (precision % move.quantity, move.product_uom.name, move.product_id.name,\
+                       precision % move.move_id.product_qty, move.move_id.product_uom.name))
 
                 #Adding a check whether any move line contains qty less than zero
                 if calc_qty < 0:
+                    precision = '%0.' + str(dp.get_precision('Product UoM')(cr)[1] or 0) + 'f'
                     raise osv.except_osv(_('Processing Error'), \
                             _('Can not process quantity %s for Product %s !') \
-                            %(move.quantity, move.product_id.name))
+                            % (precision % move.quantity, move.product_id.name))
 
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.product_id.id,

@@ -257,8 +257,9 @@ class split_in_production_lot(osv.osv_memory):
                     quantity = line.quantity
                     total_move_qty += quantity
                     if total_move_qty > move_qty:
+                        precision = '%0.' + str(dp.get_precision('Product UoM')(cr)[1] or 0) + 'f'
                         raise osv.except_osv(_('Processing Error'), _('Processing quantity %s for %s is larger than the available quantity %s!')\
-                                     %(total_move_qty, move.product_id.name, move_qty))
+                                     % (precision % total_move_qty, move.product_id.name, precision % move_qty))
                     if quantity <= 0 or move_qty == 0:
                         continue
                     quantity_rest -= quantity
