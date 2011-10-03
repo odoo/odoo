@@ -88,9 +88,8 @@ class project(osv.osv):
                             )
                         )"""%(ids)) 
         for child in cr.fetchall():
-            if child:
-                if child[0] not in childs: childs.append(child[0])
-                self._get_childs( cr, uid, child[0], childs,context)
+            if child[0] not in childs: childs.append(child[0])
+            self._get_childs( cr, uid, child[0], childs,context)
         return childs
 
 
@@ -130,7 +129,7 @@ class project(osv.osv):
                 'total_hours': s[1],
                 'progress_rate': s[1] and round(100.0*s[2]/s[1],2) or 0.0
             }
-            planned_hours, effective_hours, total_hours= 0.0, 0.0,0.0
+            
             if childs:
                 cr.execute('''SELECT
                     project_id, sum(planned_hours), sum(total_hours), sum(effective_hours), SUM(remaining_hours)
@@ -141,19 +140,18 @@ class project(osv.osv):
                     state<>'cancelled'
                 GROUP BY
                     project_id''', (tuple(childs),))
-                progress2 = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
+                child_progress = dict(map(lambda x: (x[0], (x[1] or 0.0 ,x[2] or 0.0 ,x[3] or 0.0 ,x[4] or 0.0)), cr.fetchall()))
+                planned_hours, effective_hours, total_hours, rnd= 0.0, 0.0,0.0, 0.0
                 for child in childs:
-                    s2 = progress2.get(child, (0.0,0.0,0.0,0.0))
-                    planned_hours, effective_hours, total_hours = planned_hours+s2[0], effective_hours+s2[2] , total_hours+s2[1]
-                if planned_hours == 0: 
-                    rnd = 0.0
-                else:
-                    rnd = round((effective_hours/planned_hours)*100,2) or 0.0
+                    ch_vals = child_progress.get(child, (0.0,0.0,0.0,0.0))
+                    planned_hours, effective_hours, total_hours = planned_hours+ch_vals[0], effective_hours+ch_vals[2] , total_hours+ch_vals[1]
+                if res.get(project.id).get('planned_hours')+ planned_hours > 0:
+                    rnd = round(( res.get(project.id).get('effective_hours')+effective_hours)/(res.get(project.id).get('planned_hours')+ planned_hours)*100,2) or 0.0
                 res[project.id] = {
                     'planned_hours': res.get(project.id).get('planned_hours')+ planned_hours,
                     'effective_hours': res.get(project.id).get('effective_hours')+ effective_hours,
                     'total_hours': res.get(project.id).get('total_hours')+ total_hours,
-                    'progress_rate': res.get(project.id).get('progress_rate')+ rnd
+                    'progress_rate':  rnd
                 }
         return res
 
