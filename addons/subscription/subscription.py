@@ -38,12 +38,6 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'model' in vals:
-            raise osv.except_osv(_('Error !'),_('You cannot modify the Object linked to the Document Type!\nCreate another Document instead !'))
-        return super(subscription_document, self).write(cr, uid, ids, vals, context=context)
-    
 subscription_document()
 
 class subscription_document_fields(osv.osv):

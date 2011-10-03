@@ -674,7 +674,7 @@ class account_voucher(osv.osv):
             if inv.number:
                 name = inv.number
             elif inv.journal_id.sequence_id:
-                name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
+                name = seq_obj.next_by_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
             if not inv.reference:
