@@ -24,7 +24,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
             showTab: false
         };
 
-        instance.webclient.menu.do_menu_click.add_last(this.do_menu_click);
+        instance.webclient.menu.do_menu_click.add_first(this.do_menu_click);
     },
 
     start: function() {
