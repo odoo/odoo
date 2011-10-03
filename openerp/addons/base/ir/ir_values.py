@@ -233,7 +233,7 @@ class ir_values(osv.osv):
         # remove existing defaults for the same scope
         search_criteria = [
             ('key', '=', 'default'),
-            ('key2', '=', condition),
+            ('key2', '=', condition and condition[:200]),
             ('model', '=', model),
             ('name', '=', field_name),
             ('user_id', '=', False if for_all_users else uid),
