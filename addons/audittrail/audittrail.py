@@ -324,6 +324,7 @@ class audittrail_objects_proxy(object_proxy):
                     "object_id": model.id,
                     "user_id": uid_orig,
                     "res_id": resource['id'],
+                    "name": resource['name'],
             }
             if 'id' in resource:
                 del resource['id']
@@ -352,12 +353,13 @@ class audittrail_objects_proxy(object_proxy):
             else:
                 old_values[res['id']] = res
             for res_id in old_values:
+                v = old_values[res_id]
                 vals = {
                     "method": method,
                     "object_id": model.id,
                     "user_id": uid_orig,
                     "res_id": res_id,
-
+                    "name": v.get('name') and v['name'] or ''
                 }
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
@@ -381,12 +383,13 @@ class audittrail_objects_proxy(object_proxy):
                 old_values[res_id] = resource_pool.read(cr, uid, res_id)
 
             for res_id in res_ids:
+                v = old_values[res_id]
                 vals = {
                     "method": method,
                     "object_id": model.id,
                     "user_id": uid_orig,
                     "res_id": res_id,
-
+                    "name" : v['name'],
                 }
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
@@ -441,6 +444,7 @@ class audittrail_objects_proxy(object_proxy):
                         "object_id": model.id,
                         "user_id": uid_orig,
                         "res_id": resource_id,
+                        "name": resource['name'],
                     }
 
 
