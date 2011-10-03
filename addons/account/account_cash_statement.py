@@ -294,9 +294,9 @@ class account_cash_statement(osv.osv):
             if statement.name and statement.name == '/':
                 if statement.journal_id.sequence_id:
                     c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
-                    st_number = obj_seq.get_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
+                    st_number = obj_seq.next_by_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.get(cr, uid, 'account.cash.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.cash.statement')
                 vals.update({
                     'name': st_number
                 })
