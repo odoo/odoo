@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-09-29 08:53+0000\n"
+"PO-Revision-Date: 2011-09-30 08:58+0000\n"
 "Last-Translator: Leonardo Pistone - Agile BG - Domsense "
 "<leonardo.pistone@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-30 04:52+0000\n"
+"X-Launchpad-Export-Date: 2011-10-01 05:21+0000\n"
 "X-Generator: Launchpad (build 14071)\n"
 
 #. module: account
@@ -288,7 +288,7 @@ msgstr "Reports belgi"
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
 msgstr ""
-"Non si può aggiungere/modificare registrazioni in un sezionale chiuso"
+"Non si possono aggiungere/modificare registrazioni in un sezionale chiuso"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -391,9 +391,9 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Questa vista viene usata dai contabili per inserire massivamente "
-"registrazioni in OpenERP. Le registrazioni sui sezionali vengono create da "
-"OpenERP se si usano movimenti bancari, registratori di cassa o pagamenti "
+"Questa vista viene usata dai contabili per l'inserimento massivo di "
+"registrazioni in OpenERP. I movimenti contabili vengono creati da OpenERP se "
+"si usano estratti conto bancari, registratori di cassa o pagamenti "
 "clienti/fornitori."
 
 #. module: account
@@ -438,8 +438,8 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Questo campo contiene informazioni relative alla numerazione delle scritture "
-"in questo sezionale."
+"Questo campo contiene informazioni relative alla numerazione delle "
+"registrazioni in questo sezionale."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -480,9 +480,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"Quando viene creato un periodo sezionale il suo stato è 'Bozza', se stampato "
-"il suo stato  è: 'Stampato'. Quando sono registrate tutte le transazioni il "
-"suo stato è: 'Completato'"
+"Quando viene creato un periodo contabile il suo stato è 'Bozza', se viene "
+"stampato il suo stato  è: 'Stampato'. Quando tutte le transazioni sono "
+"registrate il suo stato è: 'Completato'."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -1324,7 +1324,7 @@ msgstr "Opzioni Report"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Analisi Voci Sezionale"
+msgstr "Analisi Movimenti Contabili"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_partner_all
@@ -1437,10 +1437,10 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
-"Un Movimento Sezionale consiste in diversi componenti, ognuno di essi è una "
-"transazione a credito o a debito. OpenERP crea automaticate un movimento per "
-"ciascun documento contabile: fatture, note di credito, pagamento fornitori, "
-"estratti conto, ecc."
+"Una registrazione contabile è costituita da diversi movimenti contabili, "
+"ognuno dei quali è in dare o in avere. OpenERP crea automaticamente una "
+"registrazione contabile per ciascun documento contabile: fatture, note di "
+"credito, pagamento fornitori, estratti conto, ecc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1689,9 +1689,9 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Mostra il piano dei conti della azienda per anno fiscale, scegliendo il "
-"periodo. Cliccare su un conto per avere una vista ad albero di tutte le voci "
-"Sezionale organizzate per codice di conto."
+"Mostra il piano dei conti della tua azienda per anno fiscale, scegliendo il "
+"periodo. Cliccare su un conto per avere una vista ad albero di tutti i "
+"movimenti contabili organizzati per codice di conto."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -1715,8 +1715,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"Il campo, impostato come \"falso\", permette di nascondere il periodo "
-"fiscale del Sezionale senza eliminarlo."
+"Se impostato come \"falso\", permette di nascondere il periodo fiscale del "
+"Sezionale senza eliminarlo."
 
 #. module: account
 #: view:res.partner:0
@@ -2087,7 +2087,7 @@ msgstr " Sezionale"
 msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
-msgstr "Il Sezionale \"%s\" non ha un conto di debito di default predefinito"
+msgstr "Il Sezionale \"%s\" non ha un conto di debito predefinito"
 
 #. module: account
 #: help:account.account,type:0
