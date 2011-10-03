@@ -43,8 +43,8 @@ DEFAULT_MODULES = {
     'Marketing' : ['marketing',],
 }
 
-class base_setup_installer2(osv.osv_memory):
-    _name = 'base.setup.installer2'
+class base_setup_installer(osv.osv_memory):
+    _name = 'base.setup.installer'
 
     _inherit = 'res.config.installer'
 
@@ -107,7 +107,6 @@ class base_setup_installer2(osv.osv_memory):
 
         return result
 
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='from', context=None, toolbar=False, submenu=False):
         def in_extended_view_group(cr, uid, context=None):
             try:
@@ -116,7 +115,7 @@ class base_setup_installer2(osv.osv_memory):
                 return False
             return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
 
-        result = super(base_setup_installer2, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        result = super(base_setup_installer, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
         module_category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
@@ -208,7 +207,7 @@ class base_setup_installer2(osv.osv_memory):
                 item = 'category_%s' % name[len('on_change_category_'):]
                 return self._on_change_selection(cr, uid, ids, item, value, context=context)
             return proxy
-        return getattr(super(base_setup_installer2, self), name)
+        return getattr(super(base_setup_installer, self), name)
 
     def _on_change_selection(self, cr, uid, ids, item, value, context=None):
         if not isinstance(item, basestring) or not value:
@@ -244,7 +243,7 @@ class base_setup_installer2(osv.osv_memory):
             'selection' : simplejson.dumps(to_install),
         }
         context.update(dont_compute_virtual_attributes=True)
-        return super(base_setup_installer2, self).create(cr, uid, values, context=context)
+        return super(base_setup_installer, self).create(cr, uid, values, context=context)
 
     def apply_cb(self, cr, uid, ids, context=None):
         category_proxy = self.pool.get('ir.module.category')
@@ -303,301 +302,34 @@ class base_setup_installer2(osv.osv_memory):
         else:
             return {'type' : 'ir.actions.act_window_close'}
 
-base_setup_installer2()
+    # TODO: To implement in this new wizard
+    #def execute(self, cr, uid, ids, context=None):
+    #    module_pool = self.pool.get('ir.module.module')
+    #    modules_selected = []
+    #    datas = self.read(cr, uid, ids, context=context)[0]
+    #    for mod in datas.keys():
+    #        if mod in ('id', 'progress'):
+    #            continue
+    #        if datas[mod] == 1:
+    #            modules_selected.append(mod)
 
-class base_setup_installer(osv.osv_memory):
-    _name = 'base.setup.installer'
-    _inherit = 'res.config.installer'
+    #    module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
+    #    need_install = False
+    #    for module in module_pool.browse(cr, uid, module_ids, context=context):
+    #        if module.state == 'uninstalled':
+    #            module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
+    #            need_install = True
+    #            cr.commit()
+    #        elif module.state == 'installed':
+    #            cr.execute("update ir_actions_todo set state='open' \
+    #                                from ir_model_data as data where data.res_id = ir_actions_todo.id \
+    #                                and ir_actions_todo.type='special'\
+    #                                and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
+    #    if need_install:
+    #        self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
+    #    return
+base_setup_installer()
 
-    _install_if = {
-        ('sale','crm'): ['sale_crm'],
-        ('sale','project'): ['project_mrp'],
-    }
-    _columns = {
-        # Generic modules
-        'crm':fields.boolean('Customer Relationship Management',
-            help="Helps you track and manage relations with customers such as"
-                 " leads, requests or issues. Can automatically send "
-                 "reminders, escalate requests or trigger business-specific "
-                 "actions based on standard events."),
-        'sale':fields.boolean('Sales Management',
-            help="Helps you handle your quotations, sale orders and invoicing"
-                 "."),
-        'project':fields.boolean('Project Management',
-            help="Helps you manage your projects and tasks by tracking them, "
-                 "generating plannings, etc..."),
-        'knowledge':fields.boolean('Knowledge Management',
-            help="Lets you install addons geared towards sharing knowledge "
-                 "with and between your employees."),
-        'stock':fields.boolean('Warehouse Management',
-            help="Helps you manage your inventory and main stock operations: delivery orders, receptions, etc."),
-        'mrp':fields.boolean('Manufacturing',
-            help="Helps you manage your manufacturing processes and generate "
-                 "reports on those processes."),
-        'account_voucher':fields.boolean('Invoicing & Payments',
-            help="Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."),
-        'account_accountant':fields.boolean('Accounting & Finance',
-            help="Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing "),
-        'purchase':fields.boolean('Purchase Management',
-            help="Helps you manage your purchase-related processes such as "
-                 "requests for quotations, supplier invoices, etc..."),
-        'hr':fields.boolean('Human Resources',
-            help="Helps you manage your human resources by encoding your employees structure, generating work sheets, tracking attendance and more."),
-        'point_of_sale':fields.boolean('Point of Sales',
-            help="Helps you get the most out of your points of sales with "
-                 "fast sale encoding, simplified payment mode encoding, "
-                 "automatic picking lists generation and more."),
-        'marketing':fields.boolean('Marketing',
-            help="Helps you manage your marketing campaigns step by step."),
-        'profile_tools':fields.boolean('Extra Tools',
-            help="Lets you install various interesting but non-essential tools "
-                "like Survey, Lunch and Ideas box."),
-        'report_designer':fields.boolean('Advanced Reporting',
-            help="Lets you install various tools to simplify and enhance "
-                 "OpenERP's report creation."),
-        # Vertical modules
-        'product_expiry':fields.boolean('Food Industry',
-            help="Installs a preselected set of OpenERP applications "
-                "which will help you manage your industry."),
-        'association':fields.boolean('Associations',
-            help="Installs a preselected set of OpenERP "
-                 "applications which will help you manage your association "
-                 "more efficiently."),
-        'auction':fields.boolean('Auction Houses',
-            help="Installs a preselected set of OpenERP "
-                 "applications selected to help you manage your auctions "
-                 "as well as the business processes around them."),
-        'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
-            help="Allows invoice lines to impact multiple analytic accounts "
-                 "simultaneously."),
-        'account_payment': fields.boolean('Suppliers Payment Management',
-            help="Streamlines invoice payment and creates hooks to plug "
-                 "automated payment systems in."),
-        'account_followup': fields.boolean('Followups Management',
-            help="Helps you generate reminder letters for unpaid invoices, "
-                 "including multiple levels of reminding and customized "
-                 "per-partner policies."),
-        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
-            help="This module will support the Anglo-Saxons accounting methodology by "
-                "changing the accounting logic with stock transactions."),
-        'account_asset': fields.boolean('Assets Management',
-            help="Helps you to manage your assets and their depreciation entries."),
-        # Manufacturing Resource Planning
-        'stock_location': fields.boolean('Advanced Routes',
-            help="Manages product routes and paths within and between "
-                 "locations (e.g. warehouses)."),
-        'mrp_jit': fields.boolean('Just In Time Scheduling',
-            help="Enables Just In Time computation of procurement orders."
-                 "\n\nWhile it's more resource intensive than the default "
-                 "setup, the JIT computer avoids having to wait for the "
-                 "procurement scheduler to run or having to run the "
-                 "procurement scheduler manually."),
-        'mrp_operations': fields.boolean('Manufacturing Operations',
-            help="Enhances production orders with readiness states as well "
-                 "as the start date and end date of execution of the order."),
-        'mrp_subproduct': fields.boolean('MRP Subproducts',
-            help="Enables multiple product output from a single production "
-                 "order: without this, a production order can have only one "
-                 "output product."),
-        'mrp_repair': fields.boolean('Repairs',
-            help="Enables warranty and repair management (and their impact "
-                 "on stocks and invoicing)."),
-        # Knowledge Management
-        'document_ftp':fields.boolean('Shared Repositories (FTP)',
-            help="Provides an FTP access to your OpenERP's "
-                "Document Management System. It lets you access attachments "
-                "and virtual documents through a standard FTP client."),
-        'document_webdav':fields.boolean('Shared Repositories (WebDAV)',
-            help="Provides a WebDAV access to your OpenERP's Document "
-                 "Management System. Lets you access attachments and "
-                 "virtual documents through your standard file browser."),
-        'wiki':fields.boolean('Collaborative Content (Wiki)',
-            help="Lets you create wiki pages and page groups in order "
-                 "to keep track of business knowledge and share it with "
-                 "and  between your employees."),
-        # Content templates
-        'wiki_faq':fields.boolean('Template: Internal FAQ',
-            help="Creates a skeleton internal FAQ pre-filled with "
-                 "documentation about OpenERP's Document Management "
-                 "System."),
-        'wiki_quality_manual':fields.boolean('Template: Quality Manual',
-            help="Creates an example skeleton for a standard quality manual."),
-        # Reporting
-        'base_report_designer':fields.boolean('OpenOffice Report Designer',help="Adds wizards to Import/Export .SXW report which "
-                                "you can modify in OpenOffice.Once you have modified it you can "
-                                "upload the report using the same wizard."),
-        'base_report_creator':fields.boolean('Query Builder',help="Allows you to create any statistic "
-                                "reports  on several objects. It's a SQL query builder and browser for end users."),
-        'lunch':fields.boolean('Lunch',help='A simple module to help you to manage Lunch orders.'),
-        'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
-        'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
-        'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
-        'share':fields.boolean('Web Share',help='Allows you to give restricted access to your OpenERP documents to external users, ' \
-            'such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc.'),
-        'pad': fields.boolean('Collaborative Note Pads',
-            help="This module creates a tighter integration between a Pad "
-                 "instance of your choosing and your OpenERP Web Client by "
-                 "letting you easily link pads to OpenERP objects via "
-                 "OpenERP attachments."),
-        'email_template':fields.boolean('Automated E-Mails',
-            help="Helps you to design templates of emails and integrate them in your different processes."),
-        'marketing_campaign':fields.boolean('Marketing Campaigns',
-            help="Helps you to manage marketing campaigns and automate actions and communication steps."),
-        'crm_profiling':fields.boolean('Profiling Tools',
-            help="Helps you to perform segmentation of partners and design segmentation questionnaires"),
-        # Human Resources Management
-        'hr_holidays': fields.boolean('Leaves Management',
-            help="Tracks employee leaves, allocation requests and planning."),
-        'hr_expense': fields.boolean('Expenses',
-            help="Tracks and manages employee expenses, and can "
-                 "automatically re-invoice clients if the expenses are "
-                 "project-related."),
-        'hr_recruitment': fields.boolean('Recruitment Process',
-            help="Helps you manage and streamline your recruitment process."),
-        'hr_timesheet_sheet':fields.boolean('Timesheets',
-            help="Tracks and helps employees encode and validate timesheets "
-                 "and attendances."),
-        'hr_contract': fields.boolean("Employee's Contracts",
-            help="Extends employee profiles to help manage their contracts."),
-        'hr_evaluation': fields.boolean('Periodic Evaluations',
-            help="Lets you create and manage the periodic evaluation and "
-                 "performance review of employees."),
-        'hr_attendance': fields.boolean('Attendances',
-            help="Simplifies the management of employee's attendances."),
-        'hr_payroll': fields.boolean('Payroll',
-            help="Generic Payroll system."),
-        'hr_payroll_account': fields.boolean('Payroll Accounting',
-            help="Generic Payroll system Integrated with Accountings."),
-        # Project Management
-        'project_long_term': fields.boolean(
-        'Long Term Planning',
-            help="Enables long-term projects tracking, including "
-                 "multiple-phase projects and resource allocation handling."),
-        'hr_timesheet_sheet': fields.boolean('Timesheets',
-            help="Tracks and helps employees encode and validate timesheets "
-                 "and attendances."),
-        'project_timesheet': fields.boolean('Bill Time on Tasks',
-            help="Helps generate invoices based on time spent on tasks, if activated on the project."),
-        'account_budget': fields.boolean('Budgets',
-            help="Helps accountants manage analytic and crossover budgets."),
-        'project_issue': fields.boolean('Issues Tracker',
-            help="Automatically synchronizes project tasks and crm cases."),
-        # Methodologies
-        'project_scrum': fields.boolean('Methodology: SCRUM',
-            help="Implements and tracks the concepts and task types defined "
-                 "in the SCRUM methodology."),
-        'project_gtd': fields.boolean('Methodology: Getting Things Done',
-            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
-        'purchase_requisition':fields.boolean('Purchase Requisition',help="Manages your Purchase Requisition and allows you to easily keep track and manage all your purchase orders."),
-        'purchase_analytic_plans': fields.boolean('Purchase Analytic Plans',help="Manages analytic distribution and purchase orders."),
-        'delivery': fields.boolean('Delivery Costs', 
-            help="Allows you to compute delivery costs on your quotations."),
-        'sale_journal': fields.boolean('Invoicing journals',
-            help="Allows you to group and invoice your delivery orders according to different invoicing types: daily, weekly, etc."),
-        'sale_layout': fields.boolean('Sales Orders Print Layout',
-            help="Provides some features to improve the layout of the Sales Order reports."),
-        'sale_margin': fields.boolean('Margins in Sales Orders',
-            help="Gives the margin of profitability by calculating "
-                 "the difference between Unit Price and Cost Price."),
-        'sale_order_dates': fields.boolean('Full Dates on Sales Orders',
-            help="Adds commitment, requested and effective dates on Sales Orders."),
-        'hr_expense':fields.boolean('Resources Management: Expenses Tracking',  help="Tracks and manages employee expenses, and can "
-                 "automatically re-invoice clients if the expenses are "
-                 "project-related."),
-        'event_project':fields.boolean('Event Management: Events', help="Helps you to manage and organize your events."),
-        'project_gtd':fields.boolean('Getting Things Done',
-            help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
-        'wiki': fields.boolean('Wiki', help="Lets you create wiki pages and page groups in order "
-                 "to keep track of business knowledge and share it with "
-                 "and  between your employees."),
-        'name': fields.char('Name', size=64),
-        'crm_helpdesk': fields.boolean('Helpdesk', help="Manages a Helpdesk service."),
-        'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fundraising process and tracking."),
-        'crm_claim': fields.boolean('Claims', help="Manages the suppliers and customers claims, including your corrective or preventive actions."),
-        'import_sugarcrm': fields.boolean('Import Data from SugarCRM', help="Help you to import and update data from SugarCRM to OpenERP"),
-        'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
-        'sale_crm': fields.boolean('Opportunity to Quotation', help="Create a Quotation from an Opportunity."),
-        'fetchmail': fields.boolean('Fetch Emails', help="Allows you to receive E-Mails from POP/IMAP server."),
-        'thunderbird': fields.boolean('Thunderbird Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
-        'outlook': fields.boolean('MS-Outlook Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
-        'wiki_sale_faq': fields.boolean('Sale FAQ', help="Helps you manage wiki pages for Frequently Asked Questions on Sales Application."),
-        'import_google': fields.boolean('Google Import', help="Imports contacts and events from your google account."),
-    }
-
-    _defaults = {
-        'mrp_jit': lambda self,cr,uid,*a: self.pool.get('res.users').browse(cr, uid, uid).view == 'simple',
-        'document_ftp':True,
-        'marketing_campaign': lambda *a: 1,
-    }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(base_setup_installer, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        doc = etree.XML(res['arch'])
-        for module in ['project_gtd','hr_expense']:
-            count = 0
-            for node in doc.xpath("//field[@name='%s']" % (module)):
-                count = count + 1
-                if count > 1:
-                    node.set('invisible', '1')
-        res['arch'] = etree.tostring(doc)
-        #Checking sale module is installed or not
-        cr.execute("SELECT * from ir_module_module where state='installed' and name = 'sale'")
-        count = cr.fetchall()
-        if count:
-            doc = etree.XML(res['arch'])
-            nodes = doc.xpath("//field[@name='sale_crm']")
-            for node in nodes:
-                node.set('invisible', '0')
-                node.set('modifiers', '{}')
-            res['arch'] = etree.tostring(doc)
-        return res
-
-    def _if_knowledge(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['document_ftp']
-        return None
-
-    def _if_misc_tools(self, cr, uid, ids, context=None):
-        return ['profile_tools']
-
-    def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
-        value = {}
-        # Calculate progress
-        closed, total = self.get_current_progress(cr, uid)
-        progress = round(100. * closed / (total + len(filter(None, args))))
-        value.update({'progress':progress})
-        if progress < 10.:
-            progress = 10.
-        
-        return {'value':value}
-
-
-    def execute(self, cr, uid, ids, context=None):
-        module_pool = self.pool.get('ir.module.module')
-        modules_selected = []
-        datas = self.read(cr, uid, ids, context=context)[0]
-        for mod in datas.keys():
-            if mod in ('id', 'progress'):
-                continue
-            if datas[mod] == 1:
-                modules_selected.append(mod)
-
-        module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
-        need_install = False
-        for module in module_pool.browse(cr, uid, module_ids, context=context):
-            if module.state == 'uninstalled':
-                module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                need_install = True
-                cr.commit()
-            elif module.state == 'installed':
-                cr.execute("update ir_actions_todo set state='open' \
-                                    from ir_model_data as data where data.res_id = ir_actions_todo.id \
-                                    and ir_actions_todo.type='special'\
-                                    and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
-        if need_install:
-            self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
-        return
 
 
 

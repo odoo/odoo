@@ -1,183 +1,19 @@
 <openerp>
   <data>
 
-      <record model="ir.actions.act_window" id="action_base_setup_installer2">
+      <record model="ir.actions.act_window" id="action_base_setup_installer_beta">
           <field name="name">Install Applications (beta)</field>
-          <field name="res_model">base.setup.installer2</field>
+          <field name="res_model">base.setup.installer</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
       </record>
 
-      <record id="todo_base_setup_installer2" model="ir.actions.todo">
-        <field name="action_id" ref="action_base_setup_installer2" />
+      <record id="todo_base_setup_installer_beta" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_setup_installer_beta" />
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
       </record>
-
-    <record id="view_base_setup_installer" model="ir.ui.view">
-      <field name="name">base.setup.installer.view</field>
-      <field name="model">base.setup.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <form position="attributes">
-            <attribute name="string">Install Applications</attribute>
-          </form>
-          <xpath expr="//label[@string='description']" position="attributes">
-                <attribute name="string">Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later.</attribute>
-          </xpath>
-          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="string"/>
-                    <attribute name="rowspan">15</attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-                    <attribute name="string">Install</attribute>
-          </xpath>
-          <separator string="title" position="attributes">
-            <attribute name="string">Install Applications</attribute>
-          </separator>
-          <group colspan="8">
-            <field name="crm" />
-            <field name="sale" />
-            <field name="project" />
-            <field name="knowledge" />
-            <field name="stock" />
-            <field name="mrp" />
-            <field name="account_voucher" />
-            <field name="account_accountant" />
-            <field name="purchase" />
-            <field name="hr" />
-            <field name="profile_tools" />
-            <field name="marketing" groups="base.group_extended" />
-            <field name="point_of_sale"/>
-            <field name="report_designer" groups="base.group_extended" />
-
-            <group name="crm" colspan="4">
-                <separator string="Customer Relationship Management Features" colspan="4"/>
-                <field name="crm_claim" groups="base.group_extended"/>
-                <field name="crm_helpdesk" groups="base.group_extended"/>
-                <field name="crm_fundraising" groups="base.group_extended"/>
-                <field name="wiki_sale_faq" groups="base.group_extended"/>
-                <field name="sale_crm" invisible="1" groups="base.group_extended"/>
-                <field name="crm_caldav"/>
-                <field name="import_sugarcrm"/>
-                <field name="fetchmail"/>
-                <field name="thunderbird"/>
-                <field name="outlook"/>
-            </group>
-            <group name="sale" colspan="4">
-                <separator string="Sales Management Features" colspan="4" />
-                <field name="delivery" />
-                <field name="sale_journal" />
-                <field name="sale_layout" />
-                <field name="sale_margin" />
-                <field name="sale_order_dates" />
-            </group>
-            <group name="project" colspan="4">
-                <separator string="Project Management Features" colspan="4" />
-                <field name="project_issue" />
-                <field name="project_long_term" />
-                <field name="hr_timesheet_sheet" />
-                <field name="project_timesheet" />
-                <field name="account_budget" />
-                <field name="project_scrum" />
-                <field name="project_gtd" />
-            </group>
-            <group name="knowledge" colspan="4">
-                <separator  string="Knowledge Management Features" colspan="4" />
-                <field name="document_ftp" />
-                <field name="document_webdav" />
-                <field name="wiki" />
-                <field name="wiki_faq" />
-                <field name="wiki_quality_manual" />
-                <field name="stock" />
-            </group>
-            <group name="mrp" colspan="4">
-                <separator  string="Manufacturing Features" colspan="4" />
-                <field name="stock_location" />
-                <field name="mrp_jit" />
-                <field name="mrp_operations" />
-                <field name="mrp_subproduct" />
-                <field name="mrp_repair" />
-                <field name="account_voucher" />
-            </group>
-            <group name="account_accountant" colspan="4">
-                <separator string="Accounting &amp; Finance Features" colspan="4"/>
-                <field name="account_followup"/>
-                <field name="account_payment"/>
-                <field name="account_analytic_plans"/>
-                <field name="account_anglo_saxon"/>
-                <field name="account_asset"/>
-                <field name="purchase" />
-            </group>
-
-            <group name="hr" colspan="4">
-                <separator string="Human Resources Features" colspan="4"/>
-                <field name="hr_holidays"/>
-                <field name="hr_expense"/>
-                <field name="hr_recruitment"/>
-                <field name="hr_timesheet_sheet"/>
-                <field name="hr_contract"/>
-                <field name="hr_attendance"/>
-                <field name="hr_evaluation"/>
-                <field name="hr_payroll"/>
-                <field name="hr_payroll_account" groups="base.group_extended"/>
-            </group>
-            <group name="profile_tools" colspan="4">
-                <separator  string="Extra Tools Features" colspan="4" />
-                <field name="share" />
-                <field name="lunch" />
-                <field name="idea" />
-                <field name="survey" />
-                <field name="subscription" />
-                <field name="pad" />
-            </group>
-            <group name="marketing" colspan="4">
-                <separator  string="Marketing Features" colspan="4" />
-                <field name="marketing_campaign" />
-                <field name="email_template" />
-                <field name="crm_profiling" />
-                <field name="point_of_sale"/>
-            </group>
-            <group name="report_designer" colspan="4">
-                <separator  string="Advanced Reporting Features" colspan="4" />
-                <field name="base_report_designer" />
-                <field name="base_report_creator" />
-            </group>
-            <group name="association" colspan="4">
-                <separator  string="Associations Features" colspan="4" />
-                <field name="project_gtd" />
-                <field name="wiki" />
-                <field name="event_project" />
-                <field name="hr_expense" />
-                <field name="auction" />
-                <field name="product_expiry" />
-            </group>
-            <group name="purchase" colspan="4">
-                <separator  string="Purchase Management Features" colspan="4" />
-                <field name="purchase_requisition" />
-                <field name="purchase_analytic_plans" />
-            </group>
-          </group>
-        </data>
-      </field>
-    </record>
-    <record id="action_base_setup_installer" model="ir.actions.act_window">
-      <field name="name">Install Applications</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">base.setup.installer</field>
-      <field name="view_id" ref="view_base_setup_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-    <record id="base_setup_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_base_setup_installer"/>
-        <field name="category_id" ref="base.category_administration_config"/>
-        <field name="sequence">2</field>
-    </record>
 
     <record id="action_start_configurator" model="ir.actions.server">
       <field name="name">Start Configuration</field>
