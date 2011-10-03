@@ -24,14 +24,14 @@
 <body>
 
   <div id="topheader">
-    <div id="branding"><img src="/point_of_sale2/static/img/logo.png" /></div>
+    <div id="branding"><img src="/point_of_sale/static/src/img/logo.png" /></div>
     <div id="steps">
       <input type="radio" id="products-step-button" class="step-button" data-step='products' name="radio" checked="checked" />
         <label for="products-step-button">Products</label>
-        <img src="/point_of_sale2/static/img/steps-arrow.png">
+        <img src="/point_of_sale/static/src/img/steps-arrow.png">
       <input type="radio" id="payment-step-button" class="step-button" data-step='payment' name="radio" />
         <label for="payment-step-button">Payment</label>
-        <img src="/point_of_sale2/static/img/steps-arrow.png">
+        <img src="/point_of_sale/static/src/img/steps-arrow.png">
       <input type="radio" id="receipt-step-button" class="step-button" data-step='receipt' name="radio" />
         <label for="receipt-step-button">Receipt</label>
     </div>
@@ -91,7 +91,7 @@
           <button class="input-button number-char">0</button>
           <button class="input-button number-char">.</button>
           <button class="input-button" id="numpad-backspace">
-            <img src="/point_of_sale2/static/img/backspace.png" width="24" height="21">
+            <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21">
           </button><br>
         </div>
       </footer>
@@ -134,18 +134,18 @@
     <header>
       <ol class="breadcrumb">
         <li>
-          <a href="#"><img src="/point_of_sale2/static/img/home.png" class="homeimg"></a>
+          <a href="#"><img src="/point_of_sale/static/src/img/home.png" class="homeimg"></a>
         </li>
         <% _.each(breadcrumb, function(category) { %>
           <li>
-            <img src="/point_of_sale2/static/img/bc-arrow.png" class="bc-arrow">
+            <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow">
             <a href="#category/<%= category.id %>"><%= category.name %></a>
           </li>
         <% }); %>
       </ol>
       <div class="searchbox">
         <input placeholder="Search Products">
-        <img class="search-clear" src="/point_of_sale2/static/img/search_reset.gif">
+        <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif">
       </div>
     </header>
 

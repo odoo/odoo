@@ -63,19 +63,19 @@
         }
 
         Pos.prototype.ready = $.Deferred();
-        Pos.prototype.session = new db.base.Session('DEBUG');
+        Pos.prototype.session = new db.web.Session('DEBUG');
         Pos.prototype.store = new Store;
         Pos.prototype.fetch = function(osvModel, fields, domain, callback, errorCallback) {
             var dataSetSearch;
             callback = callback || __bind( function(result) {
                 return this.store.set(osvModel, result);
             }, this);
-            dataSetSearch = new db.base.DataSetSearch(this, osvModel, null, domain);
+            dataSetSearch = new db.web.DataSetSearch(this, osvModel, null, domain);
             return dataSetSearch.read_slice(fields, 0, null, callback);
         };
         Pos.prototype.push = function(osvModel, record, callback, errorCallback) {
             var dataSet;
-            dataSet = new db.base.DataSet(this, osvModel, null);
+            dataSet = new db.web.DataSet(this, osvModel, null);
             return dataSet.create(record, callback, errorCallback);
         };
         Pos.prototype.categories = {};
