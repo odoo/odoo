@@ -28,6 +28,8 @@ import logging
 
 import openerp.sql_db
 import openerp.osv.orm
+import openerp.cron
+import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
 
@@ -89,16 +91,24 @@ class Registry(object):
 
         res = []
 
-        # Instantiate registered classes (via metamodel discovery or via explicit
-        # constructor call), and add them to the pool.
+        # Instantiate registered classes (via the MetaModel automatic discovery
+        # or via explicit constructor call), and add them to the pool.
         for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
-            res.append(cls.createInstance(self, cr))
+            res.append(cls.create_instance(self, cr))
 
         return res
 
+    def schedule_cron_jobs(self):
+        """ Make the cron thread care about this registry/database jobs.
+        This will initiate the cron thread to check for any pending jobs for
+        this registry/database as soon as possible. Then it will continuously
+        monitor the ir.cron model for future jobs. See openerp.cron for
+        details.
+        """
+        openerp.cron.schedule_wakeup(openerp.cron.WAKE_UP_NOW, self.db.dbname)
+
     def clear_caches(self):
         """ Clear the caches
-
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
@@ -112,25 +122,20 @@ class RegistryManager(object):
         registries (essentially database connection/model registry pairs).
 
     """
-
     # Mapping between db name and model registry.
     # Accessed through the methods below.
     registries = {}
     registries_lock = threading.RLock()
 
-
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
         """ Return a registry for a given database name."""
-        with cls.registries_lock:
-            if db_name in cls.registries:
-                registry = cls.registries[db_name]
-            else:
-                registry = cls.new(db_name, force_demo, status,
-                                   update_module, pooljobs)
-            return registry
-
+        try:
+            return cls.registries[db_name]
+        except KeyError:
+            return cls.new(db_name, force_demo, status,
+                           update_module, pooljobs)
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
@@ -165,23 +170,39 @@ class RegistryManager(object):
             finally:
                 cr.close()
 
-            if pooljobs:
-                registry.get('ir.cron').restart(registry.db.dbname)
+        if pooljobs:
+            registry.schedule_cron_jobs()
 
-            return registry
-
+        return registry
 
     @classmethod
     def delete(cls, db_name):
-        """ Delete the registry linked to a given database. """
+        """Delete the registry linked to a given database.
+
+        This also cleans the associated caches. For good measure this also
+        cancels the associated cron job. But please note that the cron job can
+        be running and take some time before ending, and that you should not
+        remove a registry if it can still be used by some thread. So it might
+        be necessary to call yourself openerp.cron.Agent.cancel(db_name) and
+        and join (i.e. wait for) the thread.
+        """
         with cls.registries_lock:
             if db_name in cls.registries:
+                cls.registries[db_name].clear_caches()
                 del cls.registries[db_name]
+                openerp.cron.cancel(db_name)
 
 
     @classmethod
+    def delete_all(cls):
+        """Delete all the registries. """
+        with cls.registries_lock:
+            for db_name in cls.registries.keys():
+                cls.delete(db_name)
+
+    @classmethod
     def clear_caches(cls, db_name):
-        """ Clear the caches
+        """Clear caches
 
         This clears the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models

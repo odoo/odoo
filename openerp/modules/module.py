@@ -249,6 +249,7 @@ def load_information_from_description_file(module):
             info.setdefault('website', '')
             info.setdefault('name', False)
             info.setdefault('description', '')
+            info.setdefault('complexity', False)
             info['certificate'] = info.get('certificate') or None
             info['web'] = info.get('web') or False
             info['license'] = info.get('license') or 'AGPL-3'
@@ -277,7 +278,6 @@ def init_module_models(cr, module_name, obj_list):
     TODO better explanation of _auto_init and init.
 
     """
-
     logger.notifyChannel('init', netsvc.LOG_INFO,
         'module %s: creating or updating database tables' % module_name)
     todo = []

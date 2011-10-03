@@ -450,7 +450,7 @@ class expression(object):
                     # field could not be found in model columns, it's probably invalid, unless
                     # it's one of the _log_access special fields
                     # TODO: make these fields explicitly available in self.columns instead!
-                    if (field_path[0] not in MAGIC_COLUMNS) and (left not in MAGIC_COLUMNS):
+                    if field_path[0] not in MAGIC_COLUMNS:
                         raise ValueError("Invalid field %r in domain expression %r" % (left, exp))
                 continue
 

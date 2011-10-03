@@ -21,27 +21,29 @@
 
 #.apidoc title: Objects Services (OSV)
 
+import logging
+from psycopg2 import IntegrityError, errorcodes
+
 import orm
+import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import logging
-from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import MetaModel
+from openerp.osv.orm import MetaModel, Model, TransientModel, AbstractModel
+import openerp.exceptions
 
-
+# Deprecated.
 class except_osv(Exception):
-    def __init__(self, name, value, exc_type='warning'):
+    def __init__(self, name, value):
         self.name = name
-        self.exc_type = exc_type
         self.value = value
-        self.args = (exc_type, name)
+        self.args = (name, value)
 
 service = None
 
-class object_proxy():
+class object_proxy(object):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         global service
@@ -117,11 +119,9 @@ class object_proxy():
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
-                if inst.name == 'AccessError':
-                    self.logger.debug("AccessError", exc_info=True)
-                netsvc.abort_response(1, inst.name, 'warning', inst.value)
-            except except_osv, inst:
-                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
+                raise except_osv(inst.name, inst.value)
+            except except_osv:
+                raise
             except IntegrityError, inst:
                 osv_pool = pooler.get_pool(dbname)
                 for key in osv_pool._sql_error.keys():
@@ -198,17 +198,10 @@ class object_proxy():
             cr.close()
         return res
 
-
-class osv_memory(orm.orm_memory):
-    """ Deprecated class. """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
-
-
-class osv(orm.orm):
-    """ Deprecated class. """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
+# deprecated - for backward compatibility.
+osv = Model
+osv_memory = TransientModel
+osv_abstract = AbstractModel # ;-)
 
 
 def start_object_proxy():
