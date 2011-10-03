@@ -19,9 +19,9 @@
         /**
          * OpenERP instance constructor
          *
-         * @param {Boolean} skip_init if true, skips the built-in initialization
+         * @param {Array} modules list of modules to initialize
          */
-        init: function(skip_init) {
+        init: function(modules) {
             var new_instance = {
                 // links to the global openerp
                 _openerp: openerp,
@@ -35,8 +35,9 @@
                 web_mobile: {}
             };
             openerp.sessions[new_instance._session_id] = new_instance;
-            if (!skip_init){
-                openerp.web(new_instance);
+            modules = modules || ["web"];
+            for(var i=0; i < modules.length; i++) {
+                openerp[modules[i]](new_instance);
             }
             return new_instance;
         }

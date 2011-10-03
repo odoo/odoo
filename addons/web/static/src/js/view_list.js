@@ -49,6 +49,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.model = dataset.model;
         this.view_id = view_id;
         this.previous_colspan = null;
+        this.colors = null;
 
         this.columns = [];
 
@@ -75,6 +76,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
             self.compute_aggregates();
         });
+
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -132,6 +134,31 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_view(null, null, true);
     },
     /**
+     * Returns the color for the provided record in the current view (from the
+     * ``@colors`` attribute)
+     *
+     * @param {Record} record record for the current row
+     * @returns {String} CSS color declaration
+     */
+    color_for: function (record) {
+        if (!this.colors) { return ''; }
+        var context = _.extend({}, record.attributes, {
+            uid: this.session.uid,
+            current_date: new Date().toString('yyyy-MM-dd')
+            // TODO: time, datetime, relativedelta
+        });
+        for(var i=0, len=this.colors.length; i<len; ++i) {
+            var pair = this.colors[i],
+                color = pair[0],
+                expression = pair[1];
+            if (py.evaluate(expression, context)) {
+                return 'color: ' + color + ';';
+            }
+            // TODO: handle evaluation errors
+        }
+        return '';
+    },
+    /**
      * Called after loading the list view's description, sets up such things
      * as the view table's columns, renders the table itself and hooks up the
      * various table-level and row-level DOM events (action buttons, deletion
@@ -158,6 +185,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+
+        if (this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+                .compact()
+                .map(function(color_pair) {
+                    var pair = color_pair.split(':'),
+                        color = pair[0],
+                        expr = pair[1];
+                    return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
 
         this.setup_columns(this.fields_view.fields, grouped);
 
@@ -415,8 +453,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     do_search: function (domains, contexts, groupbys) {
         return this.rpc('/web/session/eval_domain_and_context', {
-            domains: [this.dataset.get_domain()].concat(domains),
-            contexts: [this.dataset.get_context()].concat(contexts),
+            domains: _([this.dataset.get_domain()].concat(domains)).compact(),
+            contexts: _([this.dataset.get_context()].concat(contexts)).compact(),
             group_by_seq: groupbys
         }, $.proxy(this, 'do_actual_search'));
     },
@@ -541,6 +579,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (_.isEmpty(records)) {
             records = this.groups.get_records();
         }
+        records = _(records).compact();
 
         var count = 0, sums = {};
         _(columns).each(function (column) {
@@ -1235,6 +1274,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
+            if (!this.datagroup.length) {
+                return;
+            }
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
@@ -1351,10 +1393,10 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
      * @returns {Object} record displayable in a form view
      */
     toForm: function () {
-        var form_data = {};
-        _(this.attributes).each(function (value, key) {
-            form_data[key] = {value: value};
-        });
+        var form_data = {}, attrs = this.attributes;
+        for(var k in attrs) {
+            form_data[k] = {value: attrs[k]};
+        }
 
         return {data: form_data};
     }

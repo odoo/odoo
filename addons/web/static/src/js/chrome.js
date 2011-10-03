@@ -1,7 +1,6 @@
 /*---------------------------------------------------------
  * OpenERP Web chrome
  *---------------------------------------------------------*/
-
 openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
@@ -129,6 +128,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         // Destroy widget
         this.close();
         this.$dialog.dialog('destroy');
+        this._super();
     }
 });
 
@@ -218,9 +218,8 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         this.$element.closest(".openerp")
                 .removeClass("login-mode")
                 .addClass("database_block");
-        
+
         var self = this;
-        
         var fetch_db = this.rpc("/web/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
         });
@@ -232,7 +231,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
             self.lang_list = result.lang_list;
         });
         $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
-        
+
         this.$element.find('#db-create').click(this.do_create);
         this.$element.find('#db-drop').click(this.do_drop);
         this.$element.find('#db-backup').click(this.do_backup);
@@ -254,7 +253,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                 .removeClass("database_block")
             .end()
             .empty();
-
+        this._super();
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -300,9 +299,9 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
             var admin = result[1][0];
             setTimeout(function () {
-                self.stop();
                 self.widget_parent.do_login(
                         info.db, admin.login, admin.password);
+                self.stop();
                 $.unblockUI();
             });
         });
@@ -399,7 +398,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
     do_restore: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("RestoreDB", self));
-       	
+
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
                 $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
@@ -464,15 +463,19 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
 openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     remember_creditentials: true,
+    
+    template: "Login",
+    identifier_prefix: 'oe-app-login-',
     /**
      * @constructs openerp.web.Login
      * @extends openerp.web.Widget
-     * 
+     *
      * @param parent
      * @param element_id
      */
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+
+    init: function(parent) {
+        this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
@@ -487,17 +490,6 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     },
     start: function() {
         var self = this;
-        this.rpc("/web/database/get_list", {}, function(result) {
-            self.db_list = result.db_list;
-            self.display();
-        }, function() {
-            self.display();
-        });
-    },
-    display: function() {
-        var self = this;
-        
-        this.$element.html(QWeb.render("Login", this));
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
 
@@ -506,6 +498,17 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         });
 
         this.$element.find("form").submit(this.on_submit);
+
+        this.rpc("/web/database/get_list", {}, function(result) {
+            var tpl = openerp.web.qweb.render('Login_dblist', {db_list: result.db_list, selected_db: self.selected_db});
+            self.$element.find("input[name=db]").replaceWith(tpl)
+        }, 
+        function(error, event) {
+            if (error.data.fault_code === 'AccessDenied') {
+                event.preventDefault();
+            }
+        });
+
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
@@ -574,14 +577,13 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
     /**
      * @constructs openerp.web.Header
      * @extends openerp.web.Widget
-     * 
+     *
      * @param parent
      */
     init: function(parent) {
         this._super(parent);
         this.qs = "?" + jQuery.param.querystring();
         this.$content = $();
-        console.debug("initializing header with id", this.element_id);
         this.update_promise = $.Deferred().resolve();
     },
     start: function() {
@@ -666,7 +668,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
                 });
         });
     },
-    
+
     on_action: function(action) {
     },
     on_preferences: function(){
@@ -702,10 +704,11 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             },
                 Save: function(){
                     var inner_viewmanager = action_manager.inner_viewmanager;
-                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save(function(){
-                        inner_viewmanager.start();
+                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save()
+                    .then(function() {
+                        self.dialog.stop();
+                        window.location.reload();
                     });
-                    $(this).dialog('destroy')
                 }
             }
         });
@@ -713,7 +716,7 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
        action_manager.appendTo(this.dialog);
        action_manager.render(this.dialog);
     },
-    
+
     change_password :function() {
         var self = this;
         this.dialog = new openerp.web.Dialog(this,{
@@ -728,21 +731,13 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
-                        }, function(result) {
-                         if (result.error) {
-                            self.display_error(result);
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
                         return;
-                        }
-                        else {
-                            if (result.new_password) {
-                                self.session.password = result.new_password;
-                                var session = new openerp.web.Session(self.session.server, self.session.port);
-                                session.start();
-                                session.session_login(self.session.db, self.session.login, self.session.password)
-                            }
-                        }
-                    self.notification.notify("Changed Password", "Password has been changed successfully");
-                    self.dialog.close();
+                    } else {
+                        self.session.logout();
+                    }
                 });
             }
         });
@@ -766,7 +761,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     /**
      * @constructs openerp.web.Menu
      * @extends openerp.web.Widget
-     * 
+     *
      * @param parent
      * @param element_id
      * @param secondary_menu_id
@@ -776,74 +771,132 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
         this.secondary_menu_id = secondary_menu_id;
         this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
+        this.folded = false;
+        if (window.localStorage) {
+            this.folded = localStorage.getItem('oe_menu_folded') === 'true';
+        }
+        this.float_timeout = 700;
     },
     start: function() {
+        this.$secondary_menu.addClass(this.folded ? 'oe_folded' : 'oe_unfolded');
+        this.reload();
+    },
+    reload: function() {
         this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.data = data;
-        this.$element.html(QWeb.render("Menu", this.data));
-        for (var i = 0; i < this.data.data.children.length; i++) {
-            var v = { menu : this.data.data.children[i] };
-            this.$secondary_menu.append(QWeb.render("Menu.secondary", v));
-        }
-        this.$secondary_menu.find("div.menu_accordion").accordion({
-            animated : false,
-            autoHeight : false,
-            icons : false
-        });
-        this.$secondary_menu.find("div.submenu_accordion").accordion({
-            animated : false,
-            autoHeight : false,
-            active: false,
-            collapsible: true,
-            header: 'h4'
-        });
-
+        this.$element.html(QWeb.render("Menu", { widget : this }));
+        this.$secondary_menu.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
+        this.$secondary_menu.find('.oe_toggle_secondary_menu').click(this.on_toggle_fold);
+    },
+    on_toggle_fold: function() {
+        this.$secondary_menu.toggleClass('oe_folded').toggleClass('oe_unfolded');
+        if (this.folded) {
+            this.$secondary_menu.find('.oe_secondary_menu.active').show();
+        } else {
+            this.$secondary_menu.find('.oe_secondary_menu').hide();
+        }
+        this.folded = !this.folded;
+        if (window.localStorage) {
+            localStorage.setItem('oe_menu_folded', this.folded.toString());
+        }
     },
     on_menu_click: function(ev, id) {
         id = id || 0;
-        var $menu, $parent, $secondary;
+        var $clicked_menu, manual = false;
 
         if (id) {
             // We can manually activate a menu with it's id (for hash url mapping)
-            $menu = this.$element.find('a[data-menu=' + id + ']');
-            if (!$menu.length) {
-                $menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
+            manual = true;
+            $clicked_menu = this.$element.find('a[data-menu=' + id + ']');
+            if (!$clicked_menu.length) {
+                $clicked_menu = this.$secondary_menu.find('a[data-menu=' + id + ']');
             }
         } else {
-            $menu = $(ev.currentTarget);
-            id = $menu.data('menu');
-        }
-        if (this.$secondary_menu.has($menu).length) {
-            $secondary = $menu.parents('.menu_accordion');
-            $parent = this.$element.find('a[data-menu=' + $secondary.data('menu-parent') + ']');
-        } else {
-            $parent = $menu;
-            $secondary = this.$secondary_menu.find('.menu_accordion[data-menu-parent=' + $menu.attr('data-menu') + ']');
+            $clicked_menu = $(ev.currentTarget);
+            id = $clicked_menu.data('menu');
         }
 
-        this.$secondary_menu.find('.menu_accordion').hide();
-        // TODO: ui-accordion : collapse submenus and expand the good one
-        $secondary.show();
-
-        if (id) {
+        if (this.do_menu_click($clicked_menu, manual) && id) {
             this.session.active_id = id;
-            this.rpc('/web/menu/action', {'menu_id': id},
-                    this.on_menu_action_loaded);
+            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
         }
+        ev.stopPropagation();
+        return false;
+    },
+    do_menu_click: function($clicked_menu, manual) {
+        var $sub_menu, $main_menu,
+            active = $clicked_menu.is('.active'),
+            sub_menu_visible = false;
+
+        if (this.$secondary_menu.has($clicked_menu).length) {
+            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
+            $main_menu = this.$element.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
+        } else {
+            $sub_menu = this.$secondary_menu.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
+            $main_menu = $clicked_menu;
+        }
+
+        sub_menu_visible = $sub_menu.is(':visible');
+        this.$secondary_menu.find('.oe_secondary_menu').hide();
 
         $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
-        $parent.addClass('active');
-        $menu.addClass('active');
-        $menu.parent('h4').addClass('active');
+        $main_menu.add($clicked_menu).add($sub_menu).addClass('active');
 
-        if (this.$secondary_menu.has($menu).length) {
-            return !$menu.is(".leaf");
-        } else {
-            return false;
+        if (!(this.folded && manual)) {
+            this.do_show_secondary($sub_menu, $main_menu);
         }
+
+        if ($main_menu != $clicked_menu) {
+            if ($clicked_menu.is('.submenu')) {
+                $sub_menu.find('.submenu.opened').each(function() {
+                    if (!$(this).next().has($clicked_menu).length && !$(this).is($clicked_menu)) {
+                        $(this).removeClass('opened').next().hide();
+                    }
+                });
+                $clicked_menu.toggleClass('opened').next().toggle();
+            } else if ($clicked_menu.is('.leaf')) {
+                $sub_menu.toggle(!this.folded);
+                return true;
+            }
+        } else if (this.folded) {
+            if (active && sub_menu_visible) {
+                $sub_menu.hide();
+                return true;
+            }
+        } else {
+            return true;
+        }
+        return false;
+    },
+    do_show_secondary: function($sub_menu, $main_menu) {
+        var self = this;
+        if (this.folded) {
+            var css = $main_menu.position(),
+                fold_width = this.$secondary_menu.width() + 2,
+                window_width = $(window).width();
+            css.top += 33;
+            css.left -= Math.round(($sub_menu.width() - $main_menu.width()) / 2);
+            css.left = css.left < fold_width ? fold_width : css.left;
+            if ((css.left + $sub_menu.width()) > window_width) {
+                delete(css.left);
+                css.right = 1;
+            }
+            $sub_menu.css(css);
+            $sub_menu.mouseenter(function() {
+                clearTimeout($sub_menu.data('timeoutId'));
+            }).mouseleave(function(evt) {
+                var timeoutId = setTimeout(function() {
+                    if (self.folded) {
+                        $sub_menu.hide();
+                    }
+                }, self.float_timeout);
+                $sub_menu.data('timeoutId', timeoutId);
+            });
+        }
+        $sub_menu.show();
     },
     on_menu_action_loaded: function(data) {
         var self = this;
@@ -860,7 +913,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     /**
      * @constructs openerp.web.WebClient
      * @extends openerp.web.Widget
-     * 
+     *
      * @param element_id
      */
     init: function(element_id) {
@@ -883,7 +936,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         openerp.web.Widget.prototype.notification = new openerp.web.Notification(this, "oe_notification");
 
         this.header = new openerp.web.Header(this);
-        this.login = new openerp.web.Login(this, "oe_login");
+        this.login = new openerp.web.Login(this);
         this.header.on_logout.add(this.login.on_logout);
         this.header.on_action.add(this.on_menu_action);
 
@@ -903,9 +956,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     start: function() {
         this.header.appendTo($("#oe_header"));
         this.session.start();
-        this.login.start();
+        this.login.appendTo($('#oe_login'));
         this.menu.start();
-        console.debug("The openerp client has been initialized.");
     },
     on_logged: function() {
         if(this.action_manager)
@@ -951,7 +1003,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
             self.execute_home_action(home_action[0], ds);
         })
     },
-    default_home: function () { 
+    default_home: function () {
     },
     /**
      * Bundles the execution of the home action
@@ -976,7 +1028,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     },
     do_url_set_hash: function(url) {
         if(!this.url_external_hashchange) {
-            console.log("url set #hash to",url);
             this.url_internal_hashchange = true;
             jQuery.bbq.pushState(url);
         }
@@ -984,10 +1035,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     on_url_hashchange: function() {
         if(this.url_internal_hashchange) {
             this.url_internal_hashchange = false;
-            console.log("url jump to FLAG OFF");
         } else {
             var url = jQuery.deparam.fragment();
-            console.log("url jump to",url);
             this.url_external_hashchange = true;
             this.action_manager.on_url_hashchange(url);
             this.url_external_hashchange = false;

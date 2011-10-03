@@ -3,6 +3,7 @@ from __future__ import with_statement
 
 import functools
 import logging
+import urllib
 import os
 import pprint
 import sys
@@ -13,7 +14,6 @@ import xmlrpclib
 import simplejson
 import werkzeug.datastructures
 import werkzeug.exceptions
-import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -21,8 +21,7 @@ import werkzeug.wsgi
 import ast
 import nonliterals
 import http
-# import backendlocal as backend
-import session as backend
+import session
 import openerplib
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
@@ -34,7 +33,6 @@ _logger = logging.getLogger(__name__)
 # Globals (wont move into a pool)
 #-----------------------------------------------------------
 
-applicationsession = {}
 addons_module = {}
 addons_manifest = {}
 controllers_class = {}
@@ -52,10 +50,6 @@ class WebRequest(object):
     :param request: a wrapped werkzeug Request object
     :type request: :class:`werkzeug.wrappers.BaseRequest`
     :param config: configuration object
-
-    .. attribute:: applicationsession
-
-        an application-wide :class:`~collections.Mapping`
 
     .. attribute:: httprequest
 
@@ -79,12 +73,12 @@ class WebRequest(object):
 
     .. attribute:: session_id
 
-        opaque identifier for the :class:`backend.OpenERPSession` instance of
+        opaque identifier for the :class:`session.OpenERPSession` instance of
         the current request
 
     .. attribute:: session
 
-        :class:`~backend.OpenERPSession` instance for the current request
+        :class:`~session.OpenERPSession` instance for the current request
 
     .. attribute:: context
 
@@ -95,18 +89,17 @@ class WebRequest(object):
         ``bool``, indicates whether the debug mode is active on the client
     """
     def __init__(self, request, config):
-        self.applicationsession = applicationsession
         self.httprequest = request
         self.httpresponse = None
         self.httpsession = request.session
         self.config = config
+
     def init(self, params):
         self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        self.session = self.httpsession.setdefault(
-            self.session_id, backend.OpenERPSession(
-                self.config.server_host, self.config.server_port))
+        self.session = self.httpsession.setdefault(self.session_id, session.OpenERPSession())
+        self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
@@ -317,8 +310,15 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = werkzeug.urls.Href('/web/webclient/home')
+        self.root = '/web/webclient/home'
         self.config = options
+
+        if self.config.backend == 'local':
+            conn = openerplib.get_connector(protocol='local')
+        else:
+            conn = openerplib.get_connector(hostname=self.config.server_host,
+                   port=self.config.server_port)
+        self.config.connector = conn
 
         self.session_cookie = 'sessionid'
         self.addons = {}
@@ -349,13 +349,12 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
-            return werkzeug.utils.redirect(
-                self.root(dict(request.args, debug='')), 301)(
-                    environ, start_response)
+            params = urllib.urlencode(dict(request.args, debug=''))
+            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
+                environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(
-                environ, start_response)
+                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
 
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
@@ -383,21 +382,21 @@ class Root(object):
         static URLs to the corresponding directories
         """
         statics = {}
-        addons_path = self.config.addons_path
-        if addons_path not in sys.path:
-            sys.path.insert(0, addons_path)
-        for module in os.listdir(addons_path):
-            if module not in addons_module:
-                manifest_path = os.path.join(addons_path, module, '__openerp__.py')
-                if os.path.isfile(manifest_path):
-                    manifest = ast.literal_eval(open(manifest_path).read())
-                    _logger.info("Loading %s", module)
-                    m = __import__(module)
-                    addons_module[module] = m
-                    addons_manifest[module] = manifest
-
-                    statics['/%s/static' % module] = \
-                        os.path.join(addons_path, module, 'static')
+        for addons_path in self.config.addons_path:
+            if addons_path not in sys.path:
+                sys.path.insert(0, addons_path)
+            for module in os.listdir(addons_path):
+                if module not in addons_module:
+                    manifest_path = os.path.join(addons_path, module, '__openerp__.py')
+                    path_static = os.path.join(addons_path, module, 'static')
+                    if os.path.isfile(manifest_path) and os.path.isdir(path_static):
+                        manifest = ast.literal_eval(open(manifest_path).read())
+                        manifest['addons_path'] = addons_path
+                        _logger.info("Loading %s", module)
+                        m = __import__(module)
+                        addons_module[module] = m
+                        addons_manifest[module] = manifest
+                        statics['/%s/static' % module] = path_static
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()

@@ -282,6 +282,18 @@ view managers can correctly communicate with them:
     defining e.g. the ``start`` method) or at the instance level (in the
     class's ``init``), though you should generally set it on the class.
 
+Frequent development tasks
+--------------------------
+
+There are a number of tasks which OpenERP Web developers do or will need to
+perform quite regularly. To make these easier, we have written a few guides
+to help you get started:
+
+.. toctree::
+    :maxdepth: 1
+
+    guides/client-action.rst
+
 Utility behaviors
 -----------------
 

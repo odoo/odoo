@@ -327,7 +327,8 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
-        $('.filter_label').removeClass('enabled');
+        this.$element.find('.filter_label').removeClass('enabled');
+        this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
         _.each(string, function(str){
             $(str).closest('div.searchview_group').removeClass("expanded").addClass('folded');
@@ -542,6 +543,7 @@ openerp.web.search.FilterGroup = openerp.web.search.Input.extend(/** @lends open
         var domains = _(this.filters).chain()
             .filter(function (filter) { return filter.is_enabled(); })
             .map(function (filter) { return filter.attrs.domain; })
+            .reject(_.isEmpty)
             .value();
 
         if (!domains.length) { return; }
@@ -720,7 +722,11 @@ openerp.web.search.NumberField = openerp.web.search.Field.extend(/** @lends open
 openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.IntegerField# */{
     error_message: "not a valid integer",
     parse: function (value) {
-        return parseInt(value, 10);
+        try {
+            return openerp.web.parse_value(value, {'widget': 'integer'});
+        } catch (e) {
+            return NaN;
+        }
     }
 });
 /**
@@ -730,7 +736,11 @@ openerp.web.search.IntegerField = openerp.web.search.NumberField.extend(/** @len
 openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends openerp.web.search.FloatField# */{
     error_message: "not a valid number",
     parse: function (value) {
-        return parseFloat(value);
+        try {
+            return openerp.web.parse_value(value, {'widget': 'float'});
+        } catch (e) {
+            return NaN;
+        }
     }
 });
 /**
@@ -785,20 +795,18 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
  * @extends openerp.web.search.DateField
  */
 openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
-    /**
-     * enables date picker on the HTML widgets
-     */
+    template: "SearchView.date",
     start: function () {
         this._super();
-        this.$element.addClass('field_date').datepicker({
-            dateFormat: 'yy-mm-dd'
-        });
-    },
-    stop: function () {
-        this.$element.datepicker('destroy');
+        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget.prependTo(this.$element);
+        this.datewidget.$element.find("input").attr("size", 15);
+        this.datewidget.$element.find("input").attr("autofocus",
+            this.attrs.default_focus === '1' ? 'autofocus' : undefined);
+        this.datewidget.set_value(this.defaults[this.attrs.name] || false);
     },
     get_value: function () {
-        return this.$element.val();
+        return this.datewidget.get_value() || null;
     }
 });
 /**
@@ -1113,7 +1121,7 @@ openerp.web.search.ExtendedSearchProposition.Char = openerp.web.OldWidget.extend
     }
 });
 openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.OldWidget.extend({
-    template: 'SearchView.extended_search.proposition.datetime',
+    template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
         {value: "=", text: "is equal to"},
@@ -1124,18 +1132,16 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.OldWidget.ex
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        return this.$element.val();
+        return this.datewidget.get_value();
     },
     start: function() {
         this._super();
-        this.$element.datetimepicker({
-            dateFormat: 'yy-mm-dd',
-            timeFormat: 'hh:mm:ss'
-        });
+        this.datewidget = new openerp.web.DateTimeWidget(this);
+        this.datewidget.prependTo(this.$element);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Date = openerp.web.OldWidget.extend({
-    template: 'SearchView.extended_search.proposition.date',
+    template: 'SearchView.extended_search.proposition.empty',
     identifier_prefix: 'extended-search-proposition-date',
     operators: [
         {value: "=", text: "is equal to"},
@@ -1146,14 +1152,12 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.OldWidget.extend
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        return this.$element.val();
+        return this.datewidget.get_value();
     },
     start: function() {
         this._super();
-        this.$element.datepicker({
-            dateFormat: 'yy-mm-dd',
-            timeFormat: 'hh:mm:ss'
-        });
+        this.datewidget = new openerp.web.DateWidget(this);
+        this.datewidget.prependTo(this.$element);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.OldWidget.extend({
@@ -1168,11 +1172,11 @@ openerp.web.search.ExtendedSearchProposition.Integer = openerp.web.OldWidget.ext
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        var value = parseFloat(this.$element.val());
-        if(value != 0 && !value) {
+        try {
+            return openerp.web.parse_value(this.$element.val(), {'widget': 'integer'});
+        } catch (e) {
             return "";
         }
-        return Math.round(value);
     }
 });
 openerp.web.search.ExtendedSearchProposition.Float = openerp.web.OldWidget.extend({
@@ -1187,11 +1191,11 @@ openerp.web.search.ExtendedSearchProposition.Float = openerp.web.OldWidget.exten
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        var value = parseFloat(this.$element.val());
-        if(value != 0 && !value) {
+        try {
+            return openerp.web.parse_value(this.$element.val(), {'widget': 'float'});
+        } catch (e) {
             return "";
         }
-        return value;
     }
 });
 openerp.web.search.ExtendedSearchProposition.Selection = openerp.web.OldWidget.extend({

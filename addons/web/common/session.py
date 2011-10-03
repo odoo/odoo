@@ -5,6 +5,9 @@ import time
 import openerplib
 
 import nonliterals
+
+import logging
+_logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
@@ -26,25 +29,26 @@ class OpenERPSession(object):
         Used to store references to non-literal domains which need to be
         round-tripped to the client browser.
     """
-    def __init__(self, server='127.0.0.1', port=8069):
-        self._server = server
-        self._port = port
+    def __init__(self):
+        self.config = None
         self._db = False
         self._uid = False
         self._login = False
         self._password = False
-        self._locale = 'en_US'
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
-        self._lang = {}
-        self.remote_timezone = 'utc'
-        self.client_timezone = False
         
+    def __getstate__(self):
+        state = dict(self.__dict__)
+        if "config" in state:
+            del state['config']
+        return state
+
     def build_connection(self):
-        return openerplib.get_connection(hostname=self._server, port=self._port,
-                                         database=self._db, login=self._login,
-                                         user_id=self._uid, password=self._password)
+        conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
+                   user_id=self._uid, password=self._password)
+        return conn
 
     def proxy(self, service):
         return self.build_connection().get_service(service)
@@ -99,15 +103,6 @@ class OpenERPSession(object):
         self.context = self.model('res.users').context_get(self.context)
         self.context = self.context or {}
 
-        self.client_timezone = self.context.get("tz", False)
-        # invalid code, anyway we decided the server will be in UTC
-        #if self.client_timezone:
-        #    self.remote_timezone = self.execute('common', 'timezone_get')
-
-        self._locale = self.context.get('lang','en_US')
-        lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
-        if lang_ids:
-            self._lang = self.execute('res.lang', 'read',lang_ids[0], [])
         return self.context
 
     @property
