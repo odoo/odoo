@@ -685,7 +685,8 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.width = this.node.attrs.width;
     },
     start: function() {
-        this.$element = this.view.$element.find('.' + this.element_class);
+        this.$element = this.view.$element.find(
+            '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
