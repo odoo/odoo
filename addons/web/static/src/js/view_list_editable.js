@@ -325,11 +325,13 @@ openerp.web.list_editable = function (openerp) {
                 this.$element.children().css('visibility', '');
                 if (this.modifiers.tree_invisible) {
                     var old_invisible = this.invisible;
-                    this.invisible = !!this.modifiers.tree_invisible;
+                    this.invisible = true;
                     this._super();
                     this.invisible = old_invisible;
                 } else if (this.invisible) {
                     this.$element.children().css('visibility', 'hidden');
+                } else {
+                    this._super();
                 }
             }
         });
