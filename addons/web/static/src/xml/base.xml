@@ -1290,7 +1290,7 @@
         <table>
             <tr>
                 <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
-                    <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"  
+                    <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
                 src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
                 </td>
                 <td style="cursor: pointer;">
@@ -1302,20 +1302,20 @@
     <td align="left" class="view_editor"  width="15%">
         <table  cellspacing="0" cellpadding ="0" width="100%">
             <tr>
-                <td> 
+                <td>
                     <img  id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
                 </td>
-                <td> 
-                    <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/> 
+                <td>
+                    <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
                 </td>
-                <td> 
-                    <img  id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/> 
+                <td>
+                    <img  id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
                 </td>
-                <td> 
-                    <img  id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/> 
+                <td>
+                    <img  id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
                 </td>
-                <td> 
-                    <img  id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/> 
+                <td>
+                    <img  id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
                 </td>
             </tr>
         </table>
@@ -1325,7 +1325,13 @@
             <t t-call="view_editor.row"/>
         </t>
     </tr>
-
+<t t-name="Edit_Node_View">
+    <table>
+        <tr t-foreach="res" t-as="rec">
+            <td><t t-esc="rec.ttype"/></td>
+        </tr>
+    </table>
+</t>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
