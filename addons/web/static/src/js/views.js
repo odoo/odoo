@@ -288,8 +288,8 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
             }, function (results) {
                 self.dataset.context = results.context;
                 self.dataset.domain = results.domain;
-                controller.do_search(results.domain, results.context, results.group_by);
                 self.last_search = [results.domain, results.context, results.group_by];
+                controller.do_search(results.domain, results.context, results.group_by);
             });
         } else if (this.last_search) {
             controller.do_search.apply(controller, this.last_search);
