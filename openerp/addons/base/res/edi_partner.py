@@ -21,18 +21,45 @@
 from osv import fields,osv
 from base.ir import ir_edi
 
+RES_PARTNER_ADDRESS_EDI_STRUCT = {
+    'name': True,
+    'email': True,
+    'street': True,
+    'street2': True,
+    'zip': True,
+    'city': True,
+    'country_id': True,
+    'state_id': True,
+    'phone': True,
+    'fax': True,
+    'mobile': True,
+}
+
+RES_PARTNER_EDI_STRUCT = {
+    'name': True,
+    'ref': True,
+    'lang': True,
+    'website': True,
+    'address': RES_PARTNER_ADDRESS_EDI_STRUCT
+}
+
+
 class res_partner(osv.osv, ir_edi.edi):
     _inherit = "res.partner"
-    
-res_partner()
+
+    def edi_export(self, cr, uid, records, edi_struct=None, context=None):
+        return super(res_partner,self).edi_export(cr, uid, records,
+                                                  dict(RES_PARTNER_EDI_STRUCT),
+                                                  context=context)
 
 class res_partner_address(osv.osv, ir_edi.edi):
     _inherit = "res.partner.address"
 
-res_partner_address()
+    def edi_export(self, cr, uid, records, edi_struct=None, context=None):
+        return super(res_partner_address,self).edi_export(cr, uid, records,
+                                                          dict(RES_PARTNER_ADDRESS_EDI_STRUCT),
+                                                          context=context)
 
 class res_partner_bank(osv.osv, ir_edi.edi):
     _inherit = "res.partner.bank"
-
-res_partner_bank()
 
