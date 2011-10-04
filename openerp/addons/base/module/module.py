@@ -42,17 +42,17 @@ from osv import fields, osv, orm
 
 
 ACTION_DICT = {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'base.module.upgrade',
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-            'nodestroy':True,
-        }
+    'view_type': 'form',
+    'view_mode': 'form',
+    'res_model': 'base.module.upgrade',
+    'target': 'new',
+    'type': 'ir.actions.act_window',
+    'nodestroy':True,
+}
 
 class module_category(osv.osv):
     _name = "ir.module.category"
-    _description = "Module Category"
+    _description = "Application"
 
     def _module_nbr(self,cr,uid, ids, prop, unknow_none, context):
         cr.execute('SELECT category_id, COUNT(*) \
@@ -72,12 +72,14 @@ class module_category(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=128, required=True, select=True),
-        'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
-        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer')
+        'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
+        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
+        'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
+        'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
+        'description' : fields.text("Description"),
+        'sequence' : fields.integer('Sequence'),
     }
     _order = 'name'
-module_category()
 
 class module(osv.osv):
     _name = "ir.module.module"
@@ -288,7 +290,7 @@ class module(osv.osv):
         if level<1:
             raise orm.except_orm(_('Error'), _('Recursion error in modules dependencies !'))
         demo = False
-        for module in self.browse(cr, uid, ids):
+        for module in self.browse(cr, uid, ids, context=context):
             mdemo = False
             for dep in module.dependencies_id:
                 if dep.state == 'unknown':

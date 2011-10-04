@@ -103,7 +103,9 @@ def create_categories(cr, categories):
 
     """
     p_id = None
+    category = []
     while categories:
+        category.append(categories[0])
         if p_id is not None:
             cr.execute('SELECT id \
                        FROM ir_module_category \
@@ -118,6 +120,9 @@ def create_categories(cr, categories):
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
+            xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
+            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
+                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
         else:
             c_id = c_id[0]
         p_id = c_id
