@@ -175,12 +175,16 @@ openerp.web.list_editable = function (openerp) {
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
-                    if (self.options.editable === 'top') {
-                        $new_row.insertBefore(
-                            self.$current.find('> [data-id]:first'));
+                    if (self.records.length) {
+                        if (self.options.editable === 'top') {
+                            $new_row.insertBefore(
+                                self.$current.find('> [data-id]:first'));
+                        } else {
+                            $new_row.insertAfter(
+                                self.$current.find('> [data-id]:last'));
+                        }
                     } else {
-                        $new_row.insertAfter(
-                            self.$current.find('> [data-id]:last'));
+                        $new_row.prependTo(self.$current);
                     }
                     var $last_child = self.$current.find('> tr:last');
                     if ($last_child.is(':not([data-id])')) {
