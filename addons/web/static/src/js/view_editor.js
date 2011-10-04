@@ -1,7 +1,6 @@
 openerp.web.view_editor = function(openerp) {
 var _PROPERTIES = {
-    'field' : ['name', 'string', 'required', 'readonly', 'select', 'domain', 'context', 'nolabel', 'completion',
-               'colspan', 'widget', 'eval', 'ref', 'on_change', 'attrs', 'groups'],
+    'field' : ['required', 'readonly'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
@@ -31,6 +30,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.dataset = dataset;
         this.model = dataset.model;
         this.xml_id = 0;
+        this.property = openerp.web.ViewEditor.property_widget;
     },
 
     start: function() {
@@ -320,6 +320,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             case "side-remove":
                 break;
             case "side-edit":
+                var tag, fld_name;
+                var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
+                var tag_fld = tr.split(" ");
+                if (tag_fld.length > 3){
+                    tag = tag_fld[1].replace(/[^a-zA-Z 0-9]+/g,'');
+                    fld_name = tag_fld[2].split("=")[1].replace(/[^a-zA-Z _ 0-9]+/g,'');
+                }else{
+                    tag = tag_fld[1].replace(/[^a-zA-Z 0-9]+/g,'');
+                }
+                var properties = _PROPERTIES[tag];
+                self.on_edit_node(this,properties,fld_name);
                 break;
            case "side-up":
                 while(1){
@@ -406,7 +417,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             tr.show();
         });
     },
-    on_edit_node:function(self,property,fld_name){
+    on_edit_node:function(self,properties,fld_name){
         var self = this;
         var result;
         this.dialog = new openerp.web.Dialog(this,{
@@ -427,17 +438,35 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             dataset.read_slice([],{domain : [['model','=',self.model]]},function (result) {
                 db = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
                 db.read_slice([],{domain : [['model_id','=',result[0].id],['name','=',fld_name]]},function (res) {
-                    var data = [];
-                    _.each(property,function(record){
-                        var dict = {'key':record,'value':res[0][record]};
-                        data.push(dict);
+                    _.each(properties,function(record){
+                        var type_widget =  new (self.property.get_any(['undefined' , record, 'field'])) (false, false);
+                        console.log("widget_view",type_widget);
                     });
-                    console.log("check data+++",data);
-                    /*self.dialog.$element.html(QWeb.render('Edit_Node_View',{
-                        'res': res
-                    }));*/
                 });
             });
     }
+});
+openerp.web.ViewEditor.FieldBoolean = openerp.web.form.FieldBoolean.extend({
+    init: function(view, node) {
+        //this._super(view, node);
+        console.log("view++++",view);
+        console.log("nodoe+++++",node);
+        this.template = "FieldBoolean";
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+    }
+});
+openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
+    'required' : 'openerp.web.ViewEditor.FieldBoolean',
+    'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
+    'nolabel' : 'openerp.web.ViewEditor.FieldBoolean',
+    'completion' : 'openerp.web.ViewEditor.FieldBoolean',
+    /*'widget' : '',
+    'groups' : '',
+    'position': '',
+    'icon': '',
+    'align': '' */
 });
 };
