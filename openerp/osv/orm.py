@@ -44,6 +44,7 @@
 import calendar
 import copy
 import datetime
+import itertools
 import logging
 import operator
 import pickle
@@ -1727,13 +1728,69 @@ class BaseModel(object):
                 raise except_orm('View error', msg)
         return arch, fields
 
-    def __get_default_calendar_view(self):
-        """Generate a default calendar view (For internal use only).
-        """
-        # TODO could return an etree instead of a string
+    def _get_default_form_view(self, cr, user, context=None):
+        """ Generates a default single-line form view using all fields
+        of the current model except the m2m and o2m ones.
 
-        arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
-                '<calendar string="%s"') % (self._description)
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a form view as an lxml document
+        :rtype: etree._Element
+        """
+        view = etree.Element('form', string=self._description)
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
+        for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
+            if descriptor['type'] in ('one2many', 'many2many'):
+                continue
+            etree.SubElement(view, 'field', name=field)
+            if descriptor['type'] == 'text':
+                etree.SubElement(view, 'newline')
+        return view
+
+    def _get_default_tree_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0]
+
+        view = etree.Element('tree', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
+
+    def _get_default_calendar_view(self, cr, user, context=None):
+        """ Generates a default calendar view by trying to infer
+        calendar fields from a number of pre-set attribute names
+        
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a calendar view
+        :rtype: etree._Element
+        """
+        def set_first_of(seq, in_, to):
+            """Sets the first value of ``seq`` also found in ``in_`` to
+            the ``to`` attribute of the view being closed over.
+
+            Returns whether it's found a suitable value (and set it on
+            the attribute) or not
+            """
+            for item in seq:
+                if item in in_:
+                    view.set(to, item)
+                    return True
+            return False
+
+        view = etree.Element('calendar', string=self._description)
+        etree.SubElement(view, 'field', name=self._rec_name)
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -1745,61 +1802,52 @@ class BaseModel(object):
 
             if not date_found:
                 raise except_orm(_('Invalid Object Architecture!'), _("Insufficient fields for Calendar View!"))
+        view.set('date_start', self._date_name)
 
-        if self._date_name:
-            arch += ' date_start="%s"' % (self._date_name)
+        set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
+                     self._columns, 'color')
 
-        for color in ["user_id", "partner_id", "x_user_id", "x_partner_id"]:
-            if color in self._columns:
-                arch += ' color="' + color + '"'
-                break
+        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
+                            self._columns, 'date_stop'):
+            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
+                                self._columns, 'date_delay'):
+                raise except_orm(
+                    _('Invalid Object Architecture!'),
+                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
 
-        dt_stop_flag = False
+        return view
 
-        for dt_stop in ["date_stop", "date_end", "x_date_stop", "x_date_end"]:
-            if dt_stop in self._columns:
-                arch += ' date_stop="' + dt_stop + '"'
-                dt_stop_flag = True
-                break
-
-        if not dt_stop_flag:
-            for dt_delay in ["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"]:
-                if dt_delay in self._columns:
-                    arch += ' date_delay="' + dt_delay + '"'
-                    break
-
-        arch += ('>\n'
-                 '  <field name="%s"/>\n'
-                 '</calendar>') % (self._rec_name)
-
-        return arch
-
-    def __get_default_search_view(self, cr, uid, context=None):
+    def _get_default_search_view(self, cr, uid, context=None):
+        """
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: an lxml document of the view
+        :rtype: etree._Element
+        """
         form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
-        fields_to_search = set()
         # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
         fields = self.fields_get(cr, uid, context=context)
-        for field in fields:
-            if fields[field].get('select'):
-                fields_to_search.add(field)
+        fields_to_search = set(
+            field for field, descriptor in fields.iteritems()
+            if descriptor.get('select'))
+
         for view in (form_view, tree_view):
             view_root = etree.fromstring(view['arch'])
             # Only care about select=1 in xpath below, because select=2 is covered
             # by the custom advanced search in clients
-            fields_to_search = fields_to_search.union(view_root.xpath("//field[@select=1]/@name"))
+            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
 
         tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", attrib={'string': tree_view_root.get("string", "")})
-        field_group = etree.Element("group")
-        search_view.append(field_group)
+        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
 
+        field_group = etree.SubElement(search_view, "group")
         for field_name in fields_to_search:
-            field_group.append(etree.Element("field", attrib={'name': field_name}))
+            etree.SubElement(field_group, "field", name=field_name)
 
-        #TODO tostring can be removed as fromstring is call directly after...
-        return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
+        return search_view
 
     #
     # if view_id, view_type is not required
@@ -1990,50 +2038,27 @@ class BaseModel(object):
 
         # if a view was found
         if sql_res:
-            result['type'] = sql_res['type']
-            result['view_id'] = sql_res['id']
-
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_view_inheritance(cr, user, source, result['view_id'])
-
-            result['name'] = sql_res['name']
-            result['field_parent'] = sql_res['field_parent'] or False
+            result.update(
+                arch=apply_view_inheritance(cr, user, source, sql_res['id']),
+                type=sql_res['type'],
+                view_id=sql_res['id'],
+                name=sql_res['name'],
+                field_parent=sql_res['field_parent'] or False)
         else:
-
             # otherwise, build some kind of default view
-            if view_type == 'form':
-                # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-                res = self.fields_get(cr, user, context=context)
-                xml = '<?xml version="1.0" encoding="utf-8"?> ' \
-                     '<form string="%s">' % (self._description,)
-                for x in res:
-                    if res[x]['type'] not in ('one2many', 'many2many'):
-                        xml += '<field name="%s"/>' % (x,)
-                        if res[x]['type'] == 'text':
-                            xml += "<newline/>"
-                xml += "</form>"
-
-            elif view_type == 'tree':
-                _rec_name = self._rec_name
-                if _rec_name not in self._columns:
-                    _rec_name = self._columns.keys()[0]
-                xml = '<?xml version="1.0" encoding="utf-8"?>' \
-                       '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, _rec_name)
-
-            elif view_type == 'calendar':
-                xml = self.__get_default_calendar_view()
-
-            elif view_type == 'search':
-                xml = self.__get_default_search_view(cr, user, context)
-
-            else:
+            try:
+                view = getattr(self, '_get_default_%s_view' % view_type)(
+                    cr, user, context)
+            except AttributeError:
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
-            result['arch'] = etree.fromstring(encode(xml))
-            result['name'] = 'default'
-            result['field_parent'] = False
-            result['view_id'] = 0
+
+            result.update(
+                arch=view,
+                name='default',
+                field_parent=False,
+                view_id=0)
 
         if parent_view_model != self._name:
             ctx = context.copy()
@@ -2064,14 +2089,13 @@ class BaseModel(object):
             resrelate = ir_values_obj.get(cr, user, 'action',
                     'client_action_relate', [(self._name, False)], False,
                     context)
-            resprint = map(clean, resprint)
-            resaction = map(clean, resaction)
-            if view_type != 'tree':
-                resaction = filter(lambda x: not x.get('multi'), resaction)
-                resprint = filter(lambda x: not x.get('multi'), resprint)
+            resaction = [clean(action) for action in resaction
+                         if view_type == 'tree' or not action[2].get('multi')]
+            resprint = [clean(print_) for print_ in resprint
+                        if view_type == 'tree' or not print_[2].get('multi')]
             resrelate = map(lambda x: x[2], resrelate)
 
-            for x in resprint + resaction + resrelate:
+            for x in itertools.chain(resprint, resaction, resrelate):
                 x['string'] = x['name']
 
             result['toolbar'] = {
