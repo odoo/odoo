@@ -71,7 +71,6 @@
         Pos.prototype.session = new db.web.Session('DEBUG');
         Pos.prototype.store = new Store;
         Pos.prototype.fetch = function(osvModel, fields, domain) {
-            debugger;
             var dataSetSearch;
             var self = this;
             var callback = function(result) {
