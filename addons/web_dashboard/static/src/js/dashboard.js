@@ -292,7 +292,6 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
         this._super(parent);
         this.dataset = new openerp.web.DataSetSearch(
                 this, 'ir.actions.todo');
-        this.dataset.domain = [['type', '=', 'manual']];
     },
     start: function () {
         this._super();
