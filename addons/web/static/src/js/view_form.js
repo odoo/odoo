@@ -792,8 +792,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new openerp.web.form.WidgetNotebookPage(
-                        this.view, n, this, this.pages.length);
+                var page = new (this.view.registry.get_object('notebookpage'))(this.view, n, this, this.pages.length);
                 this.pages.push(page);
             }
         }
@@ -2781,6 +2780,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'frame' : 'openerp.web.form.WidgetFrame',
     'group' : 'openerp.web.form.WidgetFrame',
     'notebook' : 'openerp.web.form.WidgetNotebook',
+    'notebookpage' : 'openerp.web.form.WidgetNotebookPage',
     'separator' : 'openerp.web.form.WidgetSeparator',
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',
