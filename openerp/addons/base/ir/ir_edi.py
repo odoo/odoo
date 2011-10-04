@@ -22,6 +22,8 @@
 import base64
 import hashlib
 import json
+import logging
+import re
 import time
 import urllib2
 
@@ -29,23 +31,44 @@ import openerp
 import openerp.release as release
 from osv import osv,fields
 from tools.translate import _
+from tools.parse_version import parse_version
 
-def split_xml_id(xml_id):
-    assert len(xml_id.split('.'))==2, \
-            _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-    return xml_id.split('.')
+EXTERNAL_ID_PATTERN = re.compile(r'^(\S+:)?(\S+?)\.(\S+)$')
+
+def split_external_id(ext_id):
+    match = EXTERNAL_ID_PATTERN.match(ext_id)
+    assert match, \
+            _("'%s' is an invalid external ID") % (ext_id)
+    return {'module': match.group(1) and match.group(1)[:-1],
+            'db_uuid': match.group(2),
+            'id': match.group(3),
+            'full': match.group(0)}
 
 def safe_unique_id(database_id, model, record_id):
-    """Generate a unique string to represent a (database id,model,record_id) pair
-    without being too long, without revealing the database id, and
-    with a very low probability of collisions.
+    """Generate a unique string to represent a (database_uuid,model,record_id) pair
+    without being too long, and with a very low probability of collisions.
     """
     msg = "%s-%s-%s-%s" % (time.time(), database_id, model, record_id)
     digest = hashlib.sha1(msg).digest()
+    # fold the sha1 20 bytes digest to 9 bytes
     digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
-    # finally, use the b64-encoded folded digest as ID part of the unique ID:
+    # b64-encode the 9-bytes folded digest to a reasonable 12 chars ASCII ID
     digest = base64.urlsafe_b64encode(digest)
     return '%s-%s' % (model.replace('.','_'), digest)
+
+def version_tuple():
+    return parse_version(release.version)
+
+def last_update_for(record):
+    """Returns the last update timestamp for the given record,
+       if available, otherwise False
+    """
+    if record._model._log_access:
+        record_log = record.perm_read()[0]
+        return record_log.get('write_date') or record_log.get('create_date') or False
+    return False
+
+_logger = logging.getLogger('edi')
 
 class ir_edi_document(osv.osv):
     _name = 'ir.edi.document'
@@ -99,6 +122,7 @@ class ir_edi_document(osv.osv):
         :return: EDI document string
         :raise: ValueError if requested EDI token does not match any know document
         """
+        _logger.debug("get_document(%s)", edi_token)
         edi_ids = self.search(cr, uid, [('name','=', edi_token)], context=context)
         if not edi_ids:
             raise ValueError('Invalid EDI token: %s' % edi_token)
@@ -134,7 +158,7 @@ class ir_edi_document(osv.osv):
 
         :param str|unicode edi_documents_string: UTF-8 string (or unicode) containing
                                                  JSON-serialized EDI document(s)
-        :return: Python object representing the EDI document(s) (usually a list of dicts) 
+        :return: Python object representing the EDI document(s) (usually a list of dicts)
         """
         return json.loads(edi_documents_string)
 
@@ -144,7 +168,7 @@ class ir_edi_document(osv.osv):
         and returns the list of the new corresponding ``ir.edi.document`` records.
 
         :param records: list of browse_record of any model
-        :return: list of IDs of the new ``ir.edi.document`` entries, in the same 
+        :return: list of IDs of the new ``ir.edi.document`` entries, in the same
                  order as the provided ``records``.
         """
         exported_ids = []
@@ -163,7 +187,7 @@ class ir_edi_document(osv.osv):
         from the given ``edi_url`` if provided.
 
         :param str|unicode edi_document: UTF-8 string or unicode containing JSON-serialized
-                                         EDI Document to import. Must not be provided if 
+                                         EDI Document to import. Must not be provided if
                                          ``edi_url`` is given.
         :param str|unicode edi_url: URL where the EDI document (same format as ``edi_document``)
                                     may be retrieved, without authentication.
@@ -182,378 +206,384 @@ class edi(object):
        ``edi_import()`` and ``edi_export()`` methods to implement their
        specific behavior, based on the primitives provided by this mixin."""
 
-    def record_xml_id(self, cr, uid, record, context=None):
-        #TODO: remove this -> use ir.model.data directly
-        model_data_pool = self.pool.get('ir.model.data')
-        data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
-        if not data_ids:
-            return False
-        xml_record_id = data_ids[0]
-        xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
-        return xml_record.module, xml_record.name
+    # private method, not RPC-exposed as it creates ir.model.data entries as
+    # SUPERUSER based on its parameters
+    def _edi_external_id(self, cr, uid, record, existing_id=None, existing_module=None,
+                        context=None):
+        """Generate/Retrieve unique external ID for ``record``.
+        Each EDI record and each relationship attribute in it is identified by a
+        unique external ID, which includes the database's UUID, as a way to
+        refer to any record within any OpenERP instance, without conflict.
 
-    def edi_xml_id(self, cr, uid, record, xml_id=None, context=None):
-        """
-        Generate a unique string to represent a pair of (the database's UUID, the XML ID).
-        Each EDI record and each relationship value are represented using a unique
-        database identifier. These database identifiers include the database unique
-        ID, as a way to uniquely refer to any record within any OpenERP instance,
-        without conflict.
-
-        For OpenERP records that have an existing "XML ID" (i.e. an entry in
+        For OpenERP records that have an existing "External ID" (i.e. an entry in
         ir.model.data), the EDI unique identifier for this record will be made of
-        "%s:%s" % (the database's UUID, the XML ID). The database's UUID MUST
-        NOT contain a colon characters (this is guaranteed by the UUID algorithm).
+        "%s:%s:%s" % (module, database UUID, ir.model.data ID). The database's
+        UUID MUST NOT contain a colon characters (this is guaranteed by the
+        UUID algorithm).
 
-        For OpenERP records that have no existing "XML ID", a new one should be
-        created during the EDI export. It is recommended that the generated XML ID
+        For records that have no existing ir.model.data entry, a new one will be
+        created during the EDI export. It is recommended that the generated external ID
         contains a readable reference to the record model, plus a unique value that
-        hides the database ID.
-        """
-        model_data_pool = self.pool.get('ir.model.data')
-        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        hides the database ID. If ``existing_id`` is provided (because it came from
+        an import), it will be used instead of generating a new one.
+        If ``existing_module`` is provided (because it came from
+        an import), it will be used instead of using local values.
 
-        _record_xml = self.record_xml_id(cr, uid, record, context=context)
-        if _record_xml:
-            module, xml_id = _record_xml
-            xml_id = '%s:%s.%s' % (db_uuid, module, xml_id)
+        :param browse_record record: any browse_record needing an EDI external ID
+        :param string existing_id: optional existing external ID value, usually coming
+                                   from a just-imported EDI record, to be used instead
+                                   of generating a new one
+        :param string existing_module: optional existing module name, usually in the
+                                       format ``module:db_uuid`` and coming from a
+                                       just-imported EDI record, to be used instead
+                                       of local values
+        :return: the full unique External ID to use for record
+        """
+        ir_model_data = self.pool.get('ir.model.data')
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        ext_id = self.get_external_id(cr, uid, [record.id])[record.id]
+        if not ext_id:
+            ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
+            # ID is unique cross-db thanks to db_uuid (already included in existing_module)
+            module = existing_module or "%s:%s" % (record._module, db_uuid)
+            _logger.debug("%s: Generating new external ID `%s.%s` for %r", self._name,
+                          module, ext_id, record)
+            ir_model_data.create(cr, openerp.SUPERUSER_ID,
+                                 {'name': ext_id,
+                                  'model': record._name,
+                                  'module': module,
+                                  'res_id': record.id})
         else:
-            if not xml_id:
-                uuid = safe_unique_id(db_uuid, record._name, record.id)
-                xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
-            module, xml_id2 = split_xml_id(xml_id)
-            xml_record_id = model_data_pool.create(cr, openerp.SUPERUSER_ID, {
-                'name': xml_id2,
-                'model': record._name,
-                'module': module,
-                'res_id': record.id}, context=context)
-        return xml_id
+            module, ext_id = ext_id.split('.')
+            if not ':' in module:
+                # this record was not previously EDI-imported
+                assert module == record._module, 'Module mismatch between record and its current'\
+                                                 'external ID'
+                # ID is unique cross-db thanks to db_uuid
+                module = "%s:%s" % (module, db_uuid)
+
+        return '%s.%s' % (module, ext_id)
 
     def edi_metadata(self, cr, uid, records, context=None):
-        """Return a list representing the boilerplate EDI structure for
-           exporting the record in the given browse_rec_list, including
+        """Return a list containing the boilerplate EDI structures for
+           exporting ``records`` as EDI, including
            the metadata fields
 
-        The metadata fields MUST always include:
-        - __model': the OpenERP model name
-        - __module': the OpenERP module containing the model
-        - __id': the unique (cross-DB) identifier for this record
-        - __last_update': last update date of record, ISO date string in UTC
-        - __version': a list of components for the version
-        - __attachments': a list (possibly empty) of dicts describing the files attached to this record.
-        """
-        if context is None:
-            context = {}
-        data_ids = []
-        attachment_object = self.pool.get('ir.attachment')
-        edi_dict_list = []
-        db_uuid = ''
-        version = []
-        for ver in release.major_version.split('.'):
-            try:
-                ver = int(ver)
-            except:
-                pass
-            version.append(ver)
+        The metadata fields always include::
 
+            {
+               '__model': 'some.model',                # record model
+               '__module': 'module',                   # require module
+               '__id': 'module:db-uuid:model.id',      # unique global external ID for the record
+               '__last_update': '2011-01-01 10:00:00', # last update date in UTC!
+               '__version' : [6,1,0],                  # server version, to check compatibility.
+               '__attachments_':
+           }
+
+        :param list(browse_record) records: records to export
+        :return: list of dicts containing boilerplate EDI metadata for each record,
+                 at the corresponding index from ``records``.
+        """
+        data_ids = []
+        ir_attachment = self.pool.get('ir.attachment')
+        results = []
+        version = version_tuple()
         for record in records:
-            attachment_ids = attachment_object.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
-            attachment_dict_list = []
-            for attachment in attachment_object.browse(cr, uid, attachment_ids, context=context):
-                attachment_dict_list.append({
+            attachment_ids = ir_attachment.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
+            attachments = []
+            for attachment in ir_attachment.browse(cr, uid, attachment_ids, context=context):
+                attachments.append({
                         'name' : attachment.name,
-                        'content': base64.encodestring(attachment.datas),
+                        'content': attachment.datas, # already base64 encoded!
                         'file_name': attachment.datas_fname,
                 })
-
-
-            uuid = self.edi_xml_id(cr, uid, record, context=context)
+            ext_id = self._edi_external_id(cr, uid, record, context=context)
             edi_dict = {
-                '__id': uuid,
-                '__last_update': False, #record.write_date, #TODO: convert into UTC
+                '__id': ext_id,
+                '__last_update': last_update_for(record),
+                '__model' : record._name,
+                '__module' : record._module,
+                '__version': version,
+                '__attachments': attachments,
             }
-            if not context.get('o2m_export'):
-                edi_dict.update({
-                    '__model' : record._name,
-                    '__module' : record._module,
-                    '__version': version,
-                    '__attachments': attachment_dict_list
-                })
-            edi_dict_list.append(edi_dict)
-
-        return edi_dict_list
+            results.append(edi_dict)
+        return results
 
     def edi_m2o(self, cr, uid, record, context=None):
-        """Return a list representing a M2O EDI value for
-           the given browse_record.
-        M2O are passed as pair (ID, Name)
-        Exmaple: ['db-uuid:xml-id',  'Partner Name']
+        """Return a m2o EDI representation for the given record.
+
+        The EDI format for a many2one is::
+
+            ['unique_external_id', 'Document Name']
         """
-        # generic implementation!
-        db_uuid = self.edi_xml_id(cr, uid, record, context=context)
-        relation_model_pool = self.pool.get(record._name)
-        name = relation_model_pool.name_get(cr, uid, [record.id], context=context)
+        edi_ext_id = self._edi_external_id(cr, uid, record, context=context)
+        relation_model = record._model
+        name = relation_model.name_get(cr, uid, [record.id], context=context)
         name = name and name[0][1] or False
-        return [db_uuid, name]
+        return [edi_ext_id, name]
 
     def edi_o2m(self, cr, uid, records, edi_struct=None, context=None):
-        """Return a list representing a O2M EDI value for
-           the browse_records from the given browse_record_list.
+        """Return a list representing a O2M EDI relationship containing
+           all the given records, according to the given ``edi_struct``.
+           This is basically the same as exporting all the record using
+           :meth:`~.edi_export` with the given ``edi_struct``, and wrapping
+           the results in a list.
 
-        Example:
-         [                                # O2M fields would be a list of dicts, with their
-           { '__id': 'db-uuid:xml-id',    # own __id.
-             '__last_update': 'iso date', # The update date, just in case...
-             'name': 'some name',
-             ...
-           }],
+           Example::
+
+             [                                # O2M fields would be a list of dicts, with their
+               { '__id': 'module:db-uuid.id', # own __id.
+                 '__last_update': 'iso date', # update date
+                 'name': 'some name',
+                 #...
+               },
+               # ...
+             ],
         """
-        # generic implementation!
-        dict_list = []
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        ctx.update({'o2m_export':True})
+        result = []
         for record in records:
-
-            model_obj = self.pool.get(record._name)
-            dict_list += model_obj.edi_export(cr, uid, [record], edi_struct=edi_struct, context=ctx)
-
-        return dict_list
+            result += record._model.edi_export(cr, uid, [record], edi_struct=edi_struct, context=context)
+        return result
 
     def edi_m2m(self, cr, uid, records, context=None):
-        """Return a list representing a M2M EDI value for
-           the browse_records from the given browse_record_list.
+        """Return a list representing a M2M EDI relationship directed towards
+           all the given records.
+           This is basically the same as exporting all the record using
+           :meth:`~.edi_m2o` and wrapping the results in a list.
 
-        Example:
-        'related_tasks': [                 # M2M fields would exported as a list of pairs,
-                  ['db-uuid:xml-id1',      # similar to a list of M2O values.
-                   'Task 01: bla bla'],
-                  ['db-uuid:xml-id2',
-                   'Task 02: bla bla']
-            ]
+            Example::
+
+                # M2M fields are exported as a list of pairs, like a list of M2O values
+                [
+                      ['module:db-uuid.id1', 'Task 01: bla bla'],
+                      ['module:db-uuid.id2', 'Task 02: bla bla']
+                ]
         """
-        # generic implementation!
-        dict_list = []
-
-        for record in records:
-            dict_list.append(self.edi_m2o(cr, uid, record, context=None))
-
-        return dict_list
+        return [self.edi_m2o(cr, uid, r, context=context) for r in records]
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Returns a list of dicts representing an edi.document containing the
-           browse_records with ``ids``, using the generic algorithm.
-           :param edi_struct: if provided, edi_struct should be a dictionary
-                              with a skeleton of the OSV fields to export as edi.
-                              Basic fields can have any key as value, but o2m
-                              values should have a sample skeleton dict as value.
-                              For example, for a res.partner record:
-                              edi_struct: {
-                                   'name': True,
-                                   'company_id': True,
-                                   'address': {
-                                       'name': True,
-                                       'street': True,
-                                   }
-                              }
-                              Any field not specified in the edi_struct will not
-                              be included in the exported data.
-        """
-        # generic implementation!
+           records, and matching the given ``edi_struct``, if provided.
 
-        if context is None:
-            context = {}
+           :param edi_struct: if provided, edi_struct should be a dictionary
+                              with a skeleton of the fields to export.
+                              Basic fields can have any key as value, but o2m
+                              values should have a sample skeleton dict as value,
+                              to act like a recursive export.
+                              For example, for a res.partner record::
+
+                                  edi_struct: {
+                                       'name': True,
+                                       'company_id': True,
+                                       'address': {
+                                           'name': True,
+                                           'street': True,
+                                           }
+                                  }
+
+                              Any field not specified in the edi_struct will not
+                              be included in the exported data. Fields with no
+                              value (False) will be omitted in the EDI struct.
+                              If edi_struct is omitted, no fields will be exported
+        """
         if edi_struct is None:
             edi_struct = {}
-        _columns = self._all_columns
-        fields_to_export = edi_struct and edi_struct.keys() or _columns.keys()
-        edi_dict_list = []
-        value = None
-        for row in records:
-            edi_dict = {}
-            edi_dict.update(self.edi_metadata(cr, uid, [row], context=context)[0])
+        fields_to_export = edi_struct.keys()
+        results = []
+        for record in records:
+            edi_dict = self.edi_metadata(cr, uid, [record], context=context)[0]
             for field in fields_to_export:
-                _column = _columns[field].column
-                _column_dict = fields.field_to_dict(self, cr, uid, _column, context=context)
-                record = getattr(row, field)
-                if not record:
+                column = self._all_columns[field].column
+                value = getattr(record, field)
+                if not value:
                     continue
                 #if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
                 #    # Do not Export Function Fields and related fields
                 #    continue
-                elif _column_dict['type'] == 'many2one':
-                    value = self.edi_m2o(cr, uid, record, context=context)
-                elif _column_dict['type'] == 'many2many':
-                    value = self.edi_m2m(cr, uid, record, context=context)
-                elif _column_dict['type'] == 'one2many':
-                    value = self.edi_o2m(cr, uid, record, edi_struct=edi_struct.get(field, {}), context=context )
-                else:
-                    value = record
+                elif column._type == 'many2one':
+                    value = self.edi_m2o(cr, uid, value, context=context)
+                elif column._type == 'many2many':
+                    value = self.edi_m2m(cr, uid, value, context=context)
+                elif column._type == 'one2many':
+                    value = self.edi_o2m(cr, uid, value, edi_struct=edi_struct.get(field, {}), context=context)
                 edi_dict[field] = value
-            edi_dict_list.append(edi_dict)
-        return edi_dict_list
+            results.append(edi_dict)
+        return results
 
-
-    def edi_get_object_by_name(self, cr, uid, value, model_name, context=None):
-        openobject = False
+    def _edi_get_object_by_name(self, cr, uid, name, model_name, context=None):
         model = self.pool.get(model_name)
-        object_ids = model.name_search(cr, uid, value, operator='=', context=context)
-        if object_ids and len(object_ids) == 1:
-            object_id = object_ids[0][0]
-            openobject = model.browse(cr, uid, object_id, context=context)
-        return openobject
+        search_results = model.name_search(cr, uid, name, operator='=', context=context)
+        if len(search_results) == 1:
+            return model.browse(cr, uid, search_results[0][0], context=context)
+        return False
 
-    def edi_get_object(self, cr, uid, xml_id, model, context=None):
-        model_data = self.pool.get('ir.model.data')
-        module, xml_id2 = split_xml_id(xml_id)
-        openobject = False
-        data_ids = model_data.search(cr, uid, [('model','=', model), ('name','=', xml_id2)])
+    def _edi_import_attachments(self, cr, uid, record_id, edi_document, context=None):
+        ir_attachment = self.pool.get('ir.attachment')
+        for attachment in edi_document.get('__attachments', []):
+            # check attachment data is non-empty and valid
+            file_data = None
+            try:
+                file_data = base64.b64decode(attachment.get('content'))
+            except TypeError:
+                pass
+            assert file_data, 'Incorrect/Missing attachment file content'
+            assert attachment.get('name'), 'Incorrect/Missing attachment name'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
+            ir_attachment.create(cr, uid, {'name': attachment['name'],
+                                           'datas_fname': attachment['file_name'],
+                                           'res_model': self._name,
+                                           'res_id': record_id,
+                                           # should be pure 7bit ASCII
+                                           'datas': str(attachment['content']),
+                                           }, context=context)
+
+
+    def _edi_get_object_by_external_id(self, cr, uid, external_id, model, context=None):
+        """Returns browse_record representing object identified by the model and external_id,
+           or None if no record was found with this external id.
+
+           :param external_id: fully qualified external id, in the EDI form
+                               ``module:db_uuid:identifier``.
+           :param model: model name the record belongs to.
+        """
+        ir_model_data = self.pool.get('ir.model.data')
+        # external_id is expected to have the form: ``module:db_uuid:model.random_name``
+        ext_id_members = split_external_id(external_id)
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+        module = ext_id_members['module']
+        ext_id = ext_id_members['id']
+        ext_module = '%s:%s' % (module, ext_id_members['db_uuid'])
+        data_ids = ir_model_data.search(cr, uid, [('model','=',model),
+                                                  ('name','=',ext_id),
+                                                  ('module','in',[ext_module,module])])
         if data_ids:
             model = self.pool.get(model)
-            data = model_data.browse(cr, uid, data_ids[0], context=context)
-            openobject = model.browse(cr, uid, data.res_id, context=context)
-        return openobject
+            data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
+            result = model.browse(cr, uid, data.res_id, context=context)
+            return result
 
-    def edi_create_relation(self, cr, uid, relation_model, relation_value, context=None):
-        relation_model = self.pool.get(relation_model)
-        values = {} #relation_model.default_get(cr, uid, fields, context=context)
-        values[relation_model._rec_name] = relation_value
-        return relation_model.create(cr, uid, values, context=context)
+    def edi_import_relation(self, cr, uid, model, value, external_id, context=None):
+        """Imports a M2O/M2M relation EDI specification ``[external_id,value]`` for the
+           given model, returning the corresponding database ID:
 
-    def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
-        relation = False
-        if xml_id:
-            relation = self.edi_get_object(cr, uid, xml_id, relation_model, context=context)
-        if not relation:
-            relation = self.edi_get_object_by_name(cr, uid, relation_value, relation_model, context=context)
-        if not relation:
-            relation_id = self.edi_create_relation(cr, uid, relation_model, relation_value, context=context)
-            relation = relation_model.browse(cr, uid, relation_id, context=context)
-
-        record_xml = self.record_xml_id(cr, uid, relation, context=context)
-        if record_xml:
-            module, xml_id = record_xml
-            xml_id = '%s.%s' % (module, xml_id)
-        if not xml_id:
-            xml_id = self.edi_xml_id(cr, uid, relation, context=context)
-
-        #TODO: update record from values ?
-        #relation_id = model_data._update(cr, uid, relation_model, module, values, xml_id=xml_id, context=context)
-        return relation and relation.id or False
+           * First, checks if the ``external_id`` is already known, in which case the corresponding
+             database ID is directly returned, without doing anything else;
+           * If the ``external_id`` is unknown, attempts to locate an existing record
+             with the same ``value`` via name_search(). If found, the given external_id will
+             be assigned to this local record (in addition to any existing one)
+           * If previous steps gave no result, create a new record with the given
+             value in the target model, assign it the given external_id, and return
+             the new database ID
+        """
+        _logger.debug("%s: Importing EDI relationship [%r,%r]", self._name, external_id, value)
+        target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
+        need_new_ext_id = False
+        if not target:
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID not found, trying name_get",
+                          self._name, external_id, value)
+            target = self._edi_get_object_by_name(cr, uid, value, model, context=context)
+            need_new_ext_id = True
+        if not target:
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it!",
+                          self._name, external_id, value)
+            # also need_new_ext_id here, but already been set above
+            res_id, name = self.name_create(cr, uid, value, context=context)
+            target = model.browse(cr, uid, res_id, context=context)
+        if need_new_ext_id:
+            ext_id_members = split_external_id(external_id)
+            # module name is never used bare when creating ir.model.data entries, in order
+            # to avoid being taken as part of the module's data, and cleanup up at next update  
+            module = "%s:%s" % (ext_id_members['module'], ext_id_members['db_uuid'])
+            # create a new ir.model.data entry for this value
+            self._edi_external_id(cr, uid, target, existing_id=ext_id_members['id'], existing_module=module, context=context)
+        return target.id
 
     def edi_import(self, cr, uid, edi_document, context=None):
+        """Imports a dict representing an edi.document into the system,
+           applying the following rules.
 
-        """Imports a list of dicts representing an edi.document, using the
-           generic algorithm.
+           All relationship fields are exported in a special way, and provide their own
+           unique identifier, so that we can avoid duplication of records when importing.
 
-             All relationship fields are exported in a special way, and provide their own
-             unique identifier, so that we can avoid duplication of records when importing.
-             Note: for all ir.model.data entries, the "module" value to use for read/write
-                   should always be "edi_import", and the "name" value should be the full
-                   db_id provided in the EDI.
+           #. Many2One
+               See :meth:`~.edi_import_relation`
 
-             1: Many2One
-             M2O fields are always exported as a pair [db_id, name], where db_id
-             is in the form "db_uuid:xml_id", both being values that come directly
-             from the original database.
-             The import should behave like this:
-                 a. Look in ir.model.data for a record that matches the db_id.
-                    If found, replace the m2o value with the correct database ID and stop.
-                    If not found, continue to next step.
-                 b. Perform name_search(name) to look for a record that matches the
-                    given m2o name. If only one record is found, create the missing
-                    ir.model.data record to link it to the db_id, and the replace the m2o
-                    value with the correct database ID, then stop. If zero result or
-                    multiple results are found, go to next step.
-                 c. Create the new record using the only field value that is known: the
-                    name, and create the ir.model.data entry to map to it.
-                    This should work for many models, and if not, the module should
-                    provide a custom EDI import logic to care for it.
+           #. One2Many
+               O2M fields are always exported as a list of dicts, where each dict corresponds
+               to a full EDI record. The import should not update existing records
+               if they already exist, it should only link them to the parent object, in this
+               fashion:
+                   * First import the parent object, using the usual procedire
+                   * Look for a record that matches the db_id provided in the __id field. If
+                     found, keep the corresponding database id, and connect it to the parent.
+                   * If not found via db_id, create a new entry using the same method that
+                     imports a full EDI record, grab the resulting db id, and use it to
+                     connect to the parent.
 
-             2: One2Many
-             O2M fields are always exported as a list of dicts, where each dict corresponds
-             to a full EDI record. The import should not update existing records
-             if they already exist, it should only link them to the parent object.
-                 a. Look for a record that matches the db_id provided in the __id field. If
-                    found, keep the corresponding database id, and connect it to the parent
-                    using a write value like (4,db_id).
-                 b. If not found via db_id, create a new entry using the same method that
-                    imports a full EDI record (recursive call!), grab the resulting db id,
-                    and use it to connect to the parent via a write value like (4, db_id).
-
-             3: Many2Many
-             M2M fields are always exported as a list of pairs similar to M2O.
-             For each pair in the M2M:
-                 a. Perform the same steps as for a Many2One (see 1.2.1.1)
-                 b. After finding the database ID of the final record in the database,
-                    connect it to the parent record via a write value like (4, db_id).
+           #: Many2Many
+               M2M fields are always exported as a list of pairs similar to M2O.
+               For each pair in the M2M:
+                   * Perform the same steps as for a Many2One (See :meth:`~.edi_import_relation`)
+                   * After finding the database ID of the final record in the database,
+                     connect it to the parent record.
         """
-        # generic implementation!
-        model_data = self.pool.get('ir.model.data')
-        assert self._name == edi_document['__model'], 'EDI Document could not import. Model of EDI Document and current model are does not match'
-        def process(datas, model_name):
-            values = {}
-            model_pool = self.pool.get(model_name)
-            xml_id = datas['__id']
-            module, xml_id2 = split_xml_id(xml_id)
-            _columns = model_pool._all_columns
-            for field in datas.keys():
-                if field not in _columns:
-                    continue
-                if not field.startswith('__'):
-                    _column = _columns[field].column
-                    _column_dict = fields.field_to_dict(self, cr, uid, _column, context=context)
+        assert self._name == edi_document['__model'], "EDI Document Model and current model do not match: "\
+                                                      "'%s' (EDI) vs '%s' (current)" % (edi_document['__model'],
+                                                                                        self._name)
 
-                    edi_field_value = datas[field]
-                    field_type = _column_dict['type']
-                    relation_model = _column_dict.get('relation')
-                    if not edi_field_value:
-                        continue
-                    if _column_dict.has_key('function') or _column_dict.has_key('related_columns'):
-                        # DO NOT IMPORT FUNCTION FIELD AND RELATED FIELD
-                        continue
-                    elif field_type == 'one2many':
-                        # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                        relations = []
-                        relation_object = self.pool.get(relation_model)
-                        for edi_relation_document in edi_field_value:
-                            relation = self.edi_get_object(cr, uid, edi_relation_document['__id'], relation_model, context=context)
-                            if not relation and edi_relation_document.get('name'):
-                                relation = self.edi_get_object_by_name(cr, uid, edi_relation_document['name'], relation_model, context=context)
-                            if relation:
-                                self.edi_xml_id(cr, uid, relation, \
-                                                    xml_id=edi_relation_document['__id'], context=context)
-                                relations.append((4, relation.id))
-                            res_module, res_xml_id, newrow = process(edi_relation_document, relation_model)
-                            relations.append( (relation and 1 or 0, relation and relation.id or 0, newrow))
-                        values[field] = relations
-                    elif field_type in ('many2one', 'many2many'):
-                        if field_type == 'many2one':
-                            edi_parent_documents = [edi_field_value]
-                        else:
-                            edi_parent_documents = edi_field_value
+        # First check the record is now already known in the database, in which case it is ignored
+        ext_id_members = split_external_id(edi_document['__id'])
+        existing_id = self._edi_get_object_by_external_id(cr, uid, ext_id_members['full'], self._name, context=context)
+        if existing_id:
+            _logger.info("'%s' EDI Document with ID '%s' is already known, skipping import!", self._name, ext_id_members['full'])
+            return
 
-                        parent_lines = []
+        record_values = {}
+        o2m_todo = {} # o2m values are processed after their parent already exists
+        for field_name, field_value in edi_document.iteritems():
+            # skip metadata and empty fields
+            if field_name.startswith('__') or field_value is None or field_value is False:
+                continue
+            field = self._all_columns[field_name].column
+            # skip function/related fields
+            if isinstance(field, fields.function):
+                _logger.warning("Unexpected function field value found in '%s' EDI document: '%s'" % (self._name, field_name))
+                continue
+            relation_model = field._obj
+            if field._type == 'many2one':
+                record_values[field_name] = self.edi_import_relation(cr, uid, relation_model,
+                                                                      field_value[1], field_value[0],
+                                                                      context=context)
+            elif field._type == 'many2many':
+                record_values[field_name] = [self.edi_import_relation(cr, uid, relation_model, m2m_value[1],
+                                                                       m2m_value[0], context=context)
+                                             for m2m_value in field_value]
+            elif field._type == 'one2many':
+                # must wait until parent report is imported, as the parent relationship
+                # is often required in o2m child records
+                o2m_todo[field_name] = field_value
+            else:
+                record_values[field_name] = field_value
 
-                        for edi_parent_document in edi_parent_documents:
-                            relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], edi_parent_document[0], context=context)
-                            parent_lines.append(relation_id)
+        module_ref = "%s:%s" % (ext_id_members['module'], ext_id_members['db_uuid'])
+        record_id = self.pool.get('ir.model.data')._update(cr, uid, self._name, module_ref, record_values,
+                                                           xml_id=ext_id_members['id'], context=context)
 
-                        if len(parent_lines):
-                            if field_type == 'many2one':
-                                values[field] = parent_lines[0]
+        record_display, = self.name_get(cr, uid, [record_id], context=context)
 
-                            else:
-                                many2many_ids = []
-                                for m2m_id in parent_lines:
-                                    many2many_ids.append((4, m2m_id))
-                                values[field] = many2many_ids
+        # process o2m values, connecting them to their parent on-the-fly
+        for o2m_field, o2m_value in o2m_todo.iteritems():
+            field = self._all_columns[o2m_field].column
+            dest_model = self.pool.get(field._obj)
+            for o2m_line in o2m_value:
+                # link to parent record: expects an (ext_id, name) pair
+                o2m_line[field._fields_id] = (ext_id_members['full'], record_display[1])
+                dest_model.edi_import(cr, uid, o2m_line, context=context)
 
-                    else:
-                        values[field] = edi_field_value
-            return module, xml_id2, values
+        # process the attachments, if any
+        self._edi_import_attachments(cr, uid, record_id, edi_document, context=context)
 
-        module, xml_id, data_values = process(edi_document, self._name)
-        return model_data._update(cr, uid, self._name, module, data_values, xml_id=xml_id, context=context)
-# vim: ts=4 sts=4 sw=4 si et
+        return record_id
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
