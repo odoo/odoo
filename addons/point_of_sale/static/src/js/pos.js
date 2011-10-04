@@ -67,20 +67,17 @@ openerp.point_of_sale = function(db) {
      Gets all the necessary data from the OpenERP web client (session, shop data etc.)
      */
     var Pos = (function() {
-        function Pos() {
+        function Pos(session) {
             this.build_tree = __bind(this.build_tree, this);
-            this.session.session_login('trunk', 'admin', 'a', __bind( function() {
-                return $.when(
-                    this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
-                    this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
-                    this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
-                    this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
-                    .then(this.build_tree);
-            }, this));
+            this.session = session;
+            $.when(this.fetch('pos.category', ['name', 'parent_id', 'child_id']),
+                this.fetch('product.product', ['name', 'list_price', 'pos_categ_id', 'taxes_id', 'img'], [['pos_categ_id', '!=', 'false']]),
+                this.fetch('account.bank.statement', ['account_id', 'currency', 'journal_id', 'state', 'name']),
+                this.fetch('account.journal', ['auto_cash', 'check_dtls', 'currency', 'name', 'type']))
+                .then(this.build_tree);
         }
 
         Pos.prototype.ready = $.Deferred();
-        Pos.prototype.session = new db.web.Session('DEBUG');
         Pos.prototype.store = new Store;
         Pos.prototype.fetch = function(osvModel, fields, domain) {
             var dataSetSearch;
@@ -1176,7 +1173,7 @@ openerp.point_of_sale = function(db) {
             if (pos)
                 throw "It is not possible to instantiate multiple instances"+
                     "of the point of sale at the same time.";
-            pos = new Pos();
+            pos = new Pos(this.session);
             
             this.$element.find('#steps').buttonset();
     

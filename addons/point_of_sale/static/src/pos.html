@@ -27,8 +27,11 @@
             $(function() {
                 var db = openerp.init();
                 openerp.point_of_sale(db);
-                var pos = new db.point_of_sale.PointOfSale(null);
-                pos.appendTo($("body"));
+                var session = new db.web.Session('DEBUG');
+                session.session_login('trunk', 'admin', 'a').then(function() {
+                    var pos = new db.point_of_sale.PointOfSale({session: session});
+                    pos.appendTo($("body"));
+                });
             });
         </script>
     </head>
