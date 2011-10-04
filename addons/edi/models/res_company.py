@@ -19,16 +19,39 @@
 #
 ##############################################################################
 
-#from osv import fields,osv
+from osv import fields,osv
+
+class res_company(osv.osv):
+    """Helper subclass for res.company providing util methods for working with
+       companies in the context of EDI import/export. The res.company object
+       itself is not EDI-exportable"""
+    _inherit = "res.company"
+
+    def edi_export_address(self, cr, uid, records, edi_address_struct=None, context=None):
+        """Returns a dict representation of the address of each company record, suitable for
+           inclusion in an EDI document, and matching the given edi_address_struct if provided.
+
+           :param list(browse_record) records: list of companies to export
+           :rtype: list(dict)
+           :return: list of dicts, where each dict contains the address representation for
+                    the company record as the same index in ``records``.
+        """
+        if context is None:
+            context = {}
+        res_partner = self.pool.get('res.partner')
+        res_partner_address = self.pool.get('res.partner.address')
+        results = []
+        for company in records:
+            res = res_partner.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
+            addr_id = res['invoice'] or res['contact'] or res['default']
+            result = {}
+            if addr_id:
+                address = res_partner_address.browse(cr, uid, addr_id, context=context)
+                result = res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=ctx)[0]
+            resuls.append(result)
+        return []
 
 # TODO: CHECK below, seems useless
-#
-#class res_company(osv.osv):
-#    """Helper subclass for res.company providing util methods for working with
-#       companies in the context of EDI import/export. The res.company object
-#       itself is not EDI-exportable"""
-#   _inherit = "res.company"
-#
 #    def edi_import_as_partner(self, cr, uid, edi_document, values=None, context=None):
 #        """
 #        import company as a new partner
@@ -84,38 +107,3 @@
 #        edi_document_partner.update(values)
 #        return partner_pool.edi_import(cr, uid, edi_document_partner, context=context)
 #
-#    def edi_export_address(self, cr, uid, records, edi_address_struct=None, context=None):
-#        """Return a dict representation of the address of each company record, suitable for
-#           inclusion in an EDI document, and matching the given edi_address_struct if provided.
-#
-#           :param list(browse_record) records: list of companies to export
-#           :rtype: list(dict)
-#           :return: list of dicts, where each dict contains the address representation for
-#                    the company record as the same index in ``records``.
-#        """
-#        if context is None:
-#            context = {}
-#        res_partner = self.pool.get('res.partner')
-#        res_partner_address = self.pool.get('res.partner.address')
-#        if edi_address_struct is None:
-#            edi_address_struct = {
-#                'street': True,
-#                'street2': True,
-#                'zip': True,
-#                'city': True,
-#                'state_id': True,
-#                'country_id': True,
-#                'email': True,
-#                'phone': True,
-#            }
-#        results = []
-#        for company in records:
-#            res = res_partner.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
-#            addr_id = res['invoice'] or res['contact'] or res['default']
-#            result = {}
-#            if addr_id:
-#                address = res_partner_address.browse(cr, uid, addr_id, context=context)
-#                result = res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=ctx)[0]
-#            results.append(result)
-#        return results
-

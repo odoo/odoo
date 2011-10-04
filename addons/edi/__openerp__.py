@@ -37,8 +37,11 @@ technical OpenERP documentation at http://doc.openerp.com
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'test': [
-        'test/partner_edi_test.yml',
+        'test/edi_partner_test.yml',
     ],
     'installable': True,
     'active': False,

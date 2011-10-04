@@ -6,7 +6,7 @@
   with an attached file, check the result, the alter the data
   and reimport it.
 -
-  !python {model: ir.edi.document}: |
+  !python {model: edi.document}: |
       import json
       partner_obj = self.pool.get('res.partner')
       tokens = self.export_edi(cr, uid, [partner_obj.browse(cr, uid, ref('base.res_partner_agrolait'))])
@@ -16,7 +16,6 @@
       # check content of the document
       assert edi_doc.get('__id').endswith('.res_partner_agrolait'), 'Incorrect external ID'
       assert edi_doc.get('__model') == 'res.partner', 'Incorrect/Missing __model'
-      assert edi_doc.get('__module') == 'base', 'Incorrect/Missing __module'
       assert edi_doc.get('__last_update'), 'Missing __last_update'
 
       # try to import the document after changing the name and id, and attaching a

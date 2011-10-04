@@ -245,7 +245,7 @@ class EDIMixin(object):
         if not ext_id:
             ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
             # ID is unique cross-db thanks to db_uuid (already included in existing_module)
-            module = existing_module or "%s:%s" % (record._module, db_uuid)
+            module = existing_module or "%s:%s" % (record._original_module, db_uuid)
             _logger.debug("%s: Generating new external ID `%s.%s` for %r", self._name,
                           module, ext_id, record)
             ir_model_data.create(cr, openerp.SUPERUSER_ID,
@@ -257,8 +257,8 @@ class EDIMixin(object):
             module, ext_id = ext_id.split('.')
             if not ':' in module:
                 # this record was not previously EDI-imported
-                assert module == record._module, 'Module mismatch between record and its current'\
-                                                 'external ID'
+                assert module == record._original_module,\
+                    'Mismatching module: expected %s, got %s' % (module, record._original_module)
                 # ID is unique cross-db thanks to db_uuid
                 module = "%s:%s" % (module, db_uuid)
 
@@ -302,7 +302,7 @@ class EDIMixin(object):
                 '__id': ext_id,
                 '__last_update': last_update_for(record),
                 '__model' : record._name,
-                '__module' : record._module,
+                '__module' : record._original_module,
                 '__version': version,
                 '__attachments': attachments,
             }

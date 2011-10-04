@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields,osv
+from osv import fields,osv 
 from edi import EDIMixin
 
 RES_PARTNER_ADDRESS_EDI_STRUCT = {
@@ -48,7 +48,7 @@ class res_partner(osv.osv, EDIMixin):
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         return super(res_partner,self).edi_export(cr, uid, records,
-                                                  dict(RES_PARTNER_EDI_STRUCT),
+                                                  edi_struct or dict(RES_PARTNER_EDI_STRUCT),
                                                   context=context)
 
 class res_partner_address(osv.osv, EDIMixin):
@@ -56,9 +56,8 @@ class res_partner_address(osv.osv, EDIMixin):
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         return super(res_partner_address,self).edi_export(cr, uid, records,
-                                                          dict(RES_PARTNER_ADDRESS_EDI_STRUCT),
+                                                          edi_struct or dict(RES_PARTNER_ADDRESS_EDI_STRUCT),
                                                           context=context)
 
 class res_partner_bank(osv.osv, EDIMixin):
     _inherit = "res.partner.bank"
-
