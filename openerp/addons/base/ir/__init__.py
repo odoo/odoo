@@ -36,7 +36,6 @@ import ir_rule
 import wizard
 import ir_config_parameter
 import osv_memory_autovacuum
-import ir_edi
 import ir_mail_server
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

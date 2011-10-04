@@ -35,8 +35,6 @@ import res_lang
 import res_log
 import res_widget
 import ir_property
-import edi_partner
-import edi_res_company
 import wizard
 import report
 
