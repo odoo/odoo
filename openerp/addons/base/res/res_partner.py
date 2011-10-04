@@ -188,7 +188,7 @@ notifications, such as the availability of invoices."),
     def name_get(self, cr, uid, ids, context={}):
         if not len(ids):
             return []
-        if context.get('show_ref', False):
+        if context and context.get('show_ref'):
             rec_name = 'ref'
         else:
             rec_name = 'name'
@@ -199,8 +199,6 @@ notifications, such as the availability of invoices."),
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
-            context={}
         if name:
             ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
             if not ids:
@@ -315,6 +313,8 @@ class res_partner_address(osv.osv):
     }
 
     def name_get(self, cr, user, ids, context={}):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         res = []
