@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-10-03 15:23+0000\n"
+"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-30 05:51+0000\n"
-"X-Generator: Launchpad (build 13794)\n"
+"X-Launchpad-Export-Date: 2011-10-04 05:12+0000\n"
+"X-Generator: Launchpad (build 14071)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned tasks"
-msgstr "任務指派"
+msgstr "已分配任務"
 
 #. module: project
 #: help:project.task.delegate,new_task_description:0
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr "「%s」任務委派予 %s"
+msgstr "已將「%s」任務委派予 %s。"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -248,7 +248,7 @@ msgstr "專案結束任務"
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
 msgid "Draft task"
-msgstr "草案任務"
+msgstr "任務草案"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -267,7 +267,7 @@ msgstr "成員"
 msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
-msgstr "完成任務估計時間，通常由專案經理（PM）於草案階段設定"
+msgstr "完成任務估計時間，通常由專案經理(PM)於草案階段設定。"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
@@ -502,7 +502,7 @@ msgstr "重新評估任務"
 #. module: project
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr "指派給"
+msgstr "已分配給"
 
 #. module: project
 #: view:project.project:0
@@ -547,7 +547,7 @@ msgstr "下一個"
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
-msgstr "「草案」階段會轉為「進行中」階段"
+msgstr "會由「草案」階段轉為「開放」階段。"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -764,7 +764,7 @@ msgstr ""
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
 msgid "Draft Open task"
-msgstr "草案進行任務"
+msgstr "開啟任務草案"
 
 #. module: project
 #: view:project.project:0
@@ -911,6 +911,10 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"當建立任務時會處於「草案(Draft)」階段。\n"
+"  開始後會處於「進行中(In Progress)」階段。\n"
+"  如需評估，會處於「待通過(Pending)」階段。                                  \n"
+"  任務完成，處於「完成(Done)」階段。"
 
 #. module: project
 #: help:project.task,progress:0
@@ -1285,7 +1289,7 @@ msgstr ""
 #. module: project
 #: view:report.project.task.user:0
 msgid "Assigned to"
-msgstr "指派給"
+msgstr "已分配給"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1583,7 +1587,7 @@ msgstr ""
 #. module: project
 #: field:project.task.delegate,user_id:0
 msgid "Assign To"
-msgstr "指派給"
+msgstr "分配給"
 
 #. module: project
 #: field:project.project,effective_hours:0

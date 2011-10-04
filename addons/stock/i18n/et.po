@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-05-09 10:19+0000\n"
+"POT-Creation-Date: 2011-10-03 14:08+0000\n"
 "PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-30 05:59+0000\n"
-"X-Generator: Launchpad (build 13794)\n"
+"X-Launchpad-Export-Date: 2011-10-04 05:13+0000\n"
+"X-Generator: Launchpad (build 14071)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -180,8 +180,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1170
-#: code:addons/stock/stock.py:2415
+#: code:addons/stock/stock.py:1190
+#: code:addons/stock/stock.py:2436
 #, python-format
 msgid "Missing partial picking data for move #%s"
 msgstr ""
@@ -243,8 +243,8 @@ msgid "Reference"
 msgstr "Viide"
 
 #. module: stock
-#: code:addons/stock/stock.py:666
-#: code:addons/stock/stock.py:1472
+#: code:addons/stock/stock.py:679
+#: code:addons/stock/stock.py:1492
 #, python-format
 msgid "Products to Process"
 msgstr ""
@@ -267,15 +267,15 @@ msgid "Split lines"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1120
+#: code:addons/stock/stock.py:1139
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2233
-#: code:addons/stock/stock.py:2274
-#: code:addons/stock/stock.py:2334
+#: code:addons/stock/stock.py:2253
+#: code:addons/stock/stock.py:2295
+#: code:addons/stock/stock.py:2355
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Warning!"
@@ -484,7 +484,7 @@ msgid "Product Lots Filter"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2618
+#: code:addons/stock/stock.py:2639
 #, python-format
 msgid ""
 "You can not cancel inventory which has any account move with posted state."
@@ -494,7 +494,6 @@ msgstr ""
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 #: report:stock.inventory.move:0
-#: report:stock.picking.list:0
 msgid "["
 msgstr "["
 
@@ -511,7 +510,7 @@ msgid "Move History (child moves)"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2015
+#: code:addons/stock/stock.py:2033
 #, python-format
 msgid ""
 "There is no stock output account defined for this product or its category: "
@@ -531,7 +530,7 @@ msgid "Destination Location"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:754
+#: code:addons/stock/stock.py:769
 #, python-format
 msgid "You can not process picking without stock moves"
 msgstr ""
@@ -580,7 +579,7 @@ msgid "Location / Product"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1303
+#: code:addons/stock/stock.py:1323
 #, python-format
 msgid "Reception"
 msgstr ""
@@ -740,7 +739,7 @@ msgid "Location Address"
 msgstr "Asukoha aadress"
 
 #. module: stock
-#: code:addons/stock/stock.py:2385
+#: code:addons/stock/stock.py:2406
 #, python-format
 msgid "is consumed with"
 msgstr ""
@@ -749,6 +748,13 @@ msgstr ""
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr "Tootmispartiid kasutatakse, et panna seerianumber tootele"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_move.py:261
+#, python-format
+msgid ""
+"Processing quantity %s for %s is larger than the available quantity %s!"
+msgstr ""
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -826,6 +832,14 @@ msgstr "sisaldab"
 #. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:65
+#, python-format
+msgid ""
+"Either there are no moves linked to the picking or Accounting Journals are "
+"misconfigured!"
 msgstr ""
 
 #. module: stock
@@ -957,24 +971,8 @@ msgid "Address of partner"
 msgstr ""
 
 #. module: stock
-#: model:res.company,overdue_msg:stock.res_company_shop0
-#: model:res.company,overdue_msg:stock.res_company_tinyshop0
-msgid ""
-"\n"
-"Date: %(date)s\n"
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Please find in attachment a reminder of all your unpaid invoices, for a "
-"total amount due of:\n"
-"\n"
-"%(followup_amount).2f %(company_currency)s\n"
-"\n"
-"Thanks,\n"
-"--\n"
-"%(user_signature)s\n"
-"%(company_name)s\n"
-"        "
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
 msgstr ""
 
 #. module: stock
@@ -1011,7 +1009,7 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: stock
-#: code:addons/stock/stock.py:1302
+#: code:addons/stock/stock.py:1322
 #, python-format
 msgid "Delivery Order"
 msgstr ""
@@ -1148,7 +1146,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2006
+#: code:addons/stock/stock.py:2024
 #, python-format
 msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
@@ -1156,7 +1154,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1319
+#: code:addons/stock/stock.py:1339
 #, python-format
 msgid "is in draft state."
 msgstr ""
@@ -1171,11 +1169,6 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
 msgid "Stock ups final"
-msgstr ""
-
-#. module: stock
-#: field:stock.location,chained_auto_packing:0
-msgid "Chaining Type"
 msgstr ""
 
 #. module: stock
@@ -1219,9 +1212,9 @@ msgid "Additional Info"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1619
-#, python-format
-msgid "Operation forbidden"
+#: field:stock.move.memory.in,move_id:0
+#: field:stock.move.memory.out,move_id:0
+msgid "Move"
 msgstr ""
 
 #. module: stock
@@ -1364,9 +1357,14 @@ msgid "Downstream traceability"
 msgstr "Allavoolu jälgitavus"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:101
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:106
 #, python-format
 msgid "No Invoices were created"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_company
+msgid "OpenERP S.A."
 msgstr ""
 
 #. module: stock
@@ -1411,7 +1409,7 @@ msgid "Let this field empty if this location is shared between all companies"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2233
+#: code:addons/stock/stock.py:2253
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
 msgstr ""
@@ -1451,7 +1449,7 @@ msgid "Supplier Location"
 msgstr "Tarnija asukoht"
 
 #. module: stock
-#: code:addons/stock/stock.py:2254
+#: code:addons/stock/stock.py:2275
 #, python-format
 msgid "were scrapped"
 msgstr ""
@@ -1634,7 +1632,19 @@ msgid "Warehouse Dashboard"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:512
+#: model:res.company,overdue_msg:stock.res_company_shop0
+#: model:res.company,overdue_msg:stock.res_company_tinyshop0
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:525
 #, python-format
 msgid "You can not remove a lot line !"
 msgstr "Sa ei saa eemaldada partii rida!"
@@ -1648,7 +1658,7 @@ msgid "Scrap Products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1128
+#: code:addons/stock/stock.py:1147
 #, python-format
 msgid "You cannot remove the picking which is in %s state !"
 msgstr ""
@@ -1711,7 +1721,7 @@ msgid "Provide the quantities of the returned products."
 msgstr "Määra tagastatud toodete kogused."
 
 #. module: stock
-#: code:addons/stock/stock.py:2009
+#: code:addons/stock/stock.py:2027
 #, python-format
 msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
@@ -1780,6 +1790,11 @@ msgid "Price"
 msgstr ""
 
 #. module: stock
+#: view:stock.location:0
+msgid "Chained Location"
+msgstr ""
+
+#. module: stock
 #: view:stock.inventory:0
 msgid "Search Inventory"
 msgstr ""
@@ -1790,7 +1805,7 @@ msgid "Quantity per lot"
 msgstr "Kogus partii kohta"
 
 #. module: stock
-#: code:addons/stock/stock.py:2012
+#: code:addons/stock/stock.py:2030
 #, python-format
 msgid ""
 "There is no stock input account defined for this product or its category: "
@@ -1892,7 +1907,6 @@ msgstr ""
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 #: report:stock.inventory.move:0
-#: report:stock.picking.list:0
 msgid "]"
 msgstr "]"
 
@@ -1956,7 +1970,7 @@ msgid "Automatic No Step Added"
 msgstr "Automaatselt sammu ei lisata"
 
 #. module: stock
-#: code:addons/stock/stock.py:2385
+#: code:addons/stock/stock.py:2406
 #, python-format
 msgid "Product "
 msgstr ""
@@ -1974,8 +1988,8 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: field:report.stock.lines.date,date:0
-msgid "Latest Inventory Date"
+#: model:ir.model,name:stock.model_stock_move_memory_out
+msgid "stock.move.memory.out"
 msgstr ""
 
 #. module: stock
@@ -1999,7 +2013,7 @@ msgid "Inventory loss"
 msgstr "Inventuuri kadu"
 
 #. module: stock
-#: code:addons/stock/stock.py:1311
+#: code:addons/stock/stock.py:1331
 #, python-format
 msgid "Document"
 msgstr ""
@@ -2120,13 +2134,13 @@ msgid "Shipping Type"
 msgstr "Saatmise tüüp"
 
 #. module: stock
-#: code:addons/stock/stock.py:2210
+#: code:addons/stock/stock.py:2230
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Sa saad kustutada ainult liigutamise mustandeid."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:97
+#: code:addons/stock/wizard/stock_partial_picking.py:98
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.ui.menu,name:stock.menu_stock_products_menu
 #: view:stock.inventory:0
@@ -2180,9 +2194,9 @@ msgid "Delay(Days)"
 msgstr ""
 
 #. module: stock
-#: field:stock.move.memory.in,move_id:0
-#: field:stock.move.memory.out,move_id:0
-msgid "Move"
+#: code:addons/stock/stock.py:1639
+#, python-format
+msgid "Operation forbidden"
 msgstr ""
 
 #. module: stock
@@ -2269,7 +2283,7 @@ msgid "Source"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2589
+#: code:addons/stock/stock.py:2610
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
 #: field:stock.inventory.line,inventory_id:0
@@ -2478,7 +2492,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2339
+#: code:addons/stock/stock.py:2361
 #, python-format
 msgid "Can not consume a move with negative or zero quantity !"
 msgstr ""
@@ -2534,7 +2548,7 @@ msgid "Quantity (UOS)"
 msgstr "Kogus (TÜ)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1664
+#: code:addons/stock/stock.py:1684
 #, python-format
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
@@ -2573,7 +2587,7 @@ msgid "Properties"
 msgstr "Omadused"
 
 #. module: stock
-#: code:addons/stock/stock.py:974
+#: code:addons/stock/stock.py:994
 #, python-format
 msgid "Error, no partner !"
 msgstr "Viga, puudub partner!"
@@ -2625,7 +2639,7 @@ msgid "Inventory Reference"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1304
+#: code:addons/stock/stock.py:1324
 #, python-format
 msgid "Internal picking"
 msgstr ""
@@ -2711,7 +2725,7 @@ msgid "Date done"
 msgstr "Teostamise kuupäev"
 
 #. module: stock
-#: code:addons/stock/stock.py:975
+#: code:addons/stock/stock.py:995
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -2784,14 +2798,22 @@ msgid "Product"
 msgstr "Toode"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:163
+#, python-format
+msgid ""
+"You cannot add any new move while validating the picking, rather you can "
+"split the lines prior to validation!"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:126
 #, python-format
 msgid "Invoicing"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2274
-#: code:addons/stock/stock.py:2334
+#: code:addons/stock/stock.py:2295
+#: code:addons/stock/stock.py:2355
 #, python-format
 msgid "Please provide Proper Quantity !"
 msgstr ""
@@ -2818,7 +2840,7 @@ msgid "Consume Products"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1663
+#: code:addons/stock/stock.py:1683
 #, python-format
 msgid "Insufficient Stock in Lot !"
 msgstr ""
@@ -2911,7 +2933,9 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 #: field:report.stock.move,location_id:0
+#: field:stock.inventory.line.split,location_id:0
 #: field:stock.move,location_id:0
+#: field:stock.move.split,location_id:0
 msgid "Source Location"
 msgstr "Lähtekoht"
 
@@ -2964,11 +2988,17 @@ msgid "All at once"
 msgstr "Kõik korraga"
 
 #. module: stock
-#: code:addons/stock/stock.py:1620
+#: code:addons/stock/stock.py:1640
 #, python-format
 msgid ""
 "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
 "that have already been processed (except by the Administrator)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:180
+#, python-format
+msgid "Can not process quantity %s for Product %s !"
 msgstr ""
 
 #. module: stock
@@ -3010,11 +3040,6 @@ msgid "Moves for this production lot"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_move_memory_out
-msgid "stock.move.memory.out"
-msgstr ""
-
-#. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in current pack"
@@ -3052,8 +3077,8 @@ msgid "Icon"
 msgstr "Ikoon"
 
 #. module: stock
-#: code:addons/stock/stock.py:2209
-#: code:addons/stock/stock.py:2617
+#: code:addons/stock/stock.py:2229
+#: code:addons/stock/stock.py:2638
 #, python-format
 msgid "UserError"
 msgstr "Kasutaja Viga"
@@ -3080,13 +3105,13 @@ msgstr "Mitte-Euroopa kliendid"
 #: code:addons/stock/product.py:100
 #: code:addons/stock/product.py:121
 #: code:addons/stock/product.py:147
-#: code:addons/stock/stock.py:2006
-#: code:addons/stock/stock.py:2009
-#: code:addons/stock/stock.py:2012
-#: code:addons/stock/stock.py:2015
-#: code:addons/stock/stock.py:2018
-#: code:addons/stock/stock.py:2021
-#: code:addons/stock/stock.py:2339
+#: code:addons/stock/stock.py:2024
+#: code:addons/stock/stock.py:2027
+#: code:addons/stock/stock.py:2030
+#: code:addons/stock/stock.py:2033
+#: code:addons/stock/stock.py:2036
+#: code:addons/stock/stock.py:2039
+#: code:addons/stock/stock.py:2361
 #: code:addons/stock/wizard/stock_fill_inventory.py:47
 #: code:addons/stock/wizard/stock_splitinto.py:49
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3095,7 +3120,7 @@ msgid "Error!"
 msgstr "Viga!"
 
 #. module: stock
-#: code:addons/stock/stock.py:2021
+#: code:addons/stock/stock.py:2039
 #, python-format
 msgid ""
 "There is no inventory variation account defined on the product category: "
@@ -3117,9 +3142,9 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,chained_location_type:0
-msgid "Chained Location Type"
-msgstr "Ahelasukoha tüüp"
+#: view:stock.move:0
+msgid "Picking"
+msgstr ""
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3127,9 +3152,17 @@ msgid "It specifies goods to be delivered all at once or by direct delivery"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:90
 #, python-format
 msgid "This picking list does not require invoicing."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:172
+#, python-format
+msgid ""
+"Processing quantity %s %s for %s is larger than the available quantity %s %s "
+"!"
 msgstr ""
 
 #. module: stock
@@ -3162,8 +3195,8 @@ msgid "Warning"
 msgstr "Hoiatus"
 
 #. module: stock
-#: code:addons/stock/stock.py:1318
-#: code:addons/stock/stock.py:2589
+#: code:addons/stock/stock.py:1338
+#: code:addons/stock/stock.py:2610
 #, python-format
 msgid "is done."
 msgstr ""
@@ -3267,7 +3300,7 @@ msgid "Reporting"
 msgstr "Aruandlus"
 
 #. module: stock
-#: code:addons/stock/stock.py:1313
+#: code:addons/stock/stock.py:1333
 #, python-format
 msgid " for the "
 msgstr ""
@@ -3316,7 +3349,7 @@ msgid "Chaining Journal"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:732
+#: code:addons/stock/stock.py:746
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr ""
@@ -3327,7 +3360,7 @@ msgid "Customers"
 msgstr "Kliendid"
 
 #. module: stock
-#: code:addons/stock/stock.py:1317
+#: code:addons/stock/stock.py:1337
 #, python-format
 msgid "is cancelled."
 msgstr ""
@@ -3338,7 +3371,7 @@ msgid "Stock Inventory Lines"
 msgstr "Lao inventuuri read"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:97
+#: code:addons/stock/wizard/stock_partial_picking.py:98
 #, python-format
 msgid "Process Document"
 msgstr ""
@@ -3462,8 +3495,8 @@ msgid "Shop 2"
 msgstr ""
 
 #. module: stock
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
+#: field:stock.location,chained_auto_packing:0
+msgid "Chaining Type"
 msgstr ""
 
 #. module: stock
@@ -3525,7 +3558,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1316
+#: code:addons/stock/stock.py:1336
 #, python-format
 msgid "is ready to process."
 msgstr ""
@@ -3541,7 +3574,7 @@ msgid "Set to zero"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:87
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:92
 #, python-format
 msgid "None of these picking lists require invoicing."
 msgstr ""
@@ -3553,7 +3586,7 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/product.py:101
-#: code:addons/stock/stock.py:2018
+#: code:addons/stock/stock.py:2036
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
 msgstr ""
@@ -3565,7 +3598,7 @@ msgid "Unplanned Qty"
 msgstr "Planeerimata kogus"
 
 #. module: stock
-#: code:addons/stock/stock.py:1315
+#: code:addons/stock/stock.py:1335
 #, python-format
 msgid "is scheduled"
 msgstr ""
@@ -3609,10 +3642,10 @@ msgid "Future Stock"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:512
-#: code:addons/stock/stock.py:1120
-#: code:addons/stock/stock.py:1128
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:101
+#: code:addons/stock/stock.py:525
+#: code:addons/stock/stock.py:1139
+#: code:addons/stock/stock.py:1147
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:106
 #, python-format
 msgid "Error"
 msgstr "Viga"
@@ -3711,7 +3744,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2385
+#: code:addons/stock/stock.py:2406
 #, python-format
 msgid "quantity."
 msgstr ""
@@ -3756,6 +3789,15 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
 msgid "Split in Production lots"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_move.py:261
+#: code:addons/stock/wizard/stock_partial_picking.py:162
+#: code:addons/stock/wizard/stock_partial_picking.py:171
+#: code:addons/stock/wizard/stock_partial_picking.py:179
+#, python-format
+msgid "Processing Error"
 msgstr ""
 
 #. module: stock
@@ -3816,9 +3858,9 @@ msgid "Stock Output Account"
 msgstr "Lao väljundkonto"
 
 #. module: stock
-#: view:stock.move:0
-msgid "Picking"
-msgstr ""
+#: field:stock.location,chained_location_type:0
+msgid "Chained Location Type"
+msgstr "Ahelasukoha tüüp"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -3865,10 +3907,11 @@ msgid "Invoiced date"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:732
+#: code:addons/stock/stock.py:746
 #: code:addons/stock/wizard/stock_fill_inventory.py:106
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:85
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:87
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:65
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:90
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:92
 #: code:addons/stock/wizard/stock_return_picking.py:77
 #: code:addons/stock/wizard/stock_return_picking.py:92
 #: code:addons/stock/wizard/stock_return_picking.py:194
