@@ -57,7 +57,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.fields =  this.fields_view.fields;
         
         if (!this.date_start) {
-            throw new Error("Calendar view has none of the following attributes : 'date_start'");
+            throw new Error("Calendar view has not defined 'date_start' attribute.");
         }
 
         //* Calendar Fields *
