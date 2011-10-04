@@ -254,14 +254,11 @@ class mrp_bom(osv.osv):
         if context is None:
             context = {}
             context['lang'] = self.pool.get('res.users').browse(cr,uid,uid).context_lang
-            
-        if product_id:
-            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v = {'product_uom': prod.uom_id.id}
-            if not name:
-                v['name'] = prod.name
-            return {'value': v}
-        return {}
+        if not product_id:
+            return {'value': {'product_uom': False, 'name': False}}
+        prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        result = {'product_uom': prod.uom_id.id, 'name': prod.name}
+        return {'value': result}
 
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
         """ Finds BoM for particular product and product uom.
