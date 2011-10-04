@@ -35,7 +35,7 @@
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
     var qweb_template = function(template) {
         return function(ctx) {
-            return _.template(QWeb.render(template), ctx);
+            return QWeb.render(template, ctx);
         };
     };
     /*

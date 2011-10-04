@@ -141,76 +141,101 @@
         </div>
     </t>
     <t t-name="pos-category-template">
-        <![CDATA[
         <header>
-        <ol class="breadcrumb">
-        <li>
-        <a href="#"><img src="/point_of_sale/static/src/img/home.png" class="homeimg" /></a>
-        </li>
-        <% _.each(breadcrumb, function(category) { %>
-        <li>
-        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow">
-        <a href="#category/<%= category.id %>"><%= category.name %></a>
-        </li>
-        <% }); %>
-        </ol>
-        <div class="searchbox">
-        <input placeholder="Search Products">
-        <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif">
-        </div>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">
+                        <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
+                    </a>
+                </li>
+                <t t-foreach="breadcrumb" t-as="category">
+                    <li>
+                        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
+                        <a t-att-href="'#category/' + category.id">
+                            <t t-esc="category.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ol>
+            <div class="searchbox">
+                <input placeholder="Search Products" />
+                <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
+            </div>
         </header>
-
         <div id="categories">
-        <h4>Categories:</h4>
-        <ol>
-        <% _.each(categories, function(category) { %>
-        <li><a href="#category/<%= category.id %>" class="button"><%= category.name %></a></li>
-        <% }); %>
-        </ol>
+            <h4>Categories:</h4>
+            <ol>
+                <t t-foreach="categories" t-as="category">
+                    <li>
+                        <a t-att-href="'#category/' + category.id" class="button">
+                            <t t-esc="category.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ol>
         </div>
-        ]]>
     </t>
     <t t-name="pos-product-template">
-        <![CDATA[
         <a href="#">
-        <div class="product-img">
-        <img src="data:image/gif;base64,<%= img %>">
-        <span class="price-tag"><%= list_price %> €</span>
-        </div>
-        <div class="product-name"><%= name %></div>
+            <div class="product-img">
+                <img t-att-src="'data:image/gif;base64,'+ img" />
+                <span class="price-tag">
+                    <t t-esc="list_price"/>
+                    €
+                </span>
+            </div>
+            <div class="product-name">
+                <t t-esc="name"/>
+            </div>
         </a>
-        ]]>
     </t>
     <t t-name="pos-orderline-template">
-        <![CDATA[
-        <td><%= name %></td>
-        <td><%= list_price.toFixed(2) %> €</td>
-        <td><%= discount.toFixed(2) %></td>
-        <td><%= quantity.toFixed(0) %></td>
-        <td><%= (list_price * (1 - discount/100) * quantity).toFixed(2) %> €</td>
-        ]]>
+        <td>
+            <t t-esc="name"/>
+        </td>
+        <td>
+            <t t-esc="list_price.toFixed(2)"/>
+            €
+        </td>
+        <td>
+            <t t-esc="discount.toFixed(2)"/>
+        </td>
+        <td>
+            <t t-esc="quantity.toFixed(0)"/>
+        </td>
+        <td>
+            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
+            €
+        </td>
     </t>
     <t t-name="pos-paymentline-template">
-        <![CDATA[
-        <span class="paymentline-type"><%= name %></span>
-        <span class="paymentline-amount"><input type="text" value="<%= amount.toFixed(2) %>" /></span>
-        ]]>
+        <span class="paymentline-type">
+            <t t-esc="name"/>
+        </span>
+        <span class="paymentline-amount">
+            <input type="text" t-att-value="amount.toFixed(2)" />
+        </span>
     </t>
     <t t-name="pos-receiptline-template">
-        <![CDATA[
-        <span class="receiptline-quantity"><%= quantity.toFixed(0) %></span>
-        <span class="receiptline-name"><%= name %></span>
-        <span class="receiptline-amount"><%= (list_price * (1 - discount/100) * quantity).toFixed(2) %> €</span>
-        ]]>
+        <span class="receiptline-quantity">
+            <t t-esc="quantity.toFixed(0)"/>
+        </span>
+        <span class="receiptline-name">
+            <t t-esc="name"/>
+        </span>
+        <span class="receiptline-amount">
+            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
+            €
+        </span>
     </t>
     <t t-name="pos-payment-button-template">
-        <![CDATA[
-        <button class="payment-button" cash-register-id="<%= id %>"><%= name %></button><br>
-        ]]>
+        <button class="payment-button" t-att-cash-register-id="id">
+            <t t-esc="name"/>
+        </button>
+        <br />
     </t>
     <t t-name="pos-order-selector-button-template">
-        <![CDATA[
-        <button class="select-order">Order</button><button class="close-order">X</button>
-        ]]>
+        <button class="select-order">Order</button>
+        <button class="close-order">X</button>
     </t>
 </templates>
