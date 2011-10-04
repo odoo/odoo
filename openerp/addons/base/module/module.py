@@ -220,6 +220,7 @@ class module(osv.osv):
         'demo': False,
         'license': 'AGPL-3',
         'web': False,
+        'complexity': 'normal',
     }
     _order = 'name'
 
