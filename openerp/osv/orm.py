@@ -816,13 +816,16 @@ class BaseModel(object):
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                if not pool.get(parent_name):
+                parent_model = pool.get(parent_name)
+                if not getattr(cls, '_original_module', None) and name == parent_model._name:
+                    cls._original_module = parent_model._module
+                if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                parent_class = parent_model.__class__
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
+                    new = copy.copy(getattr(parent_model, s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
@@ -850,6 +853,8 @@ class BaseModel(object):
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        if not getattr(cls, '_original_module', None):
+            cls._original_module = cls._module
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
