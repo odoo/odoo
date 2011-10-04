@@ -46,6 +46,10 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
 
+        // mode, one of month, week or day
+        this.mode = this.fields_view.arch.attrs.mode;
+
+        // date_start is mandatory, date_delay and date_stop are optional
         this.date_start = this.fields_view.arch.attrs.date_start;
         this.date_delay = this.fields_view.arch.attrs.date_delay;
         this.date_stop = this.fields_view.arch.attrs.date_stop;
@@ -107,9 +111,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         scheduler.config.drag_resize = true;
         scheduler.config.drag_create = true;
 
-        // Initialize Sceduler
-        this.mode = this.mode || 'month';
-        scheduler.init('openerp_scheduler', null, this.mode);
+        scheduler.init('openerp_scheduler', null, this.mode || 'month');
 
         scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
