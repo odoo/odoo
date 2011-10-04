@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+    <t t-name="PointOfSale">
+        <div id="topheader">
+            <div id="branding">
+                <img src="/point_of_sale/static/src/img/logo.png" />
+            </div>
+            <div id="steps">
+                <input type="radio" id="products-step-button" class="step-button" data-step='products' name="radio" checked="checked" />
+                <label for="products-step-button">Products</label>
+                <img src="/point_of_sale/static/src/img/steps-arrow.png" />
+                <input type="radio" id="payment-step-button" class="step-button" data-step='payment' name="radio" />
+                <label for="payment-step-button">Payment</label>
+                <img src="/point_of_sale/static/src/img/steps-arrow.png" />
+                <input type="radio" id="receipt-step-button" class="step-button" data-step='receipt' name="radio" />
+                <label for="receipt-step-button">Receipt</label>
+            </div>
+            <div id="rightheader">
+                <div id="order-selector">
+                    <button id="neworder-button">+</button>
+                    <ol id="orders"></ol>
+                </div>
+            </div>
+            <div id="loggedas">
+                <p>Minh Tran</p>
+                <button>Logout</button>
+            </div>
+        </div>
+        <div id="content">
+
+            <div id="leftpane">
+                <div id="current-order">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Product</td>
+                                <td>Price</td>
+                                <td>Disc (%)</td>
+                                <td>Qty</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody id="current-order-content"></tbody>
+                    </table>
+                </div>
+                <footer>
+                    <ul id="amounts">
+                        <li>
+                            Subtotal:
+                            <span id="subtotal">0</span> €
+                        </li>
+                        <li>
+                            Tax:
+                            <span id="tax">0</span> €
+                        </li>
+                        <li>
+                            Total:
+                            <span id="total">0</span> €
+                        </li>
+                    </ul>
+                    <div id="paypad"></div>
+                    <div id="numpad">
+                        <button class="input-button number-char">1</button>
+                        <button class="input-button number-char">2</button>
+                        <button class="input-button number-char">3</button>
+                        <button class="mode-button selected-mode" data-mode='quantity'>Qty</button>
+                        <br />
+                        <button class="input-button number-char">4</button>
+                        <button class="input-button number-char">5</button>
+                        <button class="input-button number-char">6</button>
+                        <button class="mode-button" data-mode='discount'>Disc</button>
+                        <br />
+                        <button class="input-button number-char">7</button>
+                        <button class="input-button number-char">8</button>
+                        <button class="input-button number-char">9</button>
+                        <button class="mode-button" data-mode='list_price'>Price</button>
+                        <br />
+                        <button class="input-button" id="numpad-minus" >+/-</button>
+                        <button class="input-button number-char">0</button>
+                        <button class="input-button number-char">.</button>
+                        <button class="input-button" id="numpad-backspace">
+                            <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                        </button>
+                        <br />
+                    </div>
+                </footer>
+            </div>
+            <div id="rightpane">
+                <div id="products-screen" class="step-screen selected-step"></div>
+                <div id="payment-screen" class="step-screen" style="display:none">
+                    <header>Payment</header>
+                    <section>
+                        <p>
+                            Due:
+                            <span id="payment-due-total"></span> €
+                        </p>
+                        <p>Paid:</p>
+                        <ol id="paymentlines"></ol>
+                    </section>
+                    <footer>
+                        <p>
+                            Total paid:
+                            <span id="payment-paid-total"></span> €
+                        </p>
+                        <p>
+                            <span id="payment-remaining"></span> €
+                        </p>
+                        <p>
+                            <button id="validate-order">Validate</button>
+                        </p>
+                    </footer>
+                </div>
+                <div id="receipt-screen" class="step-screen" style="display:none">
+                    <header>Receipt</header>
+                    <section>
+                        <ol id="receiptlines"></ol>
+                    </section>
+                    <footer id="receipt-summary">
+                        <ul>
+                            <li>
+                                Total:
+                                <span id="receipt-summary-total"></span> €
+                            </li>
+                            <li>
+                                Tax:
+                                <span id="receipt-summary-tax"></span> €
+                            </li>
+                            <li>
+                                Change:
+                                <span id="receipt-summary-change"></span> €
+                            </li>
+                        </ul>
+                    </footer>
+                    <p>
+                        <button id="print-receipt">Print receipt</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="pos-category-template">
+        <![CDATA[
+        <header>
+        <ol class="breadcrumb">
+        <li>
+        <a href="#"><img src="/point_of_sale/static/src/img/home.png" class="homeimg" /></a>
+        </li>
+        <% _.each(breadcrumb, function(category) { %>
+        <li>
+        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow">
+        <a href="#category/<%= category.id %>"><%= category.name %></a>
+        </li>
+        <% }); %>
+        </ol>
+        <div class="searchbox">
+        <input placeholder="Search Products">
+        <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif">
+        </div>
+        </header>
+
+        <div id="categories">
+        <h4>Categories:</h4>
+        <ol>
+        <% _.each(categories, function(category) { %>
+        <li><a href="#category/<%= category.id %>" class="button"><%= category.name %></a></li>
+        <% }); %>
+        </ol>
+        </div>
+        ]]>
+    </t>
+    <t t-name="pos-product-template">
+        <![CDATA[
+        <a href="#">
+        <div class="product-img">
+        <img src="data:image/gif;base64,<%= img %>">
+        <span class="price-tag"><%= list_price %> €</span>
+        </div>
+        <div class="product-name"><%= name %></div>
+        </a>
+        ]]>
+    </t>
+    <t t-name="pos-orderline-template">
+        <![CDATA[
+        <td><%= name %></td>
+        <td><%= list_price.toFixed(2) %> €</td>
+        <td><%= discount.toFixed(2) %></td>
+        <td><%= quantity.toFixed(0) %></td>
+        <td><%= (list_price * (1 - discount/100) * quantity).toFixed(2) %> €</td>
+        ]]>
+    </t>
+    <t t-name="pos-paymentline-template">
+        <![CDATA[
+        <span class="paymentline-type"><%= name %></span>
+        <span class="paymentline-amount"><input type="text" value="<%= amount.toFixed(2) %>" /></span>
+        ]]>
+    </t>
+    <t t-name="pos-receiptline-template">
+        <![CDATA[
+        <span class="receiptline-quantity"><%= quantity.toFixed(0) %></span>
+        <span class="receiptline-name"><%= name %></span>
+        <span class="receiptline-amount"><%= (list_price * (1 - discount/100) * quantity).toFixed(2) %> €</span>
+        ]]>
+    </t>
+    <t t-name="pos-payment-button-template">
+        <![CDATA[
+        <button class="payment-button" cash-register-id="<%= id %>"><%= name %></button><br>
+        ]]>
+    </t>
+    <t t-name="pos-order-selector-button-template">
+        <![CDATA[
+        <button class="select-order">Order</button><button class="close-order">X</button>
+        ]]>
+    </t>
+</templates>
