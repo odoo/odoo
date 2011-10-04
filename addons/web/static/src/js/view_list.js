@@ -896,6 +896,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             options: this.options,
             record: record,
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
+            view: this.view,
             render_cell: openerp.web.format_cell
         });
     },
