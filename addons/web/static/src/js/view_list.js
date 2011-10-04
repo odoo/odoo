@@ -493,6 +493,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
+            self.configure_pager(self.dataset);
             self.compute_aggregates();
         });
     },
