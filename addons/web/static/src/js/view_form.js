@@ -808,7 +808,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
             page.id = self.pages[index].element_id;
         });
         this.$element.tabs();
-        this.view.on_button_new.add_last(this.do_select_first_visible_tab);
+        this.view.on_button_new.add_first(this.do_select_first_visible_tab);
     },
     do_select_first_visible_tab: function() {
         for (var i = 0; i < this.pages.length; i++) {
