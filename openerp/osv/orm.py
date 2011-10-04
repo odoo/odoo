@@ -818,7 +818,7 @@ class BaseModel(object):
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
                 parent_model = pool.get(parent_name)
                 if not getattr(cls, '_original_module', None) and name == parent_model._name:
-                    cls._original_module = parent_model._module
+                    cls._original_module = parent_model._original_module
                 if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
