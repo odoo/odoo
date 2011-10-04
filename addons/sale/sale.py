@@ -191,7 +191,7 @@ class sale_order(osv.osv):
         return result.keys()
 
     _columns = {
-        'name': fields.char('Order Reference', size=64,
+        'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)]}, select=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this sales order request."),
