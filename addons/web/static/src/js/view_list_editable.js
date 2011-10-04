@@ -148,7 +148,7 @@ openerp.web.list_editable = function (openerp) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': record_id,
-                        'class': $(row).attr('class') + ' oe_forms',
+                        'class': row ? $(row).attr('class') : '' + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {
@@ -175,6 +175,7 @@ openerp.web.list_editable = function (openerp) {
                 if (row) {
                     $new_row.replaceAll(row);
                 } else if (self.options.editable) {
+                    var $last_child = self.$current.find('> tr:last');
                     if (self.records.length) {
                         if (self.options.editable === 'top') {
                             $new_row.insertBefore(
@@ -186,7 +187,6 @@ openerp.web.list_editable = function (openerp) {
                     } else {
                         $new_row.prependTo(self.$current);
                     }
-                    var $last_child = self.$current.find('> tr:last');
                     if ($last_child.is(':not([data-id])')) {
                         $last_child.remove();
                     }
