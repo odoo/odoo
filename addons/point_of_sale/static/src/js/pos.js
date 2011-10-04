@@ -33,6 +33,11 @@
     var db = openerp.init();
     var QWeb = db.web.qweb;
     QWeb.add_template("/point_of_sale/static/src/xml/pos.xml");
+    var qweb_template = function(template) {
+        return function(ctx) {
+            return _.template(QWeb.render(template), ctx);
+        };
+    };
     /*
      Local store access. Read once from localStorage upon construction and persist on every change.
      There should only be one store active at any given time to ensure data consistency.
@@ -585,7 +590,7 @@
                 PaymentButtonView.__super__.constructor.apply(this, arguments);
             }
 
-            PaymentButtonView.prototype.template = _.template(QWeb.render('pos-payment-button-template'));
+            PaymentButtonView.prototype.template = qweb_template('pos-payment-button-template');
             PaymentButtonView.prototype.render = function() {
                 return $(this.el).html(this.template({
                     id: this.model.get('id'),
@@ -633,7 +638,7 @@
             }
 
             OrderlineView.prototype.tagName = 'tr';
-            OrderlineView.prototype.template = _.template(QWeb.render('pos-orderline-template'));
+            OrderlineView.prototype.template = qweb_template('pos-orderline-template');
             OrderlineView.prototype.initialize = function(options) {
                 this.model.bind('change', __bind( function() {
                     $(this.el).hide();
@@ -728,7 +733,7 @@
                 CategoryView.__super__.constructor.apply(this, arguments);
             }
 
-            CategoryView.prototype.template = _.template(QWeb.render('pos-category-template'));
+            CategoryView.prototype.template = qweb_template('pos-category-template');
             CategoryView.prototype.render = function(ancestors, children) {
                 var c;
                 return $(this.el).html(this.template({
@@ -762,7 +767,7 @@
 
             ProductView.prototype.tagName = 'li';
             ProductView.prototype.className = 'product';
-            ProductView.prototype.template = _.template(QWeb.render('pos-product-template'));
+            ProductView.prototype.template = qweb_template('pos-product-template');
             ProductView.prototype.events = {
                 'click a': 'addToOrder'
             };
@@ -814,7 +819,7 @@
 
             PaymentlineView.prototype.tagName = 'li';
             PaymentlineView.prototype.className = 'paymentline';
-            PaymentlineView.prototype.template = _.template(QWeb.render('pos-paymentline-template'));
+            PaymentlineView.prototype.template = qweb_template('pos-paymentline-template');
             PaymentlineView.prototype.initialize = function() {
                 return this.model.bind('change', this.render, this);
             };
@@ -922,7 +927,7 @@
 
             ReceiptLineView.prototype.tagName = 'li';
             ReceiptLineView.prototype.className = 'receiptline';
-            ReceiptLineView.prototype.template = _.template(QWeb.render('pos-receiptline-template'));
+            ReceiptLineView.prototype.template = qweb_template('pos-receiptline-template');
             ReceiptLineView.prototype.initialize = function() {
                 return this.model.bind('change', this.render, this);
             };
@@ -998,7 +1003,7 @@
 
             OrderButtonView.prototype.tagName = 'li';
             OrderButtonView.prototype.className = 'order-selector-button';
-            OrderButtonView.prototype.template = _.template(QWeb.render('pos-order-selector-button-template'));
+            OrderButtonView.prototype.template = qweb_template('pos-order-selector-button-template');
             OrderButtonView.prototype.initialize = function(options) {
                 this.order = options.order;
                 this.shop = options.shop;
