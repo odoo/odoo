@@ -23,6 +23,14 @@
         <script type="text/javascript" src="/web/static/src/js/dates.js"></script>
         <script type="text/javascript" src="/point_of_sale/static/lib/backbone/backbone-0.5.3.js"></script>
         <script type="text/javascript" src="/point_of_sale/static/src/js/pos.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                var db = openerp.init();
+                openerp.point_of_sale(db);
+                var pos = new db.point_of_sale.PointOfSale(null);
+                pos.appendTo($("body"));
+            });
+        </script>
     </head>
     <body>
     </body>
