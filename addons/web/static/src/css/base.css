@@ -125,7 +125,7 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
     margin-top: 5px;
     text-align: center;
 }
-.openerp .login.login_invalid .login_error_message {
+.openerp .login .login_invalid .login_error_message {
     display: block;
 }
 
@@ -892,6 +892,9 @@ label.error {
 .openerp .oe_forms input.field_datetime {
     min-width: 11em;
 }
+.openerp .oe_forms.oe_frame .oe_datepicker_root {
+    width: 100%;
+}
 .openerp .oe_forms .button {
     color: #4c4c4c;
     white-space: nowrap;
@@ -904,7 +907,14 @@ label.error {
     position: absolute;
     cursor: pointer;
     right: 5px;
-    top: 5px;
+    top: 3px;
+}
+.openerp .oe_datepicker_root {
+    position: relative;
+    display: inline-block;
+}
+.openerp .oe_datepicker_root input[type="text"] {
+    min-width: 160px;
 }
 .openerp .oe_input_icon_disabled {
     position: absolute;

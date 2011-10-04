@@ -86,7 +86,7 @@ db.web.ActionManager = db.web.Widget.extend({
             console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_close);
+        return this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
         if (action.target === 'new') {
@@ -163,7 +163,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
      */
     init: function(parent, dataset, views) {
         this._super(parent);
-        this.model = dataset.model;
+        this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
@@ -184,7 +184,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
     start: function() {
         this._super();
         var self = this;
-        this.dataset.start();
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
@@ -332,6 +331,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         // dataset initialization will take the session from ``this``, so if we
         // do not have it yet (and we don't, because we've not called our own
         // ``_super()``) rpc requests will blow up.
+        this._super(parent, null, action.views);
         this.session = parent.session;
         this.action = action;
         var dataset = new db.web.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -339,7 +339,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
             dataset.ids.push(action.res_id);
             dataset.index = 0;
         }
-        this._super(parent, dataset, action.views);
+        this.dataset = dataset;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid form chrome (pager, save/new
@@ -470,7 +470,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * Intercept do_action resolution from children views
      */
     on_action_executed: function () {
-        new db.web.DataSet(this, 'res.log')
+        return new db.web.DataSet(this, 'res.log')
                 .call('get', [], this.do_display_log);
     },
     /**
@@ -770,28 +770,31 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            self.widget_parent.on_action_executed.apply(null, arguments);
+            return self.widget_parent.on_action_executed.apply(null, arguments);
         };
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                action.context = action.context || {};
-                _.extend(action.context, {
-                    active_id: record_id || false,
-                    active_ids: [record_id || false],
-                    active_model: dataset.model
+                return self.rpc('/web/session/eval_domain_and_context', {
+                    contexts: [dataset.get_context(), action.context || {}, {
+                        active_id: record_id || false,
+                        active_ids: [record_id || false],
+                        active_model: dataset.model
+                    }],
+                    domains: []
+                }).pipe(function (results) {
+                    action.context = results.context
+                    return self.do_action(action, result_handler);
                 });
-                action.context = new db.web.CompoundContext(dataset.get_context(), action.context);
-                self.do_action(action, result_handler);
             } else {
-                result_handler();
+                return result_handler();
             }
         };
 
         var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
         if (action_data.special) {
-            handler({result: {"type":"ir.actions.act_window_close"}});
+            return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
@@ -862,6 +865,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         console.log('Todo');
     },
     on_sidebar_import: function() {
+        var import_view = new db.web.DataImport(this, this.dataset);
+        import_view.start();
     },
     on_sidebar_export: function() {
         var export_view = new db.web.DataExport(this, this.dataset);
