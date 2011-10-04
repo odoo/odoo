@@ -43,6 +43,8 @@ DEFAULT_MODULES = {
     'Marketing' : ['marketing',],
 }
 
+HIDDEN_CATEGORIES = ('Tools', 'System', 'Localization', 'Link', 'Uncategorized')
+
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
 
@@ -61,7 +63,7 @@ class base_setup_installer(osv.osv_memory):
         fields = {} 
         category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', 'not in', ('Localization', 'Others', 'Tools', 'Base', 'Link'))]
+                  ('name', 'not in', HIDDEN_CATEGORIES )]
         category_ids = category_proxy.search(cr, uid, domain, context=context)
         for category in category_proxy.browse(cr, uid, category_ids, context=context):
             category_name = 'category_%d' % (category.id,)
@@ -119,7 +121,7 @@ class base_setup_installer(osv.osv_memory):
 
         module_category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', 'not in', ('Localization', 'Others', 'Tools', 'Base', 'Link'))]
+                  ('name', 'not in', HIDDEN_CATEGORIES)]
         module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='sequence asc')
 
         arch = ['<form string="%s">' % _('Automatic Base Setup')]
