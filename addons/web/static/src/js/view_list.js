@@ -520,14 +520,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {openerp.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
      */
     do_activate_record: function (index, id, dataset) {
-        var self = this;
-        // TODO is it needed ?
-        this.dataset.read_slice([],{
-                context: dataset.get_context(),
-                domain: dataset.get_domain()
-            }, function () {
-                self.select_record(index);
-        });
+        this.dataset.ids = dataset.ids;
+        this.select_record(index);
     },
     /**
      * Handles signal for the addition of a new record (can be a creation,
