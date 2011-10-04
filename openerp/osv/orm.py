@@ -1053,6 +1053,7 @@ class BaseModel(object):
                                 'name': n,
                                 'model': self._name,
                                 'res_id': r['id'],
+                                'module': '__export__',
                             })
                             r = n
                     else:
