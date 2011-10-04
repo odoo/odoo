@@ -2859,11 +2859,9 @@ class BaseModel(object):
 
     def _auto_end(self, cr, context=None):
         """ Create the foreign keys recorded by _auto_init. """
-        self.__logger.info('Establishing foreign key references...')
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
         cr.commit()
-        self.__logger.info('Establishing foreign key references... done')
         del self._foreign_keys
 
 
