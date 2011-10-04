@@ -166,7 +166,7 @@ openerp.point_of_sale = function(db) {
     })();
     
     /* global variable */
-    var pos = new Pos();
+    var pos;
     
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
     NumpadState, NumpadView, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
@@ -418,11 +418,13 @@ openerp.point_of_sale = function(db) {
         }
 
         Shop.prototype.defaults = {
-            cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
             orders: new OrderCollection,
             products: new ProductCollection
         };
         Shop.prototype.initialize = function() {
+            this.set({
+                cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
+            });
             return (this.get('orders')).bind('remove', __bind( function(removedOrder) {
                 if ((this.get('orders')).isEmpty()) {
                     this.addAndSelectOrder(new Order);
@@ -1171,12 +1173,21 @@ openerp.point_of_sale = function(db) {
         start: function() {
             var self = this;
             
+            if (pos)
+                throw "It is not possible to instantiate multiple instances"+
+                    "of the point of sale at the same time.";
+            pos = new Pos();
+            
             this.$element.find('#steps').buttonset();
     
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
                 return Backbone.history.start();
             });
+        },
+        stop: function() {
+            pos = undefined;
+            this._super();
         }
     });
 }
