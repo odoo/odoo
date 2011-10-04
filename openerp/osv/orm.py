@@ -3480,7 +3480,7 @@ class BaseModel(object):
         if uid == SUPERUSER_ID:
             return
 
-        if self.is_transient:
+        if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
             # have log_access enabled and this the create_uid column is always there.
