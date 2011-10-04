@@ -688,7 +688,10 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.width = this.node.attrs.width;
     },
     start: function() {
-        this.$element = this.view.$element.find('.' + this.element_class);
+        // avoiding find('.' + this.element_class) form because it doesn't work
+        // if class contains some dots.
+        this.$element = this.view.$element
+            .find('[class~="' + this.element_class + '"]');
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
