@@ -815,7 +815,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         cells.push('</tr>');
 
         var row = cells.join('');
-        this.$current.append(new Array(count - this.records.length + 1).join(row));
+        this.$current
+            .find('> tr:not([data-id])').remove().end()
+            .append(new Array(count - this.records.length + 1).join(row));
         this.refresh_zebra(this.records.length);
     },
     /**

@@ -120,6 +120,7 @@ openerp.web.list_editable = function (openerp) {
                 delete self.edition_id;
                 delete self.edition;
             });
+            this.pad_table_to(5);
             return cancelled.promise();
         },
         /**
@@ -173,10 +174,18 @@ openerp.web.list_editable = function (openerp) {
                     });
                 if (row) {
                     $new_row.replaceAll(row);
-                } else if (self.options.editable === 'top') {
-                    self.$current.prepend($new_row);
                 } else if (self.options.editable) {
-                    self.$current.append($new_row);
+                    if (self.options.editable === 'top') {
+                        $new_row.insertBefore(
+                            self.$current.find('> [data-id]:first'));
+                    } else {
+                        $new_row.insertAfter(
+                            self.$current.find('> [data-id]:last'));
+                    }
+                    var $last_child = self.$current.find('> tr:last');
+                    if ($last_child.is(':not([data-id])')) {
+                        $last_child.remove();
+                    }
                 }
                 self.edition = true;
                 self.edition_id = record_id;
