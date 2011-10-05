@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Customer & Supplier Claims Management',
+    'name': 'Claims',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'complexity': "easy",

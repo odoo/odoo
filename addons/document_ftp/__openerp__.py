@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Integrated FTP Server with Document Management System',
+    'name': 'Shared Repositories (FTP)',
     'version': '1.99',
     'category': 'Knowledge Management',
     'complexity': "normal",

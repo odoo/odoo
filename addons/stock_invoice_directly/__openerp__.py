@@ -23,7 +23,7 @@
 {
     'name': 'Invoice Picking Directly',
     'version': '1.0',
-    'category': 'Warehouse Management',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 Invoice Wizard for Delivery.

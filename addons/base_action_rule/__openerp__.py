@@ -22,7 +22,7 @@
 {
     'name': 'Action Rule',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module allows to implement action rules for any object.
 ============================================================

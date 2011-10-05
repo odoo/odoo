@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Carriers and Deliveries',
+    'name': 'Delivery Costs',
     'version': '1.0',
     'category': 'Sales Management',
     'complexity': "normal",

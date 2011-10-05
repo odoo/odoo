@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Budget Management',
+    'name': 'Budgets',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "normal",

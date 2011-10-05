@@ -29,7 +29,7 @@
 ##############################################################################
 
 {
-        "name" : "WebDAV server for Document Management",
+        "name" : "Shared Repositories (WebDAV)",
         "version" : "2.3",
         "author" : "OpenERP SA",
         "category" : "Knowledge Management",

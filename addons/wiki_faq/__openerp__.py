@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Document Management - Wiki - FAQ',
+    'name': 'Template: Internal FAQ',
     'version': '1.0',
     'category': 'Knowledge Management',
     'complexity': "easy",

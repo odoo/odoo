@@ -21,7 +21,7 @@
 
 
 {
-    'name'      : 'Manage multiple plans in Analytic Accounting',
+    'name'      : 'Multiple Analytic Plans',
     'version'   : '1.0',
     'category'  : 'Accounting & Finance',
     'complexity': "normal",

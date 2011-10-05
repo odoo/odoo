@@ -23,7 +23,7 @@
 {
     'name': 'Improve Invoice Layout',
     'version': '1.0',
-    'category': 'Accounting & Finance',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 This module provides some features to improve the layout of the invoices.

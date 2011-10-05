@@ -22,7 +22,7 @@
 {
     'name': 'Email Subsystem',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 A generic email subsystem with message storage and queuing
@@ -54,7 +54,7 @@ The main features are:
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base', 'base_Hidden'],
     'data': [
         "wizard/mail_compose_message_view.xml",
         "mail_message_view.xml",

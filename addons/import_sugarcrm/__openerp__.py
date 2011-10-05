@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Import SugarCRM Data into OpenERP Module.',
+    'name': 'Import Data from SugarCRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """This Module Import SugarCRM "Leads", "Opportunities", "Users", "Accounts", 

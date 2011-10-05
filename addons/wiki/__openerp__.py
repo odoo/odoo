@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Document Management - Wiki',
+    'name': 'Collaborative Content (Wiki)',
     'version': '1.0.1',
     'category': 'Knowledge Management',
     'complexity': "easy",

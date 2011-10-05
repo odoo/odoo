@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'OpenOffice Report Designer Interface',
+    'name': 'OpenOffice Report Designer',
     'version': '0.1',
     'category': 'Advanced Reporting',
     'complexity': "normal",

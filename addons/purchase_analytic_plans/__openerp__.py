@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Purchase Analytic Distribution Management',
+    'name': 'Purchase Analytic Plans',
     'version': '1.0',
     'category': 'Purchase Management',
     'description': """

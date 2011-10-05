@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Managing sales and deliveries by journal',
+    'name': 'Invoicing Journals',
     'version': '1.0',
     'category': 'Sales Management',
     'complexity': "easy",

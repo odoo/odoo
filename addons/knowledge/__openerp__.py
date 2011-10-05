@@ -25,14 +25,14 @@
     "version" : "1.0",
     "depends" : ["base","base_setup"],
     "author" : "OpenERP SA",
-    "category": 'Tools',
+    "category": 'Hidden',
     'complexity': "easy",
     "description": """
-Installer for knowledge-based tools.
+Installer for knowledge-based Hidden.
 ====================================
 
 Makes the Knowledge Application Configuration available from where you can install
-document and Wiki based tools.
+document and Wiki based Hidden.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],

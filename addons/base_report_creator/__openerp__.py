@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Statistical Report Creator',
+    'name': 'Query Builder',
     'version': '1.0',
     'category': 'Advanced Reporting',
     'complexity': "expert",

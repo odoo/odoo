@@ -21,7 +21,7 @@
 
 
 {
-    'name' : 'Outlook Interface',
+    'name' : 'Outlook Plug-In',
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',

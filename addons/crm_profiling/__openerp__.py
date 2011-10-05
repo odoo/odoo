@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'CRM Profiling Management - To Perform Segmentation within Partners',
+    'name': 'Profiling Tools',
     'version': '1.3',
     'category': 'Marketing',
     'complexity': "easy",

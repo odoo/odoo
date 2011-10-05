@@ -21,7 +21,7 @@
 ##############################################################################
 
 {
-    "name" : "Automated Email Retriever",
+    "name" : "Fetch Emails",
     "version" : "1.0",
     "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",

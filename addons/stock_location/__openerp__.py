@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Warehouse Locations Paths',
+    'name': 'Advanced Routes',
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """

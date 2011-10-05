@@ -21,16 +21,16 @@
 
 
 {
-    "name" : "Reporting Tools Installer",
+    "name" : "Reporting Hidden Installer",
     "version" : "1.0",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category": "Tools",
+    "category": "Hidden",
     "description": """
-Installer for reporting tools.
+Installer for reporting Hidden.
 ==============================
 
-Makes the Reporting Tools Configuration available from where you can install
+Makes the Reporting Hidden Configuration available from where you can install
 modules like base_report_designer and base_report_creator.
     """,
     'website': 'http://www.openerp.com',
@@ -42,6 +42,6 @@ modules like base_report_designer and base_report_creator.
     'installable': True,
     'active': False,
     'certificate' : '00764037194670093149',
-    'images': ['images/config_reporting_tools.jpeg'],
+    'images': ['images/config_reporting_Hidden.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -24,7 +24,7 @@
     "version" : "1.0",
     "depends" : ["fetchmail", "project_issue"],
     "author" : "OpenERP SA",
-    "category": 'Link',
+    "category": 'Hidden/Link',
     "description": """
     """,
     'website': 'http://www.openerp.com',

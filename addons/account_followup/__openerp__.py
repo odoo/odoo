@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Reminders',
+    'name': 'Followups Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
     'complexity': "normal",

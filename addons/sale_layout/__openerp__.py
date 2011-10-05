@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name" : "Sale Order Layout",
+    "name" : "Sales Orders Print Layout",
     "version" : "1.0",
     "images" : ["images/sale_layout.jpeg"],
     "depends" : ["sale", "account_invoice_layout"],

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Sales Order Dates',
+    'name': 'Full Dates on Sales Order',
     'version': '1.0',
     'category': 'Sales Management',
     'complexity': "easy",

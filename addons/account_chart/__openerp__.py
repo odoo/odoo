@@ -23,7 +23,7 @@
 {
     'name': 'Charts of Accounts',
     'version': '1.1',
-    'category': 'Accounting & Finance',
+    'category': 'Hidden',
     'description': """
 Remove minimal account chart.
 =============================

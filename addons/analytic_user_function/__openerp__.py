@@ -23,7 +23,7 @@
 {
     'name': 'Human Resources',
     'version': '1.0',
-    'category': 'Others',
+    'category': 'Hidden',
     'description': """
 This module allows you to define what is the default function of a specific user on a given account.
 ====================================================================================================

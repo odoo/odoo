@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Idea Manager',
+    'name': 'Ideas Box',
     'version': '0.1',
-    'category': 'Extra Tools',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 This module allows your user to easily and efficiently participate in enterprise innovation.

@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Products Repairs Module - Manage All products Repairs',
+    'name': 'Repairs',
     'version': '1.0',
     'category': 'Manufacturing',
     'description': """

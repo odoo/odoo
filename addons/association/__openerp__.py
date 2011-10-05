@@ -23,7 +23,7 @@
 {
     'name': 'Association profile',
     'version': '0.1',
-    'category': 'Associations',
+    'category': 'Vertical Applications',
     'complexity': "normal",
     'description': """
 This module is to configure modules related to an association.

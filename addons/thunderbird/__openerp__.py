@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    "name" : "Thunderbird Interface",
+    "name" : "Thunderbird Plug-In",
     "version" : "1.0",
     "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",

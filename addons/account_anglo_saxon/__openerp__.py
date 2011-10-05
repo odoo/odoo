@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name"      : "Stock Accounting for Anglo-Saxon countries",
+    "name"      : "Anglo-Saxon Accouting",
     "version"   : "1.2",
     "author"    : "OpenERP SA, Veritos",
     "website"   : "http://tinyerp.com - http://veritos.nl",

@@ -21,7 +21,7 @@
 
 
 {
-    "name" : "Marketing Campaign",
+    "name" : "Marketing Campaigns",
     "version" : "1.1",
     "depends" : ["marketing",
                  "document",
