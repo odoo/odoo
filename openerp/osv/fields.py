@@ -164,14 +164,13 @@ class reference(_column):
     def get(self, cr, obj, ids, name, uid=None, context=None, values=None):
         result = {}
         # copy initial values fetched previously.
-        for row in values:
-            result[row['id']] = row[name]
-        # verify target object exists
-        for id, value in result.iteritems():
-            if value:
-                model, res_id = value.split(',')
-                if not obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
-                    result[id] = False
+        for value in values:
+            if value[name]:
+                model, res_id = value[name].split(',')
+                if obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
+                    result[value['id']] = value[name]
+                else:
+                    result[value['id']] = False
         return result
 
 class char(_column):
