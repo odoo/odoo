@@ -131,7 +131,7 @@ class stock_picking(osv.osv):
                     'quantity': 1,
                     'invoice_line_tax_id': [(6, 0,taxes_ids)],
                 })
-        invoice_obj.button_compute(cursor, user, [invoice.id], context=context)
+            invoice_obj.button_compute(cursor, user, [invoice.id], context=context)
         return result
 
 stock_picking()
