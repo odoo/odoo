@@ -589,13 +589,8 @@ class expression(object):
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
 
-<<<<<<< TREE
-                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
-                        if isinstance(right,tuple):
-=======
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in'}
                         if isinstance(right, tuple):
->>>>>>> MERGE-SOURCE
                             right = list(right)
                         if (not isinstance(right, list)) and operator in ['not in','in']:
                             operator = dict_op[operator]
