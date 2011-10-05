@@ -24,7 +24,7 @@
 {
     'name': 'Base',
     'version': '1.3',
-    'category': 'System',
+    'category': 'Hidden',
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',

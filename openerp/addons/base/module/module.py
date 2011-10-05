@@ -78,8 +78,13 @@ class module_category(osv.osv):
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description' : fields.text("Description"),
         'sequence' : fields.integer('Sequence'),
+        'visible' : fields.boolean('Visible'),
     }
     _order = 'name'
+
+    _defaults = {
+        'visible' : 1,
+    }
 
 class module(osv.osv):
     _name = "ir.module.module"
