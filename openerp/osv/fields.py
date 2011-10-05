@@ -525,7 +525,7 @@ class many2many(_column):
     _type = 'many2many'
 
     def __init__(self, obj, rel=None, id1=None, id2=None, string='unknown', limit=None, **args):
-        """ 
+        """
         """
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -539,7 +539,7 @@ class many2many(_column):
 
     def _sql_names(self, source_model):
         """Return the SQL names defining the structure of the m2m relationship table
-            
+
             :return: (m2m_table, local_col, dest_col) where m2m_table is the table name,
                      local_col is the name of the column holding the current model's FK, and
                      dest_col is the name of the column holding the destination model's FK, and
@@ -1216,7 +1216,7 @@ class property(function):
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
         property_create = False
-        if hasattr(default_val, '_id'):
+        if hasattr(default_val, '_id') and default_val:
             if default_val._id != id_val:
                 property_create = True
         elif id_val != default_val:
