@@ -198,6 +198,7 @@
                 <field name="category_id" select="1"/>
                 <field name="open_date" select="1"/>
                 <field name="user_id" attrs="{'invisible':[('visibility','=',False)]}"/>
+                <field name="visibility" invisible="1"/>
                 <field name="vote_avg" widget="progressbar"/>
                 <group col="4" colspan="2">
                     <field name="my_vote" readonly="1"/>
