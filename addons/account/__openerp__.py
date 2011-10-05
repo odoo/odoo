@@ -53,7 +53,7 @@ module named account_voucher.
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process","board", "email_template"],
+    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi", "email_template"],
     'update_xml': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
@@ -124,7 +124,7 @@ module named account_voucher.
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml",
-        "edi_invoice_action_data.xml",
+        "edi/invoice_action_data.xml",
         "account_bank_view.xml",
     ],
     'demo_xml': [

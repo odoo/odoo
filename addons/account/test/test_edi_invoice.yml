@@ -1,38 +1,20 @@
 -
-  I create a company for Customer
+  In order to test the EDI export features of Invoices
 -
-  !record {model: res.company, id: res_company_test11}:
-    name: Thomson pvt. ltd.
-    partner_id: 1
-    rml_header: 1
-    rml_header2: 1
-    rml_header3: 1
-    currency_id: 1
-
+  First I create a draft customer invoice
 -
-  I create a partner which is a my customer
--
-  !record {model: res.partner, id: res_partner_test20}:
-    name: Junjun wala
-    supplier: False
-    company_id: res_company_test11
-    opt_out: True
--
-  I create one customer invoice
--
-  !record {model: account.invoice, id: customer_invoice_test}:
+  !record {model: account.invoice, id: invoice_edi_1}:
     journal_id: 1
-    partner_id: res_partner_test20
+    partner_id: base.res_partner_agrolait
     currency_id: base.EUR
-    address_invoice_id: base.res_partner_address_11
-    company_id: res_company_test11
+    address_invoice_id: base.res_partner_address_8invoice
+    company_id: 1
     account_id: account.a_pay
     date_invoice: '2011-06-22'
     name: selling product
     type: 'out_invoice'
     invoice_line:
       - product_id: product.product_product_pc1
-        partner_id: res_partner_test20
         uos_id: 1
         quantity: 1.0
         price_unit: 10.0
@@ -40,117 +22,93 @@
         account_id: account.a_pay
     invoice_line:
       - product_id: product.product_product_pc3
-        partner_id: res_partner_test20
         uos_id: 1
         quantity: 5.0
         price_unit: 100.0
         name: 'Medium PC'
         account_id: account.a_pay
-        
     tax_line:
       - name: sale tax
         account_id: account.a_pay
         manual: True
         amount: 1000.00
-
 -
-  I Open the Invoice
+  I confirm and open the invoice
+-
+  !workflow {model: account.invoice, ref: invoice_edi_1, action: invoice_open}
+-
+  Then I export the customer invoice
+-
+  !python {model: edi.document}: |
+    invoice_pool = self.pool.get('account.invoice')
+    invoice = invoice_pool.browse(cr, uid, ref("invoice_edi_1"))
+    token = self.export_edi(cr, uid, [invoice])
+    assert token, 'Invalid EDI Token'
+-
+  Then I import a sample EDI document of another customer invoice
 -
   !python {model: account.invoice}: |
-    
-    invoices = self.browse(cr, uid, ref("customer_invoice_test"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
-
--
-  I Testing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
--
-  !python {model: ir.edi.document}: |
-    invoice_pool = self.pool.get('account.invoice')
-    invoice = invoice_pool.browse(cr, uid, ref("customer_invoice_test"))
-
-    tokens = self.export_edi(cr, uid, [invoice])
-    assert tokens, 'Token is not generated'
--
-  I import of EDI document of custmer invoice
--
-  !python {model: ir.edi.document}: |
-    invoice_pool = self.pool.get('account.invoice')
     edi_document = {
+        "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.random_invoice_763jsms", 
+        "__module": "account", 
+        "__model": "account.invoice", 
+        "__version": [6,1,0], 
         "internal_number": "SAJ/2011/002", 
         "company_address": {
+                "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.main_address",
+                "__module": "base",
+                "__model": "res.partner.address", 
                 "city": "Gerompont", 
                 "zip": "1367", 
-                "__last_update": False, 
-                "country_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.be", "Belgium"], 
-                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:base.main_address", 
+                "country_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.be", "Belgium"], 
                 "phone": "(+32).81.81.37.00", 
                 "street": "Chaussee de Namur 40"
         }, 
-        "company_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_company_test11", "Thomson pvt. ltd."], 
-        "currency_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.EUR", "EUR (\u20ac)"], 
-        "address_invoice_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
-        "partner_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_partner_test20", "Junjun wala"], 
-        "__attachments": [], 
-        "__module": "account", 
-        "amount_total": 1010.0, 
+        "company_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_company_test11", "Thomson pvt. ltd."], 
+        "currency_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR", "EUR (€)"], 
+        "address_invoice_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
+        "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"], 
         "date_invoice": "2011-06-22", 
-        "amount_untaxed": 10.0, 
-        "name": "selling product", 
-        "__model": "account.invoice", 
-        "__last_update": False, 
+        "name": "sample invoice", 
         "tax_line": [{
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_tax-4g4EutbiEMVl", 
+                "__module": "account",
+                "__model": "account.invoice.tax", 
                 "amount": 1000.0, 
                 "manual": True, 
-                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_tax-4g4EutbiEMVl", 
                 "name": "sale tax", 
-                "__last_update": False
         }], 
-        "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:account.customer_invoice_test", 
-        "amount_tax": 1000.0, 
-        "__version": [6, 1], 
         "type": "out_invoice", 
         "invoice_line": [{
-                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
-                "name": "basic pc", 
-                "__last_update": False, 
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-1RP3so",
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "name": "Basic PC", 
                 "price_unit": 10.0, 
-                "price_subtotal": 10.0, 
-                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
-                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"], 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"], 
                 "quantity": 1.0
         },
         {
-                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
-                "name": "Medim PC", 
-                "__last_update": False, 
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-u2XV5",
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "name": "Medium PC", 
                 "price_unit": 100.0, 
-                "price_subtotal": 100.0, 
-                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
-                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc3", "[PC3] Medium PC"], 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"], 
                 "quantity": 5.0
         }]
     }
-
-    invoice_id = invoice_pool.edi_import(cr, uid, edi_document, context=context)
-    invoice_new = invoice_pool.browse(cr, uid, invoice_id, context=context)
-    assert invoice_id, 'Invoice is not imported'
--
-  I Checking the out invoice become in invoice or not after import
--
-  !python {model: account.invoice}: |
-    
-    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, "Thomson pvt. ltd.")
-    assert new_partner_id, 'Partner is not created of Supplier'
-    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',"SAJ/2011/002")])
-    assert ids, 'Invoice does not have created of party'
-    invoice_new = self.browse(cr, uid, ids[0])
+    invoice_id = self.edi_import(cr, uid, edi_document, context=context)
+    assert invoice_id, 'EDI import failed'
+    invoice_new = self.browse(cr, uid, invoice_id)
+    assert invoice_new.partner_id.supplier, 'Imported Partner is not marked as supplier'
     assert invoice_new.reference == "SAJ/2011/002", "internal number is not stored in reference"
-    assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
+    assert invoice_new.reference_type == 'none', "reference type is not set to 'none'"
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected"
-    assert invoice_new.type == 'in_invoice', "Imported in voice is not supplier invoice"
+    assert invoice_new.type == 'in_invoice', "Invoice type was not set properly"
     assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
         if inv_line.name == 'basic pc':
@@ -162,7 +120,7 @@
             assert inv_line.uos_id.name == "PCE" , "uom is not same"
             assert inv_line.price_unit == 100 , "price unit is not same"
             assert inv_line.quantity == 5 , "product qty is not same"
-            assert inv_line.price_subtotal == 100, "price sub total is not same"
+            assert inv_line.price_subtotal == 500, "price sub total is not same"
         else:
             assert 'wrong product imported in invoice lines'
     for inv_tax in invoice_new.tax_line:

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,21 +19,4 @@
 #
 ##############################################################################
 
-import account
-import installer
-import project
-import partner
 import invoice
-import account_bank_statement
-import account_bank
-import account_cash_statement
-import account_move_line
-import account_analytic_line
-import wizard
-import report
-import product
-import sequence
-import company
-import res_currency
-import edi
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
