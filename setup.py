@@ -63,8 +63,6 @@ def py2exe_options():
         return {}
 
 execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
-if timestamp:
-    version = version + "-" + timestamp
 
 setuptools.setup(
       name             = 'openerp',

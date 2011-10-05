@@ -249,7 +249,7 @@ def load_information_from_description_file(module):
             info.setdefault('website', '')
             info.setdefault('name', False)
             info.setdefault('description', '')
-            info.setdefault('complexity', False)
+            info.setdefault('complexity', 'normal')
             info['certificate'] = info.get('certificate') or None
             info['web'] = info.get('web') or False
             info['license'] = info.get('license') or 'AGPL-3'

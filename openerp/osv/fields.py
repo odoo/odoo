@@ -156,9 +156,21 @@ class integer_big(_column):
 
 class reference(_column):
     _type = 'reference'
+    _classic_read = False # post-process to handle missing target
+
     def __init__(self, string, selection, size, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
+    def get(self, cr, obj, ids, name, uid=None, context=None, values=None):
+        result = {}
+        # copy initial values fetched previously.
+        for value in values:
+            result[value['id']] = value[name]
+            if value[name]:
+                model, res_id = value[name].split(',')
+                if not obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
+                    result[value['id']] = False
+        return result
 
 class char(_column):
     _type = 'char'
@@ -495,6 +507,15 @@ class one2many(_column):
 class many2many(_column):
     """Encapsulates the logic of a many-to-many bidirectional relationship, handling the
        low-level details of the intermediary relationship table transparently.
+       A many-to-many relationship is always symmetrical, and can be declared and accessed
+       from either endpoint model.
+       If ``rel`` (relationship table name), ``id1`` (source foreign key column name)
+       or id2 (destination foreign key column name) are not specified, the system will
+       provide default values. This will by default only allow one single symmetrical
+       many-to-many relationship between the source and destination model.
+       For multiple many-to-many relationship between the same models and for
+       relationships where source and destination models are the same, ``rel``, ``id1``
+       and ``id2`` should be specified explicitly.
 
        :param str obj: destination model
        :param str rel: optional name of the intermediary relationship table. If not specified,

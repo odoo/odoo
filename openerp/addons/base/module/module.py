@@ -52,7 +52,7 @@ ACTION_DICT = {
 
 class module_category(osv.osv):
     _name = "ir.module.category"
-    _description = "Module Category"
+    _description = "Application"
 
     def _module_nbr(self,cr,uid, ids, prop, unknow_none, context):
         cr.execute('SELECT category_id, COUNT(*) \
@@ -70,29 +70,16 @@ class module_category(osv.osv):
                              result.get(id, 0))
         return result
 
-    def name_get(self, cr, uid, ids, context=None):
-        result = []
-
-        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
-        for record in reads:
-            name = record['name']
-            if record['parent_id']:
-                name = record['parent_id'][1] + ' / ' + name
-            result.append((record['id'], name,))
-
-        return result
-
     _columns = {
         'name': fields.char("Name", size=128, required=True, select=True),
-        'parent_id': fields.many2one('ir.module.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Categories'),
+        'parent_id': fields.many2one('ir.module.category', 'Parent Application', select=True),
+        'child_ids': fields.one2many('ir.module.category', 'parent_id', 'Child Applications'),
         'module_nr': fields.function(_module_nbr, method=True, string='Number of Modules', type='integer'),
         'module_ids' : fields.one2many('ir.module.module', 'category_id', 'Modules'),
         'description' : fields.text("Description"),
         'sequence' : fields.integer('Sequence'),
     }
     _order = 'name'
-module_category()
 
 class module(osv.osv):
     _name = "ir.module.module"
@@ -233,6 +220,7 @@ class module(osv.osv):
         'demo': False,
         'license': 'AGPL-3',
         'web': False,
+        'complexity': 'normal',
     }
     _order = 'name'
 

@@ -44,6 +44,7 @@
 import calendar
 import copy
 import datetime
+import itertools
 import logging
 import operator
 import pickle
@@ -303,7 +304,8 @@ class browse_record(object):
         self._cr = cr
         self._uid = uid
         self._id = id
-        self._table = table
+        self._table = table # deprecated, use _model!
+        self._model = table
         self._table_name = self._table._name
         self.__logger = logging.getLogger(
             'osv.browse_record.' + self._table_name)
@@ -459,6 +461,9 @@ class browse_record(object):
 
     def __contains__(self, name):
         return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
+
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on %s" % self)
 
     def __hasattr__(self, name):
         return name in self
@@ -815,13 +820,16 @@ class BaseModel(object):
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                if not pool.get(parent_name):
+                parent_model = pool.get(parent_name)
+                if not getattr(cls, '_original_module', None) and name == parent_model._name:
+                    cls._original_module = parent_model._original_module
+                if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                parent_class = parent_model.__class__
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
+                    new = copy.copy(getattr(parent_model, s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
@@ -849,6 +857,8 @@ class BaseModel(object):
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        if not getattr(cls, '_original_module', None):
+            cls._original_module = cls._module
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
@@ -912,14 +922,17 @@ class BaseModel(object):
             f = self._columns[store_field]
             if hasattr(f, 'digits_change'):
                 f.digits_change(cr)
+            def not_this_field(stored_func):
+                x, y, z, e, f, l = stored_func
+                return x != self._name or y != store_field
+            self.pool._store_function[self._name] = filter(not_this_field, self.pool._store_function.get(self._name, []))
             if not isinstance(f, fields.function):
                 continue
             if not f.store:
                 continue
-            if self._columns[store_field].store is True:
+            sm = f.store
+            if sm is True:
                 sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
-            else:
-                sm = self._columns[store_field].store
             for object, aa in sm.items():
                 if len(aa) == 4:
                     (fnct, fields2, order, length) = aa
@@ -930,14 +943,8 @@ class BaseModel(object):
                     raise except_orm('Error',
                         ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
                 self.pool._store_function.setdefault(object, [])
-                ok = True
-                for x, y, z, e, f, l in self.pool._store_function[object]:
-                    if (x==self._name) and (y==store_field) and (e==fields2):
-                        if f == order:
-                            ok = False
-                if ok:
-                    self.pool._store_function[object].append( (self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                    self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
+                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
 
         for (key, _, msg) in self._sql_constraints:
             self.pool._sql_error[self._table+'_'+key] = msg
@@ -1047,6 +1054,7 @@ class BaseModel(object):
                                 'name': n,
                                 'model': self._name,
                                 'res_id': r['id'],
+                                'module': '__export__',
                             })
                             r = n
                     else:
@@ -1730,13 +1738,69 @@ class BaseModel(object):
                 raise except_orm('View error', msg)
         return arch, fields
 
-    def __get_default_calendar_view(self):
-        """Generate a default calendar view (For internal use only).
-        """
-        # TODO could return an etree instead of a string
+    def _get_default_form_view(self, cr, user, context=None):
+        """ Generates a default single-line form view using all fields
+        of the current model except the m2m and o2m ones.
 
-        arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
-                '<calendar string="%s"') % (self._description)
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a form view as an lxml document
+        :rtype: etree._Element
+        """
+        view = etree.Element('form', string=self._description)
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
+        for field, descriptor in self.fields_get(cr, user, context=context).iteritems():
+            if descriptor['type'] in ('one2many', 'many2many'):
+                continue
+            etree.SubElement(view, 'field', name=field)
+            if descriptor['type'] == 'text':
+                etree.SubElement(view, 'newline')
+        return view
+
+    def _get_default_tree_view(self, cr, user, context=None):
+        """ Generates a single-field tree view, using _rec_name if
+        it's one of the columns or the first column it finds otherwise
+
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a tree view as an lxml document
+        :rtype: etree._Element
+        """
+        _rec_name = self._rec_name
+        if _rec_name not in self._columns:
+            _rec_name = self._columns.keys()[0]
+
+        view = etree.Element('tree', string=self._description)
+        etree.SubElement(view, 'field', name=_rec_name)
+        return view
+
+    def _get_default_calendar_view(self, cr, user, context=None):
+        """ Generates a default calendar view by trying to infer
+        calendar fields from a number of pre-set attribute names
+        
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: a calendar view
+        :rtype: etree._Element
+        """
+        def set_first_of(seq, in_, to):
+            """Sets the first value of ``seq`` also found in ``in_`` to
+            the ``to`` attribute of the view being closed over.
+
+            Returns whether it's found a suitable value (and set it on
+            the attribute) or not
+            """
+            for item in seq:
+                if item in in_:
+                    view.set(to, item)
+                    return True
+            return False
+
+        view = etree.Element('calendar', string=self._description)
+        etree.SubElement(view, 'field', name=self._rec_name)
 
         if (self._date_name not in self._columns):
             date_found = False
@@ -1748,61 +1812,52 @@ class BaseModel(object):
 
             if not date_found:
                 raise except_orm(_('Invalid Object Architecture!'), _("Insufficient fields for Calendar View!"))
+        view.set('date_start', self._date_name)
 
-        if self._date_name:
-            arch += ' date_start="%s"' % (self._date_name)
+        set_first_of(["user_id", "partner_id", "x_user_id", "x_partner_id"],
+                     self._columns, 'color')
 
-        for color in ["user_id", "partner_id", "x_user_id", "x_partner_id"]:
-            if color in self._columns:
-                arch += ' color="' + color + '"'
-                break
+        if not set_first_of(["date_stop", "date_end", "x_date_stop", "x_date_end"],
+                            self._columns, 'date_stop'):
+            if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
+                                self._columns, 'date_delay'):
+                raise except_orm(
+                    _('Invalid Object Architecture!'),
+                    _("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay" % (self._name)))
 
-        dt_stop_flag = False
+        return view
 
-        for dt_stop in ["date_stop", "date_end", "x_date_stop", "x_date_end"]:
-            if dt_stop in self._columns:
-                arch += ' date_stop="' + dt_stop + '"'
-                dt_stop_flag = True
-                break
-
-        if not dt_stop_flag:
-            for dt_delay in ["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"]:
-                if dt_delay in self._columns:
-                    arch += ' date_delay="' + dt_delay + '"'
-                    break
-
-        arch += ('>\n'
-                 '  <field name="%s"/>\n'
-                 '</calendar>') % (self._rec_name)
-
-        return arch
-
-    def __get_default_search_view(self, cr, uid, context=None):
+    def _get_default_search_view(self, cr, uid, context=None):
+        """
+        :param cr: database cursor
+        :param int user: user id
+        :param dict context: connection context
+        :returns: an lxml document of the view
+        :rtype: etree._Element
+        """
         form_view = self.fields_view_get(cr, uid, False, 'form', context=context)
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
-        fields_to_search = set()
         # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
         fields = self.fields_get(cr, uid, context=context)
-        for field in fields:
-            if fields[field].get('select'):
-                fields_to_search.add(field)
+        fields_to_search = set(
+            field for field, descriptor in fields.iteritems()
+            if descriptor.get('select'))
+
         for view in (form_view, tree_view):
             view_root = etree.fromstring(view['arch'])
             # Only care about select=1 in xpath below, because select=2 is covered
             # by the custom advanced search in clients
-            fields_to_search = fields_to_search.union(view_root.xpath("//field[@select=1]/@name"))
+            fields_to_search.update(view_root.xpath("//field[@select=1]/@name"))
 
         tree_view_root = view_root # as provided by loop above
-        search_view = etree.Element("search", attrib={'string': tree_view_root.get("string", "")})
-        field_group = etree.Element("group")
-        search_view.append(field_group)
+        search_view = etree.Element("search", string=tree_view_root.get("string", ""))
 
+        field_group = etree.SubElement(search_view, "group")
         for field_name in fields_to_search:
-            field_group.append(etree.Element("field", attrib={'name': field_name}))
+            etree.SubElement(field_group, "field", name=field_name)
 
-        #TODO tostring can be removed as fromstring is call directly after...
-        return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
+        return search_view
 
     #
     # if view_id, view_type is not required
@@ -1993,50 +2048,27 @@ class BaseModel(object):
 
         # if a view was found
         if sql_res:
-            result['type'] = sql_res['type']
-            result['view_id'] = sql_res['id']
-
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_view_inheritance(cr, user, source, result['view_id'])
-
-            result['name'] = sql_res['name']
-            result['field_parent'] = sql_res['field_parent'] or False
+            result.update(
+                arch=apply_view_inheritance(cr, user, source, sql_res['id']),
+                type=sql_res['type'],
+                view_id=sql_res['id'],
+                name=sql_res['name'],
+                field_parent=sql_res['field_parent'] or False)
         else:
-
             # otherwise, build some kind of default view
-            if view_type == 'form':
-                # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-                res = self.fields_get(cr, user, context=context)
-                xml = '<?xml version="1.0" encoding="utf-8"?> ' \
-                     '<form string="%s">' % (self._description,)
-                for x in res:
-                    if res[x]['type'] not in ('one2many', 'many2many'):
-                        xml += '<field name="%s"/>' % (x,)
-                        if res[x]['type'] == 'text':
-                            xml += "<newline/>"
-                xml += "</form>"
-
-            elif view_type == 'tree':
-                _rec_name = self._rec_name
-                if _rec_name not in self._columns:
-                    _rec_name = self._columns.keys()[0]
-                xml = '<?xml version="1.0" encoding="utf-8"?>' \
-                       '<tree string="%s"><field name="%s"/></tree>' \
-                       % (self._description, _rec_name)
-
-            elif view_type == 'calendar':
-                xml = self.__get_default_calendar_view()
-
-            elif view_type == 'search':
-                xml = self.__get_default_search_view(cr, user, context)
-
-            else:
+            try:
+                view = getattr(self, '_get_default_%s_view' % view_type)(
+                    cr, user, context)
+            except AttributeError:
                 # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
-            result['arch'] = etree.fromstring(encode(xml))
-            result['name'] = 'default'
-            result['field_parent'] = False
-            result['view_id'] = 0
+
+            result.update(
+                arch=view,
+                name='default',
+                field_parent=False,
+                view_id=0)
 
         if parent_view_model != self._name:
             ctx = context.copy()
@@ -2067,14 +2099,13 @@ class BaseModel(object):
             resrelate = ir_values_obj.get(cr, user, 'action',
                     'client_action_relate', [(self._name, False)], False,
                     context)
-            resprint = map(clean, resprint)
-            resaction = map(clean, resaction)
-            if view_type != 'tree':
-                resaction = filter(lambda x: not x.get('multi'), resaction)
-                resprint = filter(lambda x: not x.get('multi'), resprint)
+            resaction = [clean(action) for action in resaction
+                         if view_type == 'tree' or not action[2].get('multi')]
+            resprint = [clean(print_) for print_ in resprint
+                        if view_type == 'tree' or not print_[2].get('multi')]
             resrelate = map(lambda x: x[2], resrelate)
 
-            for x in resprint + resaction + resrelate:
+            for x in itertools.chain(resprint, resaction, resrelate):
                 x['string'] = x['name']
 
             result['toolbar'] = {
@@ -3459,7 +3490,7 @@ class BaseModel(object):
         if uid == SUPERUSER_ID:
             return
 
-        if self.is_transient:
+        if self.is_transient():
             # Only one single implicit access rule for transient models: owner only!
             # This is ok to hardcode because we assert that TransientModels always
             # have log_access enabled and this the create_uid column is always there.
@@ -4591,17 +4622,21 @@ class BaseModel(object):
                     return False
         return True
 
-    def _get_xml_ids(self, cr, uid, ids, *args, **kwargs):
-        """Find out the XML ID(s) of any database record.
+    def _get_external_ids(self, cr, uid, ids, *args, **kwargs):
+        """Retrieve the External ID(s) of any database record.
 
         **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
 
-        :return: map of ids to the list of their fully qualified XML IDs
-                 (empty list when there's none).
+        :return: map of ids to the list of their fully qualified External IDs
+                 in the form ``module.key``, or an empty list when there's no External
+                 ID for a record, e.g.::
+
+                     { 'id': ['module.ext_id', 'module.ext_id_bis'],
+                       'id2': [] }
         """
-        model_data_obj = self.pool.get('ir.model.data')
-        data_ids = model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        data_results = model_data_obj.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
+        ir_model_data = self.pool.get('ir.model.data')
+        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+        data_results = ir_model_data.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
         result = {}
         for id in ids:
             # can't use dict.fromkeys() as the list would be shared!
@@ -4610,28 +4645,34 @@ class BaseModel(object):
             result[record['res_id']].append('%(module)s.%(name)s' % record)
         return result
 
-    def get_xml_id(self, cr, uid, ids, *args, **kwargs):
-        """Find out the XML ID of any database record, if there
+    def get_external_id(self, cr, uid, ids, *args, **kwargs):
+        """Retrieve the External ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
-        model object easily, referencing it as ``osv.osv.get_xml_id``.
+        model object easily, referencing it as ``Model.get_external_id``.
 
-        When multiple XML IDs exist for a record, only one
+        When multiple External IDs exist for a record, only one
         of them is returned (randomly).
-
-        **Synopsis**: ``get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }``
 
         :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
-                 (to be usable as a function field).
+                 (to be usable as a function field), 
+                 e.g.::
+
+                     { 'id': 'module.ext_id',
+                       'id2': '' }
         """
         results = self._get_xml_ids(cr, uid, ids)
-        for k, v in results.items():
+        for k, v in results.iteritems():
             if results[k]:
                 results[k] = v[0]
             else:
                 results[k] = ''
         return results
+
+    # backwards compatibility
+    get_xml_id = get_external_id
+    _get_xml_ids = _get_external_ids
 
     # Transience
     def is_transient(self):
