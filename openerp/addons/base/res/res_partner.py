@@ -111,8 +111,6 @@ class res_partner(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'opt_out':fields.boolean('Opt-out', help="If checked, this partner will not receive any automated email \
-notifications, such as the availability of invoices."),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Partner Firm'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
@@ -155,7 +153,6 @@ notifications, such as the availability of invoices."),
         'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
-        'opt_out' : False,
         'color': 0,
     }
 
