@@ -20,111 +20,52 @@
 #
 ##############################################################################
 
-# setup from TinERP
-#   taken from straw http://www.nongnu.org/straw/index.html
-#   taken from gnomolicious http://www.nongnu.org/gnomolicious/
-#   adapted by Nicolas Évrard <nicoe@altern.org>
-#
-# doc/migrate is not included since about 6.1-dev
-# doc/tests is not included
-# python25-compat/*py should be in the openerp (and imported appropriately)
-
-import sys
-import os
+import glob, os, re, setuptools, sys
 from os.path import join, isfile
-import glob
 
-from setuptools import setup, find_packages
-
-# Backports os.walk with followlinks from python 2.6.
-# Needed to add all addons files to data_files for Windows packaging.
-def walk_followlinks(top, topdown=True, onerror=None, followlinks=False):
-    from os.path import join, isdir, islink
-    from os import listdir, error
-
-    try:
-        names = listdir(top)
-    except error, err:
-        if onerror is not None:
-            onerror(err)
-        return
-
-    dirs, nondirs = [], []
-    for name in names:
-        if isdir(join(top, name)):
-            dirs.append(name)
+# List all data files
+def data():
+    files = []
+    for root, dirnames, filenames in os.walk('openerp'):
+        for filename in filenames:
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
+                files.append(os.path.join(root, filename))
+    d = {}
+    for v in files:
+        k=os.path.dirname(v)
+        if k in d:
+            d[k].append(v)
         else:
-            nondirs.append(name)
+            d[k]=[v]
+    r = d.items()
+    return r
 
-    if topdown:
-        yield top, dirs, nondirs
-    for name in dirs:
-        path = join(top, name)
-        if followlinks or not islink(path):
-            for x in walk_followlinks(path, topdown, onerror, followlinks):
-                yield x
-    if not topdown:
-        yield top, dirs, nondirs
+def gen_manifest():
+    file_list="\n".join(data())
+    open('MANIFEST','w').write(file_list)
 
-if sys.version_info < (2, 6):
-    os.walk = walk_followlinks
-
-py2exe_keywords = {}
-py2exe_data_files = []
-if os.name == 'nt':
-    import py2exe
-    py2exe_keywords['console'] = [
-        { "script": "openerp-server",
-          "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))],
-        }]
-    py2exe_keywords['options'] = {
-        "py2exe": {
-            "skip_archive": 1,
-            "optimize": 2,
-            "dist_dir": 'dist',
-            "packages": [
-                "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-                "encodings", "dateutil", "pychart", "PIL", "pyparsing",
-                "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                "HTMLParser", "select", "mako", "poplib",
-                "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid", "commands", "openerp", "simplejson", "vatnumber"
-            ],
-            "excludes" : ["Tkconstants","Tkinter","tcl"],
+def py2exe_options():
+    if os.name == 'nt':
+        import py2exe
+        return {
+            "console" : [ { "script": "openerp-server", "icon_resources": [(1, join("pixmaps","openerp-icon.ico"))], }],
+            'options' : {
+                "py2exe": {
+                    "skip_archive": 1,
+                    "optimize": 2,
+                    "dist_dir": 'dist',
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber" "vobject", "xml", "xml", "xml.dom", "xml.xpath", "yaml", ],
+                    "excludes" : ["Tkconstants","Tkinter","tcl"],
+                }
+            }
         }
-    }
-    # TODO is it still necessary now that we don't use the library.zip file?
-    def data_files():
-        '''For Windows, we consider all the addons as data files.
-           It seems also that package_data below isn't honored by py2exe.'''
-        files = []
-        os.chdir('openerp')
-        for (dp, dn, names) in os.walk('addons'):
-            files.append((join('openerp',dp), map(lambda x: join('openerp', dp, x), names)))
-        os.chdir('..')
-        files.append(('openerp', [join('openerp', 'import_xml.rng'),]))
+    else:
+        return {}
 
-        # copy pytz/timzeone
-        # TODO check if we have to also copy dateutil's timezone data.
-        import pytz
-        # Make sure the layout of pytz hasn't changed
-        assert (pytz.__file__.endswith('__init__.pyc') or
-                pytz.__file__.endswith('__init__.py')), pytz.__file__
-        pytz_dir = os.path.dirname(pytz.__file__)
+execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
 
-        saved_dir = os.getcwd()
-        os.chdir(pytz_dir)
-        for dp, dn, names in os.walk('zoneinfo'):
-            files.append((join('pytz',dp), map(lambda x: join(pytz_dir, dp, x), names)))
-        os.chdir(saved_dir)
-
-        return files
-    py2exe_data_files = data_files()
-
-execfile(join('openerp', 'release.py'))
-
-setup(name             = name,
+setuptools.setup(
+      name             = 'openerp',
       version          = version,
       description      = description,
       long_description = long_desc,
@@ -133,43 +74,40 @@ setup(name             = name,
       author_email     = author_email,
       classifiers      = filter(None, classifiers.split("\n")),
       license          = license,
-      data_files       = [
-        (join('man', 'man1'), ['man/openerp-server.1']),
-        (join('man', 'man5'), ['man/openerp_serverrc.5']),
-        ('doc', filter(isfile, glob.glob('doc/*'))),
-      ] + py2exe_data_files,
       scripts          = ['openerp-server'],
-      packages = find_packages(),
-      include_package_data = True,
-      package_data = {
-          '': ['*.yml', '*.xml', '*.po', '*.pot', '*.csv'],
-      },
-      dependency_links = ['http://download.gna.org/pychart/'],
+      data_files       = data(),
+      packages         = setuptools.find_packages(),
+      #include_package_data = True,
       install_requires = [
-       # We require the same version as caldav for lxml.
-          'lxml==2.1.5',
-          'mako',
-          'python-dateutil',
-          'psycopg2',
         # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
         # It seems there is a single difference, which is a spurious print in generate_docs.py.
         # It is probably safe to move to PyChart 1.39 (the latest one).
         # (Let setup.py choose the latest one, and we should check we can remove pychart from
-        # our tree.)
-          'pychart',
-          'pydot',
-          'pytz',
-          'reportlab',
-          'caldav',
-          'pyyaml',
-          'pywebdav',
+        # our tree.) http://download.gna.org/pychart/
+        # TODO  'pychart',
+          'babel',
           'feedparser',
-          'simplejson >= 2.0',
-          'vatnumber', # required by base_vat module
+          'gdata',
+          'lxml',
+          'mako',
+          'psycopg2',
+          'pydot',
+          'python-dateutil',
+          'python-ldap',
+          'python-openid',
+          'pytz',
+          'pywebdav',
+          'pyyaml',
+          'reportlab',
+          'simplejson',
+          'vatnumber', # recommended by base_vat
+          'vobject',
+          'werkzeug',
+          'zsi',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
       },
-      **py2exe_keywords
+      **py2exe_options()
 )
 

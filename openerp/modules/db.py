@@ -75,13 +75,14 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, state, certificate, web, license, complexity) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id, state, info['certificate'],
             info['web'],
-            info['license']))
+            info['license'],
+            info['complexity']))
         id = cr.fetchone()[0]
         cr.execute('INSERT INTO ir_model_data \
             (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
@@ -102,7 +103,9 @@ def create_categories(cr, categories):
 
     """
     p_id = None
+    category = []
     while categories:
+        category.append(categories[0])
         if p_id is not None:
             cr.execute('SELECT id \
                        FROM ir_module_category \
@@ -117,10 +120,23 @@ def create_categories(cr, categories):
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
+            xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
+            cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
+                       VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
         else:
             c_id = c_id[0]
         p_id = c_id
         categories = categories[1:]
     return p_id
+
+def has_unaccent(cr):
+    """ Test if the database has an unaccent function.
+
+    The unaccent is supposed to be provided by the PostgreSQL unaccent contrib
+    module but any similar function will be picked by OpenERP.
+
+    """
+    cr.execute("SELECT proname FROM pg_proc WHERE proname='unaccent'")
+    return len(cr.fetchall()) > 0
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -810,7 +810,7 @@ ir_actions_todo_category()
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done')]
-TODO_TYPES = [('manual', 'Launch Manually'),
+TODO_TYPES = [('manual', 'Launch Manually'),('once', 'Launch Manually Once'),
               ('automatic', 'Launch Automatically')]
 class ir_actions_todo(osv.osv):
     """
@@ -827,7 +827,8 @@ class ir_actions_todo(osv.osv):
         'name': fields.char('Name', size=64),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
-Automatic: Runs whenever the system is reconfigured."""),
+Automatic: Runs whenever the system is reconfigured.
+Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
         'category_id': fields.many2one('ir.actions.todo.category','Category'),
@@ -843,7 +844,7 @@ Automatic: Runs whenever the system is reconfigured."""),
         """ Launch Action of Wizard"""
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
-        if wizard.type == 'automatic':
+        if wizard.type in ('automatic', 'once'):
             wizard.write({'state': 'done'})
 
         # Load action
@@ -890,13 +891,13 @@ Automatic: Runs whenever the system is reconfigured."""),
         done = filter(
             groups_match,
             self.browse(cr, uid,
-                self.search(cr, uid, ['&', ('state', '!=', 'open'), ('type', '=', 'manual')], context=context),
+                self.search(cr, uid, [('state', '!=', 'open')], context=context),
                         context=context))
 
         total = filter(
             groups_match,
             self.browse(cr, uid,
-                self.search(cr, uid, [('type', '=', 'manual')], context=context),
+                self.search(cr, uid, [], context=context),
                         context=context))
 
         return {

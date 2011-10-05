@@ -7,44 +7,50 @@
             <field name="name">ir.values.form.action</field>
             <field name="model">ir.values</field>
             <field name="type">form</field>
-            <field name="priority">20</field>
             <field name="arch" type="xml">
-                <form string="Connect Events to Actions">
-                   <field name="name" required="1"/>
+                <form string="Action Bindings">
+                   <field name="name"/>
                    <newline/>
                     <group col="2" colspan="2">
-                        <separator string="Action Source" colspan="2"/>
+                        <separator string="Action Binding" colspan="2"/>
                         <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                        <field name="model"/>
                         <field name="res_id"/>
-                        <field name="key2" required="1"/>
+                        <field name="key2"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Action To Launch" colspan="2"/>
+                        <separator string="Action" colspan="2"/>
                         <field name="action_id" on_change="onchange_action_id(action_id)"/>
+                        <field name="value_unpickle" colspan="4" string="Action Reference"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-                        <field name="object" readonly="1"/>
-
+        <record id="values_view_form_defaults" model="ir.ui.view">
+            <field name="name">ir.values.form.defaults</field>
+            <field name="model">ir.values</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="User-defined Defaults">
+                   <field name="name"/>
+                   <newline/>
+                    <group col="2" colspan="2">
+                        <separator string="Model" colspan="2"/>
+                        <field name="model_id" on_change="onchange_object_id(model_id)"/>
+                        <field name="model"/>
+                        <field name="key2" string="Condition"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator string="Values for Event Type" colspan="2"/>
-                        <label string="client_action_multi, client_action_relate" colspan="2"/>
-                        <label string="tree_but_open, client_print_multi"  colspan="2"/>
+                        <separator string="Default Value" colspan="2"/>
+                        <field name="value_unpickle" colspan="4" nolabel="1"/>
                     </group>
                     <group col="2" colspan="2">
-                        <separator colspan="2" string="Value"/>
-                         <field name="value_unpickle" nolabel="1" colspan="4"/>
+                        <separator colspan="2" string="Default Value Scope"/>
+                        <field name="user_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Metadata"/>
-                        <field name="meta_unpickle" nolabel="1"/>
-                    </group>
-                    <group col="2" colspan="2">
-                    <separator colspan="2" string=""/>
-                    <field name="user_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    </group>
-              </form>
-
+                </form>
             </field>
         </record>
 
@@ -53,10 +59,9 @@
             <field name="model">ir.values</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Client Actions">
+                <tree string="Action Bindings/Defaults">
                     <field name="name"/>
                     <field name="model"/>
-                    <field name="action_id"/>
                     <field name="key2"/>
                 </tree>
             </field>
@@ -73,7 +78,7 @@
                     <field name="key2"/>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Model" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'key2'}"/>
                     </group>
                 </search>
@@ -81,23 +86,21 @@
         </record>
 
         <record id="act_values_form_action" model="ir.actions.act_window">
-            <field name="name">Client Events</field>
+            <field name="name">Action Bindings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="values_view_search_action"/>
             <field name="domain">[('key','=','action')]</field>
-            <field name="context">{'read':'default','default_object':1}</field>
+            <field name="context">{'default_key':'action'}</field>
         </record>
-
         <record model="ir.actions.act_window.view" id="action_values_tree_view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="values_view_tree_action"/>
             <field name="act_window_id" ref="act_values_form_action"/>
         </record>
-
         <record model="ir.actions.act_window.view" id="action_values_form_view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
@@ -105,54 +108,27 @@
             <field name="act_window_id" ref="act_values_form_action"/>
         </record>
 
-
-
-
-        <!-- Values -->
-
-        <record id="values_view_form" model="ir.ui.view">
-            <field name="name">ir.values.form</field>
-            <field name="model">ir.values</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Values">
-                    <field name="name" select="1"/>
-                    <field name="model" select="1"/>
-                    <field name="key" select="1"/>
-                    <field name="key2" select="2"/>
-                    <field name="object" select="2"/>
-                    <field name="res_id"/>
-                    <field name="user_id" select="2"/>
-                    <field name="company_id" select="2"/>
-                    <field name="value_unpickle"/>
-                    <field name="meta_unpickle"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="values_view_tree" model="ir.ui.view">
-            <field name="name">ir.values.tree</field>
-            <field name="model">ir.values</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Values">
-                    <field name="name"/>
-                    <field name="model"/>
-                    <field name="key"/>
-                    <field name="key2"/>
-                    <field name="user_id"/>
-                    <field name="company_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="act_values_form" model="ir.actions.act_window">
-            <field name="name">Client Actions Connections</field>
+        <record id="act_values_form_defaults" model="ir.actions.act_window">
+            <field name="name">User-defined Defaults</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">ir.values</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="values_view_tree"/>
-            <field name="context">{'read':'default'}</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="values_view_search_action"/>
+            <field name="domain">[('key','=','default')]</field>
+            <field name="context">{'default_key':'default','default_key2':''}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_defaults_tree_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="values_view_tree_action"/>
+            <field name="act_window_id" ref="act_values_form_defaults"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_values_defaults_form_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="values_view_form_defaults"/>
+            <field name="act_window_id" ref="act_values_form_defaults"/>
         </record>
 
         <!-- Sequences -->
@@ -176,6 +152,7 @@
                         <field name="padding"/>
                         <field name="number_increment"/>
                         <field name="number_next"/>
+                        <field name="implementation"/>
                         <separator colspan="4" string="Legend (for prefix, suffix)"/>
                         <group col="8" colspan="4">
                             <group>
@@ -215,6 +192,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="number_next"/>
                     <field name="number_increment"/>
+                    <field name="implementation"/>
                 </tree>
             </field>
         </record>
@@ -342,6 +320,7 @@
         <menuitem id="next_id_6" name="Actions" parent="base.next_id_4" sequence="1"/>
         <menuitem action="ir_sequence_actions" id="menu_ir_sequence_actions" parent="next_id_6"/>
         <menuitem action="act_values_form_action" id="menu_values_form_action" parent="next_id_6"/>
+        <menuitem action="act_values_form_defaults" id="menu_values_form_defaults" parent="next_id_6"/>
 
         <!--Filters form view-->
 
@@ -571,6 +550,8 @@
                                         <field name="view_id"/>
                                     </tree>
                                 </field>
+                                <separator string="View Ordering" colspan="4"/>
+                                <field colspan="4" name="help" nolabel="1"/>
                             </group>
                         </page>
                         <page string="Security">
@@ -1876,7 +1857,7 @@
             <field name="name">Config Wizard Steps</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Config Wizard Steps">
+                <tree string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
                     <field name="category_id"/>
@@ -2008,23 +1989,19 @@
                         <field name="name"/>
                         <field name="sequence"/>
                     </group>
-                    <notebook colspan="4">
-                        <page string="Configuration">
-                            <group col="2" colspan="4">
-                                <separator string="Connection Information" colspan="4"/>
-                                <field name="smtp_host"/>
-                                <field name="smtp_port"/>
-                                <field name="smtp_debug"/>
-                             </group>
-                             <group col="2" colspan="4">
-                                <separator string="Security and Authentication" colspan="2"/>
-                                <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
-                                <field name="smtp_user"/>
-                                <field name="smtp_pass" password="True"/>
-                                <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
-                            </group>
-                        </page>
-                    </notebook>
+                    <group col="2" colspan="4">
+                        <separator string="Connection Information" colspan="4"/>
+                        <field name="smtp_host"/>
+                        <field name="smtp_port"/>
+                        <field name="smtp_debug" groups="base.group_extended"/>
+                     </group>
+                     <group col="2" colspan="4">
+                        <separator string="Security and Authentication" colspan="2"/>
+                        <field name="smtp_encryption" on_change="on_change_encryption(smtp_encryption)"/>
+                        <field name="smtp_user"/>
+                        <field name="smtp_pass" password="True"/>
+                        <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
+                    </group>
                 </form>
             </field>
         </record>
