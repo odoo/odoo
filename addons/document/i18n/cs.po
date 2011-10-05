@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-30 05:29+0000\n"
-"X-Generator: Launchpad (build 13794)\n"
+"X-Launchpad-Export-Date: 2011-10-05 05:19+0000\n"
+"X-Generator: Launchpad (build 14085)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -34,7 +34,7 @@ msgstr "Pole názvu"
 #. module: document
 #: view:board.board:0
 msgid "Document board"
-msgstr ""
+msgstr "Nástěnka dokumentů"
 
 #. module: document
 #: model:ir.model,name:document.model_process_node
@@ -44,7 +44,7 @@ msgstr "Uzel procesu"
 #. module: document
 #: view:document.directory:0
 msgid "Search Document Directory"
-msgstr ""
+msgstr "Hledat adresář dokumentů"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -75,7 +75,7 @@ msgstr "Typ obsahu adresáře"
 #. module: document
 #: view:document.directory:0
 msgid "Resources"
-msgstr ""
+msgstr "Zdroje"
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -127,6 +127,9 @@ msgid ""
 "You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference "
 "to the current record, in dynamic folders"
 msgstr ""
+"Výraz Pythonu použitý pro vyhodnocení pole.\n"
+"Můžete použití 'dir_id' pro aktuální adresář, 'res_id', 'res_model' jako "
+"odkaz na aktuální záznam, v dynamických složkách"
 
 #. module: document
 #: view:report.document.user:0
@@ -157,6 +160,8 @@ msgid ""
 "If true, all attachments that match this resource will  be located. If "
 "false, only ones that have this as parent."
 msgstr ""
+"Pokud je pravda, všechny přílohy odpovídající tomuto zdroji budou vyhledány. "
+"Pokud je nepravda, pouze ty, které mají tohoto jako rodiče."
 
 #. module: document
 #: view:document.directory:0
@@ -169,7 +174,7 @@ msgstr "Adresáře"
 #. module: document
 #: field:document.configuration,sale_order:0
 msgid "Sale Order"
-msgstr "Objednávka"
+msgstr "Prodejní objednávka"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -191,17 +196,17 @@ msgstr "Chyba!"
 #. module: document
 #: help:document.configuration,product:0
 msgid "Auto directory configuration for Products."
-msgstr "Automatická konfigurace adresářů pro produkty"
+msgstr "Automatická konfigurace adresářů pro výrobky"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr ""
+msgstr "Hledat všechny zdroje"
 
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr ""
+msgstr "Složky podle zdroje"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -216,7 +221,7 @@ msgstr "Datum změny"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Nastavení aplikace znalostí"
 
 #. module: document
 #: view:ir.attachment:0
@@ -243,12 +248,12 @@ msgstr "Adresář s dokumenty"
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "Chyba kontroly"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
@@ -272,7 +277,7 @@ msgstr "Úložiště"
 #. module: document
 #: view:document.configuration:0
 msgid "Configure Resource Directory"
-msgstr ""
+msgstr "Nastavení adresáře zdrojů"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -301,13 +306,15 @@ msgstr "Typ"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr ""
+msgstr "Vyberte zde objekt a bude jedna složka na záznam pro tento zdroj."
 
 #. module: document
 #: help:document.directory,domain:0
 msgid ""
 "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
+"Použijte doménu, pokud chcete použít automatické filtrování na viditelných "
+"zdrojích."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_files_by_partner
@@ -317,7 +324,7 @@ msgstr "Soubory podle partnerů"
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
-msgstr ""
+msgstr "Pole obsahu"
 
 #. module: document
 #: field:ir.attachment,store_fname:0
@@ -327,7 +334,7 @@ msgstr "Uložené jméno souboru"
 #. module: document
 #: field:document.directory,ressource_type_id:0
 msgid "Resource model"
-msgstr ""
+msgstr "Model zdroje"
 
 #. module: document
 #: view:document.directory:0
@@ -350,7 +357,7 @@ msgstr "Červenec"
 #: model:ir.actions.act_window,name:document.open_board_document_manager
 #: model:ir.ui.menu,name:document.menu_reports_document_manager
 msgid "Document Dashboard"
-msgstr ""
+msgstr "Nástěnka dokument"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -415,7 +422,7 @@ msgstr "Související dokumenty"
 #. module: document
 #: field:document.configuration,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Průběh nastavení"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -470,7 +477,7 @@ msgstr "Potomci"
 #. module: document
 #: view:document.directory:0
 msgid "Define words in the context, for all child directories and files"
-msgstr ""
+msgstr "Definuje slova v kontextu, pro všechny podřízené adresáře a soubory"
 
 #. module: document
 #: model:ir.module.module,description:document.module_meta_information
@@ -492,12 +499,28 @@ msgid ""
 "database,\n"
 "      but in the servers rootpad like /server/bin/filestore.\n"
 msgstr ""
+"Toto je kompletní systém pro správu dokumentů:\n"
+"    * Autentizace uživatelů\n"
+"    * Indexování dokumentů :- soubory .pptx a .docx nejsou podporovány na "
+"platformě windows.\n"
+"    * Nástěnka pro dokumenty zahrnuje:\n"
+"        * Nové soubory (seznam)\n"
+"        * Soubory podle typu zdroje (graf)\n"
+"        * Soubory podle partnera (graf)\n"
+"        * Soubory podle měsíce (graf)\n"
+"    POZOR:\n"
+"    - Když instalujete tento modul do běžící společnosti, která již má "
+"soubory PDF uložené v databázi,\n"
+"      všechny je ztratíte.\n"
+"    - Po instalaci tohoto modulu dále nejsou PDF uchovány v databázi,\n"
+"      ale na serveru v adresáři jako /server/bin/filestore.\n"
 
 #. module: document
 #: help:document.storage,online:0
 msgid ""
 "If not checked, media is currently offline and its contents not available"
 msgstr ""
+"Pokud není zaškrtnuto, médium je aktuálně offline a jeho obsahu nedostupný"
 
 #. module: document
 #: view:document.directory:0
@@ -513,7 +536,7 @@ msgstr "Vlastník"
 #. module: document
 #: view:document.directory:0
 msgid "PDF Report"
-msgstr ""
+msgstr "PDF výkaz"
 
 #. module: document
 #: view:document.directory:0
@@ -534,6 +557,9 @@ msgid ""
 "name.\n"
 "If set, the directory will have to be a resource one."
 msgstr ""
+"Zaškrtněte toto pole, pokud chcete, aby toto jméno souboru obsahovalo jméno "
+"záznamu.\n"
+"Pokud je nastavení, adresář bude jako zdroje."
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -566,6 +592,8 @@ msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
 msgstr ""
+"Zaškrtněte toto, pokud chcete použít stejnou stromovou strukturu jako "
+"objektu vybraného v systému."
 
 #. module: document
 #: view:document.directory:0
@@ -578,6 +606,8 @@ msgid ""
 "Along with Parent Model, this ID attaches this folder to a specific record "
 "of Parent Model."
 msgstr ""
+"Stejně s Nadřazeným modelem, toto ID připojí tuto složku k určitému záznamu "
+"Nadřazeného modelu."
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -633,6 +663,10 @@ msgid ""
 "record, just like attachments. Don't put a parent directory if you select a "
 "parent model."
 msgstr ""
+"Pokud sem dáte objekt, tato šablona adresáře se objeví dole pod všemi těmito "
+"objekty. Takové adresáře jsou \"přiloženy\" ke určitému modelu nebo záznamu, "
+"právě jako přílohy. Nedávejte sem nadřazený adresář, pokud vybíráte "
+"nadřazený model."
 
 #. module: document
 #: view:document.directory:0
@@ -648,7 +682,7 @@ msgstr "Říjen"
 #. module: document
 #: view:document.directory:0
 msgid "Seq."
-msgstr ""
+msgstr "Poř."
 
 #. module: document
 #: selection:document.storage,type:0
@@ -663,7 +697,7 @@ msgstr "Automatická konfigurace adresářů pro projekty."
 #. module: document
 #: view:ir.attachment:0
 msgid "Related to"
-msgstr "Souvisí s..."
+msgstr "Souvisí s"
 
 #. module: document
 #: model:ir.module.module,shortdesc:document.module_meta_information
@@ -673,17 +707,17 @@ msgstr "Integrovaný systém správy dokumentů"
 #. module: document
 #: view:document.configuration:0
 msgid "Choose the following Resouces to auto directory configuration."
-msgstr ""
+msgstr "Vyberte následující zdroj pro automatické nastavení adresáře."
 
 #. module: document
 #: view:ir.attachment:0
 msgid "Attached To"
-msgstr "Připojeno k..."
+msgstr "Připojeno k"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reports_document
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "Nástěnka"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_user_graph
@@ -709,7 +743,7 @@ msgstr "Jméno adresáře musí být unikátní!"
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
-msgstr "Autor"
+msgstr "Tvůrce"
 
 #. module: document
 #: view:board.board:0
@@ -742,7 +776,7 @@ msgstr "Název souboru"
 #. module: document
 #: view:document.configuration:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: document
 #: field:document.directory,ressource_id:0
@@ -803,12 +837,12 @@ msgstr "Měsíc"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Vykazování"
 
 #. module: document
 #: field:document.configuration,product:0
 msgid "Product"
-msgstr "Produkt"
+msgstr "Výrobek"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -849,7 +883,7 @@ msgstr ""
 #. module: document
 #: model:ir.model,name:document.model_ir_attachment
 msgid "ir.attachment"
-msgstr ""
+msgstr "ir.attachment"
 
 #. module: document
 #: view:board.board:0
@@ -933,7 +967,7 @@ msgstr "Název"
 #. module: document
 #: sql_constraint:document.storage:0
 msgid "The storage path must be unique!"
-msgstr "Cesta musí být unikátní!"
+msgstr "Cesta úložiště musí být unikátní!"
 
 #. module: document
 #: view:document.directory:0
