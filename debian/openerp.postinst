@@ -4,7 +4,7 @@ set -e
 
 case "${1}" in
     configure)
-        if ! getent passwd | grep -q "^openerp"; then
+        if ! getent passwd | grep -q "^openerp:"; then
             adduser --system --no-create-home --quiet --gecos 'OpenERP' --group openerp
         fi
         # Register "openerp" as a postgres superuser 
