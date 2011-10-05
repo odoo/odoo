@@ -43,6 +43,9 @@ technical OpenERP documentation at http://doc.openerp.com
     'test': [
         'test/edi_partner_test.yml',
     ],
+    'js': [
+        'static/src/js/edi.js'
+    ],
     'installable': True,
     'active': False,
     #'certificate': TODO
