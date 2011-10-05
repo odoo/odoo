@@ -101,10 +101,13 @@ class base_setup_installer(osv.osv_memory):
             module_ids = module_proxy.search(cr, uid, [], context=context)
             for module in module_proxy.browse(cr, uid, module_ids, context=context):
                 result['module_%d' % (module.id,)] = module.state == 'installed'
-                category_name = 'category_%d' % (module.category_id.id,)
-                if not result.get('category_name'):
-                    result[category_name] = module.state == 'installed' and \
-                            module.category_id.name in DEFAULT_MODULES
+
+            cat_proxy = self.pool.get('ir.module.category')
+            cat_ids = cat_proxy.search(cr, uid, [], context=context)
+            for cat in cat_proxy.browse(cr, uid, cat_ids, context=context):
+                m = DEFAULT_MODULES.get(cat.name,[])
+                r = module_proxy.search(cr, uid, [('state','=','installed'),('name','in',m)])
+                result['category_%d' % (cat.id,)] = bool(r)
 
         return result
 
@@ -330,10 +333,6 @@ class base_setup_installer(osv.osv_memory):
     #    if need_install:
     #        self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
     #    return
-base_setup_installer()
-
-
-
 
 #Migrate data from another application Conf wiz
 
@@ -356,7 +355,6 @@ class product_installer(osv.osv_memory):
     _inherit = 'res.config'
     _columns = {
         'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
-
     }
     _defaults = {
         'customers': 'create',
