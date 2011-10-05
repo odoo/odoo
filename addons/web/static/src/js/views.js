@@ -116,6 +116,9 @@ db.web.ActionManager = db.web.Widget.extend({
         */
     },
     ir_actions_act_window_close: function (action, on_closed) {
+        if (!this.dialog && on_closed) {
+            on_closed();
+        }
         this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
