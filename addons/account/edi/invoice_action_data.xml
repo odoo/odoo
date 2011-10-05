@@ -9,9 +9,9 @@ try:
         web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default="<WEB_ROOT_URL>")
 
         # accessing the template will fail if it has been deleted - so we'll skip everything
-        tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'email_template_edi_invoice')[1]
+        tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'email_template_edi_invoice')
 
-        edi_token = self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0]
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, [object], context = context)[0]
         context.update(edi_web_invoice_url_view='%s/web/view_edi?db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
         self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
 except:
