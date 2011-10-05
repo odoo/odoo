@@ -620,7 +620,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column));
+                .html(openerp.web.format_cell(aggregation, column, undefined, false));
         });
     },
     get_selected_ids: function() {
