@@ -1,5 +1,6 @@
 {
     "name": "web Graph",
+    "category" : "Hidden",
     "version": "2.0",
     "depends": ['web'],
     "js": [
