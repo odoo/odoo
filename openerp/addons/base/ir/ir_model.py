@@ -21,7 +21,6 @@
 import logging
 import re
 import time
-from operator import itemgetter
 
 from osv import fields,osv
 import netsvc
@@ -57,14 +56,14 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
 
 class ir_model(osv.osv):
     _name = 'ir.model'
-    _description = "Objects"
+    _description = "Models"
     _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = isinstance(self.pool.get(model.model), osv.osv_memory)
+            res[model.id] = self.pool.get(model.model).is_transient()
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -86,8 +85,8 @@ class ir_model(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Object Name', size=64, translate=True, required=True),
-        'model': fields.char('Object', size=64, required=True, select=1),
+        'name': fields.char('Model Description', size=64, translate=True, required=True),
+        'model': fields.char('Model', size=64, required=True, select=1),
         'info': fields.text('Information'),
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
@@ -98,12 +97,12 @@ class ir_model(osv.osv):
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
-    
+
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    
+
     def _check_model_name(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
@@ -115,8 +114,12 @@ class ir_model(osv.osv):
 
     def _model_name_msg(self, cr, uid, ids, context=None):
         return _('The Object name must start with x_ and not contain any special character !')
+
     _constraints = [
         (_check_model_name, _model_name_msg, ['model']),
+    ]
+    _sql_constraints = [
+        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -162,7 +165,7 @@ class ir_model(osv.osv):
             pass
         x_custom_model._name = model
         x_custom_model._module = False
-        a = x_custom_model.createInstance(self.pool, cr)
+        a = x_custom_model.create_instance(self.pool, cr)
         if (not a._columns) or ('x_name' in a._columns.keys()):
             x_name = 'x_name'
         else:
@@ -450,6 +453,24 @@ class ir_model_access(osv.osv):
         # pass no groups -> no access
         return False
 
+    def group_names_with_access(self, cr, model_name, access_mode):
+        """Returns the names of visible groups which have been granted ``access_mode`` on
+           the model ``model_name``.
+           :rtype: list
+        """
+        assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
+        cr.execute('''SELECT
+                        g.name
+                      FROM
+                        ir_model_access a
+                        JOIN ir_model m ON (a.model_id=m.id)
+                        JOIN res_groups g ON (a.group_id=g.id)
+                      WHERE
+                        m.model=%s AND
+                        a.perm_''' + access_mode, (model_name,))
+        return [x[0] for x in cr.fetchall()]
+
+    @tools.ormcache()
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -460,14 +481,12 @@ class ir_model_access(osv.osv):
 
         if isinstance(model, browse_record):
             assert model._table_name == 'ir.model', 'Invalid model object'
-            model_name = model.name
+            model_name = model.model
         else:
             model_name = model
 
-        # osv_memory objects can be read by everyone, as they only return
-        # results that belong to the current user (except for superuser)
-        model_obj = self.pool.get(model_name)
-        if isinstance(model_obj, osv.osv_memory):
+        # TransientModel records have no access rights, only an implicit access rule
+        if self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
@@ -493,16 +512,7 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
-            cr.execute('''select
-                    g.name
-                from
-                    ir_model_access a 
-                    left join ir_model m on (a.model_id=m.id) 
-                    left join res_groups g on (a.group_id=g.id)
-                where
-                    m.model=%s and
-                    a.group_id is not null and perm_''' + mode, (model_name, ))
-            groups = ', '.join(map(lambda x: x[0], cr.fetchall())) or '/'
+            groups = ', '.join(self.group_names_with_access(cr, model_name, mode)) or '/'
             msgs = {
                 'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
                 'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
@@ -511,9 +521,7 @@ class ir_model_access(osv.osv):
             }
 
             raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
-        return r
-
-    check = tools.cache()(check)
+        return r or False
 
     __cache_clearing_methods = []
 
@@ -528,7 +536,7 @@ class ir_model_access(osv.osv):
             pass
 
     def call_cache_clearing_methods(self, cr):
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
+        self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             object_ = self.pool.get(model)
             if object_:
@@ -555,14 +563,27 @@ class ir_model_access(osv.osv):
 ir_model_access()
 
 class ir_model_data(osv.osv):
+    """Holds external identifier keys for records in the database.
+       This has two main uses:
+
+           * allows easy data integration with third-party systems,
+             making import/export/sync of data possible, as records
+             can be uniquely identified across multiple systems
+           * allows tracking the origin of data installed by OpenERP
+             modules themselves, thus making it possible to later
+             update them seamlessly.
+    """
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
     _order = 'module,model,name'
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=128, select=1),
-        'model': fields.char('Object', required=True, size=64, select=1),
+        'name': fields.char('External Identifier', required=True, size=128, select=1,
+                            help="External Key/Identifier that can be used for "
+                                 "data integration with third-party systems"),
+        'model': fields.char('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'res_id': fields.integer('Record ID', select=1,
+                                 help="ID of the target record in the database"),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
@@ -574,7 +595,7 @@ class ir_model_data(osv.osv):
         'module': ''
     }
     _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
+        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same external ID in the same module!'),
     ]
 
     def __init__(self, pool, cr):
@@ -592,22 +613,22 @@ class ir_model_data(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
-    @tools.cache()
+    @tools.ormcache()
     def _get_id(self, cr, uid, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
         ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
         if not ids:
-            raise ValueError('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         # the sql constraints ensure us we have only one result
         return ids[0]
 
-    @tools.cache()
+    @tools.ormcache()
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
-            raise ValueError('No references to %s.%s' % (module, xml_id))
+            raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return (res['model'], res['res_id'])
 
     def get_object(self, cr, uid, module, xml_id, context=None):
@@ -630,10 +651,8 @@ class ir_model_data(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         """ Regular unlink method, but make sure to clear the caches. """
-        ref_ids = self.browse(cr, uid, ids, context=context)
-        for ref_id in ref_ids:
-            self._get_id.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
-            self.get_object_reference.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+        self._get_id.clear_cache(self)
+        self.get_object_reference.clear_cache(self)
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
@@ -659,8 +678,8 @@ class ir_model_data(osv.osv):
             results = cr.fetchall()
             for imd_id2,res_id2,real_id2 in results:
                 if not real_id2:
-                    self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
-                    self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
+                    self._get_id.clear_cache(self, uid, module, xml_id)
+                    self.get_object_reference.clear_cache(self, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:

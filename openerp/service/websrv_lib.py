@@ -24,8 +24,12 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 
+#.apidoc title: HTTP Layer library (websrv_lib)
+
 """ Framework for generic http servers
 
+    This library contains *no* OpenERP-specific functionality. It should be
+    usable in other projects, too.
 """
 
 import socket
@@ -48,60 +52,16 @@ class AuthProvider:
     def __init__(self,realm):
         self.realm = realm
 
-    def setupAuth(self, multi,handler):
-        """ Attach an AuthProxy object to handler
-        """
-        pass
-
     def authenticate(self, user, passwd, client_address):
         return False
 
     def log(self, msg):
         print msg
 
-class BasicAuthProvider(AuthProvider):
-    def setupAuth(self, multi, handler):
-        if not multi.sec_realms.has_key(self.realm):
-            multi.sec_realms[self.realm] = BasicAuthProxy(self)
-
-
-class AuthProxy:
-    """ This class will hold authentication information for a handler,
-        i.e. a connection
-    """
-    def __init__(self, provider):
-        self.provider = provider
-
     def checkRequest(self,handler,path = '/'):
         """ Check if we are allowed to process that request
         """
         pass
-
-class BasicAuthProxy(AuthProxy):
-    """ Require basic authentication..
-    """
-    def __init__(self,provider):
-        AuthProxy.__init__(self,provider)
-        self.auth_creds = None
-        self.auth_tries = 0
-
-    def checkRequest(self,handler,path = '/'):
-        if self.auth_creds:
-            return True
-        auth_str = handler.headers.get('Authorization',False)
-        if auth_str and auth_str.startswith('Basic '):
-            auth_str=auth_str[len('Basic '):]
-            (user,passwd) = base64.decodestring(auth_str).split(':')
-            self.provider.log("Found user=\"%s\", passwd=\"%s\"" %(user,passwd))
-            self.auth_creds = self.provider.authenticate(user,passwd,handler.client_address)
-            if self.auth_creds:
-                return True
-        if self.auth_tries > 5:
-            self.provider.log("Failing authorization after 5 requests w/o password")
-            raise AuthRejectedExc("Authorization failed.")
-        self.auth_tries += 1
-        raise AuthRequiredExc(atype = 'Basic', realm=self.provider.realm)
-
 
 class HTTPHandler(SimpleHTTPRequestHandler):
     def __init__(self,request, client_address, server):
@@ -121,13 +81,17 @@ class HTTPHandler(SimpleHTTPRequestHandler):
     def setup(self):
         pass
 
+# A list of HTTPDir.
+handlers = []
+
 class HTTPDir:
     """ A dispatcher class, like a virtual folder in httpd
     """
-    def __init__(self,path,handler, auth_provider = None):
+    def __init__(self, path, handler, auth_provider=None, secure_only=False):
         self.path = path
         self.handler = handler
         self.auth_provider = auth_provider
+        self.secure_only = secure_only
 
     def matches(self, request):
         """ Test if some request matches us. If so, return
@@ -135,6 +99,48 @@ class HTTPDir:
         if request.startswith(self.path):
             return self.path
         return False
+
+    def instanciate_handler(self, request, client_address, server):
+        handler = self.handler(noconnection(request), client_address, server)
+        if self.auth_provider:
+            handler.auth_provider = self.auth_provider()
+        return handler
+
+def reg_http_service(path, handler, auth_provider=None, secure_only=False):
+    """ Register a HTTP handler at a given path.
+
+    The auth_provider will be instanciated and set on the handler instances.
+    """
+    global handlers
+    service = HTTPDir(path, handler, auth_provider, secure_only)
+    pos = len(handlers)
+    lastpos = pos
+    while pos > 0:
+        pos -= 1
+        if handlers[pos].matches(service.path):
+            lastpos = pos
+        # we won't break here, but search all way to the top, to
+        # ensure there is no lesser entry that will shadow the one
+        # we are inserting.
+    handlers.insert(lastpos, service)
+
+def list_http_services(protocol=None):
+    global handlers
+    ret = []
+    for svc in handlers:
+        if protocol is None or protocol == 'http' or svc.secure_only:
+            ret.append((svc.path, str(svc.handler)))
+    
+    return ret
+
+def find_http_service(path, secure=False):
+    global handlers
+    for vdir in handlers:
+        p = vdir.matches(path)
+        if p == False or (vdir.secure_only and not secure):
+            continue
+        return vdir
+    return None
 
 class noconnection(object):
     """ a class to use instead of the real connection
@@ -226,312 +232,3 @@ class HttpOptions:
         """
         return opts
 
-class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
-    """ this is a multiple handler, that will dispatch each request
-        to a nested handler, iff it matches
-
-        The handler will also have *one* dict of authentication proxies,
-        groupped by their realm.
-    """
-
-    protocol_version = "HTTP/1.1"
-    default_request_version = "HTTP/0.9"    # compatibility with py2.5
-
-    auth_required_msg = """ <html><head><title>Authorization required</title></head>
-    <body>You must authenticate to use this service</body><html>\r\r"""
-
-    def __init__(self, request, client_address, server):
-        self.in_handlers = {}
-        self.sec_realms = {}
-        SocketServer.StreamRequestHandler.__init__(self,request,client_address,server)
-        self.log_message("MultiHttpHandler init for %s" %(str(client_address)))
-
-    def _handle_one_foreign(self,fore, path, auth_provider):
-        """ This method overrides the handle_one_request for *children*
-            handlers. It is required, since the first line should not be
-            read again..
-
-        """
-        fore.raw_requestline = "%s %s %s\n" % (self.command, path, self.version)
-        if not fore.parse_request(): # An error code has been sent, just exit
-            return
-        if fore.headers.status:
-            self.log_error("Parse error at headers: %s", fore.headers.status)
-            self.close_connection = 1
-            self.send_error(400,"Parse error at HTTP headers")
-            return
-
-        self.request_version = fore.request_version
-        if auth_provider and auth_provider.realm:
-            try:
-                self.sec_realms[auth_provider.realm].checkRequest(fore,path)
-            except AuthRequiredExc,ae:
-                # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
-                # authorisation features of HTTP/1.1 
-                if self.request_version != 'HTTP/1.1' and ('Darwin/9.' not in fore.headers.get('User-Agent', '')):
-                    self.log_error("Cannot require auth at %s", self.request_version)
-                    self.send_error(403)
-                    return
-                self._get_ignore_body(fore) # consume any body that came, not loose sync with input
-                self.send_response(401,'Authorization required')
-                self.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
-                self.send_header('Connection', 'keep-alive')
-                self.send_header('Content-Type','text/html')
-                self.send_header('Content-Length',len(self.auth_required_msg))
-                self.end_headers()
-                self.wfile.write(self.auth_required_msg)
-                return
-            except AuthRejectedExc,e:
-                self.log_error("Rejected auth: %s" % e.args[0])
-                self.send_error(403,e.args[0])
-                self.close_connection = 1
-                return
-        mname = 'do_' + fore.command
-        if not hasattr(fore, mname):
-            if fore.command == 'OPTIONS':
-                self.do_OPTIONS()
-                return
-            self.send_error(501, "Unsupported method (%r)" % fore.command)
-            return
-        fore.close_connection = 0
-        method = getattr(fore, mname)
-        try:
-            method()
-        except (AuthRejectedExc, AuthRequiredExc):
-            raise
-        except Exception, e:
-            if hasattr(self, 'log_exception'):
-                self.log_exception("Could not run %s", mname)
-            else:
-                self.log_error("Could not run %s: %s", mname, e)
-            self.send_error(500, "Internal error")
-            # may not work if method has already sent data
-            fore.close_connection = 1
-            self.close_connection = 1
-            if hasattr(fore, '_flush'):
-                fore._flush()
-            return
-        
-        if fore.close_connection:
-            # print "Closing connection because of handler"
-            self.close_connection = fore.close_connection
-        if hasattr(fore, '_flush'):
-            fore._flush()
-
-
-    def parse_rawline(self):
-        """Parse a request (internal).
-
-        The request should be stored in self.raw_requestline; the results
-        are in self.command, self.path, self.request_version and
-        self.headers.
-
-        Return True for success, False for failure; on failure, an
-        error is sent back.
-
-        """
-        self.command = None  # set in case of error on the first line
-        self.request_version = version = self.default_request_version
-        self.close_connection = 1
-        requestline = self.raw_requestline
-        if requestline[-2:] == '\r\n':
-            requestline = requestline[:-2]
-        elif requestline[-1:] == '\n':
-            requestline = requestline[:-1]
-        self.requestline = requestline
-        words = requestline.split()
-        if len(words) == 3:
-            [command, path, version] = words
-            if version[:5] != 'HTTP/':
-                self.send_error(400, "Bad request version (%r)" % version)
-                return False
-            try:
-                base_version_number = version.split('/', 1)[1]
-                version_number = base_version_number.split(".")
-                # RFC 2145 section 3.1 says there can be only one "." and
-                #   - major and minor numbers MUST be treated as
-                #      separate integers;
-                #   - HTTP/2.4 is a lower version than HTTP/2.13, which in
-                #      turn is lower than HTTP/12.3;
-                #   - Leading zeros MUST be ignored by recipients.
-                if len(version_number) != 2:
-                    raise ValueError
-                version_number = int(version_number[0]), int(version_number[1])
-            except (ValueError, IndexError):
-                self.send_error(400, "Bad request version (%r)" % version)
-                return False
-            if version_number >= (1, 1):
-                self.close_connection = 0
-            if version_number >= (2, 0):
-                self.send_error(505,
-                          "Invalid HTTP Version (%s)" % base_version_number)
-                return False
-        elif len(words) == 2:
-            [command, path] = words
-            self.close_connection = 1
-            if command != 'GET':
-                self.log_error("Junk http request: %s", self.raw_requestline)
-                self.send_error(400,
-                                "Bad HTTP/0.9 request type (%r)" % command)
-                return False
-        elif not words:
-            return False
-        else:
-            #self.send_error(400, "Bad request syntax (%r)" % requestline)
-            return False
-        self.request_version = version
-        self.command, self.path, self.version = command, path, version
-        return True
-
-    def handle_one_request(self):
-        """Handle a single HTTP request.
-           Dispatch to the correct handler.
-        """
-        self.request.setblocking(True)
-        self.raw_requestline = self.rfile.readline()
-        if not self.raw_requestline:
-            self.close_connection = 1
-            # self.log_message("no requestline, connection closed?")
-            return
-        if not self.parse_rawline():
-            self.log_message("Could not parse rawline.")
-            return
-        # self.parse_request(): # Do NOT parse here. the first line should be the only
-        
-        if self.path == '*' and self.command == 'OPTIONS':
-            # special handling of path='*', must not use any vdir at all.
-            if not self.parse_request():
-                return
-            self.do_OPTIONS()
-            return
-            
-        for vdir in self.server.vdirs:
-            p = vdir.matches(self.path)
-            if p == False:
-                continue
-            npath = self.path[len(p):]
-            if not npath.startswith('/'):
-                npath = '/' + npath
-
-            if not self.in_handlers.has_key(p):
-                self.in_handlers[p] = vdir.handler(noconnection(self.request),self.client_address,self.server)
-                if vdir.auth_provider:
-                    vdir.auth_provider.setupAuth(self, self.in_handlers[p])
-            hnd = self.in_handlers[p]
-            hnd.rfile = self.rfile
-            hnd.wfile = self.wfile
-            self.rlpath = self.raw_requestline
-            try:
-                self._handle_one_foreign(hnd,npath, vdir.auth_provider)
-            except IOError, e:
-                if e.errno == errno.EPIPE:
-                    self.log_message("Could not complete request %s," \
-                            "client closed connection", self.rlpath.rstrip())
-                else:
-                    raise
-            return
-        # if no match:
-        self.send_error(404, "Path not found: %s" % self.path)
-        return
-
-    def _get_ignore_body(self,fore):
-        if not fore.headers.has_key("content-length"):
-            return
-        max_chunk_size = 10*1024*1024
-        size_remaining = int(fore.headers["content-length"])
-        got = ''
-        while size_remaining:
-            chunk_size = min(size_remaining, max_chunk_size)
-            got = fore.rfile.read(chunk_size)
-            size_remaining -= len(got)
-
-
-class SecureMultiHTTPHandler(MultiHTTPHandler):
-    def getcert_fnames(self):
-        """ Return a pair with the filenames of ssl cert,key
-
-            Override this to direct to other filenames
-        """
-        return ('server.cert','server.key')
-
-    def setup(self):
-        import ssl
-        certfile, keyfile = self.getcert_fnames()
-        try:
-            self.connection = ssl.wrap_socket(self.request,
-                                server_side=True,
-                                certfile=certfile,
-                                keyfile=keyfile,
-                                ssl_version=ssl.PROTOCOL_SSLv23)
-            self.rfile = self.connection.makefile('rb', self.rbufsize)
-            self.wfile = self.connection.makefile('wb', self.wbufsize)
-            self.log_message("Secure %s connection from %s",self.connection.cipher(),self.client_address)
-        except Exception:
-            self.request.shutdown(socket.SHUT_RDWR)
-            raise
-
-    def finish(self):
-        # With ssl connections, closing the filehandlers alone may not
-        # work because of ref counting. We explicitly tell the socket
-        # to shutdown.
-        MultiHTTPHandler.finish(self)
-        try:
-            self.connection.shutdown(socket.SHUT_RDWR)
-        except Exception:
-            pass
-
-import threading
-class ConnThreadingMixIn:
-    """Mix-in class to handle each _connection_ in a new thread.
-
-       This is necessary for persistent connections, where multiple
-       requests should be handled synchronously at each connection, but
-       multiple connections can run in parallel.
-    """
-
-    # Decides how threads will act upon termination of the
-    # main process
-    daemon_threads = False
-
-    def _get_next_name(self):
-        return None
-
-    def _handle_request_noblock(self):
-        """Start a new thread to process the request."""
-        if not threading: # happens while quitting python
-            return
-        t = threading.Thread(name=self._get_next_name(), target=self._handle_request2)
-        if self.daemon_threads:
-            t.setDaemon (1)
-        t.start()
-
-    def _mark_start(self, thread):
-        """ Mark the start of a request thread """
-        pass
-
-    def _mark_end(self, thread):
-        """ Mark the end of a request thread """
-        pass
-
-    def _handle_request2(self):
-        """Handle one request, without blocking.
-
-        I assume that select.select has returned that the socket is
-        readable before this function was called, so there should be
-        no risk of blocking in get_request().
-        """
-        try:
-            self._mark_start(threading.currentThread())
-            request, client_address = self.get_request()
-            if self.verify_request(request, client_address):
-                try:
-                    self.process_request(request, client_address)
-                except Exception:
-                    self.handle_error(request, client_address)
-                    self.close_request(request)
-        except socket.error:
-            return
-        finally:
-            self._mark_end(threading.currentThread())
-
-#eof

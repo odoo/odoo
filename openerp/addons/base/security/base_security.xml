@@ -5,16 +5,16 @@
 <!--
  Users Groups
 -->
-    <record model="res.groups" id="group_system">
-        <field name="name">Administration / Configuration</field>
-    </record>
-
     <record model="res.groups" id="group_erp_manager">
         <field name="name">Administration / Access Rights</field>
     </record>
+    <record model="res.groups" id="group_system">
+        <field name="name">Administration / Configuration</field>
+        <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
+    </record>
 
     <record model="res.groups" id="group_user">
-        <field name="name">Employee</field>
+        <field name="name">Human Resources / Employee</field>
     </record>
 
     <record model="res.groups" context="{'noadmin':True}" id="group_multi_company">
@@ -26,41 +26,54 @@
     </record>
 
     <record model="res.groups" id="group_no_one" context="{'noadmin':True}">
-        <field name="name">Useability / No One</field>
+        <field name="name">Useability / Technical Features</field>
     </record>
 
-    <record id="group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
-    </record>
-    <record id="group_sale_salesman" model="res.groups">
+    <record id="group_sale_salesman" context="{'noadmin':True}" model="res.groups">
         <field name="name">Sales / User</field>
     </record>
+    <record id="group_sale_manager" context="{'noadmin':True}" model="res.groups">
+        <field name="name">Sales / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
+    </record>
+
     <!-- Set accesses to menu -->
     <record model="ir.ui.menu" id="base.menu_administration">
         <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
     </record>
 
-    <record model="ir.rule" id="res_widget_user_rule">
-        <field name="name">res.widget.user rule</field>
-        <field name="model_id" ref="model_res_widget_user"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|', ('user_id','=',user.id),('user_id','=',False)]</field>
-    </record>
+    </data>
 
-    <record model="ir.rule" id="res_partner_rule">
-        <field name="name">res.partner company</field>
-        <field name="model_id" ref="model_res_partner"/>
-        <field name="global" eval="True"/>
-        <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
-             default for multicompany setups. -->
-        <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
-    </record>
+    <data noupdate="1">
 
-    <record model="ir.rule" id="multi_company_default_rule">
-        <field name="name">Multi_company_default company</field>
-        <field name="model_id" ref="model_multi_company_default"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+        <record model="ir.rule" id="res_widget_user_rule">
+            <field name="name">res.widget.user rule</field>
+            <field name="model_id" ref="model_res_widget_user"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('user_id','=',user.id),('user_id','=',False)]</field>
+        </record>
+
+        <record model="ir.rule" id="res_partner_rule">
+            <field name="name">res.partner company</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="global" eval="True"/>
+            <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
+                 default for multicompany setups. -->
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        </record>
+
+        <record model="ir.rule" id="multi_company_default_rule">
+            <field name="name">Multi_company_default company</field>
+            <field name="model_id" ref="model_multi_company_default"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+    <record model="ir.rule" id="ir_values_default_rule">
+        <field name="name">Defaults: alter personal values only</field>
+        <field name="model_id" ref="model_ir_values"/>
+        <field name="domain_force">[('key','=','default'),('user_id','=',user.id)]</field>
+        <field name="perm_read" eval="False"/>
     </record>
 
     </data>
