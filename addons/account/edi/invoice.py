@@ -47,7 +47,6 @@ class account_invoice(osv.osv, EDIMixin):
                         'uos_id': True,
                         'product_id': True,
                         'price_unit': True,
-                        #'price_subtotal': True,
                         'quantity': True,
                         'discount': True,
                         'note': True,
@@ -68,6 +67,7 @@ class account_invoice(osv.osv, EDIMixin):
             edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
+                    'company_paypal_account': invoice.paypal_account,
                     #'company_logo': #TODO
             })
             edi_doc_list.append(edi_doc)
