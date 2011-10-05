@@ -23,6 +23,8 @@ import ir
 import module
 import res
 import publisher_warranty
+import report
+import test
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

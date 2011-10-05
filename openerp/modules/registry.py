@@ -22,89 +22,198 @@
 """ Models registries.
 
 """
+import threading
+
+import logging
 
 import openerp.sql_db
+import openerp.osv.orm
+import openerp.cron
+import openerp.tools
+import openerp.modules.db
+import openerp.tools.config
 
+class Registry(object):
+    """ Model registry for a particular database.
 
-class BoundRegistry(object):
-    """ Model registry/database connection pair."""
-    def __init__(self, db, registry):
-        self.db = db
-        self.registry = registry
+    The registry is essentially a mapping between model names and model
+    instances. There is one registry instance per database.
 
+    """
+
+    def __init__(self, db_name):
+        self.models = {} # model name/model instance mapping
+        self._sql_error = {}
+        self._store_function = {}
+        self._init = True
+        self._init_parent = {}
+        self.db_name = db_name
+        self.db = openerp.sql_db.db_connect(db_name)
+
+        cr = self.db.cursor()
+        has_unaccent = openerp.modules.db.has_unaccent(cr)
+        if openerp.tools.config['unaccent'] and not has_unaccent:
+            logger = logging.getLogger('unaccent')
+            logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
+        self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
+        cr.close()
+
+    def do_parent_store(self, cr):
+        for o in self._init_parent:
+            self.get(o)._parent_store_compute(cr)
+        self._init = False
+
+    def obj_list(self):
+        """ Return the list of model names in this registry."""
+        return self.models.keys()
+
+    def add(self, model_name, model):
+        """ Add or replace a model in the registry."""
+        self.models[model_name] = model
+
+    def get(self, model_name):
+        """ Return a model for a given name or None if it doesn't exist."""
+        return self.models.get(model_name)
+
+    def __getitem__(self, model_name):
+        """ Return a model for a given name or raise KeyError if it doesn't exist."""
+        return self.models[model_name]
+
+    def load(self, cr, module):
+        """ Load a given module in the registry.
+
+        At the Python level, the modules are already loaded, but not yet on a
+        per-registry level. This method populates a registry with the given
+        modules, i.e. it instanciates all the classes of a the given module
+        and registers them in the registry.
+
+        """
+
+        res = []
+
+        # Instantiate registered classes (via the MetaModel automatic discovery
+        # or via explicit constructor call), and add them to the pool.
+        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
+            res.append(cls.create_instance(self, cr))
+
+        return res
+
+    def schedule_cron_jobs(self):
+        """ Make the cron thread care about this registry/database jobs.
+        This will initiate the cron thread to check for any pending jobs for
+        this registry/database as soon as possible. Then it will continuously
+        monitor the ir.cron model for future jobs. See openerp.cron for
+        details.
+        """
+        openerp.cron.schedule_wakeup(openerp.cron.WAKE_UP_NOW, self.db.dbname)
+
+    def clear_caches(self):
+        """ Clear the caches
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
+        """
+        for model in self.models.itervalues():
+            model.clear_caches()
 
 class RegistryManager(object):
     """ Model registries manager.
 
-        The manager is responsible for creation and deletion of bound model
+        The manager is responsible for creation and deletion of model
         registries (essentially database connection/model registry pairs).
 
     """
+    # Mapping between db name and model registry.
+    # Accessed through the methods below.
+    registries = {}
+    registries_lock = threading.RLock()
 
-    # TODO maybe should receive the addons paths
-    def __init__(self):
-        # Mapping between db name and bound model registry.
-        # Accessed through the methods below.
-        self.bound_registries = {}
-
-
-    def get(self, db_name, force_demo=False, status=None, update_module=False,
+    @classmethod
+    def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
-        """ Return a bound registry for a given database name."""
+        """ Return a registry for a given database name."""
+        try:
+            return cls.registries[db_name]
+        except KeyError:
+            return cls.new(db_name, force_demo, status,
+                           update_module, pooljobs)
 
-        if db_name in self.bound_registries:
-            bound_registry = self.bound_registries[db_name]
-        else:
-            bound_registry = self.new(db_name, force_demo, status,
-                update_module, pooljobs)
-        return bound_registry
-
-
-    def new(self, db_name, force_demo=False, status=None,
+    @classmethod
+    def new(cls, db_name, force_demo=False, status=None,
             update_module=False, pooljobs=True):
-        """ Create and return a new bound registry for a given database name.
+        """ Create and return a new registry for a given database name.
 
-        The (possibly) previous bound registry for that database name is
-        discarded.
+        The (possibly) previous registry for that database name is discarded.
 
         """
-
         import openerp.modules
-        import openerp.osv.osv as osv_osv
-        db = openerp.sql_db.db_connect(db_name)
-        pool = osv_osv.osv_pool()
+        with cls.registries_lock:
+            registry = Registry(db_name)
 
-        # Initializing a registry will call general code which will in turn
-        # call registries.get (this object) to obtain the registry being
-        # initialized. Make it available in the bound_registries dictionary
-        # then remove it if an exception is raised.
-        self.delete(db_name)
-        bound_registry = BoundRegistry(db, pool)
-        self.bound_registries[db_name] = bound_registry
-        try:
-            # This should be a method on BoundRegistry
-            openerp.modules.load_modules(db, force_demo, status, update_module)
-        except Exception:
-            del self.bound_registries[db_name]
-            raise
+            # Initializing a registry will call general code which will in turn
+            # call registries.get (this object) to obtain the registry being
+            # initialized. Make it available in the registries dictionary then
+            # remove it if an exception is raised.
+            cls.delete(db_name)
+            cls.registries[db_name] = registry
+            try:
+                # This should be a method on Registry
+                openerp.modules.load_modules(registry.db, force_demo, status, update_module)
+            except Exception:
+                del cls.registries[db_name]
+                raise
 
-        cr = db.cursor()
-        try:
-            pool.do_parent_store(cr)
-            pool.get('ir.actions.report.xml').register_all(cr)
-            cr.commit()
-        finally:
-            cr.close()
+            cr = registry.db.cursor()
+            try:
+                registry.do_parent_store(cr)
+                registry.get('ir.actions.report.xml').register_all(cr)
+                cr.commit()
+            finally:
+                cr.close()
 
         if pooljobs:
-            pool.get('ir.cron').restart(db.dbname)
+            registry.schedule_cron_jobs()
 
-        return bound_registry
+        return registry
+
+    @classmethod
+    def delete(cls, db_name):
+        """Delete the registry linked to a given database.
+
+        This also cleans the associated caches. For good measure this also
+        cancels the associated cron job. But please note that the cron job can
+        be running and take some time before ending, and that you should not
+        remove a registry if it can still be used by some thread. So it might
+        be necessary to call yourself openerp.cron.Agent.cancel(db_name) and
+        and join (i.e. wait for) the thread.
+        """
+        with cls.registries_lock:
+            if db_name in cls.registries:
+                cls.registries[db_name].clear_caches()
+                del cls.registries[db_name]
+                openerp.cron.cancel(db_name)
 
 
-    def delete(self, db_name):
-        if db_name in self.bound_registries:
-            del self.bound_registries[db_name]
+    @classmethod
+    def delete_all(cls):
+        """Delete all the registries. """
+        with cls.registries_lock:
+            for db_name in cls.registries.keys():
+                cls.delete(db_name)
+
+    @classmethod
+    def clear_caches(cls, db_name):
+        """Clear caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models
+        of the given database name.
+
+        This method is given to spare you a ``RegistryManager.get(db_name)``
+        that would loads the given database if it was not already loaded.
+        """
+        with cls.registries_lock:
+            if db_name in cls.registries:
+                cls.registries[db_name].clear_caches()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

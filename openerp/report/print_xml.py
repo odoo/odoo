@@ -137,9 +137,8 @@ class document(object):
 
                     value = self.get_value(browser, attrs['name'])
 
-                    service = netsvc.LocalService("object_proxy")
-                    ids = service.execute(self.cr.dbname, self.uid, 'ir.attachment', 'search', [('res_model','=',model),('res_id','=',int(value))])
-                    datas = service.execute(self.cr.dbname, self.uid, 'ir.attachment', 'read', ids)
+                    ids = self.pool.get('ir.attachment').search(self.cr, self.uid, [('res_model','=',model),('res_id','=',int(value))])
+                    datas = self.pool.get('ir.attachment').read(self.cr, self.uid, ids)
 
                     if len(datas):
                         # if there are several, pick first

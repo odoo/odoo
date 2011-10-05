@@ -188,6 +188,16 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="url">
+        <rng:element name="url">
+            <rng:attribute name="id" />
+            <rng:attribute name="name" />
+            <rng:attribute name="url" />
+            <rng:optional><rng:attribute name="target" /></rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
     <rng:define name="act_window">
         <rng:element name="act_window">
             <rng:attribute name="id" />
@@ -222,6 +232,7 @@
                     <rng:ref name="delete" />
                     <rng:ref name="wizard" />
                     <rng:ref name="act_window" />
+                    <rng:ref name="url" />
                     <rng:ref name="assert" />
                     <rng:ref name="report" />
                     <rng:ref name="workflow" />

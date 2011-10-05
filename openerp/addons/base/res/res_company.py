@@ -68,28 +68,95 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
-
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
+
+    def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
+        """ Read the 'address' functional fields. """
+        result = {}
+        part_obj = self.pool.get('res.partner')
+        address_obj = self.pool.get('res.partner.address')
+        for company in self.browse(cr, uid, ids, context=context):
+            result[company.id] = {}.fromkeys(field_names, False)
+            if company.partner_id:
+                address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+                if address_data['default']:
+                    address = address_obj.read(cr, uid, address_data['default'], field_names, context=context)
+                    for field in field_names:
+                        result[company.id][field] = address[field] or False
+        return result
+
+
+    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
+        """ Read the 'address' functional fields. """
+        result = {}
+        for company in self.browse(cr, uid, ids, context=context):
+            r = []
+            for bank in company.bank_ids:
+                if bank.footer:
+                    r.append(bank.name_get(context=context)[0][1])
+            result[company.id] = ' | '.join(r)
+        return result
+
+    def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
+        """ Write the 'address' functional fields. """
+        company = self.browse(cr, uid, company_id, context=context)
+        if company.partner_id:
+            part_obj = self.pool.get('res.partner')
+            address_obj = self.pool.get('res.partner.address')
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+            address = address_data['default']
+            if address:
+                address_obj.write(cr, uid, [address], {name: value or False})
+            else:
+                address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
+        return True
+
+
     _columns = {
-        'name': fields.char('Company Name', size=64, required=True),
+        'name': fields.related('partner_id', 'name', string='Company Name', size=64, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header', size=200),
-        'rml_footer1': fields.char('Report Footer 1', size=200),
-        'rml_footer2': fields.char('Report Footer 2', size=200),
-        'rml_header' : fields.text('RML Header', required=True),
-        'rml_header2' : fields.text('RML Internal Header', required=True),
-        'rml_header3' : fields.text('RML Internal Header', required=True),
-        'logo' : fields.binary('Logo'),
+        'rml_header1': fields.char('Report Header / Company Slogan', size=200),
+        'rml_footer1': fields.char('General Information Footer', size=200),
+        'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
+        'rml_header': fields.text('RML Header', required=True),
+        'rml_header2': fields.text('RML Internal Header', required=True),
+        'rml_header3': fields.text('RML Internal Header', required=True),
+        'logo': fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.', size=64),
+        'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'), 
+        'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'), 
+        'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
+        'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="State", multi='address'), 
+        'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
+        'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
+        'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
+        'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
+        'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'), 
+        'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
+        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
+        'company_registry': fields.char('Company Registry', size=64),
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The company name must be unique !')
+    ]
+    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context={}):
+        val = []
+        if phone: val.append(_('Phone: ')+phone)
+        if fax: val.append(_('Fax: ')+fax)
+        if website: val.append(_('Website: ')+website)
+        if vat: val.append(_('VAT: ')+vat)
+        if reg: val.append(_('Reg: ')+reg)
+        return {'value': {'rml_footer1':' | '.join(val)}}
+
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -127,12 +194,7 @@ class res_company(osv.osv):
                 return rule.company_dest_id.id
         return user.company_id.id
 
-    def _get_child_ids(self, cr, uid, uid2, context={}):
-        company = self.pool.get('res.users').company_get(cr, uid, uid2)
-        ids = self._get_company_children(cr, uid, company)
-        return ids
-
-    @tools.cache()
+    @tools.ormcache()
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
@@ -159,7 +221,7 @@ class res_company(osv.osv):
     # This function restart the cache on the _get_company_children method
     #
     def cache_restart(self, cr):
-        self._get_company_children.clear_cache(cr.dbname)
+        self._get_company_children.clear_cache(self)
 
     def create(self, cr, uid, vals, context=None):
         if not vals.get('name', False) or vals.get('partner_id', False):
@@ -184,44 +246,29 @@ class res_company(osv.osv):
             return False
 
     def _get_logo(self, cr, uid, ids):
-        return open(os.path.join(
-            tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
-                    'rb') .read().encode('base64')
+        return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
 
-    def _get_header3(self,cr,uid,ids):
-        return """
+    _header = """
 <header>
 <pageTemplate>
-    <frame id="first" x1="28.0" y1="28.0" width="786" height="525"/>
+    <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
+        <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
-        <lines>25 550 818 550</lines>
+        <lines>%s</lines>
     </pageGraphics>
-    </pageTemplate>
+</pageTemplate>
 </header>"""
-    def _get_header2(self,cr,uid,ids):
-        return """
-        <header>
-        <pageTemplate>
-        <frame id="first" x1="28.0" y1="28.0" width="539" height="772"/>
-        <pageGraphics>
-        <fill color="black"/>
-        <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="9.3cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
-        <stroke color="#000000"/>
-        <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
-        </pageGraphics>
-        </pageTemplate>
-</header>"""
+
+    _header2 = _header % (539, 772, "1.0cm", "28.3cm", "11.1cm", "28.3cm", "1.0cm 28.1cm 20.1cm 28.1cm")
+
+    _header3 = _header % (786, 525, 25, 555, 440, 555, "25 550 818 550")
+
     def _get_header(self,cr,uid,ids):
         try :
             header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
@@ -267,14 +314,15 @@ class res_company(osv.osv):
     _defaults = {
         'currency_id': _get_euro,
         'rml_header':_get_header,
-        'rml_header2': _get_header2,
-        'rml_header3': _get_header3,
-        #'logo':_get_logo
+        'rml_header2': _header2,
+        'rml_header3': _header3,
+        'logo':_get_logo
     }
 
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
+
 
 res_company()
 

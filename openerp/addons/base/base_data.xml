@@ -1002,20 +1002,15 @@
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="name">OpenERP S.A.</field>
-            <!-- Company ID will be set later -->
+            <field name="name">Your Company</field>
+            <!-- Address and Company ID will be set later -->
+            <field name="address" eval="[]"/>
             <field name="company_id" eval="None"/>
+            <field name="customer" eval="False"/>
         </record>
         <record id="main_address" model="res.partner.address">
             <field name="partner_id" ref="main_partner"/>
-            <field name="name">Fabien Pinckaers</field>
-            <field name="street">Chaussee de Namur 40</field>
-            <field name="zip">1367</field>
-            <field name="city">Gerompont</field>
-            <field name="phone">(+32).81.81.37.00</field>
             <field name="type">default</field>
-            <field model="res.country" name="country_id" ref="be"/>
-            <!-- Company ID will be set later -->
             <field name="company_id" eval="None"/>
         </record>
 
@@ -1036,22 +1031,16 @@
 
         <!-- Basic Company  -->
         <record id="main_company" model="res.company">
-            <field name="name">OpenERP S.A.</field>
+            <field name="name">Your Company</field>
             <field name="partner_id" ref="main_partner"/>
-            <field name="rml_header1">Free Business Solutions</field>
-            <field name="rml_footer1">Web: http://www.openerp.com - Tel: (+32).81.81.37.00 - Bank: CPH 126-2013269-07</field>
-            <field name="rml_footer2">IBAN: BE74 1262 0132 6907 - SWIFT: CPHBBE75 - VAT: BE0477.472.701</field>
+            <field name="rml_header1">Company business slogan</field>
+            <field name="rml_footer1">Web: www.companyname.com - Tel: +1-212-555-12345</field>
+            <field name="rml_footer2">IBAN: XX12 3456 7890 1234 5678 - SWIFT: SWIFTCODE - VAT: Company vat number</field>
             <field name="currency_id" ref="base.EUR"/>
         </record>
 
-        <assert id="main_company" model="res.company">
-            <test expr="currency_id.name == 'eur'.upper()"/>
-            <test expr="name">OpenERP S.A.</test>
-        </assert>
-
         <record model="res.users" id="base.user_root">
             <field name="signature">Administrator</field>
-            <field name="address_id" ref="main_address"/>
             <field name="company_id" ref="main_company"/>
             <field name="menu_id" ref="action_menu_admin"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
@@ -1085,16 +1074,17 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
-        <record id="VEB" model="res.currency">
-            <field name="name">VEB</field>
-            <field name="symbol">Bs</field>
-            <field name="rounding">2.95</field>
+        <!-- VEF was previously VEB -->
+        <record id="VEF" model="res.currency">
+            <field name="name">VEF</field>
+            <field name="symbol">Bs.F</field>
+            <field name="rounding">0.0001</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
         </record>
-        <record id="rateVEB" model="res.currency.rate">
-            <field name="rate">2768.45</field>
-            <field name="currency_id" ref="VEB"/>
+        <record id="rateVEF" model="res.currency.rate">
+            <field name="rate">5.864</field>
+            <field name="currency_id" ref="VEF"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
@@ -1598,12 +1588,20 @@
            <field name="rounding">0.01</field>
            <field name="accuracy">4</field>
            <field name="symbol">¢</field>
+           <field name="company_id" ref="main_company"/>
         </record>
         <record id="rateCRC" model="res.currency.rate">
            <field name="rate">691.3153</field>
            <field name="currency_id" ref="CRC"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
-       </record>
+        </record>
+
+        <record id="ir_mail_server_localhost0" model="ir.mail_server">
+            <field name="name">localhost</field>
+            <field name="smtp_host">localhost</field>
+            <field eval="25" name="smtp_port"/>
+            <field eval="10" name="priority"/>
+	    </record>
 
         <record id="MUR" model="res.currency">
             <field name="name">MUR</field>
