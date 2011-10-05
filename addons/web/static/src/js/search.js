@@ -895,32 +895,16 @@ openerp.web.search.ManyToOneField = openerp.web.search.CharField.extend({
         }
         return this._super(defaults);
     },
-    /**
-     * m2o default domain has a different fallback method than normal char widget:
-     *
-     * * If an ``this.id`` is set on the field and the field's input value is
-     *   the same as ``this.name``, the operator is ``this.operator || =``
-     *   and the value is ``this.id``
-     * * If
-     */
-    make_domain: function (name) {
-        var value = this.$element.val();
+    make_domain: function (name, operator, value) {
         if (this.id && this.name) {
             if (value === this.name) {
-                return [[name, this.attrs.operator || '=', this.id]];
+                return [[name, '=', this.id]];
             } else {
                 delete this.id;
                 delete this.name;
             }
         }
-        if (value === null || value === '') { return; }
-        return this._super(name, this.default_operator, value);
-    },
-    /**
-     * m2o field's normal value is the id of the m2o record
-     */
-    get_value: function () {
-        return this.id || false;
+        return this._super(name, operator, value);
     }
 });
 
