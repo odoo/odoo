@@ -575,6 +575,10 @@ openerp.point_of_sale = function(db) {
         };
         PaypadView.prototype.performPayment = function(event) {
             var cashRegister, cashRegisterCollection, cashRegisterId;
+            /* set correct view */
+            $('.step-screen').hide();
+            $('#payment-screen').show();
+            
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.shop.get('cashRegisters');
             cashRegister = cashRegisterCollection.find(__bind( function(item) {
