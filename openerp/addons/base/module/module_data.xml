@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>        
+        <record model="ir.module.category" id="module_category_hidden">
+            <field name="name">Hidden</field>
+            <field name="sequence">0</field>
+            <field name="visible" eval="0" />
+        </record>
+
         <record model="ir.module.category" id="module_category_link">
+            <field name="parent_id" ref="module_category_hidden" />
             <field name="name">Link</field>
             <field name="sequence">0</field>
+            <field name="visible" eval="0" />
         </record>
+
         <record model="ir.module.category" id="module_category_customer_relationship_management">
             <field name="name">Customer Relationship Management</field>
             <field name="description">Helps you track and manage relations with customers such as leads, requests or issues. Can automatically send reminders, escalate requests or trigger business-specific actions based on standard events.</field>
@@ -91,6 +100,7 @@
 
         <record model="ir.module.category" id="module_category_localization">
             <field name="name">Localization</field>
+            <field name="visible" eval="0" />
         </record>
 
         <record model="ir.module.category" id="module_category_localization_account_charts">
@@ -101,6 +111,10 @@
         <record model="ir.module.category" id="module_category_associations">
             <field name="name">Associations</field>
             <field name="description">Installs a preselected set of OpenERP applications which will help you manage your association more efficiently.</field>
+        </record>
+
+        <record model="ir.module.category" id="module_category_vertical_applications">
+            <field name="name">Vertical Applications</field>
         </record>
 
 <!--        <record id="ir_ui_view_sc_modules0" model="ir.ui.view_sc">-->
