@@ -12,9 +12,9 @@ case "${1}" in
         chown openerp:openerp /etc/openerp/openerp-server.conf
         chmod 0640 /etc/openerp/openerp-server.conf
         # Creating log file
-        touch /var/log/openerp.log
-        chown openerp:openerp /var/log/openerp.log
-        chmod 0640 /var/log/openerp.log
+        touch /var/log/openerp-server.log
+        chown openerp:openerp /var/log/openerp-server.log
+        chmod 0640 /var/log/openerp-server.log
         # Creating local storage directory
         mkdir -p /var/lib/openerp/filestore
         chown openerp:openerp -R /var/lib/openerp
