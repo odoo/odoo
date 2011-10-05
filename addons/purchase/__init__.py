@@ -26,6 +26,6 @@ import wizard
 import report
 import stock
 import company
-import edi_purchase_order
+#import edi_purchase_order
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

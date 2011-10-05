@@ -67,24 +67,17 @@ class sale_order(osv.osv, ir_edi.edi):
                         #PO: No
                 'notes': True,
             }
-    
         }
-        company_pool = self.pool.get('res.company')
+        res_company = self.pool.get('res.company')
         edi_doc_list = []
         for order in records:
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
-            edi_doc = super(sale_order,self).edi_export(cr, uid, [order], edi_struct, context)
-            if not edi_doc:
-                continue
-            edi_doc = edi_doc[0]
+            edi_doc = super(sale_order,self).edi_export(cr, uid, [order], edi_struct, context)[0]
             currency = order.company_id.currency_id
-            # Add company info and address
-            edi_company_document = company_pool.edi_export_address(cr, uid, [order.company_id], context=context)[order.company_id.id]
-            edi_doc.update({
-                    'company_address': edi_company_document['company_address'],
-                    'currency_id': currency and self.edi_m2o(cr, uid, currency, context=context) or False,
-                    #'company_logo': edi_company_document['company_logo'],#TODO
-            })
+            edi_address = res_company.edi_export_address(cr, uid, [order.company_id], context=context)[0]
+            edi_doc.update(company_address=edi_address,
+                           currency_id=(currency and self.edi_m2o(cr, uid, currency, context=context) or False))
+            #TODO: company_logo
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 
@@ -124,7 +117,7 @@ class sale_order(osv.osv, ir_edi.edi):
     def edi_import(self, cr, uid, edi_document, context=None):
         if context is None:
             context = {}
-        
+
         #import company as a new partner
         partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
 
