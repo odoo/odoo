@@ -91,27 +91,29 @@
             <div id="rightpane">
                 <div id="products-screen" class="step-screen selected-step"></div>
                 <div id="payment-screen" class="step-screen" style="display:none">
-                    <header>Payment</header>
-                    <section>
-                        <p>
-                            Due:
-                            <span id="payment-due-total"></span> €
-                        </p>
-                        <p>Paid:</p>
-                        <ol id="paymentlines"></ol>
-                    </section>
-                    <footer>
-                        <p>
-                            Total paid:
-                            <span id="payment-paid-total"></span> €
-                        </p>
-                        <p>
-                            <span id="payment-remaining"></span> €
-                        </p>
-                        <p>
-                            <button id="validate-order">Validate</button>
-                        </p>
-                    </footer>
+                    <header><h2>Payment</h2></header>
+                    <div class="pos-payment-container">
+                        <section>
+                            <p>
+                                Due:
+                                <span id="payment-due-total"></span> €
+                            </p>
+                            <p>Paid:</p>
+                            <ol id="paymentlines"></ol>
+                        </section>
+                        <footer>
+                            <p>
+                                Total paid:
+                                <span id="payment-paid-total"></span> €
+                            </p>
+                            <p>
+                                <span id="payment-remaining"></span> €
+                            </p>
+                            <p>
+                                <button id="validate-order">Validate</button>
+                            </p>
+                        </footer>
+                    </div>
                 </div>
                 <div id="receipt-screen" class="step-screen" style="display:none">
                     <header>Receipt</header>
