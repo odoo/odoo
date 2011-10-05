@@ -304,7 +304,8 @@ class browse_record(object):
         self._cr = cr
         self._uid = uid
         self._id = id
-        self._table = table
+        self._table = table # deprecated, use _model!
+        self._model = table
         self._table_name = self._table._name
         self.__logger = logging.getLogger(
             'osv.browse_record.' + self._table_name)
@@ -816,13 +817,16 @@ class BaseModel(object):
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_class = pool.get(parent_name).__class__
-                if not pool.get(parent_name):
+                parent_model = pool.get(parent_name)
+                if not getattr(cls, '_original_module', None) and name == parent_model._name:
+                    cls._original_module = parent_model._original_module
+                if not parent_model:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                parent_class = parent_model.__class__
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
+                    new = copy.copy(getattr(parent_model, s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
@@ -850,6 +854,8 @@ class BaseModel(object):
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        if not getattr(cls, '_original_module', None):
+            cls._original_module = cls._module
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
@@ -1045,6 +1051,7 @@ class BaseModel(object):
                                 'name': n,
                                 'model': self._name,
                                 'res_id': r['id'],
+                                'module': '__export__',
                             })
                             r = n
                     else:
@@ -4612,17 +4619,21 @@ class BaseModel(object):
                     return False
         return True
 
-    def _get_xml_ids(self, cr, uid, ids, *args, **kwargs):
-        """Find out the XML ID(s) of any database record.
+    def _get_external_ids(self, cr, uid, ids, *args, **kwargs):
+        """Retrieve the External ID(s) of any database record.
 
         **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
 
-        :return: map of ids to the list of their fully qualified XML IDs
-                 (empty list when there's none).
+        :return: map of ids to the list of their fully qualified External IDs
+                 in the form ``module.key``, or an empty list when there's no External
+                 ID for a record, e.g.::
+
+                     { 'id': ['module.ext_id', 'module.ext_id_bis'],
+                       'id2': [] }
         """
-        model_data_obj = self.pool.get('ir.model.data')
-        data_ids = model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
-        data_results = model_data_obj.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
+        ir_model_data = self.pool.get('ir.model.data')
+        data_ids = ir_model_data.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+        data_results = ir_model_data.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
         result = {}
         for id in ids:
             # can't use dict.fromkeys() as the list would be shared!
@@ -4631,28 +4642,34 @@ class BaseModel(object):
             result[record['res_id']].append('%(module)s.%(name)s' % record)
         return result
 
-    def get_xml_id(self, cr, uid, ids, *args, **kwargs):
-        """Find out the XML ID of any database record, if there
+    def get_external_id(self, cr, uid, ids, *args, **kwargs):
+        """Retrieve the External ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
-        model object easily, referencing it as ``osv.osv.get_xml_id``.
+        model object easily, referencing it as ``Model.get_external_id``.
 
-        When multiple XML IDs exist for a record, only one
+        When multiple External IDs exist for a record, only one
         of them is returned (randomly).
-
-        **Synopsis**: ``get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }``
 
         :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
-                 (to be usable as a function field).
+                 (to be usable as a function field), 
+                 e.g.::
+
+                     { 'id': 'module.ext_id',
+                       'id2': '' }
         """
         results = self._get_xml_ids(cr, uid, ids)
-        for k, v in results.items():
+        for k, v in results.iteritems():
             if results[k]:
                 results[k] = v[0]
             else:
                 results[k] = ''
         return results
+
+    # backwards compatibility
+    get_xml_id = get_external_id
+    _get_xml_ids = _get_external_ids
 
     # Transience
     def is_transient(self):
