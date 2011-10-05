@@ -382,7 +382,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         var main_view_loaded = this._super();
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
-        if (searchview_loaded && this.action['auto_search']) {
+        if (searchview_loaded && this.action['auto_search'] !== false) {
             // schedule auto_search
             manager_ready.then(this.searchview.do_search);
         }
