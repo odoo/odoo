@@ -28,7 +28,9 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
     warn: function(title, text) {
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
-            text: text
+            text: text,
+        }, {
+            expires: false,
         });
     }
 });
