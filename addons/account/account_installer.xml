@@ -43,26 +43,6 @@
             </field>
         </record>
 
-        <record id="view_account_modules_installer" model="ir.ui.view">
-            <field name="name">account.installer.modules.form</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='account_accountant']" position="replace">
-                    <newline/>
-                    <separator string="Accounting &amp; Finance Features" colspan="4"/>
-                    <field name="account_followup"/>
-                    <field name="account_payment"/>
-                    <field name="account_analytic_plans"/>
-                    <field name="account_anglo_saxon"/>
-                    <field name="account_asset"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
             <field name="name">Install your Chart of Accounts</field>
             <field name="type">ir.actions.act_window</field>

@@ -22,7 +22,7 @@
 {
     'name': 'Dashboard Creator',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'complexity': "normal",
     'description': """
 Lets the user create a custom dashboard.
