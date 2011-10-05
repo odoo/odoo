@@ -1025,16 +1025,17 @@ class Binary(openerpweb.Controller):
 
         try:
             if not id:
-                res = Model.default_get([field], context).get(field, '')
+                res = Model.default_get([field], context).get(field)
             else:
-                res = Model.read([int(id)], [field], context)[0].get(field, '')
+                res = Model.read([int(id)], [field], context)[0].get(field)
             image_data = base64.b64decode(res)
         except (TypeError, xmlrpclib.Fault):
             image_data = self.placeholder(req)
         return req.make_response(image_data, [
             ('Content-Type', 'image/png'), ('Content-Length', len(image_data))])
     def placeholder(self, req):
-        return open(os.path.join(req.addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+        addons_path = openerpweb.addons_manifest['web']['addons_path']
+        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, id, field, fieldname, **kw):
