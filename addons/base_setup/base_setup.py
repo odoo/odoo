@@ -35,15 +35,13 @@ DEFAULT_MODULES = {
     'Project Management' : ['project',],
     'Knowledge Management' : ['document',],
     'Warehouse Management' : ['stock',],
-    'Manufacturing' : ['mrp',],
+    'Manufacturing' : ['mrp', 'procurement'],
     'Accounting & Finance' : ['account,'],
     'Purchase Management' : ['purchase,'],
     'Human Resources' : ['hr',],
     'Point of Sales' : ['pos',],
     'Marketing' : ['marketing',],
 }
-
-HIDDEN_CATEGORIES = ('Tools', 'System', 'Localization', 'Link', 'Uncategorized')
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -63,7 +61,8 @@ class base_setup_installer(osv.osv_memory):
         fields = {} 
         category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', 'not in', HIDDEN_CATEGORIES )]
+                  ('name', '!=', 'Uncategorized'),
+                  ('visible', '=', True)]
         category_ids = category_proxy.search(cr, uid, domain, context=context)
         for category in category_proxy.browse(cr, uid, category_ids, context=context):
             category_name = 'category_%d' % (category.id,)
@@ -79,11 +78,10 @@ class base_setup_installer(osv.osv_memory):
         for module in module_proxy.browse(cr, uid, module_ids, context=context):
             module_name = 'module_%d' % (module.id,)
             module_is_installed = module.state == 'installed'
-            title = "%s (%s)" % (module.shortdesc, module.complexity,)
 
             fields[module_name] = {
                 'type' : 'boolean',
-                'string' : title,
+                'string' : module.shortdesc,
                 'name' : module_name,
                 'help' : module.description,
             }
@@ -105,7 +103,8 @@ class base_setup_installer(osv.osv_memory):
                 result['module_%d' % (module.id,)] = module.state == 'installed'
                 category_name = 'category_%d' % (module.category_id.id,)
                 if not result.get('category_name'):
-                    result[category_name] = module.state == 'installed'
+                    result[category_name] = module.state == 'installed' and \
+                            module.category_id.name in DEFAULT_MODULES
 
         return result
 
@@ -121,7 +120,8 @@ class base_setup_installer(osv.osv_memory):
 
         module_category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
-                  ('name', 'not in', HIDDEN_CATEGORIES)]
+                  ('name', '!=', 'Uncategorized'),
+                  ('visible', '=', True)]
         module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='sequence asc')
 
         arch = ['<form string="%s">' % _('Automatic Base Setup')]
