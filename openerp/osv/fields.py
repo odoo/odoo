@@ -41,6 +41,7 @@ import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
+import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
@@ -1216,10 +1217,10 @@ class property(function):
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
         property_create = False
-        if hasattr(default_val, '_id') and default_val:
-            if default_val._id != id_val:
+        if isinstance(default_val, openerp.osv.orm.browse_record):
+            if default_val.id != id_val:
                 property_create = True
-        elif id_val != default_val:
+        elif default_val != id_val:
             property_create = True
 
         if property_create:
