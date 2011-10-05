@@ -29,10 +29,12 @@
             <h1>Invoice <t t-esc="invoice.internal_number"/>: <t t-esc="invoice.amount_total"/><t t-esc="invoice.currency_id[1]"/></h1>
             <p>
                 <b><t t-esc="invoice.company_id[1]"/></b><br/>
-                <t t-esc="invoice.company_address.zip"/> <t t-esc="invoice.company_address.street"/><br/>
-                <t t-esc="invoice.company_address.city"/><br/>
-                <t t-esc="invoice.company_address.country_id[1]"/><br/>
-                Phone: <t t-esc="invoice.company_address.phone"/>
+                <t t-if="invoice.company_address">
+                    <t t-esc="invoice.company_address.zip"/> <t t-esc="invoice.company_address.street"/><br/>
+                    <t t-esc="invoice.company_address.city"/><br/>
+                    <t t-if="invoice.company_address.country_id" t-esc="invoice.company_address.country_id[1]"/><br/>
+                    Phone: <t t-esc="invoice.company_address.phone"/>
+                </t>
             </p>
             <p align="right">
                 <b><t t-esc="invoice.partner_id[1]"/></b><br/>
