@@ -50,7 +50,7 @@ technical OpenERP documentation at http://doc.openerp.com
     ],
     'installable': True,
     'active': False,
-    #'certificate': TODO
+    'certificate': '002046536359186',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
