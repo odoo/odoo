@@ -24,7 +24,6 @@ from lxml import etree
 from tools import graph
 from tools.safe_eval import safe_eval as eval
 import tools
-import netsvc
 import os
 import logging
 
@@ -48,8 +47,8 @@ class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _columns = {
-        'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True),
-        'user_id': fields.many2one('res.users', 'User', select=True),
+        'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True, required=True, ondelete='cascade'),
+        'user_id': fields.many2one('res.users', 'User', select=True, required=True, ondelete='cascade'),
         'arch': fields.text('View Architecture', required=True),
     }
 
@@ -74,11 +73,12 @@ class view(osv.osv):
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
+            ('kanban', 'Kanban'),
             ('search','Search')), 'View Type', required=True, select=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
-        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
+        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   method=True, help="ID of the view defined in xml file"),
     }
     _defaults = {
@@ -95,6 +95,19 @@ class view(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
+
+    def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
+        """Retrieves the architecture of views that inherit from the given view.
+
+           :param int view_id: id of the view whose inheriting views should be retrieved
+           :param str model: model identifier of the view's related model (for double-checking)
+           :rtype: list of tuples
+           :return: [(view_arch,view_id), ...]
+        """
+        cr.execute("""SELECT arch, id FROM ir_ui_view WHERE inherit_id=%s AND model=%s
+                      ORDER BY priority""",
+                      (view_id, model))
+        return cr.fetchall()
 
     def write(self, cr, uid, ids, vals, context={}):
         if not isinstance(ids, (list, tuple)):
@@ -159,10 +172,10 @@ class view(osv.osv):
                 label_string = ""
                 if label:
                     for lbl in eval(label):
-                        if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                        if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl])=='False':
                             label_string = label_string + ' '
                         else:
-                            label_string = label_string + " " + t[lbl]
+                            label_string = label_string + " " + tools.ustr(t[lbl])
                 labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
@@ -197,10 +210,13 @@ class view_sc(osv.osv):
 
     def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context=None):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
-        results = self.read(cr, uid, ids, ['res_id','name'], context=context)
-        available_menus = self.pool.get(model).search(cr, uid, [], context=context)
+        results = self.read(cr, uid, ids, ['res_id'], context=context)
+        name_map = dict(self.pool.get(model).name_get(cr, uid, [x['res_id'] for x in results], context=context))
         # Make sure to return only shortcuts pointing to exisintg menu items.
-        return filter(lambda result: result['res_id'] in available_menus, results)
+        filtered_results = filter(lambda result: result['res_id'] in name_map, results)
+        for result in filtered_results:
+            result.update(name=name_map[result['res_id']])
+        return filtered_results
 
     _order = 'sequence,name'
     _defaults = {

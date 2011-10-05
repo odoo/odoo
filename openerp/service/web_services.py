@@ -20,13 +20,17 @@
 ##############################################################################
 
 import base64
+import locale
+import logging
 import os
+import platform
 import security
+import sys
 import thread
 import threading
 import time
-import sys
-import platform
+import traceback
+from cStringIO import StringIO
 from openerp.tools.translate import _
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
@@ -34,24 +38,69 @@ import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
-import locale
-import logging
-from cStringIO import StringIO
+import openerp.exceptions
+
+#.apidoc title: Exported Service methods
+#.apidoc module-mods: member-order: bysource
+
+""" This python module defines the RPC methods available to remote clients.
+
+    Each 'Export Service' is a group of 'methods', which in turn are RPC
+    procedures to be called. Each method has its own arguments footprint.
+"""
+
+RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+
+# This should be moved to openerp.modules.db, along side initialize().
+def _initialize_db(serv, id, db_name, demo, lang, user_password):
+    cr = None
+    try:
+        serv.actions[id]['progress'] = 0
+        cr = sql_db.db_connect(db_name).cursor()
+        openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
+        tools.config['lang'] = lang
+        cr.commit()
+        cr.close()
+
+        pool = pooler.restart_pool(db_name, demo, serv.actions[id],
+                                   update_module=True)[1]
+
+        cr = sql_db.db_connect(db_name).cursor()
+
+        if lang:
+            modobj = pool.get('ir.module.module')
+            mids = modobj.search(cr, 1, [('state', '=', 'installed')])
+            modobj.update_translations(cr, 1, mids, lang)
+
+        cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+            user_password, lang, 'admin'))
+        cr.execute('SELECT login, password, name ' \
+                   '  FROM res_users ' \
+                   ' ORDER BY login')
+        serv.actions[id].update(users=cr.dictfetchall(), clean=True)
+        cr.commit()
+        cr.close()
+    except Exception, e:
+        serv.actions[id].update(clean=False, exception=e)
+        logging.getLogger('db.create').exception('CREATE DATABASE failed:')
+        serv.actions[id]['traceback'] = traceback.format_exc()
+        if cr:
+            cr.close()
 
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
         netsvc.ExportService.__init__(self, name)
-        self.joinGroup("web-services")
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
 
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
-            'change_admin_password', 'migrate_databases' ]:
+            'change_admin_password', 'migrate_databases',
+            'create_database' ]:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -64,8 +113,6 @@ class db(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
-    def new_dispatch(self,method,auth,params):
-        pass
     def _create_empty_database(self, name):
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -85,56 +132,26 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        class DBInitialize(object):
-            def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
-                cr = None
-                try:
-                    serv.actions[id]['progress'] = 0
-                    cr = sql_db.db_connect(db_name).cursor()
-                    openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
-                    tools.config['lang'] = lang
-                    cr.commit()
-                    cr.close()
-
-                    pool = pooler.restart_pool(db_name, demo, serv.actions[id],
-                            update_module=True)[1]
-
-                    cr = sql_db.db_connect(db_name).cursor()
-
-                    if lang:
-                        modobj = pool.get('ir.module.module')
-                        mids = modobj.search(cr, 1, [('state', '=', 'installed')])
-                        modobj.update_translations(cr, 1, mids, lang)
-
-                    cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
-                        user_password, lang, 'admin'))
-                    cr.execute('SELECT login, password, name ' \
-                               '  FROM res_users ' \
-                               ' ORDER BY login')
-                    serv.actions[id]['users'] = cr.dictfetchall()
-                    serv.actions[id]['clean'] = True
-                    cr.commit()
-                    cr.close()
-                except Exception, e:
-                    serv.actions[id]['clean'] = False
-                    serv.actions[id]['exception'] = e
-                    import traceback
-                    e_str = StringIO()
-                    traceback.print_exc(file=e_str)
-                    traceback_str = e_str.getvalue()
-                    e_str.close()
-                    netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
-                    serv.actions[id]['traceback'] = traceback_str
-                    if cr:
-                        cr.close()
-        logger = netsvc.Logger()
-        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
-        dbi = DBInitialize()
-        create_thread = threading.Thread(target=dbi,
+        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        create_thread = threading.Thread(target=_initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
         self.actions[id]['thread'] = create_thread
         return id
+
+    def exp_create_database(self, db_name, demo, lang, user_password='admin'):
+        """ Similar to exp_create but blocking."""
+        self.id_protect.acquire()
+        self.id += 1
+        id = self.id
+        self.id_protect.release()
+
+        self.actions[id] = {'clean': False}
+
+        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        self._create_empty_database(db_name)
+        _initialize_db(self, id, db_name, demo, lang, user_password)
+        return True
 
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
@@ -147,13 +164,13 @@ class db(netsvc.ExportService):
                 self.actions.pop(id)
                 return (1.0, users)
             else:
-                e = self.actions[id]['exception']
+                e = self.actions[id]['exception'] # TODO this seems wrong: actions[id]['traceback'] is set, but not 'exception'.
                 self.actions.pop(id)
                 raise Exception, e
 
     def exp_drop(self, db_name):
+        openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
-        openerp.netsvc.Agent.cancel(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
@@ -255,8 +272,8 @@ class db(netsvc.ExportService):
         return True
 
     def exp_rename(self, old_name, new_name):
+        openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
-        openerp.netsvc.Agent.cancel(db_name)
         logger = netsvc.Logger()
 
         db = sql_db.db_connect('template1')
@@ -286,7 +303,7 @@ class db(netsvc.ExportService):
 
     def exp_list(self, document=False):
         if not tools.config['list_db'] and not document:
-            raise Exception('AccessDenied')
+            raise openerp.exceptions.AccessDenied()
 
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -338,9 +355,9 @@ class db(netsvc.ExportService):
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True)
             except except_orm, inst:
-                self.abortResponse(1, inst.name, 'warning', inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
-                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -348,42 +365,21 @@ class db(netsvc.ExportService):
                 raise
         return True
 
-class _ObjectService(netsvc.ExportService):
-     "A common base class for those who have fn(db, uid, password,...) "
-
-     def common_dispatch(self, method, auth, params):
-        (db, uid, passwd ) = params[0:3]
-        params = params[3:]
-        security.check(db,uid,passwd)
-        cr = pooler.get_db(db).cursor()
-        fn = getattr(self, 'exp_'+method)
-        res = fn(cr, uid, *params)
-        cr.commit()
-        cr.close()
-        return res
-
-class common(_ObjectService):
+class common(netsvc.ExportService):
     def __init__(self,name="common"):
-        _ObjectService.__init__(self,name)
-        self.joinGroup("web-services")
+        netsvc.ExportService.__init__(self,name)
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         logger = netsvc.Logger()
         if method == 'login':
-            # At this old dispatcher, we do NOT update the auth proxy
             res = security.login(params[0], params[1], params[2])
             msg = res and 'successful login' or 'bad login or password'
             # TODO log the client ip address..
             logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
             return res or False
-        elif method == 'logout':
-            if auth:
-                auth.logout(params[1])
-            logger.notifyChannel("web-service", netsvc.LOG_INFO,'Logout %s from database %s'%(login,db))
-            return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
                         'login_message','get_stats', 'check_connectivity',
-                        'list_http_services']:
+                        'list_http_services', 'version']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
@@ -395,9 +391,8 @@ class common(_ObjectService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
-
-    def new_dispatch(self,method,auth,params):
-        pass
+    def exp_version(self):
+        return RPC_VERSION_1
 
     def exp_about(self, extended=False):
         """Return information about the OpenERP Server.
@@ -432,7 +427,7 @@ GNU Public Licence.
             return rc.get_available_updates(rc.id, openerp.modules.get_modules_with_version())
 
         except tm.RemoteContractException, e:
-            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
 
 
     def exp_get_migration_scripts(self, contract_id, contract_password):
@@ -500,7 +495,7 @@ GNU Public Licence.
 
             return True
         except tm.RemoteContractException, e:
-            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
             import traceback
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -564,9 +559,8 @@ GNU Public Licence.
 class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
         netsvc.ExportService.__init__(self,name)
-        self.joinGroup('web-services')
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method == 'obj_list':
@@ -574,14 +568,10 @@ class objects_proxy(netsvc.ExportService):
         if method not in ['execute','exec_workflow']:
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
-        ls = netsvc.LocalService('object_proxy')
-        fn = getattr(ls, method)
+        assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
+        fn = getattr(openerp.osv.osv.service, method)
         res = fn(db, uid, *params)
         return res
-
-
-    def new_dispatch(self,method,auth,params):
-        pass
 
 
 #
@@ -598,13 +588,12 @@ class objects_proxy(netsvc.ExportService):
 class wizard(netsvc.ExportService):
     def __init__(self, name='wizard'):
         netsvc.ExportService.__init__(self,name)
-        self.joinGroup('web-services')
         self.id = 0
         self.wiz_datas = {}
         self.wiz_name = {}
         self.wiz_uid = {}
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
         if method not in ['execute','create']:
@@ -613,9 +602,6 @@ class wizard(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         res = fn(db, uid, *params)
         return res
-
-    def new_dispatch(self,method,auth,params):
-        pass
 
     def _execute(self, db, uid, wiz_id, datas, action, context):
         self.wiz_datas[wiz_id].update(datas)
@@ -640,9 +626,9 @@ class wizard(netsvc.ExportService):
             if self.wiz_uid[wiz_id] == uid:
                 return self._execute(db, uid, wiz_id, datas, action, context)
             else:
-                raise Exception, 'AccessDenied'
+                raise openerp.exceptions.AccessDenied()
         else:
-            raise Exception, 'WizardNotFound'
+            raise openerp.exceptions.Warning('Wizard not found.')
 
 #
 # TODO: set a maximum report number per user to avoid DOS attacks
@@ -651,33 +637,64 @@ class wizard(netsvc.ExportService):
 #     False -> True
 #
 
-class ExceptionWithTraceback(Exception):
-    def __init__(self, msg, tb):
-        self.message = msg
-        self.traceback = tb
-        self.args = (msg, tb)
-
 class report_spool(netsvc.ExportService):
     def __init__(self, name='report'):
         netsvc.ExportService.__init__(self, name)
-        self.joinGroup('web-services')
         self._reports = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-    def dispatch(self, method, auth, params):
+    def dispatch(self, method, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
-        if method not in ['report','report_get']:
+        if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
         security.check(db,uid,passwd)
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
         return res
 
+    def exp_render_report(self, db, uid, object, ids, datas=None, context=None):
+        if not datas:
+            datas={}
+        if not context:
+            context={}
 
-    def new_dispatch(self,method,auth,params):
-        pass
+        self.id_protect.acquire()
+        self.id += 1
+        id = self.id
+        self.id_protect.release()
+
+        self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
+
+        cr = pooler.get_db(db).cursor()
+        import traceback
+        import sys
+        try:
+            obj = netsvc.LocalService('report.'+object)
+            (result, format) = obj.create(cr, uid, ids, datas, context)
+            if not result:
+                tb = sys.exc_info()
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
+            self._reports[id]['result'] = result
+            self._reports[id]['format'] = format
+            self._reports[id]['state'] = True
+        except Exception, exception:
+
+            tb = sys.exc_info()
+            tb_s = "".join(traceback.format_exception(*tb))
+            logger = netsvc.Logger()
+            logger.notifyChannel('web-services', netsvc.LOG_ERROR,
+                    'Exception: %s\n%s' % (str(exception), tb_s))
+            if hasattr(exception, 'name') and hasattr(exception, 'value'):
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
+            else:
+                self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
+            self._reports[id]['state'] = True
+        cr.commit()
+        cr.close()
+
+        return self._check_report(id)
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if not datas:
@@ -701,7 +718,7 @@ class report_spool(netsvc.ExportService):
                 (result, format) = obj.create(cr, uid, ids, datas, context)
                 if not result:
                     tb = sys.exc_info()
-                    self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException('RML is not available at specified location or not enough data to print!', tb)
                 self._reports[id]['result'] = result
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
@@ -713,9 +730,9 @@ class report_spool(netsvc.ExportService):
                 logger.notifyChannel('web-services', netsvc.LOG_ERROR,
                         'Exception: %s\n%s' % (str(exception), tb_s))
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:
-                    self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+                    self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.exception_to_unicode(exception), tb)
                 self._reports[id]['state'] = True
             cr.commit()
             cr.close()
@@ -728,7 +745,7 @@ class report_spool(netsvc.ExportService):
         result = self._reports[report_id]
         exc = result['exception']
         if exc:
-            self.abortResponse(exc, exc.message, 'warning', exc.traceback)
+            netsvc.abort_response(exc, exc.message, 'warning', exc.traceback)
         res = {'state': result['state']}
         if res['state']:
             if tools.config['reportgz']:

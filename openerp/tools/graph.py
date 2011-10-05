@@ -25,11 +25,11 @@ import math
 
 class graph(object):
     def __init__(self, nodes, transitions, no_ancester=None):
-        """Initailize graph's object
+        """Initialize graph's object
 
-        @param nodes: list of ids of nodes in the graph
-        @param transitions: list of edges in the graph in the form (source_node, destination_node)
-        @param no_ancester: list of nodes with no incoming edges
+        @param nodes list of ids of nodes in the graph
+        @param transitions list of edges in the graph in the form (source_node, destination_node)
+        @param no_ancester list of nodes with no incoming edges
         """
 
         self.nodes = nodes or []
@@ -210,8 +210,8 @@ class graph(object):
 
     def exchange(self, e, f):
         """Exchange edges to make feasible-tree optimized
-        @param edge: edge with negative cut-value
-        @param edge: new edge with minimum slack-value
+        @param edge edge with negative cut-value
+        @param edge new edge with minimum slack-value
         """
         self.tree_edges.__delitem__(self.tree_edges.index(e))
         self.tree_edges.append(f)
@@ -221,7 +221,7 @@ class graph(object):
     def enter_edge(self, edge):
         """Finds a new_edge with minimum slack value to replace an edge with negative cut-value
 
-        @param edge: edge with negative cut-value
+        @param edge edge with negative cut-value
         """
 
         self.head_nodes = []
@@ -345,8 +345,8 @@ class graph(object):
     def median_value(self, node, adj_rank):
         """Returns median value of a vertex , defined as the median position of the adjacent vertices
 
-        @param node: node to process
-        @param adj_rank: rank 1 less than the node's rank
+        @param node node to process
+        @param adj_rank rank 1 less than the node's rank
         """
         adj_nodes = self.adj_position(node, adj_rank)
         l = len(adj_nodes)
@@ -367,8 +367,8 @@ class graph(object):
     def adj_position(self, node, adj_rank):
         """Returns list of the present positions of the nodes adjacent to node in the given adjacent rank.
 
-        @param node: node to process
-        @param adj_rank: rank 1 less than the node's rank
+        @param node node to process
+        @param adj_rank rank 1 less than the node's rank
         """
 
         pre_level_nodes = self.levels.get(adj_rank, [])
@@ -606,7 +606,7 @@ class graph(object):
     def rank(self):
         """Finds the optimized rank of the nodes using Network-simplex algorithm
 
-        @param start: starting node of the component
+        @param start starting node of the component
         """
         self.levels = {}
         self.critical_edges = []
@@ -668,7 +668,7 @@ class graph(object):
     def process(self, starting_node):
         """Process the graph to find ranks and order of the nodes
 
-        @param starting_node: node from where to start the graph search
+        @param starting_node node from where to start the graph search
         """
 
         self.start_nodes = starting_node or []

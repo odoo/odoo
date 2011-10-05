@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_test_exceptions_model" model="ir.ui.view">
+            <field name="name">Test exceptions</field>
+            <field name="model">test.exceptions.model</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Test exceptions">
+                      <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client."/>
+                      <group colspan="8" col="8">
+                          <separator string="" colspan="8"/>
+                          <button name="generate_except_osv" string="except_osv" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_except_orm" string="except_orm" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_warning" string="Warning" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_denied" string="AccessDenied" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_error" string="AccessError" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access rights error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_exc_access_denied" string="Exc AccessDenied" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_undefined" string="Undefined" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Server error-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <separator string="" colspan="8"/>
+                          <label colspan="6" width="220"/>
+                          <button special="cancel" string="Cancel" icon="gtk-cancel" colspan="1"/>
+                      </group>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_test_exceptions" model="ir.actions.act_window">
+            <field name="name">Test exceptions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">test.exceptions.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests"/>
+
+        <menuitem id="menu_test_exceptions" parent="base.menu_tests" name="Test exceptions"/>
+
+        <menuitem id="menu_test_exceptions_leaf"
+            name="Test exceptions"
+            action="action_test_exceptions"
+            parent="menu_test_exceptions"/>
+    </data>
+</openerp>

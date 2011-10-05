@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_partner_mass_mail" model="ir.ui.view">
+            <field name="name">Mass Mailing</field>
+            <field name="model">partner.massmail.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+              <form string="Mass Mailing" col="4">
+                <field name="email_from"/>
+                <newline/>
+                <field name="subject"/>
+                <newline/>
+                <field name="text" widget="text_tag"/>
+                <newline/>
+                <separator string="" colspan="6"/>
+                <group colspan="6" col="4" >
+                <button special="cancel" string="Cancel" icon="gtk-cancel" />
+                <button name="mass_mail_send" string="Send Email" type="object" icon="terp-mail-message-new"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+       <act_window name="Mass Mailing"
+            res_model="partner.massmail.wizard"
+            src_model="res.partner"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="action_partner_mass_mail"/>
+    </data>
+</openerp>

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-04-05 22:33+0000\n"
-"Last-Translator: Rolv Råen <Unknown>\n"
+"PO-Revision-Date: 2011-09-30 21:06+0000\n"
+"Last-Translator: Antony Lesuisse (OpenERP) <al@openerp.com>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-06 06:01+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-10-01 05:04+0000\n"
+"X-Generator: Launchpad (build 14071)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -118,6 +118,8 @@ msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
 msgstr ""
+"Du har ikke tilgang til å endre dette dokumentet (%s) ! Du må være medlem av "
+"en av følgende sikkerhetsgrupper: %s"
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -214,7 +216,7 @@ msgstr ""
 #: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
-msgstr ""
+msgstr "\"smtp_server\" må være angitt for å sende e-post til brukere"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:60
@@ -260,7 +262,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The name of the language must be unique !"
-msgstr ""
+msgstr "Navnet på språket må være unikt !"
 
 #. module: base
 #: selection:res.request,state:0
@@ -378,7 +380,7 @@ msgstr "Fransk Guyana"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Greek / Ελληνικά"
-msgstr ""
+msgstr "Gresk / Ελληνικά"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -477,7 +479,7 @@ msgstr "Veivisere"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_miscellaneoussuppliers0
 msgid "Miscellaneous Suppliers"
-msgstr ""
+msgstr "Diverse leverandører"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:255
@@ -524,7 +526,7 @@ msgstr "Jordan"
 #. module: base
 #: view:ir.module.module:0
 msgid "Certified"
-msgstr ""
+msgstr "Sertifisert"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -635,6 +637,7 @@ msgstr "Papua Ny-Guinea"
 #: help:ir.actions.report.xml,report_type:0
 msgid "Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 msgstr ""
+"Rapportformat, f.eks. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -654,7 +657,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "XML Report"
-msgstr ""
+msgstr "XML rapport"
 
 #. module: base
 #: model:res.country,name:base.es
@@ -730,7 +733,7 @@ msgstr "Andre OSI godkjente lisenser"
 msgid ""
 "Sets the language for the user's user interface, when UI translations are "
 "available"
-msgstr ""
+msgstr "Angir språk i brukergrensesnitt, når UI oversettelse er tilgjengelig"
 
 #. module: base
 #: code:addons/orm.py:1043
@@ -774,7 +777,7 @@ msgstr "Underordnede kategorier"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "ir.config_parameter"
-msgstr ""
+msgstr "ir.config_parameter"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -809,6 +812,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"Språkkode \"%s\" er ikke definert for dette systemet\"\n"
+"Legg til ytterlig språkstøtte i Administrasjonsmenyen."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -818,13 +823,13 @@ msgstr "Guam (USA)"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_project
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Personaladministrasjon Konsoll"
 
 #. module: base
 #: code:addons/base/res/res_user.py:507
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
-msgstr ""
+msgstr "Tomme passord er ikke tillat!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -863,7 +868,7 @@ msgstr ""
 #. module: base
 #: field:ir.module.module,contributors:0
 msgid "Contributors"
-msgstr ""
+msgstr "Bidragsytere"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -899,7 +904,7 @@ msgstr "Niger"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Chinese (HK)"
-msgstr ""
+msgstr "Kinesisk (CH)"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -985,6 +990,9 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"Handlingen kan ikke fullføres, sannsynligvis p.g.a følgende:\n"
+"- Sletting: Du forsøker å slette en post som det fremdeles refereres til\n"
+"- Ny/ Endre: Et obligatorisk felt er ikke korrekt angitt"
 
 #. module: base
 #: view:ir.rule:0
@@ -996,7 +1004,7 @@ msgstr ""
 #: code:addons/base/res/res_user.py:206
 #, python-format
 msgid "Operation Canceled"
-msgstr ""
+msgstr "Operasjon avbrutt"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -1011,7 +1019,7 @@ msgstr "Forespørsels dato"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_dasboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Konsoll"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_purchase_root
@@ -1050,7 +1058,7 @@ msgstr "ir.exports"
 #: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
-msgstr ""
+msgstr "Språkkode \"%s\" finnes ikke"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:163
@@ -1182,7 +1190,7 @@ msgstr "Navn på stat"
 #. module: base
 #: selection:ir.property,type:0
 msgid "Float"
-msgstr ""
+msgstr "Flyttall"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1382,7 +1390,7 @@ msgstr "Malawi"
 #: code:addons/base/res/res_user.py:413
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopi)"
 
 #. module: base
 #: field:res.partner.address,type:0
@@ -1413,7 +1421,7 @@ msgstr ""
 #. module: base
 #: view:ir.ui.view:0
 msgid "Advanced"
-msgstr ""
+msgstr "Avansert"
 
 #. module: base
 #: model:res.country,name:base.fi
@@ -1477,7 +1485,7 @@ msgstr "Spansk / Español"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Korean (KP) / 한국어 (KP)"
-msgstr ""
+msgstr "Koreansk (KP) / 한국어 (KP)"
 
 #. module: base
 #: view:base.module.update:0
@@ -1494,7 +1502,7 @@ msgstr "Logo"
 #. module: base
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Søk kontakt"
 
 #. module: base
 #: view:ir.module.module:0
@@ -1553,6 +1561,8 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 msgstr ""
+"Eksempel: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1621,7 +1631,7 @@ msgstr ""
 #: code:addons/orm.py:3147
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
-msgstr ""
+msgstr "Et dokument har blitt endret siden du sist så på det (%s:%d)"
 
 #. module: base
 #: view:workflow:0
@@ -1917,7 +1927,7 @@ msgstr "Iterasjonshandlinger"
 #. module: base
 #: help:multi_company.default,company_id:0
 msgid "Company where the user is connected"
-msgstr ""
+msgstr "Firma som brukeren tilhører"
 
 #. module: base
 #: field:publisher_warranty.contract,date_stop:0
@@ -1936,6 +1946,8 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
+"En av postene som du forsøker å endre på har allerede blitt slettet "
+"(Dokument type: %s)."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -1948,7 +1960,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
 msgid "Openstuff.net"
-msgstr ""
+msgstr "Openstuff.net"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -2010,7 +2022,7 @@ msgstr "res.partner.event"
 #. module: base
 #: model:res.widget,title:base.facebook_widget
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -2066,7 +2078,7 @@ msgstr "Bankkontotype"
 #: field:res.config.users,config_logo:0
 #: field:res.config.view,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Bilde"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2473,7 +2485,7 @@ msgstr "Russland"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Urdu / اردو"
-msgstr ""
+msgstr "Urdu / اردو"
 
 #. module: base
 #: field:res.company,name:0
@@ -2510,7 +2522,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.action_view_partner_wizard_ean_check
 #: view:partner.wizard.ean.check:0
 msgid "Ean check"
-msgstr ""
+msgstr "Ean sjekk"
 
 #. module: base
 #: field:res.partner,vat:0
@@ -2550,7 +2562,7 @@ msgstr "GPL-2 eller senere versjon"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
 msgid "M."
-msgstr ""
+msgstr "M."
 
 #. module: base
 #: code:addons/base/module/module.py:429
@@ -2579,7 +2591,7 @@ msgstr "Nauru"
 #: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
-msgstr ""
+msgstr "SertifikatsID'en på modulen må være unik!"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -2762,7 +2774,7 @@ msgstr "Basisfelt"
 #. module: base
 #: view:publisher_warranty.contract:0
 msgid "Validate"
-msgstr ""
+msgstr "Godkjenn"
 
 #. module: base
 #: field:ir.actions.todo,restart:0
@@ -2823,7 +2835,7 @@ msgstr "Sammendrag"
 #. module: base
 #: field:multi_company.default,expression:0
 msgid "Expression"
-msgstr ""
+msgstr "Uttrykk"
 
 #. module: base
 #: help:ir.actions.server,subject:0
@@ -2859,12 +2871,12 @@ msgstr "Modul .ZIP fil"
 #. module: base
 #: field:ir.ui.view,xml_id:0
 msgid "XML ID"
-msgstr ""
+msgstr "XML ID"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
-msgstr ""
+msgstr "Telecom sektor"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
@@ -2890,7 +2902,7 @@ msgstr "Surinam"
 #. module: base
 #: model:ir.ui.menu,name:base.marketing_menu
 msgid "Marketing"
-msgstr ""
+msgstr "Markedsføring"
 
 #. module: base
 #: view:res.partner.bank:0
@@ -2921,7 +2933,7 @@ msgstr "License"
 #. module: base
 #: field:ir.attachment,url:0
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: base
 #: selection:ir.actions.todo,restart:0
@@ -2951,7 +2963,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:ir.config_parameter:0
 msgid "Key must be unique."
-msgstr ""
+msgstr "Nøkkel må være unik"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -3000,6 +3012,9 @@ msgid ""
 "\n"
 "Click 'Continue' and enjoy your OpenERP experience..."
 msgstr ""
+"Databasen din er nå ferdig konfigurert.\n"
+"\n"
+"Trykk på 'Fortsett' og gled deg til å ta OpenERP i bruk..."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3142,7 +3157,7 @@ msgstr ""
 #. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
-msgstr ""
+msgstr "Systemkonfigurasjon fullført"
 
 #. module: base
 #: code:addons/orm.py:929
@@ -3242,7 +3257,7 @@ msgstr "Sikkerhet"
 #. module: base
 #: model:res.widget,title:base.openerp_favorites_twitter_widget
 msgid "OpenERP Favorites"
-msgstr ""
+msgstr "OpenERP favoritter"
 
 #. module: base
 #: model:res.country,name:base.za
@@ -3259,7 +3274,7 @@ msgstr "Installert"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Ukrainian / українська"
-msgstr ""
+msgstr "Ukrainsk / українська"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
@@ -3438,7 +3453,7 @@ msgstr "Mexico"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config_plugins
 msgid "Plugins"
-msgstr ""
+msgstr "Tillegg"
 
 #. module: base
 #: field:res.company,child_ids:0
@@ -3480,7 +3495,7 @@ msgstr "Metadata"
 #. module: base
 #: sql_constraint:ir.ui.view_sc:0
 msgid "Shortcut for this menu already exists!"
-msgstr ""
+msgstr "Det eksisterer allerede en svarvei til denne menyen!"
 
 #. module: base
 #: model:res.country,name:base.ve
@@ -3613,12 +3628,12 @@ msgstr "Demodata"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (UK)"
-msgstr ""
+msgstr "Britisk Engelsk"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Japanese / 日本語"
-msgstr ""
+msgstr "Japansk / 日本語"
 
 #. module: base
 #: help:workflow.transition,act_from:0
@@ -3657,7 +3672,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_publisher_warranty_contract
 msgid "publisher_warranty.contract"
-msgstr ""
+msgstr "publisher_warranty.contract"
 
 #. module: base
 #: model:res.country,name:base.et
@@ -4181,7 +4196,7 @@ msgstr "United Kingdom"
 #: view:res.config.users:0
 #: view:res.config.view:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: base
 #: help:res.partner.category,active:0
@@ -4365,7 +4380,7 @@ msgstr "Stat (USA)"
 #. module: base
 #: field:ir.actions.server,copy_object:0
 msgid "Copy Of"
-msgstr ""
+msgstr "Kopi av"
 
 #. module: base
 #: field:ir.model,osv_memory:0
@@ -4474,7 +4489,7 @@ msgstr ""
 #: code:addons/base/module/module.py:198
 #, python-format
 msgid "The name of the module must be unique !"
-msgstr ""
+msgstr "Modulnavnet må være unikt!"
 
 #. module: base
 #: model:res.country,name:base.mz
@@ -4484,7 +4499,7 @@ msgstr "Mosambik"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_long_term
 msgid "Long Term Planning"
-msgstr ""
+msgstr "Langtidsplanlegging"
 
 #. module: base
 #: field:ir.actions.server,message:0
@@ -4644,7 +4659,7 @@ msgstr "Spanish (MX) / Español (MX)"
 #. module: base
 #: view:res.log:0
 msgid "My Logs"
-msgstr ""
+msgstr "Mine logger"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -4654,7 +4669,7 @@ msgstr "Bhutan"
 #. module: base
 #: help:ir.sequence,number_next:0
 msgid "Next number of this sequence"
-msgstr ""
+msgstr "Neste nummer på denne sekvensen"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_11
@@ -4791,7 +4806,7 @@ msgstr "Myanmar"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Chinese (CN) / 简体中文"
-msgstr ""
+msgstr "Kinesisk (CN) / 简体中文"
 
 #. module: base
 #: field:res.bank,street:0
@@ -5291,12 +5306,12 @@ msgstr ""
 #: code:addons/orm.py:158
 #, python-format
 msgid "Object %s does not exists"
-msgstr ""
+msgstr "Object %s finnes ikke"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Slovenian / slovenščina"
-msgstr ""
+msgstr "Slovensk / slovenščina"
 
 #. module: base
 #: field:ir.actions.report.xml,attachment_use:0
@@ -5515,7 +5530,7 @@ msgstr "Oversettelser"
 
 #. module: base
 #: field:ir.sequence,padding:0
-msgid "Number padding"
+msgid "Number Padding"
 msgstr "Bunnfyll"
 
 #. module: base
@@ -5552,7 +5567,7 @@ msgstr "Veiledning"
 #. module: base
 #: view:ir.ui.view:0
 msgid "Architecture"
-msgstr ""
+msgstr "Arkitektur"
 
 #. module: base
 #: model:res.country,name:base.ml
@@ -5572,7 +5587,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Flemish (BE) / Vlaams (BE)"
-msgstr ""
+msgstr "Flamsk (BE) / Vlaams (BE)"
 
 #. module: base
 #: field:ir.cron,interval_number:0
@@ -5637,7 +5652,7 @@ msgstr "Tilpassede snarveier"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Vietnamese / Tiếng Việt"
-msgstr ""
+msgstr "Vietnamesisk / Tiếng Việt"
 
 #. module: base
 #: model:res.country,name:base.dz
@@ -5652,7 +5667,7 @@ msgstr "Belgia"
 #. module: base
 #: model:ir.model,name:base.model_osv_memory_autovacuum
 msgid "osv_memory.autovacuum"
-msgstr ""
+msgstr "osv_memory.autovacuum"
 
 #. module: base
 #: field:base.language.export,lang:0
@@ -5690,19 +5705,19 @@ msgstr "%H - Time (24-times klokke)  [00,23]."
 #. module: base
 #: model:ir.model,name:base.model_res_widget
 msgid "res.widget"
-msgstr ""
+msgstr "res.widget"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:258
 #, python-format
 msgid "Model %s does not exist!"
-msgstr ""
+msgstr "Model %s finnes ikke!"
 
 #. module: base
 #: code:addons/base/res/res_lang.py:159
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
-msgstr ""
+msgstr "Du kan ikke slette et språk som benyttes av en bruker !"
 
 #. module: base
 #: code:addons/fields.py:103
@@ -6155,7 +6170,7 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Chinese (TW) / 正體字"
-msgstr ""
+msgstr "Kinesisk (TW) / 正體字"
 
 #. module: base
 #: model:ir.model,name:base.model_res_request
@@ -6170,7 +6185,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Todo"
-msgstr ""
+msgstr "Gjøremål"
 
 #. module: base
 #: field:ir.attachment,datas:0
@@ -6207,7 +6222,7 @@ msgstr "Gibraltar"
 #. module: base
 #: field:ir.actions.report.xml,report_name:0
 msgid "Service Name"
-msgstr ""
+msgstr "Tjenestenavn"
 
 #. module: base
 #: model:res.country,name:base.pn
@@ -6269,7 +6284,7 @@ msgstr ""
 #. module: base
 #: sql_constraint:res.lang:0
 msgid "The code of the language must be unique !"
-msgstr ""
+msgstr "Språkkoden må være unik !"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
@@ -6336,7 +6351,7 @@ msgstr "Italia"
 #: view:ir.actions.todo:0
 #: selection:ir.actions.todo,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Gjøremål"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6363,7 +6378,7 @@ msgstr "Python handlinger"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "English (US)"
-msgstr ""
+msgstr "Engelsk (US)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_data
@@ -6437,7 +6452,7 @@ msgstr "Aktivitet"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Postadresse"
 
 #. module: base
 #: field:res.company,parent_id:0
@@ -9357,41 +9372,5 @@ msgstr "Sri Lanka"
 msgid "Russian / русский язык"
 msgstr ""
 
-#~ msgid "Ukrainian / ??????????"
-#~ msgstr "Ukrainsk / ?????´????? ??´??"
-
-#~ msgid "Lithuanian / Lietuviu kalba"
-#~ msgstr "Litauen / Lietuviu kalba"
-
-#~ msgid "Chinese (CN) / ????"
-#~ msgstr "Kinesisk (CN) / ????"
-
-#~ msgid "Slovenian / slovenšcina"
-#~ msgstr "Slovenia / slovenšcina"
-
-#~ msgid "Chinese (TW) / ???"
-#~ msgstr "Kinesisk (TW) / ???"
-
-#~ msgid "Romanian / româna"
-#~ msgstr "Romansk / limba româna"
-
-#~ msgid "Persian / ????"
-#~ msgstr "Persisk / ????"
-
-#~ msgid "Bulgarian / ????????? ????"
-#~ msgstr "Bulgarsk / ?????????"
-
-#~ msgid "Arabic / ???????????"
-#~ msgstr "Arabisk / ???????????"
-
-#~ msgid "Czech / Ceština"
-#~ msgstr "Tsjekkisk / Ceština"
-
-#~ msgid "Polish / Jezyk polski"
-#~ msgstr "Polsk / Jezyk polski"
-
-#~ msgid "Russian / ??????? ????"
-#~ msgstr "Russisk / ??????? ????"
-
-#~ msgid "Vietnam / C?ng hòa xã h?i ch? nghia Vi?t Nam"
-#~ msgstr "Vietnam / C?ng hòa xã h?i ch? nghia Vi?t Nam"
+#~ msgid "Number padding"
+#~ msgstr "Bunnfyll"

@@ -1,10 +1,12 @@
 # -*- encoding: utf-8 -*-
+import threading
 import types
 import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
 import openerp.pooler as pooler
+import openerp.sql_db as sql_db
 import misc
 from config import config
 import yaml_tag
@@ -177,7 +179,7 @@ class YamlInterpreter(object):
             try:
                 _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
-            except ValueError, e:
+            except ValueError:
                 raise ValueError("""%s not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
     tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
@@ -305,7 +307,7 @@ class YamlInterpreter(object):
         import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
-        if isinstance(model, osv.osv.osv_memory):
+        if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
@@ -331,6 +333,7 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields):
         record_dict = {}
+        fields = fields or {}
         for field_name, expression in fields.items():
             field_value = self._eval_field(model, field_name, expression)
             record_dict[field_name] = field_value
@@ -488,7 +491,6 @@ class YamlInterpreter(object):
         if self.isnoupdate(function) and self.mode != 'init':
             return
         model = self.get_model(function.model)
-        context = self.get_context(function, self.eval_context)
         if function.eval:
             args = self.process_eval(function.eval)
         else:
@@ -643,7 +645,6 @@ class YamlInterpreter(object):
                 ids = [self.get_id(node.id)]
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-                self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
 
@@ -801,5 +802,20 @@ def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
 
 # keeps convention of convert.py
 convert_yaml_import = yaml_import
+
+def threaded_yaml_import(db_name, module_name, file_name, delay=0):
+    def f():
+        time.sleep(delay)
+        cr = None
+        fp = None
+        try:
+            cr = sql_db.db_connect(db_name).cursor()
+            fp = misc.file_open(file_name)
+            convert_yaml_import(cr, module_name, fp, {}, 'update', True)
+        finally:
+            if cr: cr.close()
+            if fp: fp.close()
+    threading.Thread(target=f).start()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

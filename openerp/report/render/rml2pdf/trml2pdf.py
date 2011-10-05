@@ -447,14 +447,14 @@ class _rml_canvas(object):
                 self._logger.debug("Image %s used", node.get('name'))
                 s = StringIO(image_data)
             else:
+                newtext = node.text
                 if self.localcontext:
-                    res = utils._regex.findall(node.text)
+                    res = utils._regex.findall(newtext)
                     for key in res:
-                        newtext = eval(key, {}, self.localcontext)
-                        node.text = newtext or ''
+                        newtext = eval(key, {}, self.localcontext) or ''
                 image_data = None
-                if node.text:
-                    image_data = base64.decodestring(node.text)
+                if newtext:
+                    image_data = base64.decodestring(newtext)
                 if image_data:
                     s = StringIO(image_data)
                 else:
@@ -631,9 +631,11 @@ class _rml_flowable(object):
             paraStyle = None
             if tr.get('style'):
                 st = copy.deepcopy(self.styles.table_styles[tr.get('style')])
-                for s in st._cmds:
-                    s[1][1] = posy
-                    s[2][1] = posy
+                for si in range(len(st._cmds)):
+                    s = list(st._cmds[si])
+                    s[1] = (s[1][0],posy)
+                    s[2] = (s[2][0],posy)
+                    st._cmds[si] = tuple(s)
                 styles.append(st)
             if tr.get('paraStyle'):
                 paraStyle = self.styles.styles[tr.get('paraStyle')]
