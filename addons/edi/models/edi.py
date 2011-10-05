@@ -206,6 +206,11 @@ class EDIMixin(object):
        ``edi_import()`` and ``edi_export()`` methods to implement their
        specific behavior, based on the primitives provided by this mixin."""
 
+    def _edi_requires_attributes(self, attributes, edi_document):
+        for attribute in attributes:
+            assert edi_document.get(attribute),\
+                 'Attribute `%s` is required in %s EDI documents' % (attribute, self._name)
+
     # private method, not RPC-exposed as it creates ir.model.data entries as
     # SUPERUSER based on its parameters
     def _edi_external_id(self, cr, uid, record, existing_id=None, existing_module=None,
@@ -241,7 +246,7 @@ class EDIMixin(object):
         """
         ir_model_data = self.pool.get('ir.model.data')
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
-        ext_id = self.get_external_id(cr, uid, [record.id])[record.id]
+        ext_id = record.get_external_id()[record.id]
         if not ext_id:
             ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
             # ID is unique cross-db thanks to db_uuid (already included in existing_module)
@@ -454,9 +459,13 @@ class EDIMixin(object):
         module = ext_id_members['module']
         ext_id = ext_id_members['id']
         ext_module = '%s:%s' % (module, ext_id_members['db_uuid'])
+        modules = [ext_module]
+        if ext_id_members['db_uuid'] == db_uuid:
+            # local records may also be registered without the db_uuid
+            modules.append(module)
         data_ids = ir_model_data.search(cr, uid, [('model','=',model),
                                                   ('name','=',ext_id),
-                                                  ('module','in',[ext_module,module])])
+                                                  ('module','in',modules)])
         if data_ids:
             model = self.pool.get(model)
             data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
@@ -476,7 +485,7 @@ class EDIMixin(object):
              value in the target model, assign it the given external_id, and return
              the new database ID
         """
-        _logger.debug("%s: Importing EDI relationship [%r,%r]", self._name, external_id, value)
+        _logger.debug("%s: Importing EDI relationship [%r,%r]", model, external_id, value)
         target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
         need_new_ext_id = False
         if not target:
@@ -488,7 +497,8 @@ class EDIMixin(object):
             _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it!",
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
-            res_id, name = self.name_create(cr, uid, value, context=context)
+            model = self.pool.get(model)
+            res_id, name = model.name_create(cr, uid, value, context=context)
             target = model.browse(cr, uid, res_id, context=context)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)
@@ -537,7 +547,7 @@ class EDIMixin(object):
         existing_id = self._edi_get_object_by_external_id(cr, uid, ext_id_members['full'], self._name, context=context)
         if existing_id:
             _logger.info("'%s' EDI Document with ID '%s' is already known, skipping import!", self._name, ext_id_members['full'])
-            return
+            return existing_id.id
 
         record_values = {}
         o2m_todo = {} # o2m values are processed after their parent already exists
