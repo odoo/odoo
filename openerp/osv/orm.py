@@ -504,7 +504,8 @@ class browse_record(object):
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
 
-    * If no size (or an empty size is provided) return an 'infinite' VARCHAR
+    * If no size (or an empty or negative size is provided) return an
+      'infinite' VARCHAR
     * Otherwise return a VARCHAR(n)
 
     :type int size: varchar size, optional
@@ -514,10 +515,8 @@ def pg_varchar(size=0):
         if not isinstance(size, int):
             raise TypeError("VARCHAR parameter should be an int, got %s"
                             % type(size))
-        if size < 0:
-            raise ValueError("VARCHAR parameter can not be negative, got %d"
-                             % size)
-        return 'VARCHAR(%d)' % size
+        if size > 0:
+            return 'VARCHAR(%d)' % size
     return 'VARCHAR'
 
 FIELDS_TO_PGTYPES = {
