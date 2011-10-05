@@ -614,30 +614,10 @@ class expression(object):
                         if m2o_str:
                             self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
                     elif right == []:
-<<<<<<< TREE
-                        m2o_str = False
-                        if operator in ('not in', '!=', '<>'):
-                            # (many2one not in []) should return all records
-                            self.__exp[i] = self.__DUMMY_LEAF
-                        else:
-                            self.__exp[i] = ('id','=',0)
-                    else:
-                        new_op = '='
-                        if operator in  ['not like','not ilike','not in','<>','!=']:
-                            new_op = '!='
-                        #Is it ok to put 'left' and not 'id' ?
-                        self.__exp[i] = (left,new_op,False)
-=======
                         pass # Handled by __leaf_to_sql().
                     else: # right is False
                         pass # Handled by __leaf_to_sql().
->>>>>>> MERGE-SOURCE
 
-<<<<<<< TREE
-                    if m2o_str:
-                        self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
-=======
->>>>>>> MERGE-SOURCE
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
