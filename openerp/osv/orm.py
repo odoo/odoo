@@ -462,6 +462,9 @@ class browse_record(object):
     def __contains__(self, name):
         return (name in self._table._columns) or (name in self._table._inherit_fields) or hasattr(self._table, name)
 
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on %s" % self)
+
     def __hasattr__(self, name):
         return name in self
 
