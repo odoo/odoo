@@ -463,9 +463,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().then(success).resolve(_.extend(r, {created: true}));
         }
     },
-    do_search: function (domains, contexts, groupbys) {
-        console.debug("Searching form");
-    },
     on_action: function (action) {
         console.debug('Executing action', action);
     },
@@ -688,7 +685,8 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.width = this.node.attrs.width;
     },
     start: function() {
-        this.$element = this.view.$element.find('.' + this.element_class);
+        this.$element = this.view.$element.find(
+            '.' + this.element_class.replace(/[^\r\n\f0-9A-Za-z_-]/g, "\\$&"));
     },
     process_modifiers: function() {
         var compute_domain = openerp.web.form.compute_domain;
@@ -792,7 +790,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new openerp.web.form.WidgetNotebookPage(
+                var page = new (this.view.registry.get_object('notebookpage'))(
                         this.view, n, this, this.pages.length);
                 this.pages.push(page);
             }
@@ -2781,6 +2779,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'frame' : 'openerp.web.form.WidgetFrame',
     'group' : 'openerp.web.form.WidgetFrame',
     'notebook' : 'openerp.web.form.WidgetNotebook',
+    'notebookpage' : 'openerp.web.form.WidgetNotebookPage',
     'separator' : 'openerp.web.form.WidgetSeparator',
     'label' : 'openerp.web.form.WidgetLabel',
     'button' : 'openerp.web.form.WidgetButton',

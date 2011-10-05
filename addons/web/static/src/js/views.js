@@ -166,6 +166,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
+        this.last_search = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
@@ -224,35 +225,21 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
-            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
-                // In case the search view is not instantiated: manually call ListView#search
-                var domains = !_(self.action.domain).isEmpty()
-                                ? [self.action.domain] : [],
-                   contexts = !_(self.action.context).isEmpty()
-                                ? [self.action.context] : [];
-                controller.on_loaded.add({
-                    callback: function () {
-                        controller.do_search(domains, contexts, []);
-                    },
-                    position: 'last',
-                    unique: true
-                });
-            }
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
+            this.views[view_type].controller = controller;
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
+                if (self.searchview && view.controller.searchable !== false) {
+                    self.do_searchview_search();
+                }
             });
-            this.views[view_type].controller = controller;
+        } else if (this.searchview && view.controller.searchable !== false) {
+            self.do_searchview_search();
         }
 
-
         if (this.searchview) {
-            if (view.controller.searchable === false) {
-                this.searchview.hide();
-            } else {
-                this.searchview.show();
-            }
+            this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
         }
 
         this.$element
@@ -273,14 +260,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         return view_promise;
     },
     /**
-     * Event launched when a controller has been inited.
-     *
-     * @param {String} view_type type of view
-     * @param {String} view the inited controller
-     */
-    on_controller_inited: function(view_type, view) {
-    },
-    /**
      * Sets up the current viewmanager's search view.
      *
      * @param {Number|false} view_id the view to use or false for a default one
@@ -293,13 +272,36 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         }
         this.searchview = new db.web.SearchView(
                 this, this.dataset,
-                view_id, search_defaults);
+                view_id, search_defaults, this.flags.search_view === false);
 
-        this.searchview.on_search.add(function(domains, contexts, groupbys) {
-            var controller = self.views[self.active_view].controller;
-            controller.do_search.call(controller, domains, contexts, groupbys);
-        });
+        this.searchview.on_search.add(this.do_searchview_search);
         return this.searchview.appendTo($("#" + this.element_id + "_search"));
+    },
+    do_searchview_search: function(domains, contexts, groupbys) {
+        var self = this,
+            controller = this.views[this.active_view].controller;
+        if (domains || contexts) {
+            this.rpc('/web/session/eval_domain_and_context', {
+                domains: [this.action.domain || []].concat(domains || []),
+                contexts: [this.action.context || {}].concat(contexts || []),
+                group_by_seq: groupbys || []
+            }, function (results) {
+                self.dataset.context = results.context;
+                self.dataset.domain = results.domain;
+                self.last_search = [results.domain, results.context, results.group_by];
+                controller.do_search(results.domain, results.context, results.group_by);
+            });
+        } else if (this.last_search) {
+            controller.do_search.apply(controller, this.last_search);
+        }
+    },
+    /**
+     * Event launched when a controller has been inited.
+     *
+     * @param {String} view_type type of view
+     * @param {String} view the inited controller
+     */
+    on_controller_inited: function(view_type, view) {
     },
     /**
      * Called when one of the view want to execute an action
@@ -360,23 +362,19 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * launches an initial search after both views are done rendering.
      */
     start: function() {
-        var self = this;
+        var self = this,
+            searchview_loaded,
+            search_defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value;
+            }
+        });
+        // init search view
+        var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-        var searchview_loaded;
-        if (this.flags.search_view !== false) {
-            var search_defaults = {};
-            _.each(this.action.context, function (value, key) {
-                var match = /^search_default_(.*)$/.exec(key);
-                if (match) {
-                    search_defaults[match[1]] = value;
-                }
-            });
-            // init search view
-            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
-
-            searchview_loaded = this.setup_search_view(
-                    searchview_id || false, search_defaults);
-        }
+        searchview_loaded = this.setup_search_view(searchview_id || false, search_defaults);
 
         var main_view_loaded = this._super();
 
@@ -815,6 +813,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         this.options.sidebar = false;
     },
     do_switch_view: function(view) {
+    },
+    do_search: function(view) {
     },
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_section('customize', "Customize", [

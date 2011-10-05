@@ -509,15 +509,7 @@ init: function(parent, dataset, view_id) {
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.grp = groupbys;
-        return this.rpc('/web/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.reload_gantt();
-        });
+        self.reload_gantt();
     }
 
 });
