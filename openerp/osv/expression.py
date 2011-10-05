@@ -405,10 +405,6 @@ class expression(object):
                 return [value]
             return list(value)
 
-        active = False
-        for exp in self.__exp:
-            if exp[0] == 'active':
-                active = exp
         i = -1
         while i + 1<len(self.__exp):
             i += 1
@@ -466,10 +462,7 @@ class expression(object):
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                    domain = [(fargs[0],'in', right)]
-                    if active:
-                        domain.append(active)
-                    right1 = table.search(cr, uid, domain, context=context)
+                    right1 = table.search(cr, uid, [(field_path[0],'in', right)], context=dict(context, active_test=False))
                     self.__exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):

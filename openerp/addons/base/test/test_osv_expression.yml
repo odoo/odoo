@@ -500,7 +500,7 @@
         except psycopg2.DataError:
             # Should give: 'DataError: invalid input syntax for type timestamp' or similar
             cr.execute('ROLLBACK TO SAVEPOINT expression_failure_test')
-
+-
     Testing for Many2Many field with category supplier and active=False
 -
     !python {model: res.partner }: |
