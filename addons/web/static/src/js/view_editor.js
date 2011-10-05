@@ -330,7 +330,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     tag = tag_fld[1].replace(/[^a-zA-Z 0-9]+/g,'');
                 }
                 var properties = _PROPERTIES[tag];
-                self.on_edit_node(this,properties,fld_name);
+                self.on_edit_node(properties,fld_name);
                 break;
            case "side-up":
                 while(1){
@@ -417,7 +417,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             tr.show();
         });
     },
-    on_edit_node:function(self,properties,fld_name){
+    on_edit_node:function(properties,fld_name){
         var self = this;
         var result;
         this.dialog = new openerp.web.Dialog(this,{
@@ -438,9 +438,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             dataset.read_slice([],{domain : [['model','=',self.model]]},function (result) {
                 db = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
                 db.read_slice([],{domain : [['model_id','=',result[0].id],['name','=',fld_name]]},function (res) {
+                    // res will use for getting value of fields.
+                    var k = {"attrs":{"modifiers":"{'readonly':true}","name":"name"},"children":[],"tag":"field"};
                     _.each(properties,function(record){
-                        var type_widget =  new (self.property.get_any(['undefined' , record, 'field'])) (false, false);
-                        console.log("widget_view",type_widget);
+                        var type_widget =  new (self.property.get_any(['undefined' , record, 'field'])) (self.dialog, k);
+                        $("div[id='"+self.dialog.element_id+"']").append('<div>'+record+''+type_widget.render()+'</div>');
                     });
                 });
             });
@@ -449,8 +451,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 openerp.web.ViewEditor.FieldBoolean = openerp.web.form.FieldBoolean.extend({
     init: function(view, node) {
         //this._super(view, node);
-        console.log("view++++",view);
-        console.log("nodoe+++++",node);
         this.template = "FieldBoolean";
     },
     start: function() {
@@ -458,6 +458,7 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.form.FieldBoolean.extend({
         this._super.apply(this, arguments);
     }
 });
+
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'required' : 'openerp.web.ViewEditor.FieldBoolean',
     'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
