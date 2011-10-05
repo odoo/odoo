@@ -126,6 +126,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
 
         res = self.create(cr, uid, vals, context)
         attachents = msg.get('attachments', [])
+        att_ids = []
         for attactment in attachents or []:
             data_attach = {
                 'name': attactment,
@@ -135,9 +136,9 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                 'res_model': self._name,
                 'res_id': res,
             }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+            att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
-        return res
+        return res,att_ids
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
         """

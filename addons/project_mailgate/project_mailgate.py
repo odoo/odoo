@@ -55,6 +55,7 @@ class project_tasks(osv.osv):
         res = self.create(cr, uid, data)    
         
         attachments = msg.get('attachments', [])
+        att_ids = []
         for attachment in attachments or []:
             data_attach = {
                 'name': attachment,
@@ -64,9 +65,9 @@ class project_tasks(osv.osv):
                 'res_model': self._name,
                 'res_id': res,
             }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
+            att_ids.append(self.pool.get('ir.attachment').create(cr, uid, data_attach))
 
-        return res           
+        return res,att_ids           
     
     def message_update(self, cr, uid, id, msg, data={}, default_act='pending'): 
         mailgate_obj = self.pool.get('email.server.tools')
@@ -94,16 +95,14 @@ class project_tasks(osv.osv):
         return True
 
     def message_followers(self, cr, uid, ids, context=None):
-        res = []
+        res = {}
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
         for task in self.browse(cr, uid, select, context=context):
             user_email = (task.user_id and task.user_id.address_id and task.user_id.address_id.email) or False
-            res += [(user_email, False, False, task.priority)]
-        if isinstance(ids, (str, int, long)):
-            return len(res) and res[0] or False
+            res[task.id] = [user_email]
         return res
 
     def msg_send(self, cr, uid, id, *args, **argv):
