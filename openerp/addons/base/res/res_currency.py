@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import re
 import time
 import netsvc
 from osv import fields, osv
@@ -25,6 +26,8 @@ import tools
 
 from tools.misc import currency
 from tools.translate import _
+
+CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
@@ -100,6 +103,18 @@ class res_currency(osv.osv):
                     currency_date = currency_rate_obj.read(cr, user, rates[0], ['name'])['name']
                     r['date'] = currency_date
         return res
+
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if name:
+            ids = self.search(cr, user, ([('name','=',name)] + args), limit=limit, context=context)
+            name_match = CURRENCY_DISPLAY_PATTERN.match(name)
+            if not ids and name_match:
+               ids = self.search(cr, user, [('name','=', name_match.group(1))] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, user, args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
