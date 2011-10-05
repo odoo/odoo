@@ -156,9 +156,22 @@ class integer_big(_column):
 
 class reference(_column):
     _type = 'reference'
+    _classic_read = False # post-process to handle missing target
+
     def __init__(self, string, selection, size, **args):
         _column.__init__(self, string=string, size=size, selection=selection, **args)
 
+    def get(self, cr, obj, ids, name, uid=None, context=None, values=None):
+        result = {}
+        # copy initial values fetched previously.
+        for value in values:
+            if value[name]:
+                model, res_id = value[name].split(',')
+                if obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
+                    result[value['id']] = value[name]
+                else:
+                    result[value['id']] = False
+        return result
 
 class char(_column):
     _type = 'char'
