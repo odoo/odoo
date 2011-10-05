@@ -358,12 +358,18 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        # TODO query server for installed web modules
-        mods = []
-        for name, manifest in openerpweb.addons_manifest.items():
-            # TODO replace by ir.module.module installed web
-            if name not in req.config.server_wide_modules and manifest.get('active', True):
-                mods.append(name)
+        candidates = [mod for mod in openerpweb.addons_manifest.keys() if mod not in req.config.server_wide_modules]
+
+        if req.config.backend == 'local':
+            # if local backend, the modules are shared with the server
+            Modules = req.session.model('ir.module.module')
+            ids = Modules.search(
+                ['&', ('state', '=', 'installed'), ('name', 'in', candidates)]
+            )
+            mods = map(operator.itemgetter('name'), Modules.read(ids, ['name']))
+
+        else:
+            mods = [name for name in candidates if openerpweb.addons_manifest[name].get('active', True)]
         return mods
 
     @openerpweb.jsonrequest
