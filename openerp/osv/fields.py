@@ -165,11 +165,10 @@ class reference(_column):
         result = {}
         # copy initial values fetched previously.
         for value in values:
+            result[value['id']] = value[name]
             if value[name]:
                 model, res_id = value[name].split(',')
-                if obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
-                    result[value['id']] = value[name]
-                else:
+                if not obj.pool.get(model).exists(cr, uid, [int(res_id)], context=context):
                     result[value['id']] = False
         return result
 
