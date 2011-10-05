@@ -25,7 +25,7 @@ openerpweb.ast = web.common.ast
 openerpweb.nonliterals = web.common.nonliterals
 
 
-# Should move to openerpweb.Xml2Json
+# Should move to web.common.xml2json.Xml2Json
 class Xml2Json:
     # xml2json-direct
     # Simple and straightforward XML-to-JSON converter in Python
@@ -358,13 +358,12 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        # TODO query server for installed web modules
-        mods = []
-        for name, manifest in openerpweb.addons_manifest.items():
-            # TODO replace by ir.module.module installed web
-            if name not in req.config.server_wide_modules and manifest.get('active', True):
-                mods.append(name)
-        return mods
+        mods_all = openerpweb.addons_manifest.keys()
+        mods_loaded = req.config.server_wide_modules
+        mods_to_check = [i for i in mods_all if i not in mods_loaded]
+        mods_to_load = req.session.model('ir.module.module').search_read([('state','=','installed'), ('name','in', mods_to_check)])
+        r = [i['name'] for i in mods_to_load]
+        return r
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -1432,7 +1431,6 @@ class Reports(View):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
-
 
 class Import(View):
     _cp_path = "/web/import"
