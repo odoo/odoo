@@ -1,17 +1,9 @@
 -
-  I create a partner which is a my customer
+  I create a draft Purchase Order
 -
-  !record {model: res.partner, id: res_partner_test20}:
-    name: jones white
-    supplier: False
-    customer: True
-    opt_out: True
--
-  I create one Purchase Order
--
-  !record {model: purchase.order, id: purchase_order_test}:
-    partner_id: res_partner_test20
-    partner_address_id: base.res_partner_address_11
+  !record {model: purchase.order, id: purchase_order_edi_1}:
+    partner_id: base.res_partner_agrolait
+    partner_address_id: base.res_partner_address_8invoice
     location_id: stock.stock_location_3
     pricelist_id: 1
     order_line:
@@ -19,108 +11,111 @@
         product_qty: 1.0
         product_uom: 1
         price_unit: 150.0
-        name: 'basic pc'
+        name: 'Basic PC'
         date_planned: '2011-08-31'
     order_line:
       - product_id: product.product_product_pc3
         product_qty: 10.0
         product_uom: 1
         price_unit: 20.0
-        name: 'medium pc'
+        name: 'Medium PC'
         date_planned: '2011-08-31'
+
 -
-  I Open the Purchase order
+  I confirm the purchase order
 -
-  !python {model: purchase.order}: |
-    
-    orders = self.browse(cr, uid, ref("purchase_order_test"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'purchase.order',orders.id,'approved', cr)
+  !workflow {model: purchase.order, ref: purchase_order_edi_1, action: purchase_confirm}
 -
-  I Tesing of EDI functionality. First I export Purchase Order from my company than import that Order into customer company
+  Then I export the purchase order via EDI
 -
-  !python {model: ir.edi.document}: |
+  !python {model: edi.document}: |
      order_pool = self.pool.get('purchase.order')
-     order = order_pool.browse(cr, uid, ref("purchase_order_test"))
-
-     tokens = self.export_edi(cr, uid, [order])
-     assert tokens, 'Token is not generated'
+     order = order_pool.browse(cr, uid, ref("purchase_order_edi_1"))
+     token = self.export_edi(cr, uid, [order])
+     assert token, 'Invalid EDI Token'
 
 -
- I import purchase order from EDI Document of sale order
+  Then I import a sample EDI document of a sale order
 -
-  !python {model: ir.edi.document}: |
+  !python {model: edi.document}: |
     purchase_order_pool = self.pool.get('purchase.order')
     edi_document = {
-        "order_line": [{
-            "product_uom_qty": 1.0, 
-            "name": "basic pc", 
-            "product_uom": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_uom_unit", "PCE"], 
-            "sequence": 10, 
-            "price_unit": 150.0, 
-            "__last_update": False, 
-            "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_line-LXEqeuI-SSP0", 
-            "product_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"]
-        },
-        {
-            "product_uom_qty": 10.0, 
-            "name": "medium pc", 
-            "product_uom": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_uom_unit", "PCE"], 
-            "sequence": 11, 
-            "price_unit": 20.0, 
-            "__last_update": False, 
-            "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_line-LXEqeuI-SSP0", 
-            "product_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_product_pc3", "[PC3] Medim PC"]
-        }], 
-        "order_policy": "manual", 
-        "company_address": {
+        "__id": "sale:724f93ec-ddd0-11e0-88ec-701a04e25543.sale_order_test", 
+        "__module": "sale",
+        "__model": "sale.order",
+        "__import_module": "purchase",
+        "__import_model": "purchase.order",
+        "__version": [6,1,0],
+        "name": "SO008", 
+        "currency_id": ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.EUR", "EUR (€)"],
+        "date_order": "2011-09-13", 
+        "partner_id": ["sale:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_test22", "Junjun wala"],
+        "partner_address": {
+                "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_address_7wdsjasdjh",
+                "__module": "base",
+                "__model": "res.partner.address",
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40", 
                 "city": "Gerompont", 
                 "zip": "1367", 
-                "__last_update": False, 
-                "country_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.be", "Belgium"], 
-                "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_address", 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
+        },
+        "company_id": ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.main_company", "Supplier S.A."], 
+        "company_address": {
+                "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.main_address", 
+                "__module": "base",
+                "__model": "res.partner.address",
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.be", "Belgium"], 
                 "phone": "(+32).81.81.37.00", 
-                "street": "Chaussee de Namur 40"
+                "street": "Chaussee de Namur 40",
+                "street2": "mailbox 34",
         }, 
-        "partner_order_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.res_partner_address_3", "Thomas Passot, Belgium, Louvain-la-Neuve, Rue de l'Angelique, 1"],
-        "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_test", 
-        "date_order": "2011-09-13", 
-        "partner_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:sale.res_partner_test22", "Junjun wala"], 
-        "__attachments": [], 
-        "__module": "purchase", 
-        "amount_total": 350.0, 
-        "amount_untaxed": 350.0, 
-        "name": "SO008", 
-        "__model": "purchase.order", 
-        "__last_update": False, 
-        "company_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_company", "Supplier S.A."], 
-        "__version": [6, 1], 
-        "pricelist_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.list0", "Public Pricelist (EUR)"]
+        "order_line": [{
+            "__id": "sale:724f93ec-ddd0-11e0-88ec-701a04e25543.sale_order_line-LXEqeuI-SSP0", 
+            "__module": "sale", 
+            "__model": "sale.order.line",
+            "__import_module": "purchase", 
+            "__import_model": "purchase.order.line", 
+            "name": "Basic PC", 
+            "product_uom": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_uom_unit", "PCE"], 
+            "product_qty": 1.0,
+            "date_planned": "2011-09-30",
+            "sequence": 10, 
+            "price_unit": 150.0, 
+            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+        },
+        {
+            "__id": "sale:724f93ec-ddd0-11e0-88ec-701a04e25543.sale_order_line-LXEqeadasdad", 
+            "__module": "sale", 
+            "__model": "sale.order.line",
+            "__import_module": "purchase", 
+            "__import_model": "purchase.order.line", 
+            "name": "Medium PC", 
+            "product_uom": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_uom_unit", "PCE"], 
+            "product_qty": 10.0, 
+            "sequence": 11, 
+            "date_planned": "2011-09-15", 
+            "price_unit": 20.0, 
+            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+        }], 
     }
     new_purchase_order_id = purchase_order_pool.edi_import(cr, uid, edi_document, context=context)
-    assert new_purchase_order_id,  'Purchase order is not imported'
-
--
-  I Checking the sale order become purchase order or not after import
--
-  !python {model: purchase.order}: |
-    
-    ids = self.search(cr, uid, [('partner_id','=','Supplier S.A.'), ('partner_ref', '=', 'SO008')])
-    assert ids, 'Order does not have created of party'
-    order_new = self.browse(cr, uid, ids[0])
-    assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list is not imported"
+    assert new_purchase_order_id,  'Purchase order import failed'
+    order_new = purchase_order_pool.browse(cr, uid, new_purchase_order_id)
+    assert order_new.pricelist_id.name == 'Default Purchase Pricelist' , "Default Purchase Pricelist was not automatically assigned"
     assert order_new.amount_total == 350, "Amount total is not same"
     assert order_new.amount_untaxed == 350, "untaxed amount is not same"
-    assert len(order_new.order_line) == 2, "Purchase lines are not same"
+    assert len(order_new.order_line) == 2, "Purchase order lines number mismatch"
     for purchase_line in order_new.order_line:
-        if purchase_line.name == 'basic pc':
+        if purchase_line.name == 'Basic PC':
             assert purchase_line.product_uom.name == "PCE" , "uom is not same"
-            assert purchase_line.price_unit == 150 , "price unit is not same"
+            assert purchase_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 1 , "product qty is not same"
-        elif purchase_line.name == 'medium pc':
+        elif purchase_line.name == 'Medium PC':
             assert purchase_line.product_uom.name == "PCE" , "uom is not same"
-            assert purchase_line.price_unit == 20 , "price unit is not same"
+            assert purchase_line.price_unit == 20 , "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 10 , "product qty is not same"
         else:
-            assert 'wrong product imported in purchase lines'
+            raise AssertionError('unknown order line: %s' % purchase_line)
