@@ -896,11 +896,11 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                             self.on_confirmed().then(function() {
                                 def.resolve();
                             });
-                            $(self).dialog("close");
+                            $(this).dialog("close");
                         },
                         Cancel: function() {
                             def.resolve();
-                            $(self).dialog("close");
+                            $(this).dialog("close");
                         }
                     }
                 });
