@@ -208,9 +208,10 @@ class EDIMixin(object):
        specific behavior, based on the primitives provided by this mixin."""
 
     def _edi_requires_attributes(self, attributes, edi_document):
+        model_name = edi_document.get('__imported_model') or edi_document.get('__model') or self._name
         for attribute in attributes:
             assert edi_document.get(attribute),\
-                 'Attribute `%s` is required in %s EDI documents' % (attribute, self._name)
+                 'Attribute `%s` is required in %s EDI documents' % (attribute, model_name)
 
     # private method, not RPC-exposed as it creates ir.model.data entries as
     # SUPERUSER based on its parameters
@@ -263,8 +264,12 @@ class EDIMixin(object):
             module, ext_id = ext_id.split('.')
             if not ':' in module:
                 # this record was not previously EDI-imported
-                assert module == record._original_module,\
-                    'Mismatching module: expected %s, got %s' % (module, record._original_module)
+                if not module == record._original_module:
+                    # this could happen for data records defined in a module that depends
+                    # on the module that owns the model, e.g. purchase defines
+                    # product.pricelist records.
+                    _logger.debug('Mismatching module: expected %s, got %s, for %s',
+                                  module, record._original_module, record)
                 # ID is unique cross-db thanks to db_uuid
                 module = "%s:%s" % (module, db_uuid)
 
@@ -557,7 +562,11 @@ class EDIMixin(object):
             # skip metadata and empty fields
             if field_name.startswith('__') or field_value is None or field_value is False:
                 continue
-            field = self._all_columns[field_name].column
+            field_info = self._all_columns.get(field_name)
+            if not field_info:
+                _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document', field_name, self._name)
+                continue
+            field = field_info.column
             # skip function/related fields
             if isinstance(field, fields.function):
                 _logger.warning("Unexpected function field value found in '%s' EDI document: '%s'" % (self._name, field_name))
