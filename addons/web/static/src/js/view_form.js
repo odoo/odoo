@@ -1785,6 +1785,9 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             result.result.context = _.extend(result.result.context || {}, additional_context);
             self.do_action(result.result);
         });
+    },
+    focus: function () {
+        this.$input.focus();
     }
 });
 
