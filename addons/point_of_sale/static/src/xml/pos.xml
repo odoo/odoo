@@ -118,14 +118,16 @@
                             <div class="pos-sale-ticket">
                                 OpenERP Point of Sale<br />
                                 <br />
-                                <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                                    Date.CultureInfo.formatPatterns.longTime)"/><br />
+                                <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                                    Date.CultureInfo.formatPatterns.longTime)"/></div>
                                 <br />
                                 <table id="receiptlines"></table>
                                 <br />
-                                Total: <span id="receipt-summary-total"></span> €<br />
-                                Tax: <span id="receipt-summary-tax"></span> €<br />
-                                Change: <span id="receipt-summary-change"></span> €<br />
+                                <table>
+                                    <tr><td>Total:</td><td class="pos-rigth-align"><span id="receipt-summary-total"></span> €</td></tr>
+                                    <tr><td>Tax:</td><td class="pos-rigth-align"><span id="receipt-summary-tax"></span> €</td></tr>
+                                    <tr><td>Change:</td><td class="pos-rigth-align"><span id="receipt-summary-change"></span> €</td></tr>
+                                </table>
                             </div>
                         </div>
                         <button id="pos-finish-order">Next Order</button>
@@ -212,7 +214,7 @@
         </td>
     </t>
     <t t-name="pos-receiptline-template">
-        <td class="receiptline-quantity">
+        <td class="receiptline-quantity pos-rigth-align">
             <t t-esc="quantity.toFixed(0)"/>
         </td>
         <td class="receiptline-name">
