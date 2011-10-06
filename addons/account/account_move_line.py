@@ -983,14 +983,14 @@ class account_move_line(osv.osv):
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
-                    fld.append((field.field, field.sequence, field.name))
+                    fld.append((field.field, field.sequence))
                     flds.append(field.field)
                     common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3, _('Period')))
-        fld.append(('journal_id', 10, _('Journal')))
+        fld.append(('period_id', 3))
+        fld.append(('journal_id', 10))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
@@ -1006,8 +1006,7 @@ class account_move_line(osv.osv):
         document = etree.Element('tree', string=title, editable="top",
                                  refresh="5", on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
-        for field_it in fld:
-            field = field_it[0]
+        for field, _seq in fld:
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
             # if field=='state':
