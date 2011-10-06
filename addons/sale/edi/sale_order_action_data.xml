@@ -1,0 +1,172 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <!-- EDI Export + Send email Action  -->
+        <record id="ir_actions_server_edi_sale" model="ir.actions.server">
+            <field name="code"><![CDATA[
+try:
+    if not object.partner_id.opt_out:
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default="<WEB_ROOT_URL>")
+
+        # accessing the template will fail if it has been deleted - so we'll skip everything
+        tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'email_template_edi_sale')
+
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, [object], context = context)[0]
+        context.update(edi_web_url_view='%s/web/view_edi?db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
+        self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
+except:
+    pass
+            ]]></field>
+            <field eval="7" name="sequence"/>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="condition">True</field>
+            <field name="name">Auto-email confirmed sale orders</field>
+        </record>
+    </data>
+
+
+    <!-- Mail template and workflow bindings are done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+         <!-- bind the mailing server action to sale.order confirmed activity -->
+        <record id="sale.act_wait_ship" model="workflow.activity">
+            <field name="action_id" ref="ir_actions_server_edi_sale"/>
+        </record>
+
+
+        <!--Email template -->
+        <record id="email_template_edi_sale" model="email.template">
+            <field name="name">Automated Sale Order Notification Mail</field>
+            <field name="email_from">${object.user_id.user_email or ''}</field>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="email_to">${object.partner_invoice_id.email}</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="body_html"><![CDATA[
+<div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
+
+    <p>Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},</p>
+    
+    <p>Your order for ${object.partner_id.name} has just been validated: </p>
+    
+    <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
+       &nbsp;&nbsp;<strong>REFERENCES</strong><br />
+       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />
+       &nbsp;&nbsp;Order total: <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong><br />
+       &nbsp;&nbsp;Order date: ${object.date_order}<br />
+       % if object.origin:
+       &nbsp;&nbsp;Order reference: ${object.origin}<br />
+       % endif
+       % if object.client_order_ref:
+       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />
+       % endif
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.user_email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
+    </p>
+
+    <p>
+    You can view the order confirmation document, download it and pay online using the following link:
+    </p>
+            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;" 
+               href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
+
+    % if object.company_id.paypal_account:
+    <br/>
+    <p>It is also possible to directly pay with Paypal:</p>
+        <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;"
+         href="${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Order%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Order_PayNow_%s"%(object.company_id.paypal_account,object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total, object.pricelist_id.currency_id.name, object.pricelist_id.currency_id.name)}"
+            >Pay with Paypal</a>
+    % endif
+
+    <br/>
+    <p>If you have any question, do not hesitate to contact us.</p>
+    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
+    <br/>
+    <br/>
+    <div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; ">
+        <h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); ">
+            <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
+    </div>
+    <div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); ">
+        <span style="color: rgb(38, 72, 149); margin-bottom: 5px; display: block; ">
+        % if object.company_id.street:
+            ${object.company_id.street}<br/>
+        % endif
+        % if object.company_id.street2:
+            ${object.company_id.street2}<br/>
+        % endif
+        % if object.company_id.city or object.company_id.zip:
+            ${object.company_id.zip} ${object.company_id.city}<br/>
+        % endif
+        % if object.company_id.country_id:
+            ${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}<br/>
+        % endif
+        </span>
+        % if object.company_id.phone:
+            <div style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; ">
+                Phone:&nbsp; ${object.company_id.phone}
+            </div>
+        % endif
+        % if object.company_id.website:
+            <div>
+                Web :&nbsp;<a href="${object.company_id.website}">${object.company_id.website}</a>
+            </div>
+        %endif
+        <p></p>
+    </div>
+</div>
+            ]]></field>
+            <field name="body_text"><![CDATA[
+Hello${object.partner_order_id.name and ' ' or ''}${object.partner_order_id.name or ''},
+
+Your order for ${object.partner_id.name} has just been validated:
+       | Order number: *${object.name}*
+       | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
+       | Order date: ${object.date_order}
+       % if object.origin:
+       | Order reference: ${object.origin}
+       % endif
+       % if object.client_order_ref:
+       | Your reference: ${object.client_order_ref}<br />
+       % endif
+       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
+
+You can view the order confirmation, download it and even pay online using the following link:
+    ${ctx.get('edi_web_url_view') or 'n/a'}
+
+% if object.company_id.paypal_account:
+It is also possible to directly pay with Paypal:
+    ${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=%s&item_name=OpenERP%%20Order%%20%s&invoice=%s&amount=%s&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow_%s"%(object.company_id.paypal_account,object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total, object.pricelist_id.currency_id.name, object.pricelist_id.currency_id.name)}
+% endif
+
+If you have any question, do not hesitate to contact us.
+
+
+Thank you for choosing ${object.company_id.name}!
+
+
+--
+${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
+${object.company_id.name}
+% if object.company_id.street:
+${object.company_id.street or ''}
+% endif
+% if object.company_id.street2:
+${object.company_id.street2}
+% endif
+% if object.company_id.city or object.company_id.zip:
+${object.company_id.zip or ''} ${object.company_id.city or ''}
+% endif
+% if object.company_id.country_id:
+${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
+% endif
+% if object.company_id.phone:
+Phone: ${object.company_id.phone}
+% endif
+% if object.company_id.website:
+${object.company_id.website or ''}
+% endif
+            ]]></field>
+        </record>
+    </data>
+</openerp>
