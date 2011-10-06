@@ -26,7 +26,7 @@ from operator import itemgetter
 from lxml import etree
 
 import netsvc
-from osv import fields, osv
+from osv import fields, osv, orm
 from tools.translate import _
 import decimal_precision as dp
 import tools
@@ -1006,6 +1006,7 @@ class account_move_line(osv.osv):
         document = etree.Element('tree', string=title, editable="top",
                                  refresh="5", on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
+        fields_get = self.fields_get(cr, uid, flds, context)
         for field, _seq in fld:
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
@@ -1061,8 +1062,11 @@ class account_move_line(osv.osv):
             else:
                 f.set('invisible', "context.get('visible_id') not in %s" % (fields.get(field)))
 
+            orm.setup_modifiers(f, fields_get[field], context=context,
+                                in_tree_view=True)
+
         result['arch'] = etree.tostring(document, pretty_print=True)
-        result['fields'] = self.fields_get(cr, uid, flds, context)
+        result['fields'] = fields_get
         return result
 
     def _check_moves(self, cr, uid, context=None):
