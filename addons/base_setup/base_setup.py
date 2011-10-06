@@ -36,8 +36,8 @@ DEFAULT_MODULES = {
     'Knowledge Management' : ['document',],
     'Warehouse Management' : ['stock',],
     'Manufacturing' : ['mrp', 'procurement'],
-    'Accounting & Finance' : ['account,'],
-    'Purchase Management' : ['purchase,'],
+    'Accounting & Finance' : ['account'],
+    'Purchase Management' : ['purchase'],
     'Human Resources' : ['hr',],
     'Point of Sales' : ['pos',],
     'Marketing' : ['marketing',],
@@ -286,14 +286,25 @@ class base_setup_installer(osv.osv_memory):
                            ir_module_module_dependency d inner join ir_module_module m2 on d.name = m2.name \
                            where d.module_id=m.id and m2.state in %s ) and state = %s",
                           (category_id[1], ('installed', 'to install', 'to upgrade', ), 'uninstalled',))
-                modules = [name for _, name in cr.fetchall()]
+                inner_modules = [name for _, name in cr.fetchall()]
 
-                module_ids = proxy.search(cr, uid, [('name', 'in', modules)], context=context)
+                module_ids = proxy.search(cr, uid, [('name', 'in', inner_modules)], context=context)
                 if not module_ids:
                     break
 
+                modules = modules + set(inner_modules)
+
                 proxy.state_update(cr, uid, module_ids, 'to install', ['uninstalled'], context=context)
                 need_update = True
+
+
+            domain = [('name', 'in', list(modules)),
+                      ('state', '=', 'installed')]
+            for module in proxy.browse(cr, uid, proxy.search(cr, uid, domain, context=context), context):
+                cr.execute("update ir_actions_todo set state='open' \
+                           from ir_model_data as data where data.res_id = ir_actions_todo.id \
+                           and ir_actions_todo.type='special'\
+                           and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
 
             if need_update:
                 cr.commit()
@@ -303,33 +314,6 @@ class base_setup_installer(osv.osv_memory):
             return {'type' : 'ir.actions.reload'}
         else:
             return {'type' : 'ir.actions.act_window_close'}
-
-    # TODO: To implement in this new wizard
-    #def execute(self, cr, uid, ids, context=None):
-    #    module_pool = self.pool.get('ir.module.module')
-    #    modules_selected = []
-    #    datas = self.read(cr, uid, ids, context=context)[0]
-    #    for mod in datas.keys():
-    #        if mod in ('id', 'progress'):
-    #            continue
-    #        if datas[mod] == 1:
-    #            modules_selected.append(mod)
-
-    #    module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
-    #    need_install = False
-    #    for module in module_pool.browse(cr, uid, module_ids, context=context):
-    #        if module.state == 'uninstalled':
-    #            module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-    #            need_install = True
-    #            cr.commit()
-    #        elif module.state == 'installed':
-    #            cr.execute("update ir_actions_todo set state='open' \
-    #                                from ir_model_data as data where data.res_id = ir_actions_todo.id \
-    #                                and ir_actions_todo.type='special'\
-    #                                and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
-    #    if need_install:
-    #        self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
-    #    return
 
 #Migrate data from another application Conf wiz
 
