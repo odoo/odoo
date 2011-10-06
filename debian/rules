@@ -1,4 +1,5 @@
 #!/usr/bin/make -f
+# vim:noet:
 
 %:
 	dh  ${@}
@@ -10,8 +11,6 @@ override_dh_pysupport:
 	rm -Rf debian/openerp/usr/openerp debian/openerp/usr/lib/python2.6/dist-packages/tests debian/openerp/usr/lib/python2.7/dist-packages/tests
 	dh_pysupport
 	rm -Rf debian/openerp/usr/lib
-
-
 
 override_dh_installinit:
 	dh_installinit --update-rcd-params='defaults 21'
