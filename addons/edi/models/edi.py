@@ -141,13 +141,14 @@ class edi_document(osv.osv):
         ir_module = self.pool.get('ir.module.module')
         res = []
         for edi_document in edi_documents:
-            module = edi_document.get('__module')
+            module = edi_document.get('__import_module') or edi_document.get('__module')
+            assert module, 'a `__module` or `__import_module` attribute is required in each EDI document'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
                 raise osv.except_osv(_('Missing Application'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
-                              "The OpenERP configuration assistant will help with this if you are connected as an administrator.")%(module,))
-            model = edi_document.get('__model')
-            assert model, '__model attribute is required in each EDI document'
+                              "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
+            model = edi_document.get('__import_model') or edi_document.get('__model')
+            assert model, 'a `__model` or `__import_model` attribute is required in each EDI document'
             model_obj = self.pool.get(model)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             res.append((model, record_id))
@@ -538,9 +539,10 @@ class EDIMixin(object):
                    * After finding the database ID of the final record in the database,
                      connect it to the parent record.
         """
-        assert self._name == edi_document['__model'],\
-              "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)" % \
-                (edi_document['__model'], self._name)
+        assert self._name == edi_document.get('__import_model') or \
+                ('__import_model' not in edi_document and self._name == edi_document.get('__model')), \
+                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)" % \
+                   (edi_document['__model'], self._name)
 
         # First check the record is now already known in the database, in which case it is ignored
         ext_id_members = split_external_id(edi_document['__id'])
