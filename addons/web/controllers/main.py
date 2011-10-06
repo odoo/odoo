@@ -327,7 +327,7 @@ class Session(openerpweb.Controller):
         # Retrieve database installed modules
         Modules = req.session.model('ir.module.module')
         installed = set(module['name'] for module in Modules.search_read(
-                        [('state','=','installed'), ('name','in', candidates)]))
+            [('state','=','installed'), ('name','in', candidates)], ['name']))
 
         # Merge both
         return list(active | installed)
