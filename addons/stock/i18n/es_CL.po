@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-10-03 18:53+0000\n"
-"Last-Translator: David Acevedo Toledo <Unknown>\n"
+"PO-Revision-Date: 2011-10-05 16:52+0000\n"
+"Last-Translator: Francisco Reyes Acuña <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-04 05:01+0000\n"
-"X-Generator: Launchpad (build 14071)\n"
+"X-Launchpad-Export-Date: 2011-10-06 04:36+0000\n"
+"X-Generator: Launchpad (build 14085)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -549,7 +549,7 @@ msgstr "Ubicación destino"
 #: code:addons/stock/stock.py:769
 #, python-format
 msgid "You can not process picking without stock moves"
-msgstr "No puede procesar un albarán sin movimientos de stock"
+msgstr "No puede procesar una guía de despacho sin movimientos de stock"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -853,7 +853,7 @@ msgstr "Contiene"
 #. module: stock
 #: view:board.board:0
 msgid "Incoming Products Delay"
-msgstr "Retraso albaranes entrada"
+msgstr "Retraso de guías de despacho de entrada"
 
 #. module: stock
 #: view:stock.location:0
@@ -1169,9 +1169,9 @@ msgid ""
 "empty to automatically detect the type based on the source and destination "
 "locations)."
 msgstr ""
-"Tipo de envío del albarán que va a contener el movimiento encadenado (dejar "
-"vacío para detectar automáticamente el tipo basado en las ubicaciones de "
-"origen y destino)."
+"Tipo de envío de la guía de despacho que va a contener el movimiento "
+"encadenado (dejar vacío para detectar automáticamente el tipo basado en las "
+"ubicaciones de origen y destino)."
 
 #. module: stock
 #: view:stock.move.split:0
@@ -1378,7 +1378,7 @@ msgstr "Dividir"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr "Buscar albarán stock"
+msgstr "Buscar guía de despacho de stock"
 
 #. module: stock
 #: code:addons/stock/product.py:93
@@ -2014,6 +2014,27 @@ msgid ""
 "day)\n"
 "    "
 msgstr ""
+"El módulo de OpenERP de gestión de inventario puede gestionar múltiples "
+"almacenes, y varias ubicaciones estructuradas.\n"
+"Gracias a la gestión de doble entrada, el control de inventario es potente y "
+"flexible:\n"
+"* Historial de movimientos y planificación,\n"
+"* Diferentes métodos de inventario (FIFO, LIFO, ...)\n"
+"* Valoración de existencias (precio estándar o medio, ...)\n"
+"* Robustez frente a las diferencias de inventario\n"
+"* Normas de reordenación automática (nivel de existencias, JIT, ...)\n"
+"* Código de barras soportado\n"
+"* Detección rápida de errores a través del sistema de entrada doble\n"
+"* Trazabilidad (ascendente/descendente abajo, lotes de producción, número de "
+"serie, ...)\n"
+"* Panel para almacenes que incluye:\n"
+"    * Productos a recibir con retraso (fecha <= hoy)\n"
+"    * Excepciones de compra\n"
+"    * Gráfico: Número de productos Recibidos frente al previsto (gráfico de "
+"barras semanal por día)\n"
+"    * Gráfico: Número de productos Entregados frente al previsto (gráfico de "
+"barras semanal por día)\n"
+"    "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -3378,7 +3399,7 @@ msgstr "Indica si las mercancías se enviarán todas a la vez o directamente."
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:90
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr "Este albarán no requiere facturación."
+msgstr "Esta guía de despacho no requiere facturación."
 
 #. module: stock
 #: selection:report.stock.move,type:0
