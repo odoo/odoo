@@ -28,17 +28,13 @@ from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,
-            #SO: yes
-            #PO: No
     'name': True,
-    #custom: 'planned_date'
+    #custom: 'date_planned'
     'product_id': True,
     'product_uom': True,
     'price_unit': True,
     #custom: 'product_qty'
     'discount': True,
-            #SO: yes
-            #PO: No
     'notes': True,
 }
 
@@ -75,7 +71,7 @@ class sale_order(osv.osv, EDIMixin):
                     'company_paypal_account': order.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_order_id], context=context)[0],
 
-                    'currency_id': self.edi_m2o(cr, uid, order.company_id.currency_id, context=context),
+                    'currency_id': self.edi_m2o(cr, uid, order.pricelist_id.currency_id, context=context),
                     'partner_ref': order.client_order_ref or False,
                     'notes': order.note or False,
                     #TODO: company_logo
@@ -117,27 +113,55 @@ class sale_order(osv.osv, EDIMixin):
 
         return partner_id
 
-    def edi_get_pricelist(self, cr, uid, partner_id, context=None):
-        # value = ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.list0", "Public Pricelist (EUR)"]
+    def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
+        # TODO: refactor into common place for purchase/sale, e.g. into product module
         partner_model = self.pool.get('res.partner')
         partner = partner_model.browse(cr, uid, partner_id, context=context)
         pricelist = partner.property_product_pricelist
         if not pricelist:
             pricelist = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'list0', context=context)
+
+        if not pricelist.currency_id == currency:
+            # look for a pricelist with the right type and currency, or make a new one
+            pricelist_type = 'sale'
+            product_pricelist = self.pool.get('product.pricelist')
+            match_pricelist_ids = product_pricelist.search(cr, uid,[('type','=',pricelist_type),
+                                                                    ('currency_id','=',currency.id)])
+            if match_pricelist_ids:
+                pricelist_id = match_pricelist_ids[0]
+            else:
+                pricelist_name = _('EDI Pricelist (%s)') % (currency.name,)
+                pricelist_id = product_pricelist.create(cr, uid, {'name': pricelist_name,
+                                                                  'type': pricelist_type,
+                                                                  'currency_id': currency.id,
+                                                                 })
+                self.pool.get('product.pricelist.version').create(cr, uid, {'name': pricelist_name,
+                                                                            'pricelist_id': pricelist_id})
+            pricelist = product_pricelist.browse(cr, uid, pricelist_id)
+
         return self.edi_m2o(cr, uid, pricelist, context=context)
 
     def edi_import(self, cr, uid, edi_document, context=None):
-        self._edi_requires_attributes(('company_id','company_address','order_line','date_order'), edi_document)
+        self._edi_requires_attributes(('company_id','company_address','order_line','date_order','currency_id'), edi_document)
 
         #import company as a new partner
         partner_id = self._edi_import_company(cr, uid, edi_document, context=context)
 
+        # currency for rounding the discount calculations and for the pricelist
+        currency_id, currency_name = edi_document.pop('currency_id')
+        currency_id = self.edi_import_relation(cr, uid, 'res.currency', currency_name, currency_id, context=context)
+        res_currency = self.pool.get('res.currency')
+        order_currency = res_currency.browse(cr, uid, currency_id)
+
         date_order = edi_document['date_order']
-        edi_document['client_order_ref'] = edi_document.pop('partner_ref', False)
+        partner_ref = edi_document.pop('partner_ref', False)
+        edi_document['client_order_ref'] = edi_document['name']
+        edi_document['name'] = partner_ref or edi_document['name']
         edi_document['note'] = edi_document.pop('notes', False)
-        edi_document['pricelist_id'] = self.edi_get_pricelist(cr, uid, partner_id, context=context)
+        edi_document['pricelist_id'] = self._edi_get_pricelist(cr, uid, partner_id, order_currency, context=context)
         order_lines = edi_document['order_line']
         for order_line in order_lines:
+            self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
             order_line['product_uom_qty'] = order_line['product_qty']
             del order_line['product_qty']
             date_planned = order_line.pop('date_planned')
@@ -153,6 +177,8 @@ class sale_order_line(osv.osv, EDIMixin):
     _inherit='sale.order.line'
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
+        """Overridden to provides sale order line fields with the expected names
+           (sale and purchase orders have different column names)"""
         edi_struct = dict(edi_struct or SALE_ORDER_LINE_EDI_STRUCT)
         edi_doc_list = []
         for line in records:
