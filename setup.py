@@ -100,7 +100,7 @@ setuptools.setup(
           'pyyaml',
           'reportlab',
           'simplejson',
-          'vatnumber', # recommended by base_vat
+          'vatnumber',
           'vobject',
           'werkzeug',
           'zsi',
