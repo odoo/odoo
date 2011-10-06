@@ -315,19 +315,26 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        if req.config.backend == 'local':
-            candidates = [mod for mod in openerpweb.addons_manifest.keys()
-                          if mod not in req.config.server_wide_modules]
-            # if local backend, the modules are shared with the server
-            Modules = req.session.model('ir.module.module')
-            ids = Modules.search(
-                ['&', ('state', '=', 'installed'), ('name', 'in', candidates)]
-            )
-            return map(operator.itemgetter('name'), Modules.read(ids, ['name']))
+        # Compute available candidates module
+        loadable = openerpweb.addons_manifest.keys()
+        loaded = req.config.server_wide_modules
+        candidates = [mod for mod in loadable if mod not in loaded]
 
-        return [name for name, descriptor in openerpweb.addons_manifest.iteritems()
-                if name not in req.config.server_wide_modules
-                if descriptor.get('active', True)]
+        # Compute active true modules that might be on the web side only
+        active = [(name,1) for name in candidates if openerpweb.addons_manifest[name].get('active')]
+        print active
+
+        # Retrieve database installed modules
+        module_obj = req.session.model('ir.module.module')
+        installed = [(i['name'],1) for i in module_obj.search_read([('state','=','installed'), ('name','in', candidates)])]
+        print installed
+
+        # Merge both
+        merged = dict(installed)
+        merged.update(active)
+        print merged
+
+        return merged.keys()
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
