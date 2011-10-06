@@ -278,7 +278,7 @@ class base_setup_installer(osv.osv_memory):
                 proxy.state_update(cr, uid, module_ids, 'to install', ['uninstalled'], context=context)
                 need_update = True
 
-            category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_link')
+            category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_hidden_link')
             while True and category_id:
                 cr.execute("select id, name from ir_module_module m where category_id = %s \
                            and (select count(d.id) from ir_module_module_dependency d \
@@ -292,7 +292,7 @@ class base_setup_installer(osv.osv_memory):
                 if not module_ids:
                     break
 
-                modules = modules + set(inner_modules)
+                modules.update(inner_modules)
 
                 proxy.state_update(cr, uid, module_ids, 'to install', ['uninstalled'], context=context)
                 need_update = True
