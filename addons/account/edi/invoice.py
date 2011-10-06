@@ -21,53 +21,59 @@
 
 from osv import fields, osv, orm
 from edi import EDIMixin
-from tools.translate import _
+
+INVOICE_LINE_EDI_STRUCT = {
+    'name': True,
+    'origin': True,
+    'uos_id': True,
+    'product_id': True,
+    'price_unit': True,
+    'quantity': True,
+    'discount': True,
+    'note': True,
+}
+
+INVOICE_TAX_LINE_EDI_STRUCT = {
+    'name': True,
+    'base': True,
+    'amount': True,
+    'manual': True,
+    'sequence': True,
+    'base_amount': True,
+    'tax_amount': True,
+}
+
+INVOICE_EDI_STRUCT = {
+    'name': True,
+    'origin': True,
+    'company_id': True, # -> to be changed into partner
+    'type': True, # -> reversed at import
+    'internal_number': True, # -> reference at import
+    'comment': True,
+    'date_invoice': True,
+    'date_due': True,
+    'partner_id': True,
+    'payment_term': True,
+    'currency_id': True, # TODO: should perhaps include sample rate + rounding
+    'invoice_line': INVOICE_LINE_EDI_STRUCT,
+    'tax_line': INVOICE_TAX_LINE_EDI_STRUCT,
+}
 
 class account_invoice(osv.osv, EDIMixin):
     _inherit = 'account.invoice'
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a supplier or customer invoice"""
-        edi_struct = {
-                'name': True,
-                'origin': True,
-                'company_id': True, # -> to be changed into partner
-                'type': True, # -> reversed at import
-                'internal_number': True, # -> reference at import
-                'comment': True,
-                'date_invoice': True,
-                'date_due': True,
-                'partner_id': True,
-                'address_invoice_id': True, #only one address needed
-                'payment_term': True,
-                'currency_id': True, # TODO: should perhaps include sample rate + rounding
-                'invoice_line': {
-                        'name': True,
-                        'origin': True,
-                        'uos_id': True,
-                        'product_id': True,
-                        'price_unit': True,
-                        'quantity': True,
-                        'discount': True,
-                        'note': True,
-                },
-                'tax_line': {
-                        'name': True,
-                        'base': True,
-                        'amount': True,
-                        'manual': True,
-                        'sequence': True,
-                        'base_amount': True,
-                        'tax_amount': True,
-                },
-        }
+        edi_struct = dict(edi_struct or INVOICE_EDI_STRUCT)
         res_company = self.pool.get('res.company')
+        res_partner_address = self.pool.get('res.partner.address')
         edi_doc_list = []
         for invoice in records:
             edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
                     'company_paypal_account': invoice.company_id.paypal_account,
+                    'partner_address': res_partner_address.edi_export(cr, uid, [invoice.address_invoice_id], context=context)[0],
                     #'company_logo': #TODO
             })
             edi_doc_list.append(edi_doc)
@@ -101,33 +107,36 @@ class account_invoice(osv.osv, EDIMixin):
         return account
 
     def _edi_import_company(self, cr, uid, edi_document, context=None):
+        # TODO: for multi-company setups, we currently import the document in the
+        #       user's current company, but we should perhaps foresee a way to select
+        #       the desired company among the user's allowed companies
+
         self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
         res_partner_address = self.pool.get('res.partner.address')
         res_partner = self.pool.get('res.partner')
 
         # imported company = new partner
-        company_id, company_name = edi_document['company_id']
-        partner_id = self.edi_import_relation(cr, uid, 'res.partner', company_name,
-                                              company_id, context=context)
+        src_company_id, src_company_name = edi_document.pop('company_id')
+        partner_id = self.edi_import_relation(cr, uid, 'res.partner', src_company_name,
+                                              src_company_id, context=context)
         invoice_type = edi_document['type']
         partner_value = {}
         if invoice_type in ('out_invoice', 'out_refund'):
             partner_value.update({'customer': True})
         if invoice_type in ('in_invoice', 'in_refund'):
             partner_value.update({'supplier': True})
-        partner_id = res_partner.write(cr, uid, [partner_id], partner_value, context=context)
+        res_partner.write(cr, uid, [partner_id], partner_value, context=context)
 
         # imported company_address = new partner address
-        address_info = edi_document['company_address']
-        address_info['partner_id'] = (company_id, company_name)
+        address_info = edi_document.pop('company_address')
+        address_info['partner_id'] = (src_company_id, src_company_name)
         address_info['type'] = 'invoice'
         address_id = res_partner_address.edi_import(cr, uid, address_info, context=context)
 
         # modify edi_document to refer to new partner
-        del edi_document['company_id']
-        del edi_document['company_address']
         partner_address = res_partner_address.browse(cr, uid, address_id, context=context)
-        edi_document['partner_id'] = (company_id, company_name)
+        edi_document['partner_id'] = (src_company_id, src_company_name)
+        edi_document.pop('partner_address', False) # ignored
         edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
 
         return partner_id

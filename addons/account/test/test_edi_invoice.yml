@@ -66,8 +66,17 @@
         }, 
         "company_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_company_test11", "Thomson pvt. ltd."], 
         "currency_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR", "EUR (€)"], 
-        "address_invoice_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
-        "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"], 
+        "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"],
+        "partner_address": {
+                "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
+                "__module": "base",
+                "__model": "res.partner.address",
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40", 
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
+        },
         "date_invoice": "2011-06-22", 
         "name": "sample invoice", 
         "tax_line": [{
@@ -111,18 +120,18 @@
     assert invoice_new.type == 'in_invoice', "Invoice type was not set properly"
     assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
-        if inv_line.name == 'basic pc':
+        if inv_line.name == 'Basic PC':
             assert inv_line.uos_id.name == "PCE" , "uom is not same"
             assert inv_line.price_unit == 10 , "price unit is not same"
             assert inv_line.quantity == 1 , "product qty is not same"
             assert inv_line.price_subtotal == 10, "price sub total is not same"
-        elif inv_line.name == 'medium pc':
+        elif inv_line.name == 'Medium PC':
             assert inv_line.uos_id.name == "PCE" , "uom is not same"
             assert inv_line.price_unit == 100 , "price unit is not same"
             assert inv_line.quantity == 5 , "product qty is not same"
             assert inv_line.price_subtotal == 500, "price sub total is not same"
         else:
-            assert 'wrong product imported in invoice lines'
+            raise AssertionError('unknown invoice line: %s' % inv_line)
     for inv_tax in invoice_new.tax_line:
-        assert inv_tax.manual, "for tax line manual is not set to True"
-        assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
+        assert inv_tax.manual, "tax line not set to manual"
+        assert inv_tax.account_id, "missing tax line account"
