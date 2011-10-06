@@ -779,7 +779,7 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         });
     },
     get_value: function () {
-        return this.$element.val();
+        return this.attrs.selection[parseInt(this.$element.val(), 10)][0];
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
