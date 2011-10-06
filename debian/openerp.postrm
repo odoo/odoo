@@ -3,7 +3,7 @@
 set -e
 
 case "${1}" in
-	remove)
+    remove)
         deluser --quiet --system "openerp" || true
         delgroup --quiet --system --only-if-empty "openerp" || true
         ;;
@@ -15,10 +15,6 @@ case "${1}" in
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
         ;;
 
-    *)
-        echo "postrm called with unknown argument \`${1}'" >&2
-        exit 1
-        ;;
 esac
 
 #DEBHELPER#
