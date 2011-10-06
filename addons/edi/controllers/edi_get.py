@@ -1,5 +1,5 @@
 import werkzeug.wrappers
-import web.common.dispatch as openerpweb
+import web.common.http as openerpweb
 import json
 
 class EDIGet(openerpweb.Controller):
