@@ -77,11 +77,11 @@ Unaccent - Accent-insensitive search
 OpenERP will use the SQL function 'unaccent' when available for the 'ilike' and
 'not ilike' operators, and enabled in the configuration.
 Normally the 'unaccent' function is obtained from the PostgreSQL 'unaccent'
-contrib module[0]. 
+contrib module[0].
 
 
 ..todo: The following explanation should be moved in some external installation
-        guide 
+        guide
 
 The steps to install the module might differ on specific PostgreSQL versions.
 We give here some instruction for PostgreSQL 9.x on a Ubuntu system.
@@ -191,12 +191,12 @@ def combine(operator, unit, zero, domains):
 
        :param unit: the identity element of the domains "set" with regard to the operation
                     performed by ``operator``, i.e the domain component ``i`` which, when
-                    combined with any domain ``x`` via ``operator``, yields ``x``. 
+                    combined with any domain ``x`` via ``operator``, yields ``x``.
                     E.g. [(1,'=',1)] is the typical unit for AND_OPERATOR: adding it
                     to any domain component gives the same domain.
        :param zero: the absorbing element of the domains "set" with regard to the operation
                     performed by ``operator``, i.e the domain component ``z`` which, when
-                    combined with any domain ``x`` via ``operator``, yields ``z``. 
+                    combined with any domain ``x`` via ``operator``, yields ``z``.
                     E.g. [(1,'=',1)] is the typical zero for OR_OPERATOR: as soon as
                     you see it in a domain component the resulting domain is the zero.
        :param domains: a list of normalized domains.
@@ -462,7 +462,7 @@ class expression(object):
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                    right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=context)
+                    right1 = table.search(cr, uid, [(field_path[0],'in', right)], context=dict(context, active_test=False))
                     self.__exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):
