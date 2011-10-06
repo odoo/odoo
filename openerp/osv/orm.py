@@ -2959,6 +2959,10 @@ class BaseModel(object):
 
 
     def _select_column_data(self, cr):
+        # attlen is the number of bytes necessary to represent the type when
+        # the type has a fixed size. If the type has a varying size attlen is
+        # -1 and atttypmod is the size limit + 4, or -1 if there is no limit.
+        # Thus the query can return a negative size for a unlimited varchar.
         cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
            "FROM pg_class c,pg_attribute a,pg_type t " \
            "WHERE c.relname=%s " \
