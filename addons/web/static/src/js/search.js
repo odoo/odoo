@@ -116,8 +116,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      */
     make_field: function (item, field) {
         try {
-            return new (openerp.web.search.fields.get_object(field.type))
-                        (item, field, this);
+            return new (openerp.web.search.fields.get_any(
+                    [item.attrs.widget, field.type]))
+                (item, field, this);
         } catch (e) {
             if (! e instanceof openerp.web.KeyNotFound) {
                 throw e;
@@ -759,7 +760,24 @@ openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends
  * @extends openerp.web.search.Field
  */
 openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends openerp.web.search.SelectionField# */{
+    // This implementation is a basic <select> field, but it may have to be
+    // altered to be more in line with the GTK client, which uses a combo box
+    // (~ jquery.autocomplete):
+    // * If an option was selected in the list, behave as currently
+    // * If something which is not in the list was entered (via the text input),
+    //   the default domain should become (`ilike` string_value) but **any
+    //   ``context`` or ``filter_domain`` becomes falsy, idem if ``@operator``
+    //   is specified. So at least get_domain needs to be quite a bit
+    //   overridden (if there's no @value and there is no filter_domain and
+    //   there is no @operator, return [[name, 'ilike', str_val]]
     template: 'SearchView.field.selection',
+    init: function () {
+        this._super.apply(this, arguments);
+        // prepend empty option if there is no empty option in the selection list
+        this.prepend_empty = !_(this.attrs.selection).detect(function (item) {
+            return !item[1];
+        });
+    },
     get_value: function () {
         return this.$element.val();
     }

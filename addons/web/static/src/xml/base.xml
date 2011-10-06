@@ -1092,7 +1092,7 @@
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
-            <option/>
+            <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
