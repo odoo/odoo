@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Collaborative Note Pad',
-    'version': '1.0.3',
+    'version': '2.0',
     'category': 'Hidden',
     'complexity': "easy",
     'description': """
@@ -21,5 +21,6 @@ Lets the company customize which Pad installation should be used to link to new 
     'active': False,
     'web': True,
     'certificate' : '001183545978470526509',
-    'images': ['images/pad_link_companies.jpeg'],
+    'js': ['static/src/js/pad.js'],
+    'images': ['static/src/img/pad_link_companies.jpeg'],
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1: -->
+<templates id="template" xml:space="preserve">
+    <t t-extend="FormView.sidebar.attachments">
+        <t t-jquery="div.oe-binary-file-set" t-operation="append">
+                <button class="button pad" type="button">
+                    <img src="/web/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
+                    <span>Add Pad</span>
+                </button>
+        </t>
+    </t>
+</templates>
