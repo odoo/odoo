@@ -326,6 +326,7 @@ class Session(openerpweb.Controller):
             return map(operator.itemgetter('name'), Modules.read(ids, ['name']))
 
         return [name for name, descriptor in openerpweb.addons_manifest.iteritems()
+                if name not in req.config.server_wide_modules
                 if descriptor.get('active', True)]
 
     @openerpweb.jsonrequest
