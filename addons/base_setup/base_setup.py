@@ -138,15 +138,13 @@ class base_setup_installer(osv.osv_memory):
             if not extended_view:
                 domain.append(('complexity', '!=', 'expert'))
 
-            default_modules = DEFAULT_MODULES.get(module_category.name, False)
-            if default_modules:
-                domain.append(('name', 'not in', default_modules))
-
             modules = module_proxy.browse(cr, uid, module_proxy.search(cr, uid, domain, context=context), context=context)
             if not modules:
                 continue
 
-            readonly = any(module.state == 'installed' for module in modules)
+            m = DEFAULT_MODULES.get(module_category.name, [])
+            r = module_proxy.search(cr, uid, [('state', '=', 'installed'),('name', 'in', m)], context=context)
+            readonly = bool(r)
 
             attributes = {
                 'name' : 'category_%d' % (module_category.id,),
@@ -158,8 +156,7 @@ class base_setup_installer(osv.osv_memory):
             arch.append("""<field %s />""" % (" ".join(["%s='%s'" % (key, value,)
                                                         for key, value in attributes.iteritems()]),))
 
-        # Compute the module to show
-
+        # Compute the modules to show
         for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
             domain = [('category_id', '=', module_category.id)]
 
