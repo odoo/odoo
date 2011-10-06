@@ -315,12 +315,18 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        mods_all = openerpweb.addons_manifest.keys()
-        mods_loaded = req.config.server_wide_modules
-        mods_to_check = [i for i in mods_all if i not in mods_loaded]
-        mods_to_load = req.session.model('ir.module.module').search_read([('state','=','installed'), ('name','in', mods_to_check)])
-        r = [i['name'] for i in mods_to_load]
-        return r
+        if req.config.backend == 'local':
+            candidates = [mod for mod in openerpweb.addons_manifest.keys()
+                          if mod not in req.config.server_wide_modules]
+            # if local backend, the modules are shared with the server
+            Modules = req.session.model('ir.module.module')
+            ids = Modules.search(
+                ['&', ('state', '=', 'installed'), ('name', 'in', candidates)]
+            )
+            return map(operator.itemgetter('name'), Modules.read(ids, ['name']))
+
+        return [name for name, descriptor in openerpweb.addons_manifest.iteritems()
+                if descriptor.get('active', True)]
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
