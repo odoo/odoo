@@ -41,6 +41,7 @@ import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
+import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
@@ -537,7 +538,7 @@ class many2many(_column):
     _type = 'many2many'
 
     def __init__(self, obj, rel=None, id1=None, id2=None, string='unknown', limit=None, **args):
-        """ 
+        """
         """
         _column.__init__(self, string=string, **args)
         self._obj = obj
@@ -551,7 +552,7 @@ class many2many(_column):
 
     def _sql_names(self, source_model):
         """Return the SQL names defining the structure of the m2m relationship table
-            
+
             :return: (m2m_table, local_col, dest_col) where m2m_table is the table name,
                      local_col is the name of the column holding the current model's FK, and
                      dest_col is the name of the column holding the destination model's FK, and
@@ -1227,7 +1228,14 @@ class property(function):
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
-        if id_val is not default_val:
+        property_create = False
+        if isinstance(default_val, openerp.osv.orm.browse_record):
+            if default_val.id != id_val:
+                property_create = True
+        elif default_val != id_val:
+            property_create = True
+
+        if property_create:
             def_id = self._field_get(cr, uid, obj._name, prop_name)
             company = obj.pool.get('res.company')
             cid = company._company_default_get(cr, uid, obj._name, def_id,
