@@ -2241,11 +2241,11 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]], self.domain]),
+                self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
-                self.view_list.do_search.call(self, domains.concat([self.domain]), contexts, groupbys);
+                self.do_search(domains.concat([self.domain]), contexts, groupbys);
             }
         });
         this.searchview.on_loaded.add_last(function () {
@@ -2272,9 +2272,18 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             }).pipe(function() {
                 self.searchview.do_search();
             });
-            
         });
         this.searchview.appendTo($("#" + this.element_id + "_search"));
+    },
+    do_search: function(domains, contexts, groupbys) {
+        var self = this;
+        this.rpc('/web/session/eval_domain_and_context', {
+            domains: domains || [],
+            contexts: contexts || [],
+            group_by_seq: groupbys || []
+        }, function (results) {
+            self.view_list.do_search(results.domain, results.context, results.group_by);
+        });
     },
     create_row: function(data) {
         var self = this;
