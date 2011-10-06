@@ -92,53 +92,48 @@
                 <div id="products-screen" class="step-screen selected-step"></div>
                 <div id="payment-screen" class="step-screen" style="display:none">
                     <header><h2>Payment</h2></header>
-                    <div class="pos-payment-container">
-                        <section>
-                            <p>
-                                Due:
-                                <span id="payment-due-total"></span> €
-                            </p>
-                            <p>Paid:</p>
-                            <ol id="paymentlines"></ol>
-                        </section>
-                        <footer>
-                            <p>
-                                Total paid:
-                                <span id="payment-paid-total"></span> €
-                            </p>
-                            <p>
-                                <span id="payment-remaining"></span> €
-                            </p>
-                            <p>
-                                <button id="validate-order">Validate</button>
-                            </p>
-                        </footer>
+                    <div class="pos-step-container">
+                        <div class="pos-payment-container">
+                            <span id="payment-due-total" class="payment-due pos-rigth-align"></span>
+                            <table id="paymentlines">
+                            </table>
+                            <table>
+                                <tr>
+                                    <td class="paymentline-type">Paid:</td>
+                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> €</td>
+                                </tr>
+                                <tr>
+                                    <td class="paymentline-type">Change:</td>
+                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> €</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="pos-payment-buttons">
+                            <button id="validate-order">
+                                <img src="/web/static/src/img/icons/gtk-apply.png"></img>
+                                Validate</button>
+                        </div>
                     </div>
                 </div>
                 <div id="receipt-screen" class="step-screen" style="display:none">
-                    <header>Receipt</header>
-                    <section>
-                        <ol id="receiptlines"></ol>
-                    </section>
-                    <footer id="receipt-summary">
-                        <ul>
-                            <li>
-                                Total:
-                                <span id="receipt-summary-total"></span> €
-                            </li>
-                            <li>
-                                Tax:
-                                <span id="receipt-summary-tax"></span> €
-                            </li>
-                            <li>
-                                Change:
-                                <span id="receipt-summary-change"></span> €
-                            </li>
-                        </ul>
-                    </footer>
-                    <p>
-                        <button id="print-receipt">Print receipt</button>
-                    </p>
+                    <header><h2>Receipt</h2></header>
+                    <div class="pos-step-container">
+                        <div class="pos-receipt-container">
+                            <div class="pos-sale-ticket">
+                                OpenERP Point of Sale<br />
+                                <br />
+                                <t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                                    Date.CultureInfo.formatPatterns.longTime)"/><br />
+                                <br />
+                                <table id="receiptlines"></table>
+                                <br />
+                                Total: <span id="receipt-summary-total"></span> €<br />
+                                Tax: <span id="receipt-summary-tax"></span> €<br />
+                                Change: <span id="receipt-summary-change"></span> €<br />
+                            </div>
+                        </div>
+                        <button id="pos-finish-order">Finish Order</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -213,24 +208,23 @@
         </td>
     </t>
     <t t-name="pos-paymentline-template">
-        <span class="paymentline-type">
+        <td class="paymentline-type">
             <t t-esc="name"/>
-        </span>
-        <span class="paymentline-amount">
+        </td>
+        <td class="paymentline-amount pos-rigth-align">
             <input type="text" t-att-value="amount.toFixed(2)" />
-        </span>
+        </td>
     </t>
     <t t-name="pos-receiptline-template">
-        <span class="receiptline-quantity">
+        <td class="receiptline-quantity">
             <t t-esc="quantity.toFixed(0)"/>
-        </span>
-        <span class="receiptline-name">
+        </td>
+        <td class="receiptline-name">
             <t t-esc="name"/>
-        </span>
-        <span class="receiptline-amount">
-            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
-            €
-        </span>
+        </td>
+        <td class="receiptline-amount">
+            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/> €
+        </td>
     </t>
     <t t-name="pos-payment-button-template">
         <button class="payment-button" t-att-cash-register-id="id">

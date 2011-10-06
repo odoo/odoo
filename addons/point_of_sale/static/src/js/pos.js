@@ -326,10 +326,20 @@ openerp.point_of_sale = function(db) {
             this.set({
                 paymentLines: new PaymentlineCollection
             });
+            this.bind('change:validated', this.validatedChanged);
             return this.set({
                 name: "Order " + this.generateUniqueId()
             });
         };
+        Order.prototype.events = {
+            'change:validated': 'validatedChanged'
+        };
+        Order.prototype.validatedChanged = function() {
+            if (this.get("validated") && !this.previous("validated")) {
+                $('.step-screen').hide();
+                $('#receipt-screen').show();
+            }
+        }
         Order.prototype.generateUniqueId = function() {
             return new Date().getTime();
         };
@@ -829,7 +839,7 @@ openerp.point_of_sale = function(db) {
             PaymentlineView.__super__.constructor.apply(this, arguments);
         }
 
-        PaymentlineView.prototype.tagName = 'li';
+        PaymentlineView.prototype.tagName = 'tr';
         PaymentlineView.prototype.className = 'paymentline';
         PaymentlineView.prototype.template = qweb_template('pos-paymentline-template');
         PaymentlineView.prototype.initialize = function() {
@@ -923,7 +933,7 @@ openerp.point_of_sale = function(db) {
             $(this.el).find('#payment-due-total').html(dueTotal.toFixed(2));
             $(this.el).find('#payment-paid-total').html(paidTotal.toFixed(2));
             remainingAmount = dueTotal - paidTotal;
-            remaining = remainingAmount > 0 ? "Due left: " + remainingAmount.toFixed(2) : "Change: " + (-remainingAmount).toFixed(2);
+            remaining = remainingAmount > 0 ? 0 : (-remainingAmount).toFixed(2);
             return $('#payment-remaining').html(remaining);
         };
         return PaymentView;
@@ -937,7 +947,7 @@ openerp.point_of_sale = function(db) {
             ReceiptLineView.__super__.constructor.apply(this, arguments);
         }
 
-        ReceiptLineView.prototype.tagName = 'li';
+        ReceiptLineView.prototype.tagName = 'tr';
         ReceiptLineView.prototype.className = 'receiptline';
         ReceiptLineView.prototype.template = qweb_template('pos-receiptline-template');
         ReceiptLineView.prototype.initialize = function() {
@@ -953,12 +963,20 @@ openerp.point_of_sale = function(db) {
         function ReceiptView() {
             ReceiptView.__super__.constructor.apply(this, arguments);
         }
-
+        
         ReceiptView.prototype.initialize = function(options) {
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
             this.bindOrderLineEvents();
             return this.bindPaymentLineEvents();
+        };
+        ReceiptView.prototype.events = {
+            "click button#pos-finish-order": "finishOrder"
+        };
+        ReceiptView.prototype.finishOrder = function() {
+            $('.step-screen').hide();
+            $('#products-screen').show();
+            this.shop.get('selectedOrder').destroy();
         };
         ReceiptView.prototype.receiptLineList = function() {
             return $(this.el).find('#receiptlines');

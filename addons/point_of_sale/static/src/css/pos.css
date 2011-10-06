@@ -44,6 +44,15 @@
 .point-of-sale li {
     list-style-type: none;
 }
+.point-of-sale button img {
+    vertical-align: bottom;
+}
+.point-of-sale .pos-rigth-align {
+    text-align: right;
+}
+.point-of-sale .pos-rigth-align input {
+    text-align: right;
+}
 .point-of-sale #container {
     width: 100%;
     height: 100%;
@@ -415,8 +424,55 @@
     padding-top: 7px;
 }
 
-.point-of-sale .pos-payment-container {
+.point-of-sale .pos-step-container {
     display: inline-block;
+    font-size: 1.5em;
+}
+.point-of-sale .pos-payment-container {
     text-align: left;
-    font-size: 2em;
+}
+.point-of-sale .pos-payment-container .payment-due {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 3px 6px 0px 6px;
+    background-color: white;
+    border:1px solid grey;
+    border-radius: 3px;
+}
+.point-of-sale .pos-payment-container table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.point-of-sale .pos-payment-container .paymentline-type {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.point-of-sale .step-screen button {
+    width: 50%;
+    text-align: center;
+    padding: 7px 0 7px 0;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.point-of-sale .pos-sale-ticket {
+    text-align: left;
+    width: 300px;
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+    display: inline-block;
+}
+.point-of-sale .pos-sale-ticket table {
+    width: 100%;
+    border: 0;
+}
+.point-of-sale .pos-sale-ticket table td {
+    border: 0;
+}
+.point-of-sale .pos-sale-ticket table td.receiptline-amount {
+    text-align: right;
+}
+.point-of-sale .pos-receipt-container {
+    font-size: 0.75em;
 }
