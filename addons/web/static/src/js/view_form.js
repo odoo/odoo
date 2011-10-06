@@ -909,7 +909,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                 return self.on_confirmed();
             }
         };
-        if ((!this.node.attrs.special && this.view.dirty_for_user) || !this.view.datarecord.id) {
+        if (!this.node.attrs.special && (this.view.dirty_for_user || !this.view.datarecord.id)) {
             return this.view.recursive_save().pipe(exec_action);
         } else {
             return exec_action();
