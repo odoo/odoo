@@ -374,11 +374,9 @@ class browse_record(object):
                 else:
                     return attr
             else:
-                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING,
-                    "Field '%s' does not exist in object '%s': \n%s" % (
-                        name, self, ''.join(traceback.format_exc())))
-                raise KeyError("Field '%s' does not exist in object '%s'" % (
-                    name, self))
+                error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
+                self.logger.notifyChannel("browse_record", netsvc.LOG_WARNING, error_msg)
+                raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
