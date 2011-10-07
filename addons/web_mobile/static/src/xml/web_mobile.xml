@@ -195,27 +195,27 @@
                          </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'date'">
-                        <label for="">
+                        <label t-att-for="field.attrs.name">
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
                         <t t-if="values[field.attrs.name]">
-                            <input id="" type="text" t-att-value="values[field.attrs.name]"/>
+                            <input t-att-id="field.attrs.name" type="text" data-role="datebox" t-att-value="values[field.attrs.name]"/>
                         </t>
                         <t t-if="!(values[field.attrs.name])">
-                            <input id="" type="text" value=""/>
+                            <input t-att-id="field.attrs.name" type="text" value=""/>
                         </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'datetime'">
-                        <label for="">
+                        <label t-att-for="field.attrs.name">
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
                         <t t-if="values[field.attrs.name]">
-                            <input id="" type="text" t-att-value="values[field.attrs.name]"/>
+                            <input t-att-id="field.attrs.name" type="text" t-att-value="values[field.attrs.name]"/>
                         </t>
                         <t t-if="!(values[field.attrs.name])">
-                            <input id="" type="text" value=""/>
+                            <input t-att-id="field.attrs.name" type="text" value=""/>
                         </t>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'boolean'">
@@ -234,11 +234,11 @@
                         </div>
                     </t>
                     <t t-if="fields[field.attrs.name].type == 'selection'">
-                        <label for="" class="select">
+                        <label t-att-for="field.attrs.name" class="select">
                             <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
                             <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>:
                         </label>
-                        <select id="" data-native-menu="false">
+                        <select t-att-id="field.attrs.name" data-native-menu="false">
                             <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
                                 <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
                             </t>
