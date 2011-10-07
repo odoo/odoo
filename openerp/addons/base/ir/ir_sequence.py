@@ -222,7 +222,8 @@ class ir_sequence(openerp.osv.osv.osv):
         argument, which can be a code or an id (as controlled by the
         ``code_or_id`` argument. This method is deprecated.
         """
-        _logger.warning("ir_sequence.get() and ir_sequence.get_id() are deprecated. "
+        # TODO: bump up to warning after 6.1 release
+        _logger.debug("ir_sequence.get() and ir_sequence.get_id() are deprecated. "
             "Please use ir_sequence.next_by_code() or ir_sequence.next_by_id().")
         if code_or_id == 'id':
             return self.next_by_id(cr, uid, sequence_code_or_id, context)
