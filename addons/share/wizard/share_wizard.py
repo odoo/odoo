@@ -134,7 +134,7 @@ class share_wizard(osv.osv_memory):
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
     }
     _defaults = {
-        'user_type' : 'new',
+        'user_type' : 'emails',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'share_root_url': lambda self, cr, uid, context, *a: context.get('share_root_url') or _('Please specify "share_root_url" in context'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
