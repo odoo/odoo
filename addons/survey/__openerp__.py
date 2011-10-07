@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Survey Module',
+    'name': 'Survey',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module is used for surveying.
 ==================================

@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Integrated FTP Server with Document Management System',
+    'name': 'Shared Repositories (FTP)',
     'version': '1.99',
-    'category': 'Tools',
+    'category': 'Knowledge Management',
     'complexity': "normal",
     'description': """
 This is a support FTP Interface with document management system.

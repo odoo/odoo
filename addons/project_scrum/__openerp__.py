@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Scrum, Agile Development Method',
+    'name': 'Methodology: SCRUM',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",

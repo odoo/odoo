@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_purchase_install_module_form" model="ir.ui.view">
-            <field name="name">Purchases Application Configuration</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-              <data>
-                  <xpath expr="//group[@name='purchase']" position="replace">
-                    <newline/>
-                    <separator  string="Purchase Management Features" colspan="4" />
-                    <field name="purchase_requisition" />
-                    <field name="purchase_analytic_plans" />
-                  </xpath>
-              </data>
-            </field>
-        </record>
 
         <record id="action_import_create_supplier_installer" model="ir.actions.act_window">
             <field name="name">Create or Import Suppliers</field>
