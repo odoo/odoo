@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Work Center Production start end workflow',
+    'name': 'Manufacturing Operations',
     'version': '1.0',
     'category': 'Manufacturing',
     'complexity': "easy",

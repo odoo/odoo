@@ -593,5 +593,636 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_42"/>
             <field eval="5" name="sequence"/>
         </record>
+
+        <record id="survey_3" model="survey">
+            <field name="title">Employee Opinion</field>
+            <field name="max_response_limit">20</field>
+            <field eval="[(6,0,[])]" name="users"/>
+            <field name="type" ref="survey.survey_type1"/>
+            <field name="responsible_id" ref="base.user_root"/>
+            <field name="response_user">5</field>
+        </record>
+        <record id="survey_page_2" model="survey.page">
+            <field name="title">Process</field>
+            <field name="survey_id" ref="survey_3"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_page_10" model="survey.page">
+            <field name="title">Survey</field>
+            <field name="survey_id" ref="survey_3"/>
+            <field eval="5" name="sequence"/>
+        </record>
+        <record id="survey_question_0" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="1" name="sequence"/>
+            <field name="question">Employee Details</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">multiple_textboxes_diff_type</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_2"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_3" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="1" name="sequence"/>
+            <field name="question">Engagement</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_6" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="2" name="sequence"/>
+            <field name="question">Leadership</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_10" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="3" name="sequence"/>
+            <field name="question">Effectiveness</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_14" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="4" name="sequence"/>
+            <field name="question">Continuous Improvement</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_18" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="5" name="sequence"/>
+            <field name="question">Openness</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_40" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="6" name="sequence"/>
+            <field name="question">Miscellaneous</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">matrix_of_choices_only_one_ans</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_41" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="7" name="sequence"/>
+            <field name="question">Additional comments :</field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">comment</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="0" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_10"/>
+            <field name="comment_label">Other</field>
+            <field eval="0" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_21" model="survey.question">
+            <field name="in_visible_answer_type">1</field>
+            <field name="validation_type">do_not_validate</field>
+            <field name="comment_valid_type">do_not_validate</field>
+            <field name="make_comment_field_err_msg">Please enter a comment.</field>
+            <field name="numeric_required_sum_err_msg">The choices need to add up to [enter sum here].</field>
+            <field eval="0" name="comment_column"/>
+            <field name="validation_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field eval="0" name="rating_allow_one_column_require"/>
+            <field name="req_error_msg">This question requires an answer.</field>
+            <field eval="2" name="sequence"/>
+            <field name="question">At the supervisor's appraisal date </field>
+            <field eval="0" name="is_require_answer"/>
+            <field name="type">descriptive_text</field>
+            <field name="comment_valid_err_msg">The comment you entered is in an invalid format.</field>
+            <field name="descriptive_text">* His direct reports will be invited through OpenERP to express a feedback on their supervisor's leadership and to give their opinion about their own engagement and effectiveness, the continuous improvement and openness in action in the company, ...
+
+* The employees will send back their anonymous answers to OpenERP. The data will be handled by the HR manager and a  brief summary of the data will be sent to the concerned supervisor, to his team and to the supervisor's supervisor.
+* The appraiser should rate the employee’s major work accomplishments and     performance according to the metric provided below :
+
+    1 - Significantly exceeds standards and expectations required of the position
+    2 - Exceeds standards and expectations
+    3 - Meet standards and expectations
+    4 - Did not meet standards and expectations
+    5 - Significantly below standards and expectations</field>
+            <field eval="0" name="make_comment_field"/>
+            <field eval="1" name="in_visible_menu_choice"/>
+            <field name="page_id" ref="survey_page_2"/>
+            <field name="comment_label">Other</field>
+            <field eval="1" name="in_visible_rating_weight"/>
+            <field eval="0" name="allow_comment"/>
+        </record>
+        <record id="survey_question_column_heading_14" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_3"/>
+        </record>
+        <record id="survey_question_column_heading_15" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_3"/>
+        </record>
+        <record id="survey_question_column_heading_16" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_3"/>
+        </record>
+        <record id="survey_question_column_heading_17" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_3"/>
+        </record>
+        <record id="survey_question_column_heading_18" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_3"/>
+        </record>
+        <record id="survey_question_column_heading_19" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_6"/>
+        </record>
+        <record id="survey_question_column_heading_20" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_6"/>
+        </record>
+        <record id="survey_question_column_heading_21" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_6"/>
+        </record>
+        <record id="survey_question_column_heading_22" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_6"/>
+        </record>
+        <record id="survey_question_column_heading_23" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_6"/>
+        </record>
+        <record id="survey_question_column_heading_24" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_10"/>
+        </record>
+        <record id="survey_question_column_heading_25" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_10"/>
+        </record>
+        <record id="survey_question_column_heading_26" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_10"/>
+        </record>
+        <record id="survey_question_column_heading_27" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_10"/>
+        </record>
+        <record id="survey_question_column_heading_28" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_10"/>
+        </record>
+        <record id="survey_question_column_heading_29" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_14"/>
+        </record>
+        <record id="survey_question_column_heading_30" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_14"/>
+        </record>
+        <record id="survey_question_column_heading_31" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_14"/>
+        </record>
+        <record id="survey_question_column_heading_32" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_14"/>
+        </record>
+        <record id="survey_question_column_heading_33" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_14"/>
+        </record>
+        <record id="survey_question_column_heading_34" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_18"/>
+        </record>
+        <record id="survey_question_column_heading_35" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_18"/>
+        </record>
+        <record id="survey_question_column_heading_36" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_18"/>
+        </record>
+        <record id="survey_question_column_heading_37" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_18"/>
+        </record>
+        <record id="survey_question_column_heading_38" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_18"/>
+        </record>
+        <record id="survey_question_column_heading_39" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">1</field>
+            <field name="question_id" ref="survey_question_40"/>
+        </record>
+        <record id="survey_question_column_heading_40" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">2</field>
+            <field name="question_id" ref="survey_question_40"/>
+        </record>
+        <record id="survey_question_column_heading_41" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">3</field>
+            <field name="question_id" ref="survey_question_40"/>
+        </record>
+        <record id="survey_question_column_heading_42" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">4</field>
+            <field name="question_id" ref="survey_question_40"/>
+        </record>
+        <record id="survey_question_column_heading_43" model="survey.question.column.heading">
+            <field name="in_visible_rating_weight">1</field>
+            <field name="in_visible_menu_choice">1</field>
+            <field name="title">5</field>
+            <field name="question_id" ref="survey_question_40"/>
+        </record>
+        <record id="survey_answer_0" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Demonstrates genuine concern for me as a person. </field>
+            <field name="question_id" ref="survey_question_6"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_2" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I'm efficient at work and my achievements are successful.</field>
+            <field name="question_id" ref="survey_question_10"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_3" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I am proud to tell others I work here. </field>
+            <field name="question_id" ref="survey_question_3"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_4" model="survey.answer">
+            <field name="in_visible_answer_type">0</field>
+            <field name="answer">Name of your direct supervisor</field>
+            <field name="question_id" ref="survey_question_0"/>
+            <field name="type">char</field>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_5" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Actions by Executive management show genuine interest in the well-being of employees.</field>
+            <field name="question_id" ref="survey_question_40"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_6" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I know the company's values and live them.</field>
+            <field name="question_id" ref="survey_question_18"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_7" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">My work contributes towards the continuous improvement of the company, our services or products. </field>
+            <field name="question_id" ref="survey_question_14"/>
+            <field eval="1" name="sequence"/>
+        </record>
+        <record id="survey_answer_8" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I have enough work.</field>
+            <field name="question_id" ref="survey_question_10"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_9" model="survey.answer">
+            <field name="in_visible_answer_type">0</field>
+            <field name="answer">Date</field>
+            <field name="question_id" ref="survey_question_0"/>
+            <field name="type">datetime</field>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_11" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I consistently acquire new knowledge, skills or understanding through contact with my supervisor. He helps me growing my compete</field>
+            <field name="question_id" ref="survey_question_6"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_12" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">My job provides me with a sense of personal accomplishment.</field>
+            <field name="question_id" ref="survey_question_3"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_13" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">What I did several months ago is still of use to the company, the services or the products today. </field>
+            <field name="question_id" ref="survey_question_14"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_14" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">My best achievements have been communicated to the community, internally or to customers. </field>
+            <field name="question_id" ref="survey_question_18"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_15" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I have the same opportunity to succeed as others with similar experiences, performance and educational background. </field>
+            <field name="question_id" ref="survey_question_40"/>
+            <field eval="2" name="sequence"/>
+        </record>
+        <record id="survey_answer_16" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Compared to similar jobs in other companies where I could work, my total compensation is:
+(Scale: Well below others, Below othe</field>
+            <field name="question_id" ref="survey_question_40"/>
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_answer_17" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Overall, I believe the quality of products and/or services my workgroup delivers is improving.</field>
+            <field name="question_id" ref="survey_question_14"/>
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_answer_18" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I would prefer to remain with this company even if a comparable job were available in another company. </field>
+            <field name="question_id" ref="survey_question_3"/>
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_answer_19" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Listens and takes into account all ideas and do his best to put in place the best of these. </field>
+            <field name="question_id" ref="survey_question_6"/>
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_answer_21" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I mostly work on value-added tasks for the company, the products or the services. (Value-added task : significant improvement pe</field>
+            <field name="question_id" ref="survey_question_10"/>
+            <field eval="3" name="sequence"/>
+        </record>
+        <record id="survey_answer_22" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Our workgroup identifies and reduces waste of time in our activities and processes. </field>
+            <field name="question_id" ref="survey_question_14"/>
+            <field eval="4" name="sequence"/>
+        </record>
+        <record id="survey_answer_23" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">Taking everything into account, how satisfied are you with your current job? </field>
+            <field name="question_id" ref="survey_question_3"/>
+            <field eval="4" name="sequence"/>
+        </record>
+        <record id="survey_answer_24" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I understand the company strategy and how my workgroup supports it. </field>
+            <field name="question_id" ref="survey_question_40"/>
+            <field eval="4" name="sequence"/>
+        </record>
+        <record id="survey_answer_51" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I am willing to put in a great deal of effort beyond what is expected to help my workgroup succeed.</field>
+            <field name="question_id" ref="survey_question_3"/>
+            <field eval="5" name="sequence"/>
+        </record>
+        <record id="survey_answer_52" model="survey.answer">
+            <field name="in_visible_answer_type">1</field>
+            <field name="answer">I believe the information that I get from the person I report to. </field>
+            <field name="question_id" ref="survey_question_6"/>
+            <field eval="5" name="sequence"/>
+        </record>
     </data>
+
+    <data noupdate="1">
+        <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
+            <field eval="1" name="active"/>
+            <field eval="6" name="month_next"/>
+            <field name="name">Manager's Evaluation Plan</field>
+            <field eval="3" name="month_first"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="hr_evaluation_plan_phase_sendtosubordinates0" model="hr_evaluation.plan.phase">
+            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+            <field name="name">Send to Subordinates</field>
+            <field eval="0" name="send_anonymous_manager"/>
+            <field eval="1" name="sequence"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="action">bottom-up</field>
+            <field eval="0" name="send_anonymous_employee"/>
+            <field eval="0" name="send_answer_employee"/>
+            <field name="survey_id" ref="hr_evaluation.survey_2"/>
+            <field eval="0" name="send_answer_manager"/>
+            <field eval="0" name="wait"/>
+        </record>
+        <record id="hr_evaluation_plan_phase_sendtomanagers0" model="hr_evaluation.plan.phase">
+            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+            <field name="name">Send to Managers</field>
+            <field eval="0" name="send_anonymous_manager"/>
+            <field eval="2" name="sequence"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="action">top-down</field>
+            <field eval="0" name="send_anonymous_employee"/>
+            <field eval="0" name="send_answer_employee"/>
+            <field name="survey_id" ref="hr_evaluation.survey_2"/>
+            <field eval="0" name="send_answer_manager"/>
+            <field eval="0" name="wait"/>
+        </record>
+        <record id="hr_evaluation_plan_phase_sendtoemployee0" model="hr_evaluation.plan.phase">
+            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+            <field name="name">Send to Employee</field>
+            <field eval="0" name="send_anonymous_manager"/>
+            <field eval="3" name="sequence"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="action">self</field>
+            <field eval="0" name="send_anonymous_employee"/>
+            <field eval="0" name="send_answer_employee"/>
+            <field name="survey_id" ref="hr_evaluation.survey_2"/>
+            <field eval="0" name="send_answer_manager"/>
+            <field eval="0" name="wait"/>
+        </record>
+        <record id="hr_evaluation_plan_phase_finalinterviewwithmanager0" model="hr_evaluation.plan.phase">
+            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+            <field name="name">Final Interview With Manager</field>
+            <field eval="0" name="send_anonymous_manager"/>
+            <field eval="4" name="sequence"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="action">final</field>
+            <field eval="0" name="send_anonymous_employee"/>
+            <field eval="0" name="send_answer_employee"/>
+            <field name="survey_id" ref="hr_recruitment.survey_job_0"/>
+            <field eval="0" name="send_answer_manager"/>
+            <field eval="1" name="wait"/>
+        </record>
+    </data>
+
+    <data>
+        <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
+           <field name="name">Run Employee Evaluation</field>
+           <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">1</field>
+           <field name="interval_type">days</field>
+           <field name="numbercall">-1</field>
+           <field eval="'hr.employee'" name="model" />
+           <field eval="'run_employee_evaluation'" name="function" />
+           <field eval="'(False,)'" name="args" />
+        </record>
+     </data>
+
 </openerp>

@@ -39,6 +39,8 @@ class hr_evaluation_plan(osv.osv):
     }
     _defaults = {
         'active': True,
+        'month_first': 6,
+        'month_next': 12,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 hr_evaluation_plan()

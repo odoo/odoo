@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Long Term Project Management",
+    "name": "Long Term Planning",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",

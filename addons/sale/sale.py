@@ -216,7 +216,7 @@ class sale_order(osv.osv):
         'partner_shipping_id': fields.many2one('res.partner.address', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Shipping address for current sales order."),
 
         'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction."),
-        'picking_policy': fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery')],
+        'picking_policy': fields.selection([('direct', 'Deliver each products when available'), ('one', 'Deliver all products at once')],
             'Picking Policy', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
         'order_policy': fields.selection([
             ('prepaid', 'Pay before delivery'),
@@ -728,6 +728,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
+                        'price_unit': line.product_id.standard_price or 0.0
                     })
                     
                 if line.product_id:
@@ -1215,7 +1216,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
-        'charge_delivery': fields.boolean('Do you charge the delivery'),
+        'charge_delivery': fields.boolean('Do you charge the delivery?'),
         'time_unit': fields.many2one('product.uom','Main Working Time Unit')
     }
     _defaults = {
@@ -1224,12 +1225,10 @@ class sale_config_picking_policy(osv.osv_memory):
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
         res = {}
-        if sale or deli:
+        if sale:
             res.update({'order_policy': 'manual'})
-        elif not sale and not deli:
-            res.update({'order_policy': 'manual'})
-        else:
-            return {}
+        elif deli:
+            res.update({'order_policy': 'picking'})
         return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
@@ -1239,26 +1238,18 @@ class sale_config_picking_policy(osv.osv_memory):
         module_obj = self.pool.get('ir.module.module')
         module_upgrade_obj = self.pool.get('base.module.upgrade')
         module_name = []
-        group_ids=[]
-        group_name = ['group_sale_salesman','group_sale_manager']
 
-        for name in group_name:
-            data_id = data_obj.name_search(cr, uid, name)
-            group_ids.append(data_obj.browse(cr,uid,data_id[0][0]).res_id)
+        group_id = data_obj.get_object(cr, uid, 'base', 'group_sale_salesman').id
 
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.sale_orders:
-            menu_name = 'menu_invoicing_sales_order_lines'
-            data_id = data_obj.name_search(cr, uid, menu_name)
-            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]}) 
+            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_invoicing_sales_order_lines').id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]}) 
 
         if wizard.deli_orders:
-            menu_name = 'menu_action_picking_list_to_invoice'
-            data_id = data_obj.name_search(cr, uid, menu_name)
-            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
-            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]})
+            menu_id = data_obj.get_object(cr, uid, 'sale', 'menu_action_picking_list_to_invoice').id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_id)]})
 
         if wizard.task_work:
             module_name.append('project_timesheet')
@@ -1268,12 +1259,7 @@ class sale_config_picking_policy(osv.osv_memory):
             module_name.append('account_analytic_analysis')
 
         if wizard.charge_delivery:
-            module_name.append('delivery')    
-
-        if wizard.time_unit:
-            product_obj = self.pool.get('product.product')
-            product_id = product_obj.name_search(cr, uid, 'Employee')
-            product_obj.write(cr, uid, product_id[0][0], {'uom_id':wizard.time_unit.id})
+            module_name.append('delivery')
 
         if len(module_name):
             module_ids = []
@@ -1291,7 +1277,17 @@ class sale_config_picking_policy(osv.osv_memory):
             if need_install:
                 pooler.restart_pool(cr.dbname, update_module=True)[1]
 
+        if wizard.time_unit:
+            prod_id = data_obj.get_object(cr, uid, 'hr_timesheet', 'product_consultant').id
+            product_obj = self.pool.get('product.product')
+            product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+
         ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)  
+        if wizard.task_work and wizard.time_unit:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+            self.pool.get('res.company').write(cr, uid, [company_id], {
+                'project_time_mode_id': wizard.time_unit.id
+            }, context=context)
 
 sale_config_picking_policy()
 

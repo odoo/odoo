@@ -64,11 +64,11 @@
                 <form string="Sales Team">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="2"/>
-                        <field name="parent_id" select="2" widget="selection"/>
+                        <field name="parent_id" select="2"/>
                         <field name="code" select="1"/>
                         <newline/>
                         <field name="user_id" select="2"/>
-                        <field name="resource_calendar_id" select="2" widget="selection"/>
+                        <field name="resource_calendar_id" select="2"/>
                         <field name="active" select="2"/>
                     </group>
                     <notebook colspan="4">
@@ -154,12 +154,12 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <form string="Stage">
-                    <separator string="Stage Definition" colspan="4"/>
-                    <field name="name" select="1"/>
-                    <field name="sequence"/>
-                    <field name="probability"/>
-                    <group colspan="4" col="2" >
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="probability"/>
                         <field name="on_change"/>
+                        <field name="case_default"/>
+                        <field name="sequence"/>
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
@@ -230,7 +230,7 @@
             <field name="arch" type="xml">
                 <form string="Campaign">
                     <field name="name" select="1"/>
-                    <field name="section_id" select="1" widget="selection"/>
+                    <field name="section_id"/>
                 </form>
             </field>
         </record>
@@ -382,7 +382,6 @@
             <field name="arch" type="xml">
                 <group name="default_filters" position="inside">
                     <field name="context_section_id" completion="1"
-                        widget="selection"
                         readonly="0"/>
                 </group>
             </field>
@@ -396,7 +395,7 @@
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <group name="default_filters" position="inside">
-                        <field name="context_section_id" completion="1" widget="selection"/>
+                        <field name="context_section_id" completion="1"/>
                     </group>
                 </field>
         </record>

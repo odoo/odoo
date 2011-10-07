@@ -74,7 +74,7 @@ Web client WYSIWYG
     "version" : "0.9",
     "depends" : ["base"],
     "author" : "Camptocamp SA - NBessi",
-    "category": "Tools",
+    "category": "Hidden",
     "url": "http://http://www.camptocamp.com/",
     "data": [ "security/ir.model.access.csv",
               "data.xml",

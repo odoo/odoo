@@ -11,7 +11,7 @@
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Accounting Chart</attribute>
+                    <attribute name="string">Configure Your Chart of Accounts</attribute>
                 </separator>
                 <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">The default Chart of Accounts is matching your country selection. If no certified Chart of Accounts exists for your specified country, a generic one can be installed and will be selected by default.</attribute>
@@ -26,7 +26,7 @@
                 <group colspan="8" position="inside">
                     <group colspan="4" width="600">
                         <field name="charts"/>
-                            <group colspan="4" groups="base.group_extended">
+                            <group colspan="4" groups="account.group_account_user">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
                                 <field name="company_id" colspan="4" widget="selection"/><!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
@@ -43,28 +43,8 @@
             </field>
         </record>
 
-        <record id="view_account_modules_installer" model="ir.ui.view">
-            <field name="name">account.installer.modules.form</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='account_accountant']" position="replace">
-                    <newline/>
-                    <separator string="Accounting &amp; Finance Features" colspan="4"/>
-                    <field name="account_followup"/>
-                    <field name="account_payment"/>
-                    <field name="account_analytic_plans"/>
-                    <field name="account_anglo_saxon"/>
-                    <field name="account_asset"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Chart Configuration</field>
+            <field name="name">Install your Chart of Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>
@@ -85,25 +65,13 @@
             <field name="type">automatic</field>
         </record>
 
-        <record id="action_bank_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Define your Bank Account</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.bank</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-        </record>
-
-        <record id="bank_account_configuration_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_bank_account_configuration_installer" />
-            <field name="category_id" ref="category_accounting_configuration" />
-        </record>
-
         <record id="action_view_financial_accounts_installer" model="ir.actions.act_window">
             <field name="name">Review your Financial Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{'config_invisible': False}</field>
         </record>
 
         <record id="view_financial_accounts_todo" model="ir.actions.todo">
@@ -113,11 +81,12 @@
         </record>
 
         <record id="action_review_financial_journals_installer" model="ir.actions.act_window">
-            <field name="name">Review your Financial Journal</field>
+            <field name="name">Review your Financial Journals</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Setup your accounting journals. For bank accounts, it's better to use the 'Setup Your Bank Accounts' tool that will automatically create the accounts and journals for you.</field>
         </record>
 
         <record id="review_financial_journals_todo" model="ir.actions.todo">
@@ -131,6 +100,7 @@
             <field name="res_model">account.payment.term</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Payment terms define the conditions to pay a customer or supplier invoice in one or several payments. Customers periodic reminders will use the payment terms for each letter. Each customer or supplier can be assigned to one of these payment terms.</field>
         </record>
 
         <record id="review_payment_terms_todo" model="ir.actions.todo">

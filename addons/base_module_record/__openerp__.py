@@ -23,7 +23,7 @@
 {
     'name': 'Module Record',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module allows you to create a new module without any development.
 ======================================================================
