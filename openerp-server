@@ -232,13 +232,6 @@ if __name__ == "__main__":
         # services to be running before loading any registry.
         openerp.service.start_services()
 
-    if config['db_name']:
-        for dbname in config['db_name'].split(','):
-            preload_registry(dbname)
-
-    if config["stop_after_init"]:
-        sys.exit(0)
-
     for m in openerp.conf.server_wide_modules:
         try:
             __import__(m)
@@ -253,6 +246,13 @@ if __name__ == "__main__":
 The `web` module is provided by the addons found in the `openerp-web` project.
 Maybe you forgot to add those addons in your addons_path configuration."""
             logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
+
+    if config['db_name']:
+        for dbname in config['db_name'].split(','):
+            preload_registry(dbname)
+
+    if config["stop_after_init"]:
+        sys.exit(0)
 
     setup_pid_file()
     logger = logging.getLogger('server')
