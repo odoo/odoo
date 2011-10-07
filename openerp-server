@@ -247,7 +247,12 @@ if __name__ == "__main__":
             if info['post_load']:
                 getattr(sys.modules[m], info['post_load'])()
         except Exception:
-            logging.exception('Failed to load server-wide module `%s`', m)
+            msg = ''
+            if m == 'web':
+                msg = """
+The `web` module is provided by the addons found in the `openerp-web` project.
+Maybe you forgot to add those addons in your addons_path configuration."""
+            logging.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
     setup_pid_file()
     logger = logging.getLogger('server')
