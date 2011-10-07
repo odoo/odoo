@@ -154,18 +154,21 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             one_object = self.parse_xml(arch[0].arch,view_id);
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
             dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
-
-            return self.edit_view({"main_object": one_object,
+                _.each(result, function(res) {
+                    self.inherit_view(one_object, res);
+                });
+                return self.edit_view({"main_object": one_object,
                          "parent_child_id": self.parent_child_list(one_object, [])});
             });
         });
     },
+
     parent_child_list: function(one_object, p_list) {
         var self = this;
         _.each(one_object , function(element){
             if(element.child_id.length != 0){
                 p_list.push({"key":element.id,"value":_.pluck(element.child_id, 'id')});
-                self.parent_child_list(element.child_id,p_list);
+                self.parent_child_list(element.child_id, p_list);
             }
         });
         return p_list;
@@ -202,48 +205,34 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     }
                 xpath_object = self.parse_xml(xml,result.id);
             }
-            $.each(function(){
+            $.each(one_object, function(key, val){
+                self.search_object(val, check_list, xpath_object, []);
             });
-            self.search_object(val,check_list,[],position,xpath_object['main_object'],[]);
+            
         });
     },
-    search_object: function(val ,list ,p_list ,position, xpath_object){
+
+    search_object: function(val ,list , xpath_object, p_list){
         var self = this;
         var main_list = $.trim(val.name.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
         var insert = _.intersection(main_list,list);
         var check = _.indexOf(p_list.child_id,xpath_object[0]);
         if(check == -1){
             if(insert.length == list.length){
-                var level = val.level;
+                var level = val.level+1;
                 $.each(xpath_object, function(key, val) {
                     self.increase_level(val, level)
                 });   
-                var index = _.indexOf(p_list.child_id,val);
-                switch (position)
-                {
-                    case "before":
-                        if (index != 0) { index--; }
-                        p_list.child_id.splice(index,0,xpath_object[0]);
-                        break;
-                    case "after":
-                         index++;
-                         p_list.child_id.splice(index,0,xpath_object[0]);
-                        break;
-                    case "inside":
-                        val.child_id.push(xpath_object[0]);
-                        break;
-                    case "replace":
-                        break;
-                }
-                
+                val.child_id.push(xpath_object[0]);
+                return;
             }else{
                 if ( val.child_id.length != 0) { p_list = val; }
                 $.each(val.child_id, function(key, val) {
-                   self.search_object(val, list, p_list, position, xpath_object);
+                   self.search_object(val, list, xpath_object, p_list);
                 });
             }
         }
-        return return_list;
+        
     },
 
     increase_level :function(val, level){
@@ -256,7 +245,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 
     edit_view : function(one_object){
         var self = this;
-        console.log("++++++++++++++++++++++",one_object);
         this.dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Edit Xml',
@@ -376,18 +364,18 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     });
     },
     on_expand: function(self){
-        var level = $(self).closest("tr[id^='viewedit-']").attr('level');
+        var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(self).closest("tr[id^='viewedit-']");
         while (1){
             var nxt_tr = cur_tr.next();
-            if (nxt_tr.attr('level') > level){
+            if (parseInt(nxt_tr.attr('level')) > level){
                 cur_tr = nxt_tr;
                 nxt_tr.hide();
             }else return nxt_tr;
         }
     },
     on_collapse: function(self,parent_child_id,id,main_object){
-        var id = self.id.split('-')[1];
+        var id = parseInt(self.id.split('-')[1]);
         var datas = _.detect(parent_child_id,function(res){
             return res.key == id;
         });
