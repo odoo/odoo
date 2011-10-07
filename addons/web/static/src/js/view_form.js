@@ -1897,6 +1897,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                     self.save_form_view();
                 });
                 controller.$element.find(".oe_form_button_save_edit").hide();
+            } else if (view_type == "graph") {
+                self.reload_current_view()
             }
             self.is_started.resolve();
         });
@@ -1919,6 +1921,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.form_last_update.then(function() {
                 this.form_last_update = view.do_show();
             });
+        } else if (self.viewmanager.active_view === "graph") {
+            view.do_search(this.build_domain(), this.dataset.get_context(), []);
         }
     },
     set_value: function(value) {

@@ -28,6 +28,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.ordinate = null;
         this.columns = [];
         this.group_field = null;
+        this.is_loaded = $.Deferred();
     },
     do_show: function () {
         this.$element.show();
@@ -86,6 +87,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
         }, this);
         this.ordinate = this.columns[0].name;
+        this.is_loaded.resolve();
     },
     schedule_chart: function(results) {
         var self = this;
@@ -371,13 +373,16 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     },
 
     do_search: function(domain, context, group_by) {
-        // TODO: handle non-empty group_by with read_group?
-        if (!_(group_by).isEmpty()) {
-            this.abscissa = group_by[0];
-        } else {
-            this.abscissa = this.first_field;
-        }
-        this.dataset.read_slice(this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
+        var self = this;
+        return $.when(this.is_loaded).pipe(function() {
+            // TODO: handle non-empty group_by with read_group?
+            if (!_(group_by).isEmpty()) {
+                self.abscissa = group_by[0];
+            } else {
+                self.abscissa = self.first_field;
+            }
+            return self.dataset.read_slice(self.list_fields(), {}, $.proxy(self, 'schedule_chart'));
+        });
     }
 });
 };
