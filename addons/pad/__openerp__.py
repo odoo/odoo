@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Enhanced support for (Ether)Pad attachments',
+    'name': 'Collaborative Note Pad',
     'version': '1.0.3',
-    'category': 'Tools',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.

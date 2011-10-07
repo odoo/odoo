@@ -43,7 +43,7 @@
                 <form string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                        <field name="date" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>

@@ -90,12 +90,11 @@ class pos_make_payment(osv.osv_memory):
     _columns = {
         'journal': fields.selection(pos_box_entries.get_journal, "Payment Mode", required=True),
         'amount': fields.float('Amount', digits=(16,2), required= True),
-        'payment_name': fields.char('Payment Reference', size=32, required=True),
+        'payment_name': fields.char('Payment Reference', size=32),
         'payment_date': fields.date('Payment Date', required=True),
     }
     _defaults = {
         'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
-        'payment_name': _('Payment'),
         'amount': _default_amount,
         'journal': _default_journal
     }
