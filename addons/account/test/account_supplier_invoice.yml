@@ -66,8 +66,8 @@
       'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')})
     amt = move_obj._search_amount(cr, uid, move_obj, 'amount', [('amount', '=', 3100.0)], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
       'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')})
-    search_ids = amt[0][2]
-    amt_compute = move_obj._amount_compute(cr, uid, list(search_ids), 'amount', None, {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+    ids = amt[0][2]
+    amt_compute = move_obj._amount_compute(cr, uid, list(ids), 'amount', None, {'lang': u'en_US', 'active_model': 'ir.ui.menu',
       'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')}, where ='')
     move_amount = amt_compute.values()
     assert(inv.move_id and move.period_id.id == get_period and move_amount[0] == 3100.0), ('Journal Entries has not been created')
