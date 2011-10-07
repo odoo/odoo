@@ -234,7 +234,11 @@
                         <field name="count_comments" />
                         <field name="count_votes" />
                     </group>
-                    <field name="stat_vote_ids" colspan="4" mode="tree" nolabel="1">
+                    <field name="stat_vote_ids" colspan="4" mode="graph,tree" nolabel="1">
+                        <graph string="Votes Statistics" type="bar">
+                            <field name="score"/>
+                            <field name="nbr"/>
+                        </graph>
                         <tree string="Votes Statistics">
                             <field name="score"/>
                             <field name="nbr"/>
