@@ -60,7 +60,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     action_manager.do_action(action);
     },
 
-    check_attr: function(xml ,tag,level) {
+    check_attr: function(xml ,tag, level) {
         var obj = new Object();
         obj.child_id = [];
         obj.id = this.xml_id++;
@@ -82,14 +82,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return obj;
     },
 
-    save_object: function(val, parent_list, child_obj_list){
+    save_object: function(val, parent_list, child_obj_list) {
         var self = this;
         var check_id = parent_list[0];
         var p_list = parent_list.slice(1);
         if (val.child_id.length != 0) {
             $.each(val.child_id, function(key, val) {
                 if (val.id == check_id) {
-                    if (p_list.length!=0) {
+                    if (p_list.length != 0) {
                         self.save_object(val, p_list, child_obj_list);
                     } else {
                         val.child_id = child_obj_list;
@@ -152,17 +152,24 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var ve_dataset = new openerp.web.DataSet(this,'ir.ui.view');       
         ve_dataset.read_ids([parseInt(view_id)], ['arch'], function (arch) {
             one_object = self.parse_xml(arch[0].arch,view_id);
-            one_object.arch = arch[0].arch; 
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
             dataset.read_slice([],{domain : [['inherit_id','=',parseInt(view_id)]]},function (result) {
-                _.each(result,function(res){
-                    self.inherit_view(one_object,res);
-                });
-                return self.edit_view(one_object);
+
+            return self.edit_view({"main_object": one_object,
+                         "parent_child_id": self.parent_child_list(one_object, [])});
             });
         });
     },
-
+    parent_child_list: function(one_object, p_list) {
+        var self = this;
+        _.each(one_object , function(element){
+            if(element.child_id.length != 0){
+                p_list.push({"key":element.id,"value":_.pluck(element.child_id, 'id')});
+                self.parent_child_list(element.child_id,p_list);
+            }
+        });
+        return p_list;
+    },
     inherit_view: function(one_object, result){
         var self = this;
         var root = $(result.arch).filter('*');
@@ -249,6 +256,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 
     edit_view : function(one_object){
         var self = this;
+        console.log("++++++++++++++++++++++",one_object);
         this.dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Edit Xml',
@@ -268,7 +276,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     this.dialog.start().open();
     this.dialog.$element.html(QWeb.render('view_editor', {
-       'data': one_object,
+       'data': one_object['main_object'],
     }));
 
     $("tr[id^='viewedit-']").click(function() {
