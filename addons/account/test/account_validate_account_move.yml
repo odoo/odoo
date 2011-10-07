@@ -7,27 +7,6 @@
     name : Tax Code Test
     sign : 1.00
 -
-  I assign Payment term on partner
--
-  !python {model: res.partner}: |
-    ids = self.search(cr, uid, [('id', '=', ref('base.res_partner_desertic_hispafuentes'))])
-    payment = self.write(cr, uid, ids, {'property_payment_term':1}, context=context)
-    assert payment, "Payment term is not assigned on the partner"
--
-  I create a tax
--  
-  !record {model: account.tax, id: tax_10}:
-    name: Tax_10
-    amount: 10
-    type: fixed
-    sequence: 1
-    type_tax_use: all
--
-  I assign tax on account
--
-  !python {model: account.account}: |
-    cr.execute('insert into account_account_tax_default_rel (account_id, tax_id) values (%s,%s)', (ref('a_recv'), ref('tax_10')))
--
   In order to test the 'Post Journal Entries' wizard in OpenERP, I created an account move
 -
   !record {model: account.move, id: account_move_0}:
