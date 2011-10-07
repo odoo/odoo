@@ -1,0 +1,124 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* analytic_journal_billing_rate
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-11 10:47+0000\n"
+"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:37+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
+
+#. module: analytic_journal_billing_rate
+#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default invoicing rate for "
+"a specific journal on a given account. This is mostly used when a user "
+"encodes his timesheet: the values are retrieved and the fields are auto-"
+"filled... but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the account data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"\n"
+"    Este módulo le permite definir el porcentaje de facturación para un "
+"cierto diario en una cuenta dada. Se utiliza principalmente cuando un "
+"usuario codifica su hoja de servicios: los valores son recuperados y los "
+"campos son auto rellenados aunque la posibilidad de cambiar estos valores "
+"está todavía disponible.\n"
+"\n"
+"    Obviamente si no se ha guardado datos para la cuenta actual, se "
+"proporciona el valor por defecto para los datos de la cuenta como siempre "
+"por lo que este módulo es perfectamente compatible con configuraciones "
+"anteriores.\n"
+"\n"
+"    "
+
+#. module: analytic_journal_billing_rate
+#: field:analytic_journal_rate_grid,journal_id:0
+msgid "Analytic Journal"
+msgstr "Diario analítico"
+
+#. module: analytic_journal_billing_rate
+#: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: analytic_journal_billing_rate
+#: view:analytic_journal_rate_grid:0
+msgid "Billing Rate per Journal for this Analytic Account"
+msgstr "Tasa de facturación por diario para esta cuenta analítica"
+
+#. module: analytic_journal_billing_rate
+#: field:analytic_journal_rate_grid,account_id:0
+#: model:ir.model,name:analytic_journal_billing_rate.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Cuenta analítica"
+
+#. module: analytic_journal_billing_rate
+#: model:ir.model,name:analytic_journal_billing_rate.model_analytic_journal_rate_grid
+msgid "Relation table between journals and billing rates"
+msgstr "﻿Tabla de relación entre diarios y tasas de facturación"
+
+#. module: analytic_journal_billing_rate
+#: field:account.analytic.account,journal_rate_ids:0
+msgid "Invoicing Rate per Journal"
+msgstr "Tasa de facturación por diario"
+
+#. module: analytic_journal_billing_rate
+#: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
+msgid ""
+"Analytic Journal Billing Rate, Define the default invoicing rate for a "
+"specific journal"
+msgstr ""
+"Tasa de facturación de un diario analítico. Define la tasa de facturación "
+"por defecto para un diario en concreto."
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"¡Error! La divisa tiene que ser la misma que la establecida en la compañía "
+"seleccionada"
+
+#. module: analytic_journal_billing_rate
+#: field:analytic_journal_rate_grid,rate_id:0
+msgid "Invoicing Rate"
+msgstr "Tasa de facturación"
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
+
+#. module: analytic_journal_billing_rate
+#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Línea hoja de servicios"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Analytic Journal Billing Rate"
+#~ msgstr "Tasa facturación diario analítico"
