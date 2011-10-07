@@ -131,7 +131,25 @@ class mailgate_thread(osv.osv):
                 if isinstance(att,(int,long)):
                     attachments.append(att)
                 elif isinstance(att,dict):
-                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id,'name': att[0], 'datas': base64.encodestring(att[1])}))
+                    domain = [
+                        ('name', '=', att[0]),
+                        ('res_id', '=', case.id),
+                        ('res_model', '=', case._name)
+                    ]
+                    att_ids = att_obj.search(cr, uid, domain, context=context)
+
+                    if att_ids:
+                        attachments.extend(att_ids)
+                    else:
+                        values = {
+                            'res_model' : case._name,
+                            'res_id' : case.id,
+                            'name' : att[0],
+                            'datas' : base64.encodestring(att[1])
+                        }
+                        attachment_id = att_obj.create(cr, uid, values, context=context)
+                        attachments.append(attachment_id)
+
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
             if not partner_id and case._name == 'res.partner':
                 partner_id = case.id
