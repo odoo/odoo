@@ -1,5 +1,6 @@
 {
     "name" : "OpenERP Web web",
+    "category" : "Hidden",
     "version" : "2.0",
     "depends" : [],
     'active': False,

@@ -1,5 +1,6 @@
 {
     "name" : "web",
+    "category" : "Hidden",
     "depends" : [],
     'active': True,
     'post_load' : 'wsgi_postload',

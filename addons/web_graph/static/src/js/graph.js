@@ -29,7 +29,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.group_field = null;
     },
     do_show: function () {
-        // TODO: re-trigger search
         this.$element.show();
     },
     do_hide: function () {
@@ -79,9 +78,6 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
         }, this);
         this.ordinate = this.columns[0].name;
-
-        this.dataset.read_slice(
-            this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
     },
     schedule_chart: function(results) {
         var self = this;
@@ -366,24 +362,14 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         });
     },
 
-    do_search: function(domains, contexts, groupbys) {
-        var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group?
-            if(!_(results.group_by).isEmpty()){
-                self.abscissa = results.group_by[0];
-            } else {
-                self.abscissa = self.first_field;
-            }
-            self.dataset.read_slice(self.list_fields(), {
-                context: results.context,
-                domain: results.domain
-            }, $.proxy(self, 'schedule_chart'));
-        });
+    do_search: function(domain, context, group_by) {
+        // TODO: handle non-empty group_by with read_group?
+        if (!_(group_by).isEmpty()) {
+            this.abscissa = group_by[0];
+        } else {
+            this.abscissa = this.first_field;
+        }
+        this.dataset.read_slice(this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
     }
 });
 };

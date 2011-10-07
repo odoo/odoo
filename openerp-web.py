@@ -40,7 +40,7 @@ server_options.add_option('--no-serve-static', dest='serve_static',
                           default=True, action='store_false',
                           help="Do not serve static files via this server")
 server_options.add_option('--multi-threaded', dest='threaded',
-                          default=True, action='store_true',
+                          default=False, action='store_true',
                           help="Spawn one thread per HTTP request")
 server_options.add_option('--proxy-mode', dest='proxy_mode',
                           default=False, action='store_true',
@@ -55,7 +55,7 @@ logging_opts.add_option("--log-config", dest="log_config", default=os.path.join(
                         help="Logging configuration file", metavar="FILE")
 optparser.add_option_group(logging_opts)
 
-import web.common.dispatch
+import web.common.http
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
 
-    app = web.common.dispatch.Root(options)
+    app = web.common.http.Root(options)
 
     if options.proxy_mode:
         app = werkzeug.contrib.fixers.ProxyFix(app)

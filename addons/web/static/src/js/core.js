@@ -480,14 +480,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     session_login: function(db, login, password, success_callback) {
         var self = this;
         var params = { db: db, login: login, password: password };
-        this.rpc("/web/session/login", params, function(result) {
+        return this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
-            if (self.uid)
-                self.on_session_valid();
             return true;
         }).then(success_callback);
     },
