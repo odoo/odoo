@@ -17,8 +17,9 @@ QWeb.add_template('/web_graph/static/src/xml/web_graph.xml');
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
 
-    init: function(parent, dataset, view_id) {
+    init: function(parent, dataset, view_id, options) {
         this._super(parent);
+        this.set_default_options(options);
         this.dataset = dataset;
         this.view_id = view_id;
 
@@ -37,17 +38,24 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     start: function() {
         var self = this;
         this._super();
+        var loaded;
+        if (this.embedded_view) {
+            loaded = $.when([self.embedded_view]);
+        } else {
+            loaded = this.rpc('/web/view/load', {
+                    model: this.dataset.model,
+                    view_id: this.view_id,
+                    view_type: 'graph'
+            });
+        }
         return $.when(
             this.dataset.call('fields_get', []),
-            this.rpc('/web/view/load', {
-                model: this.dataset.model,
-                view_id: this.view_id,
-                view_type: 'graph'
-            })).then(function (fields_result, view_result) {
+            loaded)
+            .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
                 self.fields_view = view_result[0];
                 self.on_loaded();
-        });
+            });
     },
     /**
      * Returns all object fields involved in the graph view
