@@ -1,9 +1,32 @@
 -
-  Demo data for Account tax code
+  In order to test the account move lines in OpenERP, I create account move 
+-
+  I create a Account tax code
 -
   !record {model: account.tax.code, id: account_tax_code_0}:
     name : Tax Code Test
     sign : 1.00
+-
+  I assign Payment term on partner
+-
+  !python {model: res.partner}: |
+    ids = self.search(cr, uid, [('id', '=', ref('base.res_partner_desertic_hispafuentes'))])
+    payment = self.write(cr, uid, ids, {'property_payment_term':1}, context=context)
+    assert payment, "Payment term is not assigned on the partner"
+-
+  I create a tax
+-  
+  !record {model: account.tax, id: tax_10}:
+    name: Tax_10
+    amount: 10
+    type: fixed
+    sequence: 1
+    type_tax_use: all
+-
+  I assign tax on account
+-
+  !python {model: account.account}: |
+    cr.execute('insert into account_account_tax_default_rel (account_id, tax_id) values (%s,%s)', (ref('a_recv'), ref('tax_10')))
 -
   In order to test the 'Post Journal Entries' wizard in OpenERP, I created an account move
 -
@@ -22,24 +45,63 @@
         period_id: account.period_6
         ref: '2011010'
         tax_amount: 0.0
-      - journal_id: account.bank_journal
-        period_id: account.period_6
-        ref: '2011010'
-        tax_code_id: account_tax_code_0      
-        tax_amount: 0.0
-        account_id: account.a_recv
-        amount_currency: 0.0
-        credit: 0.0
-        date: !eval time.strftime('%Y-%m-%d')
-        debit: 2000.0
-        name: Basic Computer
-        partner_id: base.res_partner_desertic_hispafuentes
-        quantity: 0.0
     name: /
     period_id: account.period_6
     ref: '2011010'
     state: draft
-
+-
+  I create another move line
+-
+  !python {model: account.move.line}: |
+    import time
+    date = self._get_date(cr, uid, {'lang': u'en_US', 'normal_view': False, 'active_model': 'ir.ui.menu',
+      'search_default_journal_id': 1, 'journal_type': 'sale', 'search_default_period_id': 6, 'journal_id': 1, 'view_mode': False,
+      'visible_id': 1, 'period_id': 6, 'tz': False, 'active_ids': [ref('menu_eaction_account_moves_sale')],
+      'search_default_posted': 0, 'active_id': ref('menu_eaction_account_moves_sale')})
+    partner = self.onchange_partner_id(cr, uid, [], False, ref('base.res_partner_desertic_hispafuentes'), ref('account.cash'), debit=0, credit=2000, date=date, journal=False)
+    account = self.onchange_account_id(cr, uid, [], account_id=ref('account.a_recv'), partner_id= ref('base.res_partner_desertic_hispafuentes'))
+    vals = {
+        'journal_id': ref('account.bank_journal'),
+        'period_id': ref('account.period_6'),
+        'ref': '2011010',
+        'tax_code_id': ref('account_tax_code_0'),
+        'tax_amount': 0.0,
+        'account_id': ref('account.a_recv'),
+        'amount_currency': 0.0,
+        'credit': 0.0,
+        'date': time.strftime('%Y-%m-%d'),
+        'debit': 2000.0,
+        'name': 'Basic Computer',
+        'partner_id': ref('base.res_partner_desertic_hispafuentes'),
+        'quantity': 0.0,
+        'move_id': ref('account_move_0'),
+        'date_maturity': partner['value']['date_maturity'],
+        'account_tax_id': account['value']['account_tax_id']
+    }
+    line_id = self.create(cr, uid, vals)
+    assert line_id, "Account move line has not been created"
+-
+  I verify the 'Balance' of Journal Items
+-
+  I add a column 'balance' in the Journal views
+-
+  !record {model: account.journal.column, id: journal_column_balance}:
+    name: 'Balance'
+    field: 'balance'
+    view_id: account.account_sp_journal_view
+    sequence: 0
+-
+  I check the balance in Journal Items
+-
+  !python {model: account.move.line}: |
+    ids = self._balance_search(cr, uid, self, 'balance', [('balance', '=', 2000.0)], None, {'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+    'search_default_journal_id': 1, 'journal_type': 'sale', 'search_default_period_id': 6, 'view_mode': False, 'visible_id': 1,
+    'active_ids': [ref('menu_eaction_account_moves_sale')], 'search_default_posted': 0, 'active_id': ref('menu_eaction_account_moves_sale')})
+    bal = self._balance(cr, uid, ids[0][2], 'balance', None,{'lang': u'en_US', 'tz': False, 'active_model': 'ir.ui.menu',
+      'search_default_journal_id': 1, 'journal_type': 'sale', 'search_default_period_id': 6, 'view_mode': False,
+      'visible_id': 1, 'active_ids': [ref('menu_eaction_account_moves_sale')], 'search_default_posted': 0,
+      'active_id': ref('menu_eaction_account_moves_sale')})
+    assert bal, 'Balance has not been computed correctly'
 -
   I check that Initially account move state is "Draft"
 -
@@ -55,9 +117,28 @@
   I click on validate Button
 -
   !python {model: validate.account.move}: |
-      self.validate_move(cr, uid, [ref("validate_account_move_0")], {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_validate_account_moves")], "tz": False, "active_id": ref("account.menu_validate_account_moves"), })
+    self.validate_move(cr, uid, [ref("validate_account_move_0")], {"lang": "en_US", "active_model": "ir.ui.menu",
+      "active_ids": [ref("account.menu_validate_account_moves")], "tz": False, "active_id": ref("account.menu_validate_account_moves"), })
 -
-  I check that the invoice state is now "Posted"
+  I check that the move state is now "Posted"
 -
   !assert {model: account.move, id: account_move_0, string: moveincorrect}:
     - state == 'posted'
+-
+  I reconcile the entries partially through "Reconcile Entries" wizard
+-
+  !record {model: account.move.line.reconcile, id: account_move_line_reconcile0}:
+    trans_nbr: 1
+    credit: 0.0
+    debit: 2000.0
+    writeoff: 2000.0
+-
+  Then I click on the 'Partial Reconcile' button
+-
+  !python {model: account.move.line.reconcile}: |
+    move_line_obj = self.pool.get('account.move.line')
+    ids = move_line_obj.search(cr, uid, [('move_id', '=', ref('account_move_0')),('credit', '=', 2000)])
+    partial_reconcile = self.trans_rec_reconcile_partial_reconcile(cr, uid, [ref('account_move_line_reconcile0')], {'lang': u'en_US',
+      'active_model': 'account.move.line', 'active_ids': ids, 'tz': False, 'active_id': ids[0]})
+    move_line = move_line_obj.browse(cr, uid, ids)
+    assert move_line[0].reconcile_partial_id, "Partial reconcilation is not done"
