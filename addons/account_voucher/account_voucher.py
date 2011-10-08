@@ -664,11 +664,14 @@ class account_voucher(osv.osv):
         tax_obj = self.pool.get('account.tax')
         seq_obj = self.pool.get('ir.sequence')
         for inv in self.browse(cr, uid, ids, context=context):
+
             if inv.move_id:
                 continue
             context_multi_currency = context.copy()
             context_multi_currency.update({'date': inv.date})
-
+            company_currency = inv.journal_id.company_id.currency_id.id
+            current_currency = inv.currency_id.id or company_currency
+            current_currency_obj = inv.currency_id or inv.journal_id.company_id.currency_id
             if inv.number:
                 name = inv.number
             elif inv.journal_id.sequence_id:
@@ -691,9 +694,6 @@ class account_voucher(osv.osv):
             move_id = move_pool.create(cr, uid, move)
 
             #create the first line manually
-            company_currency = inv.journal_id.company_id.currency_id.id
-            current_currency = inv.currency_id.id or company_currency
-            current_currency_obj = inv.currency_id or inv.journal_id.company_id.currency_id
             debit = 0.0
             credit = 0.0
             # TODO: is there any other alternative then the voucher type ??
