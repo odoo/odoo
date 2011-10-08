@@ -652,12 +652,10 @@ class account_voucher(osv.osv):
         return {'value':res}
 
     def action_move_line_create(self, cr, uid, ids, context=None):
-        def _get_payment_term_lines(term_id, amount):
-            term_pool = self.pool.get('account.payment.term')
-            if term_id and amount:
-                terms = term_pool.compute(cr, uid, term_id, amount)
-                return terms
-            return False
+        '''
+        This method create account move from voucher.
+        Method refactored by Vauxoo.
+        '''
         if context is None:
             context = {}
         move_pool = self.pool.get('account.move')
