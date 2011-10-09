@@ -770,7 +770,10 @@ class account_voucher(osv.osv):
             }
             if amount < 0:
                 amount = -amount
-                if line.type == 'dr': line.type = 'cr' else: line.type = 'dr'
+                if line.type == 'dr':
+                    line.type = 'cr'
+                else:
+                    line.type = 'dr'
 
             if (line.type=='dr'):
                 tot_line += amount
@@ -834,6 +837,54 @@ class account_voucher(osv.osv):
 
         return (tot_line, rec_lst_ids)
 
+
+    def writeoff_move_line_create(self, cr, uid, voucher_id, line_total, move_id, name, context= None):
+        '''
+        Create the writeoff move line
+        @voucher_id: Voucher id what we are working with
+        @line_total: Total of the first line.
+        @move_id: Account move wher this lines will be joined.
+        '''
+        move_line_obj = self.pool.get('account.move.line')
+        currency_obj = self.pool.get('res.currency')
+        move_line_id = False
+
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        company_currency = voucher_brw.journal_id.company_id.currency_id.id
+        current_currency = voucher_brw.currency_id.id
+        context_multi_currency = context.copy()
+        context_multi_currency.update({'date': voucher_brw.date})
+        if current_currency <> company_currency: context = context_multi_currency
+
+        current_currency_obj = voucher_brw.currency_id or voucher_brw.journal_id.company_id.currency_id
+
+        if not currency_obj.is_zero(cr, uid, current_currency_obj, line_total):
+            diff = line_total
+            account_id = False
+            write_off_name = ''
+            if voucher_brw.payment_option == 'with_writeoff':
+                account_id = voucher_brw.writeoff_acc_id.id
+                write_off_name = voucher_brw.comment
+            elif voucher_brw.type in ('sale', 'receipt'):
+                account_id = voucher_brw.partner_id.property_account_receivable.id
+            else:
+                account_id = voucher_brw.partner_id.property_account_payable.id
+            move_line = {
+                'name': write_off_name or name,
+                'account_id': account_id,
+                'move_id': move_id,
+                'partner_id': voucher_brw.partner_id.id,
+                'date': voucher_brw.date,
+                'credit': diff > 0 and diff or 0.0,
+                'debit': diff < 0 and -diff or 0.0,
+                #'amount_currency': company_currency <> current_currency and currency_obj.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
+                #'currency_id': company_currency <> current_currency and current_currency or False,
+            }
+            move_line_id = move_line_obj.create(cr, uid, move_line)
+                
+        return move_line_id
+
+
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
         This method create account move from voucher.
@@ -870,29 +921,8 @@ class account_voucher(osv.osv):
             #create one move line per voucher line where amount is not 0.0
             line_total, rec_list_ids = self.voucher_move_line_create(cr, uid, voucher.id, line_total, move_id, context)
 
-            if not currency_pool.is_zero(cr, uid, current_currency_obj, line_total):
-                diff = line_total
-                account_id = False
-                write_off_name = ''
-                if voucher.payment_option == 'with_writeoff':
-                    account_id = voucher.writeoff_acc_id.id
-                    write_off_name = voucher.comment
-                elif voucher.type in ('sale', 'receipt'):
-                    account_id = voucher.partner_id.property_account_receivable.id
-                else:
-                    account_id = voucher.partner_id.property_account_payable.id
-                move_line = {
-                    'name': write_off_name or name,
-                    'account_id': account_id,
-                    'move_id': move_id,
-                    'partner_id': voucher.partner_id.id,
-                    'date': voucher.date,
-                    'credit': diff > 0 and diff or 0.0,
-                    'debit': diff < 0 and -diff or 0.0,
-                    #'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
-                    #'currency_id': company_currency <> current_currency and current_currency or False,
-                }
-                move_line_pool.create(cr, uid, move_line)
+            #create the writeoff line if needed
+            ml_writeoff_id = self.writeoff_move_line_create(cr, uid, voucher.id, line_total, move_id, name, context)
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
                 'state': 'posted',
