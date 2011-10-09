@@ -651,6 +651,37 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
+    def action_move_create(self, cr, uid, voucher_id, context=None):
+        '''
+        This method create the account move related to voucher.
+        @voucher_id: voucher_id what we are creating account_move.
+        '''
+        move_obj = self.pool.get('account.move')    
+        seq_obj = self.pool.get('ir.sequence')
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        if voucher_brw.number:
+            name = voucher_brw.number
+        elif voucher_brw.journal_id.sequence_id:
+            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id)
+        else:
+            raise osv.except_osv(_('Error !'), 
+                        _('Please define a sequence on the journal !'))
+        if not voucher_brw.reference:
+            ref = name.replace('/','')
+        else:
+            ref = voucher_brw.reference
+
+        move = {
+            'name': name,
+            'journal_id': voucher_brw.journal_id.id,
+            'narration': voucher_brw.narration,
+            'date': voucher_brw.date,
+            'ref': ref,
+            'period_id': voucher_brw.period_id and voucher_brw.period_id.id or False
+        }
+        move_id = move_obj.create(cr, uid, move)
+        return move_id
+
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
         This method create account move from voucher.
@@ -672,27 +703,9 @@ class account_voucher(osv.osv):
             company_currency = voucher.journal_id.company_id.currency_id.id
             current_currency = voucher.currency_id.id or company_currency
             current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
-            if voucher.number:
-                name = voucher.number
-            elif voucher.journal_id.sequence_id:
-                name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id)
-            else:
-                raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
-            if not voucher.reference:
-                ref = name.replace('/','')
-            else:
-                ref = voucher.reference
-
-            move = {
-                'name': name,
-                'journal_id': voucher.journal_id.id,
-                'narration': voucher.narration,
-                'date': voucher.date,
-                'ref': ref,
-                'period_id': voucher.period_id and voucher.period_id.id or False
-            }
-            move_id = move_pool.create(cr, uid, move)
-
+            #Create the account move record.
+            move_id = self.action_move_create(cr,uid,voucher.id)
+            name = move_pool.browse(cr, uid, move_id, context=context).name
             #create the first line manually
             debit = 0.0
             credit = 0.0
