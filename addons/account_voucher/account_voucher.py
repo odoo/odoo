@@ -923,6 +923,7 @@ class account_voucher(osv.osv):
 
             #create the writeoff line if needed
             ml_writeoff_id = self.writeoff_move_line_create(cr, uid, voucher.id, line_total, move_id, name, context)
+            #We put posted the account move.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
                 'state': 'posted',
@@ -930,6 +931,7 @@ class account_voucher(osv.osv):
             })
             if voucher.journal_id.entry_posted:
                 move_pool.post(cr, uid, [move_id], context={})
+            #We automatically reconcile the account move lines.
             for rec_ids in rec_list_ids:
                 if len(rec_ids) >= 2:
                     move_line_pool.reconcile_partial(cr, uid, rec_ids, writeoff_acc_id=voucher.exchange_acc_id.id, writeoff_period_id=voucher.period_id.id, writeoff_journal_id=voucher.journal_id.id)
