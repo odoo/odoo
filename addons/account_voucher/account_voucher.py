@@ -663,10 +663,9 @@ class account_voucher(osv.osv):
         company_currency = voucher_brw.journal_id.company_id.currency_id.id
         current_currency = voucher_brw.currency_id.id
         context_multi_currency = context.copy()
-        context_multi_currency.update({'date': voucher.date})
+        context_multi_currency.update({'date': voucher_brw.date})
         if current_currency <> company_currency: context = context_multi_currency
-        debit = 0.0
-        credit = 0.0
+        debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
         # ANSWER: We can have payment and receipt "In Advance". 
         # TODO: Make this logic available.
@@ -726,6 +725,115 @@ class account_voucher(osv.osv):
         move_id = move_obj.create(cr, uid, move)
         return move_id
 
+    def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, context=None):
+        '''
+        Create all ther rest of account move lines on accout move object.
+        @voucher_id: Voucher id what we are working with
+        @line_total: Total of the first line.
+        @move_id: Account move wher this lines will be joined.
+        '''
+        move_line_obj = self.pool.get('account.move.line')
+        currency_obj = self.pool.get('res.currency')
+        tot_line = line_total
+        rec_lst_ids = []
+
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        company_currency = voucher_brw.journal_id.company_id.currency_id.id
+        current_currency = voucher_brw.currency_id.id
+        context_multi_currency = context.copy()
+        context_multi_currency.update({'date': voucher_brw.date})
+        if current_currency <> company_currency: context = context_multi_currency
+        for line in voucher_brw.line_ids:
+            #create one move line per voucher line where amount is not 0.0
+            if not line.amount:
+                continue
+            #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial invoice if needed
+            if line.amount == line.amount_unreconciled:
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context)
+                amount_residual = line.move_line_id.amount_residual - amount #residual amount in company currency
+            else:
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context)
+                amount_residual = 0.0
+            move_line = {
+                'journal_id': voucher_brw.journal_id.id,
+                'period_id': voucher_brw.period_id.id,
+                'name': line.name or '/',
+                'account_id': line.account_id.id,
+                'move_id': move_id,
+                'partner_id': voucher_brw.partner_id.id,
+                'currency_id': company_currency <> current_currency and current_currency or False,
+                'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
+                'quantity': 1,
+                'credit': 0.0,
+                'debit': 0.0,
+                'date': voucher_brw.date
+            }
+            if amount < 0:
+                amount = -amount
+                if line.type == 'dr': line.type = 'cr' else: line.type = 'dr'
+
+            if (line.type=='dr'):
+                tot_line += amount
+                move_line['debit'] = amount
+            else:
+                tot_line -= amount
+                move_line['credit'] = amount
+
+            if voucher_brw.tax_id and voucher_brw.type in ('sale', 'purchase'):
+                move_line.update({
+                    'account_tax_id': voucher_brw.tax_id.id,
+                })
+
+            if move_line.get('account_tax_id', False):
+                tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
+                if not (tax_data.base_code_id and tax_data.tax_code_id):
+                    raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
+
+            sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
+            move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
+            voucher_line = move_line_obj.create(cr, uid, move_line)
+            rec_ids = [voucher_line, line.move_line_id.id]
+
+            if amount_residual: # Change difference entry
+                if not inv.exchange_acc_id.id:
+                    raise osv.except_osv(_('Error!'), _('You must provide an account for the exchange difference.'))
+                move_line = {
+                    'journal_id': inv.journal_id.id,
+                    'period_id': inv.period_id.id,
+                    'name': _('change')+': '+(line.name or '/'),
+                    'account_id': line.account_id.id,
+                    'move_id': move_id,
+                    'partner_id': inv.partner_id.id,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
+                    'amount_currency': 0.0,
+                    'quantity': 1,
+                    'credit': amount_residual > 0 and amount_residual or 0.0,
+                    'debit': amount_residual < 0 and -amount_residual or 0.0,
+                    'date': inv.date
+                }
+                new_id = move_line_pool.create(cr, uid, move_line)
+                move_line = {
+                    'journal_id': inv.journal_id.id,
+                    'period_id': inv.period_id.id,
+                    'name': _('change')+': '+(line.name or '/'),
+                    'account_id': inv.exchange_acc_id.id,
+                    'move_id': move_id,
+                    'amount_currency': 0.0,
+                    'partner_id': inv.partner_id.id,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
+                    'quantity': 1,
+                    'debit': amount_residual > 0 and amount_residual or 0.0,
+                    'credit': amount_residual < 0 and -amount_residual or 0.0,
+                    'date': inv.date
+                }
+                move_line_pool.create(cr, uid, move_line)
+                rec_ids.append(new_id)
+
+            if line.move_line_id.id:
+                rec_lst_ids.append(rec_ids)
+
+        return (tot_line, rec_lst_ids)
+
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
         This method create account move from voucher.
@@ -750,7 +858,6 @@ class account_voucher(osv.osv):
             # Get the name of the acc_move just created
             name = move_pool.browse(cr, uid, move_id, context=context).name
             #Create the first line of the voucher, the payment made
-            c 
             move_line_id = self.first_move_line_create(cr,uid,voucher.id, move_id, context)
             move_line_brw = move_line_pool.browse(cr,uid,move_line_id, context)
             line_total = move_line_brw.debit - move_line_brw.credit
@@ -759,96 +866,9 @@ class account_voucher(osv.osv):
                 line_total = line_total - currency_pool.compute(cr, uid, current_currency, company_currency, voucher.tax_amount, context=context_multi_currency)
             elif voucher.type == 'purchase':
                 line_total = line_total + currency_pool.compute(cr, uid, current_currency, company_currency, voucher.tax_amount, context=context_multi_currency)
-
-            for line in voucher.line_ids:
-                #create one move line per voucher line where amount is not 0.0
-                if not line.amount:
-                    continue
-                #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial voucheroice if needed
-                if line.amount == line.amount_unreconciled:
-                    amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
-                    amount_residual = line.move_line_id.amount_residual - amount #residual amount in company currency
-                else:
-                    amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
-                    amount_residual = 0.0
-                move_line = {
-                    'journal_id': voucher.journal_id.id,
-                    'period_id': voucher.period_id.id,
-                    'name': line.name or '/',
-                    'account_id': line.account_id.id,
-                    'move_id': move_id,
-                    'partner_id': voucher.partner_id.id,
-                    'currency_id': company_currency <> current_currency and current_currency or False,
-                    'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
-                    'quantity': 1,
-                    'credit': 0.0,
-                    'debit': 0.0,
-                    'date': voucher.date
-                }
-                if amount < 0:
-                    amount = -amount
-                    if line.type == 'dr':
-                        line.type = 'cr'
-                    else:
-                        line.type = 'dr'
-                if (line.type=='dr'):
-                    line_total += amount
-                    move_line['debit'] = amount
-                else:
-                    line_total -= amount
-                    move_line['credit'] = amount
-
-                if voucher.tax_id and voucher.type in ('sale', 'purchase'):
-                    move_line.update({
-                        'account_tax_id': voucher.tax_id.id,
-                    })
-                if move_line.get('account_tax_id', False):
-                    tax_data = tax_obj.browse(cr, uid, [move_line['account_tax_id']], context=context)[0]
-                    if not (tax_data.base_code_id and tax_data.tax_code_id):
-                        raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
-                sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
-                move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
-                voucher_line = move_line_pool.create(cr, uid, move_line)
-                rec_ids = [voucher_line, line.move_line_id.id]
-
-                # Change difference entry
-                if amount_residual:
-                    if not voucher.exchange_acc_id.id:
-                        raise osv.except_osv(_('Error!'), _('You must provide an account for the exchange difference.'))
-                    move_line = {
-                        'journal_id': voucher.journal_id.id,
-                        'period_id': voucher.period_id.id,
-                        'name': _('change')+': '+(line.name or '/'),
-                        'account_id': line.account_id.id,
-                        'move_id': move_id,
-                        'partner_id': voucher.partner_id.id,
-                        'currency_id': company_currency <> current_currency and current_currency or False,
-                        'amount_currency': 0.0,
-                        'quantity': 1,
-                        'credit': amount_residual > 0 and amount_residual or 0.0,
-                        'debit': amount_residual < 0 and -amount_residual or 0.0,
-                        'date': voucher.date
-                    }
-                    new_id = move_line_pool.create(cr, uid, move_line)
-                    move_line = {
-                        'journal_id': voucher.journal_id.id,
-                        'period_id': voucher.period_id.id,
-                        'name': _('change')+': '+(line.name or '/'),
-                        'account_id': voucher.exchange_acc_id.id,
-                        'move_id': move_id,
-                        'amount_currency': 0.0,
-                        'partner_id': voucher.partner_id.id,
-                        'currency_id': company_currency <> current_currency and current_currency or False,
-                        'quantity': 1,
-                        'debit': amount_residual > 0 and amount_residual or 0.0,
-                        'credit': amount_residual < 0 and -amount_residual or 0.0,
-                        'date': voucher.date
-                    }
-                    move_line_pool.create(cr, uid, move_line)
-                    rec_ids.append(new_id)
-
-                if line.move_line_id.id:
-                    rec_list_ids.append(rec_ids)
+            ############################################################
+            #create one move line per voucher line where amount is not 0.0
+            line_total, rec_list_ids = self.voucher_move_line_create(cr, uid, voucher.id, line_total, move_id, context)
 
             if not currency_pool.is_zero(cr, uid, current_currency_obj, line_total):
                 diff = line_total
