@@ -651,12 +651,56 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
+    def first_move_line_create(self, cr, uid, voucher_id, move_id, context=None):
+        '''
+        Creation of first line in a voucher with fixed partner.
+        @voucher_id: id of the voucher.
+        @move_id: account move where this line will be added.
+        '''
+        move_line_obj = self.pool.get('account.move.line')
+        currency_obj = self.pool.get('res.currency')
+        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        company_currency = voucher_brw.journal_id.company_id.currency_id.id
+        current_currency = voucher_brw.currency_id.id
+        context_multi_currency = context.copy()
+        context_multi_currency.update({'date': voucher.date})
+        if current_currency <> company_currency: context = context_multi_currency
+        debit = 0.0
+        credit = 0.0
+        # TODO: is there any other alternative then the voucher type ??
+        # ANSWER: We can have payment and receipt "In Advance". 
+        # TODO: Make this logic available.
+        # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
+        if voucher_brw.type in ('purchase', 'payment'):
+            credit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context)
+        elif voucher_brw.type in ('sale', 'receipt'):
+            debit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context)
+        if debit < 0: credit = -debit; debit = 0.0
+        if credit < 0: debit = -credit; credit = 0.0
+        sign = debit - credit < 0 and -1 or 1
+        #create the first line of the voucher
+        move_line = {
+                'name': voucher_brw.name or '/',
+                'debit': debit,
+                'credit': credit,
+                'account_id': voucher_brw.account_id.id,
+                'move_id': move_id,
+                'journal_id': voucher_brw.journal_id.id,
+                'period_id': voucher_brw.period_id.id,
+                'partner_id': voucher_brw.partner_id.id,
+                'currency_id': company_currency <> current_currency and  current_currency or False,
+                'amount_currency': company_currency <> current_currency and sign * voucher_brw.amount or 0.0,
+                'date': voucher_brw.date,
+                'date_maturity': voucher_brw.date_due
+            }
+        return move_line_obj.create(cr, uid, move_line, context)
+
     def action_move_create(self, cr, uid, voucher_id, context=None):
         '''
         This method create the account move related to voucher.
         @voucher_id: voucher_id what we are creating account_move.
         '''
-        move_obj = self.pool.get('account.move')    
+        move_obj = self.pool.get('account.move')
         seq_obj = self.pool.get('ir.sequence')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         if voucher_brw.number:
@@ -698,48 +742,19 @@ class account_voucher(osv.osv):
 
             if voucher.move_id:
                 continue
-            context_multi_currency = context.copy()
-            context_multi_currency.update({'date': voucher.date})
             company_currency = voucher.journal_id.company_id.currency_id.id
             current_currency = voucher.currency_id.id or company_currency
             current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
             #Create the account move record.
             move_id = self.action_move_create(cr,uid,voucher.id)
+            # Get the name of the acc_move just created
             name = move_pool.browse(cr, uid, move_id, context=context).name
-            #create the first line manually
-            debit = 0.0
-            credit = 0.0
-            # TODO: is there any other alternative then the voucher type ??
-            # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
-            if voucher.type in ('purchase', 'payment'):
-                credit = currency_pool.compute(cr, uid, current_currency, company_currency, voucher.amount, context=context_multi_currency)
-            elif voucher.type in ('sale', 'receipt'):
-                debit = currency_pool.compute(cr, uid, current_currency, company_currency, voucher.amount, context=context_multi_currency)
-            if debit < 0:
-                credit = -debit
-                debit = 0.0
-            if credit < 0:
-                debit = -credit
-                credit = 0.0
-            sign = debit - credit < 0 and -1 or 1
-            #create the first line of the voucher, the payment made
-            move_line = {
-                'name': voucher.name or '/',
-                'debit': debit,
-                'credit': credit,
-                'account_id': voucher.account_id.id,
-                'move_id': move_id,
-                'journal_id': voucher.journal_id.id,
-                'period_id': voucher.period_id.id,
-                'partner_id': voucher.partner_id.id,
-                'currency_id': company_currency <> current_currency and  current_currency or False,
-                'amount_currency': company_currency <> current_currency and sign * voucher.amount or 0.0,
-                'date': voucher.date,
-                'date_maturity': voucher.date_due
-            }
-            move_line_pool.create(cr, uid, move_line)
+            #Create the first line of the voucher, the payment made
+            c 
+            move_line_id = self.first_move_line_create(cr,uid,voucher.id, move_id, context)
+            move_line_brw = move_line_pool.browse(cr,uid,move_line_id, context)
+            line_total = move_line_brw.debit - move_line_brw.credit
             rec_list_ids = []
-            line_total = debit - credit
             if voucher.type == 'sale':
                 line_total = line_total - currency_pool.compute(cr, uid, current_currency, company_currency, voucher.tax_amount, context=context_multi_currency)
             elif voucher.type == 'purchase':
