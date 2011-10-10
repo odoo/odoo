@@ -46,7 +46,7 @@ class stock_period(osv.osv):
         'name': fields.char('Period Name', size=64, required=True),
         'date_start': fields.datetime('Start Date', required=True),
         'date_stop': fields.datetime('End Date', required=True),
-        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State')
+        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
     }
     _defaults = {
         'state': 'draft'

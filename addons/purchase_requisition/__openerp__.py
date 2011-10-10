@@ -18,10 +18,10 @@
 #
 ##############################################################################
 {
-    "name" : "Purchase - Purchase Requisition",
+    "name" : "Purchase Requisition",
     "version" : "0.1",
     "author" : "OpenERP SA",
-    "category" : "Purchases",
+    "category" : "Purchase Management",
     'complexity': "easy",
     "images" : ['images/purchase_requisitions.jpeg'],
     "website" : "http://www.openerp.com",

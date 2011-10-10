@@ -259,12 +259,19 @@ class pos_order(osv.osv):
         if data.get('payment_name', False):
             args['name'] = args['name'] + ': ' + data['payment_name']
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable \
-                             and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
+        args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
+                             and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
         args['partner_id'] = order.partner_id and order.partner_id.id or None
 
+        if not args['account_id']:
+            if not args['partner_id']:
+                msg = _('There is no receivable account defined to make payment')
+            else:
+                msg = _('There is no receivable account defined to make payment for the partner: "%s" (id:%d)') % (order.partner_id.name, order.partner_id.id,)
+            raise osv.except_osv(_('Configuration Error !'), msg)
+
         statement_id = statement_obj.search(cr,uid, [
-                                                     ('journal_id', '=', data['journal']),
+                                                     ('journal_id', '=', int(data['journal'])),
                                                      ('company_id', '=', curr_company),
                                                      ('user_id', '=', uid),
                                                      ('state', '=', 'open')], context=context)
@@ -274,7 +281,7 @@ class pos_order(osv.osv):
             statement_id = statement_id[0]
         args['statement_id'] = statement_id
         args['pos_statement_id'] = order_id
-        args['journal_id'] = data['journal']
+        args['journal_id'] = int(data['journal'])
         args['type'] = 'customer'
         args['ref'] = order.name
         statement_line_obj.create(cr, uid, args, context=context)

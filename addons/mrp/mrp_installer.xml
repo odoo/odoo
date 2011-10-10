@@ -1,26 +1,5 @@
 <openerp>
   <data>
-    <record id="view_mrp_installer" model="ir.ui.view">
-      <field name="name">mrp.installer.view</field>
-      <field name="model">base.setup.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <xpath expr="//group[@name='mrp']" position="replace">
-            <newline/>
-            <separator  string="Manufacturing Features" colspan="4" />
-            <field name="stock_location" />
-            <field name="mrp_jit" />
-            <field name="mrp_operations" />
-            <field name="mrp_subproduct" />
-            <field name="mrp_repair" />
-          </xpath>
-        </data>
-      </field>
-    </record>
-
-
     <record id="category_mrp_config" model="ir.actions.todo.category">
         <field name="name">MRP Management</field>
         <field name="sequence">6</field>
@@ -40,16 +19,8 @@
         <field name="groups_id" eval="[(6, 0, [ref('base.group_extended')])]" />
     </record>
 
-    <record id="action_create_bill_of_materials" model="ir.actions.act_window">
-        <field name="name">Create Bill of Materials</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">mrp.bom</field>
-        <field name="view_mode">form,tree</field>
-        <field name="view_type">form</field>
-    </record>
-
     <record id="todo_action_create_bill_of_materials" model="ir.actions.todo">
-        <field name="action_id" ref="action_create_bill_of_materials" />
+        <field name="action_id" ref="mrp_bom_form_action" />
         <field name="category_id" ref="category_mrp_config" />
     </record>
 

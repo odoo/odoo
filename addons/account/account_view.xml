@@ -162,17 +162,21 @@
             <field name="arch" type="xml">
                 <form string="Account">
                     <group col="6" colspan="4">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="parent_id"/>
-                    <field name="type" select="1"/>
-                    <field name="user_type" select="1"/>
+                        <field name="name" select="1"/>
+                        <field name="code" select="1"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="parent_id"/>
+                        <field name="type" select="1"/>
+                        <field name="user_type" select="1"/>
+                        <field name="active" groups="base.group_extended" />
+                        <newline/>
+                        <field name="debit" invisible="context.get('config_invisible', True)"/>
+                        <field name="credit" invisible="context.get('config_invisible', True)"/>
+                        <field name="balance" invisible="context.get('config_invisible', True)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
-                            <field name="active" groups="base.group_extended" />
                             <newline/>
                             <group col="2" colspan="2">
                                 <separator string="Currency" colspan="2"/>
@@ -209,7 +213,6 @@
                         <field name="code"/>
                         <field name="name"/>
                         <field name="user_type"/>
-                        <field name="type"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
@@ -438,9 +441,9 @@
                                 <field name="user_id" groups="base.group_extended"/>
                                 <field name="currency"/>
                             </group>
-                            <group colspan="2" col="2">
+                            <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Validations" colspan="4"/>
-                                <field name="allow_date" groups="base.group_extended"/>
+                                <field name="allow_date"/>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Other Configuration" colspan="4"/>
@@ -1193,7 +1196,7 @@
                         <field name="date"/>
                         <field name="account_id"/>
                         <field name="partner_id">
-                            <filter help="Next Partner Entries to reconcile" name="next_partner" string="Next Partner to reconcile" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
+                            <filter help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                         </field>
                     </group>
                     <newline/>
@@ -2375,8 +2378,7 @@
                   <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string"
-                       >Generate Your Accounting Chart from a Chart Template</attribute>
+                <attribute name="string">Generate Your Chart of Accounts from a Chart Template</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">This will automatically configure your chart of accounts, bank accounts, taxes and journals according to the selected template</attribute>
@@ -2388,13 +2390,13 @@
                   </xpath>
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    <field name ="code_digits" groups="base.group_extended"/>
+                    <field name ="code_digits" groups="account.group_account_user"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
-                    <field name ="seq_journal" groups="base.group_extended"/>
+                    <field name ="seq_journal" groups="account.group_account_user"/>
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
-                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended">
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="account.group_account_user">
                         <form string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>

@@ -239,7 +239,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char(size='64', string='File Name'),
+        'name': fields.char(size=64, string='File Name'),
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import'),
