@@ -57,13 +57,13 @@
   !assert {model: purchase.requisition, id: purchase_requisition_te0}:
     - state == 'in_progress'
 - 
-   I Create a Purchase Order for the supplier 'Axelor'.
+  In order to create a purchase order for 'Axelor', i click on the wizard 'Request a Quotation' and create record for wizard.
 - 
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
     partner_address_id: base.res_partner_address_3000
     partner_id: base.res_partner_desertic_hispafuentes
 - 
-  I create Quotations For supplier 'Axelor'.
+  I click on 'Create Quotation' for creating PO.
 - 
   !python {model: purchase.requisition.partner}: |
     self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"active_model": "purchase.requisition",
