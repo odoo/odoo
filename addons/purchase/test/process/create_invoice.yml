@@ -1,0 +1,43 @@
+-
+  I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    pur_order_obj=self.browse(cr, uid, ref("purchase_order_po0"))
+    pur_line=self.pool.get( 'purchase.order.line')
+    search_ids=pur_line.search(cr, uid, [('order_id', '=', pur_order_obj.name) ])
+    assert search_ids, _('Purchase order line is not created!')
+-
+  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.#UI
+-
+  !python {model: purchase.order}: |
+    pur_id2=self.browse(cr, uid, ref("purchase_order_po0"))
+    assert(pur_id2.invoice_ids)
+-
+  I create invoice for products in the purchase order.
+-
+  !python {model: purchase.order.line_invoice}: |
+    pur_obj=self.pool.get('purchase.order')
+    ids = []
+    pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po0"))
+    for line in pur_id1.order_line:
+        ids.append(line.id)
+    self.makeInvoices(cr, uid, [1], context={'active_ids': ids})
+-
+  I check that invoice gets created.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    pur_order_obj=self.browse(cr, uid, ref("purchase_order_po0"))
+    pur_line=self.pool.get( 'purchase.order.line')
+    search_ids=pur_line.search(cr, uid, [('order_id', '=', pur_order_obj.name),('invoiced', '=', '1') ])
+    assert search_ids, _('Invoice is not created!')
+-
+  I check that a record gets created in the Pending Invoices.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    pur_id1=self.browse(cr, uid, ref("purchase_order_po0"))
+    account_obj = self.pool.get('account.invoice')
+    ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
+    assert ids, _('Pending Invoice is not created!')
