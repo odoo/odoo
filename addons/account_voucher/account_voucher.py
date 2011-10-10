@@ -847,16 +847,22 @@ class account_voucher(osv.osv):
         return (tot_line, rec_lst_ids)
 
 
-    def writeoff_move_line_create(self, cr, uid, voucher_id, line_total, move_id, name, context= None):
+    def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, context= None):
         '''
-        Create the writeoff move line
-        @voucher_id: Voucher id what we are working with
-        @line_total: Total of the first line.
-        @move_id: Account move wher this lines will be joined.
+        Set a dict to be use to create the writeoff move line.
+
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param voucher_id: Id of voucher what we are creating account_move.
+        @param line_total: Amount total of the first account move line of the voucher.
+        @param move_id: Id of account move where this line will be added.
+        @param name: Description of account move line.
+        @param context: optional context dictionary
+        @return: dictionary which contains information regarding account move line
         '''
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
-        move_line_id = False
+        move_line = {}
 
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         company_currency = voucher_brw.journal_id.company_id.currency_id.id
@@ -889,9 +895,8 @@ class account_voucher(osv.osv):
                 #'amount_currency': company_currency <> current_currency and currency_obj.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
                 #'currency_id': company_currency <> current_currency and current_currency or False,
             }
-            move_line_id = move_line_obj.create(cr, uid, move_line)
-                
-        return move_line_id
+
+        return move_line
 
 
     def action_move_line_create(self, cr, uid, ids, context=None):
@@ -931,8 +936,10 @@ class account_voucher(osv.osv):
             line_total, rec_list_ids = self.voucher_move_line_create(cr, uid, voucher.id, line_total, move_id, context)
 
             #create the writeoff line if needed
-            ml_writeoff_id = self.writeoff_move_line_create(cr, uid, voucher.id, line_total, move_id, name, context)
-            #We put posted the account move.
+            ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, context)
+            if ml_writeoff:
+                ml_writeoff_id = move_line_pool.create(cr, uid, ml_writeoff, context)
+            #We put posted the voucher.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
                 'state': 'posted',
