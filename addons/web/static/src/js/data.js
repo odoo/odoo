@@ -617,7 +617,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         this.cache.push(cached);
         this.on_change();
         var prom = $.Deferred().then(callback);
-        setTimeout(function() {prom.resolve({result: cached.id});}, 0);
+        prom.resolve({result: cached.id});
         return prom.promise();
     },
     write: function (id, data, options, callback) {
@@ -695,7 +695,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
-            setTimeout(function () {completion.resolve(records);}, 0);
+            completion.resolve(records);
         };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
