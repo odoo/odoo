@@ -694,10 +694,15 @@ class account_voucher(osv.osv):
             }
         return move_line_obj.create(cr, uid, move_line, context)
 
-    def action_move_create(self, cr, uid, voucher_id, context=None):
+    def account_move_get(self, cr, uid, voucher_id, context=None):
         '''
         This method create the account move related to voucher.
-        @voucher_id: voucher_id what we are creating account_move.
+
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param voucher_id: Id of voucher what we are creating account_move.
+        @param context: optional context dictionary
+        @return: dictionary which contains information regarding account move
         '''
         move_obj = self.pool.get('account.move')
         seq_obj = self.pool.get('ir.sequence')
@@ -722,8 +727,7 @@ class account_voucher(osv.osv):
             'ref': ref,
             'period_id': voucher_brw.period_id and voucher_brw.period_id.id or False
         }
-        move_id = move_obj.create(cr, uid, move)
-        return move_id
+        return move
 
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, context=None):
         '''
@@ -905,7 +909,7 @@ class account_voucher(osv.osv):
             current_currency = voucher.currency_id.id or company_currency
             current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
             #Create the account move record.
-            move_id = self.action_move_create(cr,uid,voucher.id)
+            move_id = move_pool.create(cr, uid, self.account_move_get(cr,uid,voucher.id))
             # Get the name of the acc_move just created
             name = move_pool.browse(cr, uid, move_id, context=context).name
             #Create the first line of the voucher, the payment made
