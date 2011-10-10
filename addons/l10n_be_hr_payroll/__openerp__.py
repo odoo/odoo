@@ -36,7 +36,7 @@ Belgian Payroll Rules
     * Employee Payslip
     * Monthly Payroll Register
     * Integrated with Holiday Management
-    * Salary Maj, ONSS, Precompte Professionnel, Child Allowance, ...
+    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
     'active': False,
