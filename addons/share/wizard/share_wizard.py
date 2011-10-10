@@ -139,7 +139,7 @@ class share_wizard(osv.osv_memory):
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
         'share_url_template': fields.char('Share Access URL Template', size=512,
                                 help='Template for share url. May contains %(dbname)s, %(login)s and %(password)s'),
-        'share_root_url': fields.function(_share_root_url, 'Share Access URL', type='char', size=512, readonly=True,
+        'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', size=512, readonly=True,
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
@@ -743,7 +743,7 @@ class share_result_line(osv.osv_memory):
         'user_id': fields.many2one('res.users', required=True, readonly=True),
         'login': fields.related('user_id', 'login', string='Login', type='char', size=64, required=True, readonly=True),
         'password': fields.char('Password', size=64, readonly=True),
-        'share_url': fields.function(_share_url, 'Share URL', type='char', size=512),
+        'share_url': fields.function(_share_url, string='Share URL', type='char', size=512),
         'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True),
         'newly_created': fields.boolean('Newly created', readonly=True),
     }
