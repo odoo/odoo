@@ -1,7 +1,7 @@
 -
   In order to test the Packs in OpenERP, we will try to sell a "Pack of 24
   beers" which is composed of 24 "Beers" and a "Beers Pack".
-- |
+-
   I start by creating the Beers product.
 - 
   !record {model: product.product, id: product_product_beers0}:
@@ -16,7 +16,7 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-- |
+-
   I create the "Beers Pack" product.
 - 
   !record {model: product.product, id: product_product_beerspack0}:
@@ -31,7 +31,7 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-- |
+-
   I create the "Pack of 24 beers" product
 - 
   !record {model: product.product, id: product_product_packofbeers0}:
@@ -42,7 +42,7 @@
     type: product
     uom_id: product.product_uom_unit
     uom_po_id: product.product_uom_unit
-- |
+-
   I define the Phantom Bill of Material for the "Pack of 24 beers"
 - 
   !record {model: mrp.bom, id: mrp_bom_packofbeers0}:
@@ -64,10 +64,10 @@
     product_qty: 1.0
     product_uom: product.product_uom_unit
     type: phantom
-- |
+-
   As all my data are created, I will create an outgoing order picking for a
   "Pack of 24 Beers"
-- 
+-
   !record {model: stock.picking, id: picking_out}:
     address_id: base.res_partner_address_tang
     company_id: base.main_company
@@ -82,15 +82,15 @@
         product_uom: product.product_uom_unit
     move_type: direct
     type: out
-- |
+-
   I validate the newly created picking.
-- 
+-
   !python {model: stock.picking}: |
     self.draft_validate(cr, uid, [ref("picking_out")], {
         "active_ids": [ref("stock.menu_action_picking_tree")],
         "active_id": ref("stock.menu_action_picking_tree"), }
     )
-- |
+-
   I check that my Picking of a "Pack of 24 beers" has been automatically
   converted to a picking of 24 beers and a pack of beer, so that my
   stock of beers remains exact.
