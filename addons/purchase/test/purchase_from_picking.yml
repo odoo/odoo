@@ -98,7 +98,7 @@
     from tools.translate import _
     pur_id1=self.browse(cr, uid, ref("purchase_order_po2"))
     account_obj = self.pool.get('account.invoice')
-    ids = account_obj.search(cr, uid, [('origin', '=', 'PO-'+str(pur_id1.id))])
+    ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
 -
  I check that the order which was initially in the confirmed state has transit to approved state.
@@ -137,7 +137,7 @@
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po2"))
     pick_ids = [x.id for x in pur_id1.picking_ids]
     id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.expenses_journal')},
-      {'active_ids': pick_ids})
+      {'active_ids': pick_ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
 -
   I check that an invoice_ids field of Delivery&Invoices gets bind with the value.

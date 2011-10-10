@@ -6,7 +6,7 @@
         <record id="attn_VAT-OUT-21-S" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="description">VAT-OUT-21-S</field>
-            <field name="name">VAT 21%</field>
+            <field name="name">VAT 21% - Services</field>
             <field name="account_collected_id" ref="a451054"/>
             <field name="account_paid_id" ref="a451054"/>
             <field name="price_include" eval="0"/>
@@ -48,7 +48,7 @@
         <record id="attn_VAT-OUT-12-S" model="account.tax.template">
             <field name="sequence">20</field>
             <field name="description">VAT-OUT-12-S</field>
-            <field name="name">VAT 12%</field>
+            <field name="name">VAT 12% - Services</field>
             <field name="account_collected_id" ref="a451054"/>
             <field name="account_paid_id" ref="a451054"/>
             <field name="price_include" eval="0"/>
@@ -90,7 +90,7 @@
         <record id="attn_VAT-OUT-06-S" model="account.tax.template">
             <field name="sequence">30</field>
             <field name="description">VAT-OUT-06-S</field>
-            <field name="name">VAT 6%</field>
+            <field name="name">VAT 6% - Services</field>
             <field name="account_collected_id" ref="a451054"/>
             <field name="account_paid_id" ref="a451054"/>
             <field name="price_include" eval="0"/>
@@ -132,7 +132,7 @@
         <record id="attn_VAT-OUT-00-S" model="account.tax.template">
             <field name="sequence">40</field>
             <field name="description">VAT-OUT-00-S</field>
-            <field name="name">VAT 0%</field>
+            <field name="name">VAT 0% - Services</field>
             <field name="price_include" eval="0"/>
             <field name="amount">0</field>
             <field name="type">percent</field>
@@ -2070,7 +2070,7 @@
         <record id="attn_VAT-IN-V82-CAR-EXC-C2" model="account.tax.template">
             <field name="sequence">722</field>
             <field name="description">VAT-IN-V82-CAR-EXC-C2</field>
-            <field name="name">Frais de voiture - VAT 50% Deductible</field>
+            <field name="name">Frais de voiture - VAT 50% Deductible (Price Excl.)</field>
             <field name="parent_id" ref="attn_VAT-IN-V82-CAR-EXC"/>
             <field name="account_collected_id" ref="a411059"/>
             <field name="account_paid_id" ref="a411059"/>
@@ -2090,7 +2090,7 @@
         <record id="attn_VAT-IN-V82-CAR-EXC-C3" model="account.tax.template">
             <field name="sequence">723</field>
             <field name="description">VAT-IN-V82-CAR-EXC-C3</field>
-            <field name="name">Frais de voiture - Montant de la note de crédit</field>
+            <field name="name">Frais de voiture - Montant de la note de crédit (Price Excl.)</field>
             <field name="parent_id" ref="attn_VAT-IN-V82-CAR-EXC"/>
             <field name="price_include" eval="0"/>
             <field name="amount">0</field>

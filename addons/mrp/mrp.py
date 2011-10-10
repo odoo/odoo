@@ -258,7 +258,7 @@ class mrp_bom(osv.osv):
         return check_bom(boms)
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive BoM.', ['parent_id']),
+        (_check_recursion, 'Error ! You cannot create recursive BoM.', ['parent_id']),
         (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
     ]
 
@@ -301,7 +301,7 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0):
+    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0, routing_id=False):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
@@ -311,6 +311,7 @@ class mrp_bom(osv.osv):
         @return: result: List of dictionaries containing product details.
                  result2: List of dictionaries containing Work Center details.
         """
+        routing_obj = self.pool.get('mrp.routing')
         factor = factor / (bom.product_efficiency or 1.0)
         factor = rounding(factor, bom.product_rounding)
         if factor < bom.product_rounding:
@@ -338,8 +339,9 @@ class mrp_bom(osv.osv):
                     'product_uos_qty': bom.product_uos and bom.product_uos_qty * factor or False,
                     'product_uos': bom.product_uos and bom.product_uos.id or False,
                 })
-            if bom.routing_id:
-                for wc_use in bom.routing_id.workcenter_lines:
+            routing = (routing_id and routing_obj.browse(cr, uid, routing_id)) or bom.routing_id or False
+            if routing:
+                for wc_use in routing.workcenter_lines:
                     wc = wc_use.workcenter_id
                     d, m = divmod(factor, wc_use.workcenter_id.capacity_per_cycle)
                     mult = (d + (m and 1.0 or 0.0))
@@ -471,11 +473,11 @@ class mrp_production(osv.osv):
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
         'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
-        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Moves Created', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Moves Created', domain=[('state','in', ('done', 'cancel'))]),
+        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products', domain=[('state','in', ('done', 'cancel'))]),
         'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
         'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
-        'state': fields.selection([('draft','Draft'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','In Production'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
+        'state': fields.selection([('draft','New'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('cancel','Cancelled'),('done','Done')],'State', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
@@ -500,7 +502,7 @@ class mrp_production(osv.osv):
         return True
 
     _constraints = [
-        (_check_qty, 'Order quantity cannot be negative or zero !', ['product_qty']),
+        (_check_qty, 'Order quantity cannot be negative or zero!', ['product_qty']),
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -510,7 +512,7 @@ class mrp_production(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Production Order(s) which are in %s State!') % s['state'])
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in the state \'%s\'!') % s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -612,9 +614,8 @@ class mrp_production(osv.osv):
 
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
-
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
             results = res[0]
             results2 = res[1]
             for line in results:

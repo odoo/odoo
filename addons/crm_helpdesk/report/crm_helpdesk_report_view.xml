@@ -53,22 +53,22 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <group col="16" colspan="9">
+                    <group>
                         <filter string="  Year  " icon="terp-go-year"
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Helpdesk requests occurred in current year"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
                             domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in current month"/>
-                        <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                        <filter icon="terp-go-month" string="    Month-1    " 
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Helpdesk requests occurred in last month"/>
                         <separator orientation="vertical" />
-                        <filter string="Current" icon="terp-check"
-                        domain="[('state','in',('open','draft'))]" />
-                        <filter string="Won" icon="terp-check"
-                        domain="[('state','=','done')]" />
-                        <filter string="Lost" icon="terp-dialog-close"
+                        <filter string="New" icon="terp-check"
+                        domain="[('state','=','draft')]" />
+                        <filter string="Open" icon="terp-camera_test"
+                        domain="[('state','=','open')]" />
+                        <filter string="Closed" icon="terp-dialog-close"
                         domain="[('state','=','cancel')]" />
                         <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
@@ -134,7 +134,7 @@
             <field name="res_model">crm.helpdesk.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="context">{"search_default_User":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_helpdesk_tree"/>
             <field name="search_view_id" ref="view_report_crm_helpdesk_filter"/>
             <field name="help">Have a general overview of all support requests by sorting them with specific criteria such as the processing time, number of requests answered, emails sent and costs.</field>

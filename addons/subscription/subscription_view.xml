@@ -75,7 +75,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Subscription">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-check"
                         string="Running"
                         domain="[('state','=','running')]"/>
@@ -85,11 +85,11 @@
                     domain="[('date_init','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')), ('date_init','&gt;=', time.strftime('%%Y-%%m-%%d 00:00:00'))]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="user_id" select="1"/>
+                        <field name="user_id"/>
                         <field name="partner_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4">
+                    <group expand="0" string="Group By...">
                         <filter string="User" icon="terp-personal" name="User" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" name="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
@@ -169,7 +169,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Subscription Document">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="model"/>
                     </group>

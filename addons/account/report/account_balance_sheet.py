@@ -136,7 +136,7 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'code': account.code,
                         'name': account.name,
                         'level': account.level,
-                        'balance':account.balance,
+                        'balance': account.balance != 0 and account.balance * account.user_type.sign or account.balance,
                         'type': account.type,
                     }
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id

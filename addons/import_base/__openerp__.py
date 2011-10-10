@@ -22,7 +22,7 @@
 {
     'name': 'Base framework for module that need to import complex data',
     'version': '0.9',
-    'category': 'Generic Modules',
+    'category': 'Hidden',
     'description': """
         This module provide a class import_framework to help importing 
         complex data from other software
@@ -31,7 +31,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': [],
+    'update_xml': ["import_base_view.xml"],
     'demo_xml': [],
     'test': [], #TODO provide test
     'installable': True,

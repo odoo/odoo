@@ -75,13 +75,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Inventory">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name"/>
                         <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="4" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
@@ -95,7 +95,7 @@
             <field name="model">stock.inventory</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state in ('cancel')">
+                <tree string="Lot Inventory" colors="grey:state == 'cancel'">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -275,7 +275,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Pack Search">
-                    <group col="10" colspan="4">
+                    <group>
                         <field name="name" />
                         <field name="serial" />
                         <field name="date" />
@@ -383,7 +383,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-check" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots" />
                         <separator orientation="vertical"/>
                         <field name="prefix"/>
@@ -393,7 +393,7 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                     </group>
                 </search>
@@ -423,7 +423,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -447,7 +447,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -558,6 +558,7 @@
                         string="Supplier" domain="[('usage', '=', 'supplier')]" help="Supplier Locations" />
                     <separator orientation="vertical"/>
                     <field name="name"/>
+                    <field name="location_id" string="Parent Location"/>
                 </search>
             </field>
         </record>
@@ -673,8 +674,9 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
+                    <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>
@@ -698,6 +700,7 @@
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
                             <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="invoice_state" string="Invoice Control" groups="base.group_extended"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
@@ -708,7 +711,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -737,7 +740,6 @@
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
@@ -760,7 +762,7 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
                                         <field name="location_dest_id" domain="[('usage','=','internal')]" />
                                     </group>
 
@@ -768,7 +770,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -798,7 +800,7 @@
                                 </form>
                             </field>
                             <group col="10" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
@@ -810,7 +812,6 @@
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
                             <field name="auto_picking" groups="base.group_extended"/>
-                            <field name="invoice_state" groups="base.group_extended"/>
                             <field name="date_done" groups="base.group_extended"/>
                             <field name="move_type" groups="base.group_extended"/>
                             <field name="type" groups="base.group_extended"/>
@@ -830,7 +831,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Stock Picking">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Available Pickings"/>
                         <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Pickings"/>
                         <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
@@ -844,7 +845,7 @@
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -867,7 +868,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -960,7 +961,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -990,7 +991,7 @@
                                 </form>
                             </field>
                             <group col="12" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-yes"/>
@@ -1022,7 +1023,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Picking list">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
                         <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
@@ -1038,7 +1039,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -1087,7 +1088,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="partner_id" />
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1112,7 +1113,7 @@
                         <group colspan="4" col="4">
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
-                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" domain="[('partner_id','&lt;&gt;',False)]" colspan="4"/>
                             <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
@@ -1180,7 +1181,7 @@
                                         <separator string="Dates" colspan="2" />
                                         <field name="create_date" invisible="1"/>
                                         <field name="date"/>
-                                        <field name="date_expected"/>
+                                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                                     </group>
 
                                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1210,7 +1211,7 @@
                                 </form>
                             </field>
                             <group col="10" colspan="4">
-                                <field name="state" readonly="1"/>
+                                <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                                 <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" icon="gtk-cancel"/>
                                 <button name="draft_force_assign" states="draft" string="Process Later" type="object" icon="gtk-ok"/>
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
@@ -1241,7 +1242,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Incoming Shipments">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','=','assigned')]" help="Incoming Shipments Available" />
                         <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
                         <separator orientation="vertical" />
@@ -1256,7 +1257,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
                         <filter icon="terp-stock_effects-object-colorize" name="state" string="State" domain="[]" context="{'group_by':'state'}"/>
@@ -1307,7 +1308,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Internal Picking List">
-                    <group col="8" colspan="4">
+                    <group>
                         <filter icon="terp-check" string="Available" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                         <filter icon="terp-camera_test" name="confirmed" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves" />
                         <separator orientation="vertical"/>
@@ -1317,7 +1318,7 @@
                         <field name="company_id" widget="selection"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By...">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
@@ -1366,7 +1367,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
+                <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
@@ -1446,7 +1447,7 @@
                         <separator string="Dates" colspan="2" />
                         <field name="create_date" groups="base.group_extended"/>
                         <field name="date" groups="base.group_extended"/>
-                        <field name="date_expected"/>
+                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1467,7 +1468,7 @@
                     </group>
 
                     <separator colspan="4"/>
-                    <field name="state"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"waiting":"blue","confirmed":"blue"}'/>
                     <group col="4" colspan="2">
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
@@ -1485,12 +1486,12 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group col="14" colspan="4">
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
-                        <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <group>
                         <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
+                        <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                        <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                         <separator orientation="vertical"/>
                         <field name="product_id"/>
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
@@ -1500,7 +1501,7 @@
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Lot" name="groupby_prodlot_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'prodlot_id'}"/>
@@ -1525,7 +1526,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_move_search"/>
-            <field name="context">{'search_default_Available':1}</field>
+            <field name="context">{'search_default_ready':1}</field>
             <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
         </record>
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
@@ -1543,7 +1544,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="6" />
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="partner_id" string="Partner"/>
@@ -1573,7 +1574,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="%(action_partial_move_server)d" string="Process" type="action" states="confirmed,assigned" icon="gtk-go-forward"/>
+                    <button name="action_done" string="Process" type="object" states="confirmed,assigned" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1635,7 +1636,7 @@
                         <separator string="Dates" colspan="2" />
                         <field name="create_date" groups="base.group_extended"/>
                         <field name="date" groups="base.group_extended"/>
-                        <field name="date_expected"/>
+                        <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                     </group>
 
                     <group colspan="2" col="4" groups="base.group_extended">
@@ -1674,11 +1675,11 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group col="8" colspan="4">
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
+                    <group>
+                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
+                        <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
-                        <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
@@ -1686,7 +1687,7 @@
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
@@ -1706,12 +1707,12 @@
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <group col="8" colspan="4">
-                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
-                        <separator orientation="vertical"/>
+                    <group>
                         <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (available or not)"/>
                         <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
                         <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
@@ -1719,7 +1720,7 @@
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
@@ -1944,6 +1945,10 @@
             id="menu_action_stock_journal_form"
             groups="base.group_extended"
             parent="menu_warehouse_config" />
+
+        <record model="ir.actions.todo.category" id="category_stock_management_config">
+            <field name="name">Stock Management</field>
+        </record>
 
     </data>
 </openerp>

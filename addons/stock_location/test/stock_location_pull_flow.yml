@@ -28,7 +28,7 @@
   I create a account type Receivable.
 -
   !record {model: account.account.type, id: account_account_type_receivable0}:
-    close_method: balance
+    close_method: unreconciled
     code: receivable_test
     name: Receivable For Tests
     sign: 1
@@ -126,7 +126,7 @@
   I create a product and define the pulled flow condition for stock move.
   I set shipping type Sending Goods. and set Procurement type to move.
 -
-  !record {model: product.product, id: product_product_hpcdwriters0}:
+  !record {model: product.product, id: product_product_hpcdwriters01}:
     categ_id: product_category_computer0
     cost_method: standard
     list_price: 1000.0
@@ -179,7 +179,7 @@
     name: Testing pulled flow
     priority: '1'
     procure_method: make_to_order
-    product_id: product_product_hpcdwriters0
+    product_id: product_product_hpcdwriters01
     product_qty: 5.0
     product_uom: product.product_uom_unit
     product_uos: product.product_uom_unit
@@ -194,15 +194,7 @@
   !python {model: procurement.order.compute.all}: |
     proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
--
-  I check the state of procurement order is cancel and stock move is cancel.
--
-  !python {model: procurement.order }: |
-   from tools.translate import _
-   procurement_ids=self.search(cr, uid, [('id', '=', ref('procurement_order_test0'))])
-   if procurement_ids:
-    order=self.browse(cr,uid,procurement_ids)[0]
-    assert(order.state=='cancel')
+
 -
   I check the new procurement order has been created .
 -

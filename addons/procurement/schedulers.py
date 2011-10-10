@@ -77,7 +77,7 @@ class procurement_order(osv.osv):
                         report_later += 1
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if proc.state == 'exception':
-                        report.append('PROC %d: on order - %3.2f %-5s - %s' % \
+                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name))
                         report_except += 1
@@ -100,7 +100,7 @@ class procurement_order(osv.osv):
                     report_total += 1
                 for proc in procurement_obj.browse(cr, uid, report_ids, context=context):
                     if proc.state == 'exception':
-                        report.append('PROC %d: from stock - %3.2f %-5s - %s' % \
+                        report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name,))
                         report_except += 1
@@ -111,15 +111,15 @@ class procurement_order(osv.osv):
             end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
             if uid:
                 request = self.pool.get('res.request')
-                summary = '''Here is the procurement scheduling report.
+                summary = _("""Here is the procurement scheduling report.
 
-        Start Time: %s
-        End Time: %s
-        Total Procurements processed: %d
-        Procurements with exceptions: %d
-        Skipped Procurements (scheduled date outside of scheduler range) %d
+        Start Time: %s 
+        End Time: %s 
+        Total Procurements processed: %d 
+        Procurements with exceptions: %d 
+        Skipped Procurements (scheduled date outside of scheduler range) %d 
 
-        Exceptions:\n'''% (start_date, end_date, report_total, report_except, report_later)
+        Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
                 request.create(cr, uid,
                     {'name': "Procurement Processing Report.",
