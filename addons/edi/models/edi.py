@@ -29,9 +29,11 @@ import urllib2
 
 import openerp
 import openerp.release as release
+import netsvc
 from osv import osv,fields
 from tools.translate import _
 from tools.parse_version import parse_version
+from tools.safe_eval import safe_eval as eval
 
 EXTERNAL_ID_PATTERN = re.compile(r'^(\S+:)?(\S+?)\.(\S+)$')
 
@@ -427,6 +429,33 @@ class EDIMixin(object):
         if len(search_results) == 1:
             return model.browse(cr, uid, search_results[0][0], context=context)
         return False
+
+    def _edi_generate_report_attachment(self, cr, uid, record, context=None):
+        """Utility method to generate the first PDF-type report declared for the
+           current model with ``usage`` attribute set to ``default``.
+           This must be called explicitly by models that need it, usually
+           at the beginning of ``edi_export``, before the call to ``super()``."""
+        ir_actions_report = self.pool.get('ir.actions.report.xml')
+        matching_reports = ir_actions_report.search(cr, uid, [('model','=',self._name),
+                                                              ('report_type','=','pdf'),
+                                                              ('usage','=','default')])
+        if matching_reports:
+            report = ir_actions_report.browse(cr, uid, matching_reports[0])
+            report_service = 'report.' + report.report_name
+            service = netsvc.LocalService(report_service)
+            (result, format) = service.create(cr, uid, [record.id], {'model': self._name}, context=context)
+            eval_context = {'time': time, 'object': record}
+            if not report.attachment or not eval(report.attachment, eval_context):
+                # no auto-saving of report as attachment, need to do it manually
+                result = base64.b64encode(result)
+                file_name = report.report_name+".printout.pdf"
+                ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
+                                                                      {'name': file_name,
+                                                                       'datas': result,
+                                                                       'datas_fname': file_name,
+                                                                       'res_model': self._name,
+                                                                       'res_id': record.id},
+                                                                      context=context)
 
     def _edi_import_attachments(self, cr, uid, record_id, edi_document, context=None):
         ir_attachment = self.pool.get('ir.attachment')
