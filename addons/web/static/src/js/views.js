@@ -512,6 +512,52 @@ db.web.Sidebar = db.web.Widget.extend({
             self.do_toggle();
         });
     },
+
+    call_default_on_sidebar: function(item) {
+        var func_name = 'on_sidebar_' + _.underscored(item.label);
+        var fn = this.widget_parent[func_name];
+        if(typeof fn === 'function') {
+            fn(item);
+        }
+    },
+
+    add_default_sections: function() {
+        this.add_items('Customize', [
+            {
+                label: "Manage Views",
+                callback: this.call_default_on_sidebar,
+                title: "Manage views of the current object"
+            }, {
+                label: "Edit Workflow",
+                callback: this.call_default_on_sidebar,
+                title: "Manage views of the current object",
+                classname: 'oe_hide oe_sidebar_edit_workflow'
+            }, {
+                label: "Customize Object",
+                callback: this.call_default_on_sidebar,
+                title: "Manage views of the current object"
+            }
+        ]);
+
+        this.add_items('Other Options', [ 
+            {
+                label: "Import",
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: "Export",
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: "Translate",
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_sidebar_translate oe_hide'
+            }, {
+                label: "View Log",
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_hide oe_sidebar_view_log'
+            }
+        ]);
+    },
+
     add_toolbar: function(toolbar) {
         var self = this;
         _.each([['print', "Reports"], ['action', "Actions"], ['relate', "Links"]], function(type) {
@@ -524,15 +570,29 @@ db.web.Sidebar = db.web.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_section(type[0], type[1], items);
+                self.add_items(type[1], items);
             }
         });
     },
-    add_section: function(code, name, items) {
-        // For each section, we pass a name/label and optionally an array of items.
-        // If no items are passed, then the section will be created as a custom section
-        // returning back an element_id to be used by a custom controller.
-        // Else, the section is a standard section with items displayed as links.
+    
+    add_section: function(name) {
+        var code = _.underscored(name),
+            $section = this.sections[code];
+
+        if(!$section) {
+            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            var $section = $(db.web.qweb.render("Sidebar.section", {
+                section_id: section_id,
+                name: name,
+                classname: 'oe_sidebar_' + code,
+            }));
+            $section.appendTo(this.$element.find('div.sidebar-actions'));
+            this.sections[code] = $section;
+        }
+        return $section;
+    },
+
+    add_items: function(section_name, items) {
         // An item is a dictonary : {
         //    label: label to be displayed for the link,
         //    action: action to be launch when the link is clicked,
@@ -541,25 +601,24 @@ db.web.Sidebar = db.web.Widget.extend({
         //    title: optional title for the link
         // }
         // Note: The item should have one action or/and a callback
+        //
+
         var self = this,
-            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            $section = this.add_section(section_name),
+            section_id = $section.attr('id');
+
         if (items) {
             for (var i = 0; i < items.length; i++) {
                 items[i].element_id = _.uniqueId(section_id + '_item_');
                 this.items[items[i].element_id] = items[i];
             }
-        }
-        var $section = $(db.web.qweb.render("Sidebar.section", {
-            section_id: section_id,
-            name: name,
-            classname: 'oe_sidebar_' + code,
-            items: items
-        }));
-        if (items) {
-            $section.find('a.oe_sidebar_action_a').click(function() {
+
+            var $items = $(db.web.qweb.render("Sidebar.section.items", {items: items}));
+
+            $items.find('a.oe_sidebar_action_a').click(function() {
                 var item = self.items[$(this).attr('id')];
                 if (item.callback) {
-                    item.callback();
+                    item.callback.apply(self, [item]);
                 }
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
@@ -589,10 +648,13 @@ db.web.Sidebar = db.web.Widget.extend({
                 }
                 return false;
             });
+        
+            var $ul = $section.find('ul');
+            if(!$ul.length) {
+                $ul = $('<ul/>').appendTo($section);
+            }
+            $items.appendTo($ul);
         }
-        $section.appendTo(this.$element.find('div.sidebar-actions'));
-        this.sections[code] = $section;
-        return section_id;
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
@@ -821,42 +883,11 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     do_search: function(view) {
     },
+
     set_common_sidebar_sections: function(sidebar) {
-        sidebar.add_section('customize', "Customize", [
-            {
-                label: "Manage Views",
-                callback: this.on_sidebar_manage_view,
-                title: "Manage views of the current object"
-            }, {
-                label: "Edit Workflow",
-                callback: this.on_sidebar_edit_workflow,
-                title: "Manage views of the current object",
-                classname: 'oe_hide oe_sidebar_edit_workflow'
-            }, {
-                label: "Customize Object",
-                callback: this.on_sidebar_customize_object,
-                title: "Manage views of the current object"
-            }
-        ]);
-        sidebar.add_section('other', "Other Options", [
-            {
-                label: "Import",
-                callback: this.on_sidebar_import
-            }, {
-                label: "Export",
-                callback: this.on_sidebar_export
-            }, {
-                label: "Translate",
-                callback: this.on_sidebar_translate,
-                classname: 'oe_sidebar_translate oe_hide'
-            }, {
-                label: "View Log",
-                callback: this.on_sidebar_view_log,
-                classname: 'oe_hide oe_sidebar_view_log'
-            }
-        ]);
+        sidebar.add_default_sections();
     },
-    on_sidebar_manage_view: function() {
+    on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
             $('<xmp>' + db.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         } else {

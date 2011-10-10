@@ -84,8 +84,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
-            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
+            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this);
+            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
@@ -362,13 +362,16 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
 });
 
 openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section('Responsible');
+        this.$div = $('<div></div>');
+        $section.append(this.$div);
+        this._super(parent, $section.attr('id'));
         this.view = view;
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
-        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
     },
     on_filter_click: function(e) {
         var responsibles = [],
@@ -388,8 +391,9 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
 });
 
 openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section('Navigator');
+        this._super(parent, $section.attr('id'));
         this.view = view;
     },
     on_events_loaded: function(events) {

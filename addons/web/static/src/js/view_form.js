@@ -119,7 +119,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
             this.sidebar.do_unfold();
-            this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this.sidebar.add_section('attachments', "Attachments"), this);
+            this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
         }
@@ -541,8 +541,12 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
 openerp.web.form = {};
 
 openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
-    init: function(parent, element_id, form_view) {
-        this._super(parent, element_id);
+    init: function(parent, form_view) {
+        var $section = parent.add_section('Attachments');
+        this.$div = $('<div class="oe-sidebar-attachments"></div>');
+        $section.append(this.$div);
+
+        this._super(parent, $section.attr('id'));
         this.view = form_view;
     },
     do_update: function() {
@@ -560,7 +564,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     },
     on_attachments_loaded: function(attachments) {
         this.attachments = attachments;
-        this.$element.html(QWeb.render('FormView.sidebar.attachments', this));
+        this.$div.html(QWeb.render('FormView.sidebar.attachments', this));
         this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
         this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
     },
