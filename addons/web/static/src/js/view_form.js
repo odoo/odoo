@@ -11,7 +11,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     searchable: false,
     form_template: "FormView",
-    identifier_prefix: 'formview-',
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View
@@ -2079,9 +2078,9 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                         self.o2m.dataset.on_change();
                     }).then(callback, error_callback);
                 },
-                /*read_function: function() {
+                read_function: function() {
                     return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
-                },*/
+                },
                 parent_view: self.o2m.view,
                 form_view_options: {'not_interactible_on_create':true}
             }, self.o2m.build_domain(), self.o2m.build_context());

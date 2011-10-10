@@ -731,7 +731,7 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
         if (this.read_function) {
             return this.read_function.apply(null, arguments);
         } else {
-            this._super.apply(this, arguments);
+            return this._super.apply(this, arguments);
         }
     },
     default_get: function(fields, callback) {
