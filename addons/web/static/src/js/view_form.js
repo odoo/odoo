@@ -424,8 +424,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
-            this.reload();
-            return $.Deferred().then(success).resolve(r);
+            return this.reload().then(success);
         }
     },
     /**
@@ -459,8 +458,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             console.debug("The record has been created with id #" + this.datarecord.id);
-            this.reload();
-            return $.Deferred().then(success).resolve(_.extend(r, {created: true}));
+            return this.reload().pipe(function() {
+                return _.extend(r, {created: true});
+            }).then(success);
         }
     },
     on_action: function (action) {
@@ -471,9 +471,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     reload: function() {
         if (this.dataset.index == null || this.dataset.index < 0) {
-            this.on_button_new();
+            return $.when(this.on_button_new());
         } else {
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+            return this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
     },
     get_fields_values: function() {
@@ -2241,17 +2241,10 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.dataset.create_function = function() {
             return self.options.create_function.apply(null, arguments).then(function(r) {
                 self.created_elements.push(r.result);
-                if (self._written) {
-                    self._written.resolve();
-                }
             });
         };
         this.dataset.write_function = function() {
-            return self.write_row.apply(self, arguments).then(function() {
-                if (self._written) {
-                    self._written.resolve();
-                }
-            });
+            return self.write_row.apply(self, arguments);
         };
         this.dataset.read_function = this.options.read_function;
         this.dataset.parent_view = this.options.parent_view;
@@ -2359,19 +2352,15 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
             $nbutton.click(function() {
-                self._written = $.Deferred().then(function() {
-                    self._written = undefined;
+                $.when(self.view_form.do_save()).then(function() {
                     self.view_form.on_button_new();
                 });
-                self.view_form.do_save();
             });
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
-                self._written = $.Deferred().then(function() {
-                    self._written = undefined;
+                $.when(self.view_form.do_save()).then(function() {
                     self.check_exit();
                 });
-                self.view_form.do_save();
             });
             var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
             $cbutton.click(function() {
