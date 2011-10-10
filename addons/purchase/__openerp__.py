@@ -63,12 +63,14 @@ Dashboard for purchase management that includes:
              'test/process/requests_quotation.yml',
              'test/process/create_invoice.yml',
              'test/process/purchase_from_picking.yml',
-             'purchase_unit_test.xml',
-             'test/procurement_buy.yml',
+             'test/process/procurement_buy.yml',
              'test/purchase_report.yml',
              'test/purchase_order_cancel_draft.yml'
                  ],
-    'demo': ['purchase_demo.xml'],
+    'demo': [
+            'purchase_demo.xml',
+            'purchase_unit_test.xml',
+            ],
     'installable': True,
     'active': False,
     'certificate': '0057234283549',
