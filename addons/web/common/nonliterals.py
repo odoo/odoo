@@ -199,6 +199,11 @@ class CompoundDomain(BaseDomain):
             self.add(domain)
         
     def evaluate(self, context=None):
+        ctx = dict(context or {})
+        eval_context = self.get_eval_context()
+        if eval_context:
+            eval_context = self.session.eval_context(eval_context)
+            ctx.update(eval_context)
         final_domain = []
         for domain in self.domains:
             if not isinstance(domain, (list, BaseDomain)):
@@ -208,9 +213,6 @@ class CompoundDomain(BaseDomain):
             if isinstance(domain, list):
                 final_domain.extend(domain)
                 continue
-            
-            ctx = dict(context or {})
-            ctx.update(self.get_eval_context() or {})
 
             domain.session = self.session
             final_domain.extend(domain.evaluate(ctx))

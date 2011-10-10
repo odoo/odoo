@@ -1083,7 +1083,11 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
      * the fields'context with the action's context.
      */
     build_context: function() {
-        var f_context = this.field.context || null;
+        var f_context = this.field.context || {};
+        if (!!f_context.__ref) {
+            var fields_values = this._build_eval_context();
+            f_context = new openerp.web.CompoundDomain(f_context).set_eval_context(fields_values);
+        }
         // maybe the default_get should only be used when we do a default_get?
         var v_contexts = _.compact([this.node.attrs.default_get || null,
             this.node.attrs.context || null]);
@@ -1098,14 +1102,15 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         return ctx;
     },
     build_domain: function() {
-        var f_domain = this.field.domain || null;
-        var v_domain = this.node.attrs.domain || [];
-        if (!(v_domain instanceof Array) || true) { //TODO niv: remove || true
-            var fields_values = this._build_eval_context();
-            v_domain = new openerp.web.CompoundDomain(v_domain).set_eval_context(fields_values);
-        }
+        var f_domain = this.field.domain || [];
+        var n_domain = this.node.attrs.domain || null;
         // if there is a domain on the node, overrides the model's domain
-        return f_domain || v_domain;
+        var final_domain = n_domain !== null ? n_domain : f_domain;
+        if (!(final_domain instanceof Array)) {
+            var fields_values = this._build_eval_context();
+            final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
+        }
+        return final_domain;
     }
 });
 
