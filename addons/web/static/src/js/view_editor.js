@@ -73,13 +73,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             _.each(this.attributes, function(attrs){
             if (tag != 'button') {
                 if (attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index") {
-                render_name += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
+                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ; }
             } else {
                 if (attrs.nodeName == "name") {
-                render_name += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
+                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"'; }
             }
             if (attrs.nodeName != "position") {
-                obj.att_list.push([attrs.nodeName,attrs.nodeValue]);
+                obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
             }
 
         });
@@ -115,7 +115,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var child_obj_list = [];
         var children_list = $(xml).filter(root).children();
         var parents = $(children_list[0]).parents().get();
-            _.each(children_list, function(child_node){
+            _.each(children_list, function( child_node ){
             var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
             child_obj_list.push(string);
         });
@@ -137,7 +137,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return main_object;
     },
 
-    parse_xml: function(arch,view_id) {
+    parse_xml: function(arch, view_id) {
         var self = this;
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
@@ -148,7 +148,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         obj.name = "<view view_id='"+view_id+"'>"
         var root_object = self.check_attr(root,tag,0);
         f_obj = self.children_function(arch, tag, [], this.xml_id-1, [root_object], [])        
-        obj.child_id.push(f_obj[0]);
+        obj.child_id.push( f_obj[0] );
         f_obj.pop();    
         f_obj.push(obj);
         return f_obj;
