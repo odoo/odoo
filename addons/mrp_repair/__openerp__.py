@@ -48,7 +48,7 @@ The aim is to have a complete module to manage all products repairs. The followi
         'mrp_repair_report.xml',
     ],
     'demo_xml': [],
-    'test': ['test/test_mrp_repair.yml', 'test/mrp_repair_report.yml'],
+    'test': ['test/test_mrp_repair.yml', 'test/mrp_repair_report.yml','test/mrp_repair_cancel.yml'],
     'installable': True,
     'active': False,
     'certificate': '0060814381277',
