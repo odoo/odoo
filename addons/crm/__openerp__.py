@@ -119,7 +119,8 @@ Creates a dashboard for CRM that includes:
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/test_crm_lead.yml',
+            'test/process/process_crm_lead.yml',
+            'test/process/cancle_crm_lead.yml',
             'test/test_crm_meeting.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml',

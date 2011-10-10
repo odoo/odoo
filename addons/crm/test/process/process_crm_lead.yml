@@ -1,27 +1,10 @@
-﻿-
-   In order to test the CRM in OpenERP, I will do a customer qualification
-   process that starts with a fist contact with a customer (a lead), which will
-   be converted to a business opportunity and a partner.
--
-   I create a two new users "user_crm" and I assign the group "salesman".
--
-   !record {model: res.users, id: res_users_usercrm0}:
-     company_id: base.main_company
-     context_lang: en_US
-     context_section_id: crm.section_sales_department
-     groups_id:
-       - base.group_sale_salesman
-     login: user_crm
-     name: user_crm
-     password: user_crm
-
 -  |
-   I start by creating a new lead "New Customer" and I provide an address to this
+   I start by creating a new lead "Steave Jon" and I provide an address to this
    new customer, as well as an email "info@mycustomer.com".
 -
    !record {model: crm.lead, id: crm_lead_newcustomer0}:
      email_from: info@mycustomer.com
-     name: New Customer
+     name: Steave Jon
      partner_name: Capegemini
      partner_id: base.res_partner_9
      phone: (855) 924-4364
@@ -125,17 +108,6 @@
 -
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in done state}:
      - state == "done"
--
-  I cancel lead by click on "cancel" button.
--
-   !python {model: crm.lead}: |
-     self.case_cancel(cr, uid, [ref("crm_lead_newcustomer0")])
-- |
-  I check that lead is now in 'cancel' state.
--
-  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in cancel state}:
-     - state == "cancel"
-
 #-
 #  |
 #  yaml is also not working with smtp server and send new email.
