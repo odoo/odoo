@@ -62,7 +62,7 @@ Dashboard for purchase management that includes:
     'test': [
              'test/process/requests_quotation.yml',
              'test/process/create_invoice.yml',
-             'test/purchase_from_picking.yml',
+             'test/process/purchase_from_picking.yml',
              'purchase_unit_test.xml',
              'test/procurement_buy.yml',
              'test/purchase_report.yml',
