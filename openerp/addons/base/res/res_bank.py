@@ -108,14 +108,8 @@ class res_partner_bank(osv.osv):
         if not context.get('address'):
             return value
 
-        for _, id, address_data in context['address']:
-            if not (id or address): continue
-            address = {}
-            if id:
-                address.update(self.pool['res.partner.address']
-                    .read(cursor, user, [id], ['type', field], context=context)[0])
-            if address_data:
-                address.update(address_data)
+        for address in self.pool.get('res.partner').serialize_o2m_commands(
+            cursor, user, 'address', context['address'], ['type', field], context=context):
 
             if address.get('type') == 'default':
                 return address.get(field, value)

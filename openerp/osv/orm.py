@@ -4762,6 +4762,50 @@ class BaseModel(object):
 
         return True
 
+    def serialize_o2m_commands(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
+        """ Serializes o2m commands into record dictionaries (as if
+        all the o2m records came from the database via a read()), and
+        returns an iterator over these dictionaries.
+
+        Because o2m commands might be creation commands, not all
+        record ids will contain an ``id`` field. Commands matching an
+        existing record (UPDATE and LINK_TO) will have an id.
+
+        :param field_name: name of the o2m field matching the commands
+        :type field_name: str
+        :param o2m_commands: one2many commands to execute on ``field_name``
+        :type o2m_commands: list((int|False, int|False, dict|False))
+        :param fields: list of fields to read from the database, when applicable
+        :type fields: list(str)
+        :param context: request context
+        :returns: o2m records in a shape similar to that returned by
+                  ``read()`` (except records may be missing the ``id``
+                  field if they don't exist in db)
+        :rtype: iter(dict)
+        """
+        o2m_model = self._all_columns[field_name].column._obj
+
+        # extract and handle case of single ids (instead of commands):
+        # convert to LINK_TO commands (4)
+        c1, c2 = itertools.tee(o2m_commands)
+        commands = list(itertools.chain(
+            (command for command in c1 if isinstance(command, (list, tuple))),
+            ((4, id, None) for id in c2 if not isinstance(id, (list, tuple)))))
+
+        # extract records to read, by id, in a mapping dict
+        ids_to_read = [id for (command, id, _) in commands if command in (1, 4)]
+        records_by_id = dict(
+            (record['id'], record)
+            for record in self.pool.get(o2m_model).read(
+                cr, uid, ids_to_read, fields=fields, context=context))
+
+        # merge record from db with record provided by command
+        for command, id, record in commands:
+            item = {}
+            if command in (1, 4): item.update(records_by_id[id])
+            if command in (0, 1): item.update(record)
+            yield item
+
 # keep this import here, at top it will cause dependency cycle errors
 import expression
 
