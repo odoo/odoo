@@ -2074,12 +2074,14 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
                 initial_view: "form",
                 alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
                 create_function: function(data, callback, error_callback) {
-                    return self.o2m.dataset.create(data).pipe(function(r) {
+                    return self.o2m.dataset.create(data).then(function(r) {
                         self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
                         self.o2m.dataset.on_change();
-                        return {'result': undefined};
                     }).then(callback, error_callback);
                 },
+                /*read_function: function() {
+                    return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+                },*/
                 parent_view: self.o2m.view,
                 form_view_options: {'not_interactible_on_create':true}
             }, self.o2m.build_domain(), self.o2m.build_context());
@@ -2215,6 +2217,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
      * - parent_view
      * - form_view_options
      * - list_view_options
+     * - read_function
      */
     select_element: function(model, options, domain, context) {
         var self = this;
@@ -2223,7 +2226,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.context = context || {};
         this.options = _.defaults(options || {}, {"initial_view": "search", "create_function": function() {
             return self.create_row.apply(self, arguments);
-        }});
+        }, read_function: null});
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
         openerp.web.form.dialog(this.render(), {close:function() {
@@ -2234,7 +2237,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     start: function() {
         this._super();
         var self = this;
-        this.dataset = new openerp.web.ReadOnlyDataSetSearch(this, this.model,
+        this.dataset = new openerp.web.ProxyDataSet(this, this.model,
             this.context);
         this.dataset.create_function = function() {
             return self.options.create_function.apply(null, arguments).then(function(r) {
@@ -2243,14 +2246,15 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                     self._written.resolve();
                 }
             });
-        }
+        };
         this.dataset.write_function = function() {
             return self.write_row.apply(self, arguments).then(function() {
                 if (self._written) {
                     self._written.resolve();
                 }
             });
-        }
+        };
+        this.dataset.read_function = this.options.read_function;
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
@@ -2471,7 +2475,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
     }
 });
 
-openerp.web.form.FormOpenDataset = openerp.web.ReadOnlyDataSetSearch.extend({
+openerp.web.form.FormOpenDataset = openerp.web.ProxyDataSet.extend({
     read_ids: function() {
         if (this.fop.options.read_function) {
             return this.fop.options.read_function.apply(null, arguments);

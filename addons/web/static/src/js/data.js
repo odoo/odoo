@@ -720,11 +720,19 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
     init: function() {
         this._super.apply(this, arguments);
         this.create_function = null;
         this.write_function = null;
+        this.read_function = null;
+    },
+    read_ids: function () {
+        if (this.read_function) {
+            return this.read_function.apply(null, arguments);
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
@@ -735,7 +743,7 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
         if (this.create_function) {
             return this.create_function(data, callback, error_callback);
         } else {
-            console.warn("trying to create a record using read only dataset");
+            console.warn("trying to create a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
             setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
             return to_return.promise();
@@ -747,7 +755,7 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
         if (this.write_function) {
             return this.write_function(id, data, options, callback);
         } else {
-            console.warn("trying to write a record using read only dataset");
+            console.warn("trying to write a record using default proxy dataset behavior");
             var to_return = $.Deferred().then(callback);
             setTimeout(function () {to_return.resolve({"result": true});}, 0);
             return to_return.promise();
@@ -756,7 +764,7 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
-        console.warn("trying to unlink a record using read only dataset");
+        console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();
