@@ -2072,11 +2072,12 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             pop.select_element(self.o2m.field.relation,{
                 initial_view: "form",
                 alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-                create_function: function(data) {
-                    return self.o2m.dataset.create(data, function(r) {
+                create_function: function(data, callback, error_callback) {
+                    return self.o2m.dataset.create(data).pipe(function(r) {
                         self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
                         self.o2m.dataset.on_change();
-                    });
+                        return {'result': undefined};
+                    }).then(callback, error_callback);
                 },
                 parent_view: self.o2m.view,
                 form_view_options: {'not_interactible_on_create':true}
