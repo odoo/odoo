@@ -1419,8 +1419,11 @@ class account_move(osv.osv):
         valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
         obj_analytic_line = self.pool.get('account.analytic.line')
         obj_move_line = self.pool.get('account.move.line')
+
         for move in self.browse(cr, uid, ids, context):
             # Unlink old analytic lines on move_lines
+            if not move.line_id:
+                raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
                     obj_analytic_line.unlink(cr,uid,obj.id)
