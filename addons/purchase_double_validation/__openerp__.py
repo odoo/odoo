@@ -40,6 +40,7 @@ that exceeds minimum amount set by configuration wizard.
 	   'purchase_double_validation_workflow.xml',
 	   'purchase_double_validation_installer.xml'
 	    ],
+    'test': ['test/purchase_double_validation_test.yml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
