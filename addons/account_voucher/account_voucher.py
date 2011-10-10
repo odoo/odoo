@@ -665,8 +665,8 @@ class account_voucher(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        company_currency = voucher_brw.journal_id.company_id.currency_id.id
-        current_currency = voucher_brw.currency_id.id
+        company_currency = _get_company_currency(cr, uid, voucher_brw.id, context)
+        current_currency = _get_current_currency(cr, uid, voucher_brw.id, context)
         context_multi_currency = context.copy()
         context_multi_currency.update({'date': voucher_brw.date})
         if current_currency <> company_currency: context = context_multi_currency
@@ -747,8 +747,8 @@ class account_voucher(osv.osv):
         rec_lst_ids = []
 
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        company_currency = voucher_brw.journal_id.company_id.currency_id.id
-        current_currency = voucher_brw.currency_id.id
+        company_currency = _get_company_currency(cr, uid, voucher_brw.id, context)
+        current_currency = _get_current_currency(cr, uid, voucher_brw.id, context)
         context_multi_currency = context.copy()
         context_multi_currency.update({'date': voucher_brw.date})
         if current_currency <> company_currency: context = context_multi_currency
@@ -865,8 +865,8 @@ class account_voucher(osv.osv):
         move_line = {}
 
         voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        company_currency = voucher_brw.journal_id.company_id.currency_id.id
-        current_currency = voucher_brw.currency_id.id
+        company_currency = _get_company_currency(cr, uid, voucher_brw.id, context)
+        current_currency = _get_current_currency(cr, uid, voucher_brw.id, context)
         context_multi_currency = context.copy()
         context_multi_currency.update({'date': voucher_brw.date})
         if current_currency <> company_currency: context = context_multi_currency
@@ -898,11 +898,22 @@ class account_voucher(osv.osv):
 
         return move_line
 
-
+    def _get_company_currency(self, cr, uid, voucher_id, context=None):
+        '''
+        @voucher_id: Id of the voucher what i want to obtain company currency.
+        '''
+        return self.pool.get('account.voucher').browse(cr,uid,voucher_id,context).journal_id.company_id.currency_id.id
+        
+    def _get_current_currency(self, cr, uid, voucher_id, context=None):
+        '''
+        @voucher_id: Id of the voucher what i want to obtain current currency.
+        '''
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        return voucher.currency_id.id or _get_company_currency(voucher.id)
+        
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
-        This method create account move from voucher.
-        Method refactored by Vauxoo.
+        Create account move for account voucher.
         '''
         if context is None:
             context = {}
@@ -915,8 +926,8 @@ class account_voucher(osv.osv):
 
             if voucher.move_id:
                 continue
-            company_currency = voucher.journal_id.company_id.currency_id.id
-            current_currency = voucher.currency_id.id or company_currency
+            company_currency = _get_company_currency(cr, uid, voucher.id, context)
+            current_currency = _get_current_currency(cr, uid, voucher.id, context)
             current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
             #Create the account move record.
             move_id = move_pool.create(cr, uid, self.account_move_get(cr,uid,voucher.id))
