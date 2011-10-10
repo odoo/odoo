@@ -92,12 +92,16 @@ class stock_fill_inventory(osv.osv_memory):
         for location in location_ids:
             datas = {}
             res[location] = {}
-            move_ids = move_obj.search(cr, uid, [('location_dest_id','=',location),('state','=','done')], context=context)
+            move_ids = move_obj.search(cr, uid, ['|',('location_dest_id','=',location),('location_id','=',location),('state','=','done')], context=context)
 
             for move in move_obj.browse(cr, uid, move_ids, context=context):
                 lot_id = move.prodlot_id.id
                 prod_id = move.product_id.id
-                qty = uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
+                if move.location_dest_id.id == location:
+                    qty = uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
+                else:
+                    qty = -uom_obj._compute_qty(cr, uid, move.product_uom.id,move.product_qty, move.product_id.uom_id.id)
+
 
                 if datas.get((prod_id, lot_id)):
                     qty += datas[(prod_id, lot_id)]['product_qty']
