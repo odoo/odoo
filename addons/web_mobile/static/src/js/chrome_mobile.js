@@ -206,7 +206,8 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
         this.footer.start();
         this.$element.html(this.render(this.data));
-        this.$element.find("[data-role=header]").find('h1').html('Application');
+        this.$element.find("[data-role=header]").find('h1').html('Applications');
+        this.$element.find("[data-role=header]").find('#home').hide();
         this.$element.find("[data-role=footer]").find('#shrotcuts').click(function(){
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
