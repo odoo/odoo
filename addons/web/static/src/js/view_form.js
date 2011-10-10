@@ -11,6 +11,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     searchable: false,
     form_template: "FormView",
+    identifier_prefix: 'formview-',
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View
