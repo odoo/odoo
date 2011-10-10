@@ -65,7 +65,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         obj.child_id = [];
         obj.id = this.xml_id++;
         obj.level = level+1;
+        obj.att_list = [];
         var render_name = "<" + tag;
+        obj.att_list = [];
+        obj.att_list.push(tag);
         $(xml).each(function() {
             _.each(this.attributes, function(attrs){
             if (tag != 'button') {
@@ -75,7 +78,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 if (attrs.nodeName == "name") {
                 render_name += ' ' +attrs.nodeName+'='+'"'+attrs.nodeValue+'"';}
             }
+            if (attrs.nodeName != "position") {
+                obj.att_list.push([attrs.nodeName,attrs.nodeValue]);
+            }
+
         });
+        
         render_name+= ">";
         });
         obj.name = render_name;
@@ -186,55 +194,90 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         _.each(xml_list , function(xml){
             var parent_id;
             var check_list = [];
-            var position = $(xml).attr('position');
-            if (xml.tagName.toLowerCase() == "xpath") {
-                var part_expr = _.without($(xml).attr('expr').split("/"),"");;
-                xpath_object = self.parse_xml(xml,result.id); 
-                if (part_expr[part_expr.length-1].search("@")!=-1) {
-                    check_list = $.trim(part_expr[part_expr.length-1].replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
-                    
-                }else{
-                    //search full path...
-                }
-            } else {
-                var xml_child = $(xml).children();
-                check_list.push(xml.tagName.toLowerCase());
-                    if ($(root[0]).attr('name')){
-                        check_list.push($(root[0]).attr('name'));
-                        check_list.push("name");
-                    }
+            if (xml.tagName.toLowerCase() == "xpath" && ($(xml).attr('expr')).indexOf("//") == -1) {
+                var part_expr = _.without($(xml).attr('expr').split("/"),"");
                 xpath_object = self.parse_xml(xml,result.id);
+                self.full_path_search(part_expr ,one_object[0].child_id ,xpath_object,one_object);
+            } else {
+                xpath_object = self.parse_xml(xml,result.id);
+                if($(xml).attr('expr')){
+                    check_list = $.trim(($(xml).attr('expr')).replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
+                }else{ 
+                    check_list = _.flatten(xpath_object[0].child_id[0].att_list);
+                }
+                $.each(one_object, function(key, val){
+                    self.search_object(val, check_list, xpath_object);
+                });
             }
-            $.each(one_object, function(key, val){
-                self.search_object(val, check_list, xpath_object, []);
-            });
-            
         });
     },
-
-    search_object: function(val ,list , xpath_object, p_list){
+    full_path_search: function(part_expr ,val ,xpath_object, one_object) {
         var self = this;
-        var main_list = $.trim(val.name.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
-        var insert = _.intersection(main_list,list);
-        var check = _.indexOf(p_list.child_id,xpath_object[0]);
-        if(check == -1){
-            if(insert.length == list.length){
-                var level = val.level+1;
+        var obj;
+        var check_list = _.without($.trim(part_expr[0].replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),"");
+        if(check_list.length == 2){
+            var int_val = parseInt(check_list[1]);
+            if(int_val){
+                var list_1 = _.select(val,function(element){
+                    var main_list = _.flatten(element.att_list);
+                    return _.include(main_list, check_list[0]);
+                });
+                obj = val[_.indexOf(val,list_1[int_val-1])];
+            }else{
+                obj = _.detect(val,function(element){
+                    var main_list = _.flatten(element.att_list);
+                    return _.include(main_list, check_list[0]);
+                });
+            }
+        }else{
+           obj = _.detect(val,function(element){
+                var main_list = _.flatten(element.att_list);
+                check_list = _.uniq(check_list);
+                var insert = _.intersection(main_list,check_list);
+                if(insert.length == check_list.length ){return element;}
+            });
+        }
+        part_expr.shift();
+        if (part_expr.length !=0){
+            self.full_path_search(part_expr ,obj.child_id ,xpath_object,one_object);
+        }else{
+            if(obj){
+                var level = obj.level+1;
                 $.each(xpath_object, function(key, val) {
                     self.increase_level(val, level)
-                });   
-                val.child_id.push(xpath_object[0]);
-                return;
+                });
+                obj.child_id.push(xpath_object[0]);
             }else{
-                if ( val.child_id.length != 0) { p_list = val; }
-                $.each(val.child_id, function(key, val) {
-                   self.search_object(val, list, xpath_object, p_list);
+                $.each(one_object, function(key, val){
+                    self.search_object(val, check_list, xpath_object);
                 });
             }
         }
-        
+        return obj;
     },
 
+    search_object: function(val ,list , xpath_object){
+        var self = this;
+        if(xpath_object.length != 0){
+            var main_list = _.flatten(val.att_list);
+            list = _.uniq(list);
+            var insert = _.intersection(main_list,list);
+            if(insert.length == list.length ){
+                var level = val.level+1;
+                $.each(xpath_object, function(key, val) {
+                    self.increase_level(val, level)
+                });
+                val.child_id.push(xpath_object[0]);
+                xpath_object.pop();
+                return;
+            }else{
+                $.each(val.child_id, function(key, val) {
+                   self.search_object(val, list, xpath_object);
+                });
+            }
+        }
+    },
+    
     increase_level :function(val, level){
         var self = this;
         val.level = level; 
