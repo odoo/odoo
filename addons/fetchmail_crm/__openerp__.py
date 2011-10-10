@@ -24,7 +24,7 @@
     "version" : "1.0",
     "depends" : ["fetchmail", "crm"],
     "author" : "OpenERP SA",
-    "category": 'Tools',
+    "category": 'Hidden/Link',
     "description": """
     """,
     'website': 'http://www.openerp.com',

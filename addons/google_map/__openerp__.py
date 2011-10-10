@@ -23,9 +23,7 @@
 {
     'name': 'Google Map',
     'version': '1.0',
-    'category': 'Tools',
-    'complexity': "easy",
-    'category': 'Generic Modules/Others',
+    'category': 'Hidden',
     'description': """
 The module adds Google Map field in partner address.
 ====================================================

@@ -25,7 +25,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
-    "category": "Project Management",
+    "category": "Hidden",
     'complexity': "easy",
     "images": ["images/project_mailgate_task.jpeg"],
     "depends": ["project", "mail"],

@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name': 'Belgian Payroll Rules',
-    'category': 'payroll',
+    'category': 'Localization/Payroll',
     'author': 'OpenERP SA',
     'depends': ['hr_payroll','hr_contract'],
     'version': '1.0',

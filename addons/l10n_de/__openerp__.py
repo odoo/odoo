@@ -125,7 +125,7 @@
     "version" : "1.0",
     "author" : "openbig.org",
     "website" : "http://www.openbig.org",
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.
 ==============================================================================
