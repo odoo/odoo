@@ -1659,5 +1659,17 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
+        <record id="HNL" model="res.currency">
+            <field name="name">HNL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateHNL" model="res.currency.rate">
+            <field name="rate">25</field>
+            <field name="currency_id" ref="HNL"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
     </data>
 </openerp>
