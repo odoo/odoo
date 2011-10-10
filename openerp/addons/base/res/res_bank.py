@@ -106,11 +106,15 @@ class res_partner_bank(osv.osv):
             value = ''
         if not context.get('address', False):
             return value
-        for _, id, address in context['address']:
+        for _, id, address_data in context['address']:
             if not (id or address): continue
-            if not address:
-                address = self.pool['res.partner.address']\
-                    .read(cursor, user, [id], ['type', field], context=context)[0]
+            address = {}
+            if id:
+                address.update(self.pool['res.partner.address']
+                    .read(cursor, user, [id], ['type', field], context=context)[0])
+            if address_data:
+                address.update(address_data)
+
             if address.get('type') == 'default':
                 return address.get(field, value)
             elif not address.get('type'):
