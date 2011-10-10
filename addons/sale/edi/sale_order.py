@@ -60,6 +60,9 @@ class sale_order(osv.osv, EDIMixin):
         res_partner_address = self.pool.get('res.partner.address')
         edi_doc_list = []
         for order in records:
+            # generate the main report
+            self._edi_generate_report_attachment(cr, uid, order, context=context)
+
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
             edi_doc = super(sale_order,self).edi_export(cr, uid, [order], edi_struct, context)[0]
             edi_doc.update({
@@ -177,7 +180,7 @@ class sale_order_line(osv.osv, EDIMixin):
     _inherit='sale.order.line'
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        """Overridden to provides sale order line fields with the expected names
+        """Overridden to provide sale order line fields with the expected names
            (sale and purchase orders have different column names)"""
         edi_struct = dict(edi_struct or SALE_ORDER_LINE_EDI_STRUCT)
         edi_doc_list = []

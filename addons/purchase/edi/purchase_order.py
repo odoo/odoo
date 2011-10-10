@@ -60,6 +60,9 @@ class purchase_order(osv.osv, EDIMixin):
         res_partner_address = self.pool.get('res.partner.address')
         edi_doc_list = []
         for order in records:
+            # generate the main report
+            self._edi_generate_report_attachment(cr, uid, order, context=context)
+
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
             edi_doc = super(purchase_order,self).edi_export(cr, uid, [order], edi_struct, context)[0]
             edi_doc.update({

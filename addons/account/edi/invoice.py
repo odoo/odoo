@@ -69,6 +69,9 @@ class account_invoice(osv.osv, EDIMixin):
         res_partner_address = self.pool.get('res.partner.address')
         edi_doc_list = []
         for invoice in records:
+            # generate the main report
+            self._edi_generate_report_attachment(cr, uid, invoice, context=context)
+
             edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
