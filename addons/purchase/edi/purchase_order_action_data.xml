@@ -68,11 +68,21 @@ except:
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
 
     % if object.company_id.paypal_account:
+    <%
+    comp_name = quote(object.company_id.name)
+    order_name = quote(object.name)
+    paypal_account = quote(object.company_id.paypal_account)
+    order_amount = quote(str(object.amount_total))
+    cur_name = quote(object.pricelist_id.currency_id.name)
+    paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20Order%%20%s" \
+       "&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1" \
+       "&amp;bn=OpenERP_Order_PayNow_%s" % \
+       (paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_name)
+    %>
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
         <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;"
-         href="${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=OpenERP%%20Order%%20%s&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1&amp;bn=OpenERP_Order_PayNow_%s"%(object.company_id.paypal_account,object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total, object.pricelist_id.currency_id.name, object.pricelist_id.currency_id.name)}"
-            >Pay with Paypal</a>
+           href="${paypal_url}">Pay with Paypal</a>
     % endif
 
     <br/>
@@ -132,8 +142,18 @@ You can view the order confirmation, download it and even pay online using the f
     ${ctx.get('edi_web_url_view') or 'n/a'}
 
 % if object.company_id.paypal_account:
+<% 
+comp_name = quote(object.company_id.name)
+order_name = quote(object.name)
+paypal_account = quote(object.company_id.paypal_account)
+order_amount = quote(str(object.amount_total))
+cur_name = quote(object.pricelist_id.currency_id.name)
+paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amount=%s" \
+             "&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow_%s" % \
+             (paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_name)
+%>
 It is also possible to directly pay with Paypal:
-    ${"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=%s&item_name=OpenERP%%20Order%%20%s&invoice=%s&amount=%s&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow_%s"%(object.company_id.paypal_account,object.name and object.name.replace('/','%2f') or '', object.name and object.name.replace('/','%2f') or '', object.amount_total, object.pricelist_id.currency_id.name, object.pricelist_id.currency_id.name)}
+    ${paypal_url}
 % endif
 
 If you have any question, do not hesitate to contact us.
