@@ -2549,10 +2549,6 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
     },
-    update_dom: function() {
-        this._super.apply(this, arguments);
-        this.$element.find('.oe-binary').toggle(!this.readonly);
-    },
     human_filesize : function(size) {
         var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         var i = 0;
@@ -2570,11 +2566,9 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         if ($(e.target).val() != '') {
             this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
             this.$element.find('form.oe-binary-form').submit();
-            this.toggle_progress();
+            this.$element.find('.oe-binary-progress').show();
+            this.$element.find('.oe-binary').hide();
         }
-    },
-    toggle_progress: function() {
-        this.$element.find('.oe-binary-progress, .oe-binary').toggle();
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
@@ -2586,7 +2580,8 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
             this.on_file_uploaded_and_valid.apply(this, arguments);
             this.on_ui_change();
         }
-        this.toggle_progress();
+        this.$element.find('.oe-binary-progress').hide();
+        this.$element.find('.oe-binary').show();
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
@@ -2612,6 +2607,10 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
 
 openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     template: 'FieldBinaryFile',
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
+    },
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = (value != null && value !== false) ? value : '';
@@ -2643,6 +2642,10 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('.oe-binary').toggle(!this.readonly);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
