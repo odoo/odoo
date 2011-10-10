@@ -651,11 +651,16 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def first_move_line_create(self, cr, uid, voucher_id, move_id, context=None):
+    def first_move_line_get(self, cr, uid, voucher_id, move_id, context=None):
         '''
-        Creation of first line in a voucher with fixed partner.
-        @voucher_id: id of the voucher.
-        @move_id: account move where this line will be added.
+        Set a dict to be use to create the first account move line of voucher.
+
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param voucher_id: Id of voucher what we are creating account_move.
+        @param move_id: Id of account move where this line will be added.
+        @param context: optional context dictionary
+        @return: dictionary which contains information regarding account move line
         '''
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
@@ -677,7 +682,7 @@ class account_voucher(osv.osv):
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
-        #create the first line of the voucher
+        #set the first line of the voucher
         move_line = {
                 'name': voucher_brw.name or '/',
                 'debit': debit,
@@ -692,7 +697,7 @@ class account_voucher(osv.osv):
                 'date': voucher_brw.date,
                 'date_maturity': voucher_brw.date_due
             }
-        return move_line_obj.create(cr, uid, move_line, context)
+        return move_line
 
     def account_move_get(self, cr, uid, voucher_id, context=None):
         '''
@@ -913,7 +918,7 @@ class account_voucher(osv.osv):
             # Get the name of the acc_move just created
             name = move_pool.browse(cr, uid, move_id, context=context).name
             #Create the first line of the voucher, the payment made
-            move_line_id = self.first_move_line_create(cr,uid,voucher.id, move_id, context)
+            move_line_id = move_line_pool.create(cr, uid, self.first_move_line_get(cr,uid,voucher.id, move_id, context), context)
             move_line_brw = move_line_pool.browse(cr,uid,move_line_id, context)
             line_total = move_line_brw.debit - move_line_brw.credit
             rec_list_ids = []
