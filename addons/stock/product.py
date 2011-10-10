@@ -44,13 +44,12 @@ class product_product(osv.osv):
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_variation = product_obj.categ_id.property_stock_variation and product_obj.categ_id.property_stock_variation.id or False
-
+        account_variation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
         return {
             'stock_account_input': stock_input_acc,
             'stock_account_output': stock_output_acc,
             'stock_journal': journal_id,
-            'property_stock_variation': account_variation
+            'property_stock_valuation_account_id': account_variation
         }
 
     def do_change_standard_price(self, cr, uid, ids, datas, context=None):
@@ -71,7 +70,7 @@ class product_product(osv.osv):
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
         product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_variation = product_obj.categ_id.property_stock_variation
+        account_variation = product_obj.categ_id.property_stock_valuation_account_id
         account_variation_id = account_variation and account_variation.id or False
         if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
         move_ids = []
@@ -449,7 +448,7 @@ class product_category(osv.osv):
             type='many2one', relation='account.account',
             string='Stock Output Account', view_load=True,
             help='When doing real-time inventory valuation, counterpart Journal Items for all outgoing stock moves will be posted in this account. This is the default value for all products in this category, it can also directly be set on each product.'),
-        'property_stock_variation': fields.property('account.account',
+        'property_stock_valuation_account_id': fields.property('account.account',
             type='many2one',
             relation='account.account',
             string="Stock Valuation Account",
