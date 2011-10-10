@@ -30,7 +30,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     },
     start: function() {
         this._super();
-        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
         scheduler.clearAll();
@@ -58,6 +58,10 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.color_field = this.fields_view.arch.attrs.color;
         this.fields =  this.fields_view.fields;
+        
+        if (!this.date_start) {
+            throw new Error("Calendar view has not defined 'date_start' attribute.");
+        }
 
         //* Calendar Fields *
         this.calendar_fields.date_start = {'name': this.date_start, 'kind': this.fields[this.date_start].type};
@@ -70,9 +74,6 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
         if (this.date_stop) {
             this.calendar_fields.date_stop = {'name': this.date_stop, 'kind': this.fields[this.date_stop].type};
-        }
-        if (!this.date_delay && !this.date_stop) {
-            throw new Error("Calendar view has none of the following attributes : 'date_stop', 'date_delay'");
         }
 
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
@@ -198,7 +199,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
     convert_event: function(evt) {
         var date_start = openerp.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? openerp.web.str_to_datetime(evt[this.date_stop]) : null,
-            date_delay = evt[this.date_delay] || null,
+            date_delay = evt[this.date_delay] || 1.0,
             res_text = '',
             res_description = [];
 

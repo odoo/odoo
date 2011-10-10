@@ -896,11 +896,11 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                             self.on_confirmed().then(function() {
                                 def.resolve();
                             });
-                            $(self).dialog("close");
+                            $(this).dialog("close");
                         },
                         Cancel: function() {
                             def.resolve();
-                            $(self).dialog("close");
+                            $(this).dialog("close");
                         }
                     }
                 });
@@ -909,7 +909,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
                 return self.on_confirmed();
             }
         };
-        if ((!this.node.attrs.special && this.view.dirty_for_user) || !this.view.datarecord.id) {
+        if (!this.node.attrs.special && (this.view.dirty_for_user || !this.view.datarecord.id)) {
             return this.view.recursive_save().pipe(exec_action);
         } else {
             return exec_action();
@@ -1785,6 +1785,9 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             result.result.context = _.extend(result.result.context || {}, additional_context);
             self.do_action(result.result);
         });
+    },
+    focus: function () {
+        this.$input.focus();
     }
 });
 
@@ -1894,6 +1897,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                     self.save_form_view();
                 });
                 controller.$element.find(".oe_form_button_save_edit").hide();
+            } else if (view_type == "graph") {
+                self.reload_current_view()
             }
             self.is_started.resolve();
         });
@@ -1916,6 +1921,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.form_last_update.then(function() {
                 this.form_last_update = view.do_show();
             });
+        } else if (self.viewmanager.active_view === "graph") {
+            view.do_search(this.build_domain(), this.dataset.get_context(), []);
         }
     },
     set_value: function(value) {
@@ -2241,11 +2248,11 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]], self.domain]),
+                self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
-                self.view_list.do_search.call(self, domains.concat([self.domain]), contexts, groupbys);
+                self.do_search(domains.concat([self.domain]), contexts, groupbys);
             }
         });
         this.searchview.on_loaded.add_last(function () {
@@ -2272,9 +2279,18 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             }).pipe(function() {
                 self.searchview.do_search();
             });
-            
         });
         this.searchview.appendTo($("#" + this.element_id + "_search"));
+    },
+    do_search: function(domains, contexts, groupbys) {
+        var self = this;
+        this.rpc('/web/session/eval_domain_and_context', {
+            domains: domains || [],
+            contexts: contexts || [],
+            group_by_seq: groupbys || []
+        }, function (results) {
+            self.view_list.do_search(results.domain, results.context, results.group_by);
+        });
     },
     create_row: function(data) {
         var self = this;

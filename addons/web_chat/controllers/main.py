@@ -2,7 +2,7 @@
 import time
 
 import simplejson
-import web.common as openerpweb
+import web.common.http as openerpweb
 import logging
 
 _logger = logging.getLogger(__name__)

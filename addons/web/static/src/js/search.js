@@ -116,8 +116,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      */
     make_field: function (item, field) {
         try {
-            return new (openerp.web.search.fields.get_object(field.type))
-                        (item, field, this);
+            return new (openerp.web.search.fields.get_any(
+                    [item.attrs.widget, field.type]))
+                (item, field, this);
         } catch (e) {
             if (! e instanceof openerp.web.KeyNotFound) {
                 throw e;
@@ -338,7 +339,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
-        this.$element.find('.filter_label').removeClass('enabled');
+        this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
         _.each(string, function(str){
@@ -759,9 +760,44 @@ openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends
  * @extends openerp.web.search.Field
  */
 openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends openerp.web.search.SelectionField# */{
+    // This implementation is a basic <select> field, but it may have to be
+    // altered to be more in line with the GTK client, which uses a combo box
+    // (~ jquery.autocomplete):
+    // * If an option was selected in the list, behave as currently
+    // * If something which is not in the list was entered (via the text input),
+    //   the default domain should become (`ilike` string_value) but **any
+    //   ``context`` or ``filter_domain`` becomes falsy, idem if ``@operator``
+    //   is specified. So at least get_domain needs to be quite a bit
+    //   overridden (if there's no @value and there is no filter_domain and
+    //   there is no @operator, return [[name, 'ilike', str_val]]
     template: 'SearchView.field.selection',
+    init: function () {
+        this._super.apply(this, arguments);
+        // prepend empty option if there is no empty option in the selection list
+        this.prepend_empty = !_(this.attrs.selection).detect(function (item) {
+            return !item[1];
+        });
+    },
     get_value: function () {
-        return this.$element.val();
+        var index = parseInt(this.$element.val(), 10);
+        if (isNaN(index)) { return null; }
+        var value = this.attrs.selection[index][0];
+        if (value === false) { return null; }
+        return value;
+    },
+    /**
+     * The selection field needs a default ``false`` value in case none is
+     * provided, so that selector options with a ``false`` value (convention
+     * for explicitly empty options) get selected by default rather than the
+     * first (value-holding) option in the selection.
+     *
+     * @param {Object} defaults search default values
+     */
+    render: function (defaults) {
+        if (!defaults[this.attrs.name]) {
+            defaults[this.attrs.name] = false;
+        }
+        return this._super(defaults);
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{

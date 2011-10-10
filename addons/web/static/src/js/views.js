@@ -116,6 +116,9 @@ db.web.ActionManager = db.web.Widget.extend({
         */
     },
     ir_actions_act_window_close: function (action, on_closed) {
+        if (!this.dialog && on_closed) {
+            on_closed();
+        }
         this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
@@ -379,7 +382,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         var main_view_loaded = this._super();
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
-        if (searchview_loaded && this.action['auto_search']) {
+        if (searchview_loaded && this.action['auto_search'] !== false) {
             // schedule auto_search
             manager_ready.then(this.searchview.do_search);
         }

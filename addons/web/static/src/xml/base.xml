@@ -776,7 +776,7 @@
     <input type="text" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -784,7 +784,7 @@
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
     </div>
 </t>
@@ -823,7 +823,7 @@
     <textarea rows="6"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     ></textarea>
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -842,8 +842,8 @@
 <t t-name="FieldSelection">
     <select
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
         style="width: 100%">
             <t t-foreach="widget.values" t-as="option">
                 <option><t t-esc="option[1]"/></option>
@@ -851,8 +851,9 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div t-att-class="widget.element_class" class="oe-m2o">
-        <input type="text" size="1" style="width: 100%;"/>
+    <div class="oe-m2o">
+        <input type="text" size="1" style="width: 100%;"
+                t-att-id="widget.element_id"/>
         <span class="oe-m2o-drop-down-button">
             <img src="/web/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
@@ -895,8 +896,8 @@
 <t t-name="FieldBoolean">
     <input type="checkbox"
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"/>
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"/>
 </t>
 <t t-name="FieldProgressBar">
     <div t-opentag="true" class="oe-progressbar">
@@ -911,7 +912,7 @@
                 t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
-                t-attf-class="field_#{widget.type} #{widget.element_class}"
+                t-attf-class="field_#{widget.type}"
                 t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
                 t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
             />
@@ -959,7 +960,7 @@
             <input type="text" size="1"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
-                t-attf-class="field_#{widget.type} #{widget.element_class}" style="width: 100%"
+                t-attf-class="field_#{widget.type}" style="width: 100%"
             />
         </td>
         <td class="oe-binary" nowrap="true">
@@ -1004,7 +1005,6 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button"
-        t-attf-class="#{widget.element_class}"
         t-att-title="widget.help"
         style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
@@ -1101,14 +1101,14 @@
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
-            <option/>
+            <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
-                        t-att-value="option[0]" selected="selected">
+                        t-att-value="option_index" selected="selected">
                     <t t-esc="option[1]"/>
                 </option>
-                <option t-if="!selected" t-att-value="option[0]">
+                <option t-if="!selected" t-att-value="option_index">
                     <t t-esc="option[1]"/>
                 </option>
             </t>
