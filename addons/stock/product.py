@@ -44,12 +44,12 @@ class product_product(osv.osv):
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        account_variation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
+        account_valuation = product_obj.categ_id.property_stock_valuation_account_id and product_obj.categ_id.property_stock_valuation_account_id.id or False
         return {
             'stock_account_input': stock_input_acc,
             'stock_account_output': stock_output_acc,
             'stock_journal': journal_id,
-            'property_stock_valuation_account_id': account_variation
+            'property_stock_valuation_account_id': account_valuation
         }
 
     def do_change_standard_price(self, cr, uid, ids, datas, context=None):
@@ -70,9 +70,9 @@ class product_product(osv.osv):
         stock_input_acc = datas.get('stock_input_account', False)
         journal_id = datas.get('stock_journal', False)
         product_obj=self.browse(cr, uid, ids, context=context)[0]
-        account_variation = product_obj.categ_id.property_stock_valuation_account_id
-        account_variation_id = account_variation and account_variation.id or False
-        if not account_variation_id: raise osv.except_osv(_('Error!'), _('Variation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
+        account_valuation = product_obj.categ_id.property_stock_valuation_account_id
+        account_valuation_id = account_valuation and account_valuation.id or False
+        if not account_valuation_id: raise osv.except_osv(_('Error!'), _('Valuation Account is not specified for Product Category: %s') % (product_obj.categ_id.name))
         move_ids = []
         loc_ids = location_obj.search(cr, uid,[('usage','=','internal')])
         for rec_id in ids:
@@ -131,7 +131,7 @@ class product_product(osv.osv):
                                     })
                         move_line_obj.create(cr, uid, {
                                     'name': product.categ_id.name,
-                                    'account_id': account_variation_id,
+                                    'account_id': account_valuation_id,
                                     'credit': amount_diff,
                                     'move_id': move_id
                                     })
@@ -157,7 +157,7 @@ class product_product(osv.osv):
                                     })
                         move_line_obj.create(cr, uid, {
                                         'name': product.categ_id.name,
-                                        'account_id': account_variation_id,
+                                        'account_id': account_valuation_id,
                                         'debit': amount_diff,
                                         'move_id': move_id
                                     })
