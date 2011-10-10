@@ -2226,8 +2226,20 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
     },
     start: function() {
         this._super();
+        var self = this;
         this.dataset = new openerp.web.ReadOnlyDataSetSearch(this, this.model,
             this.context);
+        this.dataset.create_function = function() {
+            return self.options.create_function.apply(null, arguments).then(function(r) {
+                self.created_elements.push(r.result);
+                if (self._created) {
+                    self._created.resolve();
+                }
+            });
+        }
+        this.dataset.write_function = function() {
+            return self.write_row.apply(null, arguments);
+        }
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.on_default_get.add(this.on_default_get);
         if (this.options.initial_view == "search") {
@@ -2292,11 +2304,17 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             self.view_list.do_search(results.domain, results.context, results.group_by);
         });
     },
-    create_row: function(data) {
+    create_row: function() {
         var self = this;
         var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
-        return wdataset.create(data);
+        return wdataset.create.apply(wdataset, arguments);
+    },
+    write_row: function() {
+        var self = this;
+        var wdataset = new openerp.web.DataSetSearch(this, this.model, this.context, this.domain);
+        wdataset.parent_view = this.options.parent_view;
+        return wdataset.write.apply(wdataset, arguments);
     },
     on_select_elements: function(element_ids) {
     },
@@ -2344,14 +2362,6 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
             $cbutton.click(function() {
                 self.check_exit();
-            });
-        });
-        this.dataset.on_create.add(function(data) {
-            self.options.create_function(data).then(function(r) {
-                self.created_elements.push(r.result);
-                if (self._created) {
-                    self._created.resolve();
-                }
             });
         });
         this.view_form.do_show();

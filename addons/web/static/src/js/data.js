@@ -721,26 +721,42 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
 openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.create_function = null;
+        this.write_function = null;
+    },
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
-        return to_return.promise();
+        if (this.create_function) {
+            return this.create_function(data, callback, error_callback);
+        } else {
+            console.warn("trying to create a record using read only dataset");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            return to_return.promise();
+        }
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
         this.on_write(id, data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
-        return to_return.promise();
+        if (this.write_function) {
+            return this.write_function(id, data, options, callback);
+        } else {
+            console.warn("trying to write a record using read only dataset");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            return to_return.promise();
+        }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
+        console.warn("trying to unlink a record using read only dataset");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();
