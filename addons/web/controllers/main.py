@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import ast
 import base64
 import csv
 import glob
@@ -9,74 +10,22 @@ import os
 import re
 import simplejson
 import textwrap
-import xmlrpclib
 import time
+import xmlrpclib
 import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-from babel.messages.pofile import read_po
+import babel.messages.pofile
 
-import web.common.dispatch as openerpweb
-import web.common.ast
-import web.common.nonliterals
-import web.common.release
-openerpweb.ast = web.common.ast
-openerpweb.nonliterals = web.common.nonliterals
-
-
-# Should move to openerpweb.Xml2Json
-class Xml2Json:
-    # xml2json-direct
-    # Simple and straightforward XML-to-JSON converter in Python
-    # New BSD Licensed
-    #
-    # URL: http://code.google.com/p/xml2json-direct/
-    @staticmethod
-    def convert_to_json(s):
-        return simplejson.dumps(
-            Xml2Json.convert_to_structure(s), sort_keys=True, indent=4)
-
-    @staticmethod
-    def convert_to_structure(s):
-        root = ElementTree.fromstring(s)
-        return Xml2Json.convert_element(root)
-
-    @staticmethod
-    def convert_element(el, skip_whitespaces=True):
-        res = {}
-        if el.tag[0] == "{":
-            ns, name = el.tag.rsplit("}", 1)
-            res["tag"] = name
-            res["namespace"] = ns[1:]
-        else:
-            res["tag"] = el.tag
-        res["attrs"] = {}
-        for k, v in el.items():
-            res["attrs"][k] = v
-        kids = []
-        if el.text and (not skip_whitespaces or el.text.strip() != ''):
-            kids.append(el.text)
-        for kid in el:
-            kids.append(Xml2Json.convert_element(kid))
-            if kid.tail and (not skip_whitespaces or kid.tail.strip() != ''):
-                kids.append(kid.tail)
-        res["children"] = kids
-        return res
+import web.common
+openerpweb = web.common.http
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-def manifest_glob(addons_path, addons, key):
-    files = []
-    for addon in addons:
-        globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-        for pattern in globlist:
-            for path in glob.glob(os.path.join(addons_path, addon, pattern)):
-                files.append(path[len(addons_path):])
-    return files
-
+# TODO change into concat_file(addons,key) taking care of addons_path
 def concat_files(addons_path, file_list):
     """ Concatenate file content
     return (concat,timestamp)
@@ -104,7 +53,7 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         %(javascript)s
         <script type="text/javascript">
             $(function() {
-                var c = new openerp.init();
+                var c = new openerp.init(%(modules)s);
                 var wc = new c.web.WebClient("oe");
                 wc.start();
             });
@@ -116,24 +65,45 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
-    @openerpweb.jsonrequest
-    def csslist(self, req, mods='web'):
-        return manifest_glob(req.config.addons_path, mods.split(','), 'css')
+    def server_wide_modules(self, req):
+        addons = [i for i in req.config.server_wide_modules if i in openerpweb.addons_manifest]
+        return addons
+
+    def manifest_glob(self, req, addons, key):
+        if addons==None:
+            addons = self.server_wide_modules(req)
+        else:
+            addons = addons.split(',')
+        files = []
+        for addon in addons:
+            manifest = openerpweb.addons_manifest.get(addon, None)
+            if not manifest:
+                continue
+            addons_path = manifest['addons_path']
+            globlist = manifest.get(key, [])
+            for pattern in globlist:
+                for path in glob.glob(os.path.join(addons_path, addon, pattern)):
+                    files.append(path[len(addons_path):])
+        return files
 
     @openerpweb.jsonrequest
-    def jslist(self, req, mods='web'):
-        return manifest_glob(req.config.addons_path, mods.split(','), 'js')
+    def csslist(self, req, mods=None):
+        return self.manifest_glob(req, mods, 'css')
+
+    @openerpweb.jsonrequest
+    def jslist(self, req, mods=None):
+        return self.manifest_glob(req, mods, 'js')
 
     @openerpweb.httprequest
-    def css(self, req, mods='web'):
-        files = manifest_glob(req.config.addons_path, mods.split(','), 'css')
+    def css(self, req, mods=None):
+        files = self.manifest_glob(req, mods, 'css')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
-    def js(self, req, mods='web'):
-        files = manifest_glob(req.config.addons_path, mods.split(','), 'js')
+    def js(self, req, mods=None):
+        files = self.manifest_glob(req, mods, 'js')
         content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
@@ -143,17 +113,19 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/web/webclient/js']
         if req.debug:
-            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'js')]
+            jslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/webclient/css']
         if req.debug:
-            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'css')]
+            csslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+
         r = home_template % {
             'javascript': js,
-            'css': css
+            'css': css,
+            'modules': simplejson.dumps(self.server_wide_modules(req)),
         }
         return r
 
@@ -166,25 +138,26 @@ class WebClient(openerpweb.Controller):
                                                 "grouping", "decimal_point", "thousands_sep"])
         else:
             lang_obj = None
-            
+
         if lang.count("_") > 0:
             separator = "_"
         else:
             separator = "@"
         langs = lang.split(separator)
         langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-        
+
         transs = {}
         for addon_name in mods:
             transl = {"messages":[]}
             transs[addon_name] = transl
             for l in langs:
-                f_name = os.path.join(req.config.addons_path, addon_name, "po", l + ".po")
+                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+                f_name = os.path.join(addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
                     with open(f_name) as t_file:
-                        po = read_po(t_file)
+                        po = babel.messages.pofile.read_po(t_file)
                 except:
                     continue
                 for x in po:
@@ -240,7 +213,7 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        
+
         try:
             return req.session.proxy("db").drop(password, db)
         except xmlrpclib.Fault, e:
@@ -291,7 +264,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
-        ctx = req.session.get_context()
+        ctx = req.session.get_context() if req.session._uid else {}
 
         return {
             "session_id": req.session_id,
@@ -299,6 +272,7 @@ class Session(openerpweb.Controller):
             "context": ctx,
             "db": req.session._db
         }
+
     @openerpweb.jsonrequest
     def get_session_info(self, req):
         req.session.assert_valid(force=True)
@@ -307,6 +281,7 @@ class Session(openerpweb.Controller):
             "context": req.session.get_context() if req.session._uid else False,
             "db": req.session._db
         }
+
     @openerpweb.jsonrequest
     def change_password (self,req,fields):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
@@ -322,6 +297,7 @@ class Session(openerpweb.Controller):
         except:
             return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
     @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
@@ -336,15 +312,25 @@ class Session(openerpweb.Controller):
             }
         except Exception, e:
             return {"error": e, "title": "Languages"}
-            
+
     @openerpweb.jsonrequest
     def modules(self, req):
-        # TODO query server for installed web modules
-        mods = []
-        for name, manifest in openerpweb.addons_manifest.items():
-            if name != 'web' and manifest.get('active', True):
-                mods.append(name)
-        return mods
+        # Compute available candidates module
+        loadable = openerpweb.addons_manifest.iterkeys()
+        loaded = req.config.server_wide_modules
+        candidates = [mod for mod in loadable if mod not in loaded]
+
+        # Compute active true modules that might be on the web side only
+        active = set(name for name in candidates
+                     if openerpweb.addons_manifest[name].get('active'))
+
+        # Retrieve database installed modules
+        Modules = req.session.model('ir.module.module')
+        installed = set(module['name'] for module in Modules.search_read(
+            [('state','=','installed'), ('name','in', candidates)], ['name']))
+
+        # Merge both
+        return list(active | installed)
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -379,8 +365,8 @@ class Session(openerpweb.Controller):
                 no group by should be performed)
         """
         context, domain = eval_context_and_domain(req.session,
-                                                  openerpweb.nonliterals.CompoundContext(*(contexts or [])),
-                                                  openerpweb.nonliterals.CompoundDomain(*(domains or [])))
+                                                  web.common.nonliterals.CompoundContext(*(contexts or [])),
+                                                  web.common.nonliterals.CompoundDomain(*(domains or [])))
 
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -471,6 +457,9 @@ def clean_action(req, action):
 
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
+
+    if 'type' not in action:
+       action['type'] = 'ir.actions.act_window_close'
 
     if action['type'] == 'ir.actions.act_window':
         return fix_view_modes(action)
@@ -715,7 +704,7 @@ class DataSet(openerpweb.Controller):
             args[domain_id] = d
         if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
-        
+
         for i in xrange(len(args)):
             if isinstance(args[i], web.common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
@@ -794,7 +783,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = Xml2Json.convert_element(xml)
+        fvg['arch'] = web.common.xml2json.Xml2Json.convert_element(xml)
 
         for field in fvg['fields'].itervalues():
             if field.get('views'):
@@ -859,7 +848,7 @@ class View(openerpweb.Controller):
 
     def parse_domain(self, domain, session):
         """ Parses an arbitrary string containing a domain, transforms it
-        to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
+        to either a literal domain or a :class:`web.common.nonliterals.Domain`
 
         :param domain: the domain to parse, if the domain is not a string it
                        is assumed to be a literal domain and is returned as-is
@@ -869,14 +858,14 @@ class View(openerpweb.Controller):
         if not isinstance(domain, (str, unicode)):
             return domain
         try:
-            return openerpweb.ast.literal_eval(domain)
+            return ast.literal_eval(domain)
         except ValueError:
             # not a literal
-            return openerpweb.nonliterals.Domain(session, domain)
+            return web.common.nonliterals.Domain(session, domain)
 
     def parse_context(self, context, session):
         """ Parses an arbitrary string containing a context, transforms it
-        to either a literal context or a :class:`openerpweb.nonliterals.Context`
+        to either a literal context or a :class:`web.common.nonliterals.Context`
 
         :param context: the context to parse, if the context is not a string it
                is assumed to be a literal domain and is returned as-is
@@ -886,9 +875,9 @@ class View(openerpweb.Controller):
         if not isinstance(context, (str, unicode)):
             return context
         try:
-            return openerpweb.ast.literal_eval(context)
+            return ast.literal_eval(context)
         except ValueError:
-            return openerpweb.nonliterals.Context(session, context)
+            return web.common.nonliterals.Context(session, context)
 
     def parse_domains_and_contexts(self, elem, session):
         """ Converts domains and contexts from the view into Python objects,
@@ -963,7 +952,7 @@ class SearchView(View):
             if field.get('context'):
                 field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
-    
+
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
         Model = req.session.model("ir.filters")
@@ -972,14 +961,14 @@ class SearchView(View):
             filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
             filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
         return filters
-    
+
     @openerpweb.jsonrequest
     def save_filter(self, req, model, name, context_to_save, domain):
         Model = req.session.model("ir.filters")
-        ctx = openerpweb.nonliterals.CompoundContext(context_to_save)
+        ctx = web.common.nonliterals.CompoundContext(context_to_save)
         ctx.session = req.session
         ctx = ctx.evaluate()
-        domain = openerpweb.nonliterals.CompoundDomain(domain)
+        domain = web.common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
         domain = domain.evaluate()
         uid = req.session._uid
@@ -1002,16 +991,17 @@ class Binary(openerpweb.Controller):
 
         try:
             if not id:
-                res = Model.default_get([field], context).get(field, '')
+                res = Model.default_get([field], context).get(field)
             else:
-                res = Model.read([int(id)], [field], context)[0].get(field, '')
+                res = Model.read([int(id)], [field], context)[0].get(field)
             image_data = base64.b64decode(res)
         except (TypeError, xmlrpclib.Fault):
             image_data = self.placeholder(req)
         return req.make_response(image_data, [
             ('Content-Type', 'image/png'), ('Content-Length', len(image_data))])
     def placeholder(self, req):
-        return open(os.path.join(req.addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+        addons_path = openerpweb.addons_manifest['web']['addons_path']
+        return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, id, field, fieldname, **kw):
@@ -1370,7 +1360,7 @@ class Reports(View):
 
         report_srv = req.session.proxy("report")
         context = req.session.eval_context(
-            openerpweb.nonliterals.CompoundContext(
+            web.common.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
 
         report_data = {}
@@ -1382,7 +1372,7 @@ class Reports(View):
                 report_data['form'] = action['datas']['form']
             if 'ids' in action['datas']:
                 report_ids = action['datas']['ids']
-        
+
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
             action["report_name"], report_ids,
@@ -1394,6 +1384,7 @@ class Reports(View):
                 req.session._db, req.session._uid, req.session._password, report_id)
             if report_struct["state"]:
                 break
+
             time.sleep(self.POLLING_DELAY)
 
         report = base64.b64decode(report_struct['result'])
@@ -1407,3 +1398,107 @@ class Reports(View):
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
+
+class Import(View):
+    _cp_path = "/web/import"
+
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get(False, req.session.eval_context(req.context))
+        return fields
+
+    @openerpweb.httprequest
+    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, jsonp):
+        try:
+            data = list(csv.reader(
+                csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))
+        except csv.Error, e:
+            csvfile.seek(0)
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {
+                    'message': 'Error parsing CSV file: %s' % e,
+                    # decodes each byte to a unicode character, which may or
+                    # may not be printable, but decoding will succeed.
+                    # Otherwise simplejson will try to decode the `str` using
+                    # utf-8, which is very likely to blow up on characters out
+                    # of the ascii range (in range [128, 256))
+                    'preview': csvfile.read(200).decode('iso-8859-1')}}))
+
+        try:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps(
+                    {'records': data[:10]}, encoding=csvcode))
+        except UnicodeDecodeError:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({
+                    'message': u"Failed to decode CSV file using encoding %s, "
+                               u"try switching to a different encoding" % csvcode
+                }))
+
+    @openerpweb.httprequest
+    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, jsonp,
+                    meta):
+        modle_obj = req.session.model(model)
+        skip, indices, fields = operator.itemgetter('skip', 'indices', 'fields')(
+            simplejson.loads(meta))
+
+        error = None
+        if not (csvdel and len(csvdel) == 1):
+            error = u"The CSV delimiter must be a single character"
+
+        if not indices and fields:
+            error = u"You must select at least one field to import"
+
+        if error:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {'message': error}}))
+
+        # skip ignored records
+        data_record = itertools.islice(
+            csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep)),
+            skip, None)
+
+        # if only one index, itemgetter will return an atom rather than a tuple
+        if len(indices) == 1: mapper = lambda row: [row[indices[0]]]
+        else: mapper = operator.itemgetter(*indices)
+
+        data = None
+        error = None
+        try:
+            # decode each data row
+            data = [
+                [record.decode(csvcode) for record in row]
+                for row in itertools.imap(mapper, data_record)
+                # don't insert completely empty rows (can happen due to fields
+                # filtering in case of e.g. o2m content rows)
+                if any(row)
+            ]
+        except UnicodeDecodeError:
+            error = u"Failed to decode CSV file using encoding %s" % csvcode
+        except csv.Error, e:
+            error = u"Could not process CSV file: %s" % e
+
+        # If the file contains nothing,
+        if not data:
+            error = u"File to import is empty"
+        if error:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error': {'message': error}}))
+
+        try:
+            (code, record, message, _nope) = modle_obj.import_data(
+                fields, data, 'init', '', False,
+                req.session.eval_context(req.context))
+        except xmlrpclib.Fault, e:
+            error = {"message": u"%s, %s" % (e.faultCode, e.faultString)}
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
+
+        if code != -1:
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'success':True}))
+
+        msg = u"Error during import: %s\n\nTrying to import record %r" % (
+            message, record)
+        return '<script>window.top.%s(%s);</script>' % (
+            jsonp, simplejson.dumps({'error': {'message':msg}}))

@@ -1,6 +1,19 @@
 .openerp .oe_kanban_view .oe_column {
-    float: left;
     width: 100%;
+}
+
+.openerp .oe_vertical_text {
+    writing-mode:tb-rl;
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    display:block;
+    width:30px;
+    height:20px;
+    align:center;
+    font-size:24px;
 }
 
 .openerp .oe_kanban_view .ui-sortable-placeholder {
@@ -13,6 +26,10 @@
     color: #000000;
     font-size: 1.5em;
     font-weight: bold;
+}
+.openerp .oe_kanban_view .fold-columns-icon {
+    float: left;
+    padding: 2px 2px 0 0;
 }
 .openerp .oe_kanban_action_button {
     height: 22px;
@@ -200,4 +217,3 @@
 .openerp .oe_kanban_color_alert .oe_kanban_color_border {
     border-color: #c00 !important;
 }
-

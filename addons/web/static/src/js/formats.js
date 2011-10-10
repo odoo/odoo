@@ -82,7 +82,12 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
     }
     switch (descriptor.widget || descriptor.type) {
         case 'integer':
-            var tmp = Number(value);
+            var tmp;
+            do {
+                tmp = value;
+                value = value.replace(openerp.web._t.database.parameters.thousands_sep, "");
+            } while(tmp !== value);
+            tmp = Number(value);
             if (isNaN(tmp))
                 throw value + " is not a correct integer";
             return tmp;
@@ -113,26 +118,26 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
             if (tmp !== null)
-                return tmp;
+                return openerp.web.datetime_to_str(tmp);
             tmp = Date.parse(value);
             if (tmp !== null)
-                return tmp;
+                return openerp.web.datetime_to_str(tmp);
             throw value + " is not a valid datetime";
         case 'date':
             var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
             if (tmp !== null)
-                return tmp;
+                return openerp.web.date_to_str(tmp);
             tmp = Date.parse(value);
             if (tmp !== null)
-                return tmp;
+                return openerp.web.date_to_str(tmp);
             throw value + " is not a valid date";
         case 'time':
             var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
             if (tmp !== null)
-                return tmp;
+                return openerp.web.time_to_str(tmp);
             tmp = Date.parse(value);
             if (tmp !== null)
-                return tmp;
+                return openerp.web.time_to_str(tmp);
             throw value + " is not a valid time";
     }
     return value;
@@ -174,9 +179,13 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {String} [column.string] button label
  * @param {String} [column.icon] button icon
  * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
+ * @param {Boolean} [process_modifiers=true] should the modifiers be computed ?
  */
-openerp.web.format_cell = function (row_data, column, value_if_empty) {
-    var attrs = column.modifiers_for(row_data);
+openerp.web.format_cell = function (row_data, column, value_if_empty, process_modifiers) {
+    var attrs = {};
+    if (process_modifiers !== false) {
+        attrs = column.modifiers_for(row_data);
+    }
     if (attrs.invisible) { return ''; }
     if (column.tag === 'button') {
         return [

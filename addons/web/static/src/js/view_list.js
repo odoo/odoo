@@ -49,6 +49,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.model = dataset.model;
         this.view_id = view_id;
         this.previous_colspan = null;
+        this.colors = null;
 
         this.columns = [];
 
@@ -75,6 +76,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
             self.compute_aggregates();
         });
+
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -132,6 +134,31 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         return this.reload_view(null, null, true);
     },
     /**
+     * Returns the color for the provided record in the current view (from the
+     * ``@colors`` attribute)
+     *
+     * @param {Record} record record for the current row
+     * @returns {String} CSS color declaration
+     */
+    color_for: function (record) {
+        if (!this.colors) { return ''; }
+        var context = _.extend({}, record.attributes, {
+            uid: this.session.uid,
+            current_date: new Date().toString('yyyy-MM-dd')
+            // TODO: time, datetime, relativedelta
+        });
+        for(var i=0, len=this.colors.length; i<len; ++i) {
+            var pair = this.colors[i],
+                color = pair[0],
+                expression = pair[1];
+            if (py.evaluate(expression, context)) {
+                return 'color: ' + color + ';';
+            }
+            // TODO: handle evaluation errors
+        }
+        return '';
+    },
+    /**
      * Called after loading the list view's description, sets up such things
      * as the view table's columns, renders the table itself and hooks up the
      * various table-level and row-level DOM events (action buttons, deletion
@@ -158,6 +185,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
+
+        if (this.fields_view.arch.attrs.colors) {
+            this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+                .compact()
+                .map(function(color_pair) {
+                    var pair = color_pair.split(':'),
+                        color = pair[0],
+                        expr = pair[1];
+                    return [color, py.parse(py.tokenize(expr)), expr];
+                }).value();
+        }
 
         this.setup_columns(this.fields_view.fields, grouped);
 
@@ -353,9 +391,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
-        if (!_(this.dataset.ids).isEmpty()) {
-            this.reload_content();
-        }
     },
     do_hide: function () {
         this.$element.hide();
@@ -405,40 +440,21 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }));
     },
     /**
-     * Event handler for a search, asks for the computation/folding of domains
-     * and contexts (and group-by), then reloads the view's content.
-     *
-     * @param {Array} domains a sequence of literal and non-literal domains
-     * @param {Array} contexts a sequence of literal and non-literal contexts
-     * @param {Array} groupbys a sequence of literal and non-literal group-by contexts
-     * @returns {$.Deferred} fold request evaluation promise
-     */
-    do_search: function (domains, contexts, groupbys) {
-        return this.rpc('/web/session/eval_domain_and_context', {
-            domains: [this.dataset.get_domain()].concat(domains),
-            contexts: [this.dataset.get_context()].concat(contexts),
-            group_by_seq: groupbys
-        }, $.proxy(this, 'do_actual_search'));
-    },
-    /**
      * Handler for the result of eval_domain_and_context, actually perform the
      * searching
      *
      * @param {Object} results results of evaluating domain and process for a search
      */
-    do_actual_search: function (results) {
+    do_search: function (domain, context, group_by) {
         this.groups.datagroup = new openerp.web.DataGroup(
-            this, this.model,
-            results.domain,
-            results.context,
-            results.group_by);
+            this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
-        if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
-            results.group_by = null;
+        if (_.isEmpty(group_by) && !context['group_by_no_leaf']) {
+            group_by = null;
         }
 
-        this.reload_view(!!results.group_by, results.context).then(
+        this.reload_view(!!group_by, context).then(
             $.proxy(this, 'reload_content'));
     },
     /**
@@ -455,6 +471,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
+            self.configure_pager(self.dataset);
             self.compute_aggregates();
         });
     },
@@ -467,7 +484,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     do_select: function (ids, records) {
         this.$element.find('.oe-list-delete')
             .attr('disabled', !ids.length);
-
+        if (this.sidebar) {
+            if (ids.length) {
+                this.sidebar.do_unfold();
+            } else {
+                this.sidebar.do_fold();
+            }
+        }
         if (!records.length) {
             this.compute_aggregates();
             return;
@@ -498,14 +521,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {openerp.web.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
      */
     do_activate_record: function (index, id, dataset) {
-        var self = this;
-        // TODO is it needed ?
-        this.dataset.read_slice([],{
-                context: dataset.get_context(),
-                domain: dataset.get_domain()
-            }, function () {
-                self.select_record(index);
-        });
+        this.dataset.ids = dataset.ids;
+        this.select_record(index);
     },
     /**
      * Handles signal for the addition of a new record (can be a creation,
@@ -541,6 +558,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (_.isEmpty(records)) {
             records = this.groups.get_records();
         }
+        records = _(records).compact();
 
         var count = 0, sums = {};
         _(columns).each(function (column) {
@@ -603,7 +621,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             }
 
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
-                .html(openerp.web.format_cell(aggregation, column));
+                .html(openerp.web.format_cell(aggregation, column, undefined, false));
         });
     },
     get_selected_ids: function() {
@@ -798,7 +816,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         cells.push('</tr>');
 
         var row = cells.join('');
-        this.$current.append(new Array(count - this.records.length + 1).join(row));
+        this.$current
+            .children('tr:not([data-id])').remove().end()
+            .append(new Array(count - this.records.length + 1).join(row));
         this.refresh_zebra(this.records.length);
     },
     /**
@@ -879,6 +899,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             options: this.options,
             record: record,
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
+            view: this.view,
             render_cell: openerp.web.format_cell
         });
     },
@@ -1235,6 +1256,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
+            if (!this.datagroup.length) {
+                return;
+            }
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
@@ -1351,10 +1375,10 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
      * @returns {Object} record displayable in a form view
      */
     toForm: function () {
-        var form_data = {};
-        _(this.attributes).each(function (value, key) {
-            form_data[key] = {value: value};
-        });
+        var form_data = {}, attrs = this.attributes;
+        for(var k in attrs) {
+            form_data[k] = {value: attrs[k]};
+        }
 
         return {data: form_data};
     }

@@ -301,7 +301,7 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
             .then(this.on_records_loaded);
     },
     on_records_loaded: function (read_response, progress_response) {
-        var records = read_response[0].records,
+        var records = read_response,
            progress = progress_response[0];
 
         var grouped_todos = _(records).chain()
