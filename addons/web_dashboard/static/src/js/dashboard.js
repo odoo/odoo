@@ -43,9 +43,6 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         });
 
         //this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
-        this.$element.find('.oe-dashboard-action').live('mouseover mouseout', function(event) {
-            $(this).find('.oe-dashboard-action-header .ui-icon, .oe-dashboard-action-header .oe-dashboard-action-rename').toggle(event.type == 'mouseover');
-        });
     },
     on_undo: function() {
         this.rpc('/web/view/undo_custom', {
@@ -224,7 +221,8 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
             views_switcher : false,
             action_buttons : false,
             pager: false,
-            low_profile: true
+            low_profile: true,
+            display_title: false
         };
         var view_manager = new openerp.web.ViewManagerAction(this, action);
         view_manager.appendTo($("#"+this.view.element_id + '_action_' + action.id));
