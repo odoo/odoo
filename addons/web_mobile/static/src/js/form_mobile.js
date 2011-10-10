@@ -47,29 +47,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             }
         }
         self.$element.html(self.render({'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : self.datarecord ,'temp_flag':'1'}));
-        for(var i=0;i<get_fields.length;i++) {
-            if (get_fields[i].attrs.widget=="progressbar") {
-                $("#progress").progressbar({value:self.datarecord[get_fields[i].attrs.name]})
-            }
-            self.$element.find('input').each(function(){
-                // Set Date and Datetime field for main form
-                if($(this).attr('id')==get_fields[i].attrs.name){
-                    if(fields[get_fields[i].attrs.name].type=="date"){
-                        $("#"+get_fields[i].attrs.name).datepicker();
-                    }else if(fields[get_fields[i].attrs.name].type=="datetime"){
-                        $("#"+get_fields[i].attrs.name).datetimepicker();
-                    }
-                    // Temp: Set as disabled
-                    $("#"+get_fields[i].attrs.name).attr('disabled','true');
-                    var dateresult = openerp.web.format_value(self.datarecord[get_fields[i].attrs.name], {"widget": result.fields[get_fields[i].attrs.name].type});
-                    $(this).val(dateresult);
-                }
-            });
-            // Temp: Selection set as disabled
-            self.$element.find('select').each(function(){
-                $(this).find('option').attr('disabled','true')
-            });
-        }
+        self.formatdata(get_fields, fields, result, self.datarecord,self.element_id,'element');
         self.$element.find("[data-role=header]").find('h1').html(self.head_title);
         self.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage("#oe_menu", "slide", false, true);
@@ -124,29 +102,8 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 }else{
                     $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
                 }
-                for(var i=0;i<get_fields.length;i++) {
-                    if (get_fields[i].attrs.widget=="progressbar") {
-                        $("#progress").progressbar({value:self.datarecord[get_fields[i].attrs.name]})
-                    }
-                    // Set Date and Datetime for notebook page
-                    $(this).find('div#page_content').find('input').each(function(){
-                        if($(this).attr('id')==get_fields[i].attrs.name){
-                            if(fields[get_fields[i].attrs.name].type=="date"){
-                                $("#"+get_fields[i].attrs.name).datepicker();
-                            }else if(fields[get_fields[i].attrs.name].type=="datetime"){
-                                $("#"+get_fields[i].attrs.name).datetimepicker();
-                            }
-                            // Temp: Set as disabled
-                            $("#"+get_fields[i].attrs.name).attr('disabled','true');
-                            var dateresult = openerp.web.format_value(self.datarecord[get_fields[i].attrs.name], {"widget": result.fields[get_fields[i].attrs.name].type});
-                            $(this).val(dateresult);
-                        }
-                    });
-                    // Temp: Selection set as disabled
-                    $(this).find('div#page_content').find('select').each(function(){
-                        $(this).find('option').attr('disabled','true')
-                    });
-                }
+                self.formatdata(get_fields, fields, result, self.datarecord,'page_content','element');
+
                 $(this).find('div#page_content').find('#formbutton').click(function(){
                     var head = $(this).prev().find('select').find("option:selected").text();
                     var selected_id = $(this).prev().find('select').val();
@@ -272,30 +229,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             }
                                         }
                                     });
-                                    for(var i=0;i<get_fields.length;i++) {
-                                        if (get_fields[i].attrs.widget=="progressbar") {
-                                            $("#progress").progressbar({value:self.datarecord[get_fields[i].attrs.name]})
-                                        }
-                                        // Set Date and Datetime for o2m field form.
-                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find('input').each(function(){
-                                            if($(this).attr('id')==get_fields[i].attrs.name){
-                                                if(fields[get_fields[i].attrs.name].type=="date"){
-                                                    $("#"+get_fields[i].attrs.name).datepicker();
-                                                }else if(fields[get_fields[i].attrs.name].type=="datetime"){
-                                                    $("#"+get_fields[i].attrs.name).datetimepicker();
-                                                }
-                                                // Temp: Set as disabled
-                                                $("#"+get_fields[i].attrs.name).attr('disabled','true');
-                                                var dateresult = openerp.web.format_value(self.datarecord[get_fields[i].attrs.name], {"widget": result.fields[get_fields[i].attrs.name].type});
-                                                $(this).val(dateresult);
-                                            }
-                                        });
-                                        // Temp: Selection set as disabled.
-                                        $('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').find('select').each(function(){
-                                            $(this).find('option').attr('disabled','true')
-                                        });
-                                    }
+                                    self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
                                     $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
+                                    self.formatdata('', '', '', '','oe_form_'+listid+result.fields[relational].relation,'slider');
                                 }else{
                                     $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
                                 }
@@ -309,6 +245,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             }
         });
         $.mobile.changePage("#"+self.element_id, "slide", false, true);
+        self.formatdata('', '', '', '',self.element_id,'slider');
     },
     get_fields: function(view_fields, fields) {
         this.fields = fields || [];
@@ -321,6 +258,44 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             }
         }
         return this.fields;
+    },
+    formatdata: function(getfields, fields, result, data, id, flag){
+        if(flag == "element") {
+            for(var i = 0; i < getfields.length; i++) {
+                if (getfields[i].attrs.widget == "progressbar") {
+                    $("#progress").progressbar({value: data[getfields[i].attrs.name]})
+                }
+                $('[id^="'+id+'"]').find('input').each(function() {
+                    // Set Date and Datetime field for main form
+                    if($(this).attr('id') == getfields[i].attrs.name) {
+                        if(fields[getfields[i].attrs.name].type == "date") {
+                            $("#"+getfields[i].attrs.name).datepicker();
+                        }else if(fields[getfields[i].attrs.name].type == "datetime") {
+                            $("#"+getfields[i].attrs.name).datetimepicker();
+                        }
+                        // Temp: Set as disabled
+                        $("#"+getfields[i].attrs.name).attr('disabled', 'true');
+                        var dateresult = openerp.web.format_value(data[getfields[i].attrs.name], {"widget": result.fields[getfields[i].attrs.name].type});
+                        $(this).val(dateresult);
+                    }
+                });
+                // Temp: Selection set as disabled
+                $('[id^="'+id+'"]').find('select').each(function() {
+                    $(this).find('option').attr('disabled', 'true')
+                });
+            }
+        }
+        if(flag == "slider") {
+            $('[id^="'+id+'"]').find('#slider').each(function() {
+                $(this).slider({ disabled: "true" });
+            });
+            $('[id^="'+id+'"]').find('.ui-selectmenu').each(function(){
+                $(this).click(function() {
+                    $(this).css('top', '-9999px');
+                    $(this).css('left', '-9999px');
+                });
+            });
+        }
     }
 });
 
