@@ -138,7 +138,7 @@ Your order for ${object.partner_id.name} has just been validated:
        % if object.client_order_ref:
        | Your reference: ${object.client_order_ref}<br />
        % endif
-       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
+       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
 
 You can view the order confirmation, download it and even pay online using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
@@ -165,7 +165,7 @@ Thank you for choosing ${object.company_id.name}!
 
 
 --
-${object.user_id.name} ${object.user_id.user_email and '&lt;%s&gt;'%(object.user_id.user_email) or ''}
+${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
 ${object.company_id.name}
 % if object.company_id.street:
 ${object.company_id.street or ''}
