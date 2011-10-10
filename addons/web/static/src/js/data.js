@@ -613,7 +613,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     create: function(data, callback, error_callback) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
             defaults: this.last_default_get};
-        this.to_create.push(cached);
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
         this.on_change();
         var prom = $.Deferred().then(callback);
