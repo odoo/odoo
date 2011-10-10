@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -29,7 +29,10 @@ class purchase_order(osv.osv):
     def inv_line_create(self, cr, uid, a, ol):
         line = super(purchase_order, self).inv_line_create(cr, uid, a, ol)
         if ol.product_id:
-            oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
+            if ol.product_id.type == 'service':
+                oa = ol.product_id.categ_id.property_account_expense_categ and ol.product_id.categ_id.property_account_expense_categ.id
+            else:
+                oa = ol.product_id.property_stock_account_input and ol.product_id.property_stock_account_input.id
             if not oa:
                 oa = ol.product_id.categ_id.property_stock_account_input_categ and ol.product_id.categ_id.property_stock_account_input_categ.id
             if oa:
