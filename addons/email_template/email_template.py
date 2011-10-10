@@ -28,6 +28,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
+from urllib import quote as quote
 
 try:
     from mako.template import Template as MakoTemplate
@@ -66,6 +67,7 @@ class email_template(osv.osv):
                                                            user=user,
                                                            # context kw would clash with mako internals
                                                            ctx=context,
+                                                           quote=quote,
                                                            format_exceptions=True)
             if result == u'False':
                 result = u''
