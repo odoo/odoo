@@ -157,9 +157,8 @@ class survey_send_invitation(osv.osv_memory):
                         existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, addr.email, \
                                                                           user.password)
                     continue
-                user_id = user_ref.search(cr, uid, [('address_id', '=', addr.id)])
-                if user_id:
-                    for user_email in user_ref.browse(cr, uid, user_id):
+                if partner.user_id.user_email:
+                    for user_email in user_ref.browse(cr, uid, [partner.user_id.id]):
                         mail = record['mail']%{'login': user_email.login, \
                                                         'passwd': user_email.password, 'name': addr.name}
                         if record['send_mail_existing']:
