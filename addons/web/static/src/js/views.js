@@ -68,9 +68,11 @@ db.web.ActionManager = db.web.Widget.extend({
     },
     on_url_hashchange: function(url) {
         var self = this;
-        self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
-                self.do_action(result.result);
-            });
+        if(url && url.action_id) {
+            self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
+                    self.do_action(result.result);
+                });
+        }
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
