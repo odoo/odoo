@@ -1205,6 +1205,7 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
+    
     _columns = {
         'name': fields.char('Name', size=64),
         'sale_orders': fields.boolean('Based on Sales Orders',),
@@ -1220,6 +1221,7 @@ class sale_config_picking_policy(osv.osv_memory):
     }
     _defaults = {
         'order_policy': 'manual',
+        'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0],
     }
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
