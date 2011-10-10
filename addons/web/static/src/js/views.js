@@ -771,7 +771,9 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            return self.widget_parent.on_action_executed.apply(null, arguments);
+            if (self.widget_parent && self.widget_parent.on_action_executed) {
+                return self.widget_parent.on_action_executed.apply(null, arguments);
+            }
         };
         var handler = function (r) {
             var action = r.result;

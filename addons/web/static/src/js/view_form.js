@@ -2232,13 +2232,17 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         this.dataset.create_function = function() {
             return self.options.create_function.apply(null, arguments).then(function(r) {
                 self.created_elements.push(r.result);
-                if (self._created) {
-                    self._created.resolve();
+                if (self._written) {
+                    self._written.resolve();
                 }
             });
         }
         this.dataset.write_function = function() {
-            return self.write_row.apply(null, arguments);
+            return self.write_row.apply(self, arguments).then(function() {
+                if (self._written) {
+                    self._written.resolve();
+                }
+            });
         }
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.on_default_get.add(this.on_default_get);
@@ -2345,16 +2349,16 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
             $nbutton.click(function() {
-                self._created = $.Deferred().then(function() {
-                    self._created = undefined;
+                self._written = $.Deferred().then(function() {
+                    self._written = undefined;
                     self.view_form.on_button_new();
                 });
                 self.view_form.do_save();
             });
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
-                self._created = $.Deferred().then(function() {
-                    self._created = undefined;
+                self._written = $.Deferred().then(function() {
+                    self._written = undefined;
                     self.check_exit();
                 });
                 self.view_form.do_save();
