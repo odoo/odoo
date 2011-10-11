@@ -65,9 +65,9 @@ Dashboard for purchase management that includes:
              'test/process/purchase_from_picking.yml',
              'test/process/procurement_buy.yml',
              'test/process/merge_purchase_order.yml',
+             'test/process/purchase_order_cancel.yml',
              'test/process/purchase_report.yml',
-             'test/purchase_order_cancel_draft.yml'
-                 ],
+            ],
     'demo': [
             'purchase_demo.xml',
             'purchase_unit_test.xml',
