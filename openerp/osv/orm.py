@@ -4796,6 +4796,9 @@ class BaseModel(object):
             else:
                 commands.append(o2m_command)
 
+        assert not any(command for command, _, _ in commands if command not in (0, 1, 4)),\
+               "Only CREATE, UPDATE and LINK_TO commands are supported in resolver"
+
         # extract records to read, by id, in a mapping dict
         ids_to_read = [id for (command, id, _) in commands if command in (1, 4)]
         records_by_id = dict(

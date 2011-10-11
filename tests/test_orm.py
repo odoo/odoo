@@ -7,8 +7,11 @@ DB = os.environ['OPENERP_DATABASE']
 
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
+DELETE = lambda id: (2, id, False)
+FORGET = lambda id: (3, id, False)
 LINK_TO = lambda id: (4, id, False)
-
+DELETE_ALL = lambda: (5, False, False)
+REPLACE_WITH = lambda ids: (6, False, ids)
 
 def setUpModule():
     openerp.tools.config['addons_path'] = os.environ['OPENERP_ADDONS_PATH']
@@ -137,3 +140,22 @@ class TestO2MSerialization(unittest2.TestCase):
             {'id': ids[1], 'name': 'bar'},
             {'id': ids[2], 'name': 'baz'}
         ])
+
+    def test_invalid_commands(self):
+        "Commands with uncertain semantics in this context should be forbidden"
+
+        with self.assertRaises(AssertionError):
+            list(self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [DELETE(42)], ['name']))
+
+        with self.assertRaises(AssertionError):
+            list(self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [FORGET(42)], ['name']))
+
+        with self.assertRaises(AssertionError):
+            list(self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [DELETE_ALL()], ['name']))
+
+        with self.assertRaises(AssertionError):
+            list(self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [REPLACE_WITH([42])], ['name']))
