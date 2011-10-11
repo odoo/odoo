@@ -539,7 +539,7 @@
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
-        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
+        t-att-style="color_for(record) + (!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;' : '')"
         t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
