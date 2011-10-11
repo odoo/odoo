@@ -64,8 +64,9 @@ Dashboard for purchase management that includes:
              'test/process/create_invoice.yml',
              'test/process/purchase_from_picking.yml',
              'test/process/procurement_buy.yml',
-             'test/purchase_report.yml',
-             'test/purchase_order_cancel_draft.yml'
+             'test/process/purchase_report.yml',
+             'test/process/merge_purchase_order.yml',
+             #'test/purchase_order_cancel_draft.yml'
                  ],
     'demo': [
             'purchase_demo.xml',
