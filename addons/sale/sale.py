@@ -25,6 +25,7 @@ import time
 import pooler
 from osv import fields, osv
 from tools.translate import _
+from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
 import netsvc
 
@@ -268,7 +269,7 @@ class sale_order(osv.osv):
     }
     _defaults = {
         'picking_policy': 'direct',
-        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime(DEFAULT_SERVER_DATE_FORMAT),
         'order_policy': 'manual',
         'state': 'draft',
         'user_id': lambda obj, cr, uid, context: uid,
@@ -435,7 +436,7 @@ class sale_order(osv.osv):
         }
         inv.update(self._inv_get(cr, uid, order))
         inv_id = inv_obj.create(cr, uid, inv, context=context)
-        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime('%Y-%m-%d'))
+        data = inv_obj.onchange_payment_term_date_invoice(cr, uid, [inv_id], pay_term, time.strftime(DEFAULT_SERVER_DATE_FORMAT))
         if data.get('value', False):
             inv_obj.write(cr, uid, [inv_id], data['value'], context=context)
         inv_obj.button_compute(cr, uid, [inv_id])
@@ -619,9 +620,9 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, *args):
         for o in self.browse(cr, uid, ids):
             if (o.order_policy == 'manual'):
-                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime('%Y-%m-%d')})
+                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': time.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             else:
-                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime('%Y-%m-%d')})
+                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': time.strftime(DEFAULT_SERVER_DATE_FORMAT)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
             message = _("The quotation '%s' has been converted to a sales order.") % (o.name,)
             self.log(cr, uid, o.id, message)
@@ -759,8 +760,8 @@ class sale_order(osv.osv):
             if line.state == 'done':
                 continue
 
-            date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
-            date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+            date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=line.delay or 0.0)
+            date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             if line.product_id:
                 if line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -845,7 +846,7 @@ class sale_order(osv.osv):
                 'description': 'Order '+str(inv['id']),
                 'document': '',
                 'partner_id': part,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
                 'user_id': uid,
                 'partner_type': partnertype,
                 'probability': 1.0,
@@ -1094,7 +1095,7 @@ class sale_order_line(osv.osv):
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                    'product_uos': []}}
         if not date_order:
-            date_order = time.strftime('%Y-%m-%d')
+            date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
         product_obj = product_obj.browse(cr, uid, product, context=context)
