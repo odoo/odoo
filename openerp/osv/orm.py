@@ -4781,7 +4781,6 @@ class BaseModel(object):
         :type o2m_commands: list((int|False, int|False, dict|False))
         :param fields: list of fields to read from the database, when applicable
         :type fields: list(str)
-        :param context: request context
         :raises AssertionError: if a command is not ``CREATE``, ``UPDATE`` or ``LINK_TO``
         :returns: o2m records in a shape similar to that returned by
                   ``read()`` (except records may be missing the ``id``
@@ -4794,7 +4793,8 @@ class BaseModel(object):
         commands = []
         for o2m_command in o2m_commands:
             if not isinstance(o2m_command, (list, tuple)):
-                commands.append((4, o2m_command, False))
+                command = 4
+                commands.append((command, o2m_command, False))
             elif len(o2m_command) == 1:
                 (command,) = o2m_command
                 commands.append((command, False, False))
@@ -4802,10 +4802,10 @@ class BaseModel(object):
                 command, id = o2m_command
                 commands.append((command, id, False))
             else:
+                command = o2m_command[0]
                 commands.append(o2m_command)
-
-        assert not any(command for command, _, _ in commands if command not in (0, 1, 4)),\
-               "Only CREATE, UPDATE and LINK_TO commands are supported in resolver"
+            assert command in (0, 1, 4), \
+                "Only CREATE, UPDATE and LINK_TO commands are supported in resolver"
 
         # extract records to read, by id, in a mapping dict
         ids_to_read = [id for (command, id, _) in commands if command in (1, 4)]
@@ -4843,7 +4843,7 @@ class Model(BaseModel):
 class TransientModel(BaseModel):
     """Model super-class for transient records, meant to be temporarily
        persisted, and regularly vaccuum-cleaned.
- 
+
        A TransientModel has a simplified access rights management,
        all users can create new records, and may only access the
        records they created. The super-user has unrestricted access
