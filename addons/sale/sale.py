@@ -673,113 +673,144 @@ class sale_order(osv.osv):
                 return False
             return canceled
 
-    def action_ship_create(self, cr, uid, ids, *args):
-        wf_service = netsvc.LocalService("workflow")
-        picking_id = False
-        move_obj = self.pool.get('stock.move')
-        proc_obj = self.pool.get('procurement.order')
-        company = self.pool.get('res.users').browse(cr, uid, uid).company_id
-        for order in self.browse(cr, uid, ids, context={}):
-            proc_ids = []
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
-            picking_id = False
-            for line in order.order_line:
-                proc_id = False
-                date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
-                date_planned = (date_planned - timedelta(days=company.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, *args):
+        return {
+            'name': line.name,
+            'origin': order.name,
+            'date_planned': date_planned,
+            'product_id': line.product_id.id,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty)\
+                    or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
+            'procure_method': line.type,
+            'move_id': move_id,
+            'property_ids': [(6, 0, [x.id for x in line.property_ids])],
+            'company_id': order.company_id.id,
+            'sale_line_id': line.id,
+        }
 
-                if line.state == 'done':
-                    continue
-                move_id = False
-                if line.product_id and line.product_id.product_tmpl_id.type in ('product', 'consu'):
-                    location_id = order.shop_id.warehouse_id.lot_stock_id.id
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, *args):
+        location_id = order.shop_id.warehouse_id.lot_stock_id.id
+        output_id = order.shop_id.warehouse_id.lot_output_id.id
+        return {
+            'name': line.name[:64],
+            'picking_id': picking_id,
+            'product_id': line.product_id.id,
+            'date': date_planned,
+            'date_expected': date_planned,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': line.product_uos_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'product_packaging': line.product_packaging.id,
+            'address_id': line.address_allotment_id.id or order.partner_shipping_id.id,
+            'location_id': location_id,
+            'location_dest_id': output_id,
+            'sale_line_id': line.id,
+            'tracking_id': False,
+            'state': 'draft',
+            #'state': 'waiting',
+            'note': line.notes,
+            'company_id': order.company_id.id,
+            'price_unit': line.product_id.standard_price or 0.0
+        }
+
+    def _prepare_order_picking(self, cr, uid, order, *args):
+        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
+        return {
+            'name': pick_name,
+            'origin': order.name,
+            'type': 'out',
+            'state': 'auto',
+            'move_type': order.picking_policy,
+            'sale_id': order.id,
+            'address_id': order.partner_shipping_id.id,
+            'note': order.note,
+            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
+            'company_id': order.company_id.id,
+        }
+
+    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, *args):
+        """Create the required procurements to supply sale order lines, also connecting
+        the procurements to appropriate stock moves in order to bring the goods to the
+        sale order's requested location.
+
+        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
+        a standard outgoing picking will be created to wrap the stock moves, as returned
+        by :meth:`~._prepare_order_picking`.
+
+        Modules that wish to customize the procurements or partition the stock moves over
+        multiple stock pickings may override this method and call ``super()`` with
+        different subsets of ``order_lines`` and/or preset ``picking_id`` values.
+
+        :param browse_record order: sale order to which the order lines belong
+        :param list(browse_record) order_lines: sale order line records to procure
+        :param int picking_id: optional ID of a stock picking to which the created stock moves
+                               will be added. A new picking will be created if ommitted.
+        :return: True
+        """
+        proc_ids = []
+        for line in order_lines:
+            if line.state == 'done':
+                continue
+
+            date_planned = datetime.strptime(order.date_order, '%Y-%m-%d') + relativedelta(days=line.delay or 0.0)
+            date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime('%Y-%m-%d %H:%M:%S')
+
+            if line.product_id:
+                if line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     if not picking_id:
-                        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
-                        picking_id = self.pool.get('stock.picking').create(cr, uid, {
-                            'name': pick_name,
-                            'origin': order.name,
-                            'type': 'out',
-                            'state': 'auto',
-                            'move_type': order.picking_policy,
-                            'sale_id': order.id,
-                            'address_id': order.partner_shipping_id.id,
-                            'note': order.note,
-                            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-                            'company_id': order.company_id.id,
-                        })
-                    move_id = self.pool.get('stock.move').create(cr, uid, {
-                        'name': line.name[:64],
-                        'picking_id': picking_id,
-                        'product_id': line.product_id.id,
-                        'date': date_planned,
-                        'date_expected': date_planned,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'product_uos_qty': line.product_uos_qty,
-                        'product_uos': (line.product_uos and line.product_uos.id)\
-                                or line.product_uom.id,
-                        'product_packaging': line.product_packaging.id,
-                        'address_id': line.address_allotment_id.id or order.partner_shipping_id.id,
-                        'location_id': location_id,
-                        'location_dest_id': output_id,
-                        'sale_line_id': line.id,
-                        'tracking_id': False,
-                        'state': 'draft',
-                        #'state': 'waiting',
-                        'note': line.notes,
-                        'company_id': order.company_id.id,
-                        'price_unit': line.product_id.standard_price or 0.0
-                    })
-                    
-                if line.product_id:
-                    proc_id = self.pool.get('procurement.order').create(cr, uid, {
-                        'name': line.name,
-                        'origin': order.name,
-                        'date_planned': date_planned,
-                        'product_id': line.product_id.id,
-                        'product_qty': line.product_uom_qty,
-                        'product_uom': line.product_uom.id,
-                        'product_uos_qty': (line.product_uos and line.product_uos_qty)\
-                                or line.product_uom_qty,
-                        'product_uos': (line.product_uos and line.product_uos.id)\
-                                or line.product_uom.id,
-                        'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
-                        'procure_method': line.type,
-                        'move_id': move_id,
-                        'property_ids': [(6, 0, [x.id for x in line.property_ids])],
-                        'company_id': order.company_id.id,
-                        'sale_line_id': line.id,
-                    })
-                    proc_ids.append(proc_id)
-                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-                    if order.state == 'shipping_except':
-                        for pick in order.picking_ids:
-                            for move in pick.move_lines:
-                                if move.state == 'cancel':
-                                    mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
-                                    if mov_ids:
-                                        for mov in move_obj.browse(cr, uid, mov_ids):
-                                            move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-                                            proc_obj.write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+                        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
+                    move_id = self.pool.get('stock.move').create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, args))
+                else:
+                    # a service has no stock move
+                    move_id = False
 
-            val = {}
+                proc_id = self.pool.get('procurement.order').create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, args))
+                proc_ids.append(proc_id)
+                line.write({'procurement_id': proc_id})
 
-            if picking_id:
-                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+                # FIXME: deals with potentially cancelled shipments, seems broken, see below
+                # FIXME: was introduced by revid: mtr@mtr-20101125100355-0a1b7m792t63mssv
+                if order.state == 'shipping_except':
+                    for pick in order.picking_ids:
+                        for move in pick.move_lines:
+                            if move.state == 'cancel':
+                                mov_ids = self.pool.get('stock.move').search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
+                                if mov_ids:
+                                    for mov in move_obj.browse(cr, uid, mov_ids):
+                                        # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
+                                        self.pool.get('stock.move').write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
+                                        self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
 
-            for proc_id in proc_ids:
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+        wf_service = netsvc.LocalService("workflow")
+        if picking_id:
+            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
 
-            if order.state == 'shipping_except':
-                val['state'] = 'progress'
-                val['shipped'] = False
+        for proc_id in proc_ids:
+            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
-                if (order.order_policy == 'manual'):
-                    for line in order.order_line:
-                        if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
-                            val['state'] = 'manual'
-                            break
-            self.write(cr, uid, [order.id], val)
+        val = {}
+        if order.state == 'shipping_except':
+            val['state'] = 'progress'
+            val['shipped'] = False
+
+            if (order.order_policy == 'manual'):
+                for line in order.order_line:
+                    if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
+                        val['state'] = 'manual'
+                        break
+        order.write(val)
+        return True
+
+    def action_ship_create(self, cr, uid, ids, *args):
+        for order in self.browse(cr, uid, ids, context={}):
+            self._create_pickings_and_procurements(cr, uid, order, order.order_line, None, args)
         return True
 
     def action_ship_end(self, cr, uid, ids, context=None):
