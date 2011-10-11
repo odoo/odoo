@@ -1,5 +1,5 @@
 -
-  In order to test to Cancel purchase order from Different State,I start by cancel the previously created PO.
+  In order to test to Cancel purchase order from Different State,I start cancel the previously created PO.
 -
   Now I have to cancel previously created purchase order for product 'Side Panel'.
 -
@@ -9,10 +9,15 @@
     search_ids=self.search(cr, uid, [('purchase_id', '=', ref("purchase_order_po1"))])
     self.action_cancel(cr, uid, search_ids)
 -
-  Now I have to cancel purchase order for product 'Side Panel'.
+  Now I am able to cancel purchase order for product 'Side Panel' because related picking was cancel.
 -
   !python {model: purchase.order}: |
     self.action_cancel(cr, uid, [ref("purchase_order_po1")])
+-
+  Initially purchase order is in the cancel state.
+-
+  !assert {model: purchase.order, id: purchase_order_po1}:
+    - state == 'cancel'
 -
   Now again set purchase order for product 'Side Panel' to draft state.
 -
@@ -23,3 +28,13 @@
 -
   !assert {model: purchase.order, id: purchase_order_po1}:
     - state == 'draft'
+-
+  I have to cancel PO form draft state.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel(cr, uid, [ref("purchase_order_po1")])
+-
+  Initially purchase order is in the cancel state.
+-
+  !assert {model: purchase.order, id: purchase_order_po1}:
+    - state == 'cancel'

@@ -1,16 +1,4 @@
 -
- I check that an entry gets created in the stock moves.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    pur_id1=self.browse(cr, uid, ref("purchase_order_po0"))
-    picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
-    pick_id = picking_obj.browse(cr, uid, ids)[0]
-    move_obj = self.pool.get('stock.move')
-    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
-    assert search_id, _('No Incoming Product!')
--
   I create a new Purchase order where "invoice_method" is From Picking
 -
   !record {model: purchase.order, id: purchase_order_po1}:
@@ -40,16 +28,28 @@
     pur_id=self.browse(cr, uid, ref("purchase_order_po1"))
     assert(pur_id.picking_ids)
 -
- I check that an entry gets created related to stock move.
+  Then I create an further process from picking by clicking on "process" button
 -
-  !python {model: purchase.order}: |
-    pur_id1=self.browse(cr, uid, ref("purchase_order_po1"))
-    picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
-    pick_id = picking_obj.browse(cr, uid, ids)[0]
-    move_obj = self.pool.get('stock.move')
-    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
-    assert search_id, 'No Incoming Product!'
+  !python {model: stock.picking}: |
+    import time
+    pur_obj=self.pool.get('purchase.order')
+    pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po1"))
+    pick_ids = [x.id for x in pur_id1.picking_ids]
+    self.action_process(cr, uid, pick_ids)
+    pickings = self.browse(cr, uid, pick_ids)
+    for picking in pickings:
+      move = picking.move_lines[0]
+      partial_datas = {
+            'partner_id': picking.address_id.partner_id.id,
+            'address_id': picking.address_id.id,
+            'delivery_date' : time.strftime('%Y-%m-%d')
+           }
+      partial_datas['move%s'%(move.id)]= {
+          'product_id': move.product_id,
+          'product_qty': move.product_qty,
+          'product_uom': move.product_uom.id,
+      }
+      self.do_partial(cr, uid, [picking.id], partial_datas)
 -
   Then I create an invoice from picking by clicking on "Create Invoice" wizard
 -

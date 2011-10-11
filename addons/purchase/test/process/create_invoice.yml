@@ -41,3 +41,15 @@
     account_obj = self.pool.get('account.invoice')
     ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
+-
+ I check that an entry gets created in the stock moves.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    pur_id1=self.browse(cr, uid, ref("purchase_order_po0"))
+    picking_obj = self.pool.get('stock.picking')
+    ids = picking_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
+    pick_id = picking_obj.browse(cr, uid, ids)[0]
+    move_obj = self.pool.get('stock.move')
+    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick_id.name)])
+    assert search_id, _('No Incoming Product!')    
