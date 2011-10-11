@@ -878,7 +878,7 @@
         <td t-attf-class="oe_form_frame_cell oe_form_selection #{widget.selection.element_class}">
             <t t-raw="widget.selection.render()"/>
         </td>
-        <td class="oe_form_frame_cell oe_form_many2one #{widget.selection.element_class}" nowrap="true">
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one #{widget.m2o.element_class}" nowrap="true" style="display: none">
             <t t-raw="widget.m2o.render()"/>
         </td>
     </tr>

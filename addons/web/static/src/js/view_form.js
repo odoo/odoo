@@ -2490,6 +2490,9 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         };
         this.get_fields_values = view.get_fields_values;
         this.do_onchange = this.on_form_changed = this.on_nop;
+        this.dataset = this.view.dataset;
+        this.widgets_counter = 0;
+        this.view_id = 'reference_' + _.uniqueId();
         this.widgets = {};
         this.fields = {};
         this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
@@ -2505,8 +2508,10 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     on_nop: function() {
     },
     on_selection_changed: function() {
-        this.m2o.field.relation = this.selection.get_value();
+        var sel = this.selection.get_value();
+        this.m2o.field.relation = sel;
         this.m2o.set_value(null);
+        this.m2o.$element.toggle(sel !== false);
     },
     start: function() {
         this._super();
