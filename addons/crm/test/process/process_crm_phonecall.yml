@@ -1,0 +1,73 @@
+- |
+  For customer or partner purpose, I called to him/her for discussion about openerp.
+-
+  !record {model: crm.phonecall, id: crm_phonecall_disc_openerp}:
+    date: !eval time.strftime('%Y-%m-%d 08:00:00')
+    name: Discussion About Openerp
+    duration: 2.0
+    section_id: crm.section_sales_department
+-
+  After called to Customer/partner, So creating record to merge with exiting partner
+-
+  !record {model: crm.phonecall2partner, id: crm_phonecall2partner_existed}:
+    action: exist
+    partner_id: base.res_partner_9
+
+-
+  We are going to create partner.
+-
+  !python {model: crm.phonecall2partner}: |
+
+    self._select_partner(cr, uid,{"active_ids": [ref("crm_phonecall_disc_openerp")]})
+    self.open_create_partner(cr, uid, [ref("crm_phonecall2partner_existed")], {"active_ids": [ref("crm_phonecall_disc_openerp")]})
+    self.make_partner(cr, uid, [ref("crm_phonecall2partner_existed")], {"active_ids": [ref("crm_phonecall_disc_openerp")]})
+
+- |
+  As the success of phonecall seems to be a real business opportunity, It will convert
+  it to opportunity.
+-
+  !record {model: crm.phonecall2opportunity, id: crm_phonecall2opportunity_disc_openerp}:
+    name: Discussion About Openerp
+    partner_id: base.res_partner_9
+    planned_revenue: 0.0
+    probability: 0.0
+- |
+  Business opportunity is now assigned to this phonecall.
+-
+  !assert {model: crm.phonecall, id: crm_phonecall_disc_openerp}:
+     - opportunity_id != False
+-
+   Succeed phonecall, it will be convert into on opportunity.
+-
+  !python {model: crm.phonecall2opportunity}: |
+     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_disc_openerp")], {"active_id": ref("crm_phonecall_disc_openerp")})
+- |
+  For business And I check that the phonecall and the newly created business 
+  opportunity is linked to same  partner.
+-
+  !python {model: crm.phonecall}: |
+    obj_phonecall = self.browse(cr, uid, ref('crm_phonecall_disc_openerp'))
+    ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
+    obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
+    assert obj_phonecall.partner_id == obj_opp.partner_id
+- |
+  Customer/partner intested with our product, so we will call back to him/her
+-
+  !record {model: crm.phonecall2phonecall, id: crm_phonecall2phonecall_disc_openerp}:
+    date: !eval "'%s-%s-%s 19:49:00' %(datetime.now().year,datetime.now().month,datetime.now().day)"
+    name: interest with openerp
+    section_id: crm.section_sales_department
+    user_id: base.user_root
+    action: schedule
+    categ_id: crm.categ_phone1
+- |
+  Create other sedular call which is interested customer/partner.
+-
+  !python {model: crm.phonecall2phonecall}: |
+    self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_disc_openerp')], {'active_id': ref('crm_phonecall_disc_openerp')})
+- |
+  Completion of phonecall, Cheking for phonecall summary is close or not.
+-
+  !python {model: crm.phonecall}: |
+    phonecall_rec = self.browse(cr, uid, ref('crm_phonecall_disc_openerp'))
+    assert phonecall_rec.state == 'done', "Phonecall is not in done state"
