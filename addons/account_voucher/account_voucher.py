@@ -864,9 +864,7 @@ class account_voucher(osv.osv):
             move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
-            print "What the fuck %s"% (self.pool.get('decimal.precision').precision_get(cr,uid,'Account'))
             if round(amount_residual,self.pool.get('decimal.precision').precision_get(cr,uid,'Account')): # Change difference entry
-                print "Amount Residual %s " % str(amount_residual)
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, 
                                             amount_residual ,context)
                 new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
@@ -947,7 +945,6 @@ class account_voucher(osv.osv):
     def action_move_line_create(self, cr, uid, ids, context=None):
         '''
         Create account move for account voucher.
-
         '''
         if context is None:
             context = {}
@@ -957,7 +954,6 @@ class account_voucher(osv.osv):
         tax_obj = self.pool.get('account.tax')
         seq_obj = self.pool.get('ir.sequence')
         for voucher in self.browse(cr, uid, ids, context=context):
-
             if voucher.move_id:
                 continue
             company_currency = self._get_company_currency(cr, uid, voucher.id, context)
@@ -976,7 +972,6 @@ class account_voucher(osv.osv):
                 line_total = line_total - currency_pool.compute(cr, uid, current_currency, company_currency, voucher.tax_amount, context=context_multi_currency)
             elif voucher.type == 'purchase':
                 line_total = line_total + currency_pool.compute(cr, uid, current_currency, company_currency, voucher.tax_amount, context=context_multi_currency)
-            ############################################################
             #create one move line per voucher line where amount is not 0.0
             line_total, rec_list_ids = self.voucher_move_line_create(cr, uid, voucher.id, line_total, move_id, context)
 
