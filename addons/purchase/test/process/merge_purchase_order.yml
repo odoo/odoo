@@ -16,7 +16,7 @@
         name: Metal Cleats
         price_unit: 100.0
         product_id: product.product_product_metalcleats0
-        product_qty: 10.0
+        product_qty: 5
         product_uom: product.product_uom_unit
         state: draft
     partner_address_id: base.res_partner_address_7
@@ -28,15 +28,32 @@
   !assert {model: purchase.order, id: purchase_order_po2}:
     - state == 'draft'
 -
-  I test for Copy Purchase order in Draft state.
+  I create second purchase order for 'Side Panel' product.
 -
-  !python {model: purchase.order}: |
-    copy_id = self.copy(cr, uid, ref("purchase_order_po2"))   
-    ids = [ref("purchase_order_po2"),copy_id]
-    context.update({'active_ids': ids})
+  !record {model: purchase.order, id: purchase_order_po3}:
+    company_id: base.main_company
+    date_order: !eval time.strftime('%Y-%m-%d')
+    invoice_method: order
+    location_id: stock.stock_location_stock
+    order_line:
+      - date_planned: !eval time.strftime('%Y-%m-%d')
+        name: Metal Cleats
+        price_unit: 100.0
+        product_id: product.product_product_sidepanel0
+        product_qty: 5
+        product_uom: product.product_uom_unit
+        state: draft
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    pricelist_id: purchase.list0
 -
-  I have merged first and second(copied) purchase order which are in draft state, belong to the same supplier,have same stock location, same pricelist.
+  Initially purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_po3}:
+    - state == 'draft'
+-
+  I have merged first and second purchase order which are in draft state, belong to the same supplier,have same stock location, same pricelist.
 -
   !python {model: purchase.order.group}: |
-    ids = context.get('active_ids')
-    self.merge_orders(cr, uid, ids, context)    
+    context.update({'active_ids':[ref('purchase_order_po2'),ref('purchase_order_po3')]})
+    self.merge_orders(cr, uid, context.get('active_ids'), context)    
