@@ -2265,7 +2265,8 @@ class BaseModel(object):
         if context is None:
             context = {}
         args = args[:]
-        if name:
+        # optimize out the default criterion of ``ilike ''`` that matches everything
+        if not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
         access_rights_uid = name_get_uid or user
         ids = self._search(cr, user, args, limit=limit, context=context, access_rights_uid=access_rights_uid)

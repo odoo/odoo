@@ -109,14 +109,14 @@ class res_currency(osv.osv):
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
-        if name:
-            ids = self.search(cr, user, ([('name','=',name)] + args), limit=limit, context=context)
+        results = super(res_currency,self)\
+            .name_search(cr, user, name, args, operator=operator, context=context, limit=limit)
+        if not results:
             name_match = CURRENCY_DISPLAY_PATTERN.match(name)
-            if not ids and name_match:
-               ids = self.search(cr, user, [('name','=', name_match.group(1))] + args, limit=limit, context=context)
-        else:
-            ids = self.search(cr, user, args, limit=limit, context=context)
-        return self.name_get(cr, user, ids, context=context)
+            if name_match:
+                results = super(res_currency,self)\
+                    .name_search(cr, user, name_match.group(1), args, operator=operator, context=context, limit=limit)
+        return results
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:

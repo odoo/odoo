@@ -195,14 +195,13 @@ class res_partner(osv.osv):
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
-        if name:
+            args = []
+        # short-circuit ref match when possible
+        if name and operator in ('=', 'ilike', '=ilike', 'like'):
             ids = self.search(cr, uid, [('ref', '=', name)] + args, limit=limit, context=context)
-            if not ids:
-                ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
-        else:
-            ids = self.search(cr, uid, args, limit=limit, context=context)
-        return self.name_get(cr, uid, ids, context)
+            if ids:
+                return self.name_get(cr, uid, ids, context)
+        return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)
