@@ -1,0 +1,48 @@
+-
+  Cheking for lead from any stage, It will be cancle or not.
+-
+  !python {model: crm.lead}: |
+    lead_on_draft=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_on_draft.state == 'draft', "Lead is not in draft state"
+    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_on_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_on_cancel.state == 'cancel', "Lead is not in cancel state"
+    self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_on_reset=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_on_reset.state == 'draft', "Lead is not in draft state"
+    self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_on_pending=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_on_pending.state == 'pending', "Lead is not in pending state"
+    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_pending_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_pending_cancel.state == 'cancel', "Lead is not in cancel state"
+
+-
+  For working on parent child relationship, we are creating sales executive department that will be work under 
+  Sales Department.
+-
+  !record {model: crm.case.section, id: section_sales_exe_department}:
+    name: "Sales Executive"
+    parent_id: crm.section_sales_department
+
+-
+  If Lead not handle by executive team so its need to Escalate lead from sales executive department to sales department,
+  for that purpose i Assign sales executive department on lead, after we will be process to escalate lead to sales department 
+-
+  !record {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0}:
+    section_id: section_sales_exe_department
+-
+  Processing on Lead escalate to sales Departemnt, we are checking for lead Escalate to sales Department from Executive
+  department or not.
+-
+  !python {model: crm.lead}: |
+    lead_rec=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_cancle_reset=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_cancle_reset.state == 'draft', "Lead is not in draft state"
+    self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_on_escalate=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_on_escalate.section_id.name == 'Sales Department', "Do not Escalate lead to on sales team from Executive team"
+    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+    lead_escalate_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
+    assert lead_escalate_cancel.state == 'cancel', "Lead is not in cancel state"
