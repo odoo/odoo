@@ -979,7 +979,7 @@ class account_voucher(osv.osv):
             ml_writeoff = self.writeoff_move_line_get(cr, uid, voucher.id, line_total, move_id, name, context)
             if ml_writeoff:
                 ml_writeoff_id = move_line_pool.create(cr, uid, ml_writeoff, context)
-            #We put posted the voucher.
+            #We post the voucher.
             self.write(cr, uid, [voucher.id], {
                 'move_id': move_id,
                 'state': 'posted',
