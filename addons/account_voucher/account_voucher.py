@@ -864,8 +864,8 @@ class account_voucher(osv.osv):
             move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
-
-            if amount_residual: # Change difference entry
+            print "What the fuck %s"% (self.pool.get('decimal.precision').precision_get(cr,uid,'Account'))
+            if round(amount_residual,self.pool.get('decimal.precision').precision_get(cr,uid,'Account')): # Change difference entry
                 print "Amount Residual %s " % str(amount_residual)
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, 
                                             amount_residual ,context)
