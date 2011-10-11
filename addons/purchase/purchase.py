@@ -99,7 +99,7 @@ class purchase_order(osv.osv):
             for invoice in purchase.invoice_ids:
                 if invoice.state not in ('draft','cancel'):
                     tot += invoice.amount_untaxed
-            
+
             if purchase.amount_untaxed:
                 res[purchase.id] = min(100.0, tot * 100.0 / (purchase.amount_untaxed))
             else:
@@ -706,6 +706,14 @@ class purchase_order_line(osv.osv):
                         'uom': uom,
                         'date': date_order,
                         })[pricelist]
+        if price is False:
+            warning = {
+                'title': 'No valid pricelist line found !',
+                'message':
+                    "Couldn't find a pricelist line matching this product and quantity.\n"
+                    "You have to change either the product, the quantity or the pricelist."
+                }
+            res.update({'warning': warning})
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
 
 
