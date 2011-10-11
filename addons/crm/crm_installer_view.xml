@@ -1,29 +1,5 @@
 <openerp>
   <data>
-    <record id="view_crm_installer" model="ir.ui.view">
-      <field name="name">crm.installer.view</field>
-      <field name="model">base.setup.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <xpath expr="//group[@name='crm']" position="replace">
-            <newline/>
-            <separator string="Customer Relationship Management Features" colspan="4"/>
-            <field name="crm_claim" groups="base.group_extended"/>
-            <field name="crm_helpdesk" groups="base.group_extended"/>
-            <field name="crm_fundraising" groups="base.group_extended"/>
-            <field name="wiki_sale_faq" groups="base.group_extended"/>
-            <field name="sale_crm" invisible="1" groups="base.group_extended"/>
-            <field name="crm_caldav"/>
-            <field name="import_sugarcrm"/>
-            <field name="fetchmail"/>
-            <field name="thunderbird"/>
-            <field name="outlook"/>
-          </xpath>
-        </data>
-      </field>
-    </record>
     
     <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
         <field name="name">Define Sales Team</field>

@@ -106,7 +106,7 @@ will disable LDAP authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     "data" : [
         "users_ldap_view.xml",
         "user_ldap_installer.xml",

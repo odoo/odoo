@@ -20,7 +20,7 @@
 #
 ##############################################################################
 {
-    'name': 'HR - Recruitment',
+    'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
     'complexity': "easy",

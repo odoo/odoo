@@ -291,7 +291,7 @@ class product_template(osv.osv):
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
-        'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
+        'uos_coeff': fields.float('UOM -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert UOM to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),

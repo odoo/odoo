@@ -2,27 +2,6 @@
 <openerp>
     <data>
 
-        <record id="view_project_installer" model="ir.ui.view">
-            <field name="name">project.installer.view</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='project']" position="replace">
-                        <newline/>
-                        <separator  string="Project Management Features" colspan="4" />
-                        <field name="project_issue" />
-                        <field name="project_long_term" />
-                        <field name="hr_timesheet_sheet" />
-                        <field name="project_timesheet" />
-                        <field name="account_budget" />
-                        <field name="project_scrum" />
-                        <field name="project_gtd" />
-                    </xpath>
-                </data>
-            </field>
-        </record>
 
         <record id="category_project_config" model="ir.actions.todo.category">
             <field name="name">Project Management</field>

@@ -22,7 +22,7 @@
 {
     'name': 'Google Import',
     'version': '1.0',
-    'category': 'Generic Modules/Others',
+    'category': 'Customer Relationship Management',
     'description': """The module adds google contact in partner address and add google calendar events details in Meeting""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

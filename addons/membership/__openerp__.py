@@ -23,7 +23,7 @@
 {
     'name': 'Membership',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module allows you to manage all operations for managing memberships.
 =========================================================================
