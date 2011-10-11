@@ -4765,11 +4765,15 @@ class BaseModel(object):
     def resolve_o2m_commands_to_record_dicts(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
         """ Serializes o2m commands into record dictionaries (as if
         all the o2m records came from the database via a read()), and
-        returns an iterator over these dictionaries.
+        returns an iterable over these dictionaries.
 
         Because o2m commands might be creation commands, not all
         record ids will contain an ``id`` field. Commands matching an
-        existing record (UPDATE and LINK_TO) will have an id.
+        existing record (``UPDATE`` and ``LINK_TO``) will have an id.
+
+        .. note:: ``CREATE``, ``UPDATE`` and ``LINK_TO`` stand for the
+                  o2m command codes ``0``, ``1`` and ``4``
+                  respectively
 
         :param field_name: name of the o2m field matching the commands
         :type field_name: str
@@ -4778,10 +4782,11 @@ class BaseModel(object):
         :param fields: list of fields to read from the database, when applicable
         :type fields: list(str)
         :param context: request context
+        :raises AssertionError: if a command is not ``CREATE``, ``UPDATE`` or ``LINK_TO``
         :returns: o2m records in a shape similar to that returned by
                   ``read()`` (except records may be missing the ``id``
                   field if they don't exist in db)
-        :rtype: iter(dict)
+        :rtype: ``list(dict)``
         """
         o2m_model = self._all_columns[field_name].column._obj
 
