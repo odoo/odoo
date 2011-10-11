@@ -24,13 +24,13 @@ class TestO2MSerialization(unittest2.TestCase):
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
-        results = list(self.partner.serialize_o2m_commands(self.cr, UID, 'address', []))
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', []))
 
         self.assertEqual(results, [])
 
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
-        results = list(self.partner.serialize_o2m_commands(
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address',
             map(CREATE, [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}])))
         self.assertEqual(results, [
@@ -48,7 +48,7 @@ class TestO2MSerialization(unittest2.TestCase):
         ]
         commands = map(LINK_TO, ids)
 
-        results = list(self.partner.serialize_o2m_commands(self.cr, UID, 'address', commands, ['name']))
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', commands, ['name']))
 
         self.assertEqual(results, [
             {'id': ids[0], 'name': 'foo'},
@@ -64,7 +64,7 @@ class TestO2MSerialization(unittest2.TestCase):
             self.address.create(self.cr, UID, {'name': 'baz'})
         ]
 
-        results = list(self.partner.serialize_o2m_commands(self.cr, UID, 'address', ids, ['name']))
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', ids, ['name']))
 
         self.assertEqual(results, [
             {'id': ids[0], 'name': 'foo'},
@@ -78,7 +78,7 @@ class TestO2MSerialization(unittest2.TestCase):
         id_bar = self.address.create(self.cr, UID, {'name': 'bar'})
         id_baz = self.address.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
-        results = list(self.partner.serialize_o2m_commands(
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address', [
                 LINK_TO(id_foo),
                 UPDATE(id_bar, {'name': 'qux', 'city': 'tagtag'}),
@@ -97,7 +97,7 @@ class TestO2MSerialization(unittest2.TestCase):
             for name in ['NObar', 'baz', 'qux', 'NOquux', 'NOcorge', 'garply']
         ]
 
-        results = list(self.partner.serialize_o2m_commands(
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address', [
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),

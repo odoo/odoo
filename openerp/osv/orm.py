@@ -4762,7 +4762,7 @@ class BaseModel(object):
 
         return True
 
-    def serialize_o2m_commands(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
+    def resolve_o2m_commands_to_record_dicts(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
         """ Serializes o2m commands into record dictionaries (as if
         all the o2m records came from the database via a read()), and
         returns an iterator over these dictionaries.
