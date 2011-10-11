@@ -4790,6 +4790,9 @@ class BaseModel(object):
         for o2m_command in o2m_commands:
             if not isinstance(o2m_command, (list, tuple)):
                 commands.append((4, o2m_command, False))
+            elif len(o2m_command) == 1:
+                (command,) = o2m_command
+                commands.append((command, False, False))
             elif len(o2m_command) == 2:
                 command, id = o2m_command
                 commands.append((command, id, False))

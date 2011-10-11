@@ -141,6 +141,16 @@ class TestO2MSerialization(unittest2.TestCase):
             {'id': ids[2], 'name': 'baz'}
         ])
 
+    def test_singleton_commands(self):
+        "DELETE_ALL can appear as a singleton"
+
+        try:
+            list(self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [(5,)], ['name']))
+        except AssertionError:
+            # 5 should fail with an assert error, but not e.g. a ValueError
+            pass
+
     def test_invalid_commands(self):
         "Commands with uncertain semantics in this context should be forbidden"
 
@@ -159,3 +169,4 @@ class TestO2MSerialization(unittest2.TestCase):
         with self.assertRaises(AssertionError):
             list(self.partner.resolve_o2m_commands_to_record_dicts(
                 self.cr, UID, 'address', [REPLACE_WITH([42])], ['name']))
+
