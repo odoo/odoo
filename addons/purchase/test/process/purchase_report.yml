@@ -1,6 +1,6 @@
 -
   In order to test the PDF reports defined on a Purchase Order, we will print a Request Quotation report
-- 
+-
   !python {model: purchase.order}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.purchase.quotation').create(cr, uid, [ref('purchase.order_purchase1'),ref('purchase.order_purchase2')], {}, {})
@@ -8,7 +8,7 @@
         file(os.path.join(tools.config['test_report_directory'], 'purchase-request_quotation'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on a Purchase Order, we will print Purchase Order report
-- 
+-
   !python {model: purchase.order}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.purchase.order').create(cr, uid, [ref('purchase.order_purchase1'),ref('purchase.order_purchase2')], {}, {})
