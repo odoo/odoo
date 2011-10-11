@@ -16,6 +16,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
 
     init: function() {
         this._super.apply(this, arguments);
+        this.uservoiceForums = {};
         this.uservoiceOptions = {
             key: 'openerpsa',
             host: 'feedback.openerp.com',
@@ -31,6 +32,29 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
         this._super();
 
         var self = this;
+        var forum_mapping = {
+            'accounting': '87921',
+            'administration': '87935',
+            'human resources': '87923',
+            'knowledge': '87927',
+            'manufacturing': '87915',
+            'marketing': '87925',
+            'point of sale': '87929',
+            'project': '87919',
+            'purchases': '87911',
+            'sales': '87907',
+            'tools': '87933',
+            'warehouse': '87913',
+        };
+
+        var ds = new instance.web.DataSetSearch(this, 'ir.ui.menu', {lang: 'NO_LANG'}, [['parent_id', '=', false]]);
+
+        ds.read_slice(['name'], null, function(result) {
+            _.each(result, function(menu) {
+                self.uservoiceForums[menu.id] = forum_mapping[menu.name.toLowerCase()] || self.default_forum;
+            });
+        });
+        
         this.$element.find('a').click(function(e) {
             e.preventDefault();
             UserVoice.Popin.show(self.uservoiceOptions);
@@ -42,10 +66,7 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
     do_menu_click: function($clicked_menu, manual) {
         var id = $clicked_menu.attr('data-menu');
         if (id) {
-            var self = this;
-            this.rpc('/web_uservoice/uv/forum', {menu_id: id}, function(result) {
-                self.uservoiceOptions.forum = result.forum || self.default_forum;
-            });
+            this.uservoiceOptions.forum = this.uservoiceForums[id] || this.default_forum;
         }
     },
 
