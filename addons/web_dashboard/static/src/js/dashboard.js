@@ -214,6 +214,8 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         });
     },
     on_load_action: function(result) {
+        var self = this;
+        var action_orig = _.extend({}, result.result);
         var action = result.result;
         action.flags = {
             search_view : false,
@@ -228,6 +230,14 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
+        am.do_action = function(action) {
+            self.do_action(action);
+        }
+        if (am.inner_viewmanager) {
+            am.inner_viewmanager.on_mode_switch.add(function(mode) {
+                self.do_action(action_orig);
+            });
+        }
     },
     render: function() {
         // We should start with three columns available
@@ -241,12 +251,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        _.each(this.action_managers, function(am) {
-            am.stop();
-        });
-        this.action_managers = [];
+        var view_manager = this.view.widget_parent,
+            action_manager = view_manager.widget_parent;
         this.view.stop();
-        this.view.start();
+        action_manager.do_action(view_manager.action);
     }
 });
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
