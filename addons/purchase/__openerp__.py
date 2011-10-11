@@ -60,6 +60,7 @@ Dashboard for purchase management that includes:
         'board_purchase_view.xml',
     ],
     'test': [
+             'test/ui/onchange_methods.yml',
              'test/process/requests_quotation.yml',
              'test/process/create_invoice.yml',
              'test/process/purchase_from_picking.yml',
