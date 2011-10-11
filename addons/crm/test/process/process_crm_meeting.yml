@@ -1,0 +1,72 @@
+- |
+  Customer want to do initial discussion with us so we will arrage meeting or
+  phonecalles or internal Meeting with them. 
+-
+  !assert {model: crm.meeting, id: crm.crm_case_initialdiscussion0}:
+     - state == "draft"
+- |
+  For Remember purpose for meeting, i put reminder "30 minutes before" and assign
+  to meeting.
+-
+  !python {model: crm.meeting}: |
+     self.write(cr, uid, [ref('crm_case_initialdiscussion0')], {'alarm_id': ref("base_calendar.alarm5")})
+- |
+  In order to check recurrence on meetings I will set Recurrency to Custom
+  and I set the fields so that the meeting will occur weekly on Monday to Friday 10 times.
+-
+  !python {model: crm.meeting}: |
+     self.write(cr, uid, [ref("crm_case_initialdiscussion0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1, 'count':10, 'interval': 1, 'rrule_type': 'weekly'})
+
+- |
+  The meeting is scheduled on Monday and Friday for 10 times so i can see from the calendar view
+-
+  !python {model: crm.meeting}: |
+    self.fields_view_get(cr, uid, False, 'calendar', context)
+- |
+  We can check for one of the recurrent event and count the number of meeting.
+-
+  !python {model: crm.meeting}: |
+     import time
+     from datetime import datetime, date, timedelta
+     ids = self.search(cr, uid, [('date', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('date', '<=', (datetime.now()+timedelta(31)).strftime('%Y-%m-%d 00:00:00')), ('name', '=', 'Initial discussion')], context={'virtual_id': True})
+     assert len(ids) == 10
+
+- |
+  If I want to edit meetings information for all occurrence I click on "Edit All" button.
+-
+  !python {model: crm.meeting}: |
+     self.write(cr, uid, [ref('crm_case_initialdiscussion0')], {'edit_all':'True'},context)
+- |
+  I can see that new meeting form is opened with same value.
+  I change some data for meeting and save it.
+  I can see from meeting's calendar view that all meeting occurrences are changed accordingly.
+-
+  !record {model: crm.meeting, id: crm.crm_case_initialdiscussion0}:
+    alarm_id: base_calendar.alarm9
+    rrule_type: weekly
+- |
+  In order to invite people(internal user) for this meetings, Create record for
+  people will come on meeting.
+-
+  !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
+    type: internal
+    send_mail: False
+    partner_id: base.res_partner_9
+    user_ids:
+      - base.user_demo
+-
+  Now inviting those people which we are registers.
+-
+  !python {model: base_calendar.invite.attendee}: |
+    self.do_invite(cr, uid, [ref('base_calendar_invite_attendee_0')], {'active_id': ref('crm_case_initialdiscussion0'), 'model' : 'crm.meeting', 'attendee_field':'attendee_ids'})
+- |
+  All conformation is completed for meeting now going to confirm meeting
+  and we can check also after completion of meeting, it is done or not. 
+-
+  !python {model: crm.meeting}: |
+    self.case_open(cr, uid, [ref('crm_case_initialdiscussion0')])
+    meeting_rec = self.browse(cr, uid, ref("crm_case_initialdiscussion0"))
+    assert meeting_rec.state == 'open', "Meeting is not in confirm state"
+    self.case_close(cr, uid, [ref('crm_case_initialdiscussion0')])
+    meeting_rec_close = self.browse(cr, uid, ref("crm_case_initialdiscussion0"))
+    assert meeting_rec_close.state == 'done', "Meeting is not in done state"

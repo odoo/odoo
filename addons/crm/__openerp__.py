@@ -121,7 +121,7 @@ Creates a dashboard for CRM that includes:
     'test': [
             'test/process/process_crm_lead.yml',
             'test/process/cancle_crm_lead.yml',
-            'test/test_crm_meeting.yml',
+            'test/process/process_crm_meeting.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml',
             'test/test_crm_recurrent_meeting.yml',
