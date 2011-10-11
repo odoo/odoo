@@ -4785,12 +4785,16 @@ class BaseModel(object):
         """
         o2m_model = self._all_columns[field_name].column._obj
 
-        # extract and handle case of single ids (instead of commands):
-        # convert to LINK_TO commands (4)
-        c1, c2 = itertools.tee(o2m_commands)
-        commands = list(itertools.chain(
-            (command for command in c1 if isinstance(command, (list, tuple))),
-            ((4, id, None) for id in c2 if not isinstance(id, (list, tuple)))))
+        # convert single ids and pairs to tripled commands
+        commands = []
+        for o2m_command in o2m_commands:
+            if not isinstance(o2m_command, (list, tuple)):
+                commands.append((4, o2m_command, False))
+            elif len(o2m_command) == 2:
+                command, id = o2m_command
+                commands.append((command, id, False))
+            else:
+                commands.append(o2m_command)
 
         # extract records to read, by id, in a mapping dict
         ids_to_read = [id for (command, id, _) in commands if command in (1, 4)]

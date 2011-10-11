@@ -119,3 +119,21 @@ class TestO2MSerialization(unittest2.TestCase):
             {'name': 'grault'},
             {'id': ids[5], 'name': 'garply'}
         ])
+
+    def test_LINK_TO_pairs(self):
+        "LINK_TO commands can be written as pairs, instead of triplets"
+        ids = [
+            self.address.create(self.cr, UID, {'name': 'foo'}),
+            self.address.create(self.cr, UID, {'name': 'bar'}),
+            self.address.create(self.cr, UID, {'name': 'baz'})
+        ]
+        commands = map(lambda id: (4, id), ids)
+
+        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
+            self.cr, UID, 'address', commands, ['name']))
+
+        self.assertEqual(results, [
+            {'id': ids[0], 'name': 'foo'},
+            {'id': ids[1], 'name': 'bar'},
+            {'id': ids[2], 'name': 'baz'}
+        ])
