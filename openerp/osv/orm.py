@@ -4809,12 +4809,14 @@ class BaseModel(object):
             for record in self.pool.get(o2m_model).read(
                 cr, uid, ids_to_read, fields=fields, context=context))
 
+        record_dicts = []
         # merge record from db with record provided by command
         for command, id, record in commands:
             item = {}
             if command in (1, 4): item.update(records_by_id[id])
             if command in (0, 1): item.update(record)
-            yield item
+            record_dicts.append(item)
+        return record_dicts
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression

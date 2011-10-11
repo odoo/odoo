@@ -27,15 +27,16 @@ class TestO2MSerialization(unittest2.TestCase):
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', []))
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
+            self.cr, UID, 'address', [])
 
         self.assertEqual(results, [])
 
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address',
-            map(CREATE, [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}])))
+            map(CREATE, [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]))
         self.assertEqual(results, [
             {'foo': 'bar'},
             {'foo': 'baz'},
@@ -51,7 +52,8 @@ class TestO2MSerialization(unittest2.TestCase):
         ]
         commands = map(LINK_TO, ids)
 
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', commands, ['name']))
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
+            self.cr, UID, 'address', commands, ['name'])
 
         self.assertEqual(results, [
             {'id': ids[0], 'name': 'foo'},
@@ -67,7 +69,8 @@ class TestO2MSerialization(unittest2.TestCase):
             self.address.create(self.cr, UID, {'name': 'baz'})
         ]
 
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(self.cr, UID, 'address', ids, ['name']))
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
+            self.cr, UID, 'address', ids, ['name'])
 
         self.assertEqual(results, [
             {'id': ids[0], 'name': 'foo'},
@@ -81,12 +84,12 @@ class TestO2MSerialization(unittest2.TestCase):
         id_bar = self.address.create(self.cr, UID, {'name': 'bar'})
         id_baz = self.address.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address', [
                 LINK_TO(id_foo),
                 UPDATE(id_bar, {'name': 'qux', 'city': 'tagtag'}),
                 UPDATE(id_baz, {'name': 'quux'})
-            ], ['name', 'city']))
+            ], ['name', 'city'])
 
         self.assertEqual(results, [
             {'id': id_foo, 'name': 'foo', 'city': False},
@@ -100,7 +103,7 @@ class TestO2MSerialization(unittest2.TestCase):
             for name in ['NObar', 'baz', 'qux', 'NOquux', 'NOcorge', 'garply']
         ]
 
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
             self.cr, UID, 'address', [
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),
@@ -110,7 +113,7 @@ class TestO2MSerialization(unittest2.TestCase):
                 UPDATE(ids[4], {'name': 'corge'}),
                 CREATE({'name': 'grault'}),
                 LINK_TO(ids[5])
-            ], ['name']))
+            ], ['name'])
 
         self.assertEqual(results, [
             {'name': 'foo'},
@@ -132,8 +135,8 @@ class TestO2MSerialization(unittest2.TestCase):
         ]
         commands = map(lambda id: (4, id), ids)
 
-        results = list(self.partner.resolve_o2m_commands_to_record_dicts(
-            self.cr, UID, 'address', commands, ['name']))
+        results = self.partner.resolve_o2m_commands_to_record_dicts(
+            self.cr, UID, 'address', commands, ['name'])
 
         self.assertEqual(results, [
             {'id': ids[0], 'name': 'foo'},
@@ -145,8 +148,8 @@ class TestO2MSerialization(unittest2.TestCase):
         "DELETE_ALL can appear as a singleton"
 
         try:
-            list(self.partner.resolve_o2m_commands_to_record_dicts(
-                self.cr, UID, 'address', [(5,)], ['name']))
+            self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [(5,)], ['name'])
         except AssertionError:
             # 5 should fail with an assert error, but not e.g. a ValueError
             pass
@@ -155,18 +158,18 @@ class TestO2MSerialization(unittest2.TestCase):
         "Commands with uncertain semantics in this context should be forbidden"
 
         with self.assertRaises(AssertionError):
-            list(self.partner.resolve_o2m_commands_to_record_dicts(
-                self.cr, UID, 'address', [DELETE(42)], ['name']))
+            self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [DELETE(42)], ['name'])
 
         with self.assertRaises(AssertionError):
-            list(self.partner.resolve_o2m_commands_to_record_dicts(
-                self.cr, UID, 'address', [FORGET(42)], ['name']))
+            self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [FORGET(42)], ['name'])
 
         with self.assertRaises(AssertionError):
-            list(self.partner.resolve_o2m_commands_to_record_dicts(
-                self.cr, UID, 'address', [DELETE_ALL()], ['name']))
+            self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [DELETE_ALL()], ['name'])
 
         with self.assertRaises(AssertionError):
-            list(self.partner.resolve_o2m_commands_to_record_dicts(
-                self.cr, UID, 'address', [REPLACE_WITH([42])], ['name']))
+            self.partner.resolve_o2m_commands_to_record_dicts(
+                self.cr, UID, 'address', [REPLACE_WITH([42])], ['name'])
 
