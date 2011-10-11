@@ -1175,8 +1175,7 @@ class BaseModel(object):
         return {'datas': datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """
-        Import given data in given module
+        """Import given data in given module
 
         This method is used when importing data via client menu.
 
@@ -1191,21 +1190,26 @@ class BaseModel(object):
             order_line/product_uom_qty,
             order_line/product_uom/id    (=xml_id)
 
-        This method returns a 4-tuple with the following structure:
+        This method returns a 4-tuple with the following structure::
 
-        * The first item is a return code, it returns either ``-1`` in case o
+            (return_code, errored_resource, error_message, unused)
 
-        :param cr: database cursor
-        :param uid: current user id
-        :param fields: list of fields
+        * The first item is a return code, it is ``-1`` in case of
+          import error, or the last imported row number in case of success
+        * The second item contains the record data dict that failed to import
+          in case of error, otherwise it's 0
+        * The third item contains an error message string in case of error,
+          otherwise it's 0
+        * The last item is currently unused, with no specific semantics
+
+        :param fields: list of fields to import
         :param data: data to import
         :param mode: 'init' or 'update' for record creation
         :param current_module: module name
         :param noupdate: flag for record creation
-        :param context: context arguments, like lang, time zone,
         :param filename: optional file to store partial import state for recovery
-        :returns: 4-tuple of a return code, an errored resource, an error message and ???
-        :rtype: (int, dict|0, str|0, ''|0)
+        :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
+        :rtype: (int, dict or 0, str or 0, str or 0)
         """
         if not context:
             context = {}
