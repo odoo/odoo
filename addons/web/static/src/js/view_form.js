@@ -756,6 +756,10 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         var type = {};
         if (node.tag == 'field') {
             type = this.view.fields_view.fields[node.attrs.name] || {};
+            if (node.attrs.widget == 'statusbar') {
+                // This way we can retain backward compatibility between addons and old clients
+                node.attrs.nolabel = '1';
+            }
         }
         var widget = new (this.view.registry.get_any(
                 [node.attrs.widget, type.type, node.tag])) (this.view, node);
