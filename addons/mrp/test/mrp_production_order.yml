@@ -1,9 +1,7 @@
 -
-  In order to test the manufacturing order working with procurements I will use
-  some products with different supply method and procurement method, also check
-  the bills of material for the products.
+  In order to test the manufacturing order working with procurements I will create manufacturing orders of products having different configuration and check the flow.
 -
-  I am creating one manufacturing order.
+  I am creating a manufacturing order of 5 PC1-Basic PC which has 'Assembly Basic PC' as its BOM.
 -
   !record {model: mrp.production, id: mrp_production_mo1}:
     company_id: base.main_company
@@ -11,59 +9,42 @@
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     product_id: product.product_product_pc1
-    name: MO/0123
     product_qty: 5.0
     product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
+    product_uos_qty: 5.0
 -
-  I compute the data.
+  I click on the "Compute Data" to compute work center and scheduled product.
 -
   !python {model: mrp.production}: |
     self.action_compute(cr, uid, [ref("mrp_production_mo1")])
 -
-  I confirm the order.
+  I confirm the manufacturing order for 5 PC1.
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
 -
-  I create record for changing production quantity to 6.00
+  I check there is an internal picking for this MO to bring components in Raw Materials Location.
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
+    assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
+-
+  I remembered that we have to produce 6 PC1, so I create record for wizard 'Change Qty' changing production quantity to 6.00
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
     product_qty: 6.0
 -
-  Changes the Quantity of Product.
+  I Approve change qty wizard for 6.00 PC1.
 -
   !python {model: change.production.qty}: |
     context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
-    self.default_get(cr, uid, ["product_qty"], context)
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
 -
-  I check now quantity of the production order is 6 or not.
--
-  !assert {model: mrp.production, id: mrp_production_mo1}:
-    - product_qty == 6
--
-  I am checking Procurement orders for components of PC1.
--
-  !python {model: procurement.order}: |
-    from tools.translate import _
-    production_obj = self.pool.get('mrp.production')
-    production = production_obj.browse(cr, uid, ref('mrp_production_mo1'))
-    product_ids = map(lambda x:x.product_id.id, production.move_lines)
-    proc_ids = self.search(cr, uid, [('product_id','in',product_ids)])
-    assert proc_ids, _('No Procurements!')
--
-  The scheduler runs.
+  I compute the scheduler to procure the components based on their supply method.
 -
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
       search: "[]"
--
-  I am checking Internal picking.
--
-  !python {model: stock.picking}: |
-    from tools.translate import _
-    pick_ids = self.search(cr, uid, [('type','=','internal')])
-    assert pick_ids, _('No Internal Pickings!')
 -
   I see that there is a manufacturing order for the sub product CPU_GEN with ready state and I start production of it.
 -
