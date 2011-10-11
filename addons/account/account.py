@@ -346,6 +346,52 @@ class account_account(osv.osv):
             res[account.id] = level
         return res
 
+    def _set_credit_debit(self, cr, uid, account_id, name, value, arg, context=None):
+        if context.get('config_invisible', True):
+            return True
+
+        account = self.browse(cr, uid, account_id, context=context)
+        diff = value - getattr(account,name)
+        if not diff:
+            return True
+
+        journal_obj = self.pool.get('account.journal')
+        jids = journal_obj.search(cr, uid, [('type','=','situation'),('centralisation','=',1),('company_id','=',account.company_id.id)], context=context)
+        if not jids:
+            raise osv.except_osv(_('Error!'),_("You need an Opening journal with centralisation checked to set the initial balance!"))
+
+        period_obj = self.pool.get('account.period')
+        pids = period_obj.search(cr, uid, [('special','=',True),('company_id','=',account.company_id.id)], context=context)
+        if not pids:
+            raise osv.except_osv(_('Error!'),_("No opening/closing period defined, please create one to set the initial balance!"))
+
+        move_obj = self.pool.get('account.move.line')
+        move_id = move_obj.search(cr, uid, [
+            ('journal_id','=',jids[0]), 
+            ('period_id','=',pids[0]), 
+            ('account_id','=', account_id),
+            (name,'>', 0.0),
+            ('name','=', _('Opening Balance'))
+        ], context=context)
+        if move_id:
+            move = move_obj.browse(cr, uid, move_id[0], context=context)
+            move_obj.write(cr, uid, move_id[0], {
+                name: diff+getattr(move,name)
+            }, context=context)
+        else:
+            if diff<0.0:
+                raise osv.except_osv(_('Error!'),_("Unable to adapt the initial balance (negative value)!"))
+            nameinv = (name=='credit' and 'debit') or 'credit'
+            move_id = move_obj.create(cr, uid, {
+                'name': _('Opening Balance'),
+                'account_id': account_id,
+                'journal_id': jids[0],
+                'period_id': pids[0],
+                name: diff,
+                nameinv: 0.0
+            }, context=context)
+        return True
+
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'currency_id': fields.many2one('res.currency', 'Secondary Currency', help="Forces all moves for this account to have this secondary currency."),
@@ -370,9 +416,9 @@ class account_account(osv.osv):
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, type='many2many', relation="account.account", string="Child Accounts"),
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
-        'credit': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
-        'debit': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
-        'reconcile': fields.boolean('Reconcile', help="Check this if the user is allowed to reconcile entries in this account."),
+        'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
+        'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
+        'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
@@ -2720,7 +2766,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
-        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Bank Accounts', required=True),
+        'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
         'code_digits':fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"),
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
         "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
@@ -2768,7 +2814,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def _get_default_accounts(self, cr, uid, context=None):
         return [
-            {'acc_name': _('Bank Account'),'account_type':'bank'},
             {'acc_name': _('Cash'),'account_type':'cash'}
         ]
 

@@ -28,7 +28,7 @@ import werkzeug.urls
 import werkzeug.exceptions
 
 from openerp.modules.registry import RegistryManager
-import web.common.dispatch as openerpweb
+import web.common.http as openerpweb
 
 from openid import oidutil
 from openid.store import memstore

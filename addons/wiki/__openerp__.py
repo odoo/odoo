@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Document Management - Wiki',
+    'name': 'Collaborative Content (Wiki)',
     'version': '1.0.1',
-    'category': 'Tools',
+    'category': 'Knowledge Management',
     'complexity': "easy",
     'description': """
 The base module to manage documents(wiki).

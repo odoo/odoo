@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_confirm_install_module_form" model="ir.ui.view">
-            <field name="name">Association Application Configuration</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-              <data>
-                <xpath expr="//group[@name='association']" position="replace">
-                    <newline/>
-                    <separator  string="Associations Features" colspan="4" />
-                    <field name="project_gtd" />
-                    <field name="wiki" />
-                    <field name="event_project" />
-                    <field name="hr_expense" />
-                </xpath>
-              </data>
-            </field>
-        </record>
         <menuitem
             name="Association"
             id="base.menu_association"
