@@ -12,4 +12,3 @@ class company_pad(osv.osv):
         'pad_index': 'http://ietherpad.com/'
     }
 
-company_pad()
