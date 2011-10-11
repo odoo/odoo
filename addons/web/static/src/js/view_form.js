@@ -44,6 +44,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.translatable_fields = [];
         _.defaults(this.options, {"always_show_new_button": true,
             "not_interactible_on_create": false});
+        this.save_lock = $.Deferred().resolve();
     },
     start: function() {
         this._super();
@@ -365,42 +366,45 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     do_save: function(success, prepend_on_create) {
         var self = this;
-        if (!this.ready) {
-            return $.Deferred().reject();
-        }
-        var form_dirty = false,
-            form_invalid = false,
-            values = {},
-            first_invalid_field = null;
-        for (var f in this.fields) {
-            f = this.fields[f];
-            if (!f.is_valid()) {
-                form_invalid = true;
-                f.update_dom();
-                if (!first_invalid_field) {
-                    first_invalid_field = f;
+        var action = function() {
+            if (!self.ready) {
+                return $.Deferred().reject();
+            }
+            var form_dirty = false,
+                form_invalid = false,
+                values = {},
+                first_invalid_field = null;
+            for (var f in self.fields) {
+                f = self.fields[f];
+                if (!f.is_valid()) {
+                    form_invalid = true;
+                    f.update_dom();
+                    if (!first_invalid_field) {
+                        first_invalid_field = f;
+                    }
+                } else if (f.is_dirty()) {
+                    form_dirty = true;
+                    values[f.name] = f.get_value();
                 }
-            } else if (f.is_dirty()) {
-                form_dirty = true;
-                values[f.name] = f.get_value();
             }
-        }
-        if (form_invalid) {
-            first_invalid_field.focus();
-            this.on_invalid();
-            return $.Deferred().reject();
-        } else {
-            console.log("About to save", values);
-            if (!this.datarecord.id) {
-                return this.dataset.create(values).pipe(function(r) {
-                    return self.on_created(r, undefined, prepend_on_create);
-                }).then(success);
+            if (form_invalid) {
+                first_invalid_field.focus();
+                self.on_invalid();
+                return $.Deferred().reject();
             } else {
-                return this.dataset.write(this.datarecord.id, values, {}).pipe(function(r) {
-                    return self.on_saved(r);
-                }).then(success);
+                console.log("About to save", values);
+                if (!self.datarecord.id) {
+                    return self.dataset.create(values).pipe(function(r) {
+                        return self.on_created(r, undefined, prepend_on_create);
+                    }).then(success);
+                } else {
+                    return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
+                        return self.on_saved(r);
+                    }).then(success);
+                }
             }
-        }
+        };
+        this.save_lock = this.save_lock.pipe(action, action);
     },
     do_save_edit: function() {
         this.do_save();

@@ -639,6 +639,10 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        if (!cached) {
+            cached = {id: id, values: {}};
+            this.cache.push(cached);
+        }
         $.extend(cached.values, record.values);
         if (dirty)
             this.on_change();
