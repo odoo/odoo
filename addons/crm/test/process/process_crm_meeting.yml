@@ -55,7 +55,7 @@
     user_ids:
       - base.user_demo
 -
-  Now inviting those people which we are registers.
+  Now inviting those people which we are registered.
 -
   !python {model: base_calendar.invite.attendee}: |
     self.do_invite(cr, uid, [ref('base_calendar_invite_attendee_0')], {'active_id': ref('crm_case_initialdiscussion0'), 'model' : 'crm.meeting', 'attendee_field':'attendee_ids'})
