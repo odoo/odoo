@@ -44,6 +44,13 @@ class res_currency(osv.osv):
             else:
                 res[id] = 0
         return res
+
+    def _check_rounding(self, cr, uid, ids, context=None):
+        for currency in self.browse(cr, uid, ids, context=context):
+            if currency.rounding == 0.0:
+                return False
+        return True
+
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -63,9 +70,12 @@ class res_currency(osv.osv):
     }
     _defaults = {
         'active': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c),
+        'rounding': 0.01,
     }
     _order = "name"
+
+    _constraints = [(_check_rounding, "The rounding factor cannot be 0 !", ['rounding'])]
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
