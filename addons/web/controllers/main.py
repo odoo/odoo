@@ -5,6 +5,7 @@ import base64
 import csv
 import glob
 import itertools
+import logging
 import operator
 import os
 import re
@@ -20,6 +21,8 @@ import babel.messages.pofile
 
 import web.common
 openerpweb = web.common.http
+
+_logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -263,7 +266,13 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
-        req.session.login(db, login, password)
+        wsgienv = req.httprequest.environ
+        env = dict(
+            host='%s://%s' % (wsgienv['wsgi.url_scheme'], wsgienv['HTTP_HOST']),
+            referrer=wsgienv.get('HTTP_REFERER'),
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+        )
+        req.session.login(db, login, password, env)
         ctx = req.session.get_context() if req.session._uid else {}
 
         return {
