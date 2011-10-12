@@ -1887,6 +1887,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this._super(view, node);
         this.is_started = $.Deferred();
         this.form_last_update = $.Deferred();
+        this.init_form_last_update = this.form_last_update;
         this.disable_utility_classes = true;
     },
     start: function() {
@@ -1928,7 +1929,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             form: 'openerp.web.form.One2ManyFormView'
         });
         var once = $.Deferred().then(function() {
-            self.form_last_update.resolve();
+            self.init_form_last_update.resolve();
         });
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
