@@ -49,12 +49,18 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         };
         this.ready  = $.Deferred.queue().then(function () {
-            self.required_fields = _(self.fields).chain()
+            self.required_default_fields = _(self.fields).chain()
                 .filter(function (field) { return field.required; })
-                .pluck('name')
+                .pluck('id')
                 .value();
-            convert_fields(self);
-            self.all_fields.sort();
+            dataset.default_get(self.required_default_fields || [], function(res) {
+                self.required_fields = _(self.fields).chain()
+                    .filter(function (field) {if( !(field.id in res)) return field.required; })
+                    .pluck('name')
+                    .value();
+                convert_fields(self);
+                self.all_fields.sort();
+            });
         });
     },
     start: function() {
