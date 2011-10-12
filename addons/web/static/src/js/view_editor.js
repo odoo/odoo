@@ -182,17 +182,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var parent_id;
             var check_list = [];
             var xpath_object = self.parse_xml(xml,result.id);
-            if (xml.tagName.toLowerCase() == "xpath" && ($(xml).attr('expr')).indexOf("//") == -1) {
+            if (xml.tagName.toLowerCase() == "xpath" ) {
                 var part_expr = _.without($(xml).attr('expr').split("/"),"");
                 _.each(part_expr,function(part){
                     check_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),""));
                 });
             } else {
-                if($(xml).attr('expr')){
-                    check_list = [$.trim(($(xml).attr('expr')).replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ")];
-                }else{ 
                     check_list = [_.flatten(xpath_object[0].child_id[0].att_list)];
-                }
             }
             self.full_path_search(check_list ,one_object ,xpath_object);
         });
