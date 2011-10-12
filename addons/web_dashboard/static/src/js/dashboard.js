@@ -420,18 +420,15 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         // Check for installed application
         var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
         Installer.call('default_get', [], function (installed_modules) {
-            var installed = false;
-            _.each(installed_modules, function(v,k) {
-                if(_.startsWith(k,"cat")) {
-                   installed =installed || v;
-                }
-            });
+            var installed = _(installed_modules).any(function (active, name) {
+                return _.startsWith(name, 'cat') && active; });
+
             if(installed) {
                 self.do_display_root_menu();
             } else {
                 self.do_display_installer();
             }
-        } );
+        });
     },
     do_display_root_menu: function() {
         var self = this;
