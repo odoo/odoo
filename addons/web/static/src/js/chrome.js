@@ -823,7 +823,9 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
         }
-        ev.stopPropagation();
+        if (ev) {
+            ev.stopPropagation();
+        }
         return false;
     },
     do_menu_click: function($clicked_menu, manual) {
@@ -866,6 +868,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
                 $sub_menu.hide();
                 return true;
             }
+            return manual;
         } else {
             return true;
         }
