@@ -4598,7 +4598,7 @@ class BaseModel(object):
         :type default: dictionary
         :param context: context arguments, like lang, time zone
         :type context: dictionary
-        :return: True
+        :return: id of the newly created record
 
         """
         if context is None:
