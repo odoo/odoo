@@ -2,6 +2,11 @@ openerp.web_dashboard = function(openerp) {
 var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_dashboard/static/src/xml/web_dashboard.xml');
 
+if (!openerp.web_dashboard) {
+    /** @namespace */
+    openerp.web_dashboard = {};
+}
+
 openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -214,6 +219,8 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         });
     },
     on_load_action: function(result) {
+        var self = this;
+        var action_orig = _.extend({}, result.result);
         var action = result.result;
         action.flags = {
             search_view : false,
@@ -228,6 +235,14 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
+        am.do_action = function(action) {
+            self.do_action(action);
+        }
+        if (am.inner_viewmanager) {
+            am.inner_viewmanager.on_mode_switch.add(function(mode) {
+                self.do_action(action_orig);
+            });
+        }
     },
     render: function() {
         // We should start with three columns available
@@ -241,12 +256,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        _.each(this.action_managers, function(am) {
-            am.stop();
-        });
-        this.action_managers = [];
+        var view_manager = this.view.widget_parent,
+            action_manager = view_manager.widget_parent;
         this.view.stop();
-        this.view.start();
+        action_manager.do_action(view_manager.action);
     }
 });
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
@@ -277,20 +290,19 @@ openerp.web.form.widgets.add('hpaned', 'openerp.web.form.DashBoardLegacy');
 openerp.web.form.widgets.add('vpaned', 'openerp.web.form.DashBoardLegacy');
 openerp.web.form.widgets.add('board', 'openerp.web.form.DashBoard');
 
-openerp.web.client_actions.add(
-    'board.config.overview', 'openerp.web_dashboard.ConfigOverview'
-);
-if (!openerp.web_dashboard) {
-    /** @namespace */
-    openerp.web_dashboard = {};
-}
+/*
+ * ConfigOverview
+ * This client action designed to be used as a dashboard widget display
+ * ir.actions.todo in a fancy way
+ */
+openerp.web.client_actions.add( 'board.config.overview', 'openerp.web_dashboard.ConfigOverview');
 openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     template: 'ConfigOverview',
     init: function (parent) {
         this._super(parent);
         this.dataset = new openerp.web.DataSetSearch(
                 this, 'ir.actions.todo');
-        this.dataset.domain = [['type', '=', 'manual']];
+        this.dataset.domain = [['type', '!=', 'automatic']];
     },
     start: function () {
         this._super();
@@ -346,35 +358,152 @@ openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     }
 });
 
-openerp.web.client_actions.add(
-    'board.home.applications', 'openerp.web_dashboard.ApplicationTiles');
+/*
+ * ApplicationTiles
+ * This client action designed to be used as a dashboard widget display
+ * either a list of application to install (if none is installed yet) or
+ * a list of root menu
+ */
+openerp.web.client_actions.add( 'board.home.applications', 'openerp.web_dashboard.ApplicationTiles');
+openerp.web_dashboard.apps = {
+    applications: [
+        [
+            {
+                module: 'crm', name: 'CRM',
+                help: "Acquire leads, follow opportunities, manage prospects and phone calls, \u2026"
+            }, {
+                module: 'sale', name: 'Sales',
+                help: "Do quotations, follow sales orders, invoice and control deliveries"
+            }, {
+                module: 'account_voucher', name: 'Invoicing',
+                help: "Send invoice, track payments and reminders"
+            }, {
+                module: 'project', name: 'Projects',
+                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
+            }
+        ], [
+            {
+                module: 'purchase', name: 'Purchase',
+                help: "Do purchase orders, control invoices and reception, follow your suppliers, \u2026"
+            }, {
+                module: 'stock', name: 'Warehouse',
+                help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
+            }, {
+                module: 'hr', name: 'Human Resources',
+                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
+            }, {
+                module: 'point_of_sale', name: 'Point of Sales',
+                help: "Manage shop sales, use touch-screen POS"
+            }
+        ], [
+            {
+                module: 'profile_tools', name: 'Extra Tools',
+                help: "Track ideas, manage lunch, create surveys, share data"
+            }, {
+                module: 'mrp', name: 'Manufacturing',
+                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
+            }, {
+                module: 'marketing', name: 'Marketing',
+                help: "Manage campaigns, follow activities, automate emails, \u2026"
+            }, {
+                module: 'knowledge', name: 'Knowledge',
+                help: "Track your documents, browse your files, \u2026"
+            }
+        ]
+    ]
+};
 openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     template: 'ApplicationTiles',
     start: function () {
-        this._super();
         var self = this;
-        return new openerp.web.DataSetSearch(
-                this, 'ir.ui.menu', null, [['parent_id', '=', false]])
-            .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
-                // Create a matrix of 3*x applications
-                var rows = [];
-                while (applications.length) {
-                    rows.push(applications.splice(0, 3));
+        this._super();
+        // Check for installed application
+        var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
+        Installer.call('default_get', [], function (installed_modules) {
+            var installed = false;
+            _.each(installed_modules, function(v,k) {
+                if(_.startsWith(k,"cat")) {
+                   installed =installed || v;
                 }
-                self.$element
-                    .append(QWeb.render(
-                        'ApplicationTiles.content', {rows: rows}))
-                    .find('.oe-dashboard-home-tile')
-                        .click(function () {
-                            var $this = $(this);
-                            $this.closest('.openerp')
-                                 .find('.menu a[data-menu=' + $this.data('menuid') + ']')
-                                 .click();});
             });
+            if(installed) {
+                self.do_display_root_menu();
+            } else {
+                self.do_display_installer();
+            }
+        } );
+    },
+    do_display_root_menu: function() {
+        var self = this;
+        var dss = new openerp.web.DataSetSearch( this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+        var r = dss.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
+            // Create a matrix of 3*x applications
+            var rows = [];
+            while (applications.length) {
+                rows.push(applications.splice(0, 3));
+            }
+            var tiles = QWeb.render( 'ApplicationTiles.content', {rows: rows});
+            self.$element.append(tiles)
+                .find('.oe-dashboard-home-tile')
+                    .click(function () {
+                        var $this = $(this);
+                        $this.closest('.openerp')
+                             .find('.menu a[data-menu=' + $this.data('menuid') + ']')
+                             .click();});
+        });
+        return  r;
+    },
+    do_display_installer: function() {
+        var self = this;
+        var render_ctx = {
+            url: window.location.protocol + '//' + window.location.host + window.location.pathname,
+            session: self.session,
+            rows: openerp.web_dashboard.apps.applications
+        };
+        var installer = QWeb.render('StaticHome', render_ctx);
+        self.$element.append(installer);
+        this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
+            self.install_module($(this).val());
+        });
+    },
+    install_module: function (module_name) {
+        var self = this;
+        var Modules = new openerp.web.DataSetSearch(
+            this, 'ir.module.module', null,
+            [['name', '=', module_name], ['state', '=', 'uninstalled']]);
+        var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
+
+        $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+        Modules.read_slice(['id'], {}, function (records) {
+            if (!(records.length === 1)) { $.unblockUI(); return; }
+            Modules.call('state_update',
+                [_.pluck(records, 'id'), 'to install', ['uninstalled']],
+                function () {
+                    Upgrade.call('upgrade_module', [[]], function () {
+                        self.run_configuration_wizards();
+                    });
+                }
+            )
+        });
+    },
+    run_configuration_wizards: function () {
+        var self = this;
+        new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
+            $.unblockUI();
+            self.do_action(action, function () {
+                // TODO: less brutal reloading
+                window.location.reload(true);
+            });
+        });
     }
 });
-openerp.web.client_actions.add(
-    'board.home.widgets', 'openerp.web_dashboard.Widget');
+
+/*
+ * Widgets
+ * This client action designed to be used as a dashboard widget display
+ * the html content of a res_widget given as argument
+ */
+openerp.web.client_actions.add( 'board.home.widgets', 'openerp.web_dashboard.Widget');
 openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_dashboard.Widgets# */{
     template: 'HomeWidget',
     /**
@@ -408,4 +537,5 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
         }));
     }
 });
+
 };

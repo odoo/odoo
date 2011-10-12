@@ -55,6 +55,33 @@ _logger = logging.getLogger(__name__)
 def _getChildLogger(logger, subname):
     return logging.getLogger(logger.name + "." + subname)
 
+#----------------------------------------------------------
+# Exceptions
+# TODO openerplib should raise those instead of xmlrpc faults:
+#----------------------------------------------------------
+
+class LibException(Exception):
+    """ Base of all client lib exceptions """
+    def __init__(self,code=None,message=None):
+        self.code = code
+        self.message = message
+
+class ApplicationError(LibException):
+    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
+
+class Warning(LibException):
+    """ maps to code: 2, server side: openerp.exceptions.Warning"""
+
+class AccessError(LibException):
+    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
+
+class AccessDenied(LibException):
+    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
+
+#----------------------------------------------------------
+# Connectors
+#----------------------------------------------------------
+
 class Connector(object):
     """
     The base abstract class representing a connection to an OpenERP Server.
@@ -99,6 +126,7 @@ class XmlRPCConnector(Connector):
     def send(self, service_name, method, *args):
         url = '%s/%s' % (self.url, service_name)
         service = xmlrpclib.ServerProxy(url)
+        # TODO should try except and wrap exception into LibException
         return getattr(service, method)(*args)
 
 class NetRPC_Exception(Exception):
@@ -212,17 +240,33 @@ class LocalConnector(Connector):
 
     def send(self, service_name, method, *args):
         import openerp
-        # TODO Exception handling
-        # This will be changed to be xmlrpc compatible
-        # OpenERPWarning code 1
-        # OpenERPException code 2
+        import traceback
         try:
             result = openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except:
-            exc_type, exc_value, exc_tb = sys.exc_info()
-            fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+        except Exception,e:
+        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
+            if isinstance(e, openerp.osv.osv.except_osv):
+                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+            elif isinstance(e, openerp.exceptions.Warning):
+                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessError):
+                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessDenied):
+                fault = xmlrpclib.Fault('AccessDenied', str(e))
+            elif isinstance(e, openerp.exceptions.DeferredException):
+                info = e.traceback
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+            else:
+                info = sys.exc_info()
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
             raise fault
         return result
+
+#----------------------------------------------------------
+# Public api
+#----------------------------------------------------------
 
 class Service(object):
     """

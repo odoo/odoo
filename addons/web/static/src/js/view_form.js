@@ -44,6 +44,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.translatable_fields = [];
         _.defaults(this.options, {"always_show_new_button": true,
             "not_interactible_on_create": false});
+        this.save_lock = $.Deferred().resolve();
     },
     start: function() {
         this._super();
@@ -365,42 +366,45 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     do_save: function(success, prepend_on_create) {
         var self = this;
-        if (!this.ready) {
-            return $.Deferred().reject();
-        }
-        var form_dirty = false,
-            form_invalid = false,
-            values = {},
-            first_invalid_field = null;
-        for (var f in this.fields) {
-            f = this.fields[f];
-            if (!f.is_valid()) {
-                form_invalid = true;
-                f.update_dom();
-                if (!first_invalid_field) {
-                    first_invalid_field = f;
+        var action = function() {
+            if (!self.ready) {
+                return $.Deferred().reject();
+            }
+            var form_dirty = false,
+                form_invalid = false,
+                values = {},
+                first_invalid_field = null;
+            for (var f in self.fields) {
+                f = self.fields[f];
+                if (!f.is_valid()) {
+                    form_invalid = true;
+                    f.update_dom();
+                    if (!first_invalid_field) {
+                        first_invalid_field = f;
+                    }
+                } else if (f.is_dirty()) {
+                    form_dirty = true;
+                    values[f.name] = f.get_value();
                 }
-            } else if (f.is_dirty()) {
-                form_dirty = true;
-                values[f.name] = f.get_value();
             }
-        }
-        if (form_invalid) {
-            first_invalid_field.focus();
-            this.on_invalid();
-            return $.Deferred().reject();
-        } else {
-            console.log("About to save", values);
-            if (!this.datarecord.id) {
-                return this.dataset.create(values).pipe(function(r) {
-                    return self.on_created(r, undefined, prepend_on_create);
-                }).then(success);
+            if (form_invalid) {
+                first_invalid_field.focus();
+                self.on_invalid();
+                return $.Deferred().reject();
             } else {
-                return this.dataset.write(this.datarecord.id, values, {}).pipe(function(r) {
-                    return self.on_saved(r);
-                }).then(success);
+                console.log("About to save", values);
+                if (!self.datarecord.id) {
+                    return self.dataset.create(values).pipe(function(r) {
+                        return self.on_created(r, undefined, prepend_on_create);
+                    }).then(success);
+                } else {
+                    return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
+                        return self.on_saved(r);
+                    }).then(success);
+                }
             }
-        }
+        };
+        this.save_lock = this.save_lock.pipe(action, action);
     },
     do_save_edit: function() {
         this.do_save();
@@ -756,6 +760,10 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         var type = {};
         if (node.tag == 'field') {
             type = this.view.fields_view.fields[node.attrs.name] || {};
+            if (node.attrs.widget == 'statusbar') {
+                // This way we can retain backward compatibility between addons and old clients
+                node.attrs.nolabel = '1';
+            }
         }
         var widget = new (this.view.registry.get_any(
                 [node.attrs.widget, type.type, node.tag])) (this.view, node);
@@ -810,7 +818,7 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
             page.id = self.pages[index].element_id;
         });
         this.$element.tabs();
-        this.view.on_button_new.add_last(this.do_select_first_visible_tab);
+        this.view.on_button_new.add_first(this.do_select_first_visible_tab);
     },
     do_select_first_visible_tab: function() {
         for (var i = 0; i < this.pages.length; i++) {
@@ -2490,6 +2498,9 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
         };
         this.get_fields_values = view.get_fields_values;
         this.do_onchange = this.on_form_changed = this.on_nop;
+        this.dataset = this.view.dataset;
+        this.widgets_counter = 0;
+        this.view_id = 'reference_' + _.uniqueId();
         this.widgets = {};
         this.fields = {};
         this.selection = new openerp.web.form.FieldSelection(this, { attrs: {
@@ -2505,8 +2516,10 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
     on_nop: function() {
     },
     on_selection_changed: function() {
-        this.m2o.field.relation = this.selection.get_value();
+        var sel = this.selection.get_value();
+        this.m2o.field.relation = sel;
         this.m2o.set_value(null);
+        this.m2o.$element.toggle(sel !== false);
     },
     start: function() {
         this._super();
