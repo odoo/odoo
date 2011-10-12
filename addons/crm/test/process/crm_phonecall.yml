@@ -8,11 +8,6 @@
     partner_id: base.res_partner_tinyatwork
     planned_revenue: 0.0
     probability: 0.0
-- |
-  Business opportunity is now assigned to this phonecall.
--
-  !assert {model: crm.phonecall, id: crm_case_phone04}:
-     - opportunity_id != False
 -
   Succeed phonecall, it will be convert into on opportunity.
 -
@@ -20,15 +15,13 @@
     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_disc_openerp")], {"active_id": ref("crm_case_phone04")})
 - |
   For business And I check that the phonecall and the newly created business 
-  opportunity is linked to same  partner.
+  opportunity is linked to same  partner and also check with phonecall close or not.
 -
   !python {model: crm.phonecall}: |
     obj_phonecall = self.browse(cr, uid, ref('crm_case_phone04'))
     ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
     obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
     assert obj_phonecall.partner_id == obj_opp.partner_id, "created business opportunity is not linked to same  partner"
--
-  Completion of phonecall, Cheking for phonecall summary is close or not.
--
-  !assert {model: crm.phonecall, id: crm.crm_case_phone04, string: phonecall is held}:
-    - state == 'done'
+    assert obj_opp.stage_id.name == "New", "Converted opportunity is not in New stage"
+    assert obj_opp.stage_id.probability == 10.0, "Probability of opportunity is 10.0"
+    assert obj_phonecall.state == "done", "phonecall is held"
