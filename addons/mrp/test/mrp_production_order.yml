@@ -9,6 +9,7 @@
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     product_id: product.product_product_pc1
+    name: MO/0123
     product_qty: 5.0
     product_uom: product.product_uom_unit
     product_uos_qty: 5.0
@@ -29,12 +30,12 @@
     pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
     assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
 -
-  I remembered that we have to produce 6 PC1, so I create record for wizard 'Change Qty' changing production quantity to 6.00
+  I remembered that we have to produce 6 PC1 instead of 5.0, so I create record for wizard 'Change Qty' changing production quantity to 6.0
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
     product_qty: 6.0
 -
-  I Approve change qty wizard for 6.00 PC1.
+  I Approve change qty wizard for 6.0 PC1.
 -
   !python {model: change.production.qty}: |
     context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
@@ -50,51 +51,47 @@
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    order_ids = self.search(cr, uid, [('state','=','ready'), ('product_id', '=', ref('product.product_product_cpu_gen'))])
-    assert order_ids, _('No manufacturing order in Ready state!')
+    order_ids = self.search(cr, uid, [('state','=','ready'), ('product_id', '=', ref('product.product_product_cpu_gen')), ('origin', 'ilike', '%MO/0123%')])
+    assert order_ids, _('No manufacturing order in Ready state for CPU_GEN!')
     import netsvc
     wf_service = netsvc.LocalService("workflow")
     for order in order_ids:
         wf_service.trg_validate(uid, 'mrp.production', order, 'button_produce', cr)
 -
-  I create record for producing products with quantity 6.00.
+  Now to produce CPU_GEN, I create record of wizard 'Consume & Produce' with quantity 6.0.
 -
   !record {model: mrp.product.produce, id: mrp_product_produce0}:
-    product_qty: 6.00
+    product_qty: 6.0
     mode: 'consume_produce'
 -
-  I produce the product.
+  I confirm the production of 6.0 CPU_GEN.
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('state','=','in_production'), ('product_id', '=', ref('product.product_product_cpu_gen'))])
     self.do_produce(cr, uid, [ref('mrp_product_produce0')], context={'active_ids': prod_ids})
 -
-  Now the manufacturing order for subproduct CPU_GEN is done and manufacturing
-  order for PC1 is in ready state.
+  Component CPU_GEN is produced and now manufacturing order for PC1 is ready to produce.
 -
-  !python {model: mrp.production}: |
-    from tools.translate import _
-    prod_ids = self.search(cr, uid, [('state','=','done'), ('product_id', '=', ref('product.product_product_cpu_gen'))])
-    assert prod_ids, _('Manufacturing order for CPU_GEN is yet not done!')
+  !assert {model: mrp.production, id: mrp_production_mo1}:
+    - state == 'ready'
 -
-  I start producing the product PC1.
+  I start production of PC1.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo1}
 -
-  I create record for producing products with quantity 6.00.
+  I create record for producing products with quantity 6.0.
 -
-  !record {model: mrp.product.produce, id: mrp_product_produce1}:
-    product_qty: 6.00
+  !record {model: mrp.product.produce, id: mrp_product_produce1, context: "{'active_id': ref('mrp_production_mo1')}"}:
     mode: 'consume_produce'
 -
-  Finally my production order is done.
+  I produce the products by clicking on 'Produce'
 -
   !python {model: mrp.product.produce}: |
     context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
     self.do_produce(cr, uid, [ref('mrp_product_produce1')], context=context)
 -
-  I check now the production order for PC1 is done.
+  I check now the production order for 6.0 PC1 is done.
 -
   !assert {model: mrp.production, id: mrp_production_mo1}:
     - state == 'done'
