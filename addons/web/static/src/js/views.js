@@ -121,6 +121,9 @@ db.web.ActionManager = db.web.Widget.extend({
         if (!this.dialog && on_closed) {
             on_closed();
         }
+        if (this.dialog && action.context && action.context.active_model === 'base.module.upgrade') {
+            db.webclient.menu.reload();
+        }
         this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
