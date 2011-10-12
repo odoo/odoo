@@ -918,11 +918,6 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     on_confirmed: function() {
         var self = this;
 
-    if(this.node.attrs.context && (!f_context.__ref))
-		_.extend(this.view.dataset.context, this.view.datatarecord);
-
-
-
         return this.view.do_execute_action(
             this.node.attrs, this.view.dataset, this.view.datarecord.id, function () {
                 self.view.reload();
@@ -933,7 +928,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.check_disable();
     },
     check_disable: function() {
-        if (this.force_disabled || !this.view.is_interactible_record() || this.readonly) {
+        if (this.force_disabled || !this.view.is_interactible_record()) {
             this.$element.find("button").attr("disabled", "disabled");
             this.$element.find("button").css("color", "grey");
         } else {
