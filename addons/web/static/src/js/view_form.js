@@ -33,7 +33,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.widgets_counter = 0;
         this.fields = {};
         this.datarecord = {};
-        this.ready = false;
         this.show_invalid = true;
         this.dirty_for_user = false;
         this.default_focus_field = null;
@@ -44,7 +43,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.translatable_fields = [];
         _.defaults(this.options, {"always_show_new_button": true,
             "not_interactible_on_create": false});
-        this.save_lock = $.Deferred().resolve();
+        this.mutating_lock = $.Deferred();
+        this.initial_mutating_lock = this.mutating_lock;
         this.reload_lock = $.Deferred().resolve();
     },
     start: function() {
@@ -182,7 +182,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         }
         this.on_form_changed();
-        this.show_invalid = this.ready = true;
+        this.initial_mutating_lock.resolve();
+        this.show_invalid = true;
         this.do_update_pager(record.id == null);
         if (this.sidebar) {
             this.sidebar.attachments.do_update();
@@ -225,69 +226,78 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },
     do_onchange: function(widget, processed) {
-        processed = processed || [];
-        if (widget.node.attrs.on_change) {
-            var self = this;
-            this.ready = false;
-            var onchange = _.trim(widget.node.attrs.on_change);
-            var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-            if (call) {
-                var method = call[1], args = [];
-                var context_index = null;
-                var argument_replacement = {
-                    'False' : function() {return false;},
-                    'True' : function() {return true;},
-                    'None' : function() {return null;},
-                    'context': function(i) {
-                        context_index = i;
-                        var ctx = widget.build_context ? widget.build_context() : {};
-                        return ctx;
-                    }
-                };
-                var parent_fields = null;
-                _.each(call[2].split(','), function(a, i) {
-                    var field = _.trim(a);
-                    if (field in argument_replacement) {
-                        args.push(argument_replacement[field](i));
-                        return;
-                    } else if (self.fields[field]) {
-                        var value = self.fields[field].get_on_change_value();
-                        args.push(value == null ? false : value);
-                        return;
-                    } else {
-                        var splitted = field.split('.');
-                        if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
-                            if (parent_fields === null) {
-                                parent_fields = self.dataset.parent_view.get_fields_values();
-                            }
-                            var p_val = parent_fields[_.trim(splitted[1])];
-                            if (p_val !== undefined) {
-                                args.push(p_val == null ? false : p_val);
-                                return;
+        var self = this;
+        var act = function() {
+            try {
+            processed = processed || [];
+            if (widget.node.attrs.on_change) {
+                var onchange = _.trim(widget.node.attrs.on_change);
+                var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+                if (call) {
+                    var method = call[1], args = [];
+                    var context_index = null;
+                    var argument_replacement = {
+                        'False' : function() {return false;},
+                        'True' : function() {return true;},
+                        'None' : function() {return null;},
+                        'context': function(i) {
+                            context_index = i;
+                            var ctx = widget.build_context ? widget.build_context() : {};
+                            return ctx;
+                        }
+                    };
+                    var parent_fields = null;
+                    _.each(call[2].split(','), function(a, i) {
+                        var field = _.trim(a);
+                        if (field in argument_replacement) {
+                            args.push(argument_replacement[field](i));
+                            return;
+                        } else if (self.fields[field]) {
+                            var value = self.fields[field].get_on_change_value();
+                            args.push(value == null ? false : value);
+                            return;
+                        } else {
+                            var splitted = field.split('.');
+                            if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                                if (parent_fields === null) {
+                                    parent_fields = self.dataset.parent_view.get_fields_values();
+                                }
+                                var p_val = parent_fields[_.trim(splitted[1])];
+                                if (p_val !== undefined) {
+                                    args.push(p_val == null ? false : p_val);
+                                    return;
+                                }
                             }
                         }
-                    }
-                    throw "Could not get field with name '" + field +
-                        "' for onchange '" + onchange + "'";
-                });
-                var ajax = {
-                    url: '/web/dataset/call',
-                    async: false
-                };
-                return this.rpc(ajax, {
-                    model: this.dataset.model,
-                    method: method,
-                    args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args),
-                    context_id: context_index === null ? null : context_index + 1
-                }, function(response) {
-                    self.on_processed_onchange(response, processed);
-                });
-            } else {
-                console.log("Wrong on_change format", on_change);
+                        throw "Could not get field with name '" + field +
+                            "' for onchange '" + onchange + "'";
+                    });
+                    var ajax = {
+                        url: '/web/dataset/call',
+                        async: false
+                    };
+                    return self.rpc(ajax, {
+                        model: self.dataset.model,
+                        method: method,
+                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(args),
+                        context_id: context_index === null ? null : context_index + 1
+                    }).pipe(function(response) {
+                        return self.on_processed_onchange(response, processed);
+                    });
+                } else {
+                    console.log("Wrong on_change format", on_change);
+                }
             }
-        }
+            } catch(e) {
+                console.error(e);
+                return $.Deferred().reject();
+            }
+        };
+        this.mutating_lock = this.mutating_lock.pipe(act, act);
+        return this.mutating_lock;
     },
     on_processed_onchange: function(response, processed) {
+        try {
         var result = response;
         if (result.value) {
             for (var f in result.value) {
@@ -320,7 +330,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (result.domain) {
             // TODO:
         }
-        this.ready = true;
+        return $.Deferred().resolve();
+        } catch(e) {
+            console.error(e);
+            return $.Deferred().reject();
+        }
     },
     on_button_new: function() {
         var self = this;
@@ -369,9 +383,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var self = this;
         var action = function() {
             try {
-            if (!self.ready) {
-                return $.Deferred().reject();
-            }
+            if (!self.initial_mutating_lock.isResolved() && !self.initial_mutating_lock.isRejected())
+                return;
             var form_dirty = false,
                 form_invalid = false,
                 values = {},
@@ -410,8 +423,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return $.Deferred().reject();
             }
         };
-        this.save_lock = this.save_lock.pipe(action, action);
-        return this.save_lock;
+        this.mutating_lock = this.mutating_lock.pipe(action, action);
+        return this.mutating_lock;
     },
     do_save_edit: function() {
         this.do_save();
