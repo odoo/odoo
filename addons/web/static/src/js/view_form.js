@@ -405,6 +405,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         };
         this.save_lock = this.save_lock.pipe(action, action);
+        return this.save_lock;
     },
     do_save_edit: function() {
         this.do_save();
