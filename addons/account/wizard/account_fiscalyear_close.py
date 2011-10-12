@@ -69,6 +69,9 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)", (str(fy_id),))
         fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
 
+        if not fy_period_set or not fy2_period_set:
+            raise osv.except_osv(_('UserError'), _('No Periods found to generate opening entries'))
+
         period = obj_acc_period.browse(cr, uid, data[0].period_id.id, context=context)
         new_fyear = obj_acc_fiscalyear.browse(cr, uid, data[0].fy2_id.id, context=context)
         old_fyear = obj_acc_fiscalyear.browse(cr, uid, fy_id, context=context)
@@ -108,10 +111,10 @@ class account_fiscalyear_close(osv.osv_memory):
 
         #1. report of the accounts with defferal method == 'unreconciled'
         cr.execute('''
-            SELECT a.id 
+            SELECT a.id
             FROM account_account a
             LEFT JOIN account_account_type t ON (a.user_type = t.id)
-            WHERE a.active 
+            WHERE a.active
               AND a.type != 'view'
               AND t.close_method = %s''', ('unreconciled', ))
         account_ids = map(lambda x: x[0], cr.fetchall())
@@ -122,15 +125,15 @@ class account_fiscalyear_close(osv.osv_memory):
                      name, create_uid, create_date, write_uid, write_date,
                      statement_id, journal_id, currency_id, date_maturity,
                      partner_id, blocked, credit, state, debit,
-                     ref, account_id, period_id, date, move_id, amount_currency, 
-                     quantity, product_id, company_id) 
+                     ref, account_id, period_id, date, move_id, amount_currency,
+                     quantity, product_id, company_id)
                   (SELECT name, create_uid, create_date, write_uid, write_date,
                      statement_id, %s,currency_id, date_maturity, partner_id,
                      blocked, credit, 'draft', debit, ref, account_id,
                      %s, date, %s, amount_currency, quantity, product_id, company_id
                    FROM account_move_line
-                   WHERE account_id IN %s 
-                     AND ''' + query_line + ''' 
+                   WHERE account_id IN %s
+                     AND ''' + query_line + '''
                      AND reconcile_id IS NULL)''', (new_journal.id, period.id, move_id, tuple(account_ids),))
 
             #We have also to consider all move_lines that were reconciled
@@ -197,7 +200,7 @@ class account_fiscalyear_close(osv.osv_memory):
         query_1st_part = """
                 INSERT INTO account_move_line (
                      debit, credit, name, date, move_id, journal_id, period_id,
-                     account_id, currency_id, amount_currency, company_id, state) VALUES 
+                     account_id, currency_id, amount_currency, company_id, state) VALUES
         """
         query_2nd_part = ""
         query_2nd_part_args = []
@@ -207,7 +210,7 @@ class account_fiscalyear_close(osv.osv_memory):
                 cr.execute('SELECT sum(amount_currency) as balance_in_currency FROM account_move_line ' \
                         'WHERE account_id = %s ' \
                             'AND ' + query_line + ' ' \
-                            'AND currency_id = %s', (account.id, account.currency_id.id)) 
+                            'AND currency_id = %s', (account.id, account.currency_id.id))
                 balance_in_currency = cr.dictfetchone()['balance_in_currency']
 
             company_currency_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
