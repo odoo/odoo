@@ -1,0 +1,12 @@
+- |
+  Customer want to do initial discussion with us so we will arrage meeting 
+  with them and checked also confirm meeting and after cheked it will be
+  completed. 
+-
+  !python {model: crm.meeting}: |
+    self.case_open(cr, uid, [ref('crm_case_initialdiscussion0')])
+    meeting_rec = self.browse(cr, uid, ref("crm_case_initialdiscussion0"))
+    assert meeting_rec.state == 'open', "Meeting is not in confirm state"
+    self.case_close(cr, uid, [ref('crm_case_initialdiscussion0')])
+    meeting_rec_close = self.browse(cr, uid, ref("crm_case_initialdiscussion0"))
+    assert meeting_rec_close.state == 'done', "Meeting is not in done state"
