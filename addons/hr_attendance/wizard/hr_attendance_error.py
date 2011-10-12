@@ -54,7 +54,7 @@ class hr_attendance_error(osv.osv_memory):
                 emp_ids.append(rec.employee_id.id)
         data_error['emp_ids'] = emp_ids
         datas = {
-             'ids': [],
+             'ids': emp_ids,            # not used for printing the report, but necessary for testing
              'model': 'hr.employee',
              'form': data_error
         }
