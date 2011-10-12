@@ -270,13 +270,15 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     if($(this).attr('id') == getfields[i].attrs.name) {
                         if(fields[getfields[i].attrs.name].type == "date") {
                             $("#"+getfields[i].attrs.name).datepicker();
-                        }else if(fields[getfields[i].attrs.name].type == "datetime") {
+                        }else if(fields[getfields[i].attrs.name].type == "datetime" || fields[getfields[i].attrs.name].type == "time") {
                             $("#"+getfields[i].attrs.name).datetimepicker();
                         }
                         // Temp: Set as disabled
                         $("#"+getfields[i].attrs.name).attr('disabled', 'true');
-                        var dateresult = openerp.web.format_value(data[getfields[i].attrs.name], {"widget": result.fields[getfields[i].attrs.name].type});
-                        $(this).val(dateresult);
+                        if(result.fields[getfields[i].attrs.name]){
+                            var dateresult = openerp.web.format_value(data[getfields[i].attrs.name], {"widget": result.fields[getfields[i].attrs.name].type});
+                            $(this).val(dateresult);
+                        }
                     }
                 });
                 // Temp: Selection set as disabled
