@@ -467,7 +467,7 @@ class mrp_production(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-
+        'user_id':fields.many2one('res.users', 'Responsible'),
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
