@@ -1056,7 +1056,7 @@ class account_bank_statement_line(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
                 diff = abs(obj.amount) - obj.voucher_id.amount
-                if not self.pool.get('res.currency').is_zero(cr, uid, obj.voucher_id.currency_id, diff):
+                if not self.pool.get('res.currency').is_zero(cr, uid, obj.statement_id.currency, diff):
                     return False
         return True
 
