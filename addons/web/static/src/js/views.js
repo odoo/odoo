@@ -68,9 +68,11 @@ db.web.ActionManager = db.web.Widget.extend({
     },
     on_url_hashchange: function(url) {
         var self = this;
-        self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
-                self.do_action(result.result);
-            });
+        if(url && url.action_id) {
+            self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
+                    self.do_action(result.result);
+                });
+        }
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -771,7 +773,9 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            return self.widget_parent.on_action_executed.apply(null, arguments);
+            if (self.widget_parent && self.widget_parent.on_action_executed) {
+                return self.widget_parent.on_action_executed.apply(null, arguments);
+            }
         };
         var handler = function (r) {
             var action = r.result;

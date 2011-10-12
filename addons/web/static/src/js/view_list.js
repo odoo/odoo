@@ -1151,7 +1151,8 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
 
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit };
-        dataset.read_slice(fields, options , function (records) {
+        //TODO xmo: investigate why we need to put the setTimeout
+        setTimeout(function() {dataset.read_slice(fields, options , function (records) {
             if (!self.datagroup.openable) {
                 view.configure_pager(dataset);
             } else {
@@ -1170,7 +1171,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
             self.records.add(records, {silent: true});
             list.render();
             d.resolve(list);
-        });
+        });}, 0);
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {

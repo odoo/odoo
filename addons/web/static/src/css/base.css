@@ -300,7 +300,7 @@ label.error {
     text-shadow: 0 1px 0 #333;
     text-align: center;
     font-size: 18px;
-    line-height: 14px;
+    line-height: 18px;
     right: 0;
 }
 .openerp .secondary_menu.oe_folded .oe_toggle_secondary_menu {
@@ -325,6 +325,7 @@ label.error {
     background: #5A5858;
     vertical-align: top;
     height: 100%;
+    display: block;
     position: relative;
 }
 .openerp .secondary_menu.oe_folded {
@@ -721,11 +722,15 @@ label.error {
 .openerp .oe-listview .oe-field-cell {
     cursor: pointer;
 }
+.openerp .oe-listview .oe-field-cell progress {
+    width: 100%;
+}
 .openerp .oe-listview .oe-field-cell button {
+    margin: 0;
     padding: 0;
     border: none;
     background: none;
-    width: 100%;
+    width: 16px;
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
@@ -766,6 +771,10 @@ label.error {
 }
 .openerp .oe-listview .oe-list-footer span {
     margin: 0 1em;
+}
+.openerp .oe-listview .oe-list-footer progress {
+    vertical-align:-10% !important;
+    width: 100%;
 }
 
 /** list rounded corners
@@ -828,6 +837,9 @@ label.error {
 }
 
 /* Form */
+.openerp .oe_frame.oe_forms {
+    clear: both;
+}
 .openerp table.oe_frame td {
     color: #4c4c4c;
 }

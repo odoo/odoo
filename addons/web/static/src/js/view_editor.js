@@ -65,7 +65,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         obj.child_id = [];
         obj.id = this.xml_id++;
         obj.level = level+1;
-        obj.att_list = [];
         var render_name = "<" + tag;
         obj.att_list = [];
         obj.att_list.push(tag);

@@ -7,17 +7,34 @@
 }
 .openerp .oe-dashboard-action {
     margin: 0 0.5em 0.5em 0;
-    padding: 2px;
-}
-.openerp .oe-dashboard-action:hover {
-    border: 1px dashed #ccc;
-    padding: 1px;
+    padding: 0px;
+    background-color: white;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
 }
 
 .openerp .oe-dashboard-action .oe-dashboard-action-header {
-    font-size: 125%;
+    font-size: 85%;
     font-weight: bold;
+    text-transform: uppercase;
+    text-indent: 10px;
+    vertical-align: center;
+    border-bottom: 1px solid #e5e5e5;
+    background: white url("/web/static/src/img/box-a-header-a.gif") 0% 0% repeat-x;
 }
+
+.openerp h2.oe-dashboard-action-header {
+    margin: 0;
+    padding:4px 4px;
+    -moz-border-radius-topleft: 3px;
+    -webkit-border-top-left-radius: 3px;
+    border-top-left-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    -webkit-border-top-right-radius: 3px;
+    border-top-right-radius: 3px;
+}
+
 .openerp a.oe-dashboard-action-rename {
     float: left;
     padding-right: 4px;
@@ -55,6 +72,12 @@
 
 .openerp .oe-dashboard .ui-sortable-placeholder * {
     visibility: hidden;
+}
+
+/* Base overwriting */
+.openerp .oe-dashboard .oe-listview-content, .openerp .oe-dashboard .ui-widget-header {
+    border:none !important;
+    padding:0px 3px;
 }
 
 /* Layouts */
@@ -234,6 +257,46 @@
 .openerp .oe-dashboard-action .view-manager-main-content {
     padding: 2px;
 }
-.openerp .oe-dashboard-action-header .ui-icon, .openerp .oe-dashboard-action-header .oe-dashboard-action-rename {
-    display: none;
+
+.oe-static-home {
+    padding: 0.5em 0.5em;
+    text-align: center;
+}
+.oe-static-home h1 {
+    margin: 0 0 0.3em
+}
+.oe-static-home-banner {
+    display: inline-block;
+    margin:  auto 0;
+    padding: 0.5em 5em;
+    text-align: left;
+}
+.oe-static-home-banner li {
+    font-size: 150%;
+    font-weight: bold;
+}
+.oe-static-home address {
+    font-style: normal;
+    padding-left: 2em;
+}
+
+.oe-static-home-tiles {
+    text-align: left;
+}
+.oe-static-home-tiles td {
+    vertical-align: top;
+}
+.oe-static-home-tile {
+    margin: 0.5em;
+    padding: 0 1em;
+}
+.oe-static-home-tile-logo {
+    margin-right: 0.5em;
+}
+.oe-static-home-tile-text h2 {
+    margin-top: 0;
+    margin-bottom: 0.2em;
+}
+.oe-static-home-tile-text p {
+    margin: 0.5em 0;
 }
