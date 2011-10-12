@@ -122,7 +122,7 @@ Creates a dashboard for CRM that includes:
             'test/process/crm_lead_open.yml',
             'test/process/crm_lead_to_opportunity.yml',
             'test/process/cancle_crm_lead.yml',
-            'test/process/process_crm_meeting.yml',
+            'test/process/crm_meeting.yml',
             'test/test_crm_opportunity.yml',
             'test/process/process_crm_phonecall.yml',
             'test/test_crm_recurrent_meeting.yml',
