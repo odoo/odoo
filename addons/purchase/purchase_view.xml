@@ -278,7 +278,7 @@
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
                     <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
                     <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
-                    <filter icon="terp-accessories-archiver+" string="Purchased" domain="[('state','=','done')]" help="Purchased orders"/>
+                    <filter icon="terp-accessories-archiver+" string="Purchased" domain="[('state','=','done')]" help="Purchase orders which are in the done state."/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase orders which are in the exception state"/>
                     <separator orientation="vertical"/>
