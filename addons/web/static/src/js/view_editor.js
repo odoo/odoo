@@ -90,7 +90,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         return obj;
     },
 
-    save_object : function(val, parent_list, child_obj_list) {
+    save_object: function(val, parent_list, child_obj_list) {
         var self = this;
         var check_id = parent_list[0];
         var p_list = parent_list.slice(1);
@@ -110,27 +110,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
     },
 
-    children_function: function(xml, root, parent_list, parent_id, main_object){
+    xml_node_create: function(xml, root, parent_list, parent_id, main_object){
         var self = this;
         var child_obj_list = [];
         var children_list = $(xml).filter(root).children();
         var parents = $(children_list[0]).parents().get();
         _.each(children_list, function (child_node) {
-            var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
-            child_obj_list.push(string);
+            child_obj_list.push(self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length));
         });
         if (children_list.length != 0) {
-            var parents = $(children_list[0]).parents().get();
             if (parents.length <= parent_list.length) {
                 parent_list.splice(parents.length - 1);
             }
             parent_list.push(parent_id);
-            _.each(main_object, function (val, key) {
-                self.save_object(val, parent_list.slice(1), child_obj_list);
-            });
+            self.save_object(main_object[0], parent_list.slice(1), child_obj_list);
         }
-        for (var i=0;i<children_list.length;i++) {
-            self.children_function
+        for (var i=0; i<children_list.length; i++) {
+            self.xml_node_create
             (children_list[i], children_list[i].tagName.toLowerCase(),
                 parent_list, child_obj_list[i].id, main_object);
         }
@@ -141,18 +137,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
-        var obj = new Object();
-        obj.child_id = [];
-        obj.id = this.xml_id++;
-        obj.level = 0;
-        obj.att_list = [];
-        obj.name = "<view view_id='"+view_id+"'>"
+        var obj ={'child_id':[],'id':this.xml_id++,'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
         var root_object = self.check_attr(root,tag,0);
-        f_obj = self.children_function(arch, tag, [], this.xml_id-1, [root_object], [])        
-        obj.child_id.push( f_obj[0] );
-        f_obj.pop();    
-        f_obj.push(obj);
-        return f_obj;
+        obj.child_id = self.xml_node_create(arch, tag, [], this.xml_id-1, [root_object], [])
+        return [obj];
     },
 
     get_data: function() {
@@ -186,8 +174,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var root = $(result.arch).filter('*');
         var xml_list = [];
-        var xpath_object ;
-        var part_expr = [];
         if (root[0].tagName.toLowerCase() == "data") {
             xml_list = $(root[0]).children();
         } else {
@@ -196,94 +182,75 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         _.each(xml_list , function(xml){
             var parent_id;
             var check_list = [];
+            var xpath_object = self.parse_xml(xml,result.id);
             if (xml.tagName.toLowerCase() == "xpath" && ($(xml).attr('expr')).indexOf("//") == -1) {
                 var part_expr = _.without($(xml).attr('expr').split("/"),"");
-                xpath_object = self.parse_xml(xml,result.id);
                 _.each(part_expr,function(part){
                     check_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),""));
                 });
-                self.full_path_search(check_list ,one_object[0].child_id ,xpath_object);
             } else {
-                xpath_object = self.parse_xml(xml,result.id);
                 if($(xml).attr('expr')){
-                    check_list = $.trim(($(xml).attr('expr')).replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
+                    check_list = [$.trim(($(xml).attr('expr')).replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ")];
                 }else{ 
-                    check_list = _.flatten(xpath_object[0].child_id[0].att_list);
+                    check_list = [_.flatten(xpath_object[0].child_id[0].att_list)];
                 }
-                
-                self.full_path_search(check_list ,one_object ,xpath_object);
-                
             }
+            self.full_path_search(check_list ,one_object ,xpath_object);
         });
     },
     full_path_search: function(check_list ,val ,xpath_object) {
         var self = this;
-        var obj;
         if(xpath_object.length!=0){
-        var check = check_list[0];
-        
-        if(check.length == 2){
-            var int_val = parseInt(check[1]);
-            if(int_val){
+            var check = check_list[0];
+            var obj;
+            if(check.length == 2){
+                if(parseInt(check[1])){
+                    var list_1 = _.select(val,function(element){
+                        var main_list = _.flatten(element.att_list);
+                        return _.include(main_list, check[0]);
+                    });
+                    obj = val[_.indexOf(val,list_1[parseInt(check[1])-1])];
+                } else {
+                    obj = _.detect(val, function(element){
+                        var main_list = _.flatten(element.att_list);
+                        return _.include(main_list, check[0]);
+                    });
+                }
+            }else if(check.length == 3){
+                obj = _.detect(val,function(element){
+                    var main_list = _.flatten(element.att_list);
+                    check = _.uniq(check);
+                    var insert = _.intersection(main_list,check);
+                    if(insert.length == check.length ){return element;}
+                });
+            }else{
                 var list_1 = _.select(val,function(element){
                     var main_list = _.flatten(element.att_list);
                     return _.include(main_list, check[0]);
                 });
-                obj = val[_.indexOf(val,list_1[int_val-1])];
-            }else{
-                obj = _.detect(val,function(element){
-                    var main_list = _.flatten(element.att_list);
-                    return _.include(main_list, check[0]);
-                });
+                if(list_1 != 0){
+                    if(check_list.length == 1){
+                        obj = list_1[0];
+                    }else{
+                        check_list.shift();
+                    }
+                }
             }
-        }else{
-           obj = _.detect(val,function(element){
-                var main_list = _.flatten(element.att_list);
-                check = _.uniq(check);
-                var insert = _.intersection(main_list,check);
-                if(insert.length == check.length ){return element;}
-            });
-        }
-        if(obj){
-            check_list.shift();
-            if (check_list.length !=0){
-                self.full_path_search(check_list ,obj.child_id ,xpath_object);
-            }else{
-                
+            if(obj){
+                check_list.shift();
+                if (check_list.length !=0){
+                    self.full_path_search(check_list ,obj.child_id ,xpath_object);
+                }else{  
                     var level = obj.level+1;
-                    $.each(xpath_object, function(key, val) {
-                        self.increase_level(val, level)
-                    });
+                    self.increase_level(xpath_object[0], level)
                     obj.child_id.push(xpath_object[0]);
                     xpath_object.pop();
-                    console.log("check",check,obj)
+                    return;
+                }
             }
-            return obj;
-        }else{
-            _.each(val,function(element){
+            else {
+                _.each(val,function(element){
                 self.full_path_search(check_list ,element.child_id ,xpath_object);
-            });
-        }
-     }
-    },
-
-    search_object : function(val ,list , xpath_object){
-        var self = this;
-        if(xpath_object.length != 0){
-            var main_list = _.flatten(val.att_list);
-            list = _.uniq(list);
-            var insert = _.intersection(main_list,list);
-            if(insert.length == list.length ){
-                var level = val.level+1;
-                $.each(xpath_object, function(key, val) {
-                    self.increase_level(val, level)
-                });
-                val.child_id.push(xpath_object[0]);
-                xpath_object.pop();
-                return;
-            }else{
-                $.each(val.child_id, function(key, val) {
-                   self.search_object(val, list, xpath_object);
                 });
             }
         }
