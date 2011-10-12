@@ -181,51 +181,14 @@ class WebKitParser(report_sxw):
         os.unlink(out)
         return pdf
 
-
-    def setLang(self, lang):
-        if not lang:
-            lang = 'en_US'
-        self.localcontext['lang'] = lang
-
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         self.name, 'report', self.localcontext.get('lang', 'en_US'), src)
+                                         self.name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
-
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
-        """format using the know cursor, language from localcontext"""
-        if digits is None:
-            digits = self.parser_instance.get_digits(value)
-        if isinstance(value, (str, unicode)) and not value:
-            return ''
-        pool_lang = self.pool.get('res.lang')
-        lang = self.localcontext['lang']
-
-        lang_ids = pool_lang.search(self.parser_instance.cr, self.parser_instance.uid, [('code','=',lang)])[0]
-        lang_obj = pool_lang.browse(self.parser_instance.cr, self.parser_instance.uid, lang_ids)
-
-        if date or date_time:
-            if not str(value):
-                return ''
-
-            date_format = lang_obj.date_format
-            parse_format = '%Y-%m-%d'
-            if date_time:
-                value=value.split('.')[0]
-                date_format = date_format + " " + lang_obj.time_format
-                parse_format = '%Y-%m-%d %H:%M:%S'
-            if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value, parse_format))
-
-            else:
-                date = datetime(*value.timetuple()[:6])
-            return date.strftime(date_format)
-
-        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
 
     # override needed to keep the attachments storing procedure
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
