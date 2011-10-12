@@ -1,0 +1,10 @@
+-
+  Communication by phonecall or mail I got lead from Customer/partner, I test to created lead in initial stage.
+-
+   !python {model: crm.lead}: |
+     self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
+- |
+  In order to test lead, i will test lead is in open stage.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
+     - state == "open"
