@@ -522,38 +522,38 @@ db.web.Sidebar = db.web.Widget.extend({
     },
 
     add_default_sections: function() {
-        this.add_section('Customize', 'customize');
+        this.add_section(_t('Customize'), 'customize');
         this.add_items('customize', [
             {
-                label: "Manage Views",
+                label: _t("Manage Views"),
                 callback: this.call_default_on_sidebar,
-                title: "Manage views of the current object"
+                title: _t("Manage views of the current object"),
             }, {
-                label: "Edit Workflow",
+                label: _t("Edit Workflow"),
                 callback: this.call_default_on_sidebar,
-                title: "Manage views of the current object",
+                title: _t("Manage views of the current object"),
                 classname: 'oe_hide oe_sidebar_edit_workflow'
             }, {
-                label: "Customize Object",
+                label: _t("Customize Object"),
                 callback: this.call_default_on_sidebar,
-                title: "Manage views of the current object"
+                title: _t("Manage views of the current object"),
             }
         ]);
 
-        this.add_section('Other Options', 'other');
+        this.add_section(_t('Other Options'), 'other');
         this.add_items('other', [ 
             {
-                label: "Import",
+                label: _t("Import"),
                 callback: this.call_default_on_sidebar,
             }, {
-                label: "Export",
+                label: _t("Export"),
                 callback: this.call_default_on_sidebar,
             }, {
-                label: "Translate",
+                label: _t("Translate"),
                 callback: this.call_default_on_sidebar,
                 classname: 'oe_sidebar_translate oe_hide'
             }, {
-                label: "View Log",
+                label: _t("View Log"),
                 callback: this.call_default_on_sidebar,
                 classname: 'oe_hide oe_sidebar_view_log'
             }
@@ -562,7 +562,7 @@ db.web.Sidebar = db.web.Widget.extend({
 
     add_toolbar: function(toolbar) {
         var self = this;
-        _.each([['print', "Reports"], ['action', "Actions"], ['relate', "Links"]], function(type) {
+        _.each([['print', _t("Reports")], ['action', _t("Actions")], ['relate', _t("Links")]], function(type) {
             var items = toolbar[type[0]];
             if (items.length) {
                 for (var i = 0; i < items.length; i++) {
