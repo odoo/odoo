@@ -542,7 +542,7 @@ openerp.web.form = {};
 
 openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
     init: function(parent, form_view) {
-        var $section = parent.add_section('Attachments');
+        var $section = parent.add_section(_t('Attachments'), 'attachments');
         this.$div = $('<div class="oe-sidebar-attachments"></div>');
         $section.append(this.$div);
 

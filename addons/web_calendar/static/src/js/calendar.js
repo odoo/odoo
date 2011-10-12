@@ -363,7 +363,7 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
 
 openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
     init: function(parent, view) {
-        var $section = parent.add_section('Responsible');
+        var $section = parent.add_section(_t('Responsible'), 'responsible');
         this.$div = $('<div></div>');
         $section.append(this.$div);
         this._super(parent, $section.attr('id'));
@@ -392,7 +392,7 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
 
 openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
     init: function(parent, view) {
-        var $section = parent.add_section('Navigator');
+        var $section = parent.add_section(_t('Navigator'), 'navigator');
         this._super(parent, $section.attr('id'));
         this.view = view;
     },
