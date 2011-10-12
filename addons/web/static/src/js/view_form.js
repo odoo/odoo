@@ -45,6 +45,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             "not_interactible_on_create": false});
         this.mutating_lock = $.Deferred();
         this.initial_mutating_lock = this.mutating_lock;
+        this.on_change_lock = $.Deferred().resolve();
         this.reload_lock = $.Deferred().resolve();
     },
     start: function() {
@@ -293,8 +294,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return $.Deferred().reject();
             }
         };
-        this.mutating_lock = this.mutating_lock.pipe(act, act);
-        return this.mutating_lock;
+        this.on_change_lock = this.on_change_lock.pipe(act, act);
+        return this.on_change_lock;
     },
     on_processed_onchange: function(response, processed) {
         try {
@@ -2055,9 +2056,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
                 var res = $.when(view.do_save());
-                if (!res.isResolved() && !res.isRejected()) {
-                    throw "Asynchronous get_value() is not supported in form view.";
-                }
+                // it seems line there are some cases when this happens
+                /*if (!res.isResolved() && !res.isRejected()) {
+                    console.warn("Asynchronous get_value() is not supported in form view.");
+                }*/
                 return res;
             }
         }
