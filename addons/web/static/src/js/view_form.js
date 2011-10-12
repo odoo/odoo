@@ -509,7 +509,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     get_fields_values: function() {
         var values = {};
         _.each(this.fields, function(value, key) {
-            value.is_dirty();
             var val = value.get_value();
             values[key] = val;
         });
