@@ -423,8 +423,10 @@ class users(osv.osv):
             return False
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('UPDATE res_users SET date=now() WHERE login=%s AND password=%s AND active RETURNING id',
-                    (tools.ustr(login), tools.ustr(password)))
+            cr.execute("""UPDATE res_users
+                            SET date = now() AT TIME ZONE 'UTC'
+                            WHERE login=%s AND password=%s AND active RETURNING id""",
+                       (tools.ustr(login), tools.ustr(password)))
             res = cr.fetchone()
             cr.commit()
             if res:
