@@ -7,7 +7,7 @@
     company_id: base.main_company
     date_order: !eval time.strftime('%Y-%m-%d')
     invoice_method: order
-    location_id: stock.stock_location_stock
+    location_id: stock.stock_location_suppliers
     order_line:
       - date_planned: !eval time.strftime('%Y-%m-%d')
         name: Metal Cleats
@@ -19,6 +19,11 @@
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
     pricelist_id: purchase.list0
+-
+  I cahnge the warehouse for PO.
+-
+  !python {model: purchase.order}: |
+    self.onchange_warehouse_id(cr, uid, [ref('purchase_order_0')],1)
 -
   I test for Copy and unlink Purchase order in Draft state.
 -
@@ -36,11 +41,16 @@
   I click on botton Dummy.
 -
   !python {model: purchase.order}: |
-    self.button_dummy(cr, uid, ref('purchase_order_0'), context=None)
+    self.button_dummy(cr, uid, [ref('purchase_order_0')], context=None)
 -
-  I cahnge the partner for PO.
+  I cahnge the partner address for PO.
 -
   !python {model: purchase.order}: |
     address_id = ref('base.res_partner_address_8')
-    self.onchange_dest_address_id(cr, uid, ref('purchase_order_0'), address_id) 
-          
+    self.onchange_dest_address_id(cr, uid, [ref('purchase_order_0')], address_id)
+-
+  I Warn the buyer regarding the "Purchase amount".
+-
+  !python {model: purchase.order}: |
+    self.wkf_warn_buyer(cr, uid, [ref('purchase_order_0')])
+
