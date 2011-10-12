@@ -1,0 +1,36 @@
+-
+  As the lead seems to be a real business opportunity, I will convert it to a partner
+  and a business opportunity.
+-
+   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
+      action: 'exist'
+-
+  Create opportunity based on exiting partner
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
+-
+  In order to test lead, i will test to lead is converted to opportunity.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead is not converted on opportunity}:
+    - type == 'opportunity'
+-
+  Finally, i won this lead, so i will close this lead.
+-
+  !python {model: crm.lead}: |
+    self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
+-
+  In order to test lead, it is close or not.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in done state}:
+    - state == "done"
+-
+  After won this lead probability is 100.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
+    - probability == 100.0
+-
+  In order to test stage of opportunity after win, i will test stage of opportunity.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: stage of opportunity is win}:
+    - stage_id.name == "Won"
