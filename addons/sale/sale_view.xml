@@ -223,7 +223,7 @@
                         </page>
                         <page string="History" groups="base.group_extended">
                             <separator colspan="4" string="Invoices"/>
-                            <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
+                            <field colspan="4" name="invoice_ids" nolabel="1" context="{'type':'out_invoice', 'journal_type':'sale'}"/>
                             <separator colspan="4" string="Packings"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
