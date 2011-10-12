@@ -235,7 +235,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
             else {
                 _.each(val,function(element){
-                    self.full_path_search(cKKheck_list ,element.child_id ,xpath_object);
+                    self.full_path_search(check_list ,element.child_id ,xpath_object);
                 });
             }
         }
