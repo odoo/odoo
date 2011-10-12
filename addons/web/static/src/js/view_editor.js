@@ -1,7 +1,6 @@
 openerp.web.view_editor = function(openerp) {
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
-
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id
@@ -10,12 +9,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.model = dataset.model;
         this.xml_id = 0;
     },
-
     start: function() {
         this.View_editor();
     },
-
-    View_editor : function(){
+    View_editor : function() {
         var self = this;
         var action = {
             name:'ViewEditor',
@@ -60,36 +57,33 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         action_manager.appendTo(this.dialog);
         action_manager.do_action(action);
     },
-
     check_attr: function(xml, tag, level) {
         var obj = new Object();
         obj.child_id = [];
         obj.id = this.xml_id++;
-        obj.level = level;
-        var att_list = [];
+        obj.level = level+1;
         var render_name = "<" + tag;
-        var xml_tag = "<" + tag;
+        obj.att_list = [];
+        obj.att_list.push(tag);
         $(xml).each(function() {
-            att_list = this.attributes;
-            att_list = _.select(att_list, function(attrs) {
-                xml_tag += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+            _.each(this.attributes, function(attrs){
                 if (tag != 'button') {
                     if (attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index") {
-                        render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+                        render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ;
                     }
-                } else {
-                    if (attrs.nodeName == "name") render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+                } else if (attrs.nodeName == "name") {
+                    render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+                }
+                if (attrs.nodeName != "position") {
+                    obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
                 }
             });
-            render_name += ">";
-            xml_tag += ">";
+            render_name+= ">";
         });
-        obj.main_xml = xml_tag;
         obj.name = render_name;
         return obj;
     },
-
-    save_object : function(val, parent_list, child_obj_list) {
+    save_object: function(val, parent_list, child_obj_list) {
         var self = this;
         var check_id = parent_list[0];
         var p_list = parent_list.slice(1);
@@ -108,47 +102,37 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             val.child_id = child_obj_list;
         }
     },
-
-    children_function : function(xml, root, parent_list, parent_id, main_object, parent_child_id) {
+    xml_node_create: function(xml, root, parent_list, parent_id, main_object){
         var self = this;
         var child_obj_list = [];
-        var parent_child_id = parent_child_id;
-        var parent_list = parent_list;
-        var main_object = main_object;
         var children_list = $(xml).filter(root).children();
         var parents = $(children_list[0]).parents().get();
         _.each(children_list, function (child_node) {
-            var string = self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length);
-            child_obj_list.push(string);
+            child_obj_list.push(self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length));
         });
         if (children_list.length != 0) {
-            var child_ids = _.map(child_obj_list, function (num) { return num.id; });
-            parent_child_id.push({'key': parent_id, 'value': child_ids});
-            var parents = $(children_list[0]).parents().get();
             if (parents.length <= parent_list.length) {
                 parent_list.splice(parents.length - 1);
             }
             parent_list.push(parent_id);
-            _.each(main_object, function (val, key) {
-                self.save_object(val, parent_list.slice(1), child_obj_list);
-            });
+            self.save_object(main_object[0], parent_list.slice(1), child_obj_list);
         }
-
-        for(var i=0; i<children_list.length; i++){
-            self.children_function(children_list[i], children_list[i].tagName.toLowerCase(),
-                parent_list,child_obj_list[i].id, main_object,parent_child_id);
+        for (var i=0; i<children_list.length; i++) {
+            self.xml_node_create
+            (children_list[i], children_list[i].tagName.toLowerCase(),
+                parent_list, child_obj_list[i].id, main_object);
         }
-        return {"main_object": main_object, "parent_child_id": parent_child_id};
+        return main_object;
     },
-
-    parse_xml :function(arch, view_id){
+    parse_xml: function(arch, view_id) {
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
-        var root_object = this.check_attr(root, tag, this.xml_id);
-        return this.children_function(arch, tag, [], this.xml_id - 1, [root_object], []);
+        var obj ={'child_id':[],'id':this.xml_id++,'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
+        var root_object = this.check_attr(root,tag,0);
+        obj.child_id = this.xml_node_create(arch, tag, [], this.xml_id-1, [root_object], [])
+        return [obj];
     },
-
-    get_data : function(){
+    get_data: function() {
         var self = this;
         var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
@@ -160,76 +144,101 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 _.each(result, function(res) {
                     self.inherit_view(one_object, res);
                 });
-                return self.edit_view(one_object);
+                return self.edit_view({"main_object": one_object,
+                         "parent_child_id": self.parent_child_list(one_object, [])});
             });
         });
     },
-    inherit_view : function(one_object, result){
+    parent_child_list : function(one_object, p_list) {
+        var self = this;
+        _.each(one_object , function(element){
+            if(element.child_id.length != 0){
+                p_list.push({"key":element.id,"value":_.pluck(element.child_id, 'id')});
+                self.parent_child_list(element.child_id, p_list);
+            }
+        });
+        return p_list;
+    },
+    inherit_view : function(one_object, result) {
         var self = this;
         var root = $(result.arch).filter('*');
-        var xpath_list = [];
-        var part_expr = [];
-        var position ;
+        var xml_list = [];
         if (root[0].tagName.toLowerCase() == "data") {
-            _.each($(root).find('xpath'), function(xpath) {
-                xpath_list.push(xpath);
-            });
-        } else if(root[0].tagName.toLowerCase() == "xpath") {
-            xpath_list.push(root[0]);
+            xml_list = $(root[0]).children();
+        } else {
+            xml_list.push(root[0]);
         }
-        _.each(xpath_list, function(element) {
-            var xpath_object = self.parse_xml(element, result.id);
-            var expr = $(element).attr('expr');
-            var position = $(element).attr('position');
-            part_expr = expr.split("/");
-            if (part_expr[0] == "" && part_expr[1] == "") {
-                 part_expr = part_expr.splice(2);
-            } else if (part_expr[0] == "" ) {
-                 part_expr = part_expr.splice(1);
-            }
-            if (part_expr[part_expr.length-1].search("@") != -1 ) {
-                var part = part_expr[part_expr.length - 1];
-                var xpath_list = $.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
-                one_object['parent_child_id'].push(xpath_object['parent_child_id'][0]);
-                _.each(one_object['main_object'], function(val, key) {
-                    var id = self.search_object(val, xpath_list, [], position, xpath_object['main_object'], []);
-                    _.detect(one_object['parent_child_id'], function(res) {
-                        if (res.key==id) {
-                            res.value.push(xpath_object['main_object'][0].id);
-                        }
-                    });
+        _.each(xml_list , function(xml){
+            var parent_id;
+            var check_list = [];
+            var xpath_object = self.parse_xml(xml,result.id);
+            if (xml.tagName.toLowerCase() == "xpath" ) {
+                var part_expr = _.without($(xml).attr('expr').split("/"),"");
+                _.each(part_expr,function(part){
+                    check_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),""));
                 });
+            } else {
+                    check_list = [_.flatten(xpath_object[0].child_id[0].att_list)];
             }
+            self.full_path_search(check_list ,one_object ,xpath_object);
         });
     },
-    search_object:function(val, list, p_list, position, xpath_object, r_list) {
+    full_path_search: function(check_list ,val ,xpath_object) {
         var self = this;
-        var return_list = r_list;
-        var main_list = $.trim(val.name.replace(/[^a-zA-Z 0-9 _]+/g,' ')).split(" ");
-        var insert = _.intersection(main_list,list);
-        var check = _.indexOf(p_list.child_id,xpath_object[0]);
-        if (check == -1) {
-            if (insert.length == list.length) {
-                var level = val.level;
-                _.each(xpath_object, function(val, key) {
-                    self.increase_level(val, level)
-                });
-                var index = _.indexOf(p_list.child_id, val);
-                if (position == "before") {
-                    if (index != 0) { index--; }
-                } else if (position == "after") {
-                    index++;
+        if(xpath_object.length!=0){
+            var check = check_list[0];
+            var obj;
+            if(check.length == 2){
+                if(parseInt(check[1])){
+                    var list_1 = _.select(val,function(element){
+                        var main_list = _.flatten(element.att_list);
+                        return _.include(main_list, check[0]);
+                    });
+                    obj = val[_.indexOf(val,list_1[parseInt(check[1])-1])];
+                } else {
+                    obj = _.detect(val, function(element){
+                        var main_list = _.flatten(element.att_list);
+                        return _.include(main_list, check[0]);
+                    });
                 }
-                p_list.child_id.splice(index, 0, xpath_object[0]);
-                return_list.push(p_list.id);
+            } else if(check.length == 3) {
+                obj = _.detect(val,function(element){
+                    var main_list = _.flatten(element.att_list);
+                    check = _.uniq(check);
+                    var insert = _.intersection(main_list,check);
+                    if(insert.length == check.length ){return element;}
+                });
             } else {
-                if (val.child_id.length != 0) { p_list = val; }
-                _.each(val.child_id, function(val, key) {
-                   self.search_object(val, list, p_list, position, xpath_object, return_list);
+                var list_1 = _.select(val,function(element){
+                    var main_list = _.flatten(element.att_list);
+                    return _.include(main_list, check[0]);
+                });
+                if(list_1 != 0){
+                    if(check_list.length == 1){
+                        obj = list_1[0];
+                    } else {
+                        check_list.shift();
+                    }
+                }
+            }
+            if(obj) {
+                check_list.shift();
+                if (check_list.length !=0){
+                    self.full_path_search(check_list ,obj.child_id ,xpath_object);
+                } else {
+                    var level = obj.level+1;
+                    self.increase_level(xpath_object[0], level)
+                    obj.child_id.push(xpath_object[0]);
+                    xpath_object.pop();
+                    return;
+                }
+            }
+            else {
+                _.each(val,function(element){
+                    self.full_path_search(check_list ,element.child_id ,xpath_object);
                 });
             }
         }
-        return return_list;
     },
     increase_level: function(val, level) {
         var self = this;
@@ -238,7 +247,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             self.increase_level(val, level + 1);
         });
     },
-    edit_view : function(one_object){
+    edit_view: function(one_object) {
         var self = this;
         this.dialog = new openerp.web.Dialog(this,{
             modal: true,
@@ -261,12 +270,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.dialog.$element.html(QWeb.render('view_editor', {
             'data': one_object['main_object'],
         }));
-
         $("tr[id^='viewedit-']").click(function() {
             $("tr[id^='viewedit-']").removeClass('ui-selected');
             $(this).addClass('ui-selected');
         });
-
         $("img[id^='parentimg-']").click(function() {
             if ($(this).attr('src') == '/web/static/src/img/collapse.gif') {
                 $(this).attr('src', '/web/static/src/img/expand.gif');
@@ -358,11 +365,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
     on_expand: function(self){
-        var level = $(self).closest("tr[id^='viewedit-']").attr('level');
+        var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(self).closest("tr[id^='viewedit-']");
         while (1) {
             var nxt_tr = cur_tr.next();
-            if (nxt_tr.attr('level') > level) {
+            if (parseInt(nxt_tr.attr('level')) > level){
                 cur_tr = nxt_tr;
                 nxt_tr.hide();
             } else return nxt_tr;

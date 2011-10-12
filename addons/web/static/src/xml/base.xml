@@ -1302,20 +1302,24 @@
     <td align="left" class="view_editor"  width="15%">
         <table  cellspacing="0" cellpadding ="0" width="100%">
             <tr>
-                <td> 
-                    <img  id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                <td width="20%"> 
+                    <img t-if="rec.att_list.length"  
+                        id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
                 </td>
-                <td> 
+                <td width="20%"> 
                     <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/> 
                 </td>
-                <td> 
-                    <img  id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/> 
+                <td width="20%"> 
+                    <img t-if="rec.att_list.length"  
+                        id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/> 
                 </td>
-                <td> 
-                    <img  id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/> 
+                <td width="20%"> 
+                    <img t-if="rec.att_list.length" 
+                        id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/> 
                 </td>
-                <td> 
-                    <img  id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/> 
+                <td width="20%"> 
+                    <img t-if="rec.att_list.length"
+                        id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/> 
                 </td>
             </tr>
         </table>
