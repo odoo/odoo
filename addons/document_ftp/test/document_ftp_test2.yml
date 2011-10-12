@@ -100,12 +100,13 @@
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test2.txt', fdata)
         ftp.close()
+        cr.commit()
 -
     I look for the "test2.txt" file at the server
 -
     !python {model: ir.attachment }: |
         ids = self.search(cr, uid, [('name', '=', 'test2.txt')])
-        assert ids
+        assert ids, "No test2.txt file found."
 -
     I delete the "test2.txt" file using FTP.
 -
@@ -115,12 +116,13 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         ftp.delete('test2.txt')
         ftp.close()
+        cr.commit()
 -
     I check at the server that test2.txt is deleted
 -
     !python {model: ir.attachment }: |
         ids = self.search(cr, uid, [('name', '=', 'test2.txt')])
-        assert not ids
+        assert not ids, "test2.txt file can still be found."
 -
     I create a test2.txt file again.
 -
@@ -131,6 +133,7 @@
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test2.txt', fdata)
         ftp.close()
+        cr.commit()
 -
     I delete the test2.txt from the server (RPC).
 -

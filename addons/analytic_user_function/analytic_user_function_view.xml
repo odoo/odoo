@@ -5,7 +5,7 @@
         <!-- analytic_user_funct_grid views -->
         <record model="ir.ui.view" id="analytic_user_funct_grid_tree">
             <field name="name">analytic_user_funct_grid.tree</field>
-            <field name="model">analytic_user_funct_grid</field>
+            <field name="model">analytic.user.funct.grid</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="User's Product for this Analytic Account" editable="bottom">
@@ -17,7 +17,7 @@
 
         <record model="ir.ui.view" id="analytic_user_funct_grid_form">
             <field name="name">analytic_user_funct_grid.form</field>
-            <field name="model">analytic_user_funct_grid</field>
+            <field name="model">analytic.user.funct.grid</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User's Product for this Analytic Account">
@@ -55,7 +55,7 @@
                 </xpath>
             </field>
         </record>
-        
+
         <!-- hr_timesheet_sheet.sheet inherited view -->
         <record model="ir.ui.view" id="hr_timesheet_sheet_form_inherit1">
             <field name="name">hr.timesheet.sheet.form.form</field>

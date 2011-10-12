@@ -171,7 +171,7 @@
                         <field ref="conf_cas" name="parent_id"/>
                         <field name="type">receivable</field>
                         <field eval="True" name="reconcile"/>
-                        <field name="user_type" ref="conf_account_type_asset"/>
+                        <field name="user_type" ref="conf_account_type_receivable"/>
                     </record>
 
                     <record id="conf_ova" model="account.account.template">
@@ -212,7 +212,7 @@
                         <field ref="conf_cli" name="parent_id"/>
                         <field name="type">payable</field>
                         <field eval="True" name="reconcile"/>
-                        <field name="user_type" ref="conf_account_type_liability"/>
+                        <field name="user_type" ref="conf_account_type_payable"/>
                     </record>
 
                     <record id="conf_iva" model="account.account.template">

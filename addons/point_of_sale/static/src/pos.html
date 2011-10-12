@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Point of Sale</title>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css">
+        <style type="text/css">
+            html, body {
+                height: 100%;
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+        <link rel="stylesheet" type="text/css" href="/point_of_sale/static/src/css/pos.css">
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery-1.6.2.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.8.9.custom.min.js"></script>
+        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/formats.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/data.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/dates.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/lib/backbone/backbone-0.5.3.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/src/js/pos.js"></script>
+        <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+        <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
+        <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
+        <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
+        <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                var db = openerp.init();
+                openerp.point_of_sale(db);
+                var session = new db.web.Session('DEBUG');
+                session.session_login('addons-trunk', 'admin', 'admin').then(function() {
+                    var pos = new db.point_of_sale.PointOfSale({session: session});
+                    pos.appendTo($("body"));
+                });
+            });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
