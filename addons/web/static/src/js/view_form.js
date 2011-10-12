@@ -2041,6 +2041,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     validate: function() {
         this.invalid = false;
+        if (!this.viewmanager.views[this.viewmanager.active_view])
+            return;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
         if (this.viewmanager.active_view === "form") {
             for (var f in view.fields) {
