@@ -579,7 +579,7 @@ db.web.Sidebar = db.web.Widget.extend({
     },
     
     add_section: function(name, code) {
-        if(!code) code = _.userscored(name);
+        if(!code) code = _.underscored(name);
         var $section = this.sections[code];
 
         if(!$section) {
