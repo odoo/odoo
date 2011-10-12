@@ -38,6 +38,7 @@ import warnings
 import xmlrpclib
 from psycopg2 import Binary
 
+import osv
 import netsvc
 import tools
 from tools.translate import _
@@ -1030,8 +1031,14 @@ class property(function):
             cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
+        property_create = False
+        if isinstance(default_val, osv.orm.browse_record):
+            if default_val.id != id_val:
+                property_create = True
+        elif default_val != id_val:
+            property_create = True
 
-        if id_val is not default_val:
+        if property_create:
             def_id = self._field_get(cr, uid, obj._name, prop_name)
             company = obj.pool.get('res.company')
             cid = company._company_default_get(cr, uid, obj._name, def_id,
