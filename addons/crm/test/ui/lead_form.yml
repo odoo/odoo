@@ -1,0 +1,20 @@
+-
+  In order to check for changes on partner, data will be change automatically according to partner,
+-
+  !python {model: crm.lead}: |
+    action = self.onchange_partner_address_id(cr, uid, ref("crm_case_initialdiscussion0"), ref("base.res_partner_address_notsotinysarl0"), email=False)
+    assert action['value']['country_id'] == 20, "Country name not True"
+    assert action['value']['phone'] == '(+32).81.81.37.00', "phone number is wrong"
+-
+  I try to Unlink the Lead I create new record of lead. 
+-
+   !record {model: crm.lead, id: crm_lead_intested_openerp}:
+     name: Interested in openerp
+-
+  In order to test unlink lead, i will do unlink this lead
+-
+  !python {model: crm.lead}: |
+    from tools.translate import _
+    self.unlink(cr, uid, [ref("crm_lead_intested_openerp")])
+    id = self.search(cr, uid, [('id', '=', ref("crm_lead_intested_openerp"))])
+    assert len(id) < 1, _('Lead is not deleted') 
