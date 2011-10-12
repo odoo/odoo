@@ -198,38 +198,38 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         if(xpath_object.length!=0){
             var check = check_list[0];
             var obj;
-            if(check.length == 2){
-                if(parseInt(check[1])){
+            switch (check.length) {
+                case 2:
+                    if(parseInt(check[1])){
+                        var list_1 = _.select(val,function(element){
+                            var main_list = _.flatten(element.att_list);
+                            return _.include(main_list, check[0]);
+                        });
+                        obj = val[_.indexOf(val,list_1[parseInt(check[1])-1])];
+                    } else {
+                        obj = _.detect(val, function(element){
+                            var main_list = _.flatten(element.att_list);
+                            return _.include(main_list, check[0]);
+                        });
+                    }
+                    break;
+                case 3:
+                    obj = _.detect(val,function(element){
+                        var main_list = _.flatten(element.att_list);
+                        check = _.uniq(check);
+                        var insert = _.intersection(main_list,check);
+                        if(insert.length == check.length ){return element;}
+                    });
+                    break;
+                case 1:
                     var list_1 = _.select(val,function(element){
                         var main_list = _.flatten(element.att_list);
                         return _.include(main_list, check[0]);
                     });
-                    obj = val[_.indexOf(val,list_1[parseInt(check[1])-1])];
-                } else {
-                    obj = _.detect(val, function(element){
-                        var main_list = _.flatten(element.att_list);
-                        return _.include(main_list, check[0]);
-                    });
-                }
-            }else if(check.length == 3){
-                obj = _.detect(val,function(element){
-                    var main_list = _.flatten(element.att_list);
-                    check = _.uniq(check);
-                    var insert = _.intersection(main_list,check);
-                    if(insert.length == check.length ){return element;}
-                });
-            }else{
-                var list_1 = _.select(val,function(element){
-                    var main_list = _.flatten(element.att_list);
-                    return _.include(main_list, check[0]);
-                });
-                if(list_1 != 0){
-                    if(check_list.length == 1){
-                        obj = list_1[0];
-                    }else{
-                        check_list.shift();
+                    if(list_1 != 0){
+                        (check_list.length == 1)? obj = list_1[0] : check_list.shift();
                     }
-                }
+                    break;
             }
             if(obj){
                 check_list.shift();
