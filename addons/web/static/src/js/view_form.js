@@ -2003,6 +2003,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
+        this.save_form_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
