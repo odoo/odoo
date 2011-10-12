@@ -1937,9 +1937,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             if (this.dataset.index === null && this.dataset.ids.length >= 1) {
                 this.dataset.index = 0;
             }
-            this.form_last_update.then(function() {
-                this.form_last_update = view.do_show();
-            });
+            var act = function() {
+                return view.do_show();
+            }
+            this.form_last_update = this.form_last_update.pipe(act, act);;
         } else if (self.viewmanager.active_view === "graph") {
             view.do_search(this.build_domain(), this.dataset.get_context(), []);
         }
@@ -2007,7 +2008,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        this.save_form_view();
+        if (!this.form_last_update.isResolved() && !this.form_last_update.isRejected())
+            this.save_form_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
