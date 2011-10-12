@@ -522,7 +522,8 @@ db.web.Sidebar = db.web.Widget.extend({
     },
 
     add_default_sections: function() {
-        this.add_items('Customize', [
+        this.add_section('Customize', 'customize');
+        this.add_items('customize', [
             {
                 label: "Manage Views",
                 callback: this.call_default_on_sidebar,
@@ -539,7 +540,8 @@ db.web.Sidebar = db.web.Widget.extend({
             }
         ]);
 
-        this.add_items('Other Options', [ 
+        this.add_section('Other Options', 'other');
+        this.add_items('other', [ 
             {
                 label: "Import",
                 callback: this.call_default_on_sidebar,
@@ -570,14 +572,15 @@ db.web.Sidebar = db.web.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_items(type[1], items);
+                self.add_section(type[1], type[0]);
+                self.add_items(type[0], items);
             }
         });
     },
     
-    add_section: function(name) {
-        var code = _.underscored(name),
-            $section = this.sections[code];
+    add_section: function(name, code) {
+        if(!code) code = _.userscored(name);
+        var $section = this.sections[code];
 
         if(!$section) {
             section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
@@ -592,7 +595,7 @@ db.web.Sidebar = db.web.Widget.extend({
         return $section;
     },
 
-    add_items: function(section_name, items) {
+    add_items: function(section_code, items) {
         // An item is a dictonary : {
         //    label: label to be displayed for the link,
         //    action: action to be launch when the link is clicked,
@@ -604,7 +607,7 @@ db.web.Sidebar = db.web.Widget.extend({
         //
 
         var self = this,
-            $section = this.add_section(section_name),
+            $section = this.add_section(_.titleize(section_code.replace('_', ' ')), section_code),
             section_id = $section.attr('id');
 
         if (items) {
