@@ -1,112 +1,80 @@
--  |
-   I start by creating a new lead "Steave Jon" and I provide an address to this
-   new customer, as well as an email "info@mycustomer.com".
 -
-   !record {model: crm.lead, id: crm_lead_newcustomer0}:
-     email_from: info@mycustomer.com
-     name: Steave Jon
-     partner_name: Capegemini
-     partner_id: base.res_partner_9
-     phone: (855) 924-4364
-     mobile: (333) 715-1450
-     section_id: crm.section_sales_department
-     referred: False
--  |
-   I check that the lead is in 'draft' state.
+  Communication by phonecall or mail I got lead from Customer/partner, I test to created lead in initial stage.
 -
-   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in Draft}:
+   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in Draft}:
      - state == "draft"
 -
-   I open lead by click on "Open" button.
+  After some discussion about lead with customer/partner some possibillity to go ahead, so we are opening this lead.
 -
    !python {model: crm.lead}: |
-     self.case_open(cr, uid, [ref("crm_lead_newcustomer0")])
+     self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
      fields={
             'day_open': 0.0,
             'day_close': 0.0
             }
-     self._compute_day(cr, uid, [ref("crm_lead_newcustomer0")], fields, context)
+     self._compute_day(cr, uid, [ref("crm_case_qrecorp0")], fields, context)
 - |
-  I check that lead is now in 'open' state.
+  In order to test lead, i will test lead is in open stage.
 -
-  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in open state}:
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
      - state == "open"
 -
-   I search id for case object.
--
-   !python {model: crm.case.categ}: |
-     self._find_object_id(cr, uid, context)
--  |
-   As the lead seems to be a real business opportunity, I will convert it to a
-   partner
-   and a business opportunity by clicking on the "Convert" button.
+  As the lead seems to be a real business opportunity, I will convert it to a partner
+  and a business opportunity.
 -
    !python {model: crm.lead}: |
-     lead = self.browse(cr, uid, ref('crm_lead_newcustomer0'))
-     action = self.convert_opportunity(cr, uid, [ref("crm_lead_newcustomer0")], {'active_ids': [ref("crm_lead_newcustomer0")]})
+     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+     action = self.convert_opportunity(cr, uid, [ref("crm_case_qrecorp0")], {'active_ids': [ref("crm_case_qrecorp0")]})
      assert action['res_model'] == 'crm.lead2opportunity.partner'
 -
-   |
-   I select "create a new partner" option.
+  In order to create partner, It is possible to check for partner is exiting or i will create new partner 
+  according to this lead. so first i will create new partner. 
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_0}:
       action: 'create'
       name: 'convert'
 -
-  Then, Click on "Create Opportunity" button.
+  In order to create opportunity and its created by new partner.
 -
    !python {model: crm.lead2opportunity.partner}: |
-      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_0")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
 -
-   |
-   I select "Link to an existing partner" option.
+  In order to test with exiting partner, so i will test with exiting partner and create opportunities based
+  on exiting partner. 
 -
    !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
       action: 'exist'
 -
-  Then, Click on "Create Opportunity" button.
+  Create opportunity based on exiting partner
 -
    !python {model: crm.lead2opportunity.partner}: |
-      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
 -
-   |
-   I select "Do not link to a partner" option.
+  In order to test with no link wih partner, so i will test create opportunities based
+  no link to any partner.
 -
-   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_2}:
-      action: 'nothing'
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_2}:
+    action: 'nothing'
 -
-  Then, Click on "Create Opportunity" button.
+  In order to test create opportunity based on no link to any partner.
 -
-   !python {model: crm.lead2opportunity.partner}: |
-      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_2")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
--  |
-   In order to check the opportunity is created or not, I check type.
+  !python {model: crm.lead2opportunity.partner}: |
+    self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_2")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
+-
+  In order to test lead, i will test to lead is converted to opportunity.
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
+    lead = self.browse(cr, uid, ref("crm_case_qrecorp0"))
     assert lead.type == 'opportunity'
-
 -
-  I create mass report of lead to opprtunity partner.
+  Finally, i won this lead and congratulation we have new partner so i will close this lead.
 -
-  !record {model: crm.lead2opportunity.partner.mass, id: crm_lead2opportunity_partner_mass0}:
-    user_ids:
-      - base.user_root
-    section_id: crm.section_sales_department
+  !python {model: crm.lead}: |
+    self.case_close(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  Then, execute that mass wizard.
+  In order to test lead, i will test its on close or not.
 -
-   !python {model: crm.lead2opportunity.partner.mass}: |
-      self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
--
-   I close lead by click on "close" button.
--
-   !python {model: crm.lead}: |
-     self.case_close(cr, uid, [ref("crm_lead_newcustomer0")])
-- |
-  I check that lead is now in 'done' state.
--
-  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in done state}:
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in done state}:
      - state == "done"
 #-
 #  |
