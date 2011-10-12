@@ -446,10 +446,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
             self.$element.append(tiles)
                 .find('.oe-dashboard-home-tile')
                     .click(function () {
-                        var $this = $(this);
-                        $this.closest('.openerp')
-                             .find('.menu a[data-menu=' + $this.data('menuid') + ']')
-                             .click();});
+                        openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
+                    });
         });
         return  r;
     },
