@@ -33,6 +33,7 @@ A dictionary holding some configuration parameters to be initialized when the da
 _default_parameters = {
     "database.uuid": lambda: str(uuid.uuid1()),
     "database.create_date": lambda: datetime.datetime.now().strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT),
+    "web.base.url": lambda: "http://localhost:8069",
 }
 
 class ir_config_parameter(osv.osv):
