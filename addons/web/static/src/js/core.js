@@ -74,6 +74,7 @@ openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
             }
             return this;
         }
+        // This should NOT be used, like callbackenable it's too hackish not enough javasish
         Class.include = function (properties) {
             for (var name in properties) {
                 if (typeof properties[name] !== 'function'

@@ -22,6 +22,7 @@ openerp.web.list_editable = function (openerp) {
                     if (self.groups.get_selection().length) {
                         return;
                     }
+                    self.configure_pager(self.dataset);
                     self.compute_aggregates();
                 }
             })

@@ -784,6 +784,20 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
         var value = this.attrs.selection[index][0];
         if (value === false) { return null; }
         return value;
+    },
+    /**
+     * The selection field needs a default ``false`` value in case none is
+     * provided, so that selector options with a ``false`` value (convention
+     * for explicitly empty options) get selected by default rather than the
+     * first (value-holding) option in the selection.
+     *
+     * @param {Object} defaults search default values
+     */
+    render: function (defaults) {
+        if (!defaults[this.attrs.name]) {
+            defaults[this.attrs.name] = false;
+        }
+        return this._super(defaults);
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{

@@ -613,11 +613,11 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     create: function(data, callback, error_callback) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
             defaults: this.last_default_get};
-        this.to_create.push(cached);
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
         this.on_change();
         var prom = $.Deferred().then(callback);
-        setTimeout(function() {prom.resolve({result: cached.id});}, 0);
+        prom.resolve({result: cached.id});
         return prom.promise();
     },
     write: function (id, data, options, callback) {
@@ -639,6 +639,10 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        if (!cached) {
+            cached = {id: id, values: {}};
+            this.cache.push(cached);
+        }
         $.extend(cached.values, record.values);
         if (dirty)
             this.on_change();
@@ -695,7 +699,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
-            setTimeout(function () {completion.resolve(records);}, 0);
+            completion.resolve(records);
         };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
@@ -720,27 +724,51 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.create_function = null;
+        this.write_function = null;
+        this.read_function = null;
+    },
+    read_ids: function () {
+        if (this.read_function) {
+            return this.read_function.apply(null, arguments);
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
-        return to_return.promise();
+        if (this.create_function) {
+            return this.create_function(data, callback, error_callback);
+        } else {
+            console.warn("trying to create a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            return to_return.promise();
+        }
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
         this.on_write(id, data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
-        return to_return.promise();
+        if (this.write_function) {
+            return this.write_function(id, data, options, callback);
+        } else {
+            console.warn("trying to write a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            return to_return.promise();
+        }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
+        console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();

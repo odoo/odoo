@@ -17,8 +17,9 @@ QWeb.add_template('/web_graph/static/src/xml/web_graph.xml');
 openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
 openerp.web_graph.GraphView = openerp.web.View.extend({
 
-    init: function(parent, dataset, view_id) {
+    init: function(parent, dataset, view_id, options) {
         this._super(parent);
+        this.set_default_options(options);
         this.dataset = dataset;
         this.view_id = view_id;
 
@@ -27,6 +28,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.ordinate = null;
         this.columns = [];
         this.group_field = null;
+        this.is_loaded = $.Deferred();
     },
     do_show: function () {
         this.$element.show();
@@ -37,17 +39,24 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     start: function() {
         var self = this;
         this._super();
+        var loaded;
+        if (this.embedded_view) {
+            loaded = $.when([self.embedded_view]);
+        } else {
+            loaded = this.rpc('/web/view/load', {
+                    model: this.dataset.model,
+                    view_id: this.view_id,
+                    view_type: 'graph'
+            });
+        }
         return $.when(
             this.dataset.call('fields_get', []),
-            this.rpc('/web/view/load', {
-                model: this.dataset.model,
-                view_id: this.view_id,
-                view_type: 'graph'
-            })).then(function (fields_result, view_result) {
+            loaded)
+            .then(function (fields_result, view_result) {
                 self.fields = fields_result[0];
                 self.fields_view = view_result[0];
                 self.on_loaded();
-        });
+            });
     },
     /**
      * Returns all object fields involved in the graph view
@@ -78,6 +87,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             }
         }, this);
         this.ordinate = this.columns[0].name;
+        this.is_loaded.resolve();
     },
     schedule_chart: function(results) {
         var self = this;
@@ -363,13 +373,16 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     },
 
     do_search: function(domain, context, group_by) {
-        // TODO: handle non-empty group_by with read_group?
-        if (!_(group_by).isEmpty()) {
-            this.abscissa = group_by[0];
-        } else {
-            this.abscissa = this.first_field;
-        }
-        this.dataset.read_slice(this.list_fields(), {}, $.proxy(this, 'schedule_chart'));
+        var self = this;
+        return $.when(this.is_loaded).pipe(function() {
+            // TODO: handle non-empty group_by with read_group?
+            if (!_(group_by).isEmpty()) {
+                self.abscissa = group_by[0];
+            } else {
+                self.abscissa = self.first_field;
+            }
+            return self.dataset.read_slice(self.list_fields(), {}, $.proxy(self, 'schedule_chart'));
+        });
     }
 });
 };
