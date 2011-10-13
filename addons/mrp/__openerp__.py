@@ -93,13 +93,12 @@ Dashboard provided by this module:
          'mrp_demo.xml',
     ],
     'test': [
-         'test/mrp_procurement.yml',
-         'test/mrp_packs.yml',
-         'test/mrp_phantom_bom.yml',
          'test/mrp_production_order.yml',
+         'test/mrp_packs.yml',
          'test/mrp_production_cancel.yml',
          'test/mrp_report.yml',
-
+#         'test/mrp_procurement.yml',
+#         'test/mrp_phantom_bom.yml',
     ],
     'installable': True,
     'active': False,
