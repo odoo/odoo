@@ -35,6 +35,7 @@ from osv import fields,osv
 from osv.orm import browse_record
 from service import security
 from tools.translate import _
+import openerp
 import openerp.exceptions
 
 class groups(osv.osv):
@@ -417,6 +418,32 @@ class users(osv.osv):
         data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
+    def authenticate(self, db, login, password, user_agent_env):
+        """Verifies and returns the user ID corresponding to the given
+          ``login`` and ``password`` combination, or False if there was
+          no matching user.
+
+           :param str db: the database on which user is trying to authenticate
+           :param str login: username
+           :param str password: user password
+           :param dict user_agent_env: environment dictionary describing any
+               relevant environment attributes
+        """
+        uid = self.login(db, login, password)
+        if uid == openerp.SUPERUSER_ID:
+            # Successfully logged in as admin!
+            # Attempt to guess the web base url...
+            if user_agent_env and 'host' in user_agent_env:
+                cr = pooler.get_db(db).cursor()
+                try:
+                    self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url',
+                                                                   user_agent_env['host'])
+                    cr.commit()
+                except Exception:
+                    logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
+                finally:
+                    cr.close()
+        return uid
 
     def login(self, db, login, password):
         if not password:

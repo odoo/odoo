@@ -366,20 +366,15 @@ class db(netsvc.ExportService):
         return True
 
 class common(netsvc.ExportService):
+    _logger = logging.getLogger('web-services')
+
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
 
     def dispatch(self, method, params):
-        logger = netsvc.Logger()
-        if method == 'login':
-            res = security.login(params[0], params[1], params[2])
-            msg = res and 'successful login' or 'bad login or password'
-            # TODO log the client ip address..
-            logger.notifyChannel("web-service", netsvc.LOG_INFO, "%s from '%s' using database '%s'" % (msg, params[1], params[0].lower()))
-            return res or False
-        elif method in ['about', 'timezone_get', 'get_server_environment',
-                        'login_message','get_stats', 'check_connectivity',
-                        'list_http_services', 'version']:
+        if method in ['login', 'about', 'timezone_get', 'get_server_environment',
+                      'login_message','get_stats', 'check_connectivity',
+                      'list_http_services', 'version', 'authenticate']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
@@ -390,6 +385,18 @@ class common(netsvc.ExportService):
 
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
+
+    def exp_login(self, db, login, password):
+        # TODO: legacy indirection through 'security', should use directly
+        # the res.users model
+        res = security.login(db, login, password)
+        msg = res and 'successful login' or 'bad login or password'
+        self._logger.info("%s from '%s' using database '%s'", msg, login, db.lower())
+        return res or False
+
+    def exp_authenticate(self, db, login, password, user_agent_env):
+        res_users = pooler.get_pool(db).get('res.users')
+        return res_users.authenticate(db, login, password, user_agent_env)
 
     def exp_version(self):
         return RPC_VERSION_1
