@@ -15,13 +15,11 @@
     self.action_apply(cr, uid, [ref("crm_phonecall2opportunity_disc_openerp")], {"active_id": ref("crm_case_phone04")})
 - |
   For business And I check that the phonecall and the newly created business 
-  opportunity is linked to same  partner and also check with phonecall close or not.
+  opportunity is linked to same  partner and also check with phonecall closed and opportunity
+  is on intial stage or not.
 -
   !python {model: crm.phonecall}: |
-    obj_phonecall = self.browse(cr, uid, ref('crm_case_phone04'))
-    ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
-    obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
-    assert obj_phonecall.partner_id == obj_opp.partner_id, "created business opportunity is not linked to same  partner"
-    assert obj_opp.stage_id.name == "New", "Converted opportunity is not in New stage"
-    assert obj_opp.stage_id.probability == 10.0, "Probability of opportunity is 10.0"
-    assert obj_phonecall.state == "done", "phonecall is held"
+    phonecall = self.browse(cr, uid, ref('crm_case_phone04'))
+    assert phonecall.partner_id.id == phonecall.opportunity_id.partner_id.id, "created business opportunity is not linked to same  partner"
+    assert phonecall.opportunity_id.stage_id.id == ref("stage_lead1"), "Converted opportunity is not in Initial stage"
+    assert phonecall.state == "done", "phonecall is held"
