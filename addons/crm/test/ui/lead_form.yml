@@ -9,12 +9,15 @@
   I try to Unlink the Lead I create new record of lead. 
 -
   !record {model: crm.lead, id: crm_case_new_lead}:
-    name: Opnerp Trainning
+    name: Openerp Trainning
     state: cancel
 -
   In order to test unlink lead, i will do unlink this lead
 -
   !python {model: crm.lead}: |
+    self.copy(cr, uid, ref("crm_case_new_lead"))
+    sid = self.search(cr, uid, [('name', '=', 'Openerp Trainning')])
+    assert len(sid) == 2, 'Lead is not copied Successfully'
     try:
       self.unlink(cr, uid, [ref("crm_case_new_lead")])
     except:
