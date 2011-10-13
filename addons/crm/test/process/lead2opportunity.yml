@@ -15,22 +15,23 @@
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead is not converted on opportunity}:
     - type == 'opportunity'
 -
-  Finally, i won this lead, so i will close this lead.
+  Finally, i won this opportunity, so i will close this lead.
 -
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  In order to test lead, it is close or not.
+  In order to test opportunity, it is close or not.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in done state}:
     - state == "done"
--
-  After won this lead probability is 100.
--
-  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
-    - probability == 100.0
 -
   In order to test stage of opportunity after win, i will test stage of opportunity.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: stage of opportunity is win}:
     - stage_id.name == "Won"
+-
+  After won the opportunity, i will test probability is 100.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
+    - probability == 100.0
+    
