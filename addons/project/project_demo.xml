@@ -76,6 +76,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Prepare Requirements Document</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_2" model="project.task">
@@ -84,6 +85,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Make SRS</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_3" model="project.task">
@@ -92,6 +94,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Design Use Cases</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_4" model="project.task">
@@ -100,6 +103,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Budget Planning</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_5" model="project.task">
@@ -108,6 +112,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Quality Planning</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_6" model="project.task">
@@ -116,6 +121,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Risk Management Planning</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_7" model="project.task">
@@ -124,6 +130,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Create Project Schedules</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_8" model="project.task">
@@ -132,6 +139,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Dataflow Design</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_9" model="project.task">
@@ -140,6 +148,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">User Interface Design</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_10" model="project.task">
@@ -148,6 +157,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop Module in Sale Management</field>
+             <field name="type_id" ref="project_tt_development"/>
         </record>
 
         <record id="project_task_11" model="project.task">
@@ -156,6 +166,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Develop module in Warehouse</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
 
         <record id="project_task_12" model="project.task">
@@ -164,6 +175,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Integrate Modules</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
 
         <record id="project_task_13" model="project.task">
@@ -172,6 +184,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Unit Testing</field>
+            <field name="type_id" ref="project_tt_testing"/>      
         </record>
 
         <record id="project_task_14" model="project.task">
@@ -180,6 +193,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Regression Test</field>
+            <field name="type_id" ref="project_tt_testing"/>  
         </record>
 
         <record id="project_task_15" model="project.task">
@@ -188,6 +202,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Documentation</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
 
         <record id="project_task_16" model="project.task">
@@ -197,6 +212,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Performance Tuning</field>
+             <field name="type_id" ref="project_tt_merge"/>
         </record>
 
         <record id="project_task_17" model="project.task">
@@ -205,6 +221,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Deploy and Review on Customer System</field>
+            <field name="type_id" ref="project_tt_merge"/>
         </record>
 
         <record id="project_task_18" model="project.task">
@@ -213,6 +230,7 @@
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_integrate_openerp"/>
             <field name="name">Training and Presentation</field>
+            <field name="type_id" ref="project_tt_merge"/>
         </record>
 
         <!--
@@ -321,6 +339,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Parameters</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
         <record id="project_task_190" model="project.task">
             <field name="sequence">20</field>
@@ -330,6 +349,7 @@
             <field name="state">open</field>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Start of the doc redaction + MRP</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
         <record id="project_task_192" model="project.task">
             <field name="sequence">25</field>
@@ -339,6 +359,7 @@
             <field name="project_id" ref="project_project_21"/>
             <field name="state">done</field>
             <field name="name">MRP Tests</field>
+            <field name="type_id" ref="project_tt_testing"/>
         </record>
         <record id="project_task_193" model="project.task">
             <field name="sequence">29</field>
@@ -348,6 +369,7 @@
             <field name="project_id" ref="project_project_21"/>
             <field name="name">MRP; functional layer</field>
             <field name="state">done</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
         <record id="project_task_194" model="project.task">
             <field name="sequence">30</field>
@@ -356,6 +378,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Products Adaptation</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_195" model="project.task">
             <field name="sequence">30</field>
@@ -364,6 +387,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_23"/>
             <field name="name">Install + Super User Training</field>
+            <field name="type_id" ref="project_tt_merge"/>
         </record>
         <record id="project_task_196" model="project.task">
             <field name="sequence">30</field>
@@ -372,6 +396,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Customer doc</field>
+            <field name="type_id" ref="project_tt_specification"/>
         </record>
         <record id="project_task_197" model="project.task">
             <field name="sequence">30</field>
@@ -380,6 +405,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Development of the presentation layer</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_198" model="project.task">
             <field name="sequence">40</field>
@@ -388,6 +414,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
             <field name="name">Free Time</field>
+            <field name="type_id" ref="project_tt_testing"/>
         </record>
         <record id="project_task_199" model="project.task">
             <field name="sequence">40</field>
@@ -396,6 +423,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Specific tests</field>
+            <field name="type_id" ref="project_tt_testing"/>
         </record>
         <record id="project_task_200" model="project.task">
             <field name="sequence">40</field>
@@ -404,6 +432,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Sale module</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_201" model="project.task">
             <field name="sequence">40</field>
@@ -413,6 +442,7 @@
             <field name="project_id" ref="project_project_23"/>
             <field name="state">open</field>
             <field name="name">In house training</field>
+            <field name="type_id" ref="project_tt_merge"/>
         </record>
         <record id="project_task_202" model="project.task">
             <field name="sequence">50</field>
@@ -422,6 +452,7 @@
             <field name="project_id" ref="project_project_22"/>
             <field name="state">open</field>
             <field name="name">Validation + latest modifications.</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_203" model="project.task">
             <field name="sequence">50</field>
@@ -430,14 +461,16 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Adaptations buy module</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_204" model="project.task">
             <field name="sequence">60</field>
             <field name="planned_hours">16.0</field>
             <field name="remaining_hours">16.0</field>
+            <field name="name">Presentation of the software.</field>
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_21"/>
-            <field name="name">Presentation of the software.</field>
+            <field name="type_id" ref="project_tt_merge"/>
         </record>
         <record id="project_task_205" model="project.task">
             <field name="sequence">60</field>
@@ -446,6 +479,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Adaptations Stock module</field>
+            <field name="type_id" ref="project_tt_development"/>
         </record>
         <record id="project_task_206" model="project.task">
             <field name="sequence">70</field>
@@ -454,6 +488,7 @@
             <field model="res.users" name="user_id" search="[('login','=','demo')]"/>
             <field name="project_id" ref="project_project_22"/>
             <field name="name">Latest in house tests</field>
+            <field name="type_id" ref="project_tt_testing"/>
         </record>
     </data>
 </openerp>
