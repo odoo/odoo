@@ -40,7 +40,7 @@ Dashboard for purchase management that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images' : ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['base', 'account', 'stock', 'process', 'procurement'],
+    'depends': ['stock', 'process', 'procurement'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',

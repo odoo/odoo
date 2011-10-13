@@ -149,9 +149,6 @@ module named account_voucher.
         'test/test_edi_invoice.yml',
         'test/account_report.yml',
     ],
-    "js": [
-        'static/src/js/edi_invoice.js'
-    ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',

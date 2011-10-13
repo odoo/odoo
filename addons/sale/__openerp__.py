@@ -101,9 +101,6 @@ Dashboard for Sales Manager that includes:
         'test/sale_report.yml',
 
     ],
-    "js": [
-        'static/src/js/edi_sale_purchase_order.js',
-    ],
     'installable': True,
     'active': False,
     'certificate': '0058103601429',

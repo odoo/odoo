@@ -8,7 +8,7 @@ openerp.web.EdiViewCenterSalePurchase = openerp.web.Class.extend({
         var self = this;
         this.edi_document = eval(edi.document)
         this.$element = element;
-        QWeb.add_template("/sale/static/src/xml/edi_sale_purchase_order.xml");
+        QWeb.add_template("/edi/static/src/xml/edi_sale_purchase_order.xml");
         
     },
     start: function() {

@@ -47,6 +47,8 @@ technical OpenERP documentation at http://doc.openerp.com
         'static/src/js/sessionless.js',
         'static/src/js/edi_import.js',
         'static/src/js/edi_view.js',
+        'static/src/js/edi_invoice.js',
+        'static/src/js/edi_sale_purchase_order.js',
     ],
     'installable': True,
     'active': False,
