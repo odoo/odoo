@@ -2483,7 +2483,6 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.setup_form_view();
     },
     on_write: function(id, data) {
-        this.stop();
         if (!this.options.auto_write)
             return;
         var self = this;
@@ -2506,7 +2505,9 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
             $nbutton.click(function() {
-                self.view_form.do_save();
+                self.view_form.do_save().then(function() {
+                    self.stop();
+                });
             });
             var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
             $cbutton.click(function() {
