@@ -1,22 +1,43 @@
 -
-  Cheking for lead from any stage, It will be cancle or not.
+  Cheking for lead from draft to cancel, I will cancelling this lead.
 -
   !python {model: crm.lead}: |
-    lead_on_draft=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_on_draft.state == 'draft', "Lead is not in draft state"
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_on_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_on_cancel.state == 'cancel', "Lead is not in cancel state"
+-
+  In order to test for cancel lead , i will test lead is on cancel state.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
+     - state == "cancel"
+-
+  Cheking for lead from cancel to reset, I will reseting this lead.
+-
+  !python {model: crm.lead}: |
     self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_on_reset=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_on_reset.state == 'draft', "Lead is not in draft state"
+-
+  In order to test for reset lead , i will test lead is on draft state.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
+     - state == "draft"
+-
+  Cheking for lead from reset to pending, I will pending this lead.
+-
+  !python {model: crm.lead}: |
     self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_on_pending=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_on_pending.state == 'pending', "Lead is not in pending state"
+-
+  In order to test for pending lead , i will test lead is on pending state.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
+     - state == "pending"
+-
+  Cheking for lead from pending to cancel, I will cancelling this lead.
+-
+  !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_pending_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_pending_cancel.state == 'cancel', "Lead is not in cancel state"
-
+-
+  In order to test for cancel lead , i will test lead is on cancel state.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
+     - state == "cancel"
 -
   For working on parent child relationship, we are creating sales executive department that will be work under 
   Sales Department.
@@ -36,13 +57,21 @@
   department or not.
 -
   !python {model: crm.lead}: |
-    lead_rec=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
     self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_cancle_reset=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_cancle_reset.state == 'draft', "Lead is not in draft state"
     self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_on_escalate=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_on_escalate.section_id.name == 'Sales Department', "Do not Escalate lead to on sales team from Executive team"
+-
+  In order to test for escalate lead , i will test lead Escalate from sales Department from Executive
+  department.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to on sales team from Executive teame}:
+     - section_id.name == "Sales Department"
+-
+  Cheking for lead from escalate to cancel, I will cancelling this lead.
+-
+  !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    lead_escalate_cancel=self.browse(cr, uid, ref("crm_case_itisatelesalescampaign0"))
-    assert lead_escalate_cancel.state == 'cancel', "Lead is not in cancel state"
+-
+  In order to test for cancel lead , i will test lead is on cancel state.
+-
+  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
+     - state == "cancel"
