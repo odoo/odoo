@@ -1,10 +1,5 @@
 -
-  In order to test the purchase flow, I start it from request for quotation.
--
-  I test the purchase order where supplier 'ASUStek', 
-  price list is 'Default Purchase Pricelist (EUR)'.
--
-  I compute the total of the ordered products.
+  In order to test the purchase flow, I compute the total of the ordered products.
   "Basic PC" product price is 450.20 and ordered 2 'PCE'
   "New server config + material" product price is 150.50 and ordered 5 'PCE'
 -
@@ -14,7 +9,7 @@
   I check the total of the ordered products.
   Total should be [(450.20*2)+(150.50*5)] = 1652.90
 -
-  !assert {model: purchase.order, id: order_purchase1, string: The amount of total should be 1650}:
+  !assert {model: purchase.order, id: order_purchase1, string: The amount of total should be 1652.90}:
     - amount_total == 1652.90
 -
   I confirm the purchase order.
