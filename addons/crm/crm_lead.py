@@ -127,6 +127,12 @@ class crm_lead(crm_case, osv.osv):
                     res[obj.id] = msg.subject
                     break
         return res
+    
+    def _get_stage_id(self, cr, uid, *args):
+        model_data = self.pool.get('ir.model.data')
+        res = model_data.search(cr,uid, [('name', '=', 'stage_lead1')])
+        if res:return model_data.browse(cr,uid,res[0]).res_id
+        return False
 
     _columns = {
         # Overridden from res.partner.address:
@@ -204,7 +210,7 @@ class crm_lead(crm_case, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
-        #'stage_id': _get_stage_id,
+        'stage_id': _get_stage_id,
     }
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

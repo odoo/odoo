@@ -270,6 +270,8 @@
             <field name="categ_id" ref="crm.categ_oppor3"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Pricing Information of Onsite Intervention'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 2) +'/'+ time.strftime('%d')" name="date_deadline"/>
 	    <field eval="'Send price list regarding our interventions'" name="title_action"/>
             <field name="partner_name">BalmerInc S.A.</field>
             <field name="street">Rue des Palais 51, bte 33</field>
@@ -291,6 +293,8 @@
             <field name="categ_id" ref="crm.categ_oppor3"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Interest in your Kitchen Design Project'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 2) +'/'+ time.strftime('%d')" name="date_deadline"/>
 	    <field eval="'Send Catalogue by E-Mail'" name="title_action"/>
             <field name="partner_name">Lucie Vonck</field>
             <field name="street">Chaussée de Namur</field>
@@ -313,6 +317,8 @@
             <field name="categ_id" ref="crm.categ_oppor6"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan train our students on your product'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 2) +'/'+ time.strftime('%d')" name="date_deadline"/>
 	    <field eval="'Call to define real needs about training'" name="title_action"/>
             <field eval="4000" name="zip"/>
             <field name="partner_name">Université de Liège</field>
@@ -336,6 +342,8 @@
             <field name="categ_id" ref="crm.categ_oppor2"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan to buy 66 keyboards and 66 mouses'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 2) +'/'+ time.strftime('%d')" name="date_deadline"/>
 	    <field eval="'Propose the kit keyboard+mouse'" name="title_action"/>
             <field name="partner_name">Bank Wealthy and sons</field>
             <field name="street">1 rue Rockfeller</field>
@@ -359,6 +367,7 @@
             <field name="categ_id" ref="crm.categ_oppor7"/>
             <field name="stage_id" ref="crm.stage_lead5"/>
             <field eval="'Need 20 Days of Consultancy'" name="name"/>
+            <field eval="time.strftime('%Y-%m-%d')" name="date_deadline"/>
             <field eval="'info@mycompany.net'" name="email_from"/>
         </record>
         <record id="crm_case_abcfuelcounits0" model="crm.lead">
@@ -376,6 +385,8 @@
             <field name="categ_id" ref="crm.categ_oppor5"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="'Need new design for my website'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ time.strftime('%m') +'/'+ str(int(time.strftime('%d')) + 15)" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ time.strftime('%m') +'/'+ str(int(time.strftime('%d')) + 15)" name="date_deadline"/>
             <field eval="'info@opensides.be'" name="email_from"/>
 	    <field eval="'Convert to quote'" name="title_action"/>
             <field name="partner_name">Dubois sprl</field>
@@ -428,6 +439,8 @@
             <field name="categ_id" ref="crm.categ_oppor2"/>
             <field name="stage_id" ref="crm.stage_lead2"/>
             <field eval="'Plan to attend a training'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 2) +'/'+ time.strftime('%d')" name="date_deadline"/>
 	    <field eval="'Call to give info about next training session'" name="title_action"/>
             <field name="partner_name">Axelor</field>
             <field name="street">12 rue Albert Einstein</field>
@@ -450,6 +463,8 @@
             <field name="categ_id" ref="crm.categ_oppor1"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Need customize the solution'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ time.strftime('%m') +'/'+ str(int(time.strftime('%d')) + 15)" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_deadline"/>
             <field eval="'Conf call with technical service'" name="title_action"/>
             <field name="partner_name">Thymbra</field>
             <field name="street">Palermo, Capital Federal</field>
@@ -473,6 +488,8 @@
             <field name="categ_id" ref="crm.categ_oppor1"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="'Interest in your customizable PC'" name="name"/>
+            <field eval="time.strftime('%Y') +'/'+ time.strftime('%m') +'/'+ str(int(time.strftime('%d')) + 15)" name="date_action"/>
+            <field eval="time.strftime('%Y') +'/'+ str(int(time.strftime('%m')) + 1) +'/'+ time.strftime('%d')" name="date_deadline"/>
             <field eval="'Ask for the good receprion of the proposition'" name="title_action"/>
             <field name="partner_name">Eric Dubois</field>
             <field name="street">Chaussée de Binche, 27</field>

@@ -86,13 +86,15 @@ class crm_lead2partner(osv.osv_memory):
                     partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
                     
             # Find partner name that matches the name of the lead
-            if not partner_ids and lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-                
-            partner_id = partner_ids and partner_ids[0] or False
             
-            
-
+	    part_ids = partner_obj.search(cr, uid, [('name', 'ilike', lead.partner_name)], context=context)
+	    partner_id = False
+	    if part_ids:
+		partner_datas = partner_obj.read(cr,uid,part_ids,['name'],context=context)
+		for partner in partner_datas:
+		    if partner.get('name').upper().replace(' ','') == lead.partner_name.upper().replace(' ',''):
+			partner_id = partner.get('id')
+			
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
