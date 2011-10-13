@@ -2719,7 +2719,7 @@ class account_financial_report(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Report Name', size=128, required=True),
+        'name': fields.char('Report Name', size=128, required=True, translate=True),
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
