@@ -1037,7 +1037,7 @@ class related(function):
 
        _columns = {
            'foo_id': fields.many2one('my.foo', 'Foo'),
-           'bar': fields.related('frol', 'foo_id', type='char', string='Frol of Foo'),
+           'bar': fields.related('foo_id', 'frol', type='char', string='Frol of Foo'),
         }
     """
 
