@@ -110,7 +110,7 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
             }
         });
 
-        if (this.fields_view.arch.attrs.colors) {
+        if (!this.fields_view.arch.attrs.colors) {
             return;
         }
         this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()

@@ -22,11 +22,7 @@ class Widgets(openerpweb.Controller):
     _cp_path = '/web_dashboard/widgets'
 
     @openerpweb.httprequest
-    def content(self, req, widget_id):
-        Widget = req.session.model('res.widget')
-        w = Widget.read([widget_id], ['content'], req.session.eval_context(req.context))
-        if w:
-            r = WIDGET_CONTENT_PATTERN % w[0]
-        else:
-            r = "Widget unavailable"
-        return r
+    def content(self, request, widget_id):
+        return WIDGET_CONTENT_PATTERN % request.session.model('res.widget').read(
+            [int(widget_id)], ['content'], request.session.eval_context(request.context)
+        )[0]

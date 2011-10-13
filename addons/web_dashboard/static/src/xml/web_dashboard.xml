@@ -30,9 +30,10 @@
 </t>
 <t t-name="DashBoard.action">
     <div t-att-data-id="action.attrs.name" class="oe-dashboard-action">
-        <h2 class="oe-dashboard-action-header oe_view_title">
+        <h2 t-attf-class="oe-dashboard-action-header oe_view_title #{action.attrs.string ? '' : 'oe-dashboard-action-header-empty'}">
             <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
             <t t-esc="action.attrs.string"/>
+            <t t-if="!action.attrs.string">&amp;nbsp;</t>
             <span class='ui-icon ui-icon-closethick'></span>
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
             <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>

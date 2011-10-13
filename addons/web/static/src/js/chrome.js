@@ -487,6 +487,15 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
                 this.selected_password = localStorage.getItem('last_password_login_success');
             }
         }
+        
+        var qs = jQuery.deparam(jQuery.param.querystring());
+        if (qs.db) {
+            this.selected_db = qs.db;
+        }
+        if (qs.login) {
+            this.selected_login = qs.login;
+        }
+
     },
     start: function() {
         var self = this;
@@ -823,7 +832,9 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
             this.session.active_id = id;
             this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
         }
-        ev.stopPropagation();
+        if (ev) {
+            ev.stopPropagation();
+        }
         return false;
     },
     do_menu_click: function($clicked_menu, manual) {
@@ -866,6 +877,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
                 $sub_menu.hide();
                 return true;
             }
+            return manual;
         } else {
             return true;
         }
