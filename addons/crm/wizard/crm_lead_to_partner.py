@@ -86,8 +86,20 @@ class crm_lead2partner(osv.osv_memory):
                     partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
                     
             # Find partner name that matches the name of the lead
-            if not partner_ids and lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
+            if type(lead.partner_name).__name__ == 'unicode':
+                partner_name = str(lead.partner_name)
+            partner_name = partner_name.capitalize()
+            partner = ''
+            upper = False
+            for name in partner_name:
+	            if upper:
+		            partner+=name.upper()
+	            else:
+		            partner+=name
+	            upper = name.isspace()
+	        
+            if not partner_ids and partner:
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', partner)], context=context)
                 
             partner_id = partner_ids and partner_ids[0] or False
             
