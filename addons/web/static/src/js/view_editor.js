@@ -1,6 +1,7 @@
 openerp.web.view_editor = function(openerp) {
 var _PROPERTIES = {
-    'field' : ['required', 'readonly'],
+    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
+               'colspan', 'eval', 'ref', 'on_change', 'attrs'],
     'form' : ['string', 'col', 'link'],
     'notebook' : ['colspan', 'position', 'groups'],
     'page' : ['string', 'states', 'attrs', 'groups'],
@@ -22,7 +23,6 @@ var _PROPERTIES = {
 };
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
-
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
         this.element_id = element_id
@@ -107,7 +107,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         render_name+= ">";
         xml_tag+= ">";
         });
-        obj.main_xml = xml_tag;
+        obj.main_xml = xml;
         obj.name = render_name;
         return obj;
     },
@@ -287,7 +287,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     this.dialog.$element.html(QWeb.render('view_editor', {
        'data': one_object['main_object'],
     }));
-
     $("tr[id^='viewedit-']").click(function() {
         $("tr[id^='viewedit-']").removeClass('ui-selected');
         $(this).addClass('ui-selected');
@@ -439,10 +438,18 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 db = new openerp.web.DataSetSearch(self,'ir.model.fields', null, null);
                 db.read_slice([],{domain : [['model_id','=',result[0].id],['name','=',fld_name]]},function (res) {
                     // res will use for getting value of fields.
+                    var widget = ['readonly','required','nolable','completion','groups','position','icon','align'];
                     var k = {"attrs":{"modifiers":"{'readonly':true}","name":"name"},"children":[],"tag":"field"};
                     _.each(properties,function(record){
-                        var type_widget =  new (self.property.get_any(['undefined' , record, 'field'])) (self.dialog, k);
-                        $("div[id='"+self.dialog.element_id+"']").append('<div>'+record+''+type_widget.render()+'</div>');
+                        if (_.include(widget,record)){
+                            var type_widget =  new (self.property.get_any(['undefined' , record, 'field'])) (self.dialog, k);
+                            $("div[id='"+self.dialog.element_id+"']").append('<div>'+record+''+type_widget.render()+'</div>');
+                            type_widget.set_value(res[0][record]);
+                        }else{
+                            var type_widget = new openerp.web.ViewEditor.FieldChar (self.dialog, k);
+                            $("div[id='"+self.dialog.element_id+"']").append('<div id="res">'+record+''+type_widget.render()+'</div>');
+                            type_widget.set_value(res[0][record]);
+                        }
                     });
                 });
             });
@@ -450,12 +457,36 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.form.FieldBoolean.extend({
     init: function(view, node) {
-        //this._super(view, node);
-        this.template = "FieldBoolean";
+        this.$element = view.$element;
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
+    },
+    set_value: function(value) {
+        if (value === false || value === undefined) {
+            // As in GTK client, floats default to 0
+            value = 0;
+            this.dirty = true;
+        }
+        this._super.apply(this, [value]);
+    }
+});
+openerp.web.ViewEditor.FieldChar = openerp.web.form.FieldChar.extend({
+    init: function(view, node) {
+        this.$element = view.$element;
+    },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+    },
+    set_value: function(value) {
+        if (value === false || value === undefined) {
+            // As in GTK client, floats default to 0
+            value = 0;
+            this.dirty = true;
+        }
+        this._super.apply(this, [value]);
     }
 });
 
@@ -464,8 +495,7 @@ openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
     'nolabel' : 'openerp.web.ViewEditor.FieldBoolean',
     'completion' : 'openerp.web.ViewEditor.FieldBoolean',
-    /*'widget' : '',
-    'groups' : '',
+    /*'groups' : 'openerp.web.ViewEditor.WidgetFrame',
     'position': '',
     'icon': '',
     'align': '' */

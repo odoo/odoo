@@ -773,13 +773,13 @@
     <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
-    <input type="text" size="1"
+    <input type="text" size="12"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type} #{widget.element_class}"
-        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
+
     />
-    <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+    <!-- img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/-->
 </t>
 <t t-name="FieldChar.readonly">
     <div
