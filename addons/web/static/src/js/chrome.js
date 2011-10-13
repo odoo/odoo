@@ -970,6 +970,10 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.login.appendTo($('#oe_login'));
         this.menu.start();
     },
+    do_reload: function() {
+        this.session.session_restore();
+        this.menu.do_reload();
+    },
     on_logged: function() {
         this.menu.do_reload();
         if(this.action_manager)

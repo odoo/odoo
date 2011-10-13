@@ -123,8 +123,8 @@ db.web.ActionManager = db.web.Widget.extend({
         }
         if (this.dialog && action.context) {
             var model = action.context.active_model;
-            if (model === 'base.module.upgrade' || model === 'base.setup.installer') {
-                db.webclient.menu.do_reload();
+            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
+                db.webclient.do_reload();
             }
         }
         this.dialog_stop();
