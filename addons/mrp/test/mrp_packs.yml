@@ -1,72 +1,7 @@
 -
-  In order to test the Packs in OpenERP, we will try to sell a "Pack of 24
-  beers" which is composed of 24 "Beers" and a "Beers Pack".
+  In order to test the Packs in OpenERP, we will try to sell a "KIT Shelf of 100cm" which is composed of "[PROFIL] Assembly Section" and "[SIDEPAN] Side Panel" having Phantom BOM.
 -
-  I start by creating the Beers product.
-- 
-  !record {model: product.product, id: product_product_beers0}:
-    categ_id: product.cat1
-    name: Beers
-    procure_method: make_to_stock
-    seller_ids:
-      - delay: 1
-        name: base.res_partner_agrolait
-        min_qty: 2.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I create the "Beers Pack" product.
-- 
-  !record {model: product.product, id: product_product_beerspack0}:
-    categ_id: product.cat1
-    name: Beers Pack
-    procure_method: make_to_stock
-    seller_ids:
-      - delay: 1
-        name: base.res_partner_asus
-        min_qty: 2.0
-    supply_method: buy
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I create the "Pack of 24 beers" product
-- 
-  !record {model: product.product, id: product_product_packofbeers0}:
-    categ_id: product.cat1
-    name: Pack of 24 Beers
-    procure_method: make_to_order
-    supply_method: produce
-    type: product
-    uom_id: product.product_uom_unit
-    uom_po_id: product.product_uom_unit
--
-  I define the Phantom Bill of Material for the "Pack of 24 beers"
-- 
-  !record {model: mrp.bom, id: mrp_bom_packofbeers0}:
-    bom_lines:
-      - company_id: base.main_company
-        name: Beers
-        product_id: product_product_beers0
-        product_qty: 24.0
-        product_uom: product.product_uom_unit
-        type: normal
-      - company_id: base.main_company
-        name: Beers Pack
-        product_id: product_product_beerspack0
-        product_qty: 1.0
-        product_uom: product.product_uom_unit
-        type: normal
-    name: Pack of 24 Beers
-    product_id: product_product_packofbeers0
-    product_qty: 1.0
-    product_uom: product.product_uom_unit
-    type: phantom
--
-  As all my data are created, I will create an outgoing order picking for a
-  "Pack of 24 Beers"
+  As all my data are already available, I will create an outgoing order picking for 2 "KIT Shelf of 100cm"
 -
   !record {model: stock.picking, id: picking_out}:
     address_id: base.res_partner_address_tang
@@ -76,8 +11,8 @@
       - company_id: base.main_company
         location_dest_id: stock.stock_location_customers
         location_id: stock.stock_location_stock
-        name: Pack of 24 Beers
-        product_id: product_product_packofbeers0
+        name: KIT Shelf of 100cm
+        product_id: product.product_product_kitshelfofcm0
         product_qty: 2.0
         product_uom: product.product_uom_unit
     move_type: direct
@@ -91,13 +26,12 @@
         "active_id": ref("stock.menu_action_picking_tree"), }
     )
 -
-  I check that my Picking of a "Pack of 24 beers" has been automatically
-  converted to a picking of 24 beers and a pack of beer, so that my
-  stock of beers remains exact.
+  I check that my Picking of "KIT Shelf of 100cm" has been automatically
+  converted to a picking of  "[PROFIL] Assembly Section" and "[SIDEPAN] Side Panel".
 -
   !assert {model: stock.picking, id: picking_out, string: pack_of_beer_splitted}:
     - len(move_lines) >= 2
     - move_lines[0].product_id.id <> move_lines[1].product_id.id
-    - move_lines[0].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
-    - move_lines[1].product_id.id in (ref('product_product_beers0'), ref('product_product_beerspack0'))
+    - move_lines[0].product_id.id in (ref('product.product_product_assemblysection0'), ref('product.product_product_sidepanel0'))
+    - move_lines[1].product_id.id in (ref('product.product_product_assemblysection0'), ref('product.product_product_sidepanel0'))
     
