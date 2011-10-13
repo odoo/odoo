@@ -296,6 +296,8 @@
 -
   I check that my currency rate difference is correct. 8.5 in credit with no amount_currency
 -
+  I  check that the total reconcilation created entries as expected
+-
   I check that my writeoff is correct. 4.75 debit and 5 amount_currency
 -
   !python {model: account.voucher}: |
@@ -303,6 +305,14 @@
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    reconcile_a = reconcile_b = False
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        if move_line.amount_currency == -20.00:
+            assert move_line.reconcile_id.id, "The invoice of 200$ is not fully reconciled"
+            reconcile_b = move_line.reconcile_id.id
+        elif move_line.amount_currency == -30.00:
+            assert move_line.reconcile_id.id, "The invoice of 100$ is not fully reconciled"
+            reconcile_a = move_line.reconcile_id.id
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         if move_line.amount_currency == -20.00:
             assert move_line.credit == 19.00, "Debtor account has wrong entry."
@@ -310,8 +320,10 @@
             assert move_line.credit == 28.50, "Debtor account has wrong entry."
         elif move_line.amount_currency == 5.00:
             assert move_line.debit == 4.75, "Writeoff amount is wrong."
--
-  I  check that the total reconcilaition created entries as expected: TODO
+        elif move_line.debit == 11.5 and move_line.account_id.reconcile:
+            assert move_line.amount_currency == 0.0 and move_line.reconcile_id.id == reconcile_a, "Exchange difference entry for the invoice of 100$ is wrong"
+        elif move_line.debit == 31.0 and move_line.account_id.reconcile:
+            assert move_line.amount_currency == 0.0 and move_line.reconcile_id.id == reconcile_b, "Exchange difference entry for the invoice of 200$ is wrong"
 -
   I check the residual amount of Invoice1, should be 0 in residual currency and 0 in amount_residual and paid
 -
