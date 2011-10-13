@@ -1,0 +1,32 @@
+-
+  Using mass wizard, convert two lead to opportunity.
+-
+  !record {model: crm.lead2opportunity.partner.mass, id: crm_lead2opportunity_partner_mass0}:
+    user_ids:
+      - base.user_root
+    section_id: crm.section_sales_department
+-
+  Leads coverts to mass opportunity.
+-
+  !python {model: crm.lead2opportunity.partner.mass}: |
+    self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_case_employee0"), ref("crm_case_electonicgoodsdealer0")], 'active_id': ref("crm_case_qrecorp0")})
+-
+  First lead converted on opportunity.i test it.
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_employee0'))
+    assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
+    assert lead.planned_revenue == 0.0, 'Planned revenue should be 0!'
+    assert lead.probability == 0.0, 'probability revenue should be 0!'
+    assert lead.partner_id.name == "Agrolait", 'Partner missmatch!'
+    assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
+-
+  Second lead converted on opportunity.i test it.
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_electonicgoodsdealer0'))
+    assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
+    assert lead.planned_revenue == 0.0, 'Planned revenue should be 0!'
+    assert lead.probability == 0.0, 'probability revenue should be 0!'
+    assert lead.partner_id.name == "Le Club SARL", 'Partner missmatch!'
+    assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
