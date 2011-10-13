@@ -654,7 +654,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                 .filter(function (field) {
                     // keep m2o fields which are in the data dict
                     return field.descriptor.type === 'many2one' &&
-                           field.key in data;
+                           data[field.key];
                 }).pluck('key')
                 .value();
             var name_gets = _(fields_to_fix).map(function (field) {
