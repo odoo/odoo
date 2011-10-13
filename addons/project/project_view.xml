@@ -511,20 +511,6 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
-        
-        <record id="action_view_task_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_task_tree2"/>
-            <field name="act_window_id" ref="action_view_task"/>
-        </record>
-        
-        <record id="action_view_task_form" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_task_form2"/>
-            <field name="act_window_id" ref="action_view_task"/>
-        </record>        
  
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
 
@@ -557,6 +543,21 @@
         </record>
 
         <!-- Task types -->
+        <record id="task_type_search" model="ir.ui.view">
+            <field name="name">project.task.type.search</field>
+            <field name="model">project.task.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Stages">
+                   <group>
+                       <filter icon="terp-check" string="Common" name="common" domain="[('project_default', '=', 1)]" help="Stages common to all projects"/>
+                       <separator orientation="vertical"/>
+                       <field name="name"/>
+                   </group>
+                </search>
+            </field>
+        </record>
+
         <record id="task_type_edit" model="ir.ui.view">
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
@@ -564,7 +565,7 @@
             <field name="arch" type="xml">
                 <form string="Task Stage">
                     <group colspan="4" col="6">
-                    <field name="name" select="1"/>
+                    <field name="name"/>
                     <field name="project_default"/>
                     <field name="sequence"/>
                     </group>
@@ -648,7 +649,6 @@
             </group>
        </field>
     </record>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
-    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('date', '&gt;=', time.strftime('%Y-%m-01'))]" id="act_res_users_2_project_task_work_month" name="Month works" res_model="project.task.work" src_model="res.users" view_mode="tree,form" view_type="form"/>
+    <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
     </data>
 </openerp>

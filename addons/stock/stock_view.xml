@@ -676,6 +676,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
+                    <field name="partner_id" invisible="True"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
                     <field name="date"/>

@@ -20,9 +20,9 @@
 ##############################################################################
 {
     'name': 'Belgian Payroll Rules',
-    'category': 'payroll',
+    'category': 'Localization/Payroll',
     'author': 'OpenERP SA',
-    'depends': ['hr_payroll','hr_contract'],
+    'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """
 Belgian Payroll Rules
@@ -36,7 +36,7 @@ Belgian Payroll Rules
     * Employee Payslip
     * Monthly Payroll Register
     * Integrated with Holiday Management
-    * Salary Maj, ONSS, Precompte Professionnel, Child Allowance, ...
+    * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
     'active': False,
@@ -50,3 +50,5 @@ Belgian Payroll Rules
     ],
     'installable': True
 }
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,7 +22,7 @@
 {
     'name': 'Email Subsystem',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'complexity': "easy",
     'description': """
 A generic email subsystem with message storage and queuing

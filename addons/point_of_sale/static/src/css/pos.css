@@ -1,0 +1,478 @@
+
+.point-of-sale {
+    padding: 0;
+    margin: 0;
+    background-color: #f0eeee;
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    font-size: 12px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.point-of-sale table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+.point-of-sale td { 
+    border: 1px solid #e9eaec;
+}
+.point-of-sale input {
+    color: #555555;
+}
+.point-of-sale a {
+    text-decoration: none;
+    color: #555555;
+}
+.point-of-sale button, .point-of-sale a.button {
+    display: inline-block;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid #cacaca;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    background: #e2e2e2;
+    background: -moz-linear-gradient(#f0f0f0, #e2e2e2);
+    background: -webkit-gradient(linear, left top, left bottom, from(#f0f0f0), to(#e2e2e2));
+}
+.point-of-sale ul, .point-of-sale ol {
+    padding: 0;
+    margin: 0;
+}
+.point-of-sale li {
+    list-style-type: none;
+}
+.point-of-sale button img {
+    vertical-align: bottom;
+}
+.point-of-sale .pos-rigth-align {
+    text-align: right;
+}
+.point-of-sale .pos-rigth-align input {
+    text-align: right;
+}
+.point-of-sale #container {
+    width: 100%;
+    height: 100%;
+}
+.point-of-sale #topheader {
+    width: 100%;
+    height: 54px;
+    color: gray;
+    border-top: solid 1px #d3d3d3;
+    border-bottom: solid 1px black;
+    background: #393939;
+    background: -moz-linear-gradient(#7b7979, #393939);
+    background: -webkit-gradient(linear, left top, left bottom, from(#7b7979), to(#393939));
+}
+.point-of-sale #topheader button {
+    color: black;
+    border: 1px solid black;
+    background: #7f82ac;
+    background: -moz-linear-gradient(#b2b3d7, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#b2b3d7), to(#7f82ac));
+}
+.point-of-sale #branding, .point-of-sale #steps, .point-of-sale #rightheader {
+    float: left;
+    overflow: hidden;
+    height: 35px;
+    padding: 10px;
+}
+.point-of-sale #branding {
+    border-right: 1px solid #373737;
+    text-align: center;
+}
+.point-of-sale #branding img {
+    height: 32px;
+    width: 116px;
+}
+.point-of-sale #steps {
+    padding: 10px 17px;
+    border-right: solid 1px #3b3b3b;
+    vertical-align: top;
+}
+.point-of-sale #steps label {
+    width: 80px;
+    color: #A5A5A5;
+    font-weight: bold;
+    border-color: #454545;
+    background-color: #454545;
+    background-image: none;
+    border-bottom: solid 1px #5c5c5c;
+    border-top: solid 1px #373737;
+    vertical-align: top;
+}
+.point-of-sale #steps label:first-child {
+    border-left: solid 1px #373737;
+}
+.point-of-sale #steps label:last-child {
+    border-right: solid 1px #373737;
+}
+.point-of-sale #steps span {
+    padding: 2px 6px;
+}
+.point-of-sale #steps img {
+    height: 32px;
+}
+.point-of-sale #steps .ui-button, .point-of-sale #steps .ui-button-text-only {
+    padding-top: 4px;
+    height: 26px;
+    margin: 0 -4px;
+}
+.point-of-sale #neworder-button {
+    width: 32px;
+    padding: 1px;
+    font-size: 23px;
+}
+.point-of-sale #loggedas {
+    float: right;
+    padding: 5px 9px;
+    text-align: center;
+    color: white;
+    border-left: 1px solid #373737;
+}
+.point-of-sale #loggedas p {
+    margin: 0 0 3px 0;
+}
+.point-of-sale #content {
+    width: 100%;
+    position: absolute;
+    top: 56px;
+    bottom: 0;
+}
+.point-of-sale #leftpane {
+    height: 100%;
+    width: 440px;
+    position: relative;
+    border-right: solid 1px #afafb6;
+    background-color: white;
+}
+.point-of-sale #leftpane footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #e0e0e0;
+    background-image: url(../img/headerbackground.jpg);
+}
+.point-of-sale #current-order {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 271px;
+    overflow: auto;
+}
+.point-of-sale #current-order thead {
+    background-color: #cccccc;
+    background-image: url(../img/headerbackground.jpg);
+    border: 0px;
+    font-size: 12px;
+    width: 440px;
+}
+.point-of-sale #current-order thead td {
+    text-align: center;
+    padding: 8px 0px;
+    min-width: 40px;
+    font-size: 12px;
+}
+.point-of-sale #current-order td {
+    padding: 6px 4px;
+    font-size: 11px;
+    text-align: right;
+    min-width: 40px;
+    white-space: nowrap;
+}
+.point-of-sale #current-order td:first-child {
+    width: 320px;
+    padding: 6px;
+    text-align: left;
+    text-overflow: ellipsis;
+}
+.point-of-sale #current-order td:last-child {
+    border-right: none;
+}
+.point-of-sale #current-order tr.selected {
+    background-color: #e9eaf2;
+}
+.point-of-sale #current-order tr.selected td {
+    border-top: 2px solid #d5d6e0;
+    border-bottom: 1px solid #d5d6e0;
+    padding-top: 5px;
+    color: #555555;
+}
+.point-of-sale #amounts {
+    background: white;
+    border-bottom: solid 1px #d2d2d2;
+    border-top: solid 1px #e9eaec;
+    font-weight: bold;
+    text-align: right;
+    -webkit-margin-before: 0;
+    -webkit-margin-after: 0;
+}
+.point-of-sale #amounts li {
+    display: inline-block;
+    padding: 8px;
+    width: 29%;
+}
+.point-of-sale #paypad {
+    padding: 8px;
+    float: left;
+    text-align: center;
+}
+.point-of-sale #paypad button {
+    height: 54px;
+    width: 208px;
+    margin: 0 -3px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #555555;
+    border-top: 1px solid #efefef;
+}
+.point-of-sale #paypad button:hover {
+    color: white;
+    background: #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+}
+.point-of-sale #numpad {
+    padding: 7px;
+    float: right;
+    text-align: center;
+}
+.point-of-sale #numpad button {
+    height: 54px;
+    width: 54px;
+    margin: 0 -3px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #555555;
+    border-top: 1px solid #efefef;
+}
+.point-of-sale #numpad button:hover {
+    color: white;
+    background: #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+}
+.point-of-sale #numpad .selected-mode {
+    color: white;
+    background: #7f82ac;
+    background: -moz-linear-gradient(#9d9fc5, #7f82ac);
+    background: -webkit-gradient(linear, left top, left bottom, from(#9d9fc5), to(#7f82ac));
+}
+.point-of-sale .payment-button {
+    font-size: 14px;
+}
+.point-of-sale .input-button {
+    font-size: 24px;
+}
+.point-of-sale .mode-button, .point-of-sale #numpad-delete, .point-of-sale #numpad-minus {
+    font-size: 14px;
+}
+.point-of-sale #rightpane {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 441px;
+    right: 0;
+    height: 100%;
+    vertical-align: top;
+}
+.point-of-sale #rightpane header {
+    padding: 0;
+    height: 32px;
+    border-bottom: 1px solid #cecbcb;
+    background: #d3d3d3;
+    background: -moz-linear-gradient(white, #d3d3d3);
+    background: -webkit-gradient(linear, left top, left bottom, from(white), to(#d3d3d3));
+}
+.point-of-sale .product-list {
+    overflow: auto;
+    position: absolute;
+    top: 72px;
+    bottom: 0;
+}
+.point-of-sale .breadcrumb li {
+    float: left;
+    line-height: 32px;
+    height: 32px;
+}
+.point-of-sale .breadcrumb li:last-child {
+    padding-right: 3px;
+    border-right: 1px solid #c5c5c5;
+}
+.point-of-sale .breadcrumb a {
+    display: inline-block;
+    padding: 0 9px;
+    vertical-align: top;
+    text-shadow: #f7f7f7 0 1px 1px;
+    color: #555555;
+    font-weight: bold;
+}
+.point-of-sale .bc-arrow {
+    height: 33px;
+}
+.point-of-sale .homeimg {
+    width: 19px;
+    height: 19px;
+    margin: 6px 0;
+}
+.point-of-sale .searchbox {
+    position: absolute;
+    right: 2px;
+}
+.point-of-sale .searchbox input {
+    width: 130px;
+    -moz-border-radius: 11px;
+    -webkit-border-radius: 11px;
+    border-radius: 11px;
+    border: 1px solid #cecbcb;
+    padding: 3px 19px;
+    margin: 6px;
+    background: url("../img/search.png") no-repeat 5px;
+    background-color: white;
+}
+.point-of-sale .search-clear {
+    position: absolute;
+    top: 11px;
+    right: 11px;
+    cursor: pointer;
+    display: none;
+}
+.point-of-sale #categories {
+    border-bottom: 1px solid #cecbcb;
+}
+.point-of-sale #categories h4 {
+    display: inline-block;
+    margin: 9px 5px;
+}
+.point-of-sale #categories ol {
+    display: inline;
+}
+.point-of-sale #categories li {
+    display: inline-block;
+}
+.point-of-sale #categories .button {
+    padding: 6px 14px;
+    margin: 4px 0;
+    font-size: 12px;
+}
+.point-of-sale .product {
+    vertical-align: top;
+    display: inline-block;
+    font-size: 11px;
+    margin: 5px;
+    max-width: 120px;
+    border: 1px solid lightgray;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0px 1px 4px #777777;
+    -webkit-box-shadow: 0px 1px 4px #777777;
+    -box-shadow: 0px 1px 4px #777777;
+}
+.point-of-sale .product-img {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    background: white;
+    text-align: center;
+}
+.point-of-sale .price-tag {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    background: #7f82ac;
+    padding: 2px 5px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+.point-of-sale .product-name {
+    padding: 3px;
+}
+.point-of-sale #login-form label, .point-of-sale #login-form input {
+    display: block;
+}
+.point-of-sale #login-form input {
+    margin: 4px 0 12px;
+    padding: 4px;
+    width: 96%;
+}
+.point-of-sale div#order-selector {
+    display: inline;
+}
+.point-of-sale ol#orders {
+    display: inline;
+}
+.point-of-sale li.order-selector-button {
+    display: inline;
+}
+.point-of-sale li.selected-order button {
+    font-weight: 900;
+}
+
+.point-of-sale .step-screen {
+    text-align: center;
+}
+.point-of-sale .step-screen header h2 {
+    margin-top: 0px;
+    padding-top: 7px;
+}
+
+.point-of-sale .pos-step-container {
+    display: inline-block;
+    font-size: 1.5em;
+}
+.point-of-sale .pos-payment-container {
+    text-align: left;
+}
+.point-of-sale .pos-payment-container .payment-due {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 3px 6px 0px 6px;
+    background-color: white;
+    border:1px solid grey;
+    border-radius: 3px;
+}
+.point-of-sale .pos-payment-container table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.point-of-sale .pos-payment-container .paymentline-type {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.point-of-sale .step-screen button {
+    width: 50%;
+    text-align: center;
+    padding: 7px 0 7px 0;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+.point-of-sale .pos-sale-ticket {
+    text-align: left;
+    width: 300px;
+    background-color: white;
+    margin: 20px;
+    padding: 10px;
+    display: inline-block;
+}
+.point-of-sale .pos-sale-ticket table {
+    width: 100%;
+    border: 0;
+}
+.point-of-sale .pos-sale-ticket table td {
+    border: 0;
+}
+.point-of-sale .pos-sale-ticket table td.receiptline-amount {
+    text-align: right;
+}
+.point-of-sale .pos-receipt-container {
+    font-size: 0.75em;
+}

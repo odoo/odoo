@@ -23,7 +23,7 @@
 {
     'name': 'Base module quality - To check the quality of other modules' ,
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 The aim of this module is to check the quality of other modules.
 ================================================================

@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    <menuitem
-        id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" 
-        sequence="0"/>
-    <menuitem
-            action="hr.open_board_hr"
-            icon="terp-graph"
-            id="base.menu_hr_project"
-            parent="base.menu_hr_dasboard"
-            sequence="4"/>
-
         <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
             <field name="type">ir.actions.act_window</field>
@@ -19,7 +9,6 @@
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_graph"/>
         </record>
-
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree.simplified.board</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -55,12 +44,5 @@
                 </xpath>
             </field>
         </record>
-        <menuitem
-            action="hr.open_board_hr_manager"
-            icon="terp-graph"
-            id="base.menu_hr_manager"
-            parent="base.menu_hr_dasboard"
-            groups = "base.group_hr_manager"
-            sequence="5"/>
     </data>
 </openerp>

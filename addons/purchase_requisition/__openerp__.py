@@ -18,10 +18,10 @@
 #
 ##############################################################################
 {
-    "name" : "Purchase - Purchase Requisition",
+    "name" : "Purchase Requisition",
     "version" : "0.1",
     "author" : "OpenERP SA",
-    "category" : "Purchases",
+    "category" : "Purchase Management",
     'complexity': "easy",
     "images" : ['images/purchase_requisitions.jpeg'],
     "website" : "http://www.openerp.com",
@@ -43,7 +43,9 @@ This new object will regroup and will allow you to easily keep track and order a
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
     ],
     "active": False,
-    "test":['test/purchase_requisition_report.yml'],
+    "test":['test/purchase_requisition_report.yml',
+            'test/purchase_requisition_test.yml',
+            ],
     "installable": True,
     "certificate" : "001023264099823179629",
 }

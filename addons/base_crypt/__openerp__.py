@@ -24,7 +24,7 @@
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     'complexity': "easy",
     "description": """
 Replaces cleartext passwords in the database with a secure hash

@@ -21,7 +21,7 @@
 {
     'name': 'Brazilian Localization',
     'description': 'Brazilian Localization',
-    'category': 'Finance',
+    'category': 'Localization/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Brazil in OpenERP.
 =============================================================================

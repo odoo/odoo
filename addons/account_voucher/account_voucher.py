@@ -674,7 +674,7 @@ class account_voucher(osv.osv):
             if inv.number:
                 name = inv.number
             elif inv.journal_id.sequence_id:
-                name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
+                name = seq_obj.next_by_id(cr, uid, inv.journal_id.sequence_id.id)
             else:
                 raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
             if not inv.reference:
@@ -781,7 +781,7 @@ class account_voucher(osv.osv):
                     if not (tax_data.base_code_id and tax_data.tax_code_id):
                         raise osv.except_osv(_('No Account Base Code and Account Tax Code!'),_("You have to configure account base code and account tax code on the '%s' tax!") % (tax_data.name))
                 sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
-                move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or 0.0
+                move_line['amount_currency'] = company_currency <> current_currency and sign * line.amount or False
                 voucher_line = move_line_pool.create(cr, uid, move_line)
                 rec_ids = [voucher_line, line.move_line_id.id]
 
@@ -843,8 +843,8 @@ class account_voucher(osv.osv):
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
-                    #'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
-                    #'currency_id': company_currency <> current_currency and current_currency or False,
+                    'amount_currency': company_currency <> current_currency and inv.writeoff_amount or False,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
                 }
                 move_line_pool.create(cr, uid, move_line)
             self.write(cr, uid, [inv.id], {
@@ -1056,7 +1056,7 @@ class account_bank_statement_line(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
                 diff = abs(obj.amount) - obj.voucher_id.amount
-                if not self.pool.get('res.currency').is_zero(cr, uid, obj.voucher_id.currency_id, diff):
+                if not self.pool.get('res.currency').is_zero(cr, uid, obj.statement_id.currency, diff):
                     return False
         return True
 

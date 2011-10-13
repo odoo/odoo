@@ -180,7 +180,7 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),

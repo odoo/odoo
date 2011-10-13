@@ -23,7 +23,7 @@ import account
 import installer
 import project
 import partner
-import invoice
+import account_invoice
 import account_bank_statement
 import account_bank
 import account_cash_statement
@@ -32,7 +32,7 @@ import account_analytic_line
 import wizard
 import report
 import product
-import sequence
+import ir_sequence
 import company
 import res_currency
 import edi
