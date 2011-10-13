@@ -8,6 +8,11 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
     template: 'Notification',
     identifier_prefix: 'notification-',
 
+    init: function() {
+        this._super.apply(this, arguments);
+        openerp.notification = this;
+    },
+
     start: function() {
         this._super.apply(this, arguments);
         this.$element.notify({
@@ -29,33 +34,19 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
             expires: false,
         });
     },
-    
-    do_notify: function() { this.notify.apply(this, arguments); },
-    do_warn: function() {this.warn.apply(this, arguments); },
 
 });
 
-openerp.web.NotifiableWidget = openerp.web.Widget.extend({
-
-    init: function(/*arguments*/) {
-        this._super.apply(this, arguments);
-        this.notification = new openerp.web.Notification(this);
+openerp.web.Widget.include({
+    do_notify: function() {
+        var n = openerp.notification;
+        n.notify.apply(n, arguments);
     },
-
-    start: function() {
-        this._super.apply(this, arguments);
-        this.notification.prependTo(this.$element);
+    do_warn: function() {
+        var n = openerp.notification;
+        n.warn.apply(n, arguments);
     },
-
-    stop: function() {
-        this.notification.stop();
-        return this._super.apply(this, arguments);
-    },
-
-    do_notify: function() { this.notification.notify.apply(this.notification, arguments); },
-    do_warn: function() { this.notification.warn.apply(this.notification, arguments); },
 });
-
 
 
 openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
@@ -945,7 +936,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.WebClient = openerp.web.NotifiableWidget.extend(/** @lends openerp.web.WebClient */{
+openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
     /**
      * @constructs openerp.web.WebClient
      * @extends openerp.web.Widget
@@ -963,6 +954,7 @@ openerp.web.WebClient = openerp.web.NotifiableWidget.extend(/** @lends openerp.w
         }
         this.$element.html(QWeb.render("Interface", params));
 
+        this.notification = new openerp.web.Notification();
         this.session = new openerp.web.Session();
         this.loading = new openerp.web.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.web.CrashManager(this);
@@ -988,6 +980,7 @@ openerp.web.WebClient = openerp.web.NotifiableWidget.extend(/** @lends openerp.w
     },
     start: function() {
         this._super.apply(this, arguments);
+        this.notification.prependTo(this.$element);
         this.header.appendTo($("#oe_header"));
         this.session.start();
         this.login.appendTo($('#oe_login'));

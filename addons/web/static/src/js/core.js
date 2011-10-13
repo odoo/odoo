@@ -949,18 +949,6 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
         }
         return false;
     },
-    do_notify: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_notify.apply(this,arguments);
-        }
-        return false;
-    },
-    do_warn: function() {
-        if (this.widget_parent) {
-            return this.widget_parent.do_warn.apply(this,arguments);
-        }
-        return false;
-    },
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
