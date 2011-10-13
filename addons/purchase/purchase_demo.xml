@@ -12,6 +12,7 @@
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="pricelist_id" ref="purchase.list0"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
+            <field name="invoice_method">order</field>
             <field name="partner_address_id" ref="base.res_partner_address_tang"/>
         </record>
 
@@ -19,6 +20,7 @@
             <field name="location_id" ref="stock.stock_location_stock"/>
             <field name="pricelist_id" ref="purchase.list0"/>
             <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="invoice_method">picking</field>
             <field name="partner_address_id" ref="base.res_partner_address_zen"/>
         </record>
 
@@ -57,7 +59,7 @@
             <field name="name">New server config + material</field>
             <field model="product.product" name="product_id" search="[]"/>
             <field model="product.uom" name="product_uom" search="[]"/>
-            <field name="price_unit">150</field>
+            <field name="price_unit">150.50</field>
             <field name="product_qty">5</field>
         </record>
 
@@ -67,7 +69,7 @@
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450</field>
+            <field name="price_unit">450.20</field>
             <field name="product_qty">2</field>
         </record>
 

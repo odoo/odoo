@@ -38,7 +38,7 @@
     part = ref('base.res_partner_3')
     self.onchange_partner_id(cr, uid, ref('purchase_order_0'), part)
 -
-  I click on botton Dummy.
+  I click on botton Dummy for compute the total amount.
 -
   !python {model: purchase.order}: |
     self.button_dummy(cr, uid, [ref('purchase_order_0')], context=None)
