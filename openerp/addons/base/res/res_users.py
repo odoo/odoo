@@ -433,11 +433,11 @@ class users(osv.osv):
         if uid == openerp.SUPERUSER_ID:
             # Successfully logged in as admin!
             # Attempt to guess the web base url...
-            if user_agent_env and 'host' in user_agent_env:
+            if user_agent_env and user_agent_env.get('base_location'):
                 cr = pooler.get_db(db).cursor()
                 try:
                     self.pool.get('ir.config_parameter').set_param(cr, uid, 'web.base.url',
-                                                                   user_agent_env['host'])
+                                                                   user_agent_env['base_location'])
                     cr.commit()
                 except Exception:
                     logging.getLogger('res.users').exception("Failed to update web.base.url configuration parameter")
