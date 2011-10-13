@@ -4,8 +4,6 @@ import web.controllers.main as web
 import json
 import textwrap
 
-        
-
 edi_import_template = textwrap.dedent("""<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
@@ -15,17 +13,13 @@ edi_import_template = textwrap.dedent("""<!DOCTYPE html>
         
         %(css)s
         %(javascript)s
-        <script type="text/javascript" src="/web_edi/static/src/js/edi_import.js"></script>
+        <script type="text/javascript" src="/edi/static/src/js/edi_import.js"></script>
         <script type="text/javascript">
             $(function() {
                  var c = new openerp.init();
-
                  openerp.web.edi_import(c)
-                
                  var import_engine = new c.web.EdiImport("oe");
                  import_engine.import_edi('%(edi_url)s');
-
-
             });
         </script>
     </head>

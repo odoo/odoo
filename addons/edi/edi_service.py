@@ -31,13 +31,13 @@ class edi(netsvc.ExportService):
         netsvc.ExportService.__init__(self, name)
 
     def _edi_dispatch(self, db_name, method_name, *method_args):
-        registry = openerp.modules.registry.RegistryManager.get(db_name)
-        assert registry, 'Unknown database %s' % db_name
-        edi_document = registry['edi.document']
-        cr = registry.db.cursor()
         try:
+            registry = openerp.modules.registry.RegistryManager.get(db_name)
+            assert registry, 'Unknown database %s' % db_name
+            edi_document = registry['edi.document']
+            cr = registry.db.cursor()
             res = None
-            res = getattr(edi_document,method_name)(cr, *method_args)
+            res = getattr(edi_document, method_name)(cr, *method_args)
             cr.commit()
         except Exception:
             _logger.exception('Failed to execute EDI method %s with args %r', method_name, method_args)
@@ -49,11 +49,11 @@ class edi(netsvc.ExportService):
     def exp_get_edi_document(self, db_name, edi_token):
         return self._edi_dispatch(db_name, 'get_document', 1, edi_token)
 
-    def exp_import_edi_document(self, db, uid, passwd, edi_document, context=None):
-        return self._edi_dispatch(db_name, 'import_edi', 1, edi_document, None)
+    def exp_import_edi_document(self, db_name, uid, passwd, edi_document, context=None):
+        return self._edi_dispatch(db_name, 'import_edi', uid, edi_document, None)
 
-    def exp_import_edi_url(self, db, uid, passwd, edi_url, context=None):
-        return self._edi_dispatch(db_name, 'import_edi', 1, None, edi_url)
+    def exp_import_edi_url(self, db_name, uid, passwd, edi_url, context=None):
+        return self._edi_dispatch(db_name, 'import_edi', uid, None, edi_url)
 
     def dispatch(self, method, params):
         if method in ['import_edi_document',  'import_edi_url']:

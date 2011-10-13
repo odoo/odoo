@@ -9,7 +9,7 @@ openerp.web.edi_view = function(openerp) {
             this.template = "EdiView";
             this.element_id = element_id;
             this.$element = $('#' + element_id);
-            QWeb.add_template("/web_edi/static/src/xml/edi.xml");
+            QWeb.add_template("/edi/static/src/xml/edi.xml");
         
         },
         start: function() {
@@ -69,7 +69,7 @@ openerp.web.EdiViewCenter = openerp.web.Class.extend({
         var self = this;
         this.edi_document = edi.document;
         this.$element = element;
-        QWeb.add_template("/web_edi/static/src/xml/edi.xml");
+        QWeb.add_template("/edi/static/src/xml/edi.xml");
     },
     start: function() {
 	},
@@ -85,7 +85,7 @@ openerp.web.EdiViewRightTop = openerp.web.Class.extend({
         var self = this;
         this.edi_document = edi.document;
         this.$element = element;
-        QWeb.add_template("/web_edi/static/src/xml/edi.xml");
+        QWeb.add_template("/edi/static/src/xml/edi.xml");
         this.$_element = $('<div>')
             .appendTo(document.body)
             .delegate('button.oe_edi_button_import', 'click', {'edi': edi} , this.do_import)
@@ -135,7 +135,7 @@ openerp.web.EdiViewRightBottom = openerp.web.Class.extend({
         var self = this;
         this.edi_document = edi.document;
         this.$element = element;
-        QWeb.add_template("/web_edi/static/src/xml/edi.xml");
+        QWeb.add_template("/edi/static/src/xml/edi.xml");
     },
     start: function() {
 	},

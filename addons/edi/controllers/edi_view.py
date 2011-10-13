@@ -33,7 +33,10 @@ edi_view_template = textwrap.dedent("""<!DOCTYPE html>
 """)
 
 def edi_addons():
-    _addons = ['web', 'edi']
+     #FIXME: hardcoded to be able to test 
+    return 'web,edi,sale,purchase'
+
+    _addons = ['web', 'edi', 'sale', 'purchase']
     for addon in openerpweb.addons_module:
         if addon in _addons:
             continue
@@ -50,14 +53,14 @@ class EDIView(web.WebClient):
     @openerpweb.httprequest
     def css(self, req):
         files = self.manifest_glob(req, edi_addons(), 'css')
-        content,timestamp = web.concat_files(req.config.addons_path, files)
+        content,timestamp = web.concat_files(req.config.addons_path[0], files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req):
         files = self.manifest_glob(req, edi_addons(), 'js')
-        content,timestamp = web.concat_files(req.config.addons_path, files)
+        content,timestamp = web.concat_files(req.config.addons_path[0], files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
     
