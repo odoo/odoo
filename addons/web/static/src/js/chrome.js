@@ -543,7 +543,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.session.session_login(db, login, password, function() {
+        this.session.session_authenticate(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
                     if(self.remember_creditentials) {

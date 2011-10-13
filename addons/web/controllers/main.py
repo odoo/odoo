@@ -265,14 +265,16 @@ class Session(openerpweb.Controller):
     _cp_path = "/web/session"
 
     @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
+    def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
+        release = web.common.release
         env = dict(
-            host='%s://%s' % (wsgienv['wsgi.url_scheme'], wsgienv['HTTP_HOST']),
-            referrer=wsgienv.get('HTTP_REFERER'),
+            base_location=base_location,
+            HTTP_HOST=wsgienv['HTTP_HOST'],
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+            user_agent="%s / %s" % (release.name, release.version),
         )
-        req.session.login(db, login, password, env)
+        req.session.authenticate(db, login, password, env)
         ctx = req.session.get_context() if req.session._uid else {}
 
         return {

@@ -58,8 +58,9 @@ class OpenERPSession(object):
         self._login = login
         self._password = password
 
-    def login(self, db, login, password, env):
-        uid = self.proxy('common').login_env(db, login, password, 'web', env)
+    def authenticate(self, db, login, password, env):
+        # TODO use the lib once it use authenticate
+        uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
         
         if uid: self.get_context()
