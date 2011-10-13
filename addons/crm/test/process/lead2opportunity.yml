@@ -2,18 +2,24 @@
   As the lead seems to be a real business opportunity, I will convert it to a partner
   and a business opportunity.
 -
-   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
-      action: 'exist'
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
+    action: 'exist'
+    partner_id: base.res_partner_agrolait
 -
   Create opportunity based on exiting partner
 -
-   !python {model: crm.lead2opportunity.partner}: |
-      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
+  !python {model: crm.lead2opportunity.partner}: |
+    self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
 -
   In order to test lead, i will test to lead is converted to opportunity.
 -
-  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead is not converted on opportunity}:
-    - type == 'opportunity'
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
+    assert lead.planned_revenue == 0.0, 'Planned revenue should be 0!'
+    assert lead.probability == 0.0, 'probability revenue should be 0!'
+    assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
+    assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
   Finally, i won this opportunity, so i will close this lead.
 -
@@ -34,4 +40,3 @@
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
     - probability == 100.0
-    
