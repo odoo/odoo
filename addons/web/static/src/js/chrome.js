@@ -5,15 +5,11 @@ openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
 openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Notification# */{
-    /**
-     * @constructs openerp.web.Notification
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     * @param element_id
-     */
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+    template: 'Notification',
+    identifier_prefix: 'notification-',
+
+    start: function() {
+        this._super.apply(this, arguments);
         this.$element.notify({
             speed: 500,
             expires: 1500
@@ -32,8 +28,35 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
         }, {
             expires: false,
         });
-    }
+    },
+    
+    do_notify: function() { this.notify.apply(this, arguments); },
+    do_warn: function() {this.warn.apply(this, arguments); },
+
 });
+
+openerp.web.NotifiableWidget = openerp.web.Widget.extend({
+
+    init: function(/*arguments*/) {
+        this._super.apply(this, arguments);
+        this.notification = new openerp.web.Notification(this);
+    },
+
+    start: function() {
+        this._super.apply(this, arguments);
+        this.notification.prependTo(this.$element);
+    },
+
+    stop: function() {
+        this.notification.stop();
+        return this._super.apply(this, arguments);
+    },
+
+    do_notify: function() { this.notification.notify.apply(this.notification, arguments); },
+    do_warn: function() { this.notification.warn.apply(this.notification, arguments); },
+});
+
+
 
 openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
@@ -371,7 +394,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     }
                     $db_list.find(':selected').remove();
                     self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                    self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+                    self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
             }
         });
@@ -456,7 +479,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                         self.display_error(result);
                         return;
                     }
-                    self.notification.notify("Changed Password", "Password has been changed successfully");
+                    self.do_notify("Changed Password", "Password has been changed successfully");
                 });
             }
         });
@@ -922,7 +945,7 @@ openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
     }
 });
 
-openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
+openerp.web.WebClient = openerp.web.NotifiableWidget.extend(/** @lends openerp.web.WebClient */{
     /**
      * @constructs openerp.web.WebClient
      * @extends openerp.web.Widget
@@ -945,9 +968,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.crashmanager =  new openerp.web.CrashManager(this);
         this.crashmanager.start();
 
-        // Do you autorize this ? will be replaced by notify() in controller
-        openerp.web.Widget.prototype.notification = new openerp.web.Notification(this, "oe_notification");
-
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);
         this.header.on_logout.add(this.login.on_logout);
@@ -967,6 +987,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
     },
     start: function() {
+        this._super.apply(this, arguments);
         this.header.appendTo($("#oe_header"));
         this.session.start();
         this.login.appendTo($('#oe_login'));
@@ -1060,7 +1081,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.do_action(action);
     },
     do_about: function() {
-    }
+    },
+
 });
 
 };

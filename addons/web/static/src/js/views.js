@@ -902,7 +902,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         if (this.fields_view && this.fields_view.arch) {
             $('<xmp>' + db.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         } else {
-            this.notification.warn("Manage Views", "Could not find current view declaration");
+            this.do_warn("Manage Views", "Could not find current view declaration");
         }
     },
     on_sidebar_edit_workflow: function() {

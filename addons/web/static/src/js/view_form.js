@@ -443,7 +443,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         });
         msg += "</ul>";
-        this.notification.warn("The following fields are invalid :", msg);
+        this.do_warn("The following fields are invalid :", msg);
     },
     on_saved: function(r, success) {
         if (!r.result) {
@@ -616,7 +616,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
                 ids: [parseInt($e.attr('data-id'))]
             }, function(r) {
                 $e.parent().remove();
-                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
             });
         }
     }
@@ -1195,7 +1195,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value || !this.is_valid()) {
-            this.notification.warn("E-mail error", "Can't send email to invalid e-mail address");
+            this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
         } else {
             location.href = 'mailto:' + this.value;
         }
@@ -1210,7 +1210,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value) {
-            this.notification.warn("Resource error", "This resource is empty");
+            this.do_warn("Resource error", "This resource is empty");
         } else {
             window.open(this.value);
         }
@@ -2626,7 +2626,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
         if (size === false) {
-            this.notification.warn("File Upload", "There was a problem while uploading your file");
+            this.do_warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -2640,7 +2640,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     },
     on_save_as: function() {
         if (!this.view.datarecord.id) {
-            this.notification.warn("Can't save file", "The record has not yet been saved");
+            this.do_warn("Can't save file", "The record has not yet been saved");
         } else {
             var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
