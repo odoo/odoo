@@ -661,10 +661,16 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                 return new openerp.web.DataSet(self, self.fields_get[field].relation)
                     .name_get([data[field]], null);
             });
-            $.when.apply(null, name_gets).then(function () {
+            // null-concat forces stupid bastard `when` to always return an
+            // array containing the Array-ified results of all the name_gets.
+            // otherwise, if there's a single field to fix it returns the
+            // results of the unique name_get directly.
+            $.when.apply(null, name_gets.concat([null])).then(function () {
                 var record = _.extend({}, data);
                 for(var i=0; i<fields_to_fix.length; ++i) {
-                    record[fields_to_fix[i]] = arguments[i][0];
+                    // Each argument is [[name_get], success, jqXhr] and we
+                    // want just the name_get pair
+                    record[fields_to_fix[i]] = arguments[i][0][0];
                 }
                 results.resolve(record);
             });
