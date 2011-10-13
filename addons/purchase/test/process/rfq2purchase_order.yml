@@ -1,22 +1,40 @@
 -
-  In order to test the purchase flow, I compute the total of the ordered products.
+  In order to test the purchase flow, I compute the total of the listed products.
   "Basic PC" product price is 450.20 and ordered 2 'PCE'
   "New server config + material" product price is 150.50 and ordered 5 'PCE'
+  So, Total should be [(450.20*2)+(150.50*5)] = 1652.90
 -
-  !python {model: purchase.order}: |
-    self.button_dummy(cr, uid, [ref('order_purchase1')], context)
+  I check the amount of the RFQ is correctly computed
 -
-  I check the total of the ordered products.
-  Total should be [(450.20*2)+(150.50*5)] = 1652.90
--
-  !assert {model: purchase.order, id: order_purchase1, string: The amount of total should be 1652.90}:
+  !assert {model: purchase.order, id: order_purchase1, string: The amount of Test purchase is correctly computed}:
+    - sum([l.price_subtotal for l in order_line]) == amount_untaxed
     - amount_total == 1652.90
 -
-  I confirm the purchase order.
+  I confirm the RFQ.
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase1,order_purchase2}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase1}
 -
   I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: order_purchase1}:
     - state == 'approved'
+-
+  I check that the purchase order has now a corresponding invoice
+-
+  !assert {model: purchase.order, id: order_purchase1, string: Test purchase has now a corresponding invoice, severity: fatal}:
+    - bool(invoice_ids)
+-
+  Test purchase's invoice has the same amount and is currently a draft
+-
+  !assert {model: purchase.order, id: order_purchase1, string: Test purchase's invoice has the same amount and is currently a draft}:
+    - invoice_ids[0].state == 'draft'
+-
+  I check that the purchase order has now a corresponding picking
+-
+  !assert {model: purchase.order, id: order_purchase1, string: Test purchase has now a corresponding picking, severity: fatal}:
+    - len(picking_ids) == 1
+-
+  I check that the purchase's picking will be sent to the good address
+-
+  !assert {model: purchase.order, id: order_purchase1, string: Test purchase's picking will be sent to the good address, severity: error}:
+    - picking_ids[0].address_id == partner_address_id
