@@ -610,44 +610,114 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     on_default_get: function(res) {
         this.last_default_get = res;
     },
+    /**
+     * Makes sure this dataset has the fields_get for its model stored locally,
+     * so create/write methods are able to determine if written fields are m2os
+     * and can name_get those fields if that's the case (in order to cache a
+     * correct m2o value for them)
+     *
+     * @returns {$.Deferred} whether the fields_get is done executing, provides the fields_get value to its callbacks
+     */
+    ensure_has_fields: function () {
+        var self = this;
+
+        if (this.fields_get) {
+            var d = $.Deferred();
+            setTimeout(function () { d.resolve(self.fields_get, true); }, 0);
+            return d.promise();
+        } else {
+            return self.call('fields_get', [], function (fields_get) {
+                self.fields_get = fields_get;
+            });
+        }
+    },
+    /**
+     * Relational fields may not be written in the same format they are read.
+     *
+     * Since the BufferedDataSet is a bit dumb, it returns what it's got stored
+     * in its cache, which for modified value is what it was given. This breaks
+     * some basic contracts of openerp such as m2o read being in the
+     * ``name_get`` format.
+     *
+     * Because create & write are supposed to be asynchronous, though, it
+     * should be easy to just name_get all incorrect values.
+     *
+     * @param {Object} data form-data to write to the cache
+     * @returns {$.Deferred} resolved with a fixed data dictionary
+     */
+    fix_relational: function (data) {
+        var self = this;
+        var results = $.Deferred();
+        this.ensure_has_fields().then(function (fields) {
+            var fields_to_fix = _(fields).chain()
+                .map(function (d, k) { return {key: k, descriptor: d}; })
+                .filter(function (field) {
+                    // keep m2o fields which are in the data dict
+                    return field.descriptor.type === 'many2one' &&
+                           field.key in data;
+                }).pluck('key')
+                .value();
+            var name_gets = _(fields_to_fix).map(function (field) {
+                return new openerp.web.DataSet(self, self.fields_get[field].relation)
+                    .name_get([data[field]], null);
+            });
+            $.when.apply(null, name_gets).then(function () {
+                var record = _.extend({}, data);
+                for(var i=0; i<fields_to_fix.length; ++i) {
+                    record[fields_to_fix[i]] = arguments[i][0];
+                }
+                results.resolve(record);
+            });
+        });
+        return results;
+    },
     create: function(data, callback, error_callback) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
-            defaults: this.last_default_get};
-        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
-        this.cache.push(cached);
-        this.on_change();
+        var self = this;
         var prom = $.Deferred().then(callback);
-        prom.resolve({result: cached.id});
+        this.fix_relational(data).then(function (fixed_data) {
+            var cached = {
+                id:_.uniqueId(self.virtual_id_prefix),
+                values: fixed_data,
+                defaults: self.last_default_get
+            };
+            self.to_create.push(_.extend(_.clone(cached), {
+                values: _.clone(cached.values)}));
+            self.cache.push(cached);
+            self.on_change();
+            prom.resolve({result: cached.id});
+        });
         return prom.promise();
     },
     write: function (id, data, options, callback) {
         var self = this;
-        var record = _.detect(this.to_create, function(x) {return x.id === id;});
-        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
-        var dirty = false;
-        if (record) {
-            for (var k in data) {
-                if (record.values[k] === undefined || record.values[k] !== data[k]) {
-                    dirty = true;
-                    break;
-                }
-            }
-            $.extend(record.values, data);
-        } else {
-            dirty = true;
-            record = {id: id, values: data};
-            self.to_write.push(record);
-        }
-        var cached = _.detect(this.cache, function(x) {return x.id === id;});
-        if (!cached) {
-            cached = {id: id, values: {}};
-            this.cache.push(cached);
-        }
-        $.extend(cached.values, record.values);
-        if (dirty)
-            this.on_change();
         var to_return = $.Deferred().then(callback);
-        to_return.resolve({result: true});
+        this.fix_relational(data).then(function (fixed_data) {
+            var record = _.detect(self.to_create, function(x) {return x.id === id;});
+            record = record || _.detect(self.to_write, function(x) {return x.id === id;});
+            var dirty = false;
+            if (record) {
+                for (var k in fixed_data) {
+                    if (record.values[k] === undefined || record.values[k] !== fixed_data[k]) {
+                        dirty = true;
+                        break;
+                    }
+                }
+                $.extend(record.values, fixed_data);
+            } else {
+                dirty = true;
+                record = {id: id, values: fixed_data};
+                self.to_write.push(record);
+            }
+            var cached = _.detect(self.cache, function(x) {return x.id === id;});
+            if (!cached) {
+                cached = {id: id, values: {}};
+                this.cache.push(cached);
+            }
+            $.extend(cached.values, record.values);
+            if (dirty)
+                self.on_change();
+            to_return.resolve({result: true});
+        });
         return to_return.promise();
     },
     unlink: function(ids, callback, error_callback) {
