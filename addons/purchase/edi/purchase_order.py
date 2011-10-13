@@ -48,6 +48,11 @@ PURCHASE_ORDER_EDI_STRUCT = {
     'notes': True,
     'order_line': PURCHASE_ORDER_LINE_EDI_STRUCT,
     #custom: currency_id
+
+    # fields used for web preview only - discarded on import
+    'amount_total': True,
+    'amount_untaxed': True,
+    'amount_tax': True,
 }
 
 class purchase_order(osv.osv, EDIMixin):
@@ -163,6 +168,11 @@ class purchase_order(osv.osv, EDIMixin):
         edi_document['name'] = partner_ref or edi_document['name']
         edi_document['pricelist_id'] = self._edi_get_pricelist(cr, uid, partner_id, order_currency, context=context)
         edi_document['location_id'] = self._edi_get_location(cr, uid, partner_id, context=context)
+
+        # discard web preview fields, if present
+        edi_document.pop('amount_total', None)
+        edi_document.pop('amount_tax', None)
+        edi_document.pop('amount_untaxed', None)
 
         for order_line in edi_document['order_line']:
             self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)

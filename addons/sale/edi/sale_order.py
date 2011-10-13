@@ -47,7 +47,12 @@ SALE_ORDER_EDI_STRUCT = {
     'partner_id': True,
     #custom: 'partner_address'
     #custom: 'notes'
-    'order_line': SALE_ORDER_LINE_EDI_STRUCT
+    'order_line': SALE_ORDER_LINE_EDI_STRUCT,
+
+    # fields used for web preview only - discarded on import
+    'amount_total': True,
+    'amount_untaxed': True,
+    'amount_tax': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
@@ -162,6 +167,12 @@ class sale_order(osv.osv, EDIMixin):
         edi_document['name'] = partner_ref or edi_document['name']
         edi_document['note'] = edi_document.pop('notes', False)
         edi_document['pricelist_id'] = self._edi_get_pricelist(cr, uid, partner_id, order_currency, context=context)
+
+        # discard web preview fields, if present
+        edi_document.pop('amount_total', None)
+        edi_document.pop('amount_tax', None)
+        edi_document.pop('amount_untaxed', None)
+
         order_lines = edi_document['order_line']
         for order_line in order_lines:
             self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
