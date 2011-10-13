@@ -33,7 +33,7 @@
                 var db = openerp.init();
                 openerp.point_of_sale(db);
                 var session = new db.web.Session('DEBUG');
-                session.session_login('addons-trunk', 'admin', 'admin').then(function() {
+                session.session_login('addons-trunk_all', 'admin', 'admin').then(function() {
                     var pos = new db.point_of_sale.PointOfSale({session: session});
                     pos.appendTo($("body"));
                 });
