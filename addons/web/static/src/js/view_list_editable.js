@@ -194,7 +194,7 @@ openerp.web.list_editable = function (openerp) {
                 }
                 self.edition = true;
                 self.edition_id = record_id;
-                self.edition_form = _.extend(new openerp.web.ListEditableFormView(self, self.dataset, false), {
+                self.edition_form = _.extend(new openerp.web.ListEditableFormView(self.view, self.dataset, false), {
                     form_template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets,
                     $element: $new_row
