@@ -194,8 +194,10 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
             //this.$element.html(QWeb.render("Loading", {}));
             this.$element.html("Loading ("+this.count+")");
             this.$element.show();
+            this.widget_parent.$element.addClass('loading');
         } else {
             this.$element.fadeOut();
+            this.widget_parent.$element.removeClass('loading');
         }
     }
 });
