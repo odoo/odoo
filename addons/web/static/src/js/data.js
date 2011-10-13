@@ -680,14 +680,14 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     create: function(data, callback, error_callback) {
         var self = this;
         var prom = $.Deferred().then(callback);
-        this.fix_relational(data).then(function (fixed_data) {
+        this.fix_relational(data).then(function (fixed_m2o_data) {
             var cached = {
                 id:_.uniqueId(self.virtual_id_prefix),
-                values: fixed_data,
+                values: fixed_m2o_data,
                 defaults: self.last_default_get
             };
             self.to_create.push(_.extend(_.clone(cached), {
-                values: _.clone(cached.values)}));
+                values: _.clone(data)}));
             self.cache.push(cached);
             self.on_change();
             prom.resolve({result: cached.id});
@@ -697,21 +697,21 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     write: function (id, data, options, callback) {
         var self = this;
         var to_return = $.Deferred().then(callback);
-        this.fix_relational(data).then(function (fixed_data) {
+        this.fix_relational(data).then(function (fixed_m2o_data) {
             var record = _.detect(self.to_create, function(x) {return x.id === id;});
             record = record || _.detect(self.to_write, function(x) {return x.id === id;});
             var dirty = false;
             if (record) {
-                for (var k in fixed_data) {
-                    if (record.values[k] === undefined || record.values[k] !== fixed_data[k]) {
+                for (var k in data) {
+                    if (record.values[k] === undefined || record.values[k] !== data[k]) {
                         dirty = true;
                         break;
                     }
                 }
-                $.extend(record.values, fixed_data);
+                _.extend(record.values, data);
             } else {
                 dirty = true;
-                record = {id: id, values: fixed_data};
+                record = {id: id, values: data};
                 self.to_write.push(record);
             }
             var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -719,7 +719,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                 cached = {id: id, values: {}};
                 this.cache.push(cached);
             }
-            $.extend(cached.values, record.values);
+            _.extend(cached.values, fixed_m2o_data);
             if (dirty)
                 self.on_change();
             to_return.resolve({result: true});
