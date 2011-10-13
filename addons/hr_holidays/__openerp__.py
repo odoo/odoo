@@ -21,7 +21,7 @@
 
 
 {
-    "name": "Human Resources: Holidays management",
+    "name": "Leaves Management",
     "version": "1.5",
     "author": ['OpenERP SA', 'Axelor'],
     "category": "Human Resources",

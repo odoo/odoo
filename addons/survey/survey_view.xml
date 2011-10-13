@@ -180,14 +180,12 @@
                                 </form>
                             </field>
                             <group col="9" colspan="4">
-                                <field name="state"/>
+                                <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                                 <button name="survey_cancel"
                                     string="Cancel" states="open" type="object" icon="gtk-cancel"/>
-                                <button name="survey_draft"
-                                    string="Set to draft" states="cancel,close" type="object"
-                                    icon="gtk-new"/>
-                                <button name="survey_open" string="Open"
-                                    states="draft" type="object" icon="gtk-go-forward"/>
+                                <button name="survey_open"
+                                    string="Open" states="cancel,close" type="object"
+                                    icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
                             </group>
@@ -261,7 +259,8 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group>
-                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                        <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="All New Survey"/>
+                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="All Open Survey"/>
                         <separator orientation="vertical"/>
                         <field name="title"/>
                         <field name="type" widget="selection"/>

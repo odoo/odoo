@@ -23,7 +23,7 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Customer Relationship Management',
     'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.
@@ -126,6 +126,11 @@ Creates a dashboard for CRM that includes:
             'test/test_crm_recurrent_meeting.yml',
             'test/test_crm_stage_changes.yml',
             'test/test_crm_recurrent_meeting_case2.yml',
+            'test/test_crm_lead_case2.yml',
+            'test/test_crm_opportunity_case2.yml',
+            'test/test_crm_phonecall_case2.yml',
+            'test/test_crm_partner2opportunity.yml',
+            'test/test_crm_segmentation.yml',
              ],
     'installable': True,
     'active': False,

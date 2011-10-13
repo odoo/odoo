@@ -188,11 +188,11 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','From PO/PO lines'),('order','Draft invoices pre-generated'),('picking','From receptions')], 'Invoicing Control', required=True,
-            help="From Order: a draft invoice will be generated based on the purchase order. The accountant " \
+        'invoice_method': fields.selection([('manual','Based on purchase order lines'),('order','Draft invoices pre-generated'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+            help="Based on orders: a draft invoice will be generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Reception: a draft invoice will be generated based on validated receptions.\n" \
-                "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
+                "Based on receptions: a draft invoice will be generated based on validated receptions.\n" \
+                "Pre-generate Invoice: allows you to generate draft suppliers invoices on validation of the PO."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -540,7 +540,7 @@ class purchase_order(osv.osv):
             if not order_infos:
                 order_infos.update({
                     'origin': porder.origin,
-                    'date_order': time.strftime('%Y-%m-%d'),
+                    'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
                     'partner_address_id': porder.partner_address_id.id,
                     'dest_address_id': porder.dest_address_id.id,
@@ -553,6 +553,8 @@ class purchase_order(osv.osv):
                     'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
+                if porder.date_order < order_infos['date_order']:
+                    order_infos['date_order'] = porder.date_order
                 if porder.notes:
                     order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
                 if porder.origin:
@@ -665,7 +667,7 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -738,10 +740,10 @@ class purchase_order_line(osv.osv):
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes)
+            name=name, price_unit=price_unit, notes=notes, context=context)
         if 'product_uom' in res['value']:
             if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
@@ -818,8 +820,9 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
+            order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            schedule_date = (order_date - relativedelta(days=company.po_lead))
+            order_dates = schedule_date - relativedelta(days=seller_delay)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
@@ -833,8 +836,8 @@ class procurement_order(osv.osv):
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
-                'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                'price_unit': price or 0.0,
+                'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
@@ -846,6 +849,7 @@ class procurement_order(osv.osv):
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
+                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }

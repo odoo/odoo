@@ -321,10 +321,10 @@ class hr_timesheet_sheet(osv.osv):
             return time.strftime('%Y-12-31')
         return time.strftime('%Y-%m-%d')
 
-    def _default_employee(self,cr, uid, context=None):
+    def _default_employee(self, cr, uid, context=None):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         return emp_ids and emp_ids[0] or False
-
+    
     _defaults = {
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
@@ -381,6 +381,12 @@ class hr_timesheet_sheet(osv.osv):
             elif sheet['total_attendance'] <> 0.00:
                 raise osv.except_osv(_('Invalid action !'), _('You cannot delete a timesheet which have attendance entries!'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
+
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        department_id =  False
+        if employee_id:
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
+        return {'value': {'department_id': department_id}}
 
 hr_timesheet_sheet()
 
@@ -768,7 +774,8 @@ class res_company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'timesheet_range': fields.selection(
-            [('day','Day'),('week','Week'),('month','Month'),('year','Year')], 'Timesheet range'),
+            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range',
+            help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
             help="Allowed difference in hours between the sign in/out and the timesheet " \
                  "computation for one sheet. Set this to 0 if you do not want any control."),

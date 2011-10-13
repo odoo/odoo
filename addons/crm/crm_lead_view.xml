@@ -120,7 +120,7 @@
                     <field name="description" nolabel="1" colspan="4"/>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                         <button name="case_cancel" string="Cancel"
                             states="draft,open,pending" type="object"
                             icon="gtk-cancel" />
@@ -195,7 +195,7 @@
                                     <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
                                 </group>
                                 <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                                <field name="body_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
+                                <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
                             </group>
                             <notebook colspan="4">
                                 <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
@@ -302,7 +302,7 @@
                 <field name="state"/>
                 <field name="color"/>
                 <field name="priority"/>
-                <field name="planned_revenue"/>
+                <field name="planned_revenue" sum="Expected Revenues"/>
                 <field name="user_email"/>
                 <templates>
                     <t t-name="kanban-box">
@@ -371,14 +371,16 @@
         <field name="arch" type="xml">
             <search string="Search Leads">
                 <filter icon="terp-check"
-                    string="Current"
-                    name="current" help="Draft, Open and Pending Leads"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    string="New"
+                    name="new" help="New Leads"
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
+                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"
+                    name="pending"
                     domain="[('state','=','pending')]"/>
 
                 <separator orientation="vertical"/>
@@ -411,7 +413,7 @@
                 </field>
                 <separator orientation="vertical"/>
                 <field name="country_id" context="{'invisible_country': False}">
-                	<filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                    <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
                 </field>
                 <newline/>
                 <group expand="0" string="Group By...">
@@ -515,7 +517,7 @@
 
                     <separator colspan="4"/>
                     <group col="10" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                         <button name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
                         <button name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
                         <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
@@ -580,7 +582,7 @@
                                    <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
                                </group>
                                <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
-                               <field name="body_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
+                               <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
                            </group>
                            <notebook colspan="4">
                                <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
@@ -674,14 +676,16 @@
         <field name="arch" type="xml">
             <search string="Search Opportunities">
                 <filter icon="terp-check"
-                    string="Current"  help="Draft, Open and Pending Opportunities"
-                    name="current"
-                    domain="[('state','in',('draft','open','pending'))]"/>
+                    string="New"  help="New Opportunities"
+                    name="new"
+                    domain="[('state','=','draft')]"/>
                 <filter icon="terp-camera_test"
                     string="Open"  help="Open Opportunities"
+                    name="open"
                     domain="[('state','=','open')]"/>
                 <filter icon="terp-gtk-media-pause"
                     string="Pending"  help="Pending Opportunities"
+                    name="pending"
                     domain="[('state','=','pending')]"/>
                 <separator orientation="vertical"/>
                 <field name="name" string="Opportunity"/>

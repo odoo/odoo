@@ -23,7 +23,7 @@
 {
     'name': 'Invoice on analytic lines',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Hidden/Link',
     'description': """Generate your Invoices from Expenses, Timesheet Entries, ...
 Module to generate invoices based on costs (human resources, expenses, ...).
 ============================================================================

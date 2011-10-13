@@ -20,37 +20,8 @@
 ##############################################################################
 
 from osv import fields, osv
-
+from tools.translate import _
 import decimal_precision as dp
-
-class stock_move_track(osv.osv_memory):
-    _name = "stock.move.track"
-    _description = "Track moves"
-
-    _columns = {
-        'tracking_prefix': fields.char('Tracking prefix', size=64),
-        'quantity': fields.float("Quantity per lot")
-    }
-
-    _defaults = {
-        'quantity': lambda *x: 1
-    }
-
-    def track_lines(self, cr, uid, ids, context=None):
-        """ To track stock moves lines
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: An ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return:
-        """
-        datas = self.read(cr, uid, ids)[0]
-        move_obj = self.pool.get('stock.move')
-        move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-
-stock_move_track()
 
 class stock_move_consume(osv.osv_memory):
     _name = "stock.move.consume"
@@ -175,14 +146,6 @@ class split_in_production_lot(osv.osv_memory):
     _description = "Split in Production lots"
 
     def default_get(self, cr, uid, fields, context=None):
-        """ Get default values
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param fields: List of fields for default value
-        @param context: A standard dictionary
-        @return: Default values of fields
-        """
         if context is None:
             context = {}
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
@@ -204,38 +167,28 @@ class split_in_production_lot(osv.osv_memory):
         'qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'UoM'),
-        'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
-        'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
+        'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Production Lots'),
+        'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
         'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
     def split_lot(self, cr, uid, ids, context=None):
-        """ To split a lot
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: An ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return:
-        """
+        """ To split a lot"""
         if context is None:
             context = {}
-        self.split(cr, uid, ids, context.get('active_ids'), context=context)
+        res = self.split(cr, uid, ids, context.get('active_ids'), context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
         """ To split stock moves into production lot
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one
-        @param move_ids: the ID or list of IDs of stock move we want to split
-        @param context: A standard dictionary
-        @return:
+
+        :param move_ids: the ID or list of IDs of stock move we want to split
         """
         if context is None:
             context = {}
+        assert context.get('active_model') == 'stock.move',\
+             'Incorrect use of the stock move split wizard'
         inventory_id = context.get('inventory_id', False)
         prodlot_obj = self.pool.get('stock.production.lot')
         inventory_obj = self.pool.get('stock.inventory')
@@ -260,7 +213,8 @@ class split_in_production_lot(osv.osv_memory):
                     uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
                     if quantity_rest < 0:
                         quantity_rest = quantity
-                        break
+                        self.pool.get('stock.move').log(cr, uid, move.id, _('Unable to assign all lots to this move!'))
+                        return False
                     default_val = {
                         'product_qty': quantity,
                         'product_uos_qty': uos_qty,
@@ -297,12 +251,13 @@ class split_in_production_lot(osv.osv_memory):
 split_in_production_lot()
 
 class stock_move_split_lines_exist(osv.osv_memory):
-    _name = "stock.move.split.lines.exist"
-    _description = "Exist Split lines"
+    _name = "stock.move.split.lines"
+    _description = "Stock move Split lines"
     _columns = {
         'name': fields.char('Tracking serial', size=64),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
-        'lot_id': fields.many2one('stock.move.split', 'Lot'),
+        'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
+        'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot'),
     }
     _defaults = {
@@ -313,21 +268,3 @@ class stock_move_split_lines_exist(osv.osv_memory):
                         loc_id=False, product_id=False, uom_id=False):
         return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
                         loc_id, product_id, uom_id)
-
-stock_move_split_lines_exist()
-
-class stock_move_split_lines(osv.osv_memory):
-    _name = "stock.move.split.lines"
-    _description = "Split lines"
-    _columns = {
-        'name': fields.char('Tracking serial', size=64),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
-        'use_exist' : fields.boolean('Existing Lot'),
-        'lot_id': fields.many2one('stock.move.split', 'Lot'),
-        'action': fields.selection([('split','Split'),('keepinone','Keep in one lot')],'Action'),
-    }
-    _defaults = {
-        'quantity': 1.00,
-        'action' : 'split',
-    }
-stock_move_split_lines()

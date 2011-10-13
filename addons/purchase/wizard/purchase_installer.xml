@@ -1,21 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_purchase_install_module_form" model="ir.ui.view">
-            <field name="name">Purchases Application Configuration</field>
-            <field name="model">base.setup.installer</field>
+
+        <record id="action_import_create_supplier_installer" model="ir.actions.act_window">
+            <field name="name">Create or Import Suppliers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_supplier': 1, 'default_supplier' : True, 'default_customer' : False}</field>
+            <field name="view_id" ref="base.view_partner_tree" />
+            <field name="help">Create or Import Suppliers and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
+        </record>
+
+        <record id="category_purchase_config" model="ir.actions.todo.category">
+            <field name="name">Purchase Management</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="config_wizard_action_import_create_supplier_installer" model="ir.actions.todo">
+            <field name="action_id" ref="action_import_create_supplier_installer" />
+            <field name="category_id" ref="category_purchase_config" />
+        </record>
+
+        <record id="view_purchase_config" model="ir.ui.view">
+            <field name="name">Invoicing Control on Purchases</field>
+            <field name="model">purchase.config.wizard</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
               <data>
-                  <xpath expr="//group[@name='purchase']" position="replace">
-                    <newline/>
-                    <separator  string="Purchase Management Features" colspan="4" />
-                    <field name="purchase_requisition" />
-                    <field name="purchase_analytic_plans" />
-                  </xpath>
+                <form position="attributes">
+                  <attribute name="string">Invoicing Control on Purchases</attribute>
+                </form>
+
+                <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                    <attribute name="string">Invoicing Control on Purchases</attribute>
+                </xpath>
+                <xpath expr="//label[@string='description']" position="attributes">
+                    <attribute name="string">This tool will help you to select the method you want to use to control supplier invoices.</attribute>
+                </xpath>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="string"/>
+                    <attribute name="rowspan">12</attribute>
+                </xpath>
+                <group string="res_config_contents" position="replace">
+                    <group colspan="4" col="4">
+                       <field name="default_method"/>
+                    </group>
+                 </group>
               </data>
             </field>
+        </record>
+
+
+        <record id="action_purchase_config" model="ir.actions.act_window">
+            <field name="name">Set the Default Invoicing Control Method</field>
+            <field name="res_model">purchase.config.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_purchase_config"/>
+        </record>
+
+        <record id="todo_purchase_config" model="ir.actions.todo">
+            <field name="action_id" ref="action_purchase_config" />
+            <field name="category_id" ref="category_purchase_config" />
+            <field name="type">once</field>
         </record>
     </data>
 </openerp>

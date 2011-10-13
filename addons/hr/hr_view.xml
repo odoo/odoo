@@ -33,7 +33,7 @@
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
-                        <field name="photo" widget='image' nolabel="1"/>
+                          <field name="photo" widget='image' nolabel="1"/>
                         </group>
                     </group>
                     <notebook colspan="6">
@@ -125,7 +125,70 @@
                 </search>
              </field>
          </record>
-
+        <!-- HR Kanban View  -->
+    <record model="ir.ui.view" id="hr_kanban_view_employees">
+        <field name="name">HR - Employess Kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="department_id">
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
+                        <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle"><field name="name"/></td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td valign="top" width="22">
+                                                <t t-if="record.photo.raw_value">
+                                                    <img t-att-src="'data:image/png;base64,'+record.photo.raw_value" width='48' height='48'/>
+                                                </t>
+                                                <t t-if="!record.photo.raw_value">
+                                                    <img src="/web/static/src/img/employee.png"/>
+                                                </t> 
+                                            </td>
+                                            <td>
+                                                <div class="oe_kanban_title2"><field name="job_id"/></div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="department_id"/>
+                                                    <t t-if="record.department_id.raw_value &amp;&amp; record.city.raw_value">,</t>
+                                                    <field name="city"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="work_email"/>
+                                                    <t t-if="record.work_phone.raw_value &amp;&amp; record.work_email.raw_value">,</t>
+                                                    <field name="work_phone"/></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>                                    
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
         <record id="open_view_employee_tree" model="ir.actions.act_window">
             <field name="name">Employees Structure</field>
             <field name="res_model">hr.employee</field>
@@ -149,13 +212,27 @@
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="domain">[]</field>
             <field name="context">{"search_default_department_id": department_id,"search_default_active":eval('True')}</field>
             <field name="view_id" ref="view_employee_tree"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help">Here you can manage your work force by creating employees and assigning them specific properties in the system. Maintain all employee related information and keep track of anything that needs to be recorded for them. The personal information tab will help you maintain their identity data. The Categories tab gives you the opportunity to assign them related employee categories depending on their position and activities within the company. A category can be a seniority level within the company or a department. The Timesheets tab allows to assign them a specific timesheet and analytic journal where they will be able to enter time through the system. In the note tab, you can enter text data that should be recorded for a specific employee.</field>
         </record>
+        
+        <record id="open_view_employee_list_my_tree2" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_employee_tree"/>
+            <field name="act_window_id" ref="open_view_employee_list_my"/>
+        </record>
+        
+        <record id="open_view_employee_list_my_form2" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_employee_form"/>
+            <field name="act_window_id" ref="open_view_employee_list_my"/>
+        </record> 
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
@@ -346,9 +423,10 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
-                    <filter icon="terp-check" domain="[('state','in',('open','recruit'))]" string="Current"
-                        name="Current" help="Open and in recruitment positions"/>
-                    <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test"  
+                            domain="[('state','=','open')]" 
+                            string="In Position"
+                            help="In Position"/>
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment"
                         help="In Recruitment"/>
                     <separator orientation="vertical"/>

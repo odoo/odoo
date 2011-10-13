@@ -21,11 +21,26 @@
         <field name="model">purchase.order</field>
         <field name="inherit_id" ref="purchase.view_purchase_order_filter"/>
         <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@string='Not Invoiced']" position="after">
+            <xpath expr="/search/group/filter[@string='Not invoices']" position="after">
+             <separator orientation="vertical"/>
              <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
             </xpath>
         </field>
     </record>
+
+    <record model="ir.ui.view" id="request_for_quotation_inherit">
+        <field name="name">request.for.quotation.select.inherit</field>
+        <field name="type">form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_request_for_quotation_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="/search/group/filter[@string='Not invoices']" position="after">
+             <separator orientation="vertical"/>
+             <filter icon="terp-gtk-jump-to-rtl" string="Requisition" domain="[('requisition_id','!=',False)]"  help="Purchase Orders with requisition"/>
+            </xpath>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_purchase_requisition_form">
         <field name="name">purchase.requisition.form</field>
         <field name="type">form</field>
@@ -60,9 +75,9 @@
                         </field>
                     <separator colspan="4"/>
                     <group col="8" colspan="4">
-                        <field name="state" select="1" readonly ="1"/>
+                        <field name="state" select="1" readonly ="1" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
                         <button name="tender_cancel" states="draft,in_progress" string="Cancel" type="object" icon="gtk-cancel" />
-                        <button name="tender_in_progress" states="draft" string="Confirm" type="object" icon="gtk-apply" />
+                        <button name="tender_in_progress" states="draft" string="Start" type="object" icon="gtk-apply" />
                         <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" icon="gtk-convert" />
                         <button name="tender_done" states="in_progress" string="Done" type="object" icon="gtk-jump-to" />
                     </group>
@@ -78,8 +93,8 @@
                                 <field name="minimum_planned_date"/>
                                 <field name="origin"/>
                                 <field name="state"/>
-                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>								
-								<button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
+                                <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>                                
+                                <button name="purchase_confirm" states="draft" string="Confirm Purchase Order" icon="gtk-apply"/>
                                 <button name="purchase_approve" states="confirmed" string="Approved by Supplier" icon="gtk-ok"/>
                             </tree>
                          </field>
@@ -120,19 +135,20 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Requisition">
                  <group>
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Purchase Requisition"/>
+                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
                     <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
                     <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="user_id" />
                     <field name="exclusive" />
                 </group>
                 <newline/>
                   <group expand="0" string="Group By..." groups="base.group_extended">
-                  	<filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-					<separator orientation="vertical"/>
+                    <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <separator orientation="vertical"/>
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
@@ -187,12 +203,12 @@
             </xpath>
         </field>
     </record>
-	<act_window
+    <act_window
             domain="[('requisition_id', '=', active_id)]"
             id="act_res_partner_2_purchase_order"
             name="Purchase orders"
             res_model="purchase.order"
             src_model="purchase.requisition"/>
-    
+
     </data>
 </openerp>

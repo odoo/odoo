@@ -59,9 +59,10 @@ class hr_payslip(osv.osv):
         move_ids = []
         move_to_cancel = []
         for slip in self.browse(cr, uid, ids, context=context):
-            move_ids.append(slip.move_id.id)
-            if slip.move_id.state == 'posted':
-                move_to_cancel.append(slip.move_id.id)
+            if slip.move_id:
+                move_ids.append(slip.move_id.id)
+                if slip.move_id.state == 'posted':
+                    move_to_cancel.append(slip.move_id.id)
         move_pool.button_cancel(cr, uid, move_to_cancel, context=context)
         move_pool.unlink(cr, uid, move_ids, context=context)
         return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)
@@ -125,7 +126,7 @@ class hr_payslip(osv.osv):
                     debit_sum += debit_line[2]['debit'] - debit_line[2]['credit']
                 if credit_account_id:
                     line_ids.append(credit_line)
-                    credit_sum += credit_line[2]['credit'] - credit_line['debit']
+                    credit_sum += credit_line[2]['credit'] - credit_line[2]['debit']
 
             if debit_sum > credit_sum:
                 adjust_credit = (0, 0, {

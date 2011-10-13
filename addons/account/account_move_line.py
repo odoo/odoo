@@ -23,8 +23,10 @@ import time
 from datetime import datetime
 from operator import itemgetter
 
+from lxml import etree
+
 import netsvc
-from osv import fields, osv
+from osv import fields, osv, orm
 from tools.translate import _
 import decimal_precision as dp
 import tools
@@ -718,7 +720,7 @@ class account_move_line(osv.osv):
             )
         return cr.fetchone()
 
-    def reconcile_partial(self, cr, uid, ids, type='auto', context=None):
+    def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
         merges = []
         unmerge = []
@@ -747,7 +749,7 @@ class account_move_line(osv.osv):
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
         if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
-            res = self.reconcile(cr, uid, merges+unmerge, context=context)
+            res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         r_id = move_rec_obj.create(cr, uid, {
             'type': type,
@@ -812,7 +814,7 @@ class account_move_line(osv.osv):
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
            (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
-                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
+                raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off/exchange difference entry !'))
             if writeoff > 0:
                 debit = writeoff
                 credit = 0.0
@@ -970,7 +972,6 @@ class account_move_line(osv.osv):
         fields = {}
         flds = []
         title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
-        xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
         journals = journal_pool.browse(cr, uid, ids, context=context)
@@ -982,14 +983,14 @@ class account_move_line(osv.osv):
             for field in journal.view_id.columns_id:
                 if not field.field in fields:
                     fields[field.field] = [journal.id]
-                    fld.append((field.field, field.sequence, field.name))
+                    fld.append((field.field, field.sequence))
                     flds.append(field.field)
                     common_fields[field.field] = 1
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3, _('Period')))
-        fld.append(('journal_id', 10, _('Journal')))
+        fld.append(('period_id', 3))
+        fld.append(('journal_id', 10))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
@@ -1001,62 +1002,71 @@ class account_move_line(osv.osv):
             'tax_code_id': 50,
             'move_id': 40,
         }
-        for field_it in fld:
-            field = field_it[0]
+
+        document = etree.Element('tree', string=title, editable="top",
+                                 refresh="5", on_write="on_create_write",
+                                 colors="red:state=='draft';black:state=='valid'")
+        fields_get = self.fields_get(cr, uid, flds, context)
+        for field, _seq in fld:
             if common_fields.get(field) == total:
                 fields.get(field).append(None)
-#            if field=='state':
-#                state = 'colors="red:state==\'draft\'"'
-            attrs = []
+            # if field=='state':
+            #     state = 'colors="red:state==\'draft\'"'
+            f = etree.SubElement(document, 'field', name=field)
+
             if field == 'debit':
-                attrs.append('sum = "%s"' % _("Total debit"))
+                f.set('sum', _("Total debit"))
 
             elif field == 'credit':
-                attrs.append('sum = "%s"' % _("Total credit"))
+                f.set('sum', _("Total credit"))
 
             elif field == 'move_id':
-                attrs.append('required = "False"')
+                f.set('required', 'False')
 
             elif field == 'account_tax_id':
-                attrs.append('domain="[(\'parent_id\', \'=\' ,False)]"')
-                attrs.append("context=\"{'journal_id': journal_id}\"")
+                f.set('domain', "[('parent_id', '=' ,False)]")
+                f.set('context', "{'journal_id': journal_id}")
 
             elif field == 'account_id' and journal.id:
-                attrs.append('domain="[(\'journal_id\', \'=\', journal_id),(\'type\',\'&lt;&gt;\',\'view\'), (\'type\',\'&lt;&gt;\',\'closed\')]" on_change="onchange_account_id(account_id, partner_id)"')
+                f.set('domain', "[('journal_id', '=', journal_id),('type','!=','view'), ('type','!=','closed')]")
+                f.set('on_change', 'onchange_account_id(account_id, partner_id)')
 
             elif field == 'partner_id':
-                attrs.append('on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"')
+                f.set('on_change', 'onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)')
 
             elif field == 'journal_id':
-                attrs.append("context=\"{'journal_id': journal_id}\"")
+                f.set('context', "{'journal_id': journal_id}")
 
             elif field == 'statement_id':
-                attrs.append("domain=\"[('state', '!=', 'confirm'),('journal_id.type', '=', 'bank')]\"")
+                f.set('domain', "[('state', '!=', 'confirm'),('journal_id.type', '=', 'bank')]")
 
             elif field == 'date':
-                attrs.append('on_change="onchange_date(date)"')
+                f.set('on_change', 'onchange_date(date)')
 
             elif field == 'analytic_account_id':
-                attrs.append('''groups="analytic.group_analytic_accounting"''') # Currently it is not working due to framework problem may be ..
+                # Currently it is not working due to being executed by superclass's fields_view_get
+                # f.set('groups', 'analytic.group_analytic_accounting')
+                pass
 
             if field in ('amount_currency', 'currency_id'):
-                attrs.append('on_change="onchange_currency(account_id, amount_currency, currency_id, date, journal_id)"')
-                attrs.append('''attrs="{'readonly': [('state', '=', 'valid')]}"''')
+                f.set('on_change', 'onchange_currency(account_id, amount_currency, currency_id, date, journal_id)')
+                f.set('attrs', "{'readonly': [('state', '=', 'valid')]}")
 
             if field in widths:
-                attrs.append('width="'+str(widths[field])+'"')
+                f.set('width', str(widths[field]))
 
             if field in ('journal_id',):
-                attrs.append("invisible=\"context.get('journal_id', False)\"")
+                f.set("invisible", "context.get('journal_id', False)")
             elif field in ('period_id',):
-                attrs.append("invisible=\"context.get('period_id', False)\"")
+                f.set("invisible", "context.get('period_id', False)")
             else:
-                attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
-            xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
+                f.set('invisible', "context.get('visible_id') not in %s" % (fields.get(field)))
 
-        xml += '''</tree>'''
-        result['arch'] = xml
-        result['fields'] = self.fields_get(cr, uid, flds, context)
+            orm.setup_modifiers(f, fields_get[field], context=context,
+                                in_tree_view=True)
+
+        result['arch'] = etree.tostring(document, pretty_print=True)
+        result['fields'] = fields_get
         return result
 
     def _check_moves(self, cr, uid, context=None):
@@ -1221,7 +1231,7 @@ class account_move_line(osv.osv):
                     vals['move_id'] = res[0]
             if not vals.get('move_id', False):
                 if journal.sequence_id:
-                    #name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
+                    #name = self.pool.get('ir.sequence').next_by_id(cr, uid, journal.sequence_id.id)
                     v = {
                         'date': vals.get('date', time.strftime('%Y-%m-%d')),
                         'period_id': context['period_id'],
@@ -1249,7 +1259,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and 'amount_currency' not in vals and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and (vals.get('amount_currency', False) is False) and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:
@@ -1273,7 +1283,7 @@ class account_move_line(osv.osv):
                         'user_id': uid
             })]
 
-        result = super(osv.osv, self).create(cr, uid, vals, context=context)
+        result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])
