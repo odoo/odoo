@@ -1213,22 +1213,10 @@ class account_move(osv.osv):
                     return False
         return True
 
-    def _check_period_journal(self, cursor, user, ids, context=None):
-        for move in self.browse(cursor, user, ids, context=context):
-            for line in move.line_id:
-                if line.period_id.id != move.period_id.id:
-                    return False
-                if line.journal_id.id != move.journal_id.id:
-                    return False
-        return True
-
     _constraints = [
         (_check_centralisation,
             'You can not create more than one move per period on centralized journal',
             ['journal_id']),
-        (_check_period_journal,
-            'You can not create journal items on different periods/journals in the same journal entry',
-            ['line_id']),
     ]
 
     def post(self, cr, uid, ids, context=None):
@@ -1511,8 +1499,6 @@ class account_move(osv.osv):
                 # Update the move lines (set them as valid)
 
                 obj_move_line.write(cr, uid, line_draft_ids, {
-                    'journal_id': move.journal_id.id,
-                    'period_id': move.period_id.id,
                     'state': 'valid'
                 }, context, check=False)
 
@@ -1553,8 +1539,6 @@ class account_move(osv.osv):
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
                 obj_move_line.write(cr, uid, line_ids, {
-                    'journal_id': move.journal_id.id,
-                    'period_id': move.period_id.id,
                     'state': 'draft'
                 }, context, check=False)
         # Create analytic lines for the valid moves
@@ -2634,7 +2618,8 @@ class account_fiscal_position_template(osv.osv):
         'name': fields.char('Fiscal Position Template', size=64, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
+        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
+        'note': fields.text('Notes', translate=True),
     }
 
 account_fiscal_position_template()
@@ -2718,7 +2703,7 @@ class account_financial_report(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Report Name', size=128, required=True),
+        'name': fields.char('Report Name', size=128, required=True, translate=True),
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),

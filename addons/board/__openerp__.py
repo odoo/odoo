@@ -34,10 +34,18 @@ The user can also publish notes.
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],
-    'update_xml': ['security/board_security.xml','security/ir.model.access.csv', 'wizard/board_menu_create_view.xml', 'board_view.xml','board_administration_view.xml'],
-    'demo_xml': ['board_demo.xml'],
+    'update_xml': [
+        'security/ir.model.access.csv',
+        'wizard/board_menu_create_view.xml', 
+        'board_view.xml',
+        'board_data_admin.xml',
+        'board_data_home.xml',
+    ],
+    'demo_xml': [
+        'board_demo.xml'
+    ],
     'installable': True,
-    'active': False,
+    'active': True,
     'certificate': '0076912305725',
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }

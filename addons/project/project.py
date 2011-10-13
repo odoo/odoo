@@ -469,7 +469,7 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
     }
 

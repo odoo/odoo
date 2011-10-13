@@ -670,7 +670,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('income_pdt','=',True)]</field>
+            <field name="domain">[('expense_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_input_tree_tag">
             <field name="sequence" eval="1"/>
@@ -696,7 +696,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('expense_pdt','=',True)]</field>
+            <field name="domain">[('income_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_output_tree_tag">
             <field name="sequence" eval="1"/>

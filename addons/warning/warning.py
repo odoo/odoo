@@ -197,7 +197,7 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False,
-            fiscal_position=False, flag=False):
+            fiscal_position=False, flag=False, context=None):
         warning = {}
         if not product:
             return {'value': {'th_weight' : 0, 'product_packaging': False,
@@ -232,7 +232,7 @@ class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
     def product_id_change(self,cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context=None):
         warning = {}
         if not product:
             return {'value': {'price_unit': 0.0, 'name':'','notes':'', 'product_uom' : False}, 'domain':{'product_uom':[]}}

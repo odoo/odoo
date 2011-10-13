@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
+<data>
         <!-- User Connection -->
         <record model="ir.ui.view" id="view_user_connection_tree">
             <field name="name">user.connection.tree</field>
@@ -158,23 +157,13 @@
             <field name="view_id" ref="board_administration_form"/>
         </record>
 
-        <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11"
-            groups="base.group_extended"/>
-        <menuitem id="board.admin_menu_dasboard" name="Dashboard" sequence="0" parent="base.menu_reporting"/>
-        <menuitem id="menu_board_admin" action="open_board_administration_form" icon="terp-graph" parent="board.admin_menu_dasboard" />
-        <menuitem icon="terp-administration" id="base.menu_administration" name="Administration" sequence="50" action="open_board_administration_form"/>
+        <!-- bind adminitration dashboard to the root administration -->
+        <menuitem id="base.menu_administration" icon="terp-administration"  name="Administration" sequence="50" action="open_board_administration_form"/>
 
-    </data>
+        <!-- add a menu item in adminitration/reporting/dashboards -->
+        <menuitem id="base.menu_reporting" name="Reporting" parent="base.menu_administration" sequence="11" groups="base.group_extended"/>
+        <menuitem id="base.menu_dashboard" name="Dashboards" parent="base.menu_reporting" sequence="0"/>
+        <menuitem id="base.menu_dashboard_admin" action="open_board_administration_form" parent="base.menu_dashboard" icon="terp-graph"/>
+
+</data>
 </openerp>
-
-
-
-
-
-
-
-
-
-
-
-
