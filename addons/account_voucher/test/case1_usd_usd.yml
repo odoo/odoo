@@ -6,7 +6,7 @@
 -
   !python {model: res.currency.rate}: |
     from datetime import datetime
-    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])
+    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
     date = '%s-01-01' %(datetime.now().year)
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
     self.write(cr, uid, ids, {'rate': 1.333333})
@@ -49,12 +49,6 @@
     company_id: base.main_company
     view_id: account.account_journal_bank_view
 
--
-  I set up some accounts for currency rate expense/income in my company
--
-  !record {model: res.company, id: base.main_company}:
-    property_expense_currency_exchange: account.o_expense
-    property_income_currency_exchange: account.o_income
 -
   I create new partner Mark Strauss.
 -
@@ -173,12 +167,12 @@
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is -10.0
+  I check that writeoff amount computed is 10.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_strauss0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == -10.0), "Writeoff amount is not -10.0"
+    assert (voucher_id.writeoff_amount == 10.0), "Writeoff amount is not 10.0"
 -
   I confirm the voucher
 -
@@ -246,6 +240,7 @@
     vals = {
         'account_id': ref('account.cash'),
         'amount': 45.00,
+        'exchange_acc_id': ref('account.o_expense'),
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.USD'),
         'journal_id': ref('bank_journal_USD'),
@@ -270,12 +265,12 @@
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is -5.0
+  I check that writeoff amount computed is 5.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_strauss0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == -5.0), "Writeoff amount is not -5.0"
+    assert (voucher_id.writeoff_amount == 5.0), "Writeoff amount is not 5.0"
 -
   I confirm the voucher
 -
@@ -316,7 +311,7 @@
         elif move_line.amount_currency == 5.00:
             assert move_line.debit == 4.75, "Writeoff amount is wrong."
 -
-  I should check that the total reconcilaition created entries as expected: TODO
+  I  check that the total reconcilaition created entries as expected: TODO
 -
   I check the residual amount of Invoice1, should be 0 in residual currency and 0 in amount_residual and paid
 -
