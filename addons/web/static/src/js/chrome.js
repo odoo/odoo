@@ -39,12 +39,14 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
 
 openerp.web.Widget.include({
     do_notify: function() {
-        var n = openerp.notification;
-        n.notify.apply(n, arguments);
+        if(this.widget_parent) {
+            this.widget_parent.do_notify.apply(this.widget_parent, arguments);
+        }
     },
     do_warn: function() {
-        var n = openerp.notification;
-        n.warn.apply(n, arguments);
+        if(this.widget_parent) {
+            this.widget_parent.do_warn.apply(this.widget_parent, arguments);
+        }
     },
 });
 
@@ -986,6 +988,16 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.login.appendTo($('#oe_login'));
         this.menu.start();
     },
+
+    do_notify: function() {
+        var n = this.notification;
+        n.notify.apply(n, arguments);
+    },
+    do_warn: function() {
+        var n = this.notification;
+        n.warn.apply(n, arguments);
+    },
+
     on_logged: function() {
         this.menu.do_reload();
         if(this.action_manager)
