@@ -451,7 +451,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().reject();
         } else {
             this.reload();
-            return $.when().then(success);
+            return $.when(r).then(success);
         }
     },
     /**
@@ -485,7 +485,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             console.debug("The record has been created with id #" + this.datarecord.id);
-            this.reload()
+            this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
     },
