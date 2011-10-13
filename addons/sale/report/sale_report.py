@@ -78,6 +78,7 @@ class sale_report(osv.osv):
                     s.date_confirm as date_confirm,
                     to_char(s.date_order, 'MM') as month,
                     to_char(s.date_order, 'YYYY-MM-DD') as day,
+                    to_char(s.date_order, 'YYYY') as year,
                     s.partner_id as partner_id,
                     s.user_id as user_id,
                     s.shop_id as shop_id,
