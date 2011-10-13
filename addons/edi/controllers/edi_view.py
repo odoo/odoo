@@ -33,31 +33,30 @@ edi_view_template = textwrap.dedent("""<!DOCTYPE html>
 """)
 
 def edi_addons():
-    _addons = ['web', 'web_edi']
+    _addons = ['web', 'edi']
     for addon in openerpweb.addons_module:
         if addon in _addons:
             continue
         manifest = openerpweb.addons_manifest.get(addon, {})
         edi_addon = manifest.get('edi', False)
-        
         if edi_addon:
             _addons.append(addon)
     return _addons
 
-class EDIView(openerpweb.Controller):
+class EDIView(web.WebClient):
     #  http://path.to.web.client:8080/web/view_edi?db=XXX&token=XXXXXXXXXXX 
     _cp_path = "/web/view_edi"
 
     @openerpweb.httprequest
     def css(self, req):
-        files = web.manifest_glob(req.config.addons_path, edi_addons(), 'css')
+        files = self.manifest_glob(req, edi_addons(), 'css')
         content,timestamp = web.concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req):
-        files = web.manifest_glob(req.config.addons_path, edi_addons(), 'js')
+        files = self.manifest_glob(req, edi_addons(), 'js')
         content,timestamp = web.concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
@@ -68,16 +67,16 @@ class EDIView(openerpweb.Controller):
         addons = edi_addons()
         jslist = ['/web/view_edi/js']
         if req.debug:
-            jslist = [i + '?debug=' + str(time.time()) for i in web.manifest_glob(req.config.addons_path, addons, 'js')]
+            jslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, addons, 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/view_edi/css']
         if req.debug:
-            csslist = [i + '?debug=' + str(time.time()) for i in web.manifest_glob(req.config.addons_path, addons, 'css')]
+            csslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, addons, 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
 
-        js_files = [js_file.split('/')[-1].split('.')[0] for js_file in web.manifest_glob(req.config.addons_path, edi_addons(), 'js')]
+        js_files = [str(js_file.split('/')[-1].split('.')[0]) for js_file in self.manifest_glob(req, addons, 'js')]
             
         r = edi_view_template % {
             'javascript': js,
