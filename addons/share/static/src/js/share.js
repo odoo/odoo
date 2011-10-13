@@ -5,7 +5,7 @@ instance.web.Sidebar = instance.web.Sidebar.extend({
 
     add_default_sections: function() {
         this._super();
-        this.add_items('Sharing', [{
+        this.add_items('other', [{
             label: 'Share',
             callback: this.on_sidebar_click_share,
             classname: 'oe_share',
