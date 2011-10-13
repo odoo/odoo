@@ -124,7 +124,7 @@ db.web.ActionManager = db.web.Widget.extend({
         if (this.dialog && action.context) {
             var model = action.context.active_model;
             if (model === 'base.module.upgrade' || model === 'base.setup.installer') {
-                db.webclient.menu.reload();
+                db.webclient.menu.do_reload();
             }
         }
         this.dialog_stop();
