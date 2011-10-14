@@ -5,15 +5,16 @@ openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
 openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Notification# */{
-    /**
-     * @constructs openerp.web.Notification
-     * @extends openerp.web.Widget
-     *
-     * @param parent
-     * @param element_id
-     */
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
+    template: 'Notification',
+    identifier_prefix: 'notification-',
+
+    init: function() {
+        this._super.apply(this, arguments);
+        openerp.notification = this;
+    },
+
+    start: function() {
+        this._super.apply(this, arguments);
         this.$element.notify({
             speed: 500,
             expires: 1500
@@ -28,9 +29,12 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
     warn: function(title, text) {
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
-            text: text
+            text: text,
+        }, {
+            expires: false,
         });
-    }
+    },
+
 });
 
 openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
@@ -369,7 +373,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                     }
                     $db_list.find(':selected').remove();
                     self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
-                    self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+                    self.do_notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
             }
         });
@@ -454,7 +458,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
                         self.display_error(result);
                         return;
                     }
-                    self.notification.notify("Changed Password", "Password has been changed successfully");
+                    self.do_notify("Changed Password", "Password has been changed successfully");
                 });
             }
         });
@@ -938,13 +942,11 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         }
         this.$element.html(QWeb.render("Interface", params));
 
+        this.notification = new openerp.web.Notification();
         this.session = new openerp.web.Session();
         this.loading = new openerp.web.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.web.CrashManager(this);
         this.crashmanager.start();
-
-        // Do you autorize this ? will be replaced by notify() in controller
-        openerp.web.Widget.prototype.notification = new openerp.web.Notification(this, "oe_notification");
 
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);
@@ -965,6 +967,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
     },
     start: function() {
+        this._super.apply(this, arguments);
+        this.notification.prependTo(this.$element);
         this.header.appendTo($("#oe_header"));
         this.session.start();
         this.login.appendTo($('#oe_login'));
@@ -973,6 +977,14 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
     do_reload: function() {
         this.session.session_restore();
         this.menu.do_reload();
+    },
+    do_notify: function() {
+        var n = this.notification;
+        n.notify.apply(n, arguments);
+    },
+    do_warn: function() {
+        var n = this.notification;
+        n.warn.apply(n, arguments);
     },
     on_logged: function() {
         this.menu.do_reload();
@@ -1062,7 +1074,8 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.action_manager.do_action(action);
     },
     do_about: function() {
-    }
+    },
+
 });
 
 };

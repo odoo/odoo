@@ -336,7 +336,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {Array} errors a never-empty array of error objects
      */
     on_invalid: function (errors) {
-        this.notification.notify("Invalid Search", "triggered from search view");
+        this.do_notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
