@@ -716,9 +716,18 @@
     </record>
     
     <workflow action="button_confirm" model="mrp.production" ref="mrp_production_order1"/>
-    
+
     <!-- Run Scheduler -->
     <function model="procurement.order" name="run_scheduler"/>
+
+    <record id="mrp_production_order2" model="mrp.production">
+        <field name="product_id" ref="product.product_product_pc3"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="location_src_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_stock"/>
+        <field name="bom_id" ref="mrp.mrp_bom_2"/>
+        <field name="routing_id" ref="mrp.mrp_routing_0"/>
+    </record>
 
     </data>
 </openerp>
