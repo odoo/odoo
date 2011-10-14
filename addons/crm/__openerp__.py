@@ -127,7 +127,6 @@ Creates a dashboard for CRM that includes:
             'test/ui/lead_form.yml',
             'test/process/phonecall2opportunity.yml',
             'test/test_crm_recurrent_meeting_case2.yml',
-            'test/test_crm_segmentation.yml',
              ],
     'installable': True,
     'active': False,
