@@ -485,9 +485,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         var self = this;
         new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
             $.unblockUI();
-            self.do_action(action, function () {
-                // TODO: less brutal reloading
-                window.location.reload(true);
+            self.widget_parent.widget_parent.do_action(action, function () {
+                openerp.webclient.do_reload();
             });
         });
     }

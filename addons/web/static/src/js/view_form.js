@@ -443,7 +443,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         });
         msg += "</ul>";
-        this.notification.warn("The following fields are invalid :", msg);
+        this.do_warn("The following fields are invalid :", msg);
     },
     on_saved: function(r, success) {
         if (!r.result) {
@@ -451,7 +451,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return $.Deferred().reject();
         } else {
             this.reload();
-            return $.when().then(success);
+            return $.when(r).then(success);
         }
     },
     /**
@@ -485,7 +485,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 this.sidebar.attachments.do_update();
             }
             console.debug("The record has been created with id #" + this.datarecord.id);
-            this.reload()
+            this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
     },
@@ -616,7 +616,7 @@ openerp.web.form.SidebarAttachments = openerp.web.Widget.extend({
                 ids: [parseInt($e.attr('data-id'))]
             }, function(r) {
                 $e.parent().remove();
-                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+                self.do_notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
             });
         }
     }
@@ -735,6 +735,51 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
     render: function() {
         var template = this.template;
         return QWeb.render(template, { "widget": this });
+    },
+    _build_view_fields_values: function() {
+        var a_dataset = this.view.dataset;
+        var fields_values = this.view.get_fields_values();
+        var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
+        fields_values.parent = parent_values;
+        return fields_values;
+    },
+    _build_eval_context: function() {
+        var a_dataset = this.view.dataset;
+        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
+    },
+    /**
+     * Builds a new context usable for operations related to fields by merging
+     * the fields'context with the action's context.
+     */
+    build_context: function() {
+        var f_context = (this.field || {}).context || {};
+        if (!!f_context.__ref) {
+            var fields_values = this._build_eval_context();
+            f_context = new openerp.web.CompoundDomain(f_context).set_eval_context(fields_values);
+        }
+        // maybe the default_get should only be used when we do a default_get?
+        var v_contexts = _.compact([this.node.attrs.default_get || null,
+            this.node.attrs.context || null]);
+        var v_context = new openerp.web.CompoundContext();
+        _.each(v_contexts, function(x) {v_context.add(x);});
+        if (_.detect(v_contexts, function(x) {return !!x.__ref;})) {
+            var fields_values = this._build_eval_context();
+            v_context.set_eval_context(fields_values);
+        }
+        // if there is a context on the node, overrides the model's context
+        var ctx = v_contexts.length > 0 ? v_context : f_context;
+        return ctx;
+    },
+    build_domain: function() {
+        var f_domain = this.field.domain || [];
+        var n_domain = this.node.attrs.domain || null;
+        // if there is a domain on the node, overrides the model's domain
+        var final_domain = n_domain !== null ? n_domain : f_domain;
+        if (!(final_domain instanceof Array)) {
+            var fields_values = this._build_eval_context();
+            final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
+        }
+        return final_domain;
     }
 });
 
@@ -956,9 +1001,16 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     on_confirmed: function() {
         var self = this;
+        
+        var context = this.node.attrs.context;
+        if (context && context.__ref) {
+            context = new openerp.web.CompoundContext(context);
+            context.set_eval_context(this._build_eval_context());
+        }
 
         return this.view.do_execute_action(
-            this.node.attrs, this.view.dataset, this.view.datarecord.id, function () {
+            _.extend({}, this.node.attrs, {context: context}),
+            this.view.dataset, this.view.datarecord.id, function () {
                 self.view.reload();
             });
     },
@@ -1105,51 +1157,6 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         this.invalid = false;
     },
     focus: function() {
-    },
-    _build_view_fields_values: function() {
-        var a_dataset = this.view.dataset;
-        var fields_values = this.view.get_fields_values();
-        var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
-        fields_values.parent = parent_values;
-        return fields_values;
-    },
-    _build_eval_context: function() {
-        var a_dataset = this.view.dataset;
-        return new openerp.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
-    },
-    /**
-     * Builds a new context usable for operations related to fields by merging
-     * the fields'context with the action's context.
-     */
-    build_context: function() {
-        var f_context = this.field.context || {};
-        if (!!f_context.__ref) {
-            var fields_values = this._build_eval_context();
-            f_context = new openerp.web.CompoundDomain(f_context).set_eval_context(fields_values);
-        }
-        // maybe the default_get should only be used when we do a default_get?
-        var v_contexts = _.compact([this.node.attrs.default_get || null,
-            this.node.attrs.context || null]);
-        var v_context = new openerp.web.CompoundContext();
-        _.each(v_contexts, function(x) {v_context.add(x);});
-        if (_.detect(v_contexts, function(x) {return !!x.__ref;})) {
-            var fields_values = this._build_eval_context();
-            v_context.set_eval_context(fields_values);
-        }
-        // if there is a context on the node, overrides the model's context
-        var ctx = v_contexts.length > 0 ? v_context : f_context;
-        return ctx;
-    },
-    build_domain: function() {
-        var f_domain = this.field.domain || [];
-        var n_domain = this.node.attrs.domain || null;
-        // if there is a domain on the node, overrides the model's domain
-        var final_domain = n_domain !== null ? n_domain : f_domain;
-        if (!(final_domain instanceof Array)) {
-            var fields_values = this._build_eval_context();
-            final_domain = new openerp.web.CompoundDomain(final_domain).set_eval_context(fields_values);
-        }
-        return final_domain;
     }
 });
 
@@ -1195,7 +1202,7 @@ openerp.web.form.FieldEmail = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value || !this.is_valid()) {
-            this.notification.warn("E-mail error", "Can't send email to invalid e-mail address");
+            this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
         } else {
             location.href = 'mailto:' + this.value;
         }
@@ -1210,7 +1217,7 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.value) {
-            this.notification.warn("Resource error", "This resource is empty");
+            this.do_warn("Resource error", "This resource is empty");
         } else {
             window.open(this.value);
         }
@@ -2476,7 +2483,6 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.setup_form_view();
     },
     on_write: function(id, data) {
-        this.stop();
         if (!this.options.auto_write)
             return;
         var self = this;
@@ -2499,7 +2505,9 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
             $nbutton.click(function() {
-                self.view_form.do_save();
+                self.view_form.do_save().then(function() {
+                    self.stop();
+                });
             });
             var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
             $cbutton.click(function() {
@@ -2626,7 +2634,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
         if (size === false) {
-            this.notification.warn("File Upload", "There was a problem while uploading your file");
+            this.do_warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -2640,7 +2648,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     },
     on_save_as: function() {
         if (!this.view.datarecord.id) {
-            this.notification.warn("Can't save file", "The record has not yet been saved");
+            this.do_warn("Can't save file", "The record has not yet been saved");
         } else {
             var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +

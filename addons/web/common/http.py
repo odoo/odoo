@@ -227,7 +227,7 @@ class HttpRequest(WebRequest):
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
         r = method(controller, self, **self.params)
         if self.debug or 1:
-            if isinstance(r, werkzeug.wrappers.BaseResponse):
+            if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
                 _logger.debug('<-- %s', r)
             else:
                 _logger.debug("<-- size: %s", len(r))
@@ -395,7 +395,8 @@ class Root(object):
                 else:
                     response = result
 
-                response.set_cookie(self.session_cookie, session.sid)
+                if hasattr(response, 'set_cookie'):
+                    response.set_cookie(self.session_cookie, session.sid)
 
         return response(environ, start_response)
 

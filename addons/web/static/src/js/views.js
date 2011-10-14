@@ -123,8 +123,8 @@ db.web.ActionManager = db.web.Widget.extend({
         }
         if (this.dialog && action.context) {
             var model = action.context.active_model;
-            if (model === 'base.module.upgrade' || model === 'base.setup.installer') {
-                db.webclient.menu.reload();
+            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
+                db.webclient.do_reload();
             }
         }
         this.dialog_stop();
@@ -903,7 +903,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
             var view_editor = new db.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
             view_editor.start();
         } else {
-            this.notification.warn("Manage Views", "Could not find current view declaration");
+            this.do_warn("Manage Views", "Could not find current view declaration");
         }
     },
     on_sidebar_edit_workflow: function() {
