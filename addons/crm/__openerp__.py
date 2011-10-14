@@ -122,6 +122,7 @@ Creates a dashboard for CRM that includes:
             'test/process/lead_open.yml',
             'test/process/lead2opportunity.yml',
             'test/process/cancel_lead.yml',
+            'test/process/merge2opportunity.yml',
             'test/process/meeting.yml',
             'test/process/lead2_mass_convert_opportunity.yml',
             'test/ui/lead_form.yml',
