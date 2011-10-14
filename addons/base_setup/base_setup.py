@@ -107,7 +107,8 @@ class base_setup_installer(osv.osv_memory):
             for cat in cat_proxy.browse(cr, uid, cat_ids, context=context):
                 m = DEFAULT_MODULES.get(cat.name,[])
                 r = module_proxy.search(cr, uid, [('state','=','installed'),('name','in',m)])
-                result['category_%d' % (cat.id,)] = len(r) == len(m)
+
+                result['category_%d' % (cat.id,)] = bool(r) and (len(r) == len(m))
 
         return result
 
