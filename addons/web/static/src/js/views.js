@@ -859,7 +859,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                     }],
                     domains: []
                 }).pipe(function (results) {
-                    action.context = results.context
+                    action.context = new db.web.CompoundContext(
+                        results.context, action_data.context);
                     return self.do_action(action, result_handler);
                 });
             } else {
