@@ -466,7 +466,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 });
 
 openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
-    remember_creditentials: true,
+    remember_credentials: true,
     
     template: "Login",
     identifier_prefix: 'oe-app-login-',
@@ -484,7 +484,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.selected_db = null;
         this.selected_login = null;
 
-        if (this.has_local_storage && this.remember_creditentials) {
+        if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
             if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
@@ -550,7 +550,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
-                    if(self.remember_creditentials) {
+                    if(self.remember_credentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
                         if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
