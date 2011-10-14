@@ -797,7 +797,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 // and let the various registered events handle refreshing the
                 // row
                 new openerp.web.DataSet(this.view, column.relation)
-                    .name_get([value], function (names) {
+                        .name_get([value], function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
