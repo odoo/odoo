@@ -69,6 +69,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             } catch (e) {
                 return value.format("%H:%M:%S");
             }
+        case 'selection':
+            // Each choice is [value, label]
+            var result = _(descriptor.selection).detect(function (choice) {
+                return choice[0] === value;
+            });
+            if (result) { return result[1]; }
+            return;
         default:
             return value;
     }

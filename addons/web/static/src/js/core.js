@@ -74,7 +74,6 @@ openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
             }
             return this;
         }
-        // This should NOT be used, like callbackenable it's too hackish not enough javasish
         Class.include = function (properties) {
             for (var name in properties) {
                 if (typeof properties[name] !== 'function'
@@ -288,14 +287,12 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      */
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
-            try {
-                return this.get_object(keys[i]);
-            } catch (e) {
-                if (e instanceof openerp.web.KeyNotFound) {
-                    continue;
-                }
-                throw e;
+            var key = keys[i];
+            if (key === undefined || !(key in this.map)) {
+                continue;
             }
+
+            return this.get_object(key);
         }
         throw new openerp.web.KeyNotFound(keys.join(','));
     },

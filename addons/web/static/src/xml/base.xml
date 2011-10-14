@@ -2,9 +2,8 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="Interface">
-    <div id="oe_loading" class="loading"></div>
-    <div id="oe_notification" class="oe_notification">
+<t t-name="Notification">
+    <div class="oe_notification">
         <div id="oe_notification_default">
             <a class="ui-notify-cross ui-notify-close" href="#">x</a>
             <h1>#{title}</h1>
@@ -17,6 +16,9 @@
             <p>#{text}</p>
         </div>
     </div>
+</t>
+<t t-name="Interface">
+    <div id="oe_loading" class="loading"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
@@ -467,17 +469,20 @@
     </div>
 </t>
 <t t-name="Sidebar.section">
-    <h2><t t-esc="name"/></h2>
     <div t-att-id="section_id" t-att-class="classname">
-        <ul t-if="items">
+        <h2><t t-esc="name"/></h2>
+    </div>
+</t>
+
+
+<t t-name="Sidebar.section.items">
             <li t-foreach="items" t-as="item" t-att-class="item.classname">
                 <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
                     <t t-esc="item.label"/>
                 </a>
             </li>
-        </ul>
-    </div>
 </t>
+
 <t t-name="TranslateDialog">
     <ul class="oe_translate_tabs">
         <li><a t-attf-href="##{widget.element_id}_fields">Fields</a></li>
