@@ -384,6 +384,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
+        if (this.debug) params.debug = 1;
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
@@ -566,15 +567,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 var file_list = ["/web/static/lib/datejs/globalization/" +
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
-                if(self.debug) {
-                    self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
-                    self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
-                        self.do_load_js(file_list.concat(files));
-                    });
-                } else {
-                    self.do_load_css(["/web/webclient/css?mods="+modules]);
-                    self.do_load_js(file_list.concat(["/web/webclient/js?mods="+modules]));
-                }
+
+                self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
+                    self.do_load_js(file_list.concat(files));
+                });
                 openerp._modules_loaded = true;
             });
         });
@@ -583,7 +580,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file + (self.debug ? '?debug=' + (new Date().getTime()) : ''),
+                'href': file,
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -595,7 +592,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file + (this.debug ? '?debug=' + (new Date().getTime()) : '');
+            tag.src = file;
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
