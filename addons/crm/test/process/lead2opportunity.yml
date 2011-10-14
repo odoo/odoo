@@ -16,8 +16,6 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
     assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
-    assert lead.planned_revenue == 0.0, 'Planned revenue should be 0!'
-    assert lead.probability == 0.0, 'probability revenue should be 0!'
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
