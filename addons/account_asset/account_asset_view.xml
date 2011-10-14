@@ -212,6 +212,21 @@
         </field>
     </record>
     
+    # ------------------------------------------------------
+    # Account invoice
+    # ------------------------------------------------------
+    <record id="view_account_invoice_search_inherit" model="ir.ui.view">
+        <field name="name">account.invoice.search.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="type">search</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="group/field[@name='period_id']" position="after">
+                <field name="category_id"/>
+            </xpath>
+        </field>
+    </record>
+    
     <!--
         Asset History 
      -->

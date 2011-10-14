@@ -24,6 +24,9 @@ from osv import osv, fields
 class account_invoice(osv.osv):
 
     _inherit = 'account.invoice'
+    _columns = {
+        'category_id': fields.many2one('account.asset.category', 'Asset category', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
+    }
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context=context)
         res['asset_id'] = x.get('asset_id', False)
