@@ -36,10 +36,24 @@
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: stage of opportunity is win}:
     - stage_id.name == "Won"
 -
-  After won the opportunity, i will test probability is 100.
+  After winning the opportunity, i will test probability is 100.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
     - probability == 100.0
+-
+  Suppose i have opportinity in initial stage, i will check after loss my `opportunity` , probability of that opportunity is 0
+-
+  !python {model: crm.lead}: |
+    self.case_open(cr, uid, [ref("crm_case_rdroundfundingunits0")])
+    self.case_mark_lost(cr, uid, [ref("crm_case_rdroundfundingunits0")])
+-
+  I check after loss the opportunity, probability set to 0.0 and lost stage set accordingly.
+-
+  !python {model: crm.lead}: |
+    opportunity = self.browse(cr, uid, ref('crm_case_rdroundfundingunits0'))
+    assert opportunity.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
+    assert opportunity.probability == 0.0, 'Probability is wrong!'
+
 -
   I have two opportunity ,so i will merge this two Opportunities.
 -
