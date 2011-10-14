@@ -35,7 +35,7 @@ DEFAULT_MODULES = {
     'Project Management' : ['project',],
     'Knowledge Management' : ['document',],
     'Warehouse Management' : ['stock',],
-    'Manufacturing' : ['mrp', 'procurement'],
+    'Manufacturing' : ['mrp'],
     'Accounting & Finance' : ['account'],
     'Purchase Management' : ['purchase'],
     'Human Resources' : ['hr',],
@@ -107,7 +107,7 @@ class base_setup_installer(osv.osv_memory):
             for cat in cat_proxy.browse(cr, uid, cat_ids, context=context):
                 m = DEFAULT_MODULES.get(cat.name,[])
                 r = module_proxy.search(cr, uid, [('state','=','installed'),('name','in',m)])
-                result['category_%d' % (cat.id,)] = bool(r)
+                result['category_%d' % (cat.id,)] = len(r) == len(m)
 
         return result
 
