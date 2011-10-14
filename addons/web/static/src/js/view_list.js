@@ -785,6 +785,26 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             [this.records.at(this.dataset.index).get('id'),
              this.dataset]);
     },
+    render_cell: function (record, column) {
+        if (column.type === 'many2one') {
+            var value = record.get(column.id);
+            // m2o values are usually name_get formatted, [Number, String]
+            // pairs, but in some cases only the id is provided. In these
+            // cases, we need to perform a name_get call to fetch the actual
+            // displayable value
+            if (typeof value === 'number' || value instanceof Number) {
+                // fetch the name, set it on the record (in the right field)
+                // and let the various registered events handle refreshing the
+                // row
+                new openerp.web.DataSet(this.view, column.relation)
+                    .name_get([value], function (names) {
+                    if (!names.length) { return; }
+                    record.set(column.id, names[0]);
+                });
+            }
+        }
+        return openerp.web.format_cell(record.toForm().data, column);
+    },
     render: function () {
         if (this.$current) {
             this.$current.remove();
@@ -792,7 +812,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                render_cell: openerp.web.format_cell}, this)));
+                render_cell: $.proxy(this, 'render_cell')}, this)));
         this.pad_table_to(5);
     },
     pad_table_to: function (count) {
@@ -900,7 +920,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             record: record,
             row_parity: (index % 2 === 0) ? 'even' : 'odd',
             view: this.view,
-            render_cell: openerp.web.format_cell
+            render_cell: $.proxy(this, 'render_cell')
         });
     },
     /**

@@ -636,7 +636,7 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-raw="render_cell(record.toForm().data, column)"/>
+            <t t-raw="render_cell(record, column)"/>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete' width="1">
