@@ -8,7 +8,6 @@
 -
   !assert {model: purchase.order, id: order_purchase1, string: The amount of Test purchase is correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
-    - amount_total == 1652.90
 -
   I confirm the RFQ.
 -
@@ -19,52 +18,64 @@
   !assert {model: purchase.order, id: order_purchase1}:
     - state == 'approved'
 -
-  I check that the purchase order has now a corresponding invoice
--
-  !assert {model: purchase.order, id: order_purchase1, string: Test purchase has now a corresponding invoice, severity: fatal}:
-    - len(invoice_ids) == 1
--
-  I check that the purchase's invoice is currently in draft state.
--
-  !assert {model: purchase.order, id: order_purchase1, string: Test purchase's invoice has the same amount and is currently a draft}:
-    - invoice_ids[0].state == 'draft'
--
   I check that the purchase order has now a corresponding invoice details
 -
   !python {model: purchase.order}: |
-    purchase_data = self.browse(cr, uid, ref("order_purchase1"))
-    for line in self.pool.get('account.invoice').browse(cr, uid, [purchase_data.invoice_ids[0].id]):
-      assert line.name == purchase_data.name, "Invoice name is not correspond with purchase order"
-      assert line.amount_untaxed == purchase_data.amount_untaxed, "Invoice untaxed amount is not correspond with purchase order"
-      assert line.amount_tax == purchase_data.amount_tax, "Invoice tax amount is not correspond with purchase order"
-      assert line.amount_total == purchase_data.amount_total, "Invoice total amount is not correspond with purchase order"
-      assert line.partner_id == purchase_data.partner_id, "Invoice supplier is not correspond with purchase order"
-      assert line.invoice_line[0].product_id == purchase_data.order_line[0].product_id, "Invoice product is not correspond with purchase order"
-      assert line.invoice_line[1].product_id == purchase_data.order_line[1].product_id, "Invoice product is not correspond with purchase order"
-      assert line.invoice_line[0].price_unit == purchase_data.order_line[0].price_unit, "Invoice unit price is not correspond with purchase order"
-      assert line.invoice_line[1].price_unit == purchase_data.order_line[1].price_unit, "Invoice unit price is not correspond with purchase order"
+    purchase_order = self.browse(cr, uid, ref("order_purchase1"))
+    assert len(purchase_order.invoice_ids) == 1,"Invoice line is not more or less than one"
+    for invoice in purchase_order.invoice_ids:
+      assert invoice.state == "draft", "Invoice state should be draft"
+      assert invoice.reference == purchase_order.partner_ref or purchase_order.name,"Invoice reference is not correspond with purchase order"
+      assert invoice.account_id == purchase_order.partner_id.property_account_payable ,"Invoice account_id is not correspond with purchase order"
+      assert invoice.type == 'in_invoice',"Invoice type is not correspond with purchase order"
+      assert invoice.currency_id == purchase_order.pricelist_id.currency_id ,"Invoice currency_id is not correspond with purchase order"
+      assert invoice.address_invoice_id == purchase_order.partner_address_id ,"Invoice address_invoice is not correspond with purchase order"
+      assert invoice.address_contact_id == purchase_order.partner_address_id ,"Invoice address_contact is not correspond with purchase order"
+      assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"
+      ##assert invoice.fiscal_position == purchase_order.fiscal_position  or purchase_order.partner_id.property_account_position ,"Invoice fiscal_position is not correspond with purchase order"
+      ##assert invoice.payment_term == purchase_order.partner_id.property_payment_term and purchase_order.partner_id.property_payment_term  or False,"Invoice payment_term is not correspond with purchase order"
+      assert invoice.company_id == purchase_order.company_id ,"Invoice company is not correspond with purchase order"
+      assert invoice.state == "draft", "Invoice state should be draft"
+      assert invoice.name == purchase_order.name, "Invoice name is not correspond with purchase order"
+      assert invoice.amount_untaxed == purchase_order.amount_untaxed, "Invoice untaxed amount is not correspond with purchase order"
+      assert invoice.amount_tax == purchase_order.amount_tax, "Invoice tax amount is not correspond with purchase order"
+      assert invoice.amount_total == purchase_order.amount_total, "Invoice total amount is not correspond with purchase order"
+      assert invoice.partner_id == purchase_order.partner_id, "Invoice supplier is not correspond with purchase order"
+      assert len(invoice.invoice_line) == len(purchase_order.order_line), "Invoice line is not correspond with puchase order line"
+      for index in range(0,len(invoice.invoice_line)):
+        #assert invoice.invoice_line[index].account_id == purchase_order.order_line[index].product_id, "Invoice product is not correspond with purchase order"
+        assert invoice.invoice_line[index].price_unit == purchase_order.order_line[index].price_unit, "Invoice unit price is not correspond with purchase order"
+        ##assert invoice.invoice_line[index].name == purchase_order.order_line[index].name,"Invoice product is not correspond with purchase order"
+        #assert invoice.invoice_line[index].account_id == a,"Invoice product is not correspond with purchase order"
+        assert invoice.invoice_line[index].price_unit == purchase_order.order_line[index].price_unit or 0.0,"Invoice product is not correspond with purchase order"
+        assert invoice.invoice_line[index].quantity == purchase_order.order_line[index].product_qty,"Invoice product is not correspond with purchase order"
+        assert invoice.invoice_line[index].product_id == purchase_order.order_line[index].product_id  or False,"Invoice product is not correspond with purchase order"
+        assert invoice.invoice_line[index].uos_id == purchase_order.order_line[index].product_uom  or False,"Invoice product is not correspond with purchase order"
+        #assert  == [(6, 0, [x.id for x in purchase_order.order_line.taxes_id])],"Invoice product is not correspond with purchase order"
+        ##assert invoice.invoice_line[index].account_analytic_id == purchase_order.order_line.account_analytic_id  or False,"Invoice product is not correspond with purchase order"
+        ##for tax in range(0,len(invoice.invoice_line[index].invoice_line_tax_id)):
+
 -
   I check that the purchase order has now a corresponding Reception.
 -
-  !assert {model: purchase.order, id: order_purchase1, string: Test purchase has now a corresponding Reception, severity: fatal}:
-    - len(picking_ids) == 1
--
-  I check that the purchase order has now a corresponding Reception details
--
   !python {model: purchase.order}: |
-    purchase_data = self.browse(cr, uid, ref("order_purchase1"))
-    for line in self.pool.get('stock.picking').browse(cr, uid, [purchase_data.picking_ids[0].id]):
-      assert line.origin == purchase_data.name, "Reception origin is not correspond with purchase order"
-      assert line.move_lines[0].product_id == purchase_data.order_line[0].product_id, "Reception product is not correspond with purchase order"
-      assert line.move_lines[1].product_id == purchase_data.order_line[1].product_id, "Reception product is not correspond with purchase order"
-      assert line.move_lines[0].location_dest_id == purchase_data.location_id, "Reception location is not correspond with purchase order"
-      assert line.move_lines[0].product_uom == purchase_data.order_line[0].product_uom, "Reception uom is not correspond with purchase order"
-      assert line.move_lines[1].product_uom == purchase_data.order_line[1].product_uom, "Reception uom is not correspond with purchase order"
-      assert line.move_lines[0].product_qty == purchase_data.order_line[0].product_qty, "Reception qty is not correspond with purchase order"
-      assert line.move_lines[1].product_qty == purchase_data.order_line[1].product_qty, "Reception qty is not correspond with purchase order"
--
-  I check that the purchase's reception will be sent to the good address
--
-  !assert {model: purchase.order, id: order_purchase1, string: Test purchase's reception will be sent to the good address, severity: error}:
-    - picking_ids[0].address_id == partner_address_id
-
+    purchase_order = self.browse(cr, uid, ref("order_purchase1"))
+    assert len(purchase_order.picking_ids) == 1, "Reception line should be more or less than one"
+    for picking in purchase_order.picking_ids:
+      assert picking.state == "assigned", "Reception state should be in assigned state"
+      assert picking.address_id == purchase_order.dest_address_id  or purchase_order.partner_address_id ,"Reception product is not correspond with purchase order"
+      ##assert picking.invoice_state == '2binvoiced',"Reception Invoice state should be 2binvoiced"
+      assert picking.company_id == purchase_order.company_id ,"Reception company is not correspond with purchase order"
+      for index in range(0,len(picking.move_lines)):
+        assert picking.move_lines[index].product_id == purchase_order.order_line[index].product_id, "Reception product is not correspond with purchase order"
+        assert picking.move_lines[index].location_dest_id == purchase_order.location_id, "Reception location is not correspond with purchase order"
+        ##assert picking.move_lines[index].product_uom == purchase_order.order_line[index].product_uom, "Reception uom is not correspond with purchase order"        
+        ##assert line.move_lines[index].product_uom == purchase_data.order_line[index].product_uom, "Reception uom is not correspond with purchase order"
+        assert picking.move_lines[index].product_qty == purchase_order.order_line[index].product_qty, "Reception qty is not correspond with purchase order"
+        assert picking.move_lines[index].product_id == purchase_order.order_line[index].product_id ,"Reception products is not correspond with purchase order"
+        assert picking.move_lines[index].product_uos_qty == purchase_order.order_line[index].product_qty,"Reception product uos qty is not correspond with purchase order"
+        assert picking.move_lines[index].product_uom == purchase_order.order_line[index].product_uom ,"Reception product UOM is not correspond with purchase order"
+        assert picking.move_lines[index].product_uos == purchase_order.order_line[index].product_uom ,"Reception product UOS is not correspond with purchase order"
+        assert picking.move_lines[index].location_dest_id == purchase_order.location_id,"Reception Destination Location is not correspond with purchase order"
+        assert picking.move_lines[index].company_id == purchase_order.company_id ,"Reception Company is not correspond with purchase order"
+        assert picking.move_lines[index].price_unit == purchase_order.order_line[index].price_unit ,"Reception Price unit is not correspond with purchase order"
