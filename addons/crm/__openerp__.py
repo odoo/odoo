@@ -130,7 +130,6 @@ Creates a dashboard for CRM that includes:
             'test/test_crm_stage_changes.yml',
             'test/test_crm_recurrent_meeting_case2.yml',
             'test/test_crm_phonecall_case2.yml',
-            'test/test_crm_partner2opportunity.yml',
             'test/test_crm_segmentation.yml',
              ],
     'installable': True,
