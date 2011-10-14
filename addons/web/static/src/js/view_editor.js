@@ -34,7 +34,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             },
         };
         var action_manager = new openerp.web.ActionManager(this);
-        this.dialog = new openerp.web.Dialog(this,{
+        this.view_edit_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'ViewEditor',
             width: 750,
@@ -52,9 +52,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         },
         });
-        this.dialog.start();
-        this.dialog.open();
-        action_manager.appendTo(this.dialog);
+        this.view_edit_dialog.start();
+        this.view_edit_dialog.open();
+        action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
     },
     check_attr: function(xml, tag, level) {
@@ -134,7 +134,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     get_data: function() {
         var self = this;
-        var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
+        var view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
         ve_dataset.read_ids([parseInt(view_id)], ['arch'], function (arch) {
             one_object = self.parse_xml(arch[0].arch,view_id);
@@ -249,7 +249,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     edit_view: function(one_object) {
         var self = this;
-        this.dialog = new openerp.web.Dialog(this,{
+        this.edit_xml_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Edit Xml',
             width: 750,
@@ -266,15 +266,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             }
         });
-        this.dialog.start().open();
-        this.dialog.$element.html(QWeb.render('view_editor', {
+        this.edit_xml_dialog.start().open();
+        this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {
             'data': one_object['main_object'],
         }));
-        $("tr[id^='viewedit-']").click(function() {
+        this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
             $("tr[id^='viewedit-']").removeClass('ui-selected');
             $(this).addClass('ui-selected');
         });
-        $("img[id^='parentimg-']").click(function() {
+        this.edit_xml_dialog.$element.find("img[id^='parentimg-']").click(function() {
             if ($(this).attr('src') == '/web/static/src/img/collapse.gif') {
                 $(this).attr('src', '/web/static/src/img/expand.gif');
                 self.on_expand(this);
@@ -284,7 +284,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 self.on_collapse(this,one_object['parent_child_id'], one_object['main_object']);
             }
         });
-        $("img[id^='side-']").click(function() {
+        this.edit_xml_dialog.$element.find("img[id^='side-']").click(function() {
             var side = $(this).closest("tr[id^='viewedit-']")
             var id_tr = (side.attr('id')).split('-')[1];
             var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src'); ;
@@ -347,7 +347,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     var last_tr_id = (last_tr.attr('id')).split('-')[1];
                     img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
                     if (img) {
-                        $("img[id='parentimg-" + last_tr_id + "']").attr('src', '/web/static/src/img/expand.gif');
+                        this.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").attr('src', '/web/static/src/img/expand.gif');
                         while (1) {
                             var next_tr = last_tr.next();
                             if (next_tr.attr('level') <= level || next_tr.length == 0) break;
@@ -364,9 +364,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         });
     },
-    on_expand: function(self){
-        var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
-        var cur_tr = $(self).closest("tr[id^='viewedit-']");
+    on_expand: function(expand_img){
+        var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
+        var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");
         while (1) {
             var nxt_tr = cur_tr.next();
             if (parseInt(nxt_tr.attr('level')) > level){
@@ -375,13 +375,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             } else return nxt_tr;
         }
     },
-    on_collapse: function(self, parent_child_id, id, main_object) {
-        var id = self.id.split('-')[1];
+    on_collapse: function(collapse_img, parent_child_id, id, main_object) {
+        var self = this;
+        var id = collapse_img.id.split('-')[1];
         var datas = _.detect(parent_child_id,function(res) {
             return res.key == id;
         });
         _.each(datas.value, function(rec) {
-            var tr = $("tr[id='viewedit-"+rec+"']");
+            var tr = self.edit_xml_dialog.$element.find("tr[id='viewedit-"+rec+"']");
             tr.find("img[id='parentimg-"+rec+"']").attr('src','/web/static/src/img/expand.gif');
             tr.show();
         });
