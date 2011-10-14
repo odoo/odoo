@@ -17,14 +17,12 @@ instance.web.Sidebar = instance.web.Sidebar.extend({
         var view = this.widget_parent
         var action = view.widget_parent.action;
 
-        var share_url_template = _('%s//%s/?db=%%(dbname)s&login=%%(login)s').sprintf(document.location.protocol, document.location.host);
         var Share = new instance.web.DataSet(this, 'share.wizard', view.dataset.get_context());
 
         Share.create({
             name: action.name,
             domain: view.dataset.domain,
             action_id: action.id,
-            share_url_template: share_url_template,
         }, function(result) {
             var share_id = result.result;
             console.log('share_id', share_id);

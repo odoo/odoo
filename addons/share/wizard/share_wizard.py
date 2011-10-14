@@ -119,12 +119,18 @@ class share_wizard(osv.osv_memory):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
+    def share_url_template(self, cr, uid, _ids, context=None):
+        # NOTE: take _ids in parameter to allow usage through browse_record objects
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
+        if base_url:
+            base_url += '/?db=%(dbname)s&login=%(login)s'
+        return base_url
 
     def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')
-        data = dict(dbname=cr.dbname, login='', password='')
+        data = dict(dbname=cr.dbname, login='')
         for this in self.browse(cr, uid, ids, context=context):
-            result[this.id] = this.share_url_template % data
+            result[this.id] = this.share_url_template() % data
         return result
 
     _columns = {
@@ -137,8 +143,6 @@ class share_wizard(osv.osv_memory):
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
-        'share_url_template': fields.char('Share Access URL Template', size=512,
-                                help='Template for share url. May contains %(dbname)s, %(login)s and %(password)s'),
         'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', size=512, readonly=True,
                                 help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
@@ -147,7 +151,6 @@ class share_wizard(osv.osv_memory):
     _defaults = {
         'user_type' : 'emails',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
-        'share_url_template': lambda self, cr, uid, context, *a: context.get('share_url_template') or _('Please specify "share_url_template" in context'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly',
     }
@@ -735,8 +738,8 @@ class share_result_line(osv.osv_memory):
     def _share_url(self, cr, uid, ids, _fieldname, _args, context=None):
         result = dict.fromkeys(ids, '')
         for this in self.browse(cr, uid, ids, context=context):
-            data = dict(dbname=cr.dbname, login=this.login, password='')    # password is kept empty for security reasons
-            result[this.id] = this.share_wizard_id.share_url_template % data
+            data = dict(dbname=cr.dbname, login=this.login)
+            result[this.id] = this.share_wizard_id.share_url_template() % data
         return result
 
     _columns = {
