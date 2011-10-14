@@ -36,6 +36,23 @@
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: stage of opportunity is win}:
     - stage_id.name == "Won"
 -
+  I want to add internal note to this opportunity, so i create note.
+-
+  !record {model: crm.add.note, id: crm_add_note_won_opportunity}:
+    body: 'I won this Opportunity'
+-
+  Apply this note to opportunity.
+-
+  !python {model: crm.add.note}: |
+    self.action_add(cr, uid, [ref("crm_add_note_won_opportunity")], {"active_model": "crm.lead","active_ids": [ref("crm_case_qrecorp0")]})
+-
+  I will test Internal note added on opportunity .
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
+    message = 'I won this Opportunity' in lead.message_ids[-1].subject
+    assert message,'Fail to Added interal note on opportunity'
+-
   After winning the opportunity, i will test probability is 100.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
