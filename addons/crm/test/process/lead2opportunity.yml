@@ -40,3 +40,21 @@
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
     - probability == 100.0
+-
+  I have two opportunity ,so i will merge this two Opportunities.
+-
+  !python {model: crm.merge.opportunity}: |
+    op_ids=self.pool.get('crm.lead').browse(cr, uid, [ref('crm_case_bankwealthy2'), ref('crm_case_unifliege')])
+    self.merge(cr, uid, op_ids)
+
+-
+  I will test which two opportunity merged .
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_case_bankwealthy2'))
+    merge = 'Merged opportunities' in lead.message_ids[0].subject
+    assert merge,'Fail to create Merge opportunity'
+    assert lead.type == 'opportunity', 'Merged opportunity type not change!'
+    assert lead.partner_id.id == ref("base.res_partner_accent"), 'Partner missmatch!'
+    assert lead.stage_id.id == ref("stage_lead2"), 'Stage of probability is incorrect!'
+    
