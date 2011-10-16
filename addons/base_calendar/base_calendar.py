@@ -1005,7 +1005,7 @@ class calendar_event(osv.osv):
         return result
 
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
