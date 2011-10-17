@@ -1,4 +1,5 @@
 openerp.web.list = function (openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
@@ -10,7 +11,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': "New",
+        'addable': _t("New"),
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,
@@ -252,7 +253,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                                 '<option value="100">100</option>' +
                                 '<option value="200">200</option>' +
                                 '<option value="500">500</option>' +
-                                '<option value="NaN">Unlimited</option>')
+                                '<option value="NaN">' + _t("Unlimited") + '</option>')
                         .change(function () {
                             var val = parseInt($select.val(), 10);
                             self._limit = (isNaN(val) ? null : val);
@@ -463,7 +464,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
-        if (!ids.length || !confirm(" Are you sure to remove those records ?")) {
+        if (!(ids.length && confirm(_t("Are you sure to remove those records ?")))) {
             return;
         }
         var self = this;
@@ -1097,7 +1098,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
                 $group_column.html(openerp.web.format_cell(
-                    row_data, group_column, "Undefined"
+                    row_data, group_column, _t("Undefined")
                 ));
                 if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
