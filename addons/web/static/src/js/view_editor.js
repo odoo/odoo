@@ -95,7 +95,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var p_list = parent_list.slice(1);
         if (val.child_id.length != 0) {
             _.each(val.child_id, function(val, key) {
-                if (val.id==check_id) {
+                if (val.id == check_id) {
                     if (p_list.length!=0) {
                         self.save_object(val, p_list, child_obj_list);
                     } else {
@@ -144,18 +144,21 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
 
     get_data: function() {
         var self = this;
+        var view_arch_list = [];
         var view_id =(($("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
         ve_dataset.read_ids([parseInt(view_id)], ['arch'], function (arch) {
             one_object = self.parse_xml(arch[0].arch,view_id);
-            one_object.arch = arch[0].arch;
+            view_arch_list.push({"view_id" : view_id, "arch" : arch[0].arch});
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
             dataset.read_slice([], {domain : [['inherit_id','=', parseInt(view_id)]]}, function (result) {
                 _.each(result, function(res) {
+                    view_arch_list.push({"view_id":res.id,"arch":res.arch});
                     self.inherit_view(one_object, res);
                 });
                 return self.edit_view({"main_object": one_object,
-                         "parent_child_id": self.parent_child_list(one_object, [])});
+                         "parent_child_id": self.parent_child_list(one_object, []),
+                         "arch": view_arch_list});
             });
         });
     },
@@ -226,7 +229,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         var main_list = _.flatten(element.att_list);
                         return _.include(main_list, check[0]);
                     });
-                    if(list_1 != 0){
+                    if(list_1.length != 0){
                         (check_list.length == 1)? obj = list_1[0] : check_list.shift();
                     }
                     break;
@@ -373,9 +376,38 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                        $(last_tr).after(rec);
                     });
                 }
+                var arch1 = one_object["arch"][0].arch;
+                root = $(arch1).filter(":first")[0];
+                self.get_node(one_object["arch"][0].arch, 
+                                one_object['main_object'][0].child_id[0],
+                                     parseInt(id_tr),
+                                        one_object['main_object'][0].child_id[0].chld_id, level, one_object);
                 break;
             }
         });
+    },
+    get_node: function(arch, obj, id, child_list, level, one_object){
+        var self = this;
+        var children_list =  $(arch).children();
+        if(obj.level <= level){
+            if(id != obj.id){
+                for(var i=0;i< children_list.length; i++){
+                    if(obj.child_id){var child_list = obj.child_id};
+                    
+                self.get_node(children_list[i], obj.child_id[i], id, child_list, level, one_object);
+                }
+            }else{
+                var next = $(arch).next()
+                $(next).after(arch);
+                var index = _.indexOf(child_list,obj)
+                var re_insert_obj = child_list.splice(index,1);
+                child_list.splice(index+1, 0, re_insert_obj[0]);
+                var p = $(arch).parents();
+                one_object["arch"][0].arch = p[p.length-1]; 
+                utfstring = unescape(encodeURIComponent(p));
+                return;
+            }
+        }
     },
     on_expand: function(self){
         var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
@@ -390,6 +422,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     on_collapse: function(self, parent_child_id, id, main_object) {
         var id = self.id.split('-')[1];
+
         var datas = _.detect(parent_child_id,function(res) {
             return res.key == id;
         });
