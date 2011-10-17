@@ -102,7 +102,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
 
         this.$form_header.find('button.oe_form_button_save').click(this.do_save);
-        this.$form_header.find('button.oe_form_button_save_edit').click(this.do_save_edit);
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
@@ -426,10 +425,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         };
         this.mutating_lock = this.mutating_lock.pipe(action, action);
         return this.mutating_lock;
-    },
-    do_save_edit: function() {
-        this.do_save();
-        //this.switch_readonly(); Use promises
     },
     switch_readonly: function() {
     },
@@ -1948,7 +1943,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 controller.on_pager_action.add_first(function() {
                     self.save_form_view();
                 });
-                controller.$element.find(".oe_form_button_save_edit").hide();
+                controller.$element.find(".oe_form_button_save").hide();
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
