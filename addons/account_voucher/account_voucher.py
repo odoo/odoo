@@ -867,8 +867,7 @@ class account_voucher(osv.osv):
 
             if amount_residual: 
                 # Change difference entry
-                exch_lines = self._get_exchange_lines(cr, uid, line, move_id, 
-                                            amount_residual ,context)
+                exch_lines = self._get_exchange_lines(cr, uid, line, move_id, amount_residual, company_currency, current_currency, context=context)
                 new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
                 move_line_obj.create(cr, uid, exch_lines[1], context)
                 rec_ids.append(new_id)
