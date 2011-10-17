@@ -449,11 +449,11 @@
         </blockquote>
     	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
     	   href="javascript: void(0)"> </a>
-        <h2 class="oe_view_title" t-if="self.session.debug || self.flags.display_title !==false">
-            <t t-if="self.flags.display_title !==false" t-esc="self.action.name"/>
-            <button t-if="self.session.debug" class="oe_get_xml_view">
-                View#<span></span>
-            </button>
+        <button t-if="self.session.debug" class="oe_get_xml_view">
+            View#<span></span>
+        </button>
+        <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
+            <t t-if="self.flags.display_title !== false" t-esc="self.action.name"/>
         </h2>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">

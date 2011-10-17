@@ -431,10 +431,16 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
     on_mode_switch: function (view_type) {
         var self = this;
         return $.when(
-            this._super(view_type),
-            this.shortcut_check(this.views[view_type])).then(function () {
-                var view_id = self.views[self.active_view].controller.fields_view.view_id;
+                this._super(view_type),
+                this.shortcut_check(this.views[view_type])
+            ).then(function() {
+                var controller = self.views[self.active_view].controller,
+                    fvg = controller.fields_view,
+                    view_id = (fvg && fvg.view_id) || '--';
                 self.$element.find('.oe_get_xml_view span').text(view_id);
+                if (!self.action.name && fvg) {
+                    self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
+                }
         });
     },
     shortcut_check : function(view) {
