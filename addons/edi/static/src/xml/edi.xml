@@ -1,62 +1,57 @@
 <template>
 <t t-name="EdiView">
-    <div class="oe_form_header">
-        <table width="100%">
-            <tr>
-                <td width="10%">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="oe_forms">
+    <tr>
+        <td colspan="2" valign="top">
+            <div id="oe_header" class="header">
+                <div>
                     <a href="/" class="company_logo_link">
                             <div class="company_logo" />
                     </a>
-                </td>
-                <td width="30%" align="center">
-                    <div class="header_corner">
-                        <button type="button" name="action_print">View/Print PDF</button>
-     
-                      </div>
-               </td>
-               <td width="50%">
-                   <div class="header_corner">
-                   </div>
-               </td>
-           </tr>
-            <tr>
-                <td colspan="3">
-                    <hr/>
-                </td>
-            </tr>
-            </table>
-    </div>
-    <div hight="100%">
-        <table width="100%" hight="100%">
+                </div>
+                <div class="header_corner">
+                    <button type="button" name="action_print">View/Print PDF</button>
+                  </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" valign="top" height="100%">
+            <table cellspacing="0" cellpadding="0" border="0" height="100%" width="100%">
                 <tr>
-                    <td width="70%" align="top">
-                          <div class="oe_edi_center">
-                          </div>  
-                          
-                            
-                    </td>
-                    <td width="30%" valign="top">
-                          <div class="oe_edi_right_top">
-                          </div>
-                          <div class="oe_edi_right_bottom">
-                          </div>  
-                    </td>
-                </tr>
-            
-                <tr>
-                        <td><hr/></td>
-                </tr>
-                <tr>
-                    <td align="center">
-                            <button type="button" name="action_print">View/Print PDF</button>
+                    <td valign="top" class="oe-application-container">
+                        <div id="oe_app" class="oe-application">
+                            <table width="100%" height="100%">
+                                <tr class="oe_edi_preview_container">
+                                    <td class="oe_edi_preview">
+                                          <div class="oe_edi_center">
+                                          </div>
+                                          <div class="oe_edi_center_bottom" align="center">
+                                            <button type="button" name="action_print">View/Print PDF</button>
+                                          </div>
+                                    </td>
+                                    <td class="oe_edi_sidebar_container">
+                                          <div class="oe_edi_right_top">
+                                          </div>
+                                          <div class="oe_edi_right_bottom">
+                                          </div>  
+                                    </td>
+                                </tr>
+                            </table>
+                       </div>
                     </td>
                 </tr>
             </table>
-    </div>
-    <div id="oe_footer" class="oe_footer">
-                    <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
-    </div>
-      
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="oe_footer" class="oe_footer">
+                <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">OpenERP</a>.</p>
+            </div>
+        </td>
+    </tr>
+</table>
 </t>
 <t t-name="EdiViewCenter">
     <div>
@@ -66,33 +61,35 @@
 
 <t t-name="EdiViewRightTop">
     <div>
-       <table>
-                    <tr>
-                        <td>
-                            <b>Push this document into your enterprise management system </b>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <hr/>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td> 
-                                <input type="radio" id="oe_edi_rd_import_openerp" name="oe_edi_rd_import" value="oe_edi_import_openerp">Import it into exising OpenERP Server<br/> OpenERP Server Address: http:// <input type="text" id="oe_edi_txt_server_url"></input></input><br/>
-                                <input type="radio" id="oe_edi_rd_import_saas_account" name="oe_edi_rd_import" value="oe_edi_create_saas_account">Please create OpenERP Server for me and import it into my server.<br/> 
-                                </input>
-                                Compnay: <input type="text" name="oe_edi_txt_saas_url"></input> .my.openerp.com<br/>
-                                Password: <input type="password" name="oe_edi_txt_saas_password"></input> <br/>
-                                Email: <input type="text" name="oe_edi_txt_saas_email"></input><br/>
-                                <input type="radio" id="oe_edi_rd_import_other" name="oe_edi_rd_import" value="oe_edi_import_other">Import into another application</input>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center"><button type="button" class="oe_edi_button_import">Continue</button>
-                        </td>
-                    </tr>
-                </table>
+        <p class="oe_edi_sidebar_title">
+            Push this document into your enterprise management system
+        </p>
+
+        <p>
+            <input type="radio" id="oe_edi_rd_import_openerp" name="oe_edi_rd_import" value="oe_edi_import_openerp"/>
+            <label for="oe_edi_rd_import_openerp">Import it into my existing OpenERP instance</label>
+            <p class="oe_edi_nested_block">
+                <label for="oe_edi_txt_saas_url">OpenERP instance address:</label> http://<input type="text" id="oe_edi_txt_server_url"/>
+            </p>
+        </p>
+
+        <p>
+            <input type="radio" id="oe_edi_rd_import_saas_account" name="oe_edi_rd_import" value="oe_edi_create_saas_account"/>
+            <label for="oe_edi_rd_import_saas_account">Create a new OpenERP instance for me:</label>
+            <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_url">Company:</label><input type="text" name="oe_edi_txt_saas_url"/>.my.openerp.com</p>
+            <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_password">Password:</label><input type="password" name="oe_edi_txt_saas_password"/></p>
+            <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_email">Email:</label><input type="text" name="oe_edi_txt_saas_email"/></p>
+        </p>
+
+        <p>
+            <input type="radio" id="oe_edi_rd_import_other" name="oe_edi_rd_import" value="oe_edi_import_other"/>
+            <label for="oe_edi_rd_import_other">Import into another application</label>
+        </p>
+
+        <p>
+            <button type="button" class="oe_edi_button_import">Continue</button>
+        </p>
+
     </div>
 </t>
 <t t-name="EdiViewRightBottom">

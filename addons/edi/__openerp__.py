@@ -50,6 +50,9 @@ technical OpenERP documentation at http://doc.openerp.com
         'static/src/js/edi_invoice.js',
         'static/src/js/edi_sale_purchase_order.js',
     ],
+    "css": [
+        "static/src/css/edi.css"
+    ],
     'installable': True,
     'active': False,
     'certificate': '002046536359186',

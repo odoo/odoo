@@ -23,7 +23,7 @@ edi_view_template = textwrap.dedent("""<!DOCTYPE html>
                     }
                 }
                 var edi_engine = new c.web.EdiView("oe");
-         	    edi_engine.view_edi('%(token)s', '%(db)s');
+                edi_engine.view_edi('%(token)s', '%(db)s');
 
             });
         </script>
@@ -33,8 +33,8 @@ edi_view_template = textwrap.dedent("""<!DOCTYPE html>
 """)
 
 def edi_addons():
-     #FIXME: hardcoded to be able to test 
-    return 'web,edi,sale,purchase'
+     #FIXME: hardcoded to be able to test
+    return 'web,edi'
 
     _addons = ['web', 'edi', 'sale', 'purchase']
     for addon in openerpweb.addons_module:
@@ -47,7 +47,7 @@ def edi_addons():
     return _addons
 
 class EDIView(web.WebClient):
-    #  http://path.to.web.client:8080/web/view_edi?db=XXX&token=XXXXXXXXXXX 
+    #  http://path.to.web.client:8080/web/view_edi?db=XXX&token=XXXXXXXXXXX
     _cp_path = "/web/view_edi"
 
     @openerpweb.httprequest
@@ -63,7 +63,7 @@ class EDIView(web.WebClient):
         content,timestamp = web.concat_files(req.config.addons_path[0], files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
-    
+
     @openerpweb.httprequest
     def index(self, req, token, db):
         # script tags
@@ -80,7 +80,7 @@ class EDIView(web.WebClient):
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
 
         js_files = [str(js_file.split('/')[-1].split('.')[0]) for js_file in self.manifest_glob(req, addons, 'js')]
-            
+
         r = edi_view_template % {
             'javascript': js,
             'css': css,
@@ -89,6 +89,6 @@ class EDIView(web.WebClient):
             'edi_js': js_files
         }
         return r
-        
+
 
 
