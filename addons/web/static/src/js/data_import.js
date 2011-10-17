@@ -84,7 +84,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 self.graft_fields(fields);
                 self.ready.push(new openerp.web.DataSet(self, self.model).default_get(_.pluck(self.fields, 'id'), function (fields) {
                     self.fields_with_defaults = [];
-                    _.each(fields, function(key, val) { if (key) { self.fields_with_defaults.push(val); }  });
+                    _.each(fields, function(val, key) { if (val) { self.fields_with_defaults.push(key); }  });
                 })
             )
         }));
