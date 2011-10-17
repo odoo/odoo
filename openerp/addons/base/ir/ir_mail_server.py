@@ -44,8 +44,8 @@ _logger = logging.getLogger('ir.mail_server')
 
 class MailDeliveryException(osv.except_osv):
     """Specific exception subclass for mail delivery errors"""
-    def __init__(self, name, value, exc_type='warning'):
-        super(MailDeliveryException, self).__init__(name, value, exc_type=exc_type)
+    def __init__(self, name, value):
+        super(MailDeliveryException, self).__init__(name, value)
 
 class WriteToLogger(object):
     """debugging helper: behave as a fd and pipe to logger at the given level"""
@@ -431,7 +431,9 @@ class ir_mail_server(osv.osv):
                     # ignored, just a consequence of the previous exception
                     pass
         except Exception, e:
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (smtp_server, e.__class__.__name__, e)
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (tools.ustr(smtp_server),
+                                                                             e.__class__.__name__,
+                                                                             tools.ustr(e))
             _logger.exception(msg)
             raise MailDeliveryException(_("Mail delivery failed"), msg)
         return message_id
