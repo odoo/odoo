@@ -817,10 +817,10 @@ class account_voucher(osv.osv):
                 continue
             #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial invoice if needed
             if line.amount == line.amount_unreconciled:
-                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context)
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context)
                 amount_residual = line.move_line_id.amount_residual - amount #residual amount in company currency
             else:
-                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context)
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context)
                 amount_residual = 0.0
             move_line = {
                 'journal_id': voucher_brw.journal_id.id,
