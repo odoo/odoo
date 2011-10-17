@@ -690,9 +690,9 @@ class account_voucher(osv.osv):
         # TODO: Make this logic available.
         # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
         if voucher_brw.type in ('purchase', 'payment'):
-            credit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context)
+            credit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context=context)
         elif voucher_brw.type in ('sale', 'receipt'):
-            debit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context)
+            debit = currency_obj.compute(cr, uid, current_currency, company_currency, voucher_brw.amount, context=context)
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
