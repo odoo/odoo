@@ -1008,7 +1008,7 @@ class Binary(openerpweb.Controller):
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
         res = Model.read([int(id)], [field, fieldname], context)[0]
-        filecontent = res.get(field, '')
+        filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return req.not_found()
         else:
