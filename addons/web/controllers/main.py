@@ -1003,7 +1003,10 @@ class Binary(openerpweb.Controller):
     def saveas(self, req, model, id, field, fieldname, **kw):
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
-        res = Model.read([int(id)], [field, fieldname], context)[0]
+        if id:
+            res = Model.read([int(id)], [field, fieldname], context)[0]
+        else:
+            res = Model.default_get([field, fieldname], context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
             return req.not_found()
