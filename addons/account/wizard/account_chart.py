@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+import time
 
 class account_chart(osv.osv_memory):
     """
@@ -38,31 +39,39 @@ class account_chart(osv.osv_memory):
                                         ], 'Target Moves', required=True),
     }
 
+    def _get_fiscalyear(self, cr, uid, context=None):
+        """Return default Fiscalyear value"""
+        now = time.strftime('%Y-%m-%d')
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1)
+        return fiscalyears and fiscalyears[0] or False
+
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
-        res['value'] = {}
         if fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
-                SELECT * FROM (SELECT p.id
+                SELECT *, 1 FROM (SELECT p.id
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                ORDER BY p.date_start ASC
                                LIMIT 1) AS period_start
                 UNION
-                SELECT * FROM (SELECT p.id
+                SELECT *, 2 FROM (SELECT p.id
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
                                AND p.date_start < NOW()
                                ORDER BY p.date_stop DESC
-                               LIMIT 1) AS period_stop''', (fiscalyear_id, fiscalyear_id))
+                               LIMIT 1) AS period_stop
+                order by 2''', (fiscalyear_id, fiscalyear_id))
             periods =  [i[0] for i in cr.fetchall()]
             if periods and len(periods) > 1:
                 start_period = periods[0]
                 end_period = periods[1]
             res['value'] = {'period_from': start_period, 'period_to': end_period}
+        else:
+            res['value'] = {'period_from': False, 'period_to': False}
         return res
 
     def account_chart_open_window(self, cr, uid, ids, context=None):
@@ -96,7 +105,8 @@ class account_chart(osv.osv_memory):
         return result
 
     _defaults = {
-        'target_move': 'posted'
+        'target_move': 'posted',
+        'fiscalyear': _get_fiscalyear,
     }
 
 account_chart()
