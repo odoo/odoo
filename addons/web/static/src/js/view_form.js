@@ -2764,12 +2764,32 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         if (color) {
             var elem = this.$element.find("li.oe-arrow-list-selected span");
             elem.css("border-color", color);
+            if (this.check_white(color))
+                elem.css("color", "white");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
             elem.css("border-left-color", "rgba(0,0,0,0)");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
             elem.css("border-color", "rgba(0,0,0,0)");
             elem.css("border-left-color", color);
         }
+    },
+    check_white: function(color) {
+        var div = $("<div></div>");
+        div.css("display", "none");
+        div.css("color", color);
+        div.appendTo($("body"));
+        var ncolor = div.css("color");
+        div.remove();
+        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
+        if (!res) {
+            return false;
+        }
+        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
+        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
+        if (lum < 128) {
+            return true;
+        }
+        return false;
     }
 });
 
