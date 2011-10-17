@@ -49,18 +49,12 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
         };
         this.ready  = $.Deferred.queue().then(function () {
-            self.required_default_fields = _(self.fields).chain()
-                .filter(function (field) { return field.required; })
-                .pluck('id')
+            self.required_fields = _(self.fields).chain()
+                .filter(function (field) { return field.required && !_.include(self.fields_with_defaults, field.id); })
+                .pluck('name')
                 .value();
-            dataset.default_get(self.required_default_fields || [], function(res) {
-                self.required_fields = _(self.fields).chain()
-                    .filter(function (field) {if( !(field.id in res)) return field.required; })
-                    .pluck('name')
-                    .value();
-                convert_fields(self);
-                self.all_fields.sort();
-            });
+            convert_fields(self);
+            self.all_fields.sort();
         });
     },
     start: function() {
@@ -88,7 +82,12 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.ready.push(new openerp.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
                 self.graft_fields(fields);
-            }));
+                self.ready.push(new openerp.web.DataSet(self, self.model).default_get(_.pluck(self.fields, 'id'), function (fields) {
+                    self.fields_with_defaults = [];
+                    _.each(fields, function(key, val) { if (key) { self.fields_with_defaults.push(val); }  });
+                })
+            )
+        }));
     },
     graft_fields: function (fields, parent, level) {
         parent = parent || this;
