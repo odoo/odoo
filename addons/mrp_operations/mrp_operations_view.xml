@@ -180,7 +180,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations">
+            <gantt color="workcenter_id" date_delay="hour" date_start="date_planned" string="Operations" date_stop="date_planned_end">
                 <level object="mrp.workcenter" link="production_id" domain="[]">
                     <field name="product"/>
                     <field name="hour"/>
@@ -219,7 +219,7 @@
         <field name="model">mrp.production.workcenter.line</field>
         <field name="type">gantt</field>
         <field name="arch" type="xml">
-            <gantt color="production_id" date_delay="hour" date_start="date_planned">
+            <gantt color="production_id" date_delay="hour" date_start="date_planned" date_stop="date_planned_end">
                 <level object="mrp.workcenter" link="workcenter_id" domain="[]">
                     <field name="product"/>
                     <field name="hour"/>
