@@ -1,17 +1,16 @@
 -
-  As the lead seems to be a real business opportunity, I will convert it to a partner
-  and a business opportunity.
+  I test to convert lead to real business opportunity, so first i create existing partner attached with lead.
 -
   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_create_1}:
     action: 'exist'
     partner_id: base.res_partner_agrolait
 -
-  Create opportunity based on exiting partner
+  Create opportunity based on exiting partner.
 -
   !python {model: crm.lead2opportunity.partner}: |
     self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_1")], {'active_ids': [ref("crm_case_qrecorp0")], 'active_id': ref("crm_case_qrecorp0")})
 -
-  In order to test lead, i will test to lead is converted to opportunity.
+  After converted in opportunity, i test to lead is converted to opportunity.
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
@@ -19,12 +18,12 @@
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
 -
-  Finally, i won this opportunity, so i will close this lead.
+  Finally, i won this opportunity, so i close this opportunity.
 -
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  In order to test opportunity, it is close or not.
+  I check lead is close or not.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in done state}:
     - state == "done"
@@ -52,7 +51,7 @@
 #    lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
 #    assert lead.message_ids[0].subject == 'I won this Opportunity', 'Fail to Added interal note on opportunity'
 -
-  After winning the opportunity, i will test probability is 100.
+  After winning the opportunity, i test probability is 100.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Probability is equal to 100}:
     - probability == 100.0
@@ -69,22 +68,3 @@
     opportunity = self.browse(cr, uid, ref('crm_case_rdroundfundingunits0'))
     assert opportunity.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
     assert opportunity.probability == 0.0, 'Probability is wrong!'
-
--
-  I have two opportunity ,so i will merge this two Opportunities.
--
-  !python {model: crm.merge.opportunity}: |
-    op_ids=self.pool.get('crm.lead').browse(cr, uid, [ref('crm_case_bankwealthy2'), ref('crm_case_unifliege')])
-    self.merge(cr, uid, op_ids)
-
--
-  I will test which two opportunity merged .
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_bankwealthy2'))
-    merge = 'Merged opportunities' in lead.message_ids[0].subject
-    assert merge,'Fail to create Merge opportunity'
-    assert lead.type == 'opportunity', 'Merged opportunity type not change!'
-    assert lead.partner_id.id == ref("base.res_partner_accent"), 'Partner missmatch!'
-    assert lead.stage_id.id == ref("stage_lead2"), 'Stage of probability is incorrect!'
-    
