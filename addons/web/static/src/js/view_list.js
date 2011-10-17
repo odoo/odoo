@@ -768,7 +768,11 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
 
-                $(self).trigger('action', [field, record_id, function () {
+                // note: $.data converts data to number if it's composed only
+                // of digits, nice when storing actual numbers, not nice when
+                // storing strings composed only of digits. Force the action
+                // name to be a string
+                $(self).trigger('action', [field.toString(), record_id, function () {
                     return self.reload_record(self.records.get(record_id));
                 }]);
             })
