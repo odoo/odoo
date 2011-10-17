@@ -463,7 +463,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
-        if (!ids.length) {
+        if (!ids.length || !confirm(" Are you sure to remove those records ?")) {
             return;
         }
         var self = this;
