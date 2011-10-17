@@ -124,12 +124,13 @@ class ir_model(osv.osv):
 
     # overridden to allow searching both on model name (model field)
     # and model description (name field)
-    def name_search(self, cr, uid, name='', args=None, operator='ilike',  context=None, limit=None):
+    def _name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        return super(ir_model, self).name_search(cr, uid, None, domain,
-                        operator=operator, limit=limit, context=context)
+        return self.name_get(cr, name_get_uid or uid,
+                             super(ir_model, self).search(cr, uid, domain, limit=limit, context=context),
+                             context=context)
 
 
     def unlink(self, cr, user, ids, context=None):
