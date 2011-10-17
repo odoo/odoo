@@ -82,12 +82,15 @@ class auction_pay_buy(osv.osv_memory):
             lots = lot_obj.browse(cr, uid, context.get('active_ids', []), context=context)
             for lot in lots:
                 if datas['buyer_id']:
+                    if isinstance(datas['buyer_id'], tuple):
+                        datas['buyer_id'] = datas['buyer_id'][0]
                     lot_obj.write(cr, uid, [lot.id], {'ach_uid': datas['buyer_id']})
                 if not lot.auction_id:
                     raise osv.except_osv(_('Error!'), _('No auction date for "%s": Please set one.') % (lot.name))
                 lot_obj.write(cr, uid, [lot.id], {'is_ok':True})
-    
             for st, stamount in [('statement_id1', 'amount'), ('statement_id2', 'amount2'), ('statement_id3', 'amount3')]:
+                if isinstance(datas[st], tuple):
+                        datas[st] = datas[st][0]
                 if datas[st]:
                     new_id = bank_statement_line_obj.create(cr, uid, {
                         'name':'Buyer:'+ str(lot.ach_login or '')+', auction:'+ lots[0].auction_id.name, 
