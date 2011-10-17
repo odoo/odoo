@@ -25,8 +25,7 @@ openerpweb = web.common.http
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-# TODO change into concat_file(addons,key) taking care of addons_path
-def concat_files(addons_path, file_list):
+def concat_files(file_list):
     """ Concatenate file content
     return (concat,timestamp)
     concat: concatenation of file content
@@ -34,8 +33,7 @@ def concat_files(addons_path, file_list):
     """
     files_content = []
     files_timestamp = 0
-    for i in file_list:
-        fname = os.path.join(addons_path, i[1:])
+    for fname in file_list:
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
@@ -70,57 +68,55 @@ class WebClient(openerpweb.Controller):
         return addons
 
     def manifest_glob(self, req, addons, key):
-        if addons==None:
+        if addons is None:
             addons = self.server_wide_modules(req)
         else:
             addons = addons.split(',')
-        files = []
         for addon in addons:
             manifest = openerpweb.addons_manifest.get(addon, None)
             if not manifest:
                 continue
-            addons_path = manifest['addons_path']
+            # ensure does not ends with /
+            addons_path = os.path.join(manifest['addons_path'], '')[:-1]
             globlist = manifest.get(key, [])
             for pattern in globlist:
-                for path in glob.glob(os.path.join(addons_path, addon, pattern)):
-                    files.append(path[len(addons_path):])
-        return files
+                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
+                    yield path, path[len(addons_path):]
+
+    def manifest_list(self, req, mods, extension):
+        if not req.debug:
+            path = '/web/webclient/' + extension
+            if mods is not None:
+                path += '?mods=' + mods
+            return [path]
+        return ['%s?debug=%s' % (wp, os.path.getmtime(fp)) for fp, wp in self.manifest_glob(req, mods, extension)]
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
-        return self.manifest_glob(req, mods, 'css')
+        return self.manifest_list(req, mods, 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods=None):
-        return self.manifest_glob(req, mods, 'js')
+        return self.manifest_list(req, mods, 'js')
 
     @openerpweb.httprequest
     def css(self, req, mods=None):
-        files = self.manifest_glob(req, mods, 'css')
-        content,timestamp = concat_files(req.config.addons_path, files)
-        # TODO request set the Date of last modif and Etag
+        files = [f[0] for f in self.manifest_glob(req, mods, 'css')]
+        content,timestamp = concat_files(files)
+        # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods=None):
-        files = self.manifest_glob(req, mods, 'js')
-        content,timestamp = concat_files(req.config.addons_path, files)
-        # TODO request set the Date of last modif and Etag
+        files = [f[0] for f in self.manifest_glob(req, mods, 'js')]
+        content,timestamp = concat_files(files)
+        # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
-        # script tags
-        jslist = ['/web/webclient/js']
-        if req.debug:
-            jslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'js')]
-        js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
-
-        # css tags
-        csslist = ['/web/webclient/css']
-        if req.debug:
-            csslist = [i + '?debug=' + str(time.time()) for i in self.manifest_glob(req, None, 'css')]
-        css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>'%i for i in self.manifest_list(req, None, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">'%i for i in self.manifest_list(req, None, 'css'))
 
         r = home_template % {
             'javascript': js,
