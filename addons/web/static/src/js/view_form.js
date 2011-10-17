@@ -2745,7 +2745,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     render_list: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return x.trim(); });
+            function(x) { return _.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
             
         if (shown.length == 0) {
