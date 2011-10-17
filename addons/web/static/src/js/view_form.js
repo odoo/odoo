@@ -1014,7 +1014,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.check_disable();
     },
     check_disable: function() {
-        if (this.force_disabled || !this.view.is_interactible_record()) {
+        if (this.readonly || this.force_disabled || !this.view.is_interactible_record()) {
             this.$element.find("button").attr("disabled", "disabled");
             this.$element.find("button").css("color", "grey");
         } else {
