@@ -226,13 +226,14 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             var timeoutId = setTimeout(function() { $cpicker.remove() }, 500);
             $cpicker.data('timeoutId', timeoutId);
         });
-        $cpicker.find('a').click(function() {
+        $cpicker.find('a').click(function(evt) {
             var data = {};
             data[$e.data('name')] = $(this).data('color');
             self.dataset.write(id, data, {}, function() {
                 self.on_reload_record(id);
             });
             $cpicker.remove();
+            return false;
         });
     },
     /**
@@ -397,6 +398,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
     },
     on_action_clicked: function(evt) {
+        evt.preventDefault();
         var $action = $(evt.currentTarget),
             record_id = parseInt($action.closest(".oe_kanban_record").attr("id").split('_')[1]),
             type = $action.data('type');
