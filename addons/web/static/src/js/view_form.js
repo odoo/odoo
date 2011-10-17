@@ -2662,6 +2662,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
+        this.$element.find('input[type=text]').attr('disabled', this.readonly);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
