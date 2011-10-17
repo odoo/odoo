@@ -1888,6 +1888,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.is_started = $.Deferred();
+        this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
         this.disable_utility_classes = true;
@@ -1952,9 +1953,11 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.on_mode_switch.add_first(function() {
             self.save_form_view();
         });
-        setTimeout(function () {
-            self.viewmanager.appendTo(self.$element);
-        }, 0);
+        this.is_setted.then(function() {
+            setTimeout(function () {
+                self.viewmanager.appendTo(self.$element);
+            }, 0);
+        });
     },
     reload_current_view: function() {
         var self = this;
@@ -2031,6 +2034,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         $.when(this.is_started).then(function() {
             self.reload_current_view();
         });
+        this.is_setted.resolve();
     },
     get_value: function() {
         var self = this;
