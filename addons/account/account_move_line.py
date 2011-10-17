@@ -603,11 +603,19 @@ class account_move_line(osv.osv):
                     return False
         return True
 
+    def _check_currency(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.account_id.currency_id:
+                if not l.currency_id or not l.currency_id.id == l.account_id.currency_id.id:
+                    return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id, 'Company must be same for its related account and period.',['company_id'] ),
-        (_check_date, 'The date of your Journal Entry is not in the defined period!',['date'] ),
+        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
+        (_check_date, 'The date of your Journal Entry is not in the defined period!', ['date']),
+        (_check_currency, 'The selected account of your Journal Entry must receive a value in its secondary currency', ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
