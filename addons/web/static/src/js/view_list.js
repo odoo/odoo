@@ -773,10 +773,12 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                self.dataset.index = self.records.indexOf(
-                    self.records.get(
-                        self.row_id(e.currentTarget)));
-                self.row_clicked(e);
+                var row_id = self.row_id(e.currentTarget);
+                if (row_id !== undefined) {
+                    self.dataset.index = self.records.indexOf(
+                        self.records.get(row_id));
+                    self.row_clicked(e);
+                }
             });
     },
     row_clicked: function () {
