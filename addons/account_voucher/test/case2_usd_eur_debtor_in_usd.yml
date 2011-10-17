@@ -155,7 +155,6 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    print "<<<<<<<<<<<<<<<<<" 
     res = self.onchange_partner_id(cr, uid, [], ref("res_partner_michal1"), ref('bank_journal_EUR'), 200.0, 2, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
