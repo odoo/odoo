@@ -287,14 +287,12 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      */
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
-            try {
-                return this.get_object(keys[i]);
-            } catch (e) {
-                if (e instanceof openerp.web.KeyNotFound) {
-                    continue;
-                }
-                throw e;
+            var key = keys[i];
+            if (key === undefined || !(key in this.map)) {
+                continue;
             }
+
+            return this.get_object(key);
         }
         throw new openerp.web.KeyNotFound(keys.join(','));
     },
@@ -480,7 +478,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     session_login: function(db, login, password, success_callback) {
         var self = this;
         var params = { db: db, login: login, password: password };
-        this.rpc("/web/session/login", params, function(result) {
+        return this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;

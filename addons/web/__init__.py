@@ -1,6 +1,5 @@
 import common
 import controllers
-import common.dispatch
 import logging
 import optparse
 
@@ -22,6 +21,6 @@ def wsgi_postload():
     o.serve_static = True
     o.backend = 'local'
 
-    app = common.dispatch.Root(o)
+    app = common.http.Root(o)
     openerp.wsgi.register_wsgi_handler(app)
 

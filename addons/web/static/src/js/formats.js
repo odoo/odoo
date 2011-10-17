@@ -69,6 +69,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             } catch (e) {
                 return value.format("%H:%M:%S");
             }
+        case 'selection':
+            // Each choice is [value, label]
+            var result = _(descriptor.selection).detect(function (choice) {
+                return choice[0] === value;
+            });
+            if (result) { return result[1]; }
+            return;
         default:
             return value;
     }
@@ -179,9 +186,13 @@ openerp.web.auto_date_to_str = function(value, type) {
  * @param {String} [column.string] button label
  * @param {String} [column.icon] button icon
  * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
+ * @param {Boolean} [process_modifiers=true] should the modifiers be computed ?
  */
-openerp.web.format_cell = function (row_data, column, value_if_empty) {
-    var attrs = column.modifiers_for(row_data);
+openerp.web.format_cell = function (row_data, column, value_if_empty, process_modifiers) {
+    var attrs = {};
+    if (process_modifiers !== false) {
+        attrs = column.modifiers_for(row_data);
+    }
     if (attrs.invisible) { return ''; }
     if (column.tag === 'button') {
         return [

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import web.common as openerpweb
+import web.common.http as openerpweb
 
 WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
 <html>
@@ -24,5 +24,5 @@ class Widgets(openerpweb.Controller):
     @openerpweb.httprequest
     def content(self, request, widget_id):
         return WIDGET_CONTENT_PATTERN % request.session.model('res.widget').read(
-            [widget_id], ['content'], request.session.eval_context(request.context)
+            [int(widget_id)], ['content'], request.session.eval_context(request.context)
         )[0]

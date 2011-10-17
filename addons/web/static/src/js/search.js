@@ -13,24 +13,35 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param view_id
      * @param defaults
      */
-    init: function(parent, dataset, view_id, defaults) {
+    init: function(parent, dataset, view_id, defaults, hidden) {
         this._super(parent);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
 
         this.defaults = defaults || {};
+        this.has_defaults = !_.isEmpty(this.defaults);
 
         this.inputs = [];
         this.enabled_filters = [];
 
         this.has_focus = false;
 
+        this.hidden = !!hidden;
+        this.headless = this.hidden && !this.has_defaults;
+
         this.ready = $.Deferred();
     },
     start: function() {
         this._super();
-        this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        if (this.hidden) {
+            this.$element.hide();
+        }
+        if (this.headless) {
+            this.ready.resolve();
+        } else {
+            this.rpc("/web/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        }
         return this.ready.promise();
     },
     show: function () {
@@ -105,8 +116,9 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      */
     make_field: function (item, field) {
         try {
-            return new (openerp.web.search.fields.get_object(field.type))
-                        (item, field, this);
+            return new (openerp.web.search.fields.get_any(
+                    [item.attrs.widget, field.type]))
+                (item, field, this);
         } catch (e) {
             if (! e instanceof openerp.web.KeyNotFound) {
                 throw e;
@@ -137,10 +149,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
             'defaults': this.defaults
         });
 
-        // We don't understand why the following commented line does not work in Chrome but
-        // the non-commented line does. As far as we investigated, only God knows.
-        //this.$element.html(render);
-        jQuery(render).appendTo(this.$element);
+        this.$element.html(render);
         this.$element.find(".oe_search-view-custom-filter-btn").click(ext.on_activate);
 
         var f = this.$element.find('form');
@@ -246,10 +255,13 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
+        if (this.headless && !this.has_defaults) {
+            return this.on_search([], [], []);
+        }
         // reset filters management
         var select = this.$element.find(".oe_search-view-filters-management");
         select.val("_filters");
-        
+
         if (e && e.preventDefault) { e.preventDefault(); }
 
         var data = this.build_search_data();
@@ -324,10 +336,10 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {Array} errors a never-empty array of error objects
      */
     on_invalid: function (errors) {
-        this.notification.notify("Invalid Search", "triggered from search view");
+        this.do_notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
-        this.$element.find('.filter_label').removeClass('enabled');
+        this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
         this.enabled_filters.splice(0);
         var string = $('a.searchview_group_string');
         _.each(string, function(str){
@@ -748,9 +760,44 @@ openerp.web.search.FloatField = openerp.web.search.NumberField.extend(/** @lends
  * @extends openerp.web.search.Field
  */
 openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends openerp.web.search.SelectionField# */{
+    // This implementation is a basic <select> field, but it may have to be
+    // altered to be more in line with the GTK client, which uses a combo box
+    // (~ jquery.autocomplete):
+    // * If an option was selected in the list, behave as currently
+    // * If something which is not in the list was entered (via the text input),
+    //   the default domain should become (`ilike` string_value) but **any
+    //   ``context`` or ``filter_domain`` becomes falsy, idem if ``@operator``
+    //   is specified. So at least get_domain needs to be quite a bit
+    //   overridden (if there's no @value and there is no filter_domain and
+    //   there is no @operator, return [[name, 'ilike', str_val]]
     template: 'SearchView.field.selection',
+    init: function () {
+        this._super.apply(this, arguments);
+        // prepend empty option if there is no empty option in the selection list
+        this.prepend_empty = !_(this.attrs.selection).detect(function (item) {
+            return !item[1];
+        });
+    },
     get_value: function () {
-        return this.$element.val();
+        var index = parseInt(this.$element.val(), 10);
+        if (isNaN(index)) { return null; }
+        var value = this.attrs.selection[index][0];
+        if (value === false) { return null; }
+        return value;
+    },
+    /**
+     * The selection field needs a default ``false`` value in case none is
+     * provided, so that selector options with a ``false`` value (convention
+     * for explicitly empty options) get selected by default rather than the
+     * first (value-holding) option in the selection.
+     *
+     * @param {Object} defaults search default values
+     */
+    render: function (defaults) {
+        if (!defaults[this.attrs.name]) {
+            defaults[this.attrs.name] = false;
+        }
+        return this._super(defaults);
     }
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{

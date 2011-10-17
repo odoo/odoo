@@ -68,9 +68,11 @@ db.web.ActionManager = db.web.Widget.extend({
     },
     on_url_hashchange: function(url) {
         var self = this;
-        self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
-                self.do_action(result.result);
-            });
+        if(url && url.action_id) {
+            self.rpc("/web/action/load", { action_id: url.action_id }, function(result) {
+                    self.do_action(result.result);
+                });
+        }
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -116,6 +118,15 @@ db.web.ActionManager = db.web.Widget.extend({
         */
     },
     ir_actions_act_window_close: function (action, on_closed) {
+        if (!this.dialog && on_closed) {
+            on_closed();
+        }
+        if (this.dialog && action.context) {
+            var model = action.context.active_model;
+            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
+                db.webclient.do_reload();
+            }
+        }
         this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
@@ -166,6 +177,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
+        this.last_search = false;
         this.active_view = null;
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
@@ -224,35 +236,21 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
                 controller.set_embedded_view(view.embedded_view);
             }
             controller.do_switch_view.add_last(this.on_mode_switch);
-            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
-                // In case the search view is not instantiated: manually call ListView#search
-                var domains = !_(self.action.domain).isEmpty()
-                                ? [self.action.domain] : [],
-                   contexts = !_(self.action.context).isEmpty()
-                                ? [self.action.context] : [];
-                controller.on_loaded.add({
-                    callback: function () {
-                        controller.do_search(domains, contexts, []);
-                    },
-                    position: 'last',
-                    unique: true
-                });
-            }
             var container = $("#" + this.element_id + '_view_' + view_type);
             view_promise = controller.appendTo(container);
+            this.views[view_type].controller = controller;
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
+                if (self.searchview && view.controller.searchable !== false) {
+                    self.do_searchview_search();
+                }
             });
-            this.views[view_type].controller = controller;
+        } else if (this.searchview && view.controller.searchable !== false) {
+            self.do_searchview_search();
         }
 
-
         if (this.searchview) {
-            if (view.controller.searchable === false) {
-                this.searchview.hide();
-            } else {
-                this.searchview.show();
-            }
+            this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
         }
 
         this.$element
@@ -273,14 +271,6 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         return view_promise;
     },
     /**
-     * Event launched when a controller has been inited.
-     *
-     * @param {String} view_type type of view
-     * @param {String} view the inited controller
-     */
-    on_controller_inited: function(view_type, view) {
-    },
-    /**
      * Sets up the current viewmanager's search view.
      *
      * @param {Number|false} view_id the view to use or false for a default one
@@ -293,13 +283,36 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         }
         this.searchview = new db.web.SearchView(
                 this, this.dataset,
-                view_id, search_defaults);
+                view_id, search_defaults, this.flags.search_view === false);
 
-        this.searchview.on_search.add(function(domains, contexts, groupbys) {
-            var controller = self.views[self.active_view].controller;
-            controller.do_search.call(controller, domains, contexts, groupbys);
-        });
+        this.searchview.on_search.add(this.do_searchview_search);
         return this.searchview.appendTo($("#" + this.element_id + "_search"));
+    },
+    do_searchview_search: function(domains, contexts, groupbys) {
+        var self = this,
+            controller = this.views[this.active_view].controller;
+        if (domains || contexts) {
+            this.rpc('/web/session/eval_domain_and_context', {
+                domains: [this.action.domain || []].concat(domains || []),
+                contexts: [this.action.context || {}].concat(contexts || []),
+                group_by_seq: groupbys || []
+            }, function (results) {
+                self.dataset.context = results.context;
+                self.dataset.domain = results.domain;
+                self.last_search = [results.domain, results.context, results.group_by];
+                controller.do_search(results.domain, results.context, results.group_by);
+            });
+        } else if (this.last_search) {
+            controller.do_search.apply(controller, this.last_search);
+        }
+    },
+    /**
+     * Event launched when a controller has been inited.
+     *
+     * @param {String} view_type type of view
+     * @param {String} view the inited controller
+     */
+    on_controller_inited: function(view_type, view) {
     },
     /**
      * Called when one of the view want to execute an action
@@ -360,28 +373,24 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * launches an initial search after both views are done rendering.
      */
     start: function() {
-        var self = this;
+        var self = this,
+            searchview_loaded,
+            search_defaults = {};
+        _.each(this.action.context, function (value, key) {
+            var match = /^search_default_(.*)$/.exec(key);
+            if (match) {
+                search_defaults[match[1]] = value;
+            }
+        });
+        // init search view
+        var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-        var searchview_loaded;
-        if (this.flags.search_view !== false) {
-            var search_defaults = {};
-            _.each(this.action.context, function (value, key) {
-                var match = /^search_default_(.*)$/.exec(key);
-                if (match) {
-                    search_defaults[match[1]] = value;
-                }
-            });
-            // init search view
-            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
-
-            searchview_loaded = this.setup_search_view(
-                    searchview_id || false, search_defaults);
-        }
+        searchview_loaded = this.setup_search_view(searchview_id || false, search_defaults);
 
         var main_view_loaded = this._super();
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
-        if (searchview_loaded && this.action['auto_search']) {
+        if (searchview_loaded && this.action['auto_search'] !== false) {
             // schedule auto_search
             manager_ready.then(this.searchview.do_search);
         }
@@ -511,9 +520,57 @@ db.web.Sidebar = db.web.Widget.extend({
             self.do_toggle();
         });
     },
+
+    call_default_on_sidebar: function(item) {
+        var func_name = 'on_sidebar_' + _.underscored(item.label);
+        var fn = this.widget_parent[func_name];
+        if(typeof fn === 'function') {
+            fn(item);
+        }
+    },
+
+    add_default_sections: function() {
+        this.add_section(_t('Customize'), 'customize');
+        this.add_items('customize', [
+            {
+                label: _t("Manage Views"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+            }, {
+                label: _t("Edit Workflow"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+                classname: 'oe_hide oe_sidebar_edit_workflow'
+            }, {
+                label: _t("Customize Object"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+            }
+        ]);
+
+        this.add_section(_t('Other Options'), 'other');
+        this.add_items('other', [ 
+            {
+                label: _t("Import"),
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: _t("Export"),
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: _t("Translate"),
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_sidebar_translate oe_hide'
+            }, {
+                label: _t("View Log"),
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_hide oe_sidebar_view_log'
+            }
+        ]);
+    },
+
     add_toolbar: function(toolbar) {
         var self = this;
-        _.each([['print', "Reports"], ['action', "Actions"], ['relate', "Links"]], function(type) {
+        _.each([['print', _t("Reports")], ['action', _t("Actions")], ['relate', _t("Links")]], function(type) {
             var items = toolbar[type[0]];
             if (items.length) {
                 for (var i = 0; i < items.length; i++) {
@@ -523,15 +580,30 @@ db.web.Sidebar = db.web.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_section(type[0], type[1], items);
+                self.add_section(type[1], type[0]);
+                self.add_items(type[0], items);
             }
         });
     },
-    add_section: function(code, name, items) {
-        // For each section, we pass a name/label and optionally an array of items.
-        // If no items are passed, then the section will be created as a custom section
-        // returning back an element_id to be used by a custom controller.
-        // Else, the section is a standard section with items displayed as links.
+    
+    add_section: function(name, code) {
+        if(!code) code = _.underscored(name);
+        var $section = this.sections[code];
+
+        if(!$section) {
+            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            var $section = $(db.web.qweb.render("Sidebar.section", {
+                section_id: section_id,
+                name: name,
+                classname: 'oe_sidebar_' + code,
+            }));
+            $section.appendTo(this.$element.find('div.sidebar-actions'));
+            this.sections[code] = $section;
+        }
+        return $section;
+    },
+
+    add_items: function(section_code, items) {
         // An item is a dictonary : {
         //    label: label to be displayed for the link,
         //    action: action to be launch when the link is clicked,
@@ -540,25 +612,24 @@ db.web.Sidebar = db.web.Widget.extend({
         //    title: optional title for the link
         // }
         // Note: The item should have one action or/and a callback
+        //
+
         var self = this,
-            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            $section = this.add_section(_.titleize(section_code.replace('_', ' ')), section_code),
+            section_id = $section.attr('id');
+
         if (items) {
             for (var i = 0; i < items.length; i++) {
                 items[i].element_id = _.uniqueId(section_id + '_item_');
                 this.items[items[i].element_id] = items[i];
             }
-        }
-        var $section = $(db.web.qweb.render("Sidebar.section", {
-            section_id: section_id,
-            name: name,
-            classname: 'oe_sidebar_' + code,
-            items: items
-        }));
-        if (items) {
-            $section.find('a.oe_sidebar_action_a').click(function() {
+
+            var $items = $(db.web.qweb.render("Sidebar.section.items", {items: items}));
+
+            $items.find('a.oe_sidebar_action_a').click(function() {
                 var item = self.items[$(this).attr('id')];
                 if (item.callback) {
-                    item.callback();
+                    item.callback.apply(self, [item]);
                 }
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
@@ -588,10 +659,13 @@ db.web.Sidebar = db.web.Widget.extend({
                 }
                 return false;
             });
+        
+            var $ul = $section.find('ul');
+            if(!$ul.length) {
+                $ul = $('<ul/>').appendTo($section);
+            }
+            $items.appendTo($ul);
         }
-        $section.appendTo(this.$element.find('div.sidebar-actions'));
-        this.sections[code] = $section;
-        return section_id;
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
@@ -770,7 +844,9 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var self = this;
         var result_handler = function () {
             if (on_closed) { on_closed.apply(null, arguments); }
-            return self.widget_parent.on_action_executed.apply(null, arguments);
+            if (self.widget_parent && self.widget_parent.on_action_executed) {
+                return self.widget_parent.on_action_executed.apply(null, arguments);
+            }
         };
         var handler = function (r) {
             var action = r.result;
@@ -783,7 +859,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                     }],
                     domains: []
                 }).pipe(function (results) {
-                    action.context = results.context
+                    action.context = new db.web.CompoundContext(
+                        results.context, action_data.context);
                     return self.do_action(action, result_handler);
                 });
             } else {
@@ -816,47 +893,18 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     do_switch_view: function(view) {
     },
-    set_common_sidebar_sections: function(sidebar) {
-        sidebar.add_section('customize', "Customize", [
-            {
-                label: "Manage Views",
-                callback: this.on_sidebar_manage_view,
-                title: "Manage views of the current object"
-            }, {
-                label: "Edit Workflow",
-                callback: this.on_sidebar_edit_workflow,
-                title: "Manage views of the current object",
-                classname: 'oe_hide oe_sidebar_edit_workflow'
-            }, {
-                label: "Customize Object",
-                callback: this.on_sidebar_customize_object,
-                title: "Manage views of the current object"
-            }
-        ]);
-        sidebar.add_section('other', "Other Options", [
-            {
-                label: "Import",
-                callback: this.on_sidebar_import
-            }, {
-                label: "Export",
-                callback: this.on_sidebar_export
-            }, {
-                label: "Translate",
-                callback: this.on_sidebar_translate,
-                classname: 'oe_sidebar_translate oe_hide'
-            }, {
-                label: "View Log",
-                callback: this.on_sidebar_view_log,
-                classname: 'oe_hide oe_sidebar_view_log'
-            }
-        ]);
+    do_search: function(view) {
     },
-    on_sidebar_manage_view: function() {
+
+    set_common_sidebar_sections: function(sidebar) {
+        sidebar.add_default_sections();
+    },
+    on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
             var view_editor = new db.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
             view_editor.start();
         } else {
-            this.notification.warn("Manage Views", "Could not find current view declaration");
+            this.do_warn("Manage Views", "Could not find current view declaration");
         }
     },
     on_sidebar_edit_workflow: function() {

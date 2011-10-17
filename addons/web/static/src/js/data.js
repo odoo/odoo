@@ -610,40 +610,120 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     on_default_get: function(res) {
         this.last_default_get = res;
     },
+    /**
+     * Makes sure this dataset has the fields_get for its model stored locally,
+     * so create/write methods are able to determine if written fields are m2os
+     * and can name_get those fields if that's the case (in order to cache a
+     * correct m2o value for them)
+     *
+     * @returns {$.Deferred} whether the fields_get is done executing, provides the fields_get value to its callbacks
+     */
+    ensure_has_fields: function () {
+        var self = this;
+
+        if (this.fields_get) {
+            var d = $.Deferred();
+            setTimeout(function () { d.resolve(self.fields_get, true); }, 0);
+            return d.promise();
+        } else {
+            return self.call('fields_get', [], function (fields_get) {
+                self.fields_get = fields_get;
+            });
+        }
+    },
+    /**
+     * Relational fields may not be written in the same format they are read.
+     *
+     * Since the BufferedDataSet is a bit dumb, it returns what it's got stored
+     * in its cache, which for modified value is what it was given. This breaks
+     * some basic contracts of openerp such as m2o read being in the
+     * ``name_get`` format.
+     *
+     * Because create & write are supposed to be asynchronous, though, it
+     * should be easy to just name_get all incorrect values.
+     *
+     * @param {Object} data form-data to write to the cache
+     * @returns {$.Deferred} resolved with a fixed data dictionary
+     */
+    fix_relational: function (data) {
+        var self = this;
+        var results = $.Deferred();
+        this.ensure_has_fields().then(function (fields) {
+            var fields_to_fix = _(fields).chain()
+                .map(function (d, k) { return {key: k, descriptor: d}; })
+                .filter(function (field) {
+                    // keep m2o fields which are in the data dict
+                    return field.descriptor.type === 'many2one' &&
+                           data[field.key];
+                }).pluck('key')
+                .value();
+            var name_gets = _(fields_to_fix).map(function (field) {
+                return new openerp.web.DataSet(self, self.fields_get[field].relation)
+                    .name_get([data[field]], null);
+            });
+            // null-concat forces stupid bastard `when` to always return an
+            // array containing the Array-ified results of all the name_gets.
+            // otherwise, if there's a single field to fix it returns the
+            // results of the unique name_get directly.
+            $.when.apply(null, name_gets.concat([null])).then(function () {
+                var record = _.extend({}, data);
+                for(var i=0; i<fields_to_fix.length; ++i) {
+                    // Each argument is [[name_get], success, jqXhr] and we
+                    // want just the name_get pair
+                    record[fields_to_fix[i]] = arguments[i][0][0];
+                }
+                results.resolve(record);
+            });
+        });
+        return results;
+    },
     create: function(data, callback, error_callback) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
-            defaults: this.last_default_get};
-        this.to_create.push(cached);
-        this.cache.push(cached);
-        this.on_change();
+        var self = this;
         var prom = $.Deferred().then(callback);
-        setTimeout(function() {prom.resolve({result: cached.id});}, 0);
+        this.fix_relational(data).then(function (fixed_m2o_data) {
+            var cached = {
+                id:_.uniqueId(self.virtual_id_prefix),
+                values: fixed_m2o_data,
+                defaults: self.last_default_get
+            };
+            self.to_create.push(_.extend(_.clone(cached), {
+                values: _.clone(data)}));
+            self.cache.push(cached);
+            self.on_change();
+            prom.resolve({result: cached.id});
+        });
         return prom.promise();
     },
     write: function (id, data, options, callback) {
         var self = this;
-        var record = _.detect(this.to_create, function(x) {return x.id === id;});
-        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
-        var dirty = false;
-        if (record) {
-            for (var k in data) {
-                if (record.values[k] === undefined || record.values[k] !== data[k]) {
-                    dirty = true;
-                    break;
-                }
-            }
-            $.extend(record.values, data);
-        } else {
-            dirty = true;
-            record = {id: id, values: data};
-            self.to_write.push(record);
-        }
-        var cached = _.detect(this.cache, function(x) {return x.id === id;});
-        $.extend(cached.values, record.values);
-        if (dirty)
-            this.on_change();
         var to_return = $.Deferred().then(callback);
-        to_return.resolve({result: true});
+        this.fix_relational(data).then(function (fixed_m2o_data) {
+            var record = _.detect(self.to_create, function(x) {return x.id === id;});
+            record = record || _.detect(self.to_write, function(x) {return x.id === id;});
+            var dirty = false;
+            if (record) {
+                for (var k in data) {
+                    if (record.values[k] === undefined || record.values[k] !== data[k]) {
+                        dirty = true;
+                        break;
+                    }
+                }
+                _.extend(record.values, data);
+            } else {
+                dirty = true;
+                record = {id: id, values: data};
+                self.to_write.push(record);
+            }
+            var cached = _.detect(self.cache, function(x) {return x.id === id;});
+            if (!cached) {
+                cached = {id: id, values: {}};
+                this.cache.push(cached);
+            }
+            _.extend(cached.values, fixed_m2o_data);
+            if (dirty)
+                self.on_change();
+            to_return.resolve({result: true});
+        });
         return to_return.promise();
     },
     unlink: function(ids, callback, error_callback) {
@@ -695,7 +775,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
-            setTimeout(function () {completion.resolve(records);}, 0);
+            completion.resolve(records);
         };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
@@ -720,27 +800,51 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
 });
 openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
 
-openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.create_function = null;
+        this.write_function = null;
+        this.read_function = null;
+    },
+    read_ids: function () {
+        if (this.read_function) {
+            return this.read_function.apply(null, arguments);
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
     default_get: function(fields, callback) {
         return this._super(fields, callback).then(this.on_default_get);
     },
     on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
-        return to_return.promise();
+        if (this.create_function) {
+            return this.create_function(data, callback, error_callback);
+        } else {
+            console.warn("trying to create a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            return to_return.promise();
+        }
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
         this.on_write(id, data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
-        return to_return.promise();
+        if (this.write_function) {
+            return this.write_function(id, data, options, callback);
+        } else {
+            console.warn("trying to write a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            return to_return.promise();
+        }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
+        console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();

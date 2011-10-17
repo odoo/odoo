@@ -2,9 +2,8 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="Interface">
-    <div id="oe_loading" class="loading"></div>
-    <div id="oe_notification" class="oe_notification">
+<t t-name="Notification">
+    <div class="oe_notification">
         <div id="oe_notification_default">
             <a class="ui-notify-cross ui-notify-close" href="#">x</a>
             <h1>#{title}</h1>
@@ -17,6 +16,9 @@
             <p>#{text}</p>
         </div>
     </div>
+</t>
+<t t-name="Interface">
+    <div id="oe_loading" class="loading"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
@@ -447,8 +449,8 @@
         </blockquote>
     	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
     	   href="javascript: void(0)"> </a>
-        <h2 class="oe_view_title">
-            <t t-esc="self.action.name"/>
+        <h2 class="oe_view_title" t-if="self.session.debug || self.flags.display_title !==false">
+            <t t-if="self.flags.display_title !==false" t-esc="self.action.name"/>
             <button t-if="self.session.debug" class="oe_get_xml_view">
                 View#<span></span>
             </button>
@@ -467,17 +469,20 @@
     </div>
 </t>
 <t t-name="Sidebar.section">
-    <h2><t t-esc="name"/></h2>
     <div t-att-id="section_id" t-att-class="classname">
-        <ul t-if="items">
+        <h2><t t-esc="name"/></h2>
+    </div>
+</t>
+
+
+<t t-name="Sidebar.section.items">
             <li t-foreach="items" t-as="item" t-att-class="item.classname">
                 <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
                     <t t-esc="item.label"/>
                 </a>
             </li>
-        </ul>
-    </div>
 </t>
+
 <t t-name="TranslateDialog">
     <ul class="oe_translate_tabs">
         <li><a t-attf-href="##{widget.element_id}_fields">Fields</a></li>
@@ -539,7 +544,7 @@
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
-        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
+        t-att-style="color_for(record) + (!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;' : '')"
         t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
@@ -640,7 +645,7 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-raw="render_cell(record.toForm().data, column)"/>
+            <t t-raw="render_cell(record, column)"/>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete' width="1">
@@ -776,7 +781,7 @@
     <input type="text" size="12"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
 
     />
     <!-- img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/-->
@@ -784,7 +789,7 @@
 <t t-name="FieldChar.readonly">
     <div
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
     </div>
 </t>
@@ -823,7 +828,7 @@
     <textarea rows="6"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     ></textarea>
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -842,8 +847,8 @@
 <t t-name="FieldSelection">
     <select
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
         style="width: 100%">
             <t t-foreach="widget.values" t-as="option">
                 <option><t t-esc="option[1]"/></option>
@@ -851,8 +856,9 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div t-att-class="widget.element_class" class="oe-m2o">
-        <input type="text" size="1" style="width: 100%;"/>
+    <div class="oe-m2o">
+        <input type="text" size="1" style="width: 100%;"
+                t-att-id="widget.element_id"/>
         <span class="oe-m2o-drop-down-button">
             <img src="/web/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
@@ -886,7 +892,7 @@
         <td t-attf-class="oe_form_frame_cell oe_form_selection #{widget.selection.element_class}">
             <t t-raw="widget.selection.render()"/>
         </td>
-        <td class="oe_form_frame_cell oe_form_many2one #{widget.selection.element_class}" nowrap="true">
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one #{widget.m2o.element_class}" nowrap="true" style="display: none">
             <t t-raw="widget.m2o.render()"/>
         </td>
     </tr>
@@ -895,8 +901,8 @@
 <t t-name="FieldBoolean">
     <input type="checkbox"
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-attf-class="field_#{widget.type} #{widget.element_class}"/>
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"/>
 </t>
 <t t-name="FieldProgressBar">
     <div t-opentag="true" class="oe-progressbar">
@@ -911,7 +917,7 @@
                 t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
-                t-attf-class="field_#{widget.type} #{widget.element_class}"
+                t-attf-class="field_#{widget.type}"
                 t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
                 t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
             />
@@ -959,7 +965,7 @@
             <input type="text" size="1"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
-                t-attf-class="field_#{widget.type} #{widget.element_class}" style="width: 100%"
+                t-attf-class="field_#{widget.type}" style="width: 100%"
             />
         </td>
         <td class="oe-binary" nowrap="true">
@@ -1004,7 +1010,6 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button"
-        t-attf-class="#{widget.element_class}"
         t-att-title="widget.help"
         style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
@@ -1101,14 +1106,14 @@
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
-            <option/>
+            <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
-                        t-att-value="option[0]" selected="selected">
+                        t-att-value="option_index" selected="selected">
                     <t t-esc="option[1]"/>
                 </option>
-                <option t-if="!selected" t-att-value="option[0]">
+                <option t-if="!selected" t-att-value="option_index">
                     <t t-esc="option[1]"/>
                 </option>
             </t>
@@ -1302,20 +1307,24 @@
     <td align="left" class="view_editor"  width="15%">
         <table  cellspacing="0" cellpadding ="0" width="100%">
             <tr>
-                <td>
-                    <img  id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                <td width="20%">
+                    <img t-if="rec.att_list.length"
+                        id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
                 </td>
-                <td>
+                <td width="20%">
                     <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
                 </td>
-                <td>
-                    <img  id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                <td width="20%">
+                    <img t-if="rec.att_list.length"
+                        id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
                 </td>
-                <td>
-                    <img  id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                <td width="20%">
+                    <img t-if="rec.att_list.length"
+                        id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
                 </td>
-                <td>
-                    <img  id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                <td width="20%">
+                    <img t-if="rec.att_list.length"
+                        id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
                 </td>
             </tr>
         </table>
