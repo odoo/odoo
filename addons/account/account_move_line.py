@@ -741,7 +741,10 @@ class account_move_line(osv.osv):
             company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context=context):
-            company_currency_id = line.company_id.currency_id
+            if line.account_id.currency_id:
+                currency_id = line.account_id.currency_id
+            else:
+                currency_id = line.company_id.currency_id
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
@@ -749,12 +752,18 @@ class account_move_line(osv.osv):
                     if not line2.reconcile_id:
                         if line2.id not in merges:
                             merges.append(line2.id)
-                        total += (line2.debit or 0.0) - (line2.credit or 0.0)
+                        if line2.account_id.currency_id:
+                            total += line2.amount_currency
+                        else:
+                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
                 merges_rec.append(line.reconcile_partial_id.id)
             else:
                 unmerge.append(line.id)
-                total += (line.debit or 0.0) - (line.credit or 0.0)
-        if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
+                if line.account_id.currency_id:
+                    total += line.amount_currency
+                else:
+                    total += (line.debit or 0.0) - (line.credit or 0.0)
+        if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         r_id = move_rec_obj.create(cr, uid, {
