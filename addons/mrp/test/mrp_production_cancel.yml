@@ -1,29 +1,24 @@
 -
-  In order to test the manufacturing order in Openerp,
-  I am creating one manufacturing order
+  In order to test effect of cancelling Internal picking on production order, I first confirm order for PC3.
 -
-  !record {model: mrp.production, id: mrp_production_mo1}:
-    company_id: base.main_company
-    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
-    location_src_id: stock.stock_location_stock
-    product_id: product.product_product_pc1
-    name: MO/01234
-    product_qty: 5.0
-    product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_order2}
 -
-  I confirm the order.
+  I check that the related internal picking is waiting availability.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
+  !assert {model: mrp.production, id: mrp_production_order2}:
+    - picking_id.state == 'confirmed'
 -
-  In order to cancel the MO, I first cancel its picking.
+  In order to cancel the production order, I first cancel its picking.
 -
-  !python {model: stock.picking}: |
-    mrp_obj = self.pool.get('mrp.production')
-    mo = mrp_obj.browse(cr, uid, ref("mrp_production_mo1"))
-    self.action_cancel(cr, uid, [mo.picking_id.id], context=None)
+  !function {model: stock.picking, name: action_cancel}:
+    - model: mrp.production
+      eval: "[obj(ref('mrp_production_order2')).picking_id.id]"
 -
-  Then I Cancel the production order and related stock moves.
+  Now I cancel the production order.
 -
-  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_mo1}
+  !workflow {model: mrp.production, action: button_cancel, ref: mrp_production_order2}
+-
+  Now I check that the production order is cancelled.
+-
+  !assert {model: mrp.production, id: mrp_production_order2}:
+    - state == 'cancel'
