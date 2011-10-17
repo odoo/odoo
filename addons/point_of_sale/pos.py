@@ -60,37 +60,32 @@ class pos_order(osv.osv):
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        cr.execute("""
-        SELECT
-            p.id,
-            COALESCE(SUM(
-                l.price_unit*l.qty*(1-(l.discount/100.0)))::decimal(16,2), 0
-                ) AS amount
-        FROM pos_order p
-            LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id IN %s GROUP BY p.id """, (tuple(ids),))
-        res = dict(cr.fetchall())
-
-        for rec in self.browse(cr, uid, ids, context):
-            if rec.partner_id \
-               and rec.partner_id.property_account_position \
-               and rec.partner_id.property_account_position.tax_ids:
-                res[rec.id] = res[rec.id] - rec.amount_tax
+        res = {}
+        for order in self.browse(cr, uid, ids, context):
+            val = 0.0
+            for line in order.lines:
+                val += line.price_subtotal
+            if order.partner_id \
+               and order.partner_id.property_account_position \
+               and order.partner_id.property_account_position.tax_ids:
+                val -= order.amount_tax
+            res[order.id] = val
         return res
 
     def _amount_tax(self, cr, uid, ids, field_name, arg, context):
         res = {}
         tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
         for order in self.browse(cr, uid, ids):
             val = 0.0
+            cur = order.pricelist_id.currency_id
             for line in order.lines:
                 val = reduce(lambda x, y: x+round(y['amount'], 2),
                         tax_obj.compute_inv(cr, uid, line.product_id.taxes_id,
                             line.price_unit * \
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             val)
-
-            res[order.id] = val
+            res[order.id] = cur_obj.round(cr, uid, cur, val)
         return res
 
     def _total_payment(self, cr, uid, ids, field_name, arg, context):
@@ -817,8 +812,11 @@ class pos_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context):
         res = {}
+        cur_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids):
             res[line.id] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id] = cur_obj.round(cr, uid, cur, res[line.id])
         return res
 
     def price_by_product(self, cr, uid, ids, pricelist, product_id, qty=0, partner_id=False):
