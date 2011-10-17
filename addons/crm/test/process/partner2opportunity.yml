@@ -1,0 +1,20 @@
+- |
+  I will create opportunity by partner.
+-
+  !record {model: crm.partner2opportunity, id: crm_partner2opportunity_id_0}:
+    name: BalmerInc S.A.
+    planned_revenue: 200.0
+    partner_id: base.res_partner_9
+    probability: 150.0
+
+-
+  Convert partner to opportunity, i will test to convert opportunity is correct.
+-
+  !python {model: crm.partner2opportunity}: |
+    opportunity = self.make_opportunity(cr, uid, [ref("crm_partner2opportunity_id_0")])
+    opportunity_rec = self.pool.get('crm.lead').browse(cr, uid, opportunity['res_id'])
+    assert opportunity_rec.type == 'opportunity', 'Lead is not converted to opportunity!'
+    assert opportunity_rec.planned_revenue == 200.0, 'Planned revenue should be 200!'
+    assert opportunity_rec.probability == 150.0, 'probability revenue should be 150!'
+    assert opportunity_rec.partner_id.id == ref("base.res_partner_9"), 'Partner missmatch!'
+    assert opportunity_rec.state == 'draft', 'Opportunity stage not in draft state'
