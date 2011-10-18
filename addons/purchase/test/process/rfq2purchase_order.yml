@@ -24,7 +24,10 @@
     purchase_order = self.browse(cr, uid, ref("order_purchase1"))
     assert len(purchase_order.invoice_ids) == 1,"Invoice line is not more or less than one"
     for invoice in purchase_order.invoice_ids:
-      assert invoice.state == "draft", "Invoice state should be draft"
+      if purchase_order.invoiced == True:
+        assert invoice.state == "open", "Invoice state should be Open"
+      else:
+        assert invoice.state == "draft", "Invoice state should be draft"
       assert invoice.reference == purchase_order.partner_ref or purchase_order.name,"Invoice reference is not correspond with purchase order"
       assert invoice.account_id == purchase_order.partner_id.property_account_payable ,"Invoice account_id is not correspond with purchase order"
       assert invoice.type == 'in_invoice',"Invoice type is not correspond with purchase order"
@@ -33,7 +36,6 @@
       assert invoice.address_contact_id == purchase_order.partner_address_id ,"Invoice address_contact is not correspond with purchase order"
       assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"
       assert invoice.company_id == purchase_order.company_id ,"Invoice company is not correspond with purchase order"
-      assert invoice.state == "draft", "Invoice state should be draft"
       assert invoice.name == purchase_order.name, "Invoice name is not correspond with purchase order"
       assert invoice.amount_untaxed == purchase_order.amount_untaxed, "Invoice untaxed amount is not correspond with purchase order"
       assert invoice.amount_tax == purchase_order.amount_tax, "Invoice tax amount is not correspond with purchase order"
@@ -55,12 +57,17 @@
   I check that the purchase order has now a corresponding Reception.
 -
   !python {model: purchase.order}: |
-    purchase_order = self.browse(cr, uid, ref("order_purchase2"))
-    assert len(purchase_order.picking_ids) == 1, "Reception line should be more or less than one"
+    purchase_order = self.browse(cr, uid, ref("order_purchase1"))
+    assert len(purchase_order.picking_ids) == 1, "Reception line should be one"
     for picking in purchase_order.picking_ids:
       assert picking.state == "assigned", "Reception state should be in assigned state"
       assert picking.address_id == purchase_order.dest_address_id  or purchase_order.partner_address_id ,"Reception product is not correspond with purchase order"
-      assert picking.invoice_state == '2binvoiced',"Reception Invoice state should be 2binvoiced"
+      if purchase_order.invoice_method == 'picking':
+        assert picking.invoice_state == '2binvoiced',"Reception Invoice state should be 2binvoiced if it's Based on receptions "
+      elif purchase_order.invoice_method == 'picking':
+        assert picking.invoice_state == 'invoiced',"Reception Invoice state should be invoiced."
+      else:
+        assert picking.invoice_state == 'none',"Reception Invoice state should be Not applicable if it's invoice method is 'Draft invoices pre-generated'"
       assert picking.company_id == purchase_order.company_id ,"Reception company is not correspond with purchase order"
       for index in range(0,len(picking.move_lines)):
         assert picking.move_lines[index].product_id == purchase_order.order_line[index].product_id, "Reception product is not correspond with purchase order"

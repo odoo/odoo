@@ -62,7 +62,7 @@ Dashboard for purchase management that includes:
     'test': [
              #'test/ui/onchange_methods.yml',
              'test/process/rfq2purchase_order.yml',
-             #'test/process/create_invoice.yml',
+             'test/process/invoice_from_reception.yml',
              #'test/process/purchase_from_picking.yml',
              #'test/process/procurement_buy.yml',
              #'test/process/merge_purchase_order.yml',

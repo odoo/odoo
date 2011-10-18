@@ -1,0 +1,36 @@
+-
+ I create reception for order where invoice control is 'Based on receptions'.
+-
+  !python {model: purchase.order}: |
+    self.action_picking_create(cr, uid, [ref("order_purchase2")])
+-
+  I create an invoice for order by clicking on "Create Invoice" wizard
+-
+  !python {model: stock.invoice.onshipping}: |
+    import time
+    pick_ids = [x.id for x in self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase2")).picking_ids]
+    id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.expenses_journal')},{'active_ids': pick_ids, 'active_model': 'stock.picking'})
+    self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
+-
+  Reception is ready for process so now done the process.
+-
+  !python {model: purchase.order}: |
+    pick_ids = [x.id for x in self.browse(cr, uid, ref("order_purchase2")).picking_ids]
+    self.pool.get('stock.picking').validate_picking(cr, uid, pick_ids)
+-
+  Now,put all Purchase Order invoice in open state.
+-
+  !python {model: purchase.order}: |
+    import netsvc
+    purchase = self.pool.get('purchase.order')
+    invoice_ids = [x.id for x in purchase.browse(cr, uid, ref("order_purchase2")).invoice_ids]
+    invoice_ids.append([x.id for x in purchase.browse(cr, uid, ref("order_purchase1")).invoice_ids][0])
+    wf_service = netsvc.LocalService("workflow")
+    for invoice in invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice', invoice, 'invoice_open', cr)
+-
+  I check that purchase order is invoiced & paid or it's shipped.
+-
+  !python {model: purchase.order}: |
+     assert self.browse(cr, uid, ref("order_purchase2")).shipped == True,"Reception is not delivered"
+     assert self.browse(cr, uid, ref("order_purchase1")).invoiced == True,"Purchase order is not Invoiced & Paid"
