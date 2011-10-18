@@ -39,8 +39,7 @@
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
      - state == "cancel"
 -
-  For working on parent child relationship, I create sales executive department that will be work under 
-  Sales Department.
+  I create sales executive department that will be work under Sales Department.
 -
   !record {model: crm.case.section, id: section_sales_exe_department}:
     name: "Sales Executive"
