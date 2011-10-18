@@ -854,23 +854,27 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                 return self.widget_parent.on_action_executed.apply(null, arguments);
             }
         };
+        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
+        
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                return self.rpc('/web/session/eval_domain_and_context', {
-                    contexts: [dataset.get_context(), action.context || {}, {
-                        active_id: record_id || false,
-                        active_ids: [record_id || false],
+                var ncontext = new db.web.CompoundContext(context, action.context || {});
+                if (record_id) {
+                    ncontext.add({
+                        active_id: record_id,
+                        active_ids: [record_id],
                         active_model: dataset.model
-                    }],
+                    });
+                }
+                return self.rpc('/web/session/eval_domain_and_context', {
+                    contexts: [ncontext],
                     domains: []
                 }).pipe(function (results) {
-                    if (!action_data.context) {
-                        action.context = results.context
-                    } else {
-                        action.context = new db.web.CompoundContext(
-                            results.context, action_data.context);
-                    }
+                    action.context = results.context;
+                    /* niv: previously we were overriding once more with action_data.context,
+                     * I assumed this was not a correct behavior and removed it
+                     */
                     return self.do_action(action, result_handler);
                 }, null);
             } else {
@@ -878,14 +882,12 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
             }
         };
 
-        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
-
         if (action_data.special) {
             return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
+            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }
