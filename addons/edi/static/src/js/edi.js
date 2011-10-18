@@ -21,7 +21,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     on_document_loaded: function(docs){
         this.doc = docs[0];
         //console.log("docs",this.doc);
-        var template = "Edi." + this.doc.__model;
+        var template = "Edi." + this.doc.__model + ".content";
         var param = {"widget":this, "doc":this.doc};
         this.center = openerp.web.qweb.render(template, param);
         //console.log(this.center);
@@ -115,25 +115,6 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
             });
         }
     },
-});
-
-openerp.edi.EdiViewCenterInvoice = openerp.web.Class.extend({
-    init: function(element, edi){
-        this.$_element = $('<div>')
-            .appendTo(document.body)
-            .delegate('#oe_edi_invoice_button_pay', 'click', {'edi': edi} , this.do_pay)
-    },
-    do_pay: function(e){
-        if ($element.find('#oe_edi_invoice_rd_pay_paypal').attr('checked') == 'checked') {
-            alert('Pay Invoice using Paypal service');
-        }
-        if ($element.find('#oe_edi_invoice_rd_pay_google_checkout').attr('checked') == 'checked') {
-            alert('Pay Invoice using Google Checkout');
-        }
-        if ($element.find('#oe_edi_invoice_rd_pay_bank').attr('checked') == 'checked') {
-            alert('Pay Invoice using Bankwire Trasnfer')
-        }
-    }
 });
 
 }

@@ -1,27 +1,5 @@
 <template>
-<t t-name="Edi.account.invoice">
-    <t t-if="!doc.reconciled">
-        <table width="100%">
-            <tr>
-                <td>
-                    <b>Pay this Invoice in Online</b>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <hr/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                        <input type="radio" id="oe_edi_invoice_rd_pay_paypal" name="oe_edi_invoice_rd_pay" value="paypal">Paypal</input>
-                        <input type="radio" id="oe_edi_invoice_rd_pay_google_checkout" name="oe_edi_invoice_rd_pay" value="google">Google Checkout</input>
-                        <input type="radio" id="oe_edi_invoice_rd_pay_bank" name="oe_edi_invoice_rd_pay" value="bank">Bank wire Transfer</input>
-                        <button type="button" id="oe_edi_invoice_button_pay" name="oe_edi_invoice_button_pay">Pay</button>
-                </td>
-            </tr>
-        </table>
-    </t>
+<t t-name="Edi.account.invoice.content">
     <h1>Invoice <t t-esc="doc.internal_number"/>: <t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/></h1>
     <p>
         <b><t t-esc="doc.company_id[1]"/></b><br/>
@@ -116,5 +94,30 @@
             <td colspan="2"></td>
         </tr>
     </table>
+</t>
+<t t-name="Edi.account.invoice.sidebar">
+    <t t-if="!doc.reconciled">
+        <table width="100%">
+            <tr>
+                <td>
+                    <b>Pay this Invoice in Online</b>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <hr/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!-- TODO replace this with  correct <form>s to payement gw -->
+                    <input type="radio" id="oe_edi_invoice_rd_pay_paypal" name="oe_edi_invoice_rd_pay" value="paypal">Paypal</input>
+                    <input type="radio" id="oe_edi_invoice_rd_pay_google_checkout" name="oe_edi_invoice_rd_pay" value="google">Google Checkout</input>
+                    <input type="radio" id="oe_edi_invoice_rd_pay_bank" name="oe_edi_invoice_rd_pay" value="bank">Bank wire Transfer</input>
+                    <button type="button" id="oe_edi_invoice_button_pay" name="oe_edi_invoice_button_pay">Pay</button>
+                </td>
+            </tr>
+        </table>
+    </t>
 </t>
 </template>
