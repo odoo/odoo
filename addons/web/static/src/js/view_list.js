@@ -793,8 +793,24 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
              this.dataset]);
     },
     render_cell: function (record, column) {
+        var value;
+        if(column.type === 'reference') {
+            value = record.get(column.id);
+            if (value) {
+                // reference values are in the shape "$model,$id" (as a
+                // string), we need to split and name_get this pair in order
+                // to get a correctly displayable value in the field
+                var ref = value.split(','),
+                    model = ref[0],
+                    id = parseInt(ref[1], 10);
+                new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
+                    if (!names.length) { return; }
+                    record.set(column.id, names[0][1]);
+                });
+            }
+        }
         if (column.type === 'many2one') {
-            var value = record.get(column.id);
+            value = record.get(column.id);
             // m2o values are usually name_get formatted, [Number, String]
             // pairs, but in some cases only the id is provided. In these
             // cases, we need to perform a name_get call to fetch the actual
