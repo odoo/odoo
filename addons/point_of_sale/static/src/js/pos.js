@@ -1,6 +1,6 @@
 openerp.point_of_sale = function(db) {
     db.point_of_sale = {};
-    
+
     /* Some utility functions defined by Coffee script */
     var __bind = function(fn, me) {
         return function() {
@@ -39,7 +39,7 @@ openerp.point_of_sale = function(db) {
             return QWeb.render(template, ctx);
         };
     };
-    
+
     /*
      Local store access. Read once from localStorage upon construction and persist on every change.
      There should only be one store active at any given time to ensure data consistency.
@@ -158,16 +158,16 @@ openerp.point_of_sale = function(db) {
         };
         return Pos;
     })();
-    
+
     /* global variable */
     var pos;
-    
+
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
     NumpadState, NumpadView, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
     OrderlineCollection, OrderlineView, PaymentButtonView, PaymentView, Paymentline,
     PaymentlineCollection, PaymentlineView, PaypadView, Product, ProductCollection,
     ProductListView, ProductView, ReceiptLineView, ReceiptView, Shop, ShopView, StepsView;
-    
+
     /*
      ---
      Models
@@ -585,7 +585,7 @@ openerp.point_of_sale = function(db) {
             /* set correct view */
             $('.step-screen').hide();
             $('#payment-screen').show();
-            
+
             cashRegisterId = event.currentTarget.attributes['cash-register-id'].nodeValue;
             cashRegisterCollection = this.shop.get('cashRegisters');
             cashRegister = cashRegisterCollection.find(__bind( function(item) {
@@ -960,7 +960,7 @@ openerp.point_of_sale = function(db) {
         function ReceiptView() {
             ReceiptView.__super__.constructor.apply(this, arguments);
         }
-        
+
         ReceiptView.prototype.initialize = function(options) {
             this.shop = options.shop;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
@@ -1193,14 +1193,14 @@ openerp.point_of_sale = function(db) {
             //        thingie
             window.location.hash = '';
             var self = this;
-            
+
             if (pos)
                 throw "It is not possible to instantiate multiple instances"+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
-            
+
             this.$element.find('#steps').buttonset();
-    
+
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
                 return Backbone.history.start();
