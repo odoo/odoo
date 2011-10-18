@@ -44,11 +44,9 @@ technical OpenERP documentation at http://doc.openerp.com
         'test/edi_partner_test.yml',
     ],
     'js': [
-        'static/src/js/sessionless.js',
-        'static/src/js/edi_import.js',
-        'static/src/js/edi_view.js',
-        'static/src/js/edi_invoice.js',
-        'static/src/js/edi_sale_purchase_order.js',
+        'static/src/js/edi.js',
+        #'static/src/js/edi_invoice.js',
+        #'static/src/js/edi_sale_purchase_order.js',
     ],
     "css": [
         "static/src/css/edi.css"

@@ -1,0 +1,80 @@
+<template>
+<t t-name="Edi.sale.order">
+   <h1>Order <t t-esc="doc.name"/>: <t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/></h1>
+   <p>
+        <b><t t-esc="doc.company_id[1]"/></b><br/>
+        <t t-if="doc.company_address">
+            <t t-esc="doc.company_address.zip"/> <t t-esc="doc.company_address.street"/><br/>
+            <t t-esc="doc.company_address.city"/><br/>
+            <t t-if="doc.company_address.country_id" t-esc="doc.company_address.country_id[1]"/><br/>
+            Phone: <t t-esc="doc.company_address.phone"/>
+        </t>
+    </p> 
+    <p align="right">
+        <b><t t-esc="doc.partner_id[1]"/></b><br/>
+        <t t-if="doc.partner_order_id" t-esc="doc.partner_order_id[1]"/>
+        <t t-if="doc.partner_address_id" t-esc="doc.partner_address_id[1]"/>
+    </p>
+    <table width="100%">
+        <tr>
+            <th align="left">Description</th>
+            <th align="left">Date</th>
+            <th align="left">Origin</th>
+            <th align="left">Your Reference</th>
+        </tr>
+        <tr>
+            <td align="left"><t t-esc="doc.name"/></td>
+            <td align="left"><t t-esc="doc.date_order"/></td>
+            <td align="left"><t t-esc="doc.origin"/></td>
+            <td align="left">
+                <t t-if="doc.partner_ref" t-esc="doc.partner_ref"/>
+                <t t-if="doc.client_order_ref" t-esc="doc.client_order_ref"/>
+            </td>
+        </tr>
+    </table>
+    <table width="100%" >
+        <tr>
+            <th align="left">Product Description</th>
+            <th align="center">Unit Price</th>
+            <th align="center">Quantity</th>
+            <th align="center">UOM</th>
+            <th align="right">Price</th>
+        </tr>
+        <t t-if="doc.order_line" t-foreach="doc.order_line" t-as="doc_line">
+            <tr>
+            <td align="left"><t t-esc="doc_line.product_id[1]"/></td>
+            <td align="center"><t t-esc="doc_line.price_unit"/></td>
+            <td align="center">
+                <t t-if="doc_line.product_qty" t-esc="doc_line.product_qty"/>
+                <t t-if="doc_line.product_uom_qty" t-esc="doc_line.product_uom_qty"/>
+            </td>
+            <td align="center"><t t-esc="doc_line.product_uom[1]"/></td>
+            <td align="right"><t t-esc="doc_line.price_subtotal"/><t t-esc="doc.currency_id[1]"/></td>
+            </tr>
+        </t>
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="2"><hr/></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td>Net Total: </td>
+            <td align="right"><t t-esc="doc.amount_untaxed"/><t t-esc="doc.currency_id[1]"/><t/></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td>Taxes: </td>
+            <td align="right"><t t-esc="doc.amount_tax"/><t t-esc="doc.currency_id[1]"/><t/></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td colspan="2"><hr/></td>
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td>Total: </td>
+            <td align="right"><t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/><t/></td>
+        </tr>
+    </table>
+</t>
+</template>
