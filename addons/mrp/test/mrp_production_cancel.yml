@@ -22,3 +22,7 @@
 -
   !assert {model: mrp.production, id: mrp_production_order2}:
     - state == 'cancel'
+-
+  I remove this production order.
+-
+  !delete {model: mrp.production, id: mrp_production_order2}
