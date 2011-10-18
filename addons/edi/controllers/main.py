@@ -60,6 +60,24 @@ class EDI(openerpweb.Controller):
         response = werkzeug.wrappers.Response( result, headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]) 
         return response
 
+    @openerpweb.httprequest
+    def download_attachment(self, req, db, token):
+        result = req.session.proxy('edi').get_edi_document(db, token)
+        doc = json.loads(result)[0]
+        attachment = doc['__attachments'] and doc['__attachments'][0]
+        if attachment:
+            result = attachment["content"].decode('base64')
+            import email.Utils as utils
+
+            # Encode as per RFC 2231
+            filename_utf8 = attachment['file_name']
+            filename_encoded = "%s=%s" % ('filename*',
+                                          utils.encode_rfc2231(filename_utf8, 'utf-8'))
+            response = werkzeug.wrappers.Response( result, headers=[('Content-Type', 'application/pdf'),
+                                                                    ('Content-Disposition', 'inline; ' + filename_encoded),
+                                                                    ('Content-Length', len(result))])
+            return response
+
     @openerpweb.jsonrequest
     def get_edi_document(self, req, db, token):
         result = req.session.proxy('edi').get_edi_document(db, token)

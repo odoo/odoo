@@ -1,6 +1,6 @@
 <template>
 <t t-name="Edi.account.invoice">
-    <t t-if="!invoice.reconciled">
+    <t t-if="!doc.reconciled">
         <table width="100%">
             <tr>
                 <td>
@@ -22,19 +22,19 @@
             </tr>
         </table>
     </t>
-    <h1>Invoice <t t-esc="invoice.internal_number"/>: <t t-esc="invoice.amount_total"/><t t-esc="invoice.currency_id[1]"/></h1>
+    <h1>Invoice <t t-esc="doc.internal_number"/>: <t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/></h1>
     <p>
-        <b><t t-esc="invoice.company_id[1]"/></b><br/>
-        <t t-if="invoice.company_address">
-            <t t-esc="invoice.company_address.zip"/> <t t-esc="invoice.company_address.street"/><br/>
-            <t t-esc="invoice.company_address.city"/><br/>
-            <t t-if="invoice.company_address.country_id" t-esc="invoice.company_address.country_id[1]"/><br/>
-            Phone: <t t-esc="invoice.company_address.phone"/>
+        <b><t t-esc="doc.company_id[1]"/></b><br/>
+        <t t-if="doc.company_address">
+            <t t-esc="doc.company_address.zip"/> <t t-esc="doc.company_address.street"/><br/>
+            <t t-esc="doc.company_address.city"/><br/>
+            <t t-if="doc.company_address.country_id" t-esc="doc.company_address.country_id[1]"/><br/>
+            Phone: <t t-esc="doc.company_address.phone"/>
         </t>
     </p>
     <p align="right">
-        <b><t t-esc="invoice.partner_id[1]"/></b><br/>
-        <t t-esc="invoice.address_invoice_id[1]"/>
+        <b><t t-esc="doc.partner_id[1]"/></b><br/>
+        <t t-esc="doc.address_invoice_id[1]"/>
     </p>
     <table width="100%">
         <tr>
@@ -44,10 +44,10 @@
             <th align="left">Your Reference</th>
         </tr>
         <tr>
-            <td align="left"><t t-esc="invoice.name"/><t t-esc="invoice.comment"/></td>
-            <td align="left"><t t-esc="invoice.date_invoice"/></td>
-            <td align="left"><t t-esc="invoice.origin"/></td>
-            <td align="left"><t t-esc="invoice.reference"/></td>
+            <td align="left"><t t-esc="doc.name"/><t t-esc="doc.comment"/></td>
+            <td align="left"><t t-esc="doc.date_invoice"/></td>
+            <td align="left"><t t-esc="doc.origin"/></td>
+            <td align="left"><t t-esc="doc.reference"/></td>
         </tr>
     </table>
     <table width="100%" >
@@ -58,13 +58,13 @@
             <th align="left">Discount</th>
             <th align="right">Price</th>
         </tr>
-            <t t-if="invoice.invoice_line" t-foreach="invoice.invoice_line" t-as="invoice_line">
+            <t t-if="doc.invoice_line" t-foreach="doc.invoice_line" t-as="invoice_line">
                 <tr>
                 <td align="left"><t t-esc="invoice_line.name"/><br/><t t-esc="invoice_line.note"/></td>
                 <td align="left"><t t-esc="invoice_line.quantity"/><t t-esc="invoice_line.uos_id[1]"/></td>
                 <td align="left"><t t-esc="invoice_line.price_unit"/></td>
                 <td align="left"><t t-esc="invoice_line.discount"/></td>
-                <td align="right"><t t-esc="invoice_line.price_subtotal"/><t t-esc="invoice.currency_id[1]"/></td>
+                <td align="right"><t t-esc="invoice_line.price_subtotal"/><t t-esc="doc.currency_id[1]"/></td>
                 </tr>
             </t>
         <tr>
@@ -74,12 +74,12 @@
         <tr>
             <td colspan="3"></td>
             <td>Net Total: </td>
-            <td align="right"><t t-esc="invoice.amount_untaxed"/><t t-esc="invoice.currency_id[1]"/></td>
+            <td align="right"><t t-esc="doc.amount_untaxed"/><t t-esc="doc.currency_id[1]"/></td>
         </tr>
         <tr>
             <td colspan="3"></td>
             <td>Taxes: </td>
-            <td align="right"><t t-esc="invoice.amount_tax"/><t t-esc="invoice.currency_id[1]"/></td>
+            <td align="right"><t t-esc="doc.amount_tax"/><t t-esc="doc.currency_id[1]"/></td>
         </tr>
         <tr>
             <td colspan="3"></td>
@@ -88,7 +88,7 @@
         <tr>
             <td colspan="3"></td>
             <td>Total: </td>
-            <td align="right"><t t-esc="invoice.amount_total"/><t t-esc="invoice.currency_id[1]"/></td>
+            <td align="right"><t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/></td>
         </tr>
         <tr>
             <td colspan="3">
@@ -98,11 +98,11 @@
                         <th align="right">Base Amount</th>
                         <th align="right">Amount</th>
                     </tr>
-                    <t t-if="invoice.tax_line"><t t-foreach="invoice.tax_line" t-as="tax_line">
+                    <t t-if="doc.tax_line"><t t-foreach="doc.tax_line" t-as="tax_line">
                         <tr>
                         <td align="left"><t t-esc="tax_line.name"/></td>
-                        <td align="right"><t t-esc="tax_line.base_amount"/><t t-esc="invoice.currency_id[1]"/></td>
-                        <td align="right"><t t-esc="tax_line.amount"/><t t-esc="invoice.currency_id[1]"/></td>
+                        <td align="right"><t t-esc="tax_line.base_amount"/><t t-esc="doc.currency_id[1]"/></td>
+                        <td align="right"><t t-esc="tax_line.amount"/><t t-esc="doc.currency_id[1]"/></td>
                         </tr>
                         </t>
                     </t>

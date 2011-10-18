@@ -7,29 +7,28 @@
     <tr>
         <td colspan="2" valign="top" id="oe_header" class="header">
             <div> <a href="/" class="company_logo_link"> <div class="company_logo" /> </a> </div>
-            <div class="header_corner"> <button type="button" name="action_print">View/Print PDF</button> </div>
+            
         </td>
     </tr>
     <tr>
         <td class="oe_edi_view">
             <p class="oe_form_paragraph"><t t-raw="widget.center"/></p>
+            <p><button type="button" id="edi_action_print" class="edi_action_print">View/Print PDF</button></p>
         </td>
         <td class="oe_edi_sidebar_container">
-            <button type="button" name="action_print">View/Print PDF</button>
-
             <p class="oe_edi_sidebar_title">
                 Push this document into your enterprise management system
             </p>
             <p>
                 <input type="radio" id="oe_edi_rd_import_openerp" name="oe_edi_rd_import" value="oe_edi_import_openerp"/>
-                <label for="oe_edi_rd_import_openerp">Import it into my existing OpenERP instance</label>
+                <label for="oe_edi_rd_import_openerp">Import it into an existing OpenERP instance</label>
                 <p class="oe_edi_nested_block">
                     <label for="oe_edi_txt_saas_url">OpenERP instance address:</label> http://<input type="text" id="oe_edi_txt_server_url"/>
                 </p>
             </p>
             <p>
                 <input type="radio" id="oe_edi_rd_import_saas_account" name="oe_edi_rd_import" value="oe_edi_create_saas_account"/>
-                <label for="oe_edi_rd_import_saas_account">Create a new OpenERP instance for me:</label>
+                <label for="oe_edi_rd_import_saas_account">Create a new OpenERP instance:</label>
                 <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_url">Company:</label><input type="text" name="oe_edi_txt_saas_url"/>.my.openerp.com</p>
                 <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_password">Password:</label><input type="password" name="oe_edi_txt_saas_password"/></p>
                 <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_email">Email:</label><input type="text" name="oe_edi_txt_saas_email"/></p>

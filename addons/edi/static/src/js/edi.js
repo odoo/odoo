@@ -27,8 +27,13 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this.center = openerp.web.qweb.render(template, param);
         //console.log(this.center);
         this.right = "";
-        this.$element.html(openerp.web.qweb.render("EdiView", param ));
+        this.$element.html(openerp.web.qweb.render("EdiView", param));
+        this.$element.find('button#edi_action_print').bind('click', this.do_print)
         //self.$element.delegate('button.oe_edi_button_import', 'click', this.do_import);
+    },
+    do_print: function(e){
+        l = window.location;
+        window.location = l.protocol + '//' + l.host + "/edi/download_attachment?db=" + this.db + "&token=" + this.token;
     },
     do_import: function(e){
         $element = $(e.view.document.body)
