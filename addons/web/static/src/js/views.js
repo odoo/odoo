@@ -854,19 +854,15 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                 return self.widget_parent.on_action_executed.apply(null, arguments);
             }
         };
-        var context = new db.web.CompoundContext(dataset.get_context());
-        if (record_id) {
-            context.add({
-                active_id: record_id,
-                active_ids: [record_id],
-                active_model: dataset.model
-            });
-        }
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
                 return self.rpc('/web/session/eval_domain_and_context', {
-                    contexts: [context, action.context || {}],
+                    contexts: [dataset.get_context(), action.context || {}, {
+                        active_id: record_id || false,
+                        active_ids: [record_id || false],
+                        active_model: dataset.model
+                    }],
                     domains: []
                 }).pipe(function (results) {
                     if (!action_data.context) {
@@ -881,6 +877,8 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                 return result_handler();
             }
         };
+
+        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
         if (action_data.special) {
             return handler({result: {"type":"ir.actions.act_window_close"}});
