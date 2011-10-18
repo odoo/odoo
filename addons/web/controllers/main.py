@@ -47,7 +47,7 @@ html_template = """<!DOCTYPE html>
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         %(css)s
-        %(javascript)s
+        %(js)s
         <script type="text/javascript">
             $(function() {
                 var s = new openerp.init(%(modules)s);
@@ -118,7 +118,7 @@ class WebClient(openerpweb.Controller):
         css = "\n        ".join('<link rel="stylesheet" href="%s">'%i for i in self.manifest_list(req, None, 'css'))
 
         r = html_template % {
-            'javascript': js,
+            'js': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
             'init': 'new s.web.WebClient("oe").start();',
