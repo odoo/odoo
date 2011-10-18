@@ -7,7 +7,6 @@ openerp.edi = {}
 openerp.edi.EdiView = openerp.web.Widget.extend({
     init: function(parent, db, token) {
         this._super();
-        var self = this;
         this.db = db;
         this.token = token;
         this.session = new openerp.web.Session();
@@ -28,33 +27,25 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         //console.log(this.center);
         this.right = "";
         this.$element.html(openerp.web.qweb.render("EdiView", param));
-        this.$element.find('button#edi_action_print').bind('click', this.do_print)
-        //self.$element.delegate('button.oe_edi_button_import', 'click', this.do_import);
+        this.$element.find('button.oe_edi_action_print').bind('click', this.do_print);
+        this.$element.find('button.oe_edi_import_button').bind('click', this.do_import);
     },
     do_print: function(e){
-        l = window.location;
+        var l = window.location;
         window.location = l.protocol + '//' + l.host + "/edi/download_attachment?db=" + this.db + "&token=" + this.token;
     },
     do_import: function(e){
-        $element = $(e.view.document.body)
-        token = e.data.edi.token
-        db = e.data.edi.db
-        var current_url = $(location).attr('href')
-        var pathName = current_url.substring(0, current_url.lastIndexOf('/') +1);
+        var l = window.location;
+        var url_prefix = l.protocol + '//' + l.host;
+        var url_download = url_prefix +'/edi/download?db=' + this.db + '&token=' + this.token;
 
-        if ($element.find('#oe_edi_rd_import_openerp').attr('checked') == 'checked') {
-            server_url = $element.find('#oe_edi_txt_server_url').val()
-            edi_url = pathName + 'get_edi?db=' + db + '&token=' + token
-            edi_url = encodeURIComponent(edi_url)
-            window.location = 'http://' + server_url + '/web/import_edi?edi_url=' + edi_url
-        }
-        if ($element.find('#oe_edi_rd_import_saas_account').attr('checked') == 'checked') {
-            // create SAAS Account
-        }
-        if ($element.find('#oe_edi_rd_import_other').attr('checked') == 'checked') {
-            // GET EDI document
-            edi_url = pathName + 'get_edi?db=' + db + '&token=' + token
-            window.location = edi_url
+        if (this.$element.find('#oe_edi_import_openerp').attr('checked') == 'checked') {
+            var server_url = this.$element.find('#oe_edi_txt_server_url').val()
+            window.location = 'http://' + server_url + '/web/import_url?url=' + encodeURIComponent(url_download);
+        } else if (this.$element.find('#oe_edi_import_saas').attr('checked') == 'checked') {
+            window.location = "https://cc.my.openerp.com/odms/create_edi?url=" + encodeURIComponent(url_download);
+        } else if (this.$element.find('#oe_edi_import_download').attr('checked') == 'checked') {
+            window.location = url_download
         }
     }
 });
@@ -68,92 +59,71 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     },
     start: function() {
     },
-    do_import: function(){
-        var self = this;
-        self.rpc('/web/import_edi/import_edi_url', self.params, function(response){
-            if (response.length) {
-                $('<div>Import successful, click Ok to see the new document</div>').dialog({
-                modal: true,
-                title: 'Successful',
-                buttons: {
-                    Ok: function() {
-                        $(this).dialog("close");
-                        var action = {
-                            "res_model": response[0][0],
-                            "res_id": parseInt(response[0][1], 10),
-                            "views":[[false,"form"]],
-                            "type":"ir.actions.act_window",
-                            "view_type":"form",
-                            "view_mode":"form"
-                        }
-                        action.flags = {
-                            search_view: false,
-                            sidebar : false,
-                            views_switcher : false,
-                            action_buttons : false,
-                            pager: false
-                        }
-                        var action_manager = new openerp.web.ActionManager(self);
-                        action_manager.appendTo($("#oe_app"));
-                        action_manager.start();
-                        action_manager.do_action(action);
-                       }
-                    }
-                });
-            }
-            else{
-                $(QWeb.render("DialogWarning", "Sorry, Import is not successful.")).dialog({
-                    modal: true,
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-            }
-        });
-    },
     import_edi: function(edi_url) {
         var self = this;
         this.params = {};
-        if(edi_url) this.params['edi_url'] = decodeURIComponent(edi_url);
+        if(edi_url)
+            this.params['edi_url'] = decodeURIComponent(edi_url);
         if (!this.session.db){
             this.start();
             this.session.on_session_valid.add_last(self.do_import);
         } else{
             self.do_import();
         }
-    }
+    },
+    do_import: function() {
+        this.rpc('/edi/import_edi_url', this.params, this.on_imported);
+    },
+    on_imported: function(response){
+        if (response.length) {
+            $('<div>Import successful, click Ok to see the new document</div>').dialog({
+            modal: true,
+            title: 'Successful',
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                    var action = {
+                        "res_model": response[0][0],
+                        "res_id": parseInt(response[0][1], 10),
+                        "views":[[false,"form"]],
+                        "type":"ir.actions.act_window",
+                        "view_type":"form",
+                        "view_mode":"form"
+                    }
+                    action.flags = {
+                        search_view: false,
+                        sidebar : false,
+                        views_switcher : false,
+                        action_buttons : false,
+                        pager: false
+                    }
+                    var action_manager = new openerp.web.ActionManager(self);
+                    action_manager.appendTo($("#oe_app"));
+                    action_manager.start();
+                    action_manager.do_action(action);
+                   }
+                }
+            });
+        } else {
+            $(QWeb.render("DialogWarning", "Sorry, Import is not successful.")).dialog({
+                modal: true,
+                buttons: {
+                    Ok: function() {
+                        $(this).dialog("close");
+                    }
+                }
+            });
+        }
+    },
 });
 
 openerp.edi.EdiViewCenterInvoice = openerp.web.Class.extend({
     init: function(element, edi){
-        var self = this;
-        this.edi_document = eval(edi.document)
-        this.$element = element;
-        QWeb.add_template("/web_edi_invoice/static/src/xml/edi_invoice.xml");
         this.$_element = $('<div>')
             .appendTo(document.body)
             .delegate('#oe_edi_invoice_button_pay', 'click', {'edi': edi} , this.do_pay)
     },
-    start: function() {
-	},
-    render: function(){
-        template = "InvoiceEdiView";
-        if (this.$current) {
-            this.$current.remove();
-        }
-        this.$current = this.$_element.clone(true);
-        this.$current.empty().append($(QWeb.render(template, {'invoices': this.edi_document})));
-        this.$element.append(this.$current);
-    },
     do_pay: function(e){
-        $element = $(e.view.document.body)
-        token = e.data.edi.token
-        db = e.data.edi.db
-        var current_url = $(location).attr('href')
-        var pathName = current_url.substring(0, current_url.lastIndexOf('/') +1);
-
         if ($element.find('#oe_edi_invoice_rd_pay_paypal').attr('checked') == 'checked') {
             alert('Pay Invoice using Paypal service');
         }

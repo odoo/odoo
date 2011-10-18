@@ -7,7 +7,6 @@
     <tr>
         <td colspan="2" valign="top" id="oe_header" class="header">
             <div> <a href="/" class="company_logo_link"> <div class="company_logo" /> </a> </div>
-            
         </td>
     </tr>
     <tr>
@@ -17,33 +16,37 @@
         </td>
         <td class="oe_edi_sidebar_container">
             <p class="oe_edi_sidebar_title">
-                Push this document into your enterprise management system
+                Import this document
             </p>
-            <p>
-                <input type="radio" id="oe_edi_rd_import_openerp" name="oe_edi_rd_import" value="oe_edi_import_openerp"/>
-                <label for="oe_edi_rd_import_openerp">Import it into an existing OpenERP instance</label>
-                <p class="oe_edi_nested_block">
-                    <label for="oe_edi_txt_saas_url">OpenERP instance address:</label> http://<input type="text" id="oe_edi_txt_server_url"/>
-                </p>
+
+            <input type="radio" id="oe_edi_import_openerp" name="oe_edi_import"/>
+            <label for="oe_edi_rd_import_openerp">Import it into an existing OpenERP instance</label>
+            <p class="oe_edi_nested_block">
+                <label for="oe_edi_txt_saas_url">OpenERP instance address:</label>
+                <br/>
+                http://<input type="text" id="oe_edi_txt_server_url"/>
             </p>
-            <p>
-                <input type="radio" id="oe_edi_rd_import_saas_account" name="oe_edi_rd_import" value="oe_edi_create_saas_account"/>
-                <label for="oe_edi_rd_import_saas_account">Create a new OpenERP instance:</label>
-                <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_url">Company:</label><input type="text" name="oe_edi_txt_saas_url"/>.my.openerp.com</p>
-                <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_password">Password:</label><input type="password" name="oe_edi_txt_saas_password"/></p>
-                <p class="oe_edi_nested_block"><label for="oe_edi_txt_saas_email">Email:</label><input type="text" name="oe_edi_txt_saas_email"/></p>
+
+            <input type="radio" id="oe_edi_import_saas" name="oe_edi_import"/>
+            <label for="oe_edi_rd_import_saas_account">Create a new OpenERP instance:</label>
+            <p class="oe_edi_nested_block">
+                <label for="oe_edi_txt_saas_url">Company:</label><input type="text" name="oe_edi_txt_saas_url"/>.my.openerp.com
+                <br/>
+                <label for="oe_edi_txt_saas_password">Password:</label><input type="password" name="oe_edi_txt_saas_password"/>
+                <br/>
+                <label for="oe_edi_txt_saas_email">Email:</label><input type="text" name="oe_edi_txt_saas_email"/>
+                <br/>
             </p>
-            <p>
-                <input type="radio" id="oe_edi_rd_import_other" name="oe_edi_rd_import" value="oe_edi_import_other"/>
-                <label for="oe_edi_rd_import_other">Import into another application</label>
-            </p>
-            <p>
-                <button type="button" class="oe_edi_button_import">Continue</button>
-            </p>
-            <div class="oe_edi_right_top">
-            </div>
+
+            <input type="radio" id="oe_edi_import_download" name="oe_edi_import"/>
+            <label for="oe_edi_rd_import_other">Import into another application</label>
+            <br/>
+            <br/>
+
+            <button type="button" class="oe_edi_import_button">Continue</button>
+
             <div class="oe_edi_right_bottom">
-            </div>  
+            </div>
         </td>
     </tr>
     <tr>
