@@ -334,8 +334,8 @@ class mail_message(osv.osv):
                       'subtype': msg_mime_subtype,
                       'body_text': plaintext_body
                       'body_html': html_body,
-                      'attachments': { 'file1': 'bytes',
-                                       'file2': 'bytes' }
+                      'attachments': [('file1', 'bytes'),
+                                       ('file2', 'bytes') }
                        # ...
                        'original': source_of_email,
                     }
@@ -416,7 +416,7 @@ class mail_message(osv.osv):
                 body = tools.html2plaintext(body)
             msg['body_text'] = tools.ustr(body, encoding)
 
-        attachments = {}
+        attachments = []
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
             body = ""
             if 'multipart/alternative' in msg.get('content-type', ''):
@@ -432,7 +432,7 @@ class mail_message(osv.osv):
                 if part.get_content_maintype()=='text':
                     content = part.get_payload(decode=True)
                     if filename:
-                        attachments[filename] = content
+                        attachments.append((filename, content))
                     content = tools.ustr(content, encoding)
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
@@ -442,7 +442,7 @@ class mail_message(osv.osv):
                         body = content
                 elif part.get_content_maintype() in ('application', 'image'):
                     if filename :
-                        attachments[filename] = part.get_payload(decode=True)
+                        attachments.append((filename,part.get_payload(decode=True)))
                     else:
                         res = part.get_payload(decode=True)
                         body += tools.ustr(res, encoding)
