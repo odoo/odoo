@@ -11,7 +11,7 @@
     general_account_id: account.a_expense
     journal_id: hr_timesheet.analytic_journal
     name: develop yaml for hr module
-    product_id: hr_timesheet.product_consultant
+    product_id: product.product_consultant
     product_uom_id: product.uom_hour
     to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
     unit_amount: 5.00
@@ -31,7 +31,7 @@
     date: 1
     name: 1
     price: 1
-    product: hr_timesheet.product_consultant
+    product: product.product_consultant
     time: 1
 
 -
@@ -67,7 +67,7 @@
   I create final invoice for this analytic account.
 -
   !record {model: hr.timesheet.invoice.create.final, id: hr_timesheet_invoice_create_final_0}:
-    balance_product: hr_timesheet.product_consultant
+    balance_product: product.product_consultant
     date: 1
     name: 1
     price: 1

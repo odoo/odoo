@@ -1312,7 +1312,7 @@ class sale_config_picking_policy(osv.osv_memory):
                 pooler.restart_pool(cr.dbname, update_module=True)[1]
 
         if wizard.time_unit:
-            prod_id = data_obj.get_object(cr, uid, 'hr_timesheet', 'product_consultant').id
+            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             product_obj = self.pool.get('product.product')
             product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 
