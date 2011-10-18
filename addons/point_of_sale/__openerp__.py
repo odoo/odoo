@@ -22,7 +22,7 @@
 
 {
     'name': 'Point Of Sale',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Point Of Sale',
     'description': """
 This module provides a quick and easy sale process.

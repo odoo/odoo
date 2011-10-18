@@ -1183,10 +1183,15 @@ openerp.point_of_sale = function(db) {
         };
         return App;
     })();
-    
+
+    db.web.client_actions.add('pos.ui', 'db.point_of_sale.PointOfSale');
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
         template: "PointOfSale",
         start: function() {
+            // FIXME: absolutely horrible hack to avoid conflict
+            //        between backbone's history and al's action
+            //        thingie
+            window.location.hash = '';
             var self = this;
             
             if (pos)
