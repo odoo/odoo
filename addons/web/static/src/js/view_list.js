@@ -795,11 +795,11 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
     render_cell: function (record, column) {
         if(column.type === 'reference') {
             var value = record.get(column.id);
-            if (_.isString(value)) {
+            if (typeof value === 'string' || value instanceof String) {
                 var ref = value.split(',');
-                if (_.size(ref) > 1) {
+                if (ref.length > 1) {
                     var model = ref[0],
-                        id = parseInt(ref[1]);
+                        id = parseInt(ref[1], 10);
                     new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
                         if (!names.length) {
                             return;
