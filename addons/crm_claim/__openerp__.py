@@ -48,7 +48,7 @@ automatically new claims based on incoming emails.
     'demo_xml': [
         'crm_claim_demo.xml',
     ],
-    'test': ['test/test_crm_claim.yml'],
+    'test': ['test/process/claim.yml'],
     'installable': True,
     'active': False,
     'certificate' : '00612027414703404749',
