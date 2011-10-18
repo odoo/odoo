@@ -9,7 +9,6 @@ import operator
 import os
 import re
 import simplejson
-import textwrap
 import time
 import xmlrpclib
 import zlib
@@ -41,7 +40,7 @@ def concat_files(file_list):
     files_concat = "".join(files_content)
     return files_concat,files_timestamp
 
-home_template = textwrap.dedent("""<!DOCTYPE html>
+html_template = """<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -51,15 +50,15 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         %(javascript)s
         <script type="text/javascript">
             $(function() {
-                var c = new openerp.init(%(modules)s);
-                var wc = new c.web.WebClient("oe");
-                wc.start();
+                var s = new openerp.init(%(modules)s);
+                %(init)s
             });
         </script>
     </head>
     <body id="oe" class="openerp"></body>
 </html>
-""")
+"""
+
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
@@ -118,10 +117,11 @@ class WebClient(openerpweb.Controller):
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>'%i for i in self.manifest_list(req, None, 'js'))
         css = "\n        ".join('<link rel="stylesheet" href="%s">'%i for i in self.manifest_list(req, None, 'css'))
 
-        r = home_template % {
+        r = html_template % {
             'javascript': js,
             'css': css,
             'modules': simplejson.dumps(self.server_wide_modules(req)),
+            'init': 'new s.web.WebClient("oe").start();',
         }
         return r
 
