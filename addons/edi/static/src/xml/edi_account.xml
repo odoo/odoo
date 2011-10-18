@@ -34,7 +34,12 @@
     </p>
     <p align="right">
         <b><t t-esc="doc.partner_id[1]"/></b><br/>
-        <t t-esc="doc.address_invoice_id[1]"/>
+        <t t-if="doc.partner_address">
+            <t t-esc="doc.partner_address.zip"/> <t t-esc="doc.partner_address.street"/><br/>
+            <t t-esc="doc.partner_address.city"/><br/>
+            <t t-if="doc.partner_address.country_id" t-esc="doc.partner_address.country_id[1]"/><br/>
+            Phone: <t t-esc="doc.partner_address.phone"/>
+        </t>
     </p>
     <table width="100%">
         <tr>
