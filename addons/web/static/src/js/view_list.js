@@ -808,8 +808,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                     record.set(column.id, names[0][1]);
                 });
             }
-        }
-        if (column.type === 'many2one') {
+        } else if (column.type === 'many2one') {
             value = record.get(column.id);
             // m2o values are usually name_get formatted, [Number, String]
             // pairs, but in some cases only the id is provided. In these
