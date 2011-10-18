@@ -793,6 +793,22 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
              this.dataset]);
     },
     render_cell: function (record, column) {
+        if(column.type === 'reference') {
+            var value = record.get(column.id);
+            if (_.isString(value)) {
+                var ref = value.split(',');
+                if (_.size(ref) > 1) {
+                    var model = ref[0],
+                        id = parseInt(ref[1]);
+                    new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
+                        if (!names.length) {
+                            return;
+                        }
+                        record.set(column.id, names[0][1]);
+                    });
+                }
+            }
+        }
         if (column.type === 'many2one') {
             var value = record.get(column.id);
             // m2o values are usually name_get formatted, [Number, String]
