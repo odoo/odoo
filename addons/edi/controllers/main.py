@@ -5,27 +5,7 @@ import simplejson
 import werkzeug.wrappers
 
 import web.common.http as openerpweb
-import web.controllers.main as web
-
-edi_template = textwrap.dedent("""<!DOCTYPE html>
-<html style="height: 100%%">
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-        <title>OpenERP</title>
-        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
-        %(css)s
-        %(js)s
-        <script type="text/javascript">
-            $(function() {
-                 var c = new openerp.init(%(modules)s);
-                 //var wc = new c.web.WebClient("oe");
-                 %(init)s
-            });
-        </script>
-    </head>
-    <body id="oe" class="openerp"></body>
-</html>
-""")
+import web.controllers.main
 
 class EDI(openerpweb.Controller):
     # http://hostname:8069/edi/view?db=XXXX&token=XXXXXXXXXXX
@@ -43,15 +23,15 @@ class EDI(openerpweb.Controller):
     @openerpweb.httprequest
     def view(self, req, db, token):
         d = self.template(req)
-        d["init"] = 'var e = new c.edi.EdiView(null,"%s","%s");e.appendTo($("body"));'%(db,token)
-        r = edi_template % d
+        d["init"] = 'new s.edi.EdiView(null,"%s","%s").appendTo($("body"));'%(db,token)
+        r = web.controllers.main.html_template % d
         return r
 
     @openerpweb.httprequest
     def import_url(self, req, url):
         d = self.template(req)
-        d["init"] = 'var e = new c.edi.EdiImportUrl(null,"%s");e.appendTo($("body"));'%(url)
-        r = edi_template % d
+        d["init"] = 'new s.edi.EdiImportUrl(null,"%s").appendTo($("body"));'%(url)
+        r = web.controllers.main.html_template % d
         return r
 
     @openerpweb.httprequest
