@@ -1,18 +1,18 @@
 -
-  In order to check for changes on partner, data will be change automatically according to partner,
+  In order to check for changes on partner, country and phone number change automatically according to partner,
 -
   !python {model: crm.lead}: |
     action = self.onchange_partner_address_id(cr, uid, ref("crm_case_qrecorp0"), ref("base.res_partner_address_notsotinysarl0"), email=False)
     assert action['value']['country_id'] == 20, "Country name not True"
     assert action['value']['phone'] == '(+32).81.81.37.00', "phone number is wrong"
 -
-  I try to Unlink the Lead I create new record of lead. 
+  I try to Unlink the lead, so I create new record of lead on cancel stage. 
 -
   !record {model: crm.lead, id: crm_case_new_lead}:
     name: Openerp Trainning
     state: cancel
 -
-  In order to test unlink lead, i will do unlink this lead
+  I test copy and unlink this lead.
 -
   !python {model: crm.lead}: |
     self.copy(cr, uid, ref("crm_case_new_lead"))
