@@ -16,16 +16,16 @@
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
     assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
-    assert lead.stage_id.id == ref("stage_lead1"), 'Stage of probability is incorrect!'
+    assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
   Finally, i won this opportunity, so i close this opportunity.
 -
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  I check lead is close or not.
+  I check opportunity is close or not.
 -
-  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in done state}:
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Opportunity in done state}:
     - state == "done"
 -
   In order to test stage of opportunity after win, i will test stage of opportunity.
