@@ -20,12 +20,12 @@
 #
 ##############################################################################
 {
-    "name" : "Thunderbird Interface",
+    "name" : "Thunderbird Plug-In",
     "version" : "1.0",
     "author" : ['OpenERP SA', 'Axelor'],
     "website" : "http://www.openerp.com/",
-    "depends" : ["base","mail_gateway"],
-    "category" : "Tools",
+    "depends" : ["base","mail"],
+    "category" : "Customer Relationship Management",
     "description": """
 This module is required for the Thuderbird Plug-in to work properly.
 ====================================================================
@@ -35,7 +35,6 @@ OpenERP objects. You can select a partner, a task, a project, an analytical
 account, or any other object and attach the selected mail as a .eml file in
 the attachment of a selected record. You can create documents for CRM Lead,
 HR Applicant and Project Issue from selected mails.
-
       """,
     "init_xml" : [],
     "demo_xml" : [],

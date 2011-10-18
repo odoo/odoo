@@ -118,7 +118,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
@@ -430,7 +430,7 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
@@ -469,7 +469,8 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
+        'color': fields.integer('Color Index'),
     }
 
     _defaults = {
@@ -484,6 +485,21 @@ class task(osv.osv):
     }
 
     _order = "sequence,priority, date_start, name, id"
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set task priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set task priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
@@ -590,11 +606,12 @@ class task(osv.osv):
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'project.task.close',
+                'res_model': 'mail.compose.message',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True,
-                'context': {'active_id': task.id}
+                'context': {'active_id': task.id,
+                            'active_model': 'project.task'}
            }
         return res
 

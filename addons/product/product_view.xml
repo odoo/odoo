@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <search string="Product">
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
-                   <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
@@ -69,7 +69,7 @@
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Product">
-                   <group colspan="4" col="6">
+                   <group colspan="4" col="8">
                     <group colspan="4" col="2">
                         <separator string="Name" colspan="2"/>
                         <field name="name"/>
@@ -85,6 +85,9 @@
                         <field name="sale_ok"/>
                         <field name="purchase_ok"/>
                     </group>
+                    <group colspan="1" col="1">
+                        <field name="product_image" widget='image' nolabel="1"/>
+                    </group> 
                    </group>
 
                     <notebook colspan="4">
@@ -108,8 +111,8 @@
                             <group colspan="2" col="2" groups="base.group_extended">
                                 <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
-                                <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
                             <group colspan="2" col="2" name="status" groups="base.group_extended">
@@ -191,6 +194,68 @@
                 </form>
             </field>
         </record>
+        
+        <!-- Product Kanban View  -->
+        <record model="ir.ui.view" id="product_kanban_view">
+            <field name="name">Product Kanban</field>
+            <field name="model">product.product</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="type">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <t t-if="record.default_code.raw_value">[<field name="default_code"/>]</t>
+                                                <field name="name"/>
+                                            </td>
+                                            <td align="right" valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.product_manager.raw_value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" width="22">
+                                                    <t t-if="record.product_image.raw_value">
+                                                        <img t-att-src="'data:image/png;base64,'+record.product_image.raw_value" width='48' height='48'/>
+                                                    </t>
+                                                    <t t-if="!record.product_image.raw_value">
+                                                        <img src="/web/static/src/img/product_default.png"/>
+                                                    </t> 
+                                                </td>
+                                                <td>
+                                                    <div class="oe_kanban_title2">
+                                                        <t t-if="record.type.raw_value=='service'">No Stock</t>
+                                                        <t t-if="record.type.raw_value!='service'">
+                                                            <div><field name="qty_available"/> On Hand , <field name="virtual_available"/> Available</div>
+                                                            <div><t t-if="record.list_price.raw_value!=0">Public Price : <field name="lst_price"/> ,</t> Cost : <field name="standard_price"/></div>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                         </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
         <record id="product_normal_action" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -204,12 +269,27 @@
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_to_sell":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>  
             <field name="search_view_id" ref="product_search_form_view"/>            
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
+        
+        <record id="open_view_product_tree1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+           <field name="view_id" ref="product_product_tree_view"/>
+            <field name="act_window_id" ref="product_normal_action_sell"/>
+        </record>
+        
+        <record id="open_view_product_form1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="product_normal_form_view"/>
+            <field name="act_window_id" ref="product_normal_action_sell"/>
+        </record> 
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
         <menuitem action="product.product_normal_action_sell" id="product.menu_products" parent="base.menu_product" sequence="1"/>

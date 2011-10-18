@@ -22,7 +22,7 @@
 {
     "name" : "Basic Calendar Functionality",
     "version" : "1.0",
-    "depends" : ["base"],
+    "depends" : ["base", "mail"],
     'complexity': "easy",
     'description': """
 This is a full-featured calendar system.
@@ -34,7 +34,7 @@ It supports:
     - Recurring events
     - Invitations to people""",
     "author" : "OpenERP SA",
-    'category': 'Tools',
+    'category': 'Hidden',
     'website': 'http://www.openerp.com',
     "init_xml" : [
         'base_calendar_data.xml'

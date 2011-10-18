@@ -6,7 +6,7 @@
             <field name="model">account_followup.followup.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up Lines">
+                <tree string="Follow-Up Steps">
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="start" groups="base.group_extended"/>
@@ -19,7 +19,7 @@
             <field name="model">account_followup.followup.line</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up Lines">
+                <form string="Follow-Up Steps">
                   <group col="6" colspan="4">
                      <field name="name"/>
                      <field name="delay"/>
@@ -45,7 +45,7 @@
                 <form string="Follow-Up">
                     <field name="name"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <separator colspan="4" string=""/>
+                    <newline/>
                     <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
@@ -69,13 +69,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Followup">
-                   <group col="10" colspan="4">
+                   <group>
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Group By...">
-                        <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                    </group>
                </search>
             </field>
@@ -164,11 +160,12 @@
         <!--   Configure Follow-Ups  Wizard    -->
         
           <record id="action_view_account_followup_followup_form" model="ir.actions.act_window">
-            <field name="name">Configure Follow-Ups</field>
+            <field name="name">Review Invoicing Follow-Ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account_followup.followup</field>
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
+            <field name="context" eval="'{\'res_id\': %s}' % (ref('demo_followup1'),)"/>
             <field name="view_id" ref="view_account_followup_followup_form"/>
         </record>
         

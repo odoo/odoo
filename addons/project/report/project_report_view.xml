@@ -59,7 +59,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
-                    <group colspan="10" col="12">
+                    <group>
                         <filter icon="terp-go-year" string="  Year  "
                                 domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-01-01'))]"
                                 help="Current Year"/>
@@ -69,15 +69,14 @@
                                 help="Current Month"/>
                         <filter icon="terp-go-week"
                                 string="    Month-1    "
-                                separator="1"
                                 domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                                 help="Previous Month"/>
                         <separator orientation="vertical"/>
-                        <filter string="Draft"
+                        <filter string="New"
                                 icon="terp-document-new"
                                 domain="[('state','=','draft')]"
-                                help = "Draft tasks"/>
-                        <filter string="Current"
+                                help = "New tasks"/>
+                        <filter string="In progress"
                                 icon="terp-check"
                                 domain="[('state', '=' ,'open')]"
                                 help = "In progress tasks"/>
@@ -109,7 +108,7 @@
                       <field name="partner_id" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="priority"/>
                         <field name="type_id" widget="selection"/>
                         <separator orientation="vertical"/>
@@ -122,7 +121,7 @@
 
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
+                    <group expand="1" string="Group By...">
                         <filter string="Project" name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}"/>
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
                         <separator orientation="vertical"/>
@@ -185,7 +184,7 @@
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('uid','=',uid),('state','=','open')]</field>
+        <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
     </record>
 
@@ -273,7 +272,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="context">{}</field>
-        <field name="domain">[('uid','=',uid),('state','=','open')]</field>
+        <field name="domain">[('user_id','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
     </record>
 

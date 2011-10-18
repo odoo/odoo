@@ -10,7 +10,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="name" position="before">
-                    <field name="state" select="1" on_change="onchange_invoice_line_view(state)" />
+                    <field name="state" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
             	</field>
             </field>
@@ -23,6 +23,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='name']" position="before">
+                    <field name="state" invisible="1"/>
                     <field name="sequence" string="Seq."/>
                 </xpath>
             </field>

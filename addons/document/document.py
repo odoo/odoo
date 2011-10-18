@@ -64,7 +64,7 @@ class document_file(osv.osv):
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
                     "WHERE parent_id IS NULL", (parent_id,))
 
-        cr.execute("UPDATE ir_attachment SET file_size=length(db_datas) WHERE file_size = 0;")
+        cr.execute("UPDATE ir_attachment SET file_size=length(db_datas) WHERE file_size = 0 and type = 'binary'")
 
         cr.execute("ALTER TABLE ir_attachment ALTER parent_id SET NOT NULL")
 
@@ -252,7 +252,7 @@ class document_file(osv.osv):
             ids = ids2
         if 'file_size' in vals: # only write that field using direct SQL calls
             del vals['file_size']
-        if len(ids) and len(vals):
+        if ids and vals:
             result = super(document_file,self).write(cr, uid, ids, vals, context=context)
         cr.commit() # ?
         return result
