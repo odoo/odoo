@@ -1,6 +1,3 @@
-
-openerp.point_of_sale = {};
-
 openerp.point_of_sale = function(db) {
     db.point_of_sale = {};
     
