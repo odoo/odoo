@@ -467,8 +467,8 @@ class Root(object):
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
-        if len(l) > 1:
-            for i in range(len(l), 1, -1):
+        if len(l):
+            for i in range(len(l), 0, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
                     c = controllers_path[ps]
