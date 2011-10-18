@@ -694,6 +694,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.view = view;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
+        this.always_invisible = (this.modifiers.invisible && this.modifiers.invisible === true);
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_class = [
@@ -809,18 +810,26 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
     },
     set_row_cells_with: function(row) {
         var bypass = 0,
-            max_width = 100;
+            max_width = 100,
+            row_length = row.length;
         for (var i = 0; i < row.length; i++) {
-            bypass += row[i].width === undefined ? 0 : 1;
-            max_width -= row[i].decrease_max_width;
+            if (row[i].always_invisible) {
+                row_length--;
+            } else {
+                bypass += row[i].width === undefined ? 0 : 1;
+                max_width -= row[i].decrease_max_width;
+            }
         }
         var size_unit = Math.round(max_width / (this.columns - bypass)),
             colspan_sum = 0;
         for (var i = 0; i < row.length; i++) {
             var w = row[i];
+            if (w.always_invisible) {
+                continue;
+            }
             colspan_sum += w.colspan;
             if (w.width === undefined) {
-                var width = (i === row.length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
+                var width = (i === row_length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
                 max_width -= width;
                 w.width = width + '%';
             }
@@ -850,13 +859,15 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         this.add_widget(widget);
     },
     add_widget: function(widget, colspan) {
-        colspan = colspan || widget.colspan;
         var current_row = this.table[this.table.length - 1];
-        if (current_row.length && (this.x + colspan) > this.columns) {
-            current_row = this.add_row();
+        if (!widget.always_invisible) {
+            colspan = colspan || widget.colspan;
+            if (current_row.length && (this.x + colspan) > this.columns) {
+                current_row = this.add_row();
+            }
+            this.x += widget.colspan;
         }
         current_row.push(widget);
-        this.x += widget.colspan;
         return widget;
     }
 });
