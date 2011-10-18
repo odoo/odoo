@@ -1,45 +1,45 @@
 -
-  Cheking for lead from draft to cancel, I will cancelling this lead.
+  Cheking for lead from draft to cancel, I cancel this lead.
 -
   !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for cancel lead , i will test lead is on cancel state.
+  I test lead is on cancel state.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
      - state == "cancel"
 -
-  Cheking for lead from cancel to reset, I will reseting this lead.
+  Checking for lead from cancel to reset, I reset this lead.
 -
   !python {model: crm.lead}: |
     self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for reset lead , i will test lead is on draft state.
+  I test lead is on draft state.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
      - state == "draft"
 -
-  Cheking for lead from reset to pending, I will pending this lead.
+  Cheking for lead from reset to pending, I pending this lead.
 -
   !python {model: crm.lead}: |
     self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for pending lead , i will test lead is on pending state.
+  I test lead is on pending state.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
      - state == "pending"
 -
-  Cheking for lead from pending to cancel, I will cancelling this lead.
+  Cheking for lead from pending to cancel, I cancel this lead.
 -
   !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for cancel lead , i will test lead is on cancel state.
+  I test lead is on cancel state.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
      - state == "cancel"
 -
-  For working on parent child relationship, we are creating sales executive department that will be work under 
+  For working on parent child relationship, I create sales executive department that will be work under 
   Sales Department.
 -
   !record {model: crm.case.section, id: section_sales_exe_department}:
@@ -47,31 +47,31 @@
     parent_id: crm.section_sales_department
 
 -
-  If Lead not handle by executive team so its need to Escalate lead from sales executive department to sales department,
-  for that purpose i Assign sales executive department on lead, after we will be process to escalate lead to sales department 
+  Escalate lead from sales executive department to sales department,
+  for that purpose i assign sales executive department on lead, 
+  after i will be process to escalate lead to sales department 
 -
   !record {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0}:
     section_id: section_sales_exe_department
 -
-  Processing on Lead escalate to sales Departemnt, we are checking for lead Escalate to sales Department from Executive
+  Processing on Lead escalate to sales departemnt, i check for lead escalate to sales Department from Executive
   department or not.
 -
   !python {model: crm.lead}: |
     self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
     self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for escalate lead , i will test lead Escalate from sales Department from Executive
-  department.
+  I test lead escalate from sales department from Executive  department.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to on sales team from Executive teame}:
      - section_id.name == "Sales Department"
 -
-  Cheking for lead from escalate to cancel, I will cancelling this lead.
+  Cheking for lead from escalate to cancel, I cancel this lead.
 -
   !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  In order to test for cancel lead , i will test lead is on cancel state.
+  I test lead is on cancel state.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
      - state == "cancel"
