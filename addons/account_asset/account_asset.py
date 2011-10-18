@@ -296,6 +296,9 @@ class account_asset_asset(osv.osv):
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        if vals.get('category_id'):
+            res = self.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
+            vals.update(res['value'])
         asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
         self.compute_depreciation_board(cr, uid, [asset_id], context=context)
         return asset_id
