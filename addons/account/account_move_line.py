@@ -494,8 +494,14 @@ class account_move_line(osv.osv):
         'amount_residual_currency': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
         'amount_residual': fields.function(_amount_residual, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
-        'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
-        'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
+        'journal_id': fields.related('move_id', 'journal_id', string='Journal', type='many2one', relation='account.journal', required=True, select=True, readonly=True,
+                                store = {
+                                    'account.move': (_get_move_lines, ['journal_id'], 20)
+                                }),
+        'period_id': fields.related('move_id', 'period_id', string='Period', type='many2one', relation='account.period', required=True, select=True, readonly=True,
+                                store = {
+                                    'account.move': (_get_move_lines, ['period_id'], 20)
+                                }),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
         'date_maturity': fields.date('Due date', select=True ,help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
@@ -597,11 +603,19 @@ class account_move_line(osv.osv):
                     return False
         return True
 
+    def _check_currency(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.account_id.currency_id:
+                if not l.currency_id or not l.currency_id.id == l.account_id.currency_id.id:
+                    return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
-        (_check_company_id, 'Company must be same for its related account and period.',['company_id'] ),
-        (_check_date, 'The date of your Journal Entry is not in the defined period!',['date'] ),
+        (_check_company_id, 'Company must be same for its related account and period.', ['company_id']),
+        (_check_date, 'The date of your Journal Entry is not in the defined period!', ['date']),
+        (_check_currency, 'The selected account of your Journal Entry must receive a value in its secondary currency', ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -735,7 +749,10 @@ class account_move_line(osv.osv):
             company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context=context):
-            company_currency_id = line.company_id.currency_id
+            if line.account_id.currency_id:
+                currency_id = line.account_id.currency_id
+            else:
+                currency_id = line.company_id.currency_id
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
@@ -743,12 +760,18 @@ class account_move_line(osv.osv):
                     if not line2.reconcile_id:
                         if line2.id not in merges:
                             merges.append(line2.id)
-                        total += (line2.debit or 0.0) - (line2.credit or 0.0)
+                        if line2.account_id.currency_id:
+                            total += line2.amount_currency
+                        else:
+                            total += (line2.debit or 0.0) - (line2.credit or 0.0)
                 merges_rec.append(line.reconcile_partial_id.id)
             else:
                 unmerge.append(line.id)
-                total += (line.debit or 0.0) - (line.credit or 0.0)
-        if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
+                if line.account_id.currency_id:
+                    total += line.amount_currency
+                else:
+                    total += (line.debit or 0.0) - (line.credit or 0.0)
+        if self.pool.get('res.currency').is_zero(cr, uid, currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id)
             return res
         r_id = move_rec_obj.create(cr, uid, {
@@ -1259,7 +1282,7 @@ class account_move_line(osv.osv):
                         break
             # Automatically convert in the account's secondary currency if there is one and
             # the provided values were not already multi-currency
-            if account.currency_id and not vals.get('ammount_currency') and account.currency_id.id != account.company_id.currency_id.id:
+            if account.currency_id and (vals.get('amount_currency', False) is False) and account.currency_id.id != account.company_id.currency_id.id:
                 vals['currency_id'] = account.currency_id.id
                 ctx = {}
                 if 'date' in vals:

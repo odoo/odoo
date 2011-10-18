@@ -880,7 +880,7 @@ class account_invoice(osv.osv):
                         'account_id': acc_id,
                         'date_maturity': t[0],
                         'amount_currency': diff_currency_p \
-                                and  amount_currency or False,
+                                and amount_currency or False,
                         'currency_id': diff_currency_p \
                                 and inv.currency_id.id or False,
                         'ref': ref,
