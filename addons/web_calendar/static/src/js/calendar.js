@@ -180,13 +180,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                 }
             }
 
-            if (this.fields[this.date_start]['type'] == 'date') {
-                try {
-                     evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
-                } catch(e) {}
-                try {
-                    evt[this.date_start] = openerp.web.str_to_datetime(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
-                } catch(e) {}
+            if (this.fields[this.date_start]['type'] == 'date' && /^\d\d\d\d-\d\d-\d\d$/.exec(evt[this.date_start])) {
+                evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
                 evt[this.date_stop] = openerp.web.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
