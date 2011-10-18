@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,41 +15,47 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
+import wizard
 from osv import osv
+import pooler
+from osv import fields
+import time
 
-class launch_map(osv.osv_memory):
+def _launch_wizard(self, cr, uid, data, context=None):
+    address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
+    m= address_obj.browse(cr, uid, data['id'], context=context)
+    url=''
+    url="http://maps.google.com/maps?oi=map&q="
+    if m.street:
+        url+=m.street.replace(' ','+')
+    if m.street2:
+        url+='+'+m.street2.replace(' ','+')
+    if m.city:
+        url+='+'+m.city.replace(' ','+')
+    if m.state_id:
+        url+='+'+m.state_id.name.replace(' ','+')
+    if m.country_id:
+        url+='+'+m.country_id.name.replace(' ','+')
+    if m.zip:
+        url+='+'+m.zip.replace(' ','+')
+    return {
+    'type': 'ir.actions.act_url',
+    'url':url,
+    'target': 'new'
+    }
 
-    _name = "launch.map"
-    _description = "Launch Google Map"
+class launch_map(wizard.interface):
 
-    def launch_wizard(self, cr, uid, ids, context=None):
-        active_id = context.get('active_id', False)
-        address_obj= self.pool.get('res.partner.address')
-        partner = address_obj.browse(cr, uid, active_id, context=context)
-        url="http://maps.google.com/maps?oi=map&q="
-        if partner.street:
-            url+=partner.street.replace(' ','+')
-        if partner.street2:
-            url+='+'+partner.street2.replace(' ','+')
-        if partner.city:
-            url+='+'+partner.city.replace(' ','+')
-        if partner.state_id:
-            url+='+'+partner.state_id.name.replace(' ','+')
-        if partner.country_id:
-            url+='+'+partner.country_id.name.replace(' ','+')
-        if partner.zip:
-            url+='+'+partner.zip.replace(' ','+')
-        return {
-        'type': 'ir.actions.act_url',
-        'url':url,
-        'target': 'new'
-        }
-
-launch_map()
-
+    states= {'init' : {'actions': [],
+                       'result':{'type':'action',
+                                 'action': _launch_wizard,
+                                 'state':'end'}
+                       }
+             }
+launch_map('google_map_launch')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

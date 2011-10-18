@@ -19,25 +19,14 @@
 #
 ##############################################################################
 
+from osv import fields,osv,orm
 
-{
-    'name': 'Google Map',
-    'version': '1.0',
-    'category': 'Hidden',
-    'description': """
-The module adds Google Map field in partner address.
-====================================================
-
-Using this you can directly open Google Map from the URL widget.""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'images': ['images/google_map.jpeg'],
-    'depends': ['base'],
-    'init_xml': [],
-    'update_xml': ['google_map_wizard.xml', 'google_map_view.xml'],
-    'demo_xml': [],
-    'installable': True,
-    'active': False,
-    'certificate': '0029498930765',
-}
+class res_partner_address(osv.osv):
+    _description ='Partner Contact'
+    _name = 'res.partner.address'
+    _inherit = 'res.partner.address'
+    _columns = {
+        }
+res_partner_address()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
