@@ -181,8 +181,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                var formated_date;
-                try{
+                try {
                      evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
                 } catch(e) {}
                 try {
