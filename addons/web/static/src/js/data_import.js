@@ -1,5 +1,6 @@
 openerp.web.data_import = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 /**
  * Safari does not deal well at all with raw JSON data being returned. As a
  * result, we're going to cheat by using a pseudo-jsonp: instead of getting
@@ -101,7 +102,16 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         level = level || 0;
 
         var self = this;
+        if (level === 0) {
+            parent.fields.push({
+                id: 'id',
+                name: 'id',
+                string: _t('External ID'),
+                required: false
+            });
+        }
         _(fields).each(function (field, field_name) {
+            if (field_name === 'id') { return; }
             var f = {
                 id: field_name,
                 name: field_name,
