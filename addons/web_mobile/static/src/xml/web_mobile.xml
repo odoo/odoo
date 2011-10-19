@@ -290,6 +290,9 @@
                                     </t>
                                 </t>
                             </t>
+                            <t t-if="!fields[field.attrs.name].selection">
+                                <option t-att-value="values[field.attrs.name][0]" ><t t-esc="values[field.attrs.name][1]"/></option>
+                            </t>
                         </select>
                         <t t-if="fields[field.attrs.name].selection">
                             <a id="formbutton" href="#" title="Form View"><img src="/web/static/src/img/icons/gtk-index.png" /></a>

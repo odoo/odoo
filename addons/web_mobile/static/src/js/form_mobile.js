@@ -256,6 +256,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
             if (view_fields[i].tag == 'group') {
                 this.get_fields(view_fields[i].children, this.fields);
             }
+            if (view_fields[i].tag == 'level') {
+                this.get_fields(view_fields[i].children, this.fields);
+            }
         }
         return this.fields;
     },
