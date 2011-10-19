@@ -37,6 +37,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.model = parent.model;
         this.fields = [];
         this.all_fields = [];
+        this.fields_with_defaults = [];
         this.required_fields = null;
 
         var convert_fields = function (root, prefix) {
@@ -50,7 +51,9 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         };
         this.ready  = $.Deferred.queue().then(function () {
             self.required_fields = _(self.fields).chain()
-                .filter(function (field) { return field.required; })
+                .filter(function (field) {
+                    return field.required &&
+                           !_.include(self.fields_with_defaults, field.id); })
                 .pluck('name')
                 .value();
             convert_fields(self);
@@ -82,7 +85,16 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.ready.push(new openerp.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
                 self.graft_fields(fields);
-            }));
+                self.ready.push(new openerp.web.DataSet(self, self.model)
+                        .default_get(_.pluck(self.fields, 'id'), function (fields) {
+                    _.each(fields, function(val, key) {
+                        if (val) {
+                            self.fields_with_defaults.push(key);
+                        }
+                    });
+                })
+            )
+        }));
     },
     graft_fields: function (fields, parent, level) {
         parent = parent || this;

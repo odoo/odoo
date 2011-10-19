@@ -40,6 +40,9 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 }
 
 /* Loading */
+.loading {
+    cursor: wait;
+}
 .openerp .loading {
     display: none;
     z-index: 100;
@@ -222,6 +225,7 @@ label.error {
     background: #f0eeee;
 }
 .openerp .oe-application-container {
+    width: 100%;
     height: 100%;
 }
 
@@ -1369,19 +1373,20 @@ label.error {
 }
 
 ul.oe-arrow-list {
-    padding-left: 0.5em;
+    padding-left: 1.1em;
     margin: 0;
+    white-space: nowrap;
 }
 ul.oe-arrow-list li {
     display: inline-block;
-    margin-left: -0.5em;
+    margin-left: -1em;
 }
 ul.oe-arrow-list li span {
     vertical-align: top;
     display: inline-block;
     border-width:1em;
     border-style:solid;
-    border-color: white;
+    border-color: #DEDEDE;
     line-height:0em;
 }
 ul.oe-arrow-list .oe-arrow-list-before {
@@ -1390,16 +1395,16 @@ ul.oe-arrow-list .oe-arrow-list-before {
 }
 ul.oe-arrow-list .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
-    border-left-color: white;
+    border-left-color: #DEDEDE;
     border-right-width:0;
 }
 ul.oe-arrow-list li.oe-arrow-list-selected span {
-    border-color: #CFCCCC;
+    border-color: #B5B9FF;
 }
 ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-before {
     border-left-color: rgba(0,0,0,0);
 }
 ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
-    border-left-color: #CFCCCC;
+    border-left-color: #B5B9FF;
 }

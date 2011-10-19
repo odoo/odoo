@@ -131,7 +131,10 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_domain_string(), SuperDict(ctx))
+        try:
+            return eval(self.get_domain_string(), SuperDict(ctx))
+        except NameError as e:
+            raise ValueError('Error during evaluation of this domain: "%s", message: "%s"' % (self.get_domain_string(), e.message))
 
 class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
@@ -176,7 +179,10 @@ class Context(BaseContext):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_context_string(), SuperDict(ctx))
+        try:
+            return eval(self.get_context_string(), SuperDict(ctx))
+        except NameError as e:
+            raise ValueError('Error during evaluation of this context: "%s", message: "%s"' % (self.get_context_string(), e.message))
 
 class SuperDict(dict):
     def __getattr__(self, name):

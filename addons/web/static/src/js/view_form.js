@@ -102,7 +102,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
 
         this.$form_header.find('button.oe_form_button_save').click(this.do_save);
-        this.$form_header.find('button.oe_form_button_save_edit').click(this.do_save_edit);
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
@@ -427,10 +426,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.mutating_lock = this.mutating_lock.pipe(action, action);
         return this.mutating_lock;
     },
-    do_save_edit: function() {
-        this.do_save();
-        //this.switch_readonly(); Use promises
-    },
     switch_readonly: function() {
     },
     switch_editable: function() {
@@ -699,6 +694,7 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.view = view;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
+        this.always_invisible = (this.modifiers.invisible && this.modifiers.invisible === true);
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_class = [
@@ -814,18 +810,26 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
     },
     set_row_cells_with: function(row) {
         var bypass = 0,
-            max_width = 100;
+            max_width = 100,
+            row_length = row.length;
         for (var i = 0; i < row.length; i++) {
-            bypass += row[i].width === undefined ? 0 : 1;
-            max_width -= row[i].decrease_max_width;
+            if (row[i].always_invisible) {
+                row_length--;
+            } else {
+                bypass += row[i].width === undefined ? 0 : 1;
+                max_width -= row[i].decrease_max_width;
+            }
         }
         var size_unit = Math.round(max_width / (this.columns - bypass)),
             colspan_sum = 0;
         for (var i = 0; i < row.length; i++) {
             var w = row[i];
+            if (w.always_invisible) {
+                continue;
+            }
             colspan_sum += w.colspan;
             if (w.width === undefined) {
-                var width = (i === row.length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
+                var width = (i === row_length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
                 max_width -= width;
                 w.width = width + '%';
             }
@@ -855,13 +859,15 @@ openerp.web.form.WidgetFrame = openerp.web.form.Widget.extend({
         this.add_widget(widget);
     },
     add_widget: function(widget, colspan) {
-        colspan = colspan || widget.colspan;
         var current_row = this.table[this.table.length - 1];
-        if (current_row.length && (this.x + colspan) > this.columns) {
-            current_row = this.add_row();
+        if (!widget.always_invisible) {
+            colspan = colspan || widget.colspan;
+            if (current_row.length && (this.x + colspan) > this.columns) {
+                current_row = this.add_row();
+            }
+            this.x += widget.colspan;
         }
         current_row.push(widget);
-        this.x += widget.colspan;
         return widget;
     }
 });
@@ -1019,7 +1025,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         this.check_disable();
     },
     check_disable: function() {
-        if (this.force_disabled || !this.view.is_interactible_record()) {
+        if (this.readonly || this.force_disabled || !this.view.is_interactible_record()) {
             this.$element.find("button").attr("disabled", "disabled");
             this.$element.find("button").css("color", "grey");
         } else {
@@ -1893,6 +1899,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.is_started = $.Deferred();
+        this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
         this.disable_utility_classes = true;
@@ -1948,7 +1955,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 controller.on_pager_action.add_first(function() {
                     self.save_form_view();
                 });
-                controller.$element.find(".oe_form_button_save_edit").hide();
+                controller.$element.find(".oe_form_button_save").hide();
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
@@ -1957,9 +1964,11 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.on_mode_switch.add_first(function() {
             self.save_form_view();
         });
-        setTimeout(function () {
-            self.viewmanager.appendTo(self.$element);
-        }, 0);
+        this.is_setted.then(function() {
+            setTimeout(function () {
+                self.viewmanager.appendTo(self.$element);
+            }, 0);
+        });
     },
     reload_current_view: function() {
         var self = this;
@@ -2036,6 +2045,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         $.when(this.is_started).then(function() {
             self.reload_current_view();
         });
+        this.is_setted.resolve();
     },
     get_value: function() {
         var self = this;
@@ -2647,14 +2657,10 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
-        if (!this.view.datarecord.id) {
-            this.do_warn("Can't save file", "The record has not yet been saved");
-        } else {
-            var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-                '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
-            window.open(url);
-        }
+        var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
+            '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
+        window.open(url);
     },
     on_clear: function() {
         if (this.value !== false) {
@@ -2671,6 +2677,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('.oe-binary-file-set, .oe-binary-file-clear').toggle(!this.readonly);
+        this.$element.find('input[type=text]').attr('disabled', this.readonly);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
@@ -2750,7 +2757,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     render_list: function() {
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
-            function(x) { return x.trim(); });
+            function(x) { return _.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
             
         if (shown.length == 0) {
@@ -2769,12 +2776,32 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         if (color) {
             var elem = this.$element.find("li.oe-arrow-list-selected span");
             elem.css("border-color", color);
+            if (this.check_white(color))
+                elem.css("color", "white");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
             elem.css("border-left-color", "rgba(0,0,0,0)");
             elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
             elem.css("border-color", "rgba(0,0,0,0)");
             elem.css("border-left-color", color);
         }
+    },
+    check_white: function(color) {
+        var div = $("<div></div>");
+        div.css("display", "none");
+        div.css("color", color);
+        div.appendTo($("body"));
+        var ncolor = div.css("color");
+        div.remove();
+        var res = /^\s*rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*$/.exec(ncolor);
+        if (!res) {
+            return false;
+        }
+        var comps = [parseInt(res[1]), parseInt(res[2]), parseInt(res[3])];
+        var lum = comps[0] * 0.3 + comps[1] * 0.59 + comps[1] * 0.11;
+        if (lum < 128) {
+            return true;
+        }
+        return false;
     }
 });
 
