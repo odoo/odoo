@@ -928,7 +928,8 @@ class account_invoice(osv.osv):
                 if period_ids:
                     period_id = period_ids[0]
                 else:
-                    raise osv.except_osv(_('No Period Defined !'),_("You must first define a period !") )
+                    raise osv.except_osv(_('No Period Defined !'),_('You must define a period for Company: %s') % \
+                                         (inv.company_id.name,))
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
