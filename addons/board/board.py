@@ -168,9 +168,6 @@ class board_board(osv.osv):
         'name':lambda *args:  'Dashboard'
     }
 
-board_board()
-
-
 class board_line(osv.osv):
     """
     Board Line
@@ -192,8 +189,6 @@ class board_line(osv.osv):
     _defaults = {
         'position': lambda *args: 'left'
     }
-
-board_line()
 
 class res_log_report(osv.osv):
     """ Log Report """

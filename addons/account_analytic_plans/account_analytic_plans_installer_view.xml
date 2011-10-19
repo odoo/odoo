@@ -7,14 +7,15 @@
         <field name="res_model">account.analytic.plan</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="account_analytic_plans.account_analytic_plan_form"/>
+        <field name="view_id" eval="False"/>
+        <field name="help">To setup a multiple analytic plans environment, you must define the root analytic accounts for each plan set. Then, you must attach a plan set to your account journals.</field>
     </record>
-        
-   <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
-      <field name="category_id" ref="account.category_accounting_configuration"/>
-      <field name="sequence">15</field>
-  </record>
+
+    <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
+        <field name="category_id" ref="account.category_accounting_configuration"/>
+        <field name="sequence">15</field>
+    </record>
 
   </data>
 </openerp>

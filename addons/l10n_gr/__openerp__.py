@@ -24,7 +24,7 @@
     "version" : "0.2",
     "author" : "P. Christeas, OpenERP SA.",
     "website": "http://openerp.hellug.gr/",
-    "category" : "Finance",
+    "category" : "Localization/Account Charts",
     "description": """
 This is the base module to manage the accounting chart for Greece.
 ==================================================================

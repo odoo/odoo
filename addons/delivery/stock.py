@@ -118,16 +118,20 @@ class stock_picking(osv.osv):
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
                 taxes_ids = self.pool.get('account.fiscal.position').map_tax(cursor, user, partner.property_account_position, taxes)
 
-            invoice_line_obj.create(cursor, user, {
-                'name': picking.carrier_id.name,
-                'invoice_id': invoice.id,
-                'uos_id': picking.carrier_id.product_id.uos_id.id,
-                'product_id': picking.carrier_id.product_id.id,
-                'account_id': account_id,
-                'price_unit': price,
-                'quantity': 1,
-                'invoice_line_tax_id': [(6, 0,taxes_ids)],
-            })
+            if any(inv_line.product_id.id == picking.carrier_id.product_id.id for inv_line in invoice.invoice_line):
+                continue
+            else:
+                invoice_line_obj.create(cursor, user, {
+                    'name': picking.carrier_id.name,
+                    'invoice_id': invoice.id,
+                    'uos_id': picking.carrier_id.product_id.uos_id.id,
+                    'product_id': picking.carrier_id.product_id.id,
+                    'account_id': account_id,
+                    'price_unit': price,
+                    'quantity': 1,
+                    'invoice_line_tax_id': [(6, 0,taxes_ids)],
+                })
+            invoice_obj.button_compute(cursor, user, [invoice.id], context=context)
         return result
 
 stock_picking()

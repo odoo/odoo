@@ -291,7 +291,7 @@ class product_template(osv.osv):
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
-        'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
+        'uos_coeff': fields.float('UOM -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert UOM to UOS\n'
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
@@ -460,6 +460,7 @@ class product_product(osv.osv):
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
         'price_margin': lambda *a: 1.0,
+        'color': 0,
     }
 
     _name = "product.product"
@@ -486,8 +487,10 @@ class product_product(osv.osv):
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
+        'color': fields.integer('Color Index'),
+        'product_image': fields.binary('Image'),
     }
-
+    
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
         unlink_product_tmpl_ids = []
