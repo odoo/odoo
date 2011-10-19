@@ -1274,6 +1274,7 @@ class BaseModel(object):
                     if line[i] and skip:
                         return False
                     continue
+                field_name = field[len(prefix)]
 
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
@@ -1289,7 +1290,7 @@ class BaseModel(object):
                     return [(6,0,res)]
 
                 # ID of the record using a XML ID
-                if field[len(prefix)]=='id':
+                if field_name == 'id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
                     except ValueError:
@@ -1298,16 +1299,17 @@ class BaseModel(object):
                     continue
 
                 # ID of the record using a database ID
-                elif field[len(prefix)]=='.id':
+                elif field_name == '.id':
                     data_res_id = _get_id(model_name, line[i], current_module, '.id')
                     continue
 
+                field_type = fields_def[field_name]['type']
                 # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                if fields_def[field[len(prefix)]]['type']=='one2many':
-                    if field[len(prefix)] in done:
+                if field_type == 'one2many':
+                    if field_name in done:
                         continue
-                    done[field[len(prefix)]] = True
-                    relation = fields_def[field[len(prefix)]]['relation']
+                    done[field_name] = True
+                    relation = fields_def[field_name]['relation']
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
@@ -1316,7 +1318,7 @@ class BaseModel(object):
 
                     first = 0
                     while pos < len(datas):
-                        res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
+                        res2 = process_liness(self, datas, prefix + [field_name], current_module, relation_obj._name, newfd, pos, first)
                         if not res2:
                             break
                         (newrow, pos, w2, data_res_id2, xml_id2) = res2
@@ -1332,36 +1334,36 @@ class BaseModel(object):
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
 
-
-                elif fields_def[field[len(prefix)]]['type']=='many2one':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2one':
+                    relation = fields_def[field_name]['relation']
                     res = _get_id(relation, line[i], current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type']=='many2many':
-                    relation = fields_def[field[len(prefix)]]['relation']
+                elif field_type == 'many2many':
+                    relation = fields_def[field_name]['relation']
                     res = many_ids(line[i], relation, current_module, mode)
 
-                elif fields_def[field[len(prefix)]]['type'] == 'integer':
+                elif field_type == 'integer':
                     res = line[i] and int(line[i]) or 0
-                elif fields_def[field[len(prefix)]]['type'] == 'boolean':
+                elif field_type == 'boolean':
                     res = line[i].lower() not in ('0', 'false', 'off')
-                elif fields_def[field[len(prefix)]]['type'] == 'float':
+                elif field_type == 'float':
                     res = line[i] and float(line[i]) or 0.0
-                elif fields_def[field[len(prefix)]]['type'] == 'selection':
-                    for key, val in fields_def[field[len(prefix)]]['selection']:
+                elif field_type == 'selection':
+                    for key, val in fields_def[field_name]['selection']:
                         if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
                             res = key
                             break
                     if line[i] and not res:
-                        logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                _("key '%s' not found in selection field '%s'") % \
-                                        (tools.ustr(line[i]), tools.ustr(field[len(prefix)])))
-                        warning += [_("Key/value '%s' not found in selection field '%s'") % (tools.ustr(line[i]), tools.ustr(field[len(prefix)]))]
+                        logging.getLogger('orm.import').warn(
+                            _("key '%s' not found in selection field '%s'"),
+                            tools.ustr(line[i]), tools.ustr(field_name))
+                        warning.append(_("Key/value '%s' not found in selection field '%s'") % (
+                            tools.ustr(line[i]), tools.ustr(field_name)))
 
                 else:
                     res = line[i]
 
-                row[field[len(prefix)]] = res or False
+                row[field_name] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
             return result
