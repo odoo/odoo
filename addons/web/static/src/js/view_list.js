@@ -780,7 +780,6 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
                 if (row_id !== undefined) {
-                    console.log(self.dataset);
                     self.dataset.index = self.dataset.ids.indexOf(row_id);
                     self.row_clicked(e);
                 }
