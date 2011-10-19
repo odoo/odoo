@@ -1,137 +1,37 @@
 -
-  In order to test Forward Partner functionality, I create an opportunity and forward it to partner.
+  In order to test find nearest Partner functionality and assign to opportunity ,
+  so First i create a grade 'First' for partner.
 -
-  I assign an email address to Administrator.
--
-  !record {model: res.users, id: base.user_root}:
-    user_email: admin@openerp.com
--
-  I create some partner grades.
--
-  I create a grade 'First'.
--
-  !record {model: res.partner.grade, id: res_partner_grade_first0}:
+  !record {model: res.partner.grade, id: res_partner_grade_first}:
     name: First
     sequence: 1
 -
-  I create another grade 'Second'.
+  I assign grade 'First' to the partner 'Eric' and give more probability to assign a lead to this partner.
 -
-  !record {model: res.partner.grade, id: res_partner_grade_second0}:
-    name: Second
-    sequence: 2
+  !record {model: res.partner, id: base.res_partner_ericdubois0}:
+    grade_id: res_partner_grade_first
+    partner_weight: 10
 -
-  I create one more grade 'Third'.
--
-  !record {model: res.partner.grade, id: res_partner_grade_third0}:
-    name: Third
-    sequence: 3
--
-  I assign grade 'First' to the partner 'Axelor'.
--
-  !record {model: res.partner, id: base.res_partner_desertic_hispafuentes}:
-    grade_id: res_partner_grade_first0
--
-  I change the User email id or partner if needed.
+  Set Lattitude and Longitude according to partner address.
 -
   !python {model: res.partner}: |
-    self.geo_localize(cr, uid, [ref('base.res_partner_desertic_hispafuentes')], context)
+    self.geo_localize(cr, uid, [ref('base.res_partner_ericdubois0')], context)
+    partner = self.browse(cr, uid, ref('base.res_partner_ericdubois0'))
+    assert partner.partner_latitude == 50.4530495 , "Lattitude is wrong"
+    assert partner.partner_longitude == 3.9693885 , "Longitude is wrong"
 -
-  I assgin a reply-to email address to Sales Team.
--
-  !record {model: crm.case.section, id: crm.section_sales_department}:
-    reply_to: sales_openerp@openerp.com
--
-  I create an opportunity 'Questionnaire on OpenERP'.
--
-  !record {model: crm.lead, id: crm_lead_questionnaireonopenerp0}:
-    categ_id: crm.categ_oppor7
-    section_id: crm.section_sales_department
-    country_id: base.fr
-    date_assign: '2011-02-07'
-    day_close: 0.0
-    day_open: 0.0
-    email_from: info@axelor.com
-    name: Questionnaire on OpenERP
-    partner_address_id: base.res_partner_address_3000
-    partner_assigned_id: base.res_partner_desertic_hispafuentes
-    partner_id: base.res_partner_desertic_hispafuentes
-    partner_latitude: 0.0
-    partner_longitude: 0.0
-    phone: +33 1 64 61 04 01
-    planned_revenue: 0.0
-    probability: 0.0
-    type: opportunity
--
-  I change the assigned partner.
+  I would like to change the assign partner on opportunity, so find nearest partner assign to this opportunity.
 -
   !python {model: crm.lead}: |
-    self.onchange_assign_id(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'), context)
-    self.assign_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context)
+    res = self.onchange_assign_id(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], ref('base.res_partner_ericdubois0'), context)
+    assert res['value']['user_id'] == ref('base.user_demo'), "User not correct"
+    self.assign_partner(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], context)
 -
-  I change the User email id or partner if needed.
+  In order to assigned partner to opportunity, so i test latitude and longitude of partner of opportunity
+  and opportuniy assign to assigned partner.
 -
-  !python {model: crm.lead.forward.to.partner}: |
-    context.update({'history': 'latest', })
-    user = ref('base.user_root')
-    self.on_change_email(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], user)
-    self.on_change_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'))
--
-  I change in history define.
--
-  !python {model: crm.lead.forward.to.partner}: |
-    context.update({'history': 'info', })
-    self.on_change_history(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context.get('history'), context)
--
-  I check the case history.
--
-  !python {model: crm.lead.forward.to.partner}: |
-    context.update({'history': 'latest', })
-    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
-    
-    context.update({'history': 'info', })
-    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
-    
-    context.update({'history': 'whole', })
-    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
--
-  I get lead details.
--
-  !python {model: crm.lead.forward.to.partner}: |
-    self.get_lead_details(cr, uid, ref('crm_lead_questionnaireonopenerp0'), context)
--
-  I click on Forward button.
--
-  !python {model: crm.lead.forward.to.partner}: |
-    from tools import config
-    vals = {
-       'subject': 'email',
-       'email_to': 'info@axelor.com',
-       'email_from': 'Administrator <admin@openerp.com>',
-       'reply_to': 'sales_openerp@openerp.com',
-       'state': 'draft',
-       'history': 'latest', 
-    }
-    ids = self.create(cr, uid, vals, context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    host = config.get('smtp_user', '127.0.0.1')
-    assert config.get(host, True), 'SMTP not configured !'
-    try:
-      self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    except:
-      pass
--
-  I create the opportunity.
--
-   !record {model: crm.lead, id: crm_opportunity2}:
-    email_from: info@balmerinc.be
-    name: 'FUEL CO 829264 - 10002 units'
-    partner_address_id: base.res_partner_address_1
-    partner_id: base.res_partner_9
-    probability: 1.0
-    stage_id: crm.stage_lead1
-    categ_id: crm.categ_oppor2
-    section_id: crm.section_sales_department
--  |
-   I Update the data.
--
-   !python {model: crm.merge.opportunity}: |
-    self._update_data([ref('crm_opportunity2')], ref('crm_lead_questionnaireonopenerp0'))
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, [ref('crm.crm_case_abcfuelcounits0')])[0]
+    assert lead.partner_latitude == 50.8495239 , "Lattitude is wrong"
+    assert lead.partner_longitude == 4.3667002 , "Longitude is wrong"
+    assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy not assign partner"
