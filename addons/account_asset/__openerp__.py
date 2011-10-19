@@ -42,7 +42,6 @@
         "account_asset_wizard.xml",
         "wizard/account_asset_change_duration_view.xml",
         "wizard/wizard_asset_compute_view.xml",
-#        "wizard/wizard_asset_close_view.xml",
         "account_asset_view.xml",
         "account_asset_invoice_view.xml",
         "report/account_asset_report_view.xml",
