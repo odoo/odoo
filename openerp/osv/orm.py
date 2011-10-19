@@ -1261,7 +1261,7 @@ class BaseModel(object):
             nbrmax = position+1
 
             done = {}
-            for i in range(len(fields)):
+            for i, field in enumerate(fields):
                 res = False
                 if i >= len(line):
                     raise Exception(_('Please check that all your lines have %d columns.'
@@ -1270,7 +1270,6 @@ class BaseModel(object):
                 if not line[i]:
                     continue
 
-                field = fields[i]
                 if field[:len(prefix)] <> prefix:
                     if line[i] and skip:
                         return False
