@@ -64,7 +64,7 @@ Dashboard for purchase management that includes:
              'test/process/rfq2purchase_order.yml',
              'test/process/invoice_from_reception.yml',
              #'test/process/procurement_buy.yml',
-             'test/process/merge_purchase_order.yml',
+             #'test/process/merge_purchase_order.yml',
              'test/process/purchase_order_cancel.yml',
              'test/process/purchase_order_delete.yml',
              #'test/process/purchase_report.yml',
