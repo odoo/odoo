@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <record id="view_open_questionnaire_form" model="ir.ui.view">
+            <field name="name">Open Questionnaires</field>
+            <field name="model">open.questionnaire</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Questionnaires">
+                    <field name="questionnaire_id"/>
+                    <newline/>
+                    <separator string="" colspan="4"/>
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2"/>
+                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
+                        <button name="build_form" string="Open Questionnaire" icon="terp-camera_test" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_open_questionnaire">
+            <field name="name">Open Questionnaire</field>
+            <field name="res_model">open.questionnaire</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <!-- Questionnaire form view -->
+        <!--<act_window
+            context="{}"
+            id="act_open_questionnaire"
+            name="Using a Questionnaire"
+            res_model="open.questionnaire"
+            src_model="crm_profiling.questionnaire"
+            view_id="view_open_questionnaire_form"
+            target="new"
+            view_mode="form"/>-->
+
+    </data>
+</openerp>
