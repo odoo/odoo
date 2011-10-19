@@ -5,6 +5,7 @@
 -
   !python {model: purchase.order}: |
     copy_id = self.copy(cr, uid, ref("order_purchase3"))
+    assert self.browse(cr, uid,[order_purchase4]).state == "draft", "Purchase order should be draft"
     self.unlink(cr, uid, [copy_id)])
 -
   I want to delete confirm purchase order.
