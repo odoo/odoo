@@ -780,8 +780,8 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
                 if (row_id !== undefined) {
-                    self.dataset.index = self.records.indexOf(
-                        self.records.get(row_id));
+                    console.log(self.dataset);
+                    self.dataset.index = self.dataset.ids.indexOf(row_id);
                     self.row_clicked(e);
                 }
             });
@@ -789,7 +789,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
     row_clicked: function () {
         $(this).trigger(
             'row_link',
-            [this.records.at(this.dataset.index).get('id'),
+            [this.dataset.ids[this.dataset.index],
              this.dataset]);
     },
     render_cell: function (record, column) {
