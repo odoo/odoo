@@ -72,42 +72,6 @@ class stock_partial_picking(osv.osv_memory):
         """Returns product cost and currency ID for the given move, suited for re-computing
            the average product cost.
         
-<<<<<<< TREE
-        _moves_arch_lst = """<form string="%s">
-                        <field name="date" invisible="1"/>
-                        <separator colspan="4" string="%s"/>
-                        <field name="%s" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>
-                        """ % (_('Process Document'), _('Products'), "product_moves_" + picking_type)
-        _moves_fields = result['fields']
-
-        # add field related to picking type only
-        _moves_fields.update({
-                            'product_moves_' + picking_type: {'relation': 'stock.move.memory.'+picking_type, 'type' : 'one2many', 'string' : 'Product Moves'}, 
-                            })
-        _moves_arch_lst += """
-                <separator string="" colspan="4" />
-                <label string="" colspan="2"/>
-                <group col="2" colspan="2">
-                <button icon='gtk-cancel' special="cancel"
-                    string="_Cancel" />
-                <button name="do_partial" string="_Validate"
-                    colspan="1" type="object" icon="gtk-go-forward" />
-            </group>
-        </form>"""
-        result['arch'] = _moves_arch_lst
-        result['fields'] = _moves_fields
-        return result
-
-    def __create_partial_picking_memory(self, picking, pick_type):
-        move_memory = {
-            'product_id' : picking.product_id.id, 
-            'quantity' : picking.product_qty, 
-            'product_uom' : picking.product_uom.id, 
-            'prodlot_id' : picking.prodlot_id.id, 
-            'move_id' : picking.id,
-            'location_id' : picking.location_id.id, 
-            'location_dest_id' : picking.location_dest_id.id,  
-=======
            :return: map of the form::
 
                 {'cost': 123.34,
@@ -130,7 +94,6 @@ class stock_partial_picking(osv.osv_memory):
             'move_id' : move.id,
             'location_id' : move.location_id.id,
             'location_dest_id' : move.location_dest_id.id,
->>>>>>> MERGE-SOURCE
         }
         if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
