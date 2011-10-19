@@ -62,7 +62,7 @@ class stock_partial_picking(osv.osv_memory):
             res.update(picking_id=picking_id)
         if 'move_ids' in fields:
             picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
-            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state not in ('done','cancel')]
+            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state == 'assigned']
             res.update(move_ids=moves)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))

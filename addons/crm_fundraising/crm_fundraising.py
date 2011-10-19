@@ -33,7 +33,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
     _order = "id desc"
     _inherit = ['mail.thread']
     _columns = {
-            'id': fields.integer('ID'),
+            'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
             'active': fields.boolean('Active', required=False),
             'date_action_last': fields.datetime('Last Action', readonly=1),
