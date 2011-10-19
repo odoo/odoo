@@ -1396,7 +1396,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if fields and 'duration' not in fields:
             fields.append('duration')
 
-        real_data = {}
         real_data = super(calendar_event, self).read(cr, uid,
                     [real_id for base_calendar_id, real_id in select],
                     fields=fields, context=context, load=load)
