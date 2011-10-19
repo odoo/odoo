@@ -301,7 +301,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         });
         $("img[id^='side-']").click(function() {
-            var side = $(this).closest("tr[id^='viewedit-']")
+            var side = $(this).closest("tr[id^='viewedit-']");
             var id_tr = (side.attr('id')).split('-')[1];
             var img = side.find("img[id='parentimg-"+id_tr+"']").attr('src'); ;
             var level = side.attr('level');
@@ -376,38 +376,47 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                        $(last_tr).after(rec);
                     });
                 }
+                
                 var arch1 = one_object["arch"][0].arch;
                 root = $(arch1).filter(":first")[0];
                 self.get_node(one_object["arch"][0].arch, 
                                 one_object['main_object'][0].child_id[0],
                                      parseInt(id_tr),
-                                        one_object['main_object'][0].child_id[0].chld_id, level, one_object);
+                                        one_object['main_object'][0].child_id[0].chld_id, level ,
+                                            one_object["arch"][0].view_id);
                 break;
             }
         });
     },
-    get_node: function(arch, obj, id, child_list, level, one_object){
+    get_node: function(arch, obj, id, child_list, level, view_id){
         var self = this;
         var children_list =  $(arch).children();
         if(obj.level <= level){
-            if(id != obj.id){
+            if(id == obj.id){
+            var next = $(arch).next()
+            $(next).after(arch);
+            var parent = $(arch).parents();
+            parent = parent[parent.length-1];
+            var convert_to_utf = "";
+            var s = new XMLSerializer();  
+            var stream = {  
+                write : function(string)  
+                {convert_to_utf = convert_to_utf + string + "";}
+            };  
+            s.serializeToStream(parent, stream, "UTF-8");
+            convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
+            convert_to_utf = '<?xml version="1.0" encoding="utf-8"?>' + convert_to_utf; 
+            dataset = new openerp.web.DataSet(this, 'ir.ui.view');
+            dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
+            });
+            }else{
                 for(var i=0;i< children_list.length; i++){
                     if(obj.child_id){var child_list = obj.child_id};
-                    
-                self.get_node(children_list[i], obj.child_id[i], id, child_list, level, one_object);
+                    self.get_node(children_list[i], obj.child_id[i], id, child_list, level, view_id);
                 }
-            }else{
-                var next = $(arch).next()
-                $(next).after(arch);
-                var index = _.indexOf(child_list,obj)
-                var re_insert_obj = child_list.splice(index,1);
-                child_list.splice(index+1, 0, re_insert_obj[0]);
-                var p = $(arch).parents();
-                one_object["arch"][0].arch = p[p.length-1]; 
-                utfstring = unescape(encodeURIComponent(p));
-                return;
             }
         }
+        
     },
     on_expand: function(self){
         var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
