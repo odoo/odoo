@@ -1396,13 +1396,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if fields and 'duration' not in fields:
             fields.append('duration')
 
+        real_data = super(calendar_event, self).read(cr, uid,
+                    [real_id for base_calendar_id, real_id in select],
+                    fields=fields, context=context, load=load)
+        real_data = dict(zip([x['id'] for x in real_data], real_data))
 
         for base_calendar_id, real_id in select:                
-            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-           
-            if not res :
-                continue
+            res = real_data[real_id].copy()
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
