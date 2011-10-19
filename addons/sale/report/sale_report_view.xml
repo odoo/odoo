@@ -22,7 +22,7 @@
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
                 <field name="shipped_qty_1" sum="Shipped"/>
-                <field name="uom_name" invisible="not context.get('set_visible',False)"/>
+                <field name="product_uom" invisible="not context.get('set_visible',False)"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" sum="Commitment Delay"/>
                 <field name="state" invisible="1"/>
@@ -98,7 +98,7 @@
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Reference UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
+                    <filter string="Reference UoM" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
                     <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
                     <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
@@ -208,6 +208,7 @@
                 <field name="price_total" />
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
+                <field name="product_uom" invisible="1"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="state" invisible="1"/>
