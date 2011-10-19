@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import google_map
-import wizard
+import google_map_launch
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
