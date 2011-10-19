@@ -27,7 +27,6 @@ from tools import to_xml
 from report import report_sxw
 from datetime import datetime
 from tools.translate import _
-import tools
 
 #FIXME: we should use toxml
 class report_custom(report_rml):
