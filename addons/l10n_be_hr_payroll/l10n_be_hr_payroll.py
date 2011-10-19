@@ -20,32 +20,37 @@
 ##############################################################################
 
 from osv import fields, osv
+import decimal_precision as dp
 
 class hr_contract_be(osv.osv):
     _inherit = 'hr.contract'
 
     _columns = {
-        'reim_travel':fields.float('Reimbursement of travel expenses', digits=(16,2)),
-        'company_car_emp':fields.float('Company car employer', digits=(16,2)),
-        'company_car_wkr':fields.float('Company Car Deduction for Worker', digits=(16,2)),
-        'mis_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
-        'ch_value':fields.float('Check Value Meal ', digits=(16,2)),
-        'ch_worker':fields.float('Check Value Meal - by worker ', digits=(16,2)),
-        'insurance':fields.float('Insurance Group - by worker ', digits=(16,2)),
-        'advantage':fields.float('Benefits of various nature ', digits=(16,2)),
-        'suppl_net':fields.float('Net supplements', digits=(16,2)),
-        'retained_net':fields.float('Net retained ', digits=(16,2)),
+        'travel_reimbursement_amount': fields.float('Reimbursement of travel expenses', digits_compute=dp.get_precision('Payroll')),
+        'car_company_amount': fields.float('Company car employer', digits_compute=dp.get_precision('Payroll')),
+        'car_employee_deduction': fields.float('Company Car Deduction for Worker', digits_compute=dp.get_precision('Payroll')),
+        'misc_onss_deduction': fields.float('Miscellaneous exempt ONSS ', digits_compute=dp.get_precision('Payroll')),
+        'meal_voucher_amount': fields.float('Check Value Meal ', digits_compute=dp.get_precision('Payroll')),
+        'meal_voucher_employee_deduction': fields.float('Check Value Meal - by worker ', digits_compute=dp.get_precision('Payroll')),
+        'insurance_employee_deduction': fields.float('Insurance Group - by worker ', digits_compute=dp.get_precision('Payroll')),
+        'misc_advantage_amount': fields.float('Benefits of various nature ', digits_compute=dp.get_precision('Payroll')),
+        'additional_net_amount': fields.float('Net supplements', digits_compute=dp.get_precision('Payroll')),
+        'retained_net_amount': fields.float('Net retained ', digits_compute=dp.get_precision('Payroll')),
     }
+    
 hr_contract_be()
 
 class hr_employee_be(osv.osv):
     _inherit = 'hr.employee'
 
     _columns = {
-        'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
-        'handicap':fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
-        'handicap_child':fields.boolean('Disabled Children', help="if recipient children is/are declared disabled by law"),
-        'resident':fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
-        'number_handicap':fields.integer('Number of disabled children'),
+        'spouse_fiscal_status': fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
+        'disabled_spouse_bool': fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
+        'disabled_children_bool': fields.boolean('Disabled Children', help="if recipient children is/are declared disabled by law"),
+        'resident_bool': fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
+        'disabled_children_number': fields.integer('Number of disabled children'),
     }
+    
 hr_employee_be()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

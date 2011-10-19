@@ -8,20 +8,18 @@
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
-                        <attribute name="string">Load Outlook Plug-In</attribute>
+                        <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Load Outlook Plug-In</attribute>
+                        <attribute name="string">Install Outlook Plug-In</attribute>
                     </separator>
                     <xpath expr="//label[@string='description']" position="attributes">
                         <attribute name="string">This plug-in allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one.</attribute>
                     </xpath>
                     <xpath expr="//button[@string='Install Modules']" position="replace">
-                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close" invisible="not context.get('menu',False)"/>
-                        <button name="action_next" icon="gtk-go-forward" type="object" string="Configure" colspan="1" invisible="context.get('menu',False)"/>
+                        <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
                     </xpath>
                     <xpath expr="//button[@string='Skip']" position="replace">
-                        <button name="action_skip" icon="gtk-jump-to" special="cancel" type="object" string="Skip" colspan="1" invisible="context.get('menu',False)"/>
                     </xpath>
                     <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
                         <attribute name="string"/>
@@ -46,7 +44,7 @@
         </record>
 
         <record id="action_outlook_installer" model="ir.actions.act_window">
-            <field name="name">Load Outlook Plug-In</field>
+            <field name="name">Install Outlook Plug-In</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -59,10 +57,11 @@
             <field name="action_id" ref="action_outlook_installer"/>
             <field name="category_id" ref="base.category_sales_management_config"/>
             <field name="sequence">4</field>
+            <field name="type">automatic</field>
         </record>
 
         <record id="action_outlook_wizard" model="ir.actions.act_window">
-            <field name="name">Load Outlook Plug-In</field>
+            <field name="name">Install Outlook Plug-In</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">outlook.installer</field>
             <field name="view_id" ref="view_outlook_installer"/>
@@ -73,10 +72,7 @@
         </record>
 
         <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
+        <menuitem id="menu_base_config_plugins_outlook" action="action_outlook_wizard" parent="base.menu_base_config_plugins" sequence="10"/>
 
-        <menuitem id="menu_base_config_plugins_outlook" action="action_outlook_wizard" name="Load Outlook Plug-In" parent="base.menu_base_config_plugins" sequence="10"/>
-
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1" />
-        <menuitem id="menu_base_config_plugins_outlook_sales" action="action_outlook_wizard" name="Load Outlook Plug-In" parent="base.menu_sales" />
     </data>
 </openerp>

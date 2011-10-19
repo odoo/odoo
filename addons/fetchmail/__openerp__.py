@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    "name" : "Automated Email Retriever",
+    "name" : "Fetch Emails",
     "version" : "1.0",
     "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",
-    "category": 'Tools',
+    "category": 'Customer Relationship Management',
     "description": """
 Retrieve incoming email on POP / IMAP servers
 =============================================

@@ -22,10 +22,9 @@
 
 
 {
-    'name': 'Extended Module to Add CalDav feature on Meeting',
+    'name': 'Calendar Synchronizing',
     'version': '1.1',
-    'category': 'Sales',
-    'category': 'Generic Modules/CRM & SRM',
+    'category': 'Customer Relationship Management',
     'complexity': "normal",
     'description': """
 Caldav features in Meeting.

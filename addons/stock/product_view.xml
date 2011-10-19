@@ -27,7 +27,7 @@
                         <separator string="Accounting Stock Properties" colspan="2"/>
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_variation"/>
+                        <field name="property_stock_valuation_account_id"/>
                         <field name="property_stock_journal"/>
                     </group>
                 </form>
@@ -118,6 +118,67 @@
                         <field name="track_outgoing" />
                     </group>
                 </group>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product.product_kanban_view">
+            <field name="name">Product Kanban</field>
+            <field name="model">product.product</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="type">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
+                            <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <t t-if="record.default_code.raw_value">[<field name="default_code"/>]</t>
+                                                <field name="name"/>
+                                            </td>
+                                            <td align="right" valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.product_manager.raw_value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <table class="oe_kanban_table">
+                                            <tr>
+                                                <td valign="top" width="22">
+                                                    <t t-if="record.product_image.raw_value">
+                                                        <img t-att-src="'data:image/png;base64,'+record.product_image.raw_value" width='48' height='48'/>
+                                                    </t>
+                                                    <t t-if="!record.product_image.raw_value">
+                                                        <img src="/web/static/src/img/product_default.png"/>
+                                                    </t> 
+                                                </td>
+                                                <td>
+                                                    <div class="oe_kanban_title2">
+                                                        <t t-if="record.type.raw_value=='service'">No Stock</t>
+                                                        <t t-if="record.type.raw_value!='service'">
+                                                            <div><field name="qty_available"/> On Hand , <field name="virtual_available"/> Available</div>
+                                                            <div><t t-if="record.list_price.raw_value!=0">Public Price : <field name="lst_price"/> ,</t> Cost : <field name="standard_price"/></div>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                        <div class="oe_kanban_left">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                            <a string="Update Stock" name="%(stock.action_view_change_product_quantity)d" icon="gtk-execute" type="action"/> 
+                                         </div>
+                                        <br class="oe_kanban_clear"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
