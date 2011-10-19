@@ -1,64 +1,28 @@
 -
-  I create a new Purchase order where "invoice_method" is From Picking
+  In order to test to delete purchase order from Different State,I start delete the draft order.
 -
-  !record {model: purchase.order, id: purchase_order_po1}:
-    company_id: base.main_company
-    date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_method: picking
-    location_id: stock.stock_location_stock
-    order_line:
-      - date_planned: !eval time.strftime('%Y-%m-%d')
-        name: iPod
-        price_unit: 100.0
-        product_id: product.product_product_sidepanel0
-        product_qty: 10.0
-        product_uom: product.product_uom_unit
-        state: draft
-    partner_address_id: base.res_partner_address_7
-    partner_id: base.res_partner_4
-    pricelist_id: purchase.list0
--
-  I confirm the purchase order for Side Panel.
--
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po1}
--
- I check that an entry gets created in the stock.picking.
+  I have to first delete draft purchase order.
 -
   !python {model: purchase.order}: |
-    pur_id=self.browse(cr, uid, ref("purchase_order_po1"))
-    assert(pur_id.picking_ids)
+    copy_id = self.copy(cr, uid, ref("order_purchase3"))
+    self.unlink(cr, uid, [copy_id)])
 -
-  Then I create an further process from picking by clicking on "process" button
+  I want to delete confirm purchase order.
 -
-  !python {model: stock.picking}: |
-    import time
-    pur_obj=self.pool.get('purchase.order')
-    pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po1"))
-    pick_ids = [x.id for x in pur_id1.picking_ids]
-    self.action_process(cr, uid, pick_ids)
-    pickings = self.browse(cr, uid, pick_ids)
-    for picking in pickings:
-      move = picking.move_lines[0]
-      partial_datas = {
-            'partner_id': picking.address_id.partner_id.id,
-            'address_id': picking.address_id.id,
-            'delivery_date' : time.strftime('%Y-%m-%d')
-           }
-      partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
-          'product_qty': move.product_qty,
-          'product_uom': move.product_uom.id,
-      }
-      self.do_partial(cr, uid, [picking.id], partial_datas)
+  !python {model: purchase.order}: |
+    assert self.browse(cr, uid,[order_purchase4]).state == "approve", "Purchase order should be Confirm"
+    self.unlink(cr, uid, [ref("order_purchase4")])
 -
-  Then I create an invoice from picking by clicking on "Create Invoice" wizard
+  I want to delete cancelled purchase order.
 -
-  !python {model: stock.invoice.onshipping}: |
-    import time
-    pur_obj=self.pool.get('purchase.order')
-    pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po1"))
-    pick_ids = [x.id for x in pur_id1.picking_ids]
-    id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.expenses_journal')},
-      {'active_ids': pick_ids, 'active_model': 'stock.picking'})
-    self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
-
+  !python {model: purchase.order}: |
+    copy_id = self.copy(cr, uid, ref("order_purchase5"))
+    self.action_cancel(cr, uid, [copy_id])
+    assert self.browse(cr, uid,[copy_id]).state == "cancel", "Purchase order should be cancelled"
+    self.unlink(cr, uid, [copy_id])
+-
+  I want to delete done purchase order.
+-
+  !python {model: purchase.order}: |
+    assert self.browse(cr, uid,[ref("test_purchase_1")]).state == "done", "Purchase order should be done"
+    self.unlink(cr, uid, [ref("test_purchase_1")])

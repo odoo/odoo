@@ -1,48 +1,53 @@
 -
-  In order to test to Cancel purchase order from Different State,I start cancel the confirm order.
+  In order to test to cancel purchase order from Different State,I start cancel the draft order.
 -
-  I have to first cancel Picking of Purchase order .
+  Initially purchase order is in the draft state.
 -
-  !python {model: stock.picking}: |
-    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("order_purchase4"))])
-    self.action_cancel(cr, uid, search_ids)
+  !assert {model: purchase.order, id: order_purchase5}:
+    - state == 'draft'
 -
-  Now I am able to cancel purchase order because related picking was cancel.
+  I want to cancel order form draft state.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("order_purchase4")])
+    self.action_cancel(cr, uid, [ref("order_purchase5")])
 -
-  Initially purchase order is in the cancel state.
+  I check that order is in the cancel state.
 -
-  !assert {model: purchase.order, id: order_purchase4}:
+  !assert {model: purchase.order, id: order_purchase5}:
     - state == 'cancel'
 -
   Now again set purchase order to draft state.
 -
   !python {model: purchase.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order_purchase4")]) 
+    self.action_cancel_draft(cr, uid, [ref("order_purchase5")]) 
 -
-  Initially purchase order is in the draft state.
+  Now I confirm the this order.
 -
-  !assert {model: purchase.order, id: order_purchase4}:
-    - state == 'draft'
+  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase5}
 -
-  I have to cancel order form draft state.
+  I check that order is in the confirm state.
+-
+  !assert {model: purchase.order, id: order_purchase5}:
+    - state == 'approved'
+-
+  I want to cancel order form confirm state.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("order_purchase4")])
+    self.action_cancel(cr, uid, [ref("order_purchase5")])
 -
-  Initially purchase order is in the cancel state.
+  I have to first cancel reception of order .
 -
-  !assert {model: purchase.order, id: order_purchase4}:
+  !python {model: stock.picking}: |
+    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("order_purchase5"))])
+    self.action_cancel(cr, uid, search_ids)
+-
+  Now I am able to cancel purchase order because related picking was cancel.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel(cr, uid, [ref("order_purchase5")])
+-
+  I check that order is in the cancel state.
+-
+  !assert {model: purchase.order, id: order_purchase5}:
     - state == 'cancel'
--
-  Now again put it in draft state.
--
-  !python {model: purchase.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order_purchase4")]) 
--
-  Initially purchase order is in the draft state.
--
-  !assert {model: purchase.order, id: order_purchase4}:
-    - state == 'draft'
+
