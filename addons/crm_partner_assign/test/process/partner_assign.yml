@@ -35,3 +35,24 @@
     assert lead.partner_latitude == 50.8495239 , "Lattitude is wrong"
     assert lead.partner_longitude == 4.3667002 , "Longitude is wrong"
     assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy not assign partner"
+-
+  Oppportuniry forword to its nearest partner, so first i create record of forword mail
+-
+  !record {model: crm.lead.forward.to.partner, id: crm_lead_forward_to_partner_rec}:
+    send_to: email
+    email_from: 'admin@openerp.com'
+    email_to: 'admin@tinyerp.com'
+    subject: 'Openerp lead forward'
+    history: latest 
+-
+  I forword this opportunity to its nearest partner.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    from tools import config
+    host = config.get('smtp_user', '127.0.0.1')
+    assert config.get(host, True), 'SMTP not configured !'
+    try:
+      self.action_forward(cr, uid, ref("crm_lead_forward_to_partner_rec"), context={'active_id': ref('crm.crm_case_abcfuelcounits0'),
+      'active_ids': [ref('crm.crm_case_abcfuelcounits0')], 'active_model': 'crm.lead'})
+    except:
+      pass
