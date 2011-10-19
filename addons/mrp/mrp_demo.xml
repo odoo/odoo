@@ -270,32 +270,17 @@
             <field model="product.product" name="product_id" ref="product.product_product_cpu3"/>
         </record>
 
-        <record id="mrp_bom_kit" model="mrp.bom">
+        <record id="mrp_bom_kit3" model="mrp.bom">
             <field name="code">KIT</field>
-            <field name="name">Kit Mouse</field>
+            <field name="name">Kit Keyboard + Mouse</field>
             <field name="sequence">40</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
+            <field name="type">phantom</field>
             <field name="bom_id" ref="mrp_bom_10"/>
-            <field model="product.product" name="product_id" ref="product.product_product_25"/>
+            <field model="product.product" name="product_id" ref="product.product_product_26"/>
         </record>
-        <record id="mrp_bom_clavier" model="mrp.bom">
-            <field name="name">Keyboard</field>
-            <field name="sequence">42</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_kit"/>
-            <field model="product.product" name="product_id" ref="product.product_product_24"/>
-        </record>
-        <record id="mrp_bom_mouse" model="mrp.bom">
-            <field name="name">Mouse</field>
-            <field name="sequence">44</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_kit"/>
-            <field model="product.product" name="product_id" ref="product.product_product_25"/>
-        </record>
+
         <record id="mrp_bom_16" model="mrp.bom">
             <field name="name">Moon PC</field>
             <field name="sequence">45</field>
@@ -502,6 +487,35 @@
             <field name="bom_id" ref="mrp_bom_0"/>
             <field model="product.product" name="product_id" ref="product.product_product_ram"/>
         </record>
+
+        <record id="mrp_bom_kit1" model="mrp.bom">
+            <field name="code">KIT</field>
+            <field name="sequence">15</field>
+            <field name="name">Kit Keyboard + Mouse</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+            <field name="type">normal</field>
+            <field model="product.product" name="product_id" ref="product.product_product_26"/>
+        </record>
+
+        <record id="mrp_bom_mouse2" model="mrp.bom">
+            <field name="name">Mouse</field>
+            <field name="sequence">121</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+            <field name="bom_id" ref="mrp_bom_kit1"/>
+            <field model="product.product" name="product_id" ref="product.product_product_25"/>
+        </record>
+
+        <record id="mrp_bom_clavier2" model="mrp.bom">
+            <field name="name">Keyboard</field>
+            <field name="sequence">123</field>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="product_qty">1.0</field>
+            <field name="bom_id" ref="mrp_bom_kit1"/>
+            <field model="product.product" name="product_id" ref="product.product_product_24"/>
+        </record>
+        
         <record id="mrp_bom_41" model="mrp.bom">
             <field name="name">Regular processor config</field>
             <field name="sequence">111</field>
@@ -536,25 +550,9 @@
             <field name="name">Kit Keyboard + Mouse</field>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="product_qty">1.0</field>
-            <field name="type">normal</field>
+            <field name="type">phantom</field>
             <field name="bom_id" ref="mrp_bom_9"/>
             <field model="product.product" name="product_id" ref="product.product_product_26"/>
-        </record>
-        <record id="mrp_bom_mouse2" model="mrp.bom">
-            <field name="name">Mouse</field>
-            <field name="sequence">121</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_kit2"/>
-            <field model="product.product" name="product_id" ref="product.product_product_25"/>
-        </record>
-        <record id="mrp_bom_clavier2" model="mrp.bom">
-            <field name="name">Keyboard</field>
-            <field name="sequence">123</field>
-            <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="product_qty">1.0</field>
-            <field name="bom_id" ref="mrp_bom_kit2"/>
-            <field model="product.product" name="product_id" ref="product.product_product_24"/>
         </record>
 
         <!--
