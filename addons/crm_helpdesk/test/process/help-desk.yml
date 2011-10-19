@@ -1,57 +1,17 @@
 -
-  |
-  I start by creating New helpdesk request regarding some functional questions.
-  I select Date at which helpdesk request is created.
-- 
-  !record {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    email_from: info@balmerinc.be
-    name: Some functional question.
-    partner_address_id: base.res_partner_address_1
-    partner_id: base.res_partner_9
-    section_id: crm.section_sales_department
--
-  I create the message.
+  I start by create helpdesk request regarding some functional questions, 
+  so first create message manually regarding functional question for helpdesk
+  and test it, open this helpdesk and update that message accordingly, after
+  i complete this helpdesk then close it.
 -
   !python {model: crm.helpdesk}: |
-    msg = {
-       'subject': 'test_email',
-       'body_text': 'Testing',
-       'from': 'Administrator <admin@openerp.com>',
-      }
-    context = None
-    self.message_new(cr, uid,msg,context)
-
-- |
-  I check that the Helpdesk request  is in 'Draft' state.
--
-  !assert {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}: 
-    - state == 'draft'  
-- |
-  I make it "Open".
--
-  !python {model: crm.helpdesk}: |
-    self.case_open(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])  
--
-  Update the created message.
--
-  !python {model: crm.helpdesk}: |
-    vals = {}
-    msg = {
-       'subject': 'test_email',
-       'body_text': 'Testing',
-       'from': 'Administrator <admin@openerp.com>',
-       'priority': 'done'
-      }
-    context = None
-    default_act = 'pending'
-    try:
-      self.message_update(cr, uid,[ref('crm_helpdesk_somefunctionalquestion0')], msg,context)
-    except:
-      pass
-- |
-  After a proper communication for the request via email I make sure that the request is fulfilled and
-  I close this HelpDesk Request by clicking on "Close" button.
-- 
-  !python {model: crm.helpdesk}: |
-    self.case_close(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])
+    msg = {'subject': 'Functional questions', 'body_text': 'How the CRM working?', 'from': 'admin@openerp.com'}
+    helpdesk_id = self.message_new(cr, uid, msg, context=None)
+    data = self.browse(cr, uid ,helpdesk_id)
+    assert data.name == "Functional questions", "Subject name is incorrect"
+    assert data.email_from == "admin@openerp.com","Email Id incorrect"
+    assert data.description == "How the CRM working?", "Description is incorrect"
+    self.case_open(cr, uid, [helpdesk_id])
+    msg = {'subject': 'Email regarding to CRM', 'body_text': 'Details of CRM Documentation', 'from': 'admin@openerp.com'}
+    self.message_update(cr, uid,[helpdesk_id], msg, default_act = 'pending',context=None)
+    self.case_close(cr, uid, [helpdesk_id])
