@@ -4,56 +4,17 @@
   PO belong to same suppliers.
   PO have same stock location and same price list.
 -
-  I create first purchase order for 'Metal Cleats' product.
+  Initially purchase order is in the draft state for merging those orders.
 -
-  !record {model: purchase.order, id: purchase_order_po2}:
-    company_id: base.main_company
-    date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_method: order
-    location_id: stock.stock_location_stock
-    order_line:
-      - date_planned: !eval time.strftime('%Y-%m-%d')
-        name: Metal Cleats
-        price_unit: 100.0
-        product_id: product.product_product_metalcleats0
-        product_qty: 5
-        product_uom: product.product_uom_unit
-        state: draft
-    partner_address_id: base.res_partner_address_7
-    partner_id: base.res_partner_4
-    pricelist_id: purchase.list0
+  !python {model: purchase.order}: |
+    assert self.browse(cr, uid, ref("order_purchase3")).state == 'draft',"Purchase order should be in draft state"
 -
-  Initially purchase order is in the draft state.
--
-  !assert {model: purchase.order, id: purchase_order_po2}:
-    - state == 'draft'
--
-  I create second purchase order for 'Side Panel' product.
--
-  !record {model: purchase.order, id: purchase_order_po3}:
-    company_id: base.main_company
-    date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_method: order
-    location_id: stock.stock_location_stock
-    order_line:
-      - date_planned: !eval time.strftime('%Y-%m-%d')
-        name: Metal Cleats
-        price_unit: 100.0
-        product_id: product.product_product_sidepanel0
-        product_qty: 5
-        product_uom: product.product_uom_unit
-        state: draft
-    partner_address_id: base.res_partner_address_7
-    partner_id: base.res_partner_4
-    pricelist_id: purchase.list0
--
-  Initially purchase order is in the draft state.
--
-  !assert {model: purchase.order, id: purchase_order_po3}:
-    - state == 'draft'
--
-  I have merged first and second purchase order which are in draft state, belong to the same supplier,have same stock location, same pricelist.
+  I have to merge the purchase order so for that I create one duplicate order.
 -
   !python {model: purchase.order.group}: |
-    context.update({'active_ids':[ref('purchase_order_po2'),ref('purchase_order_po3')]})
-    self.merge_orders(cr, uid, context.get('active_ids'), context)    
+    purchase = self.pool.get('purchase.order')
+    purchase_id = purchase.copy(cr, uid, ref("order_purchase3"))
+    assert purchase.browse(cr, uid, purchase_id).state == 'draft',"Purchase order(copy) should be draft"
+    self.merge_orders(cr, uid, [1], {'active_ids':[ref('order_purchase3'),purchase_id],'active_model': 'purchase.order','active_id':ref('order_purchase3')})
+    assert purchase.browse(cr, uid, ref("order_purchase3")).state == 'cancel',"Purchase order should be cancelled"
+    assert purchase.browse(cr, uid, purchase_id).state == 'cancel',"After merge purchase order(copy) should be cancelled"

@@ -1,40 +1,50 @@
 -
-  In order to test to Cancel purchase order from Different State,I start cancel the previously created PO.
+  In order to test to Cancel purchase order from Different State,I start cancel the confirm order.
 -
   Now I have to cancel previously created purchase order for product 'Side Panel'.
 -
   I have to first cancel Picking of Purchase order .
 -
   !python {model: stock.picking}: |
-    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("purchase_order_po1"))])
+    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("order_purchase4"))])
     self.action_cancel(cr, uid, search_ids)
 -
-  Now I am able to cancel purchase order for product 'Side Panel' because related picking was cancel.
+  Now I am able to cancel purchase order because related picking was cancel.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("purchase_order_po1")])
+    self.action_cancel(cr, uid, [ref("order_purchase4")])
 -
   Initially purchase order is in the cancel state.
 -
-  !assert {model: purchase.order, id: purchase_order_po1}:
+  !assert {model: purchase.order, id: order_purchase4}:
     - state == 'cancel'
 -
-  Now again set purchase order for product 'Side Panel' to draft state.
+  Now again set purchase order to draft state.
 -
   !python {model: purchase.order}: |
-    self.action_cancel_draft(cr, uid, [ref("purchase_order_po1")]) 
+    self.action_cancel_draft(cr, uid, [ref("order_purchase4")]) 
 -
   Initially purchase order is in the draft state.
 -
-  !assert {model: purchase.order, id: purchase_order_po1}:
+  !assert {model: purchase.order, id: order_purchase4}:
     - state == 'draft'
 -
-  I have to cancel PO form draft state.
+  I have to cancel order form draft state.
 -
   !python {model: purchase.order}: |
-    self.action_cancel(cr, uid, [ref("purchase_order_po1")])
+    self.action_cancel(cr, uid, [ref("order_purchase4")])
 -
   Initially purchase order is in the cancel state.
 -
-  !assert {model: purchase.order, id: purchase_order_po1}:
+  !assert {model: purchase.order, id: order_purchase4}:
     - state == 'cancel'
+-
+  Now again put it in draft state.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order_purchase4")]) 
+-
+  Initially purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: order_purchase4}:
+    - state == 'draft'
