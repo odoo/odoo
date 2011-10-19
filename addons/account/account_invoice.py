@@ -927,6 +927,8 @@ class account_invoice(osv.osv):
                 period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d')), ('company_id', '=', inv.company_id.id)])
                 if period_ids:
                     period_id = period_ids[0]
+                else:
+                    raise osv.except_osv(_('No Period Defined !'),_("You must first define a period !") )
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
