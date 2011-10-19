@@ -283,6 +283,18 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                             $(this).val(dateresult);
                         }
                     }
+                    $('[id^="'+id+'"]').find('#website').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
+                    $('[id^="'+id+'"]').find('#email').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
+                    $('[id^="'+id+'"]').find('#email_from').each(function(){
+                        $(this).css('display','inline-block');
+                        $(this).css('width','60%');
+                    });
                 });
                 // Temp: Selection set as disabled
                 $('[id^="'+id+'"]').find('select').each(function() {
@@ -298,6 +310,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 $(this).click(function() {
                     $(this).css('top', '-9999px');
                     $(this).css('left', '-9999px');
+                });
+            });
+            // image displayed with m2o field
+            $('[id^="'+id+'"]').find('div[class=ui-select]').each(function(){
+                $(this).next().each(function(){
+                    if($(this).attr('id')=="formbutton"){
+                        $(this).prev().css('display','inline-table');
+                        $(this).prev().find('a').find('.ui-btn-inner').removeClass('ui-btn-inner');
+                        $(this).prev().find('a').find('span:first').css('padding-right','150px');
+                    }
                 });
             });
         }
