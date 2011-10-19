@@ -220,16 +220,49 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
             // Column auto-detection
             _(headers).each(function (header, index) {
-                var f =_(self.fields).detect(function (field) {
-                    // TODO: levenshtein between header and field.string
-                    return field.name === header || field.string.toLowerCase() === header;
-                });
-                if (f) {
-                    $fields.eq(index).val(f.name);
+                var field_name = self.match_column_to_field(header);
+                if (field_name) {
+                    $fields.eq(index).val(field_name);
                 }
             });
             self.on_check_field_values();
         });
+    },
+    /**
+     * Returns the name of the field (nested) matching the provided column name
+     *
+     * @param {String} name column name to look for
+     * @param {Array} [fields] fields to look into for the provided name
+     * @returns {String|undefined}
+     */
+    match_column_to_field: function (name, fields) {
+        fields = fields || this.fields;
+        var f;
+        f = _(fields).detect(function (field) {
+            // TODO: levenshtein between header and field.string
+            return field.name === name
+                || field.string.toLowerCase() === name.toLowerCase();
+        });
+        if (f) { return f.name; }
+
+        // if ``name`` is a path (o2m), we need to recurse through its .fields
+        var index = name.indexOf('/');
+        if (index === -1) { return undefined; }
+        // Get the first path section, try to find the matching field
+        var column_name = name.substring(0, index);
+        f = _(fields).detect(function (field) {
+            // field.name for o2m is $foo/id, so we want to match on id
+            return field.id === column_name
+                || field.string.toLowerCase() === column_name.toLowerCase()
+        });
+        if (!f) { return undefined; }
+
+        // if we found a matching field for the first path section, recurse in
+        // its own .fields to try and get the rest of the path matched
+        var rest = this.match_column_to_field(
+                name.substring(index+1), f.fields);
+        if (!rest) { return undefined; }
+        return f.id + '/' + rest;
     },
     /**
      * Looks through all the field selections, and tries to find if two
