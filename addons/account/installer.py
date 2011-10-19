@@ -149,7 +149,7 @@ class account_installer(osv.osv_memory):
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     sales_tax_temp = obj_tax_temp.create(cr, uid, {
-                                            'name': _('TAX %s%%') % (s_tax*100),
+                                            'name': _('Sale TAX %s%%') % (s_tax*100),
                                             'amount': s_tax,
                                             'base_code_id': new_tax_code_temp,
                                             'tax_code_id': new_paid_tax_code_temp,
@@ -178,8 +178,7 @@ class account_installer(osv.osv_memory):
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     purchase_tax_temp = obj_tax_temp.create(cr, uid, {
-                                             'name': _('TAX %s%%') % (p_tax*100),
-                                             'description': _('TAX %s%%') % (p_tax*100),
+                                             'name': _('Purchase TAX %s%%') % (p_tax*100),
                                              'amount': p_tax,
                                              'base_code_id': new_tax_code_temp,
                                              'tax_code_id': new_paid_tax_code_temp,

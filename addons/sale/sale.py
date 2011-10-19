@@ -1238,6 +1238,7 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
+    
     _columns = {
         'name': fields.char('Name', size=64),
         'sale_orders': fields.boolean('Based on Sales Orders',),
@@ -1253,6 +1254,7 @@ class sale_config_picking_policy(osv.osv_memory):
     }
     _defaults = {
         'order_policy': 'manual',
+        'time_unit': lambda self, cr, uid, c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c) and self.pool.get('product.uom').search(cr, uid, [('name', '=', _('Hour'))], context=c)[0] or False,
     }
 
     def onchange_order(self, cr, uid, ids, sale, deli, context=None):
@@ -1298,7 +1300,7 @@ class sale_config_picking_policy(osv.osv_memory):
             need_install = False
             module_ids = []
             for module in module_name:
-                data_id = module_obj.name_search(cr,uid,module)
+                data_id = module_obj.name_search(cr, uid , module, [], '=')
                 module_ids.append(data_id[0][0])
 
             for module in module_obj.browse(cr, uid, module_ids):
@@ -1310,7 +1312,7 @@ class sale_config_picking_policy(osv.osv_memory):
                 pooler.restart_pool(cr.dbname, update_module=True)[1]
 
         if wizard.time_unit:
-            prod_id = data_obj.get_object(cr, uid, 'hr_timesheet', 'product_consultant').id
+            prod_id = data_obj.get_object(cr, uid, 'product', 'product_consultant').id
             product_obj = self.pool.get('product.product')
             product_obj.write(cr, uid, prod_id, {'uom_id':wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
 

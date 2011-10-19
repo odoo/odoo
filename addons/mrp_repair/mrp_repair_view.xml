@@ -15,6 +15,7 @@
                 <field name="address_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
             </tree>
@@ -159,6 +160,7 @@
                         <field name="picking_id"/>
                         <field name="location_id"/>
                         <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Internal Notes"/>
@@ -199,6 +201,8 @@
                       <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit"/>
+                      <separator orientation="vertical" groups="base.group_multi_company"/>
+                      <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
              </search>
           </field>

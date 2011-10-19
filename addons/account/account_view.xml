@@ -455,9 +455,9 @@
 <!--                                <field name="invoice_sequence_id"/>-->
                                 <field name="group_invoice_lines"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2"> <!-- can't set the field as hidden for certain groups as it's required in the object and not in the view, and GTK doesn't handle that correctly -->
                                 <separator string="Sequence" colspan="4"/>
-                                <field name="sequence_id"/>
+                                <field name="sequence_id" required="0"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
