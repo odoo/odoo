@@ -132,13 +132,18 @@
 <t t-name="ListView">
     <t t-call="Header" />
     <div id="content" data-role="content">
-        <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
-            <li data-theme="c" t-foreach="records" t-as="record">
-                <a id="list-id" t-att-data-id="record[0]" href="#">
-                    <t t-esc="record[1]"/>
-                </a>
-            </li>
-        </ul>
+        <t t-if="!(records.length>0)">
+            No one record is created
+        </t>
+        <t t-if="records.length>0">
+            <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
+                <li data-theme="c" t-foreach="records" t-as="record">
+                    <a id="list-id" t-att-data-id="record[0]" href="#">
+                        <t t-esc="record[1]"/>
+                    </a>
+                </li>
+            </ul>
+        </t>
     </div>
     <t t-call="Footer" />
 </t>
