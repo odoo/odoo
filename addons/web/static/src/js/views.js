@@ -158,6 +158,9 @@ db.web.ActionManager = db.web.Widget.extend({
                 complete: $.unblockUI
             });
         });
+    },
+    ir_actions_act_url: function (action) {
+        window.open(action.url, action.target === 'self' ? '_self' : '_blank');
     }
 });
 
