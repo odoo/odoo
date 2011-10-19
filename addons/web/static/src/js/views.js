@@ -859,7 +859,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                var ncontext = new db.web.CompoundContext(context, action.context || {});
+                var ncontext = new db.web.CompoundContext(context);
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
@@ -867,6 +867,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                         active_model: dataset.model
                     });
                 }
+                ncontext.add(action.context || {});
                 return self.rpc('/web/session/eval_domain_and_context', {
                     contexts: [ncontext],
                     domains: []
