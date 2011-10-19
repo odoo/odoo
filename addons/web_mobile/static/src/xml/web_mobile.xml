@@ -141,6 +141,9 @@
                     <a id="list-id" t-att-data-id="record[0]" href="#">
                         <t t-esc="record[1]"/>
                     </a>
+                    <t t-foreach="data" t-as="data1" >
+                        <t t-esc="data1[0]" />
+                    </t>
                 </li>
             </ul>
         </t>
