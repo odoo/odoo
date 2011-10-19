@@ -686,11 +686,12 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             # TOCHECK: Find stock location for user's company warehouse or 
             # repair order's company's warehouse (company_id field is added in fix of lp:831583)
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context)
-            warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
+            warehouse_ids = warehouse_obj.search(cr, uid, [('company_id','=',company_id)], context=context)
+            stock_id = False
             if warehouse_ids:
                 stock_id = warehouse_obj.browse(cr, uid, warehouse_ids[0], context=context).lot_stock_id.id
             to_invoice = (guarantee_limit and datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
-
+            
             return {'value': {
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
