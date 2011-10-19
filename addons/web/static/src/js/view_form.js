@@ -15,7 +15,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     /**
      * @constructs openerp.web.FormView
      * @extends openerp.web.View
-     * 
+     *
      * @param {openerp.web.Session} session the current openerp session
      * @param {openerp.web.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
@@ -1007,7 +1007,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
     },
     on_confirmed: function() {
         var self = this;
-        
+
         var context = this.node.attrs.context;
         if (context && context.__ref) {
             context = new openerp.web.CompoundContext(context);
@@ -2745,13 +2745,13 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     start: function() {
         this._super();
         this.selected_value = null;
-        
+
         this.render_list();
     },
     set_value: function(value) {
         this._super(value);
         this.selected_value = value;
-        
+
         this.render_list();
     },
     render_list: function() {
@@ -2759,7 +2759,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return _.trim(x); });
         shown = _.select(shown, function(x) { return x.length > 0; });
-            
+
         if (shown.length == 0) {
             this.to_show = this.field.selection;
         } else {
@@ -2767,10 +2767,10 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
-        
+
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
-        
+
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
@@ -2872,6 +2872,7 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend(
 openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.extend({
     set_value: function (value) {
         value = value || null;
+        this._super(value);
         this.invalid = false;
         var self = this;
         this.tmp_value = value;
