@@ -1257,7 +1257,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
             if (!self.readonly) {
-                self.picker('setDate', self.value || new Date());
+                self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
                 self.$element.find('.oe_datepicker').toggle();
             }
         });
