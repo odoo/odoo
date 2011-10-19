@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
        <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
          <field name="name">hr.timesheet.sheet.graph</field>
          <field name="model">hr_timesheet_sheet.sheet</field>
@@ -311,9 +311,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="department_id"/>
-                    <field name="total_attendance"/>
-                    <field name="total_timesheet"/>
-                    <field name="total_difference"/>
+                    <field name="total_attendance" widget="float_time"/>
+                    <field name="total_timesheet" widget="float_time"/>
+                    <field name="total_difference" widget="float_time"/>
                     <field name="state"/>
                 </tree>
             </field>

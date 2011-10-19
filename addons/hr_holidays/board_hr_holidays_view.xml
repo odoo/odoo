@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0"/>
-        <menuitem
-            action="hr.open_board_hr"
-            icon="terp-graph"
-            id="base.menu_hr_project"
-            parent="base.menu_hr_dasboard"
-            sequence="4"/>
-
-            <!-- Need to merge in above view -->
-
         <record model="ir.actions.act_window" id="action_hr_holidays_leaves_by_month">
             <field name="name">My Leaves</field>
             <field name="res_model">hr.holidays.status</field>
