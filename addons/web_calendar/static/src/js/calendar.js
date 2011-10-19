@@ -267,12 +267,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     do_edit_event: function(event_id) {
+        var self = this;
         event_id = parseInt(event_id, 10);
         var index = _.indexOf(this.dataset.ids, event_id);
         if (index > -1) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show();
-            this.form_dialog.open();
+            this.form_dialog.form.do_show().then(function() {
+                self.form_dialog.open();
+            });
             return false;
         }
         return true;
