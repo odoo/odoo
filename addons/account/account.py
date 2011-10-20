@@ -1276,8 +1276,7 @@ class account_move(osv.osv):
                     if not l[0]:
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
-
-        if 'line_id' in vals:
+        if 'line_id' in vals and vals.get('line_id', False):
             c = context.copy()
             c['novalidate'] = True
             result = super(account_move, self).create(cr, uid, vals, c)
@@ -1423,7 +1422,8 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context):
             # Unlink old analytic lines on move_lines
             if not move.line_id:
-                raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
+                if 'voucher_cancel' not in context and 'invoice_cancel' not in context:
+                    raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
                     obj_analytic_line.unlink(cr,uid,obj.id)
