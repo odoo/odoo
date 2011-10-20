@@ -1,0 +1,10 @@
+-
+  I check segmentation which allows users to perform segmentation within partners
+  and set the category according to question, so first compute questions(answers) 
+  scenario with parther and check that category set according to questions. 
+-
+  !python {model: res.partner}: |
+    data ={'form': {'quest_form3': ref("partner_quality3"), 'quest_form2': ref("nb_employees2"),'quest_form1': ref("sector1"),'questionnaire_name': ref('questionnaire1')}, 'ids': [ref('base.res_partner_ericdubois0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('base.res_partner_ericdubois0')}
+    data = self._questionnaire_compute(cr, uid, data, context)
+    partner = self.browse(cr, uid, ref('base.res_partner_ericdubois0'))
+    assert partner.category_id[0].id == ref("base.res_partner_category_17"), "Category not assign properly" 
