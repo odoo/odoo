@@ -386,7 +386,7 @@ property or property parameter."),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate a calendar attendee.'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -484,6 +484,7 @@ property or property parameter."),
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -510,14 +511,15 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    tools.email_send(
+                    mail_message.schedule_with_attach(cr, uid,
                         email_from,
                         mail_to,
                         sub,
                         body,
-                        attach=attach and [('invitation.ics', attach)] or None,
+                        attachments=attach and {'invitation.ics': attach} or None,
                         subtype='html',
-                        reply_to=email_from
+                        reply_to=email_from,
+                        context=context
                     )
             return True
 
@@ -812,6 +814,7 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
+        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
@@ -893,11 +896,12 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.user_email)
                     if mail_to:
-                        tools.email_send(
+                        mail_message.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
-                            body
+                            body,
+                            context=context
                         )
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
@@ -994,14 +998,14 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative'))
             if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative'))
             result[event] = self.compute_rule_string(datas)
         return result
 
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
@@ -1038,7 +1042,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
-        'end_type' : fields.selection([('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
+        'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence termination'),
         'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
@@ -1199,13 +1203,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             
             return (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date_new') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date_new'))) or '')
-       
+
         freq=datas.get('rrule_type')
         if freq == 'none':
             return ''
-        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
-        return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
 
+        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
+
+        return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
 
     def remove_virtual_id(self, ids):
         if isinstance(ids, (str, int)):
@@ -1216,9 +1221,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for id in ids:
                 res.append(base_calendar_id2real_id(id))
             return res
-                
-    def search(self, cr, uid, args, offset=0, limit=0, order=None,
-            context=None, count=False):
+
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         args_without_date = []
         start_date = False
         until_date = False
@@ -1250,7 +1254,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         else:
             return res
 
-
     def get_edit_all(self, cr, uid, id, vals=None):
         """
             return true if we have to edit all meeting from the same recurrent
@@ -1277,7 +1280,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 return date_start == split_id[1]
             except Exception:
                 return True
-  
+
+
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context = {}
@@ -1289,7 +1293,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-            
             edit_all = self.get_edit_all(cr, uid, event_id, vals=vals)
             if edit_all:
                 if self.need_to_update(event_id, vals):
@@ -1393,13 +1396,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if fields and 'duration' not in fields:
             fields.append('duration')
 
+        real_data = super(calendar_event, self).read(cr, uid,
+                    [real_id for base_calendar_id, real_id in select],
+                    fields=fields, context=context, load=load)
+        real_data = dict(zip([x['id'] for x in real_data], real_data))
 
         for base_calendar_id, real_id in select:                
-            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-           
-            if not res :
-                continue
+            res = real_data[real_id].copy()
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]

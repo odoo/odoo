@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:16+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:13+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -2251,11 +2251,6 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Sale Order Line"
 #~ msgstr "Pozycja zamówienia sprzedaży"
 
-#, python-format
-#~ msgid "You can not cancel a sale order line that has already been invoiced !"
-#~ msgstr ""
-#~ "Nie możesz anulować zamówienia sprzedaży, które zostało już zafakturowane !"
-
 #~ msgid "Purchase Pricelists"
 #~ msgstr "Cennik zakupu"
 
@@ -2277,17 +2272,11 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Automatic Declaration"
 #~ msgstr "Deklaracja automatyczna"
 
-#~ msgid "Customer Ref."
-#~ msgstr "Nr u klienta"
-
 #~ msgid "Invoice after delivery"
 #~ msgstr "Faktura po dostawie"
 
 #~ msgid "Origin"
 #~ msgstr "Pochodzenie"
-
-#~ msgid "Shop name"
-#~ msgstr "Nazwa sklepu"
 
 #~ msgid "Net Price"
 #~ msgstr "Cena netto"
@@ -2335,18 +2324,8 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Configure Sale Order Logistic"
 #~ msgstr "Konfiguruj ligistykę zamówienia sprzedaży"
 
-#~ msgid "Quantity (UOS)"
-#~ msgstr "Ilość (JS)"
-
 #~ msgid "One procurement for each product."
 #~ msgstr "Jedno nabycie na każdy produkt"
-
-#~ msgid ""
-#~ "If you don't have enough stock available to deliver all at once, do you "
-#~ "accept partial shippings or not."
-#~ msgstr ""
-#~ "Czy akceptujesz wysyłkę częściową, jeśli nie masz wystarczających zapasów, "
-#~ "aby dostarczyć całość."
 
 #~ msgid "Make Invoice"
 #~ msgstr "Utwórz fakturę"
@@ -2356,9 +2335,6 @@ msgstr "Faktura wg dostaw"
 
 #~ msgid "Open Advance Invoice"
 #~ msgstr "Otwarte faktury płatne z góry"
-
-#~ msgid "Product UOS"
-#~ msgstr "JS produktu"
 
 #~ msgid "Make invoices"
 #~ msgstr "Utwórz faktury"
@@ -2471,36 +2447,6 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Draft Invoice"
 #~ msgstr "Projekt faktury"
 
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order Ater Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all packing lists have been finished.\n"
-#~ "  - The 'Invoice from the packings' choice is used to create an invoice "
-#~ "during the packing process."
-#~ msgstr ""
-#~ "Sposób wysyłki jest stosowany do uzgodnienia operacji fakturowania i "
-#~ "wysyłki.\n"
-#~ "  - 'Płatność przed dostawą' wygeneruje fakturę, a następnie po zapłacie "
-#~ "wysyłkową listę przesunięć.\n"
-#~ "  - 'Wysyłka i ręczna faktura' utworzy od razu listę przesunięć i będzie "
-#~ "czekać na użytkownika, aż naciśnie przycisk 'Faktura', aby utworzyć projekt "
-#~ "faktury.\n"
-#~ "  - 'Faktura wg zamówienia po dostawie' wygeneruje projekt faktury wg "
-#~ "zamówienia po zrealizowaniu wszystkich wysyłkowych list przesunięć.\n"
-#~ "  - 'Faktura wg dostawy' jest stosowane do tworzenia faktur podczas "
-#~ "wydawania towarów."
-
-#~ msgid "Manual in progress"
-#~ msgstr "Ręczne w trakcie przetwarzania"
-
-#~ msgid "In progress"
-#~ msgstr "W trakcie przetwarzania"
-
 #~ msgid "Packing Default Policy"
 #~ msgstr "Domyślne zasady wydawania"
 
@@ -2523,15 +2469,6 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Sale Procurement"
 #~ msgstr "Nabycie dla sprzedaży"
 
-#~ msgid "Related Packings"
-#~ msgstr "Odnośne listy przesunięć"
-
-#, python-format
-#~ msgid "You must first cancel all packings attached to this sale order."
-#~ msgstr ""
-#~ "Musisz najpierw anulować wszystkie listy przesunięć związane z tym "
-#~ "zamówieniem sprzedaży."
-
 #~ msgid "Quotation (A sale order in draft state)"
 #~ msgstr "Oferta (zamówienie sprzedaży w stanie Projekt)"
 
@@ -2541,9 +2478,6 @@ msgstr "Faktura wg dostaw"
 #~ msgid "Related invoices"
 #~ msgstr "Odnośne faktury"
 
-#~ msgid "Invoice from the packings"
-#~ msgstr "Faktura wg dostawy"
-
 #~ msgid ""
 #~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
 #~ "is, quotation is moved to  sale order."
@@ -2551,19 +2485,6 @@ msgstr "Faktura wg dostaw"
 #~ "Kiedy przycisk potwierdzenia zostanie naciśnięty, to stan Projektu "
 #~ "przechodzi w Ręczny, a to oznacza, że oferta zmieniła się w Zamówienie "
 #~ "sprzedaży."
-
-#~ msgid ""
-#~ "Gives the state of the quotation or sale order. The exception state is "
-#~ "automatically set when a cancel operation occurs in the invoice validation "
-#~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
-#~ "'Waiting Schedule' state is set when the invoice is confirmed but waiting "
-#~ "for the scheduler to be on the date 'Date Ordered'."
-#~ msgstr ""
-#~ "Określa stan oferty lub zamówienia sprzedaży. Stan wyjątku jest nadawany, "
-#~ "gdy wystąpi operacja anulowania przy zatwierdzaniu faktury (Wyjątek faktury) "
-#~ "lub w procesie listy przesunięć (Wyjątek wysyłki). Stan 'Oczekuje na "
-#~ "planowanie' zostaje ustawiony, gdy faktura jest potwierdzona, ale czeka na "
-#~ "planistę do daty 'Data zamówienia'."
 
 #~ msgid ""
 #~ "Invoice is created when 'Create Invoice' is being clicked after confirming "
@@ -2616,29 +2537,6 @@ msgstr "Faktura wg dostaw"
 #~ msgstr "Nie można anulować tego zamówienia sprzedaży !"
 
 #~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the packing order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the packing order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order After Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all packing lists have been finished.\n"
-#~ "  - The 'Invoice from the packing' choice is used to create an invoice "
-#~ "during the packing process."
-#~ msgstr ""
-#~ "Zasady wysyłki są stosowane do synchronizowania operacji fakturowych i "
-#~ "wysyłkowych.\n"
-#~ "  - 'Płać przed wysyłką' najpierw wygeneruje fakturę a potem, po otrzymaniu "
-#~ "wpłaty, wygeneruje zamówienie wysyłki.\n"
-#~ "  - 'Wysyłka i faktura ręczna' utworzy zamówienie wysyłki od razu i poczeka, "
-#~ "aż użytkownik naciśnie przycisk 'Faktura', aby wygenerować projekt faktury.\n"
-#~ "  - 'Faktura wg zamówienia po postawie' utworzy projekt faktury po wysyłce "
-#~ "na podstawie zamówienia.\n"
-#~ "  - 'Faktura wg wysyłki' jest stosowana do tworzenia faktury w trakcie "
-#~ "procesu wysyłki."
-
-#~ msgid ""
 #~ "Gives the state of the quotation or sale order. The exception state is "
 #~ "automatically set when a cancel operation occurs in the invoice validation "
 #~ "(Invoice Exception) or in the packing list process (Shipping Exception). The "
@@ -2689,248 +2587,9 @@ msgstr "Faktura wg dostaw"
 #~ "  - 'Faktura z wydania' utworzy fakturę w trakcie wykonywania wydania "
 #~ "zewnętrznego."
 
-#~ msgid "Dashboard for sales"
-#~ msgstr "Konsola dla sprzedaży"
-
-#~ msgid "Sales manager board"
-#~ msgstr "Konsola szefa sprzedaży"
-
-#~ msgid "Cases of the month"
-#~ msgstr "Sprawy miesiąca"
-
-#~ msgid "Sale Dashboard"
-#~ msgstr "Konsola sprzedaży"
-
-#~ msgid "Sales of the month"
-#~ msgstr "Sprzedaż w miesiącu"
-
-#~ msgid "Top ten sales of the month"
-#~ msgstr "Najlepsze sprzedaże w miesiącu"
-
-#~ msgid "Average Price"
-#~ msgstr "Cena przeciętna"
-
-#~ msgid "Cases statistics"
-#~ msgstr "Statystyka spraw"
-
-#~ msgid "My open quotations"
-#~ msgstr "Moje otwarte zamówienia"
-
-#~ msgid "Turnover Per Product"
-#~ msgstr "Obrót na produkt"
-
-#~ msgid "Monthly Sales Turnover Over One Year"
-#~ msgstr "Miesięczny obrót w jednym roku"
-
-#~ msgid "Sales Orders by Products"
-#~ msgstr "Zamówienia sprzedaży wg produktów"
-
-#~ msgid "Monthly cumulated sales turnover over one year"
-#~ msgstr "Miesięczny skumulowany obrót w jednym roku"
-
-#~ msgid "Sales of the Month"
-#~ msgstr "Sprzedaż w miesiącu"
-
-#~ msgid "Sales Orders by Categories"
-#~ msgstr "Zamówienia sprzedaży wg kategorii"
-
-#~ msgid "All Months"
-#~ msgstr "Wszystkie miesiące"
-
-#~ msgid "Report of Created Sale Order"
-#~ msgstr "Raport z utworzonych zamówień sprzedaży"
-
-#~ msgid "Sales Orders by category"
-#~ msgstr "Zamówienia sprzedaży wg kategorii"
-
-#~ msgid "Sales by Product (this month)"
-#~ msgstr "Sprzedaż wg produktu (w tym miesiącu)"
-
-#~ msgid "Monthly sales turnover over one year"
-#~ msgstr "Miesięczny obrót w ciągu roku"
-
-#~ msgid "Sales by Product"
-#~ msgstr "Sprzedaż wg produktów"
-
-#~ msgid "This Month"
-#~ msgstr "Bieżący miesiąc"
-
-#~ msgid "Categories"
-#~ msgstr "Kategorie"
-
-#~ msgid "Created Sale Orders"
-#~ msgstr "Utworzone zamówienia sprzedaży"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "Sprzedaż - Raportowanie"
-
-#~ msgid "Sales by Category of Products"
-#~ msgstr "Sprzedaż wg kategorii produktów"
-
-#~ msgid "Monthly Cumulated Sales Turnover Over One Year"
-#~ msgstr "Miesięczny skumulowany obrót w ciągu jednego roku"
-
-#~ msgid "# of Products"
-#~ msgstr "# Produktów"
-
-#~ msgid "Daily sales turnover over one year"
-#~ msgstr "Dizenny obrót na rok"
-
-#~ msgid "Create Date"
-#~ msgstr "Data utworzenia"
-
-#~ msgid "Graphs"
-#~ msgstr "Wykresy"
-
-#~ msgid "Daily Sales Turnover Over One Year"
-#~ msgstr "Dzienny obrót na rok"
-
-#~ msgid "Sales by Category of Product (this month)"
-#~ msgstr "Sprzedaż wg kategorii poroduktów (w tym miesiącu)"
-
-#~ msgid "Total Turnover"
-#~ msgstr "Suma obrotów"
-
-#~ msgid "Reporting"
-#~ msgstr "Raportowanie"
-
-#~ msgid "Turnover Per Month"
-#~ msgstr "Obrót miesięczny"
-
-#~ msgid "Sales by State"
-#~ msgstr "Sprzedaż wg stanu"
-
-#~ msgid "Created Sales orders"
-#~ msgstr "Utworzone zamówienia sprzedaży"
-
-#~ msgid "Sales By Partner"
-#~ msgstr "Sprzedaż wg partnera"
-
-#~ msgid "Reference of the document that generated this sale order request."
-#~ msgstr "Odnośnik do dokumentu, który wygenerował to zamówienie sprzedaży."
-
-#, python-format
-#~ msgid ""
-#~ "You selected a quantity of %d Units.\n"
-#~ "But it's not compatible with the selected packaging.\n"
-#~ "Here is a proposition of quantities according to the packaging: "
-#~ msgstr ""
-#~ "Wybrałeś ilości dla jednostek %d.\n"
-#~ "Ale to jest niezgodne z wybranymi opakowaniami.\n"
-#~ "To jest propozycja ilości dostosowanej do opakowań: "
-
-#, python-format
-#~ msgid "Cannot delete a sale order line which is %s !"
-#~ msgstr "Nie mozna usunąć pozycji zamówienia sprzedaży, która jest %s !"
-
-#, python-format
-#~ msgid "You must first cancel stock moves attached to this sale order line."
-#~ msgstr ""
-#~ "Musisz najpierw anulować przesunięcia zapasów związane z tą pozycją "
-#~ "zamówienia sprzedaży."
-
-#~ msgid "Date on which sale order is created"
-#~ msgstr "Data utworzenia zamówienia sprzedaży"
-
-#~ msgid "From a sale order"
-#~ msgstr "Z zamówienia sprzedaży"
-
-#~ msgid "Sale Open Invoice"
-#~ msgstr "Otwarte faktry sprzedaży"
-
-#~ msgid "Invoice address for current sale order"
-#~ msgstr "Adres faktury dla bieżącego zamówienia sprzedaży"
-
-#~ msgid ""
-#~ "Number of days between the order confirmation the the shipping of the "
-#~ "products to the customer"
-#~ msgstr ""
-#~ "Liczba dni pomiędzy potwierdzeniem zamówienia a wysyłką produktów do klienta"
-
-#~ msgid "The analytic account related to a sale order"
-#~ msgstr "Konto analityczne związane z tym zamówieniem sprzedaży"
-
-#~ msgid "The total amount"
-#~ msgstr "Suma kwot"
-
-#, python-format
-#~ msgid "The quotation '%s' has been converted to a sale order."
-#~ msgstr "Oferta '%s' została skonwertowana do zamówienia sprzedaży."
-
-#, python-format
-#~ msgid ""
-#~ "There is no income account defined ' \\n                                     "
-#~ "   'for this product: \"%s\" (id:%d)"
-#~ msgstr ""
-#~ "Nie zdefiniowano konta przychodów ' \\n 'dla produktu: \"%s\" (id:%d)"
-
-#~ msgid "Sale Make Invoice"
-#~ msgstr "Sprzedaż tworzy fakturę"
-
-#~ msgid ""
-#~ "One Procurement order for each sale order line and for each of the "
-#~ "components."
-#~ msgstr ""
-#~ "Jedno zapotrzebowanie dla każdej pozycji zamówienia sprzedaży i dla każdego "
-#~ "komponentu."
-
-#~ msgid "It indicates that an invoice has been paid"
-#~ msgstr "To oznacza, że faktura została zapłacona"
-
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
-#~ "then generate the picking order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the picking order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice on Order After Delivery' choice will generate the draft "
-#~ "invoice based on sale order after all picking lists have been finished.\n"
-#~ "  - The 'Invoice from the picking' choice is used to create an invoice "
-#~ "during the picking process."
-#~ msgstr ""
-#~ "Zasady wysyłki są stosowane do synchronizowania operacji fakturowania i "
-#~ "wydań.\n"
-#~ "  - 'Płatność przed dostawą' najpierw wygeneruje fakturę, a wydanie "
-#~ "zewnętrzne po zapłaceniu faktury.\n"
-#~ "  - 'Wysyłka i ręczna faktura' utworzy pobranie i będzie czekać na "
-#~ "użytkownika, aż utworzy projekt faktury przyciskiem.\n"
-#~ "  - 'Faktura wg zamówienia po wysyłce' wygeneruje projekt faktury na "
-#~ "podstawie zamówienia po wykonaniu pobrania..\n"
-#~ "  - 'Faktura z pobrania' jest stosowana do tworzenia faktury w trakcie "
-#~ "wykonywania pobrania."
-
-#~ msgid "The tax amount"
-#~ msgstr "Kwota podatku"
-
-#~ msgid ""
-#~ "Incoterm which stands for 'International Commercial terms' implies its a "
-#~ "series of sales terms which are used in the commercial transaction"
-#~ msgstr ""
-#~ "Incoterm (International Commercial terms) wprowadza terminy sprzedażowe "
-#~ "stosowane w transakcjach handlowych"
-
-#~ msgid "Sequence Number"
-#~ msgstr "Numer kolejny"
-
-#, python-format
-#~ msgid "The sale order '%s' has been cancelled."
-#~ msgstr "Zamówienie sprzedaży '%s' zostało anulowane."
-
-#, python-format
-#~ msgid "The sale order '%s' has been set in draft state."
-#~ msgstr "Zamówienie sprzedaży '%s' zostało ustawione w stan Projekt."
-
 #~ msgid ""
 #~ "This is the list of picking list that have been generated for this invoice"
 #~ msgstr "To pobranie zostało utworzone dla tej faktury"
-
-#~ msgid "Sales by Product's Category"
-#~ msgstr "Sprzedaż wg kategorii produktu"
-
-#, python-format
-#~ msgid " Quantity: "
-#~ msgstr " Ilość: "
 
 #, python-format
 #~ msgid "You must first cancel all packing attached to this sale order."
@@ -2966,118 +2625,3 @@ msgstr "Faktura wg dostaw"
 
 #~ msgid "Invoice based on packing lists"
 #~ msgstr "Faktura wg pobrania"
-
-#, python-format
-#~ msgid ""
-#~ "Invoice cannot be created for this Sale Order Line due to one of the "
-#~ "following reasons:\n"
-#~ "1.The state of this sale order line is either \"draft\" or \"cancel\"!\n"
-#~ "2.The Sale Order Line is Invoiced!"
-#~ msgstr ""
-#~ "Nie można utworzyć faktury z tej pozycji zamówienia sprzedaży z jednego z "
-#~ "powodów:\n"
-#~ "1.Stan pozycji jest \"Projekt\" lub \"Anulowano\"!\n"
-#~ "2.Pozycja jest już zafakturowana!"
-
-#~ msgid ""
-#~ "Here is a list of each sales order line to be invoiced. This view allows you "
-#~ "to invoice sales orders partially, by lines of sales order. You don't need "
-#~ "this list if you invoice based on the delivery orders or if you invoice "
-#~ "sales totally."
-#~ msgstr ""
-#~ "To jest lista pozycji zamówień sprzedaży do fakturowania. Ten widok pozwala "
-#~ "fakturować zamówienia sprzedaży częściowo, po pozycji. Nie potrzebujesz tej "
-#~ "listy, jeśli fakturujesz na podstawie wysyłek lub jeśli fakturujesz w "
-#~ "całości."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "ID certyfikatu modułu musi być unikalne !"
-
-#~ msgid "Sale Advance Payment Invoice"
-#~ msgstr "Faktura zaliczkowa"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Reguły nie są obsługiwane dla obiektów osv_memory !"
-
-#, python-format
-#~ msgid ""
-#~ "You cannot make an advance on a sale order                              that "
-#~ "is defined as 'Automatic Invoice after delivery'."
-#~ msgstr ""
-#~ "Nie można wystawiać faktury zaliczkowej dla zamówienia sprzedaży "
-#~ "zdefiniowanego jako \"Automatyczna faktura po dostawie\"."
-
-#~ msgid "Pricelist version for current sale order"
-#~ msgstr "Wersja cannika dla bieżącego zamówienia sprzedaży"
-
-#~ msgid "Invoice from Delivery"
-#~ msgstr "Faktura z wydania"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Nazwa modułu musi być unikalna !"
-
-#~ msgid "Sales By Salesman"
-#~ msgstr "Sprzedaż wg sprzedawców"
-
-#~ msgid "Date on which sale order is confirmed"
-#~ msgstr "Data potwierdzenia zamówienia sprzedaży"
-
-#~ msgid "Shipping address for current sale order"
-#~ msgstr "Adres wysyłki dla zamówienia sprzedaży"
-
-#~ msgid "Default UoM"
-#~ msgstr "Domyślna JM"
-
-#~ msgid "Source document"
-#~ msgstr "Źródło dokumentu"
-
-#~ msgid "Logistics"
-#~ msgstr "Logistyka"
-
-#~ msgid "Configure Sale Order Logistics"
-#~ msgstr "Konfiguruj ligistykę zamówienia sprzedaży"
-
-#~ msgid "Sales by Customer"
-#~ msgstr "Sprzedaż wg klientów"
-
-#~ msgid ""
-#~ "Depending on the Invoicing control of the sale order, the invoice can be "
-#~ "based on delivered or on ordered quantities. Thus, a sale order can "
-#~ "generates an invoice or a delivery order as soon as it is confirmed by the "
-#~ "salesman."
-#~ msgstr ""
-#~ "Zależnie od ustawień fakturowania zamówienia sprzedaży faktura może być "
-#~ "generowana na ilości dostarczone lub zamówione. Dzięki tym ustawieniom "
-#~ "potwierdzenie zamówienia sprzedaży może od razu generować fakturę."
-
-#~ msgid ""
-#~ "Sales Orders helps you manage quotations and orders done with your "
-#~ "customers. OpenERP suggests that you to start by creating a quotation. Once "
-#~ "the order is confirmed, the quotation is converted into a Sale Order. "
-#~ "OpenERP can handle several types of products so that a sales order can "
-#~ "trigger tasks, delivery orders, manufacturing orders, purchases and so on. "
-#~ "Based on the configuration of the sale order, a draft invoice will be "
-#~ "generated so that you just have to confirm it when you want to bill your "
-#~ "customer."
-#~ msgstr ""
-#~ "Zamówienia sprzedaży są elementem porządkującym oferty dla klientów i "
-#~ "zamówienia od klientów. Zalecamy rozpoczynanie sprzedaży od sporządzenia "
-#~ "oferty. Po potwierdzeniu oferty staje się ona zamówieniem sprzedaży. Dzięki "
-#~ "temu, że OpenERP rozpoznaje typy produktów, zamówienie sprzedaży może "
-#~ "wygenerować zadanie, zamówienie dostawy, zamówienie produkcji lub zamówienie "
-#~ "zakupu. W Konfiguracji zamówienia sprzedaży można ustawić, że po "
-#~ "potwierdzeniu zamówienia sprzedaży automatycznie zostanie wygenerowany "
-#~ "projekt faktury dla klienta."
-
-#~ msgid ""
-#~ "The salesman confirms the quotation. The state of the sale order becomes 'In "
-#~ "progress' or 'Manual in progress'."
-#~ msgstr ""
-#~ "Kiedy sprzedawca potwierdza ofertę, to zmienia się ona w zamówienie "
-#~ "sprzedaży w stanie 'W toku' lub 'Ręcznie w toku'."
-
-#~ msgid "Sales Dashboard"
-#~ msgstr "Konsola sprzedaży"

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:49+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:51+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -45,7 +45,7 @@ msgstr "Varastopaikka, mistä järjestelmä etsii komponetit."
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr ""
+msgstr "Työpisteiden käyttöaste"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -65,7 +65,7 @@ msgstr "Kiertojen määrä"
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
 msgid "Number of Cycles"
-msgstr ""
+msgstr "Syklien lukumäärä"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -114,7 +114,7 @@ msgstr "Reititykset"
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "Työpisteen tuote"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -124,12 +124,12 @@ msgstr "Etsi osaluettelo"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
-msgstr ""
+msgstr "Varastoitaville tuotteille ja käyttötavaroille"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
-msgstr ""
+msgstr "Tuotetaan"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -137,6 +137,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
+"Kierrosten määrä joka työpisteen pitää tehdä suorittaakseen määritellyn "
+"toiminnon reitityksessä"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -155,7 +157,7 @@ msgstr "Valmiit tuotteet"
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
-msgstr ""
+msgstr "Ostettava"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -168,6 +170,8 @@ msgid ""
 "Enhances production orders with readiness states as well as the start date "
 "and end date of execution of the order."
 msgstr ""
+"Parantaa tuotantotilauksia valmiusasteiden tilamerkinnöillä ja aloitus sekä "
+"lopetuspäivillä"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
@@ -178,7 +182,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
-msgstr ""
+msgstr "Viimeisteltävät tuotteet"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -188,7 +192,7 @@ msgstr "Sarja / Pakkaus"
 #. module: mrp
 #: field:mrp.installer,mrp_subproduct:0
 msgid "MRP Subproducts"
-msgstr ""
+msgstr "MRP alatuotteet"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -232,11 +236,13 @@ msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
 msgstr ""
+"Täytä tämä tuote seurataksesi helposti tuotantokustannuksia analyyttisessä "
+"kirjanpidossa"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
-msgstr ""
+msgstr "Ostettaville materiaaleille"
 
 #. module: mrp
 #: field:mrp.bom.revision,indice:0
@@ -346,7 +352,7 @@ msgstr "Kesäkuu"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr ""
+msgstr "Valmista tuote"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -357,7 +363,7 @@ msgstr "Lokakuu"
 #: code:addons/mrp/report/price.py:177
 #, python-format
 msgid "Components Cost of "
-msgstr ""
+msgstr "Komponenttien hinta "
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -403,6 +409,8 @@ msgid ""
 "This is used in case of a service without any impact in the system, a "
 "training session for instance."
 msgstr ""
+"Tätä käytetään palveluiden yhteydessä jotka eivät vaikuta järjestelmään, "
+"esim. opetustilanteissa."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
@@ -412,7 +420,7 @@ msgstr "Korjaukset"
 #. module: mrp
 #: field:mrp.installer,stock_location:0
 msgid "Advanced Routes"
-msgstr ""
+msgstr "Kehittyneet reitit"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
@@ -430,6 +438,8 @@ msgid ""
 "Enables warranty and repair management (and their impact on stocks and "
 "invoicing)."
 msgstr ""
+"Mahdollistaa takuu ja korjaushallinnan (ja näiden vaikutuksen varastoihin ja "
+"laskutukseen)."
 
 #. module: mrp
 #: field:mrp.production,date_planned_date:0
@@ -475,6 +485,8 @@ msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bill of materials."
 msgstr ""
+"Määrittele eritykset ominaisuusryhmät joita voidaan asettaa osaluetteloille "
+"(bom)."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
@@ -484,7 +496,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct1
 msgid "For Services."
-msgstr ""
+msgstr "Palveluille"
 
 #. module: mrp
 #: field:mrp.bom.revision,date:0
@@ -504,7 +516,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production.workcenter.line,cycle:0
 msgid "Nbr of cycles"
-msgstr ""
+msgstr "Syklien määrä"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
@@ -517,7 +529,7 @@ msgstr "Tarjouspyyntö"
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
-msgstr ""
+msgstr "BOM on linkitetty reititykseen, eli työpisteiden järjestykseen"
 
 #. module: mrp
 #: constraint:product.product:0
@@ -558,7 +570,7 @@ msgstr "Tuotteen osaluettelon rakenne"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Search Production"
-msgstr ""
+msgstr "Hae tuotannosta"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -611,11 +623,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
+"Jos kentän arvo on epätosi (false), sallii reitityksen piilottamisen ilman "
+"sen poistamista"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
-msgstr ""
+msgstr "Materiaalien reititys"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -657,7 +671,7 @@ msgstr "Rivien lukumäärä"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
 msgid "Planning"
-msgstr ""
+msgstr "Suunnittelu"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -681,7 +695,7 @@ msgstr "Yhden kierron kesto tunneissa."
 #. module: mrp
 #: report:bom.structure:0
 msgid "BOM Ref"
-msgstr ""
+msgstr "BOM viite"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -702,6 +716,8 @@ msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
 msgstr ""
+"Tuotteen myyntierä (uos) on yksikkömääritelmä laskutusta ja varastointia "
+"varten."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -720,12 +736,12 @@ msgstr "Tyyppi"
 #: code:addons/mrp/report/price.py:201
 #, python-format
 msgid "Total Cost of "
-msgstr ""
+msgstr "Kokonaiskustannus "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Linked to the 'Minimum stock rule' supplying method."
-msgstr ""
+msgstr "Linkitetty 'minimivarasto sääntö' toimitus metodiin"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -733,7 +749,7 @@ msgid "Per month"
 msgstr "Kuukaudessa"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -746,7 +762,7 @@ msgid "Product Name"
 msgstr "Tuotteen nimi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Invalid action !"
 msgstr "Virheellinen toiminto!"
@@ -762,6 +778,7 @@ msgid ""
 "Add more functionalities to the core Manufacturing Application with the "
 "following addons."
 msgstr ""
+"Lisää uusia toimintoja perus valmistus ohjelmistoon seuraavilla lisäosilla."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -834,6 +851,8 @@ msgid ""
 "Time in hours for this work center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Tämän työpisteen käyttämä tuntimäärä reitityksen vaatiman toiminnon "
+"suorittamiseen."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -868,7 +887,7 @@ msgstr "Osalistan tyyppi"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Laajennetut Suotimet..."
 
 #. module: mrp
 #: code:addons/mrp/procurement.py:47
@@ -876,12 +895,13 @@ msgstr ""
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
 msgstr ""
+"Hankinnalla '%s' on poikkeus: 'BoM:ia ei ole määritelty tuotteelle !'"
 
 #. module: mrp
 #: view:mrp.production.order:0
 #: view:mrp.property:0
 msgid "Search"
-msgstr ""
+msgstr "Hae"
 
 #. module: mrp
 #: field:report.workcenter.load,cycle:0
@@ -935,7 +955,7 @@ msgstr "Tuntimäärä"
 #. module: mrp
 #: field:mrp.installer,mrp_jit:0
 msgid "Just In Time Scheduling"
-msgstr ""
+msgstr "Just in time ajoitus (JIT)"
 
 #. module: mrp
 #: view:mrp.property:0
@@ -957,7 +977,7 @@ msgstr "Valmistussuunnitelma"
 #: view:mrp.routing:0
 #: view:mrp.workcenter:0
 msgid "Inactive"
-msgstr ""
+msgstr "Passiivinen"
 
 #. module: mrp
 #: help:mrp.installer,mrp_subproduct:0
@@ -980,7 +1000,7 @@ msgstr "Peruuta"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Split in production lots"
-msgstr ""
+msgstr "Jaa tuotantoeriin"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -995,6 +1015,8 @@ msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
 msgstr ""
+"Jos palvelulla on 'osta' hankintametodi, tämä luo hankintaehdotuksen, esim. "
+"alihankintatarpeen."
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
@@ -1004,7 +1026,7 @@ msgstr "Siirrä tuote"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Late"
-msgstr ""
+msgstr "Myöhässä"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
@@ -1016,6 +1038,7 @@ msgstr "Valmista varastoon"
 msgid ""
 "Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
+"Antaa järjestysnumeron kun näytetään lista reititettävistä työpisteistä."
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1036,7 +1059,7 @@ msgstr "Tuotannon Työtila"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Source Loc."
-msgstr ""
+msgstr "Alkuperäinen sijainti"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1049,6 +1072,8 @@ msgid ""
 "Manages product routes and paths within and between locations (e.g. "
 "warehouses)."
 msgstr ""
+"Hallitsee tuotteiden reittejä paikkojen sisällä ja niiden välissä (esim. "
+"varastot)"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_billofmaterial0
@@ -1067,7 +1092,7 @@ msgstr "Nimi"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "MRP Application Configuration"
-msgstr ""
+msgstr "MRP ohjelman konfiguraatio"
 
 #. module: mrp
 #: help:mrp.installer,mrp_jit:0
@@ -1082,7 +1107,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.product.produce,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Toimintatapa"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1157,7 +1182,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
-msgstr ""
+msgstr "Valmistustilaukset odottavat tuotteita"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1190,7 +1215,7 @@ msgstr "Valmiiden tuotteiden paikka"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
 msgid "Resources"
-msgstr ""
+msgstr "Resurssit"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1226,7 +1251,7 @@ msgstr "Tuntinumero"
 #. module: mrp
 #: view:mrp.routing:0
 msgid "Work Center Operations"
-msgstr ""
+msgstr "Työpisteen toiminnot"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1263,11 +1288,12 @@ msgid ""
 "This is the internal picking list that brings the finished product to the "
 "production plan"
 msgstr ""
+"Tämä on sisäinen keräilyslista joka tuo lopputuotteen tuontatosuunnitelmaan"
 
 #. module: mrp
 #: field:stock.change.standard.price,change_parent_price:0
 msgid "Change Parent Price"
-msgstr ""
+msgstr "Muuta ylemmän tason tuotteen hintaa"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
@@ -1298,7 +1324,7 @@ msgstr "Revisiot"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure Your Manufacturing Resource Planning Application"
-msgstr ""
+msgstr "Määrittele valmistuksen suunnitteluohjelmasi (MRP)"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1314,13 +1340,13 @@ msgstr "Keräilylista"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "Month -1"
-msgstr ""
+msgstr "edellinen kk"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:914
+#: code:addons/mrp/mrp.py:924
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
-msgstr ""
+msgstr "Valmistustilaus '%s' on aikataulutettu '%s':lle."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1328,7 +1354,7 @@ msgid "Production Order N° :"
 msgstr "Tuotantotilaus nro:"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:630
+#: code:addons/mrp/mrp.py:640
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr "Valmistustilaus '%s'on valmis tuotantoon."
@@ -1336,7 +1362,7 @@ msgstr "Valmistustilaus '%s'on valmis tuotantoon."
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
 msgid "Production Scheduled Product"
-msgstr ""
+msgstr "Tuotannon aikataulutettu tuote"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
@@ -1399,7 +1425,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr ""
+msgstr "Tuotannon työpoisteet"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1411,12 +1437,12 @@ msgstr "Kuukausi"
 #: code:addons/mrp/wizard/change_production_qty.py:62
 #, python-format
 msgid "Active Id is not found"
-msgstr ""
+msgstr "Aktiivisia tunnisteita (id) ei löydy"
 
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Search for mrp workcenter"
-msgstr ""
+msgstr "Etsi valmistuksen MRP työpisteitä"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1437,17 +1463,17 @@ msgstr "Tuntitili"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
-msgstr ""
+msgstr "Kohdepaikka"
 
 #. module: mrp
 #: field:mrp.production.order,product_id2:0
 msgid "Product Consumed"
-msgstr ""
+msgstr "Tuote käytetty"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Pending"
-msgstr ""
+msgstr "Odottava"
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1490,6 +1516,8 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Kaikkien määrien on oltava suurempia kuin 0.\n"
+"Asenna mrp_subproduct moduuli jos haluat hallita lisätuotteita tai  BoM:meja!"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1504,7 +1532,7 @@ msgstr "Muuta tuotteiden määrää"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Ohjaa raaka-aineiden hankintaa."
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -1561,7 +1589,7 @@ msgid "Manufacturing Orders To Start"
 msgstr "Aloitettavat valmistustilaukset"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:491
+#: code:addons/mrp/mrp.py:495
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr "Valmistustilauksia, jotka ovat %s tilassa, ei voi poistaa!"
@@ -1623,11 +1651,14 @@ msgid ""
 "of one or more persons and/or machines that can be considered as a unit for "
 "capacity and planning forecasting."
 msgstr ""
+"Työpisteet mahdollistavat valmistusyksiköiden luomisen ja hallitsemisen. Ne "
+"voivat muodostua yhdestä tai useammasta henkilöstä ja/tai koneesta joita "
+"käsitellään kapasiteettiyksikkönä ja suunnittelussa sekä ennustamisessa."
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Käytä tuotteet"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -1648,10 +1679,10 @@ msgstr "Valmista tilaukselle"
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
 #: model:ir.ui.menu,name:mrp.menu_report_mrp_production_orders_tree
 msgid "Production Analysis"
-msgstr ""
+msgstr "Tuotannon analyysi"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:345
+#: code:addons/mrp/mrp.py:349
 #, python-format
 msgid "Copy"
 msgstr "Kopioi"
@@ -1670,7 +1701,7 @@ msgstr "Lopetuspäivämäärä"
 #. module: mrp
 #: field:mrp.workcenter,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurssi"
 
 #. module: mrp
 #: help:mrp.bom,date_start:0
@@ -1688,7 +1719,7 @@ msgstr "Tuotteen myyntiyksikkö"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "#Line Orders"
-msgstr ""
+msgstr "Tilausrivien määrä"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1718,7 +1749,7 @@ msgstr "Ominaisuuksien kategoriat"
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Antaa järjestyksenä kun näytetään luetteloa työtilauksista"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1787,7 +1818,7 @@ msgstr "Osaluettelo"
 #: help:mrp.bom,product_uom:0
 msgid ""
 "UoM (Unit of Measure) is the unit of measurement for the inventory control"
-msgstr ""
+msgstr "UoM (määräyksikkö) on varastonhallinnan laskentayksikkö."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -1796,6 +1827,8 @@ msgid ""
 "are products themselves) can also have their own Bill of Material (multi-"
 "level)."
 msgstr ""
+"BoM on tuotteen sisällön kuvaus (osaluettelo). Myös sen komponenteilla "
+"(jotka ovat myös tuotteita) voi olla omat osaluettelonsa (monitasoinen..)."
 
 #. module: mrp
 #: field:mrp.bom,company_id:0
@@ -1883,6 +1916,9 @@ msgid ""
 "linked to manufacturing activities, receptions of products and delivery "
 "orders."
 msgstr ""
+"Viikottainen varastonarvon vaihtelu mahdollistaa varaston arvon muutosten "
+"seurannan joka on linkitetty valmistustoimintoihin, vastaanottoihin ja "
+"toimituksiin."
 
 #. module: mrp
 #: view:mrp.product.produce:0
@@ -1892,12 +1928,12 @@ msgstr "Vahvista"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr ""
+msgstr "Valmistustehokkuus"
 
 #. module: mrp
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -1905,6 +1941,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"Jos aktiivisen kentän tilaksi asetetaan epätosi (false), se sallii "
+"osaluettelon piilottamisen ilman sen poistamista."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -1923,11 +1961,13 @@ msgid ""
 "This reporting allows you to analyse your manufacturing activities and "
 "performance."
 msgstr ""
+"Tämä raportointi auttaa sinua analysoimaan valmistustoimintaa ja sen "
+"tehokkuutta"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Käytä vain"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1995,7 +2035,7 @@ msgstr "Tuntien lukumäärä"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Costing Information"
-msgstr ""
+msgstr "Kustannustiedot"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
@@ -2005,12 +2045,12 @@ msgstr "Hankintatilaukset"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
+msgstr "Tuotemäärää on pyöristetty"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
-msgstr ""
+msgstr "Määritys tuotannosta tai ostotilaukselta."
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2020,7 +2060,7 @@ msgstr "Ylempi reititys"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguroi"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -2047,13 +2087,13 @@ msgstr "Osaluettelo"
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
-msgstr ""
+msgstr "Varaston arvon variaatio"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_mts0
 #: model:process.node,note:mrp.process_node_servicemts0
 msgid "Assignment from stock."
-msgstr ""
+msgstr "Varastosta otto"
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -2088,7 +2128,7 @@ msgstr "Viikko"
 #. module: mrp
 #: field:mrp.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Konfiguraation eteneminen"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2099,7 +2139,7 @@ msgstr "Normaali"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
 msgid "Manufacturing Steps."
-msgstr ""
+msgstr "Valmistusvaiheet"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:136
@@ -2111,7 +2151,7 @@ msgstr "Kustannusrakenne"
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Käytä ja tuota"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -2130,6 +2170,9 @@ msgid ""
 "master bills of materials. Use this menu to search in which BoM a specific "
 "component is used."
 msgstr ""
+"Osaluettelon komponenetit ovat osia tai alatuotteita joista osaluettelo "
+"(bom) muodostuu. Käytä tätä valikkoa etsiäksesi mitä osaluetteloa käytetään "
+"tietylle komponentille."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -2139,10 +2182,10 @@ msgstr "Tammikuu"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
 msgid "Product type is Stockable or Consumable."
-msgstr ""
+msgstr "Tuotetyyppi on varastoitava tai käytettävä"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/mrp.py:595
 #: code:addons/mrp/wizard/change_production_qty.py:77
 #: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
@@ -2190,7 +2233,7 @@ msgstr "Tuotannot"
 #: code:addons/mrp/report/price.py:194
 #, python-format
 msgid "Work Cost of "
-msgstr ""
+msgstr "Työn kustannukset "
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -2245,12 +2288,12 @@ msgstr "Tuotanto"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Poikkeavat hankinnat"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
 msgid "'Minimum stock rule' material"
-msgstr ""
+msgstr "'Minimivarasto' säännön mukaiset materiaalit"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
@@ -2260,7 +2303,7 @@ msgstr "Tuotteen hinta"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_installer
 msgid "MRP Applications Configuration"
-msgstr ""
+msgstr "MRP ohjelmien konfigurointi"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_split
@@ -2299,7 +2342,7 @@ msgstr "Toukokuu"
 #. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
-msgstr ""
+msgstr "Valmistuksen työpöytä"
 
 #. module: mrp
 #: field:mrp.production,date_planned_end:0
@@ -2313,11 +2356,14 @@ msgid ""
 "specified period. It is expressed in number of hours and machine related "
 "cycles."
 msgstr ""
+"Työpisteiden kuormistus antaa käsityksen työpisteiden kuormitustilanteesta "
+"valitulla ajanjaksolla. Se kerrotaan tuntimäärinä ja koneisiin liittyvinä "
+"työkertojen määrinä."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Hankintatapa riippuu tuotteen tyypistä"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -2338,7 +2384,7 @@ msgstr "Helmikuu"
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "Omaisuusryhmät"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -2360,7 +2406,7 @@ msgstr "Siivoukseen kuluva aika tunneissa."
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
 msgid "Automatic RFQ"
-msgstr ""
+msgstr "Automaattinen tarjouspyyntö"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
@@ -2368,6 +2414,8 @@ msgid ""
 "If the service has a 'Produce' supply method, this creates a task in the "
 "project management module of OpenERP."
 msgstr ""
+"Jos palvelulla on 'valmista' toimitustapa, tämä luo tehtävän OpenERPin "
+"projektinhallintamoduuliin."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_productionprocureproducts0
@@ -2402,7 +2450,7 @@ msgstr "Sarja"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Resurssin lomat"
 
 #. module: mrp
 #: help:mrp.bom,sequence:0
@@ -2504,9 +2552,6 @@ msgstr "Vuosi"
 #~ msgid "Max Quantity"
 #~ msgstr "Maksimimäärä"
 
-#~ msgid "Procurement Request"
-#~ msgstr "Hankintapyyntö"
-
 #~ msgid "Minimum Stock Procure"
 #~ msgstr "Varaston minimihankinta"
 
@@ -2545,9 +2590,6 @@ msgstr "Vuosi"
 
 #~ msgid "Service Product"
 #~ msgstr "Palvelutuote"
-
-#~ msgid "Scheduled End"
-#~ msgstr "Ajoitettu loppu"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
@@ -3164,5 +3206,29 @@ msgstr "Vuosi"
 #~ msgstr ""
 #~ "Paikka josta järjestelmä etsii tuotteita joita on käytetty raaka-aineissa."
 
-#~ msgid "MRP & Logistics Scheduler"
-#~ msgstr "Tuotanto- ja logistiikka-aikataulut"
+#~ msgid "Specify Cost of Work center per cycle."
+#~ msgstr "Määrittele työpisteen kulut sykliä kohden"
+
+#~ msgid "Workcenter Usage"
+#~ msgstr "Työpisteen käyttöaste"
+
+#~ msgid ""
+#~ "Number of operations this work center can do in parallel. If this work "
+#~ "center represents a team of 5 workers, the capacity per cycle is 5."
+#~ msgstr ""
+#~ "Työpisteen suorittavien rinnakkaisten tehtävien lukumäärä. Jos työpisteen "
+#~ "henkilöstö on 5 työntekijää, kapasiteetti sykliä kohti on 5."
+
+#~ msgid ""
+#~ "Description of the work center. Explain here what's a cycle according to "
+#~ "this work center."
+#~ msgstr "Työpisteen kuvaus. Kuvaa tähän mikä on työpisteen työnkulku."
+
+#~ msgid ""
+#~ "Routing indicates all the workcenters used, for how long and/or cycles.If "
+#~ "Routing is indicated then,the third tab of a production order (workcenters) "
+#~ "will be automatically pre-completed."
+#~ msgstr ""
+#~ "Reititys kertoo käytetyt työpisteet, kestoajat ja työkertojen määrät. Jos "
+#~ "reititys on määritelty, niin kolmas alasivu tuotantotilauksissa (työpisteet) "
+#~ "esitäytetään automaattisesti."

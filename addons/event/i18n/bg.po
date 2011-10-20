@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:54+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:55+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: event
 #: view:event.event:0
@@ -329,6 +329,9 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"Фактурите за това събитие ще бъдат създадени с този продукт. Това позволява "
+"да се укаже етикета по подразбиране и счетоводната информация, която искате "
+"по подразбиране за тези фактури."
 
 #. module: event
 #: view:event.registration:0
@@ -344,7 +347,7 @@ msgstr "Други оратори"
 #. module: event
 #: model:ir.model,name:event.model_event_make_invoice
 msgid "Event Make Invoice"
-msgstr ""
+msgstr "Събитие за генериране на фактура"
 
 #. module: event
 #: help:event.registration,nb_register:0
@@ -424,7 +427,7 @@ msgstr "Отказ от регистрация"
 #: code:addons/event/event.py:395
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Регистрирания контрагент няма адрес за генериране на фактура."
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -482,7 +485,7 @@ msgstr "Изрично потвърждение"
 #: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr ""
+msgstr "Внимание: За събитието '%s' е достигнат максималния лимит (%s)."
 
 #. module: event
 #: view:event.event:0
@@ -504,6 +507,10 @@ msgid ""
 "particular dates the state is set to 'Confirmed'. If the event is over, the "
 "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
 msgstr ""
+"Ако събитието е създадено, състоянието е \"Проект\". Ако събитието е "
+"потвърдено за определените дати, състоянието е \"Потвърдено\". Ако събитието "
+"е приключило, състоянието е настроен на \"Готово\". Ако събитието е отменено "
+"състоянието енастроен на \"Отменено\"."
 
 #. module: event
 #: view:event.event:0
@@ -673,6 +680,9 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Тези имейл адреси ще бъдат добавени към CC полето на всички входящи и "
+"изходящи имейли за този запис преди да бъде изпратено. Повече от един имейл "
+"адрес да се разделят със запетая"
 
 #. module: event
 #: constraint:res.partner:0
@@ -754,6 +764,8 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
+"Внимание: Това събитие не е достигнало минималната граница за брой "
+"регистрации. Сигурни ли сте, искате да го потвърдите?"
 
 #. module: event
 #: field:event.registration,active:0
@@ -774,6 +786,8 @@ msgstr "Разширени филтри"
 #: help:event.event,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
 msgstr ""
+"Имейл адресът поставени в \"Отговор до\" на всички имейли, изпратени от "
+"OpenERP"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -783,7 +797,7 @@ msgstr "Октомври"
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "Общо отворени и готови регистрации"
 
 #. module: event
 #: field:event.event,language:0
@@ -863,7 +877,7 @@ msgstr "Прикачени файлове"
 #: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
-msgstr ""
+msgstr "Свързаното събитие няма определен продукт"
 
 #. module: event
 #: view:event.event:0
@@ -1126,7 +1140,7 @@ msgstr "Държава"
 #: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+msgstr "Регистрацията е настроена да не може да бъде фактурирана"
 
 #. module: event
 #: code:addons/event/event.py:500
@@ -1184,7 +1198,7 @@ msgstr "Начална дата на събитие"
 #. module: event
 #: view:event.event:0
 msgid "Registration Email Body"
-msgstr ""
+msgstr "Основен текст на съобщението за регистрация"
 
 #. module: event
 #: view:partner.event.registration:0
@@ -1220,7 +1234,7 @@ msgstr "Общо"
 #. module: event
 #: help:event.event,register_min:0
 msgid "Providee Minimum Number of Registrations"
-msgstr ""
+msgstr "Осигуряване на минимален брой на регистрациите"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
@@ -1235,6 +1249,10 @@ msgid ""
 "caldav. Most of the users should work in the Calendar menu, and not in the "
 "list of events."
 msgstr ""
+"Събитие е обект от ниско ниво, използвано от срещи и другите документи, "
+"които трябва да бъдат синхронизирани с мобилни устройства или календар "
+"приложения чрез CalDAV. Повечето потребители трябва да работят в менюто "
+"Календар, а не в списъка на събитията."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Невалиден XML за преглед на архитектурата"
@@ -1330,9 +1348,6 @@ msgstr ""
 
 #~ msgid "Confirmed Events"
 #~ msgstr "Потвърдени събития"
-
-#~ msgid "Error ! You can not create recursive sections."
-#~ msgstr "Грешка! Не може да създавате вложени секции."
 
 #~ msgid "Invoice Rejected"
 #~ msgstr "Фактурата отказана"

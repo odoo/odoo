@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-08-03 02:29+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:01+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:02+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -33,12 +33,14 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"如果您觉得你的模块会让其他人感兴趣。我们希望您把它发布到OpenERP.com的模块部分。你可以通过这个网页或者用base_module_publish这"
+"个模块来发布"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "结束"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -65,7 +67,7 @@ msgstr "只记录"
 #. module: base_module_record
 #: model:ir.model,name:base_module_record.model_ir_module_record
 msgid "ir.module.record"
-msgstr ""
+msgstr "ir.module.record"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -152,13 +154,13 @@ msgstr "模块已成功创建！"
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "YAML file successfully created !"
-msgstr ""
+msgstr "YMAL 文件创建成功！"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "结果，粘贴这个到你的模块的xml文件里面"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -192,29 +194,29 @@ msgstr "记录"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Module Record"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
 msgid "Continue"
-msgstr "继续"
+msgstr "下一步"
 
 #. module: base_module_record
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "导出自定义配置到数据文件"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:129
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Normal Data"
-msgstr "一般数据"
+msgstr "普通数据"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,end,end:0
@@ -241,13 +243,13 @@ msgstr "模块信息"
 #: wizard_field:base_module_record.module_record_data,init,info_yaml:0
 #: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
 msgid "YAML"
-msgstr ""
+msgstr "YAML"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
 #: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
 msgid "Result"
-msgstr ""
+msgstr "结果"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,init,end:0
@@ -292,6 +294,16 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"这个模块可以让你不通过代码开发就创建一个新模块。\n"
+"它会记录你在操作中对象的所有的操作和变量的产生\n"
+"并生成一个.ZIP模块文件。所以你可以直接用OpenERP\n"
+"客户端来创建模块。\n"
+"\n"
+"如何使用它：\n"
+"运行管理/自定义/创建模块/把自定义设置导出为模块向导。\n"
+"选择录制和被录制的对象和记录模块中的日期时间标准。\n"
+"    "
 
 #~ msgid "Status"
 #~ msgstr "状态"
@@ -308,48 +320,6 @@ msgstr ""
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to create a new module without any development.\n"
-#~ "It records all operations on objects during the recording session and\n"
-#~ "produce a .ZIP module. So you can create your own module directly from\n"
-#~ "the Open ERP client.\n"
-#~ "\n"
-#~ "This version works for creating and updating existing records. It "
-#~ "recomputes\n"
-#~ "dependencies and links for all types of widgets (many2one, many2many, ...).\n"
-#~ "It also support workflows and demo/update data.\n"
-#~ "\n"
-#~ "This should help you to easily create reusable and publishable modules\n"
-#~ "for custom configurations and demo/testing data.\n"
-#~ "\n"
-#~ "How to use it:\n"
-#~ "1. Start the recording\n"
-#~ "2. Do stuff in your Open ERP client\n"
-#~ "3. Stop the recording session\n"
-#~ "4. Export to a reusable module\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "这模块允许你创建你的模块和发展\n"
-#~ "    它记录在会话周期的所有对象操作\n"
-#~ "和产生一个zip模块\n"
-#~ "所以你可以在系统的客户端创建自己的模块.\n"
-#~ "    \n"
-#~ "版本的创建和更新时重新计算的\n"
-#~ "依赖关系和所有关系类型(many2one, many2many, ...).\n"
-#~ "它也支持工作流和demo和测试数据.\n"
-#~ "\n"
-#~ "    这有助你简化创建可再重用和发布自定义模块\n"
-#~ "自定义配置和示范或测试数据.\n"
-#~ "    \n"
-#~ "    如何使用?\n"
-#~ "    1.开始记录\n"
-#~ "    2.在你的客户端完成操作\n"
-#~ "    3.停止记录会话\n"
-#~ "    4.导出一个可重用的模块\n"
-#~ "    "
 
 #~ msgid "Start Recording"
 #~ msgstr "开始记录"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:43+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:46+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +28,7 @@ msgstr ""
 "Entferne Beschreibung der Aufgabe in der Aufgabenliste des Benutzers."
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "Die Aufgabe '%s' wurde delegiert an %s."
@@ -63,7 +63,7 @@ msgid "Deadlines"
 msgstr "Meine Fristen"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Vorgang nicht erlaubt!"
@@ -252,7 +252,7 @@ msgid "Day"
 msgstr "Tag"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "Die Aufgabe '%s' ist erledigt"
@@ -449,7 +449,7 @@ msgid "Reactivate Project"
 msgstr "Reaktiviere Projekt"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Aufgabe '%s' beendet"
@@ -499,8 +499,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (Kopie)"
@@ -645,7 +645,7 @@ msgid "Reevaluate"
 msgstr "Neuberechnung"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Versende EMail nach Beendigung der Aufgabe"
@@ -740,7 +740,7 @@ msgid "Starting Date"
 msgstr "Start Datum:"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -770,7 +770,7 @@ msgstr ""
 "nachvollziehen."
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "Die Aufgabe '%s' wurde gestartet"
@@ -1194,7 +1194,6 @@ msgstr "Pinnwand Projektmitarbeiter"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Hauptprojekt"
 
@@ -1224,7 +1223,7 @@ msgid "Customer Email"
 msgstr "EMail Kunde"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Das Projekt '%s' wurde abgeschlossen."
@@ -1275,7 +1274,7 @@ msgstr ""
 "Bei Fertigstellung der Aufgabe wird der Status in \"Erledigt\" geändert."
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Das Projekt '%s' wurde geöffnet und damit in Berabeitung genommen."
@@ -1423,7 +1422,7 @@ msgstr ""
 "Durchschnittsanzahl an Tagen bzw. auch die Preise und Umsätze erkennen."
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Aufgabe '%s' auf Bearbeitung gesetzt"
@@ -1475,7 +1474,7 @@ msgid "Open"
 msgstr "Offen"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1813,7 +1812,7 @@ msgid "Spent Hours"
 msgstr "Geleistete Stunden"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "Die Aufgabe '%s' ist im Wartezustand."
@@ -1824,7 +1823,7 @@ msgstr "Die Aufgabe '%s' ist im Wartezustand."
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
-msgstr "Gesamte Stunden"
+msgstr "Gesamtstunden"
 
 #. module: project
 #: help:project.project,sequence:0
@@ -1900,7 +1899,7 @@ msgid "Validation State"
 msgstr "Validierung Status"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Aufgabe '%s' ist storniert"
@@ -1930,7 +1929,7 @@ msgid "Create Date"
 msgstr "Erzeugt am"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "Die Aufgabe '%s' wurde abgebrochen."
@@ -2280,225 +2279,3 @@ msgstr "Budgets"
 
 #~ msgid "All Attachments"
 #~ msgstr "Alle Anhänge"
-
-#~ msgid "My project's planning"
-#~ msgstr "Meine geplanten Projekte"
-
-#~ msgid "Board for project users"
-#~ msgstr "Tafel für Projekt Mitarbeiter"
-
-#~ msgid "Pipeline of tasks"
-#~ msgstr "Aufgabenbestand"
-
-#~ msgid "My Planning"
-#~ msgstr "Meine Planung"
-
-#~ msgid "Project Manager Dashboard"
-#~ msgstr "Projektmanager Dashboard"
-
-#~ msgid "My Deadlines"
-#~ msgstr "Meine Deadlines"
-
-#~ msgid "User's timesheets"
-#~ msgstr "Benutzer Zeiterfassung"
-
-#~ msgid "Project manager board"
-#~ msgstr "Dashboard Projektmanager"
-
-#~ msgid "My tasks board"
-#~ msgstr "Meine Aufgaben (Dashboard)"
-
-#~ msgid "My user's pipeline"
-#~ msgstr "Meine Benutzer"
-
-#~ msgid "My Timesheet"
-#~ msgstr "Meine Zeiterfassung"
-
-#~ msgid "Tasks finished by project (this month)"
-#~ msgstr "Aufgaben nach Projekten (dieser Monat)"
-
-#~ msgid "Tasks Closed by Project and User"
-#~ msgstr "Fertige Aufgaben nach Projekt und Benutzer"
-
-#~ msgid "Tasks finished by project and user (this month)"
-#~ msgstr "Erl. Aufgaben nach Projekt und Benutzer (d. Monat)"
-
-#~ msgid "Task Closed"
-#~ msgstr "Beendete Aufgaben"
-
-#~ msgid "Tasks by Project"
-#~ msgstr "Aufgaben nach Projekt"
-
-#~ msgid "Sales Management - Reporting"
-#~ msgstr "Verkaufsverwaltung - Berichte"
-
-#~ msgid "User"
-#~ msgstr "Benutzer"
-
-#~ msgid "Tasks by Project and User"
-#~ msgstr "Aufgaben nach Projekt und Benutzer"
-
-#~ msgid "This Month"
-#~ msgstr "Dieser Monat"
-
-#~ msgid "Tasks by projects and users"
-#~ msgstr "Aufgaben nach Projekten und Benutzern"
-
-#~ msgid "Avg Closing Delay"
-#~ msgstr "Durch. Verzögerung"
-
-#~ msgid "Tasks by project"
-#~ msgstr "Aufgaben nach Projekten"
-
-#~ msgid "Tasks Closed by Project"
-#~ msgstr "Erl. Aufgaben nach Projekt"
-
-#~ msgid "Tasks by User"
-#~ msgstr "Aufgaben je Benutzer"
-
-#~ msgid "No Task"
-#~ msgstr "Keine Aufgabe"
-
-#~ msgid "Report on tasks by user for projects"
-#~ msgstr "Report je Aufgabe und Benutzer je Projekt"
-
-#~ msgid "Timesheet / Task Hours Per Month"
-#~ msgstr "Arbeitszeitaufzeichnung / Stunden je Monat"
-
-#~ msgid "Reporting"
-#~ msgstr "Berichtswesen"
-
-#~ msgid ""
-#~ "Gives statistics on tasks by user on projects to check the pipeline of users."
-#~ msgstr "Statistik über offene Aufgaben (Pipeline) je Benutzer"
-
-#~ msgid "Task Closed Within Past 15 Days"
-#~ msgstr "Erledigte Aufgaben der letzten 15 Tage"
-
-#~ msgid "Task Hours"
-#~ msgstr "Aufgabe Stunden"
-
-#~ msgid "Task Number"
-#~ msgstr "Aufgaben Nummer"
-
-#~ msgid "report.timesheet.task.user"
-#~ msgstr "report.timesheet.task.user"
-
-#~ msgid "Timesheet/Task hours Report Per Month"
-#~ msgstr "Arbeitszeitaufzeichnung/Aufgaben Stunden je Monat"
-
-#~ msgid "Task Progress"
-#~ msgstr "Aufgaben-Fortschritt"
-
-#~ msgid "Closed Task Report"
-#~ msgstr "Abgeschlossene Aufgaben Bericht"
-
-#~ msgid "Timesheet Hours"
-#~ msgstr "Arbeitszeitaufzeichnung Stunden"
-
-#~ msgid "Closed Tasks"
-#~ msgstr "Abgeschlossene Aufgaben"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the project "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Wenn dieses Feld aktiviert ist , kann ein Projekt ausgeblendet werden, ohne "
-#~ "dieses vollständig zu entfernen."
-
-#~ msgid "Gives the sequence order when displaying a list of task"
-#~ msgstr ""
-#~ "Definition der Reihenfolge von Aufgaben, bei der Anzeige von Aufgabenlisten."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#~ msgid "Scheduling"
-#~ msgstr "Terminierung"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
-
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "Die Bezeichnung der Gruppe sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "Define here the steps that will be used on the project from the creation of "
-#~ "the task, up to the closing of the task or issue. You will use these stages "
-#~ "in order to track the progress of the resolution of a task or an issue."
-#~ msgstr ""
-#~ "Definieren Sie hier die erforderlichen Arbeitsschritte eines Projektes von "
-#~ "der Erstellung einer Aufgabe bis zur Erledigung der Aufgabe oder "
-#~ "Problemlösung. Sie können durch diese Schritte den Bearbeitungsstand oder "
-#~ "den Fortschritt bei der Aufgabenerledigung oder Problemlösung jederzeit gut "
-#~ "nachvollziehen."
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "A task represents a work that has to be done. Each user works in his own "
-#~ "list of tasks where he can record his task work in hours. He can work and "
-#~ "close the task itself or delegate it to antoher user. If you delegate a task "
-#~ "to another user, you get a new task in pending state, which will be re-"
-#~ "opened when you have to review the work achieved. If you install the "
-#~ "project_timesheet module, tasks works can be invoiced based on the project "
-#~ "configuration. With the project_mrp module, sales orders can create tasks "
-#~ "automatically when they are confirmed."
-#~ msgstr ""
-#~ "Eine Aufgabe repräsentiert einen zu erledigenden Arbeit. Jeder Benutzer "
-#~ "verfügt über einen eigene Aufgabenliste, über die er seine erledigte Arbeit "
-#~ "aufzeichnen kann. Durch die Delegation einer Aufgabe an einen anderen "
-#~ "Benutzer, erhalten Sie eine neue Aufgabe mit Status 'In Wartezustand', die "
-#~ "zu Ihrer Kontrolle wiedereröffnet wird, wenn der andere Benutzer die "
-#~ "delegierte Aufgabe erledigt. Wenn Sie das Modul project_timesheet "
-#~ "installieren, können Sie erledigte Aufgaben in Projekten unmittelbar auf "
-#~ "Basis der Projektzeiterfassung abrechnen. Durch das project_mrp Modul, "
-#~ "können auch automatisch Aufgaben aus Verkaufsaufträgen generiert werden."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "Eine Regel sollte mindestens ein Zugriffsrecht aktiviert haben."
-
-#~ msgid ""
-#~ "A project contains a set of tasks or issues that will be performed by your "
-#~ "resources assigned on it. A project can be put into a hierarchy, as a child "
-#~ "of a Parent Project. This allows you to  design large project structure with "
-#~ "different phases spread over the project duration cycle. Each user can set "
-#~ "his default project in his own preferences, in order to filter automatically "
-#~ "the tasks or issues he usually works on."
-#~ msgstr ""
-#~ "Ein Projekt besteht aus einzelnen Aufgaben oder Problemstellungen, die durch "
-#~ "zugewiesene Mitarbeiter bearbeitet werden sollen. Ein Projekt kann durch "
-#~ "eine hierachische Struktur ein Teilprojekt eines Hauptprojektes sein. Dieses "
-#~ "ermöglicht die Gestaltung komplexer Projektstrukturen mit verschiedenen "
-#~ "Projektphasen über die Gesamtdauer eines Projektdurchlaufs. Jeder Benutzer "
-#~ "kann ein Standard Projekt in seinen persönlichen Einstellungen hinterlegen, "
-#~ "um exakt die Aufgaben oder Probleme herauszufiltern, an denen der Benutzer "
-#~ "arbeiten soll."
-
-#~ msgid ""
-#~ "A project contains a set of tasks or issues that will be performed by your "
-#~ "assigned personnel. A project can be put into a hierarchy, as a child of a "
-#~ "Parent Project. This allows you to design large project structure with "
-#~ "different phases spread over the project's duration cycle. Each user can set "
-#~ "his default project in his own preferences, in order to filter automatically "
-#~ "the tasks or issues he usually works on. If you have personalized your "
-#~ "Project application in order to invoice the time spent on a task, you can "
-#~ "choose to invoice or not one project in the billing section."
-#~ msgstr ""
-#~ "Ein Projekt besteht aus einer Reihe von Einzelaufgaben oder projektbezogenen "
-#~ "Problemstellungen, die durch Ihre Mitarbeiter zu bearbeiten sind. Ein "
-#~ "Projekt kann in eine bestehende multidimensionale Projekthierachie, z.B. als "
-#~ "Teilprojekt platziert werden. Jeder Anwender kann dabei sein eigenes Projekt "
-#~ "in seinen Benutzer Eigenschaften hinterlegen, wodurch für die Anzeige der zu "
-#~ "bearbeitenden Aufgaben ein automatischer Filter nur für dieses Projekt "
-#~ "angewendet wird. Wenn Sie Ihre Anwendung für Projekte so konfiguriert haben, "
-#~ "dass eine unmittelbare Weiterberechnung von erledigten Aufgaben möglich sein "
-#~ "soll, können Sie einstellen, ob für ein Projekt die Abrechnungsfunktion "
-#~ "angewendet werden soll oder nicht."

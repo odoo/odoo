@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:27+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:24+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
 msgid "Time-laps during which task has to be treated"
-msgstr ""
+msgstr "处理任务的时间段"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -34,7 +34,7 @@ msgstr "重新激活"
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
 msgid "Gives the sequence order when displaying a list of timebox."
-msgstr ""
+msgstr "输入序号用于时间箱列表排序"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
@@ -44,13 +44,13 @@ msgstr "旅行"
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "Timebox Empty Process Completed Successfully."
-msgstr ""
+msgstr "清空时间箱成功"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
-msgstr ""
+msgstr "没有子时间箱"
 
 #. module: project_gtd
 #: code:addons/project_gtd/project_gtd.py:112
@@ -66,7 +66,7 @@ msgstr "长期"
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
 msgid "Project Timebox Empty"
-msgstr ""
+msgstr "清空时间箱"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
@@ -100,7 +100,7 @@ msgstr "错误！"
 #. module: project_gtd
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "错误！不能创建循环引用的任务"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -119,7 +119,7 @@ msgid ""
 "Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
-msgstr ""
+msgstr "时间箱是GTD方法的一个术语。时间箱用于根据一定的时间区间来对任务进行分类：今天的事，本周的事，这个月的事，长期的事"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
@@ -139,7 +139,7 @@ msgstr "图标"
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
 msgid "Project Timebox Fill"
-msgstr ""
+msgstr "填充时间箱"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
@@ -186,6 +186,15 @@ msgid ""
 "performing those tasks.\n"
 "    "
 msgstr ""
+"\n"
+"这个模块实现了GTD的概念。这个世界通行的方法是用来提升个人时间管理的。\n"
+"\n"
+"Getting Things Done（GTD）是由David Allen提出的一种行为管理方法，他还\n"
+"写了一本同名的书阐述这个方法。\n"
+"\n"
+"GTD基于一个原则：个人应该把任务从脑子里移除到外部的记录系统上。这样，\n"
+"大脑就不需要再记忆所有该做的事情，只需要关注正在做的事。\n"
+"    "
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
@@ -238,7 +247,7 @@ msgstr "序列"
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "输入序号用于情境列表的排序"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -254,7 +263,7 @@ msgstr "任务选择"
 #: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "收件箱"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
@@ -264,12 +273,12 @@ msgstr "从时间箱"
 #. module: project_gtd
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
-msgstr ""
+msgstr "用户要执行任务的地点"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -277,12 +286,12 @@ msgid ""
 "Contexts are defined in the \"Getting Things Done\" methodology. It allows "
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
-msgstr ""
+msgstr "情境是GTD方法中的概念。它使你能够按照执行的地点对任务进行分类，如：在办公室、在家、开车的时候"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "上一个"
 
 #~ msgid "Parent Timebox"
 #~ msgstr "上级时间盒"

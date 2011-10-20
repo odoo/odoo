@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2243,9 +2243,9 @@ msgid "Future Qty"
 msgstr "Ilość planowana"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr "Konto wyceny zapasów"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2301,7 +2301,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Strefa, w której system umieści gotowe produkty."
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -4192,9 +4192,6 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgid "Invoice is not created"
 #~ msgstr "Faktura nie została utworzona"
 
-#~ msgid "Qty"
-#~ msgstr "Il."
-
 #~ msgid "Available Moves"
 #~ msgstr "Dostępne przesunięcia"
 
@@ -4216,9 +4213,6 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 
 #~ msgid "Planned Date"
 #~ msgstr "Planowana data"
-
-#~ msgid "Canceled"
-#~ msgstr "Anulowano"
 
 #~ msgid "Created Date"
 #~ msgstr "Data utworzenia"
@@ -4391,12 +4385,6 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgid "Outgoing Products"
 #~ msgstr "Wydawanie produktów"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Wymuś nr partii przy przyjmowaniu"
-
-#~ msgid "Track Outging Lots"
-#~ msgstr "Wymuś nr partii przy wydawaniu"
-
 #~ msgid ""
 #~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
 #~ "structured stock locations.\n"
@@ -4469,14 +4457,6 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgid "Sub Products"
 #~ msgstr "Produkty uboczne"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Przyszły zapas"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Przyszła ilość"
-
 #~ msgid "Make Picking"
 #~ msgstr "Wykonaj pobranie"
 
@@ -4500,16 +4480,8 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ "będzie zrobić ręcznie. 'Automatycznie i bezpośrednio' zamieni strefę "
 #~ "docelową w przesunięciu przychodzącym."
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Przyszłe produkcje"
-
 #~ msgid "Make Parcel"
 #~ msgstr "Wykonaj paczkę (przesunięcie)"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Przyszłe przyjęcia"
 
 #~ msgid "Customer Refund"
 #~ msgstr "Korekta dla klienta"
@@ -4528,10 +4500,6 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 
 #~ msgid "Non Assigned Products:"
 #~ msgstr "Nie przypisane produkty:"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Przyszłe dostawy"
 
 #~ msgid ""
 #~ "Tracking lot is the code that will be put on the logistical unit/pallet"
@@ -4690,204 +4658,28 @@ msgstr "Nieobowiązkowe szczegóły lokalizacji. Tylko do informacji."
 #~ msgid "Invoice Status"
 #~ msgstr "Fakturowanie"
 
-#~ msgid "weight"
-#~ msgstr "waga"
-
 #, python-format
 #~ msgid "Invoice cannot be created from Packing."
 #~ msgstr "Nie można utworzyć faktury z pobrania"
-
-#~ msgid ""
-#~ "This is the list of all delivery orders that must be prepared, according to "
-#~ "your different sales orders and your logistics rules."
-#~ msgstr ""
-#~ "To jest lista wydań do przygotowania według zamówień sprzedaży i "
-#~ "logistycznych reguł."
-
-#~ msgid ""
-#~ "The Periodical Inventories are used when you count your number of products "
-#~ "available per location. You can use it, once a year, when you do the general "
-#~ "inventory or, once you need it, to correct the current stock level of a "
-#~ "product."
-#~ msgstr ""
-#~ "Okresowa inwentaryzacja jest stosowana, kiedy przeliczasz ilości produktów "
-#~ "dostępnych w poszczególnych strefach. Możesz ją stosować raz na rok lub w "
-#~ "miarę potrzeby częściej do urealnienia stanu zapasów."
-
-#~ msgid ""
-#~ "Define your locations in order to reflect to your warehouse structure and "
-#~ "organization. OpenERP is able to manage physical locations (warehouses, "
-#~ "shelves, bin, etc), partners location (customers, suppliers) and virtual "
-#~ "locations which are the counter-part of the stock operations like the "
-#~ "manufacturing orders consummations, the inventories, etc. Every stock "
-#~ "operation in OpenERP moves the products from one location to another one. "
-#~ "For instance, if you receive products from a supplier, OpenERP will move "
-#~ "products from the Supplier location into the Stock location. Each report can "
-#~ "be performed on physicals, partners or virtual locations."
-#~ msgstr ""
-#~ "Strefy magazynowe powinny odzwierciedlać twoją strukturę magazynową. OpenERP "
-#~ "może operować na strefach fizycznych (magazyny, półki, zasobniki), strefy "
-#~ "partnerów (klientów, dostawców), i wirtualne strefy, które będą stanowiły "
-#~ "strefy przeciwstawne w operacjach na zasobach. Każda operacja na zasobach w "
-#~ "OpenERP przenosi produkty z jednej strefy do drugiej. Na przykład, jeśli "
-#~ "otrzymujesz produkty od dostawcy, to OpenERP dokona przesunięcia zapasów ze "
-#~ "strefy Dostawcy do strefy wewnętrznej (fizycznej). Wszystkie raporty o "
-#~ "stanie zapasów mogą dotyczyć stref fizycznych, partnerów lub stref "
-#~ "wirtualnych."
-
-#~ msgid ""
-#~ "When the stock move is created it is in the 'Draft' state.\n"
-#~ " After that it is set to 'Confirmed' state.\n"
-#~ " If stock is available state is set to 'Available'.\n"
-#~ " When the picking is done the state is 'Done'.                               "
-#~ "   \n"
-#~ "The state is 'Waiting' if the move is waiting for another one."
-#~ msgstr ""
-#~ "Kiedy przesunięcie jest tworzone, to jest w stanie 'Projekt'.\n"
-#~ " Później zmienia się na 'Potwierdzone'.\n"
-#~ " Jeśli dana ilość jest dostępna, to stan zmienia się na 'Dostępne'.\n"
-#~ " Jeśli pobranie zostanie wykonane, to stan zmienia się na 'Wykonano'.        "
-#~ "                          \n"
-#~ "Jeśli przesunięcie czeka na inne przesunięcie, to stan jest 'Oczekiwanie'."
 
 #, python-format
 #~ msgid "is consumed with"
 #~ msgstr "Jest używany z"
 
 #, python-format
-#~ msgid "Bad Lot Assignation !"
-#~ msgstr "Złe przypisanie partii !"
-
-#, python-format
-#~ msgid "No invoice were created"
-#~ msgstr "Nie utworzono faktury"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Nazwa modułu musi być unikalna !"
-
-#~ msgid "Not from Picking"
-#~ msgstr "Nie z pobrania"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "ID certyfikatu modułu musi być unikalne !"
-
-#~ msgid "The name of the journal must be unique per company !"
-#~ msgstr "Nazwa dziennika musi być unikalna w ramach firmy !"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Reguły nie są obsługiwane dla obiektów osv_memory !"
-
-#, python-format
 #~ msgid "Product "
 #~ msgstr "Produkt "
-
-#~ msgid "Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"
-#~ msgstr ""
-#~ "Unikalny numer seryjny będzie wyświetlany jako: PREFIKS/SERIAL [INT_REF]"
-
-#, python-format
-#~ msgid "Currency in which Unit Cost is expressed"
-#~ msgstr "Waluta, w której jest wyrażony koszt jednostkowy"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
-
-#~ msgid "Serial Number"
-#~ msgstr "Numer seryjny"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "Reguła musi mieć zaznaczone co najmniej jedno prawo dostępu !"
-
-#, python-format
-#~ msgid "You are moving %.2f products but only %.2f available in this lot."
-#~ msgstr ""
-#~ "Chcesz przesunąć %.2f produktu ale tylko %.2f jest dostępne w tej partii."
-
-#~ msgid "The code of the journal must be unique per company !"
-#~ msgstr "Kod dziennika musi być unikalny w ramach firmy !"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
-
-#, python-format
-#~ msgid "Invoices"
-#~ msgstr "Faktury"
-
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "Nazwa grupy musi być unikalna !"
 
 #, python-format
 #~ msgid "is scheduled"
 #~ msgstr "jest zaplanowane"
 
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Rozmiar pola nie może być mniejszy od 1 !"
-
 #, python-format
 #~ msgid "quantity."
 #~ msgstr "ilość."
 
-#~ msgid "Outgoing Deliveries"
-#~ msgstr "Wydania zewnętrzne"
-
-#~ msgid ""
-#~ "The stock journals system allows you assign each stock operation into a "
-#~ "specific journal according to the type of operation to perform or the "
-#~ "worker/team that should perform the operation. Examples of stock journals "
-#~ "may be: quality control, pick lists, packing, etc."
-#~ msgstr ""
-#~ "Dzienniki magazynowe pozwalają powiązać każda operację magazynową do "
-#~ "konkretnego dziennika w zależności od typu operacji lub osób wykonujących "
-#~ "operację. Przykłady dzienników magazynowych, to kontrola jakości, listy "
-#~ "pobrań, pakowanie itp."
-
-#~ msgid ""
-#~ "The Internal Moves lists all inventory operations you have to perform in "
-#~ "your warehouse. All operations can be categorized into stock journals, so "
-#~ "that each worker has it's own list of operations to perform in his own "
-#~ "journal. Most operations are prepared automatically by OpenERP according to "
-#~ "your pre-configured logistics rules but you can also record manual stock "
-#~ "operations."
-#~ msgstr ""
-#~ "Przesunięcia wewnętrzne są listą operacji magazynowych do wykonania wewnątrz "
-#~ "magazynu. Operacje mogą być grupowane w dzienniki magazynowe, aby każdy "
-#~ "magazynier miał własną listę operacji do wykonania. Większość operacji jest "
-#~ "generowana automatycznie według skonfigurowanych reguł, ale można też "
-#~ "dodawać operacje ręcznie."
-
-#~ msgid ""
-#~ "This menu gives you the full traceability of inventory operations made on a "
-#~ "specific product. You can filter on the product to see all the past or "
-#~ "future movements made on the product."
-#~ msgstr ""
-#~ "To menu pomaga ci obserwować operacje magazynowe wykonywane na konkretnym "
-#~ "produkcie. Możesz filtrować wg produktu, aby zobaczyć wykonane lub przyszłe "
-#~ "przesunięcia."
-
-#~ msgid ""
-#~ "This is the list of all your packs. After having selected a Pack, you can "
-#~ "get the up-stream or down-stream traceability of the products contained in "
-#~ "the pack."
-#~ msgstr ""
-#~ "To jest lista paczek. Wybierając paczkę możesz sprawdzić przepływ produktów "
-#~ "z paczki wstecz i wprzód."
-
-#~ msgid ""
-#~ "The 'Deliver Products' menu lists all products you have to deliver to your "
-#~ "customers. You can process the deliveries directly from this list, line by "
-#~ "or line or through the Delivery Orders menu."
-#~ msgstr ""
-#~ "Menu 'Wydania zewnętrzne' zawiera wszystkie produkty, które trzeba "
-#~ "dostarczyć klientom. Możesz przetwarzać wydania z listy lub przez menu "
-#~ "Wydania zewnętrzne."
-
-#~ msgid ""
-#~ "This is the list of all the production lots (serial numbers) you recorded. "
-#~ "After having selected a lot, you can get the up-stream or down-stream "
-#~ "traceability of the products contained in lot."
-#~ msgstr ""
-#~ "To jest lista partii produkcyjnych, które utworzyłeś. Po wybraniu partii "
-#~ "możesz prześledzić przesunięcia wprzód i wstecz dla danej partii."
+#~ msgid "Stock Variation Account"
+#~ msgstr "Konto wyceny zapasów"
 
 #, python-format
 #~ msgid "INV: "

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:21+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -24,17 +24,17 @@ msgstr "Дата по плану, если задана"
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr "Валюта партнера"
+msgstr "Валюта контрагента"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr "Установить в 'Черновик'"
+msgstr "Установить в \"Черновик\""
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr "Выберите режим платежа для применения"
+msgstr "Выберите способ оплаты для применения"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -54,7 +54,7 @@ msgstr ""
 "\n"
 "Этот модуль обеспечивает :\n"
 "* более эффективный способ управления оплатой счетов.\n"
-"* постой механизм для разных автоматических платежей.\n"
+"* простой механизм для разных автоматических платежей.\n"
 "    "
 
 #. module: account_payment
@@ -76,7 +76,7 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
-"При размещении заказа, его состояние - \"Черновик\".\n"
+"При вводе распоряжения, его состояние - \"Черновик\".\n"
 " После подтверждения банком, состояние \"Подтверждено\".\n"
 " После оплаты, состояние \"Готово\""
 
@@ -118,7 +118,7 @@ msgstr "Используемый счет"
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr "Срок"
+msgstr "Дата исполнения"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -171,7 +171,7 @@ msgstr "Новое платежное поручение"
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr "Ссылка"
+msgstr "Обозначение"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
@@ -242,12 +242,12 @@ msgstr "Информация транзакции"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Payment Mode"
-msgstr "Режим оплаты"
+msgstr "Способ оплаты"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr "Действительно до"
+msgstr "Дата вступления в силу"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -262,7 +262,8 @@ msgid ""
 "scheduled date of execution."
 msgstr ""
 "Выберите опцию для платежного поручения: 'Заданная'' - дата установлена "
-"вами. 'Немедленно' - выполнить сразу. 'Срок' - выполнить в определенную дату."
+"вами. 'Немедленно' - выполнить сразу. 'Дата исполнения' - выполнить в "
+"определенную дату."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -283,7 +284,7 @@ msgstr "Дата исполнения"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "Банковский или кассовый журнал для формы оплаты"
+msgstr "Банковский или кассовый журнал для способа оплаты"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -294,12 +295,12 @@ msgstr "Заданная дата"
 #: field:payment.line,info_partner:0
 #: view:payment.order:0
 msgid "Destination Account"
-msgstr "Счет назначения"
+msgstr "Р/с получателя"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Desitination Account"
-msgstr "Счет назначения"
+msgstr "Р/с получателя"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -335,7 +336,7 @@ msgstr "Произвести платежи"
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr "Тип коммуникации"
+msgstr "Тип назначения платежа"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
@@ -350,7 +351,7 @@ msgstr "Позиция банковской выписки"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
-msgstr "Срок"
+msgstr "Дата исполнения"
 
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
@@ -370,7 +371,7 @@ msgstr "Да"
 #. module: account_payment
 #: help:payment.line,info_owner:0
 msgid "Address of the Main Partner"
-msgstr "Адрес основного партнера"
+msgstr "Адрес основного контрагента"
 
 #. module: account_payment
 #: help:payment.line,date:0
@@ -387,7 +388,7 @@ msgstr "Заполнение платежного поручения"
 #. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
-msgstr "Режим платежа"
+msgstr "Способ оплаты"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -413,13 +414,13 @@ msgstr "Черновик"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr "Приемник сообщения коммуникации"
+msgstr "Продолжение назначения платежа"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "No partner defined on entry line"
-msgstr "Не определен партнер в проводке"
+msgstr "Не определен контрагент в проводке"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -467,7 +468,7 @@ msgstr "Для счета и периода должна быть одна ко�
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr "Эта проводка будет использована для информации о плательщике."
+msgstr "Эта проводка будет использована для информации о заказчике."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -518,7 +519,7 @@ msgstr "Сумма в валюте компании"
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr "Заказчик"
+msgstr "Плательщик"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
@@ -533,12 +534,12 @@ msgstr "Ссылка на счет"
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr "Ваша ссылка"
+msgstr "Ссылка"
 
 #. module: account_payment
 #: field:payment.order,mode:0
 msgid "Payment mode"
-msgstr "Режим платежа"
+msgstr "Способ оплаты"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -555,7 +556,7 @@ msgstr "Общая информация"
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr "Готово"
+msgstr "Сделано"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -565,7 +566,7 @@ msgstr "Счет"
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr "Связь"
+msgstr "Назначение"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -589,7 +590,7 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
-"Платежное поручение это платежное требование от вышей компании на оплату "
+"Платежное поручение это платежное требование от вашей компании на оплату "
 "счета поставщика. Здесь вы заносите все платежные поручения которые должны "
 "быть исполнены, отслеживаете все платежные поручения, ссылки на счета и "
 "партнеров по которым должны быть сделаны платежи."
@@ -612,12 +613,12 @@ msgstr "Сумма в валюте партнера"
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr "Коммуникации 2"
+msgstr "Назначение 2"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr "Банковский счет назначения"
+msgstr "Р/с получателя"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -628,7 +629,7 @@ msgstr "Вы уверены, что хотите сделать платеж ?"
 #: view:payment.mode:0
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr "Книга"
+msgstr "Журнал"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
@@ -670,7 +671,7 @@ msgid ""
 "'What do you want to say to the recipient about this order ?'"
 msgstr ""
 "Используется как сообщение между плательщиком и текущей компанией. "
-"Обозначает \"Что вы хотите сказать получателю об этом распоряжение ?'"
+"Обозначает \"Что вы хотите сказать получателю в этом распоряжении ?'"
 
 #. module: account_payment
 #: field:payment.mode,name:0
@@ -680,13 +681,13 @@ msgstr "Название"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr "Счет банка"
+msgstr "Банковский счет"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr "Информация проводки"
+msgstr "Информация записи"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
@@ -696,7 +697,7 @@ msgstr "payment.order.create"
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr "Заказ"
+msgstr "Распоряжение"
 
 #. module: account_payment
 #: field:payment.order,total:0
@@ -713,7 +714,7 @@ msgstr "Оплатить"
 #: field:payment.line,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr "Партнер"
+msgstr "Контрагент"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
@@ -723,7 +724,7 @@ msgstr "Заполнить платежку"
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr "Банковский счет для режима платежа"
+msgstr "Банковский счет для способа оплаты"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -795,27 +796,6 @@ msgstr "Нельзя создать проводку по счету с типо
 
 #~ msgid "Cash Journal for the Payment Mode"
 #~ msgstr "Кассовая книга для режима платежа"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Правила не поддерживаются для объектов osv_memory !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "Название группы должно быть уникальным !"
 
 #, python-format
 #~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"

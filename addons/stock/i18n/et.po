@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-10-30 15:49+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-10-11 18:14+0000\n"
+"Last-Translator: Aare Vesi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:46+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:48+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -47,7 +47,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move.split.lines,action:0
 msgid "Action"
-msgstr ""
+msgstr "Tegevus"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -63,7 +63,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Today"
-msgstr ""
+msgstr "Täna"
 
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
@@ -138,7 +138,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päev"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -168,7 +168,7 @@ msgstr "Laopäevik"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr ""
+msgstr "Sissetulev"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -2083,8 +2083,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2141,7 +2141,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3912,10 +3912,6 @@ msgstr ""
 #~ msgid "terp-account"
 #~ msgstr "terp-konto"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Tuleviku laoseis"
-
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
 
@@ -3969,9 +3965,6 @@ msgstr ""
 
 #~ msgid "STOCK_CUT"
 #~ msgstr "STOCK_CUT"
-
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Jälgi saabuvaid partiisid"
 
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Tarnete kalender"
@@ -4097,9 +4090,6 @@ msgstr ""
 
 #~ msgid "Dest. Address"
 #~ msgstr "Sihtaadress"
-
-#~ msgid "Qty"
-#~ msgstr "Kogus"
 
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
@@ -4309,9 +4299,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Jälgi väljuvaid partiisid"
-
 #~ msgid "STOCK_FIND"
 #~ msgstr "STOCK_FIND"
 
@@ -4362,9 +4349,6 @@ msgstr ""
 
 #~ msgid "Add"
 #~ msgstr "Lisa"
-
-#~ msgid "Canceled"
-#~ msgstr "Tühistatud"
 
 #~ msgid "Set Stock to 0"
 #~ msgstr "Määra ladu nulli"
@@ -4631,10 +4615,6 @@ msgstr ""
 #~ msgid "Products Received"
 #~ msgstr "Tooted saabunud"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Tooted tulevikus"
-
 #~ msgid "Incoming Products"
 #~ msgstr "Saabuvad tooted"
 
@@ -4713,24 +4693,5 @@ msgstr ""
 #~ msgid "Units"
 #~ msgstr "Ühikud"
 
-#~ msgid "weight"
-#~ msgstr "kaalukus"
-
 #~ msgid "Total :"
 #~ msgstr "Kokku :"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Tulevased tarned"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Tulevased vastuvõtud"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Tulevane kogus"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Tulevased kasumid ja kahjumid"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
-"X-Generator: Launchpad (build 13405)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:54+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -26,7 +26,7 @@ msgstr ""
 "становится подтвержденным заказом на закупку."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr "Вы не можете подтвердить заказ на закупку без позиций в заказе."
@@ -44,7 +44,7 @@ msgid "Destination"
 msgstr "Место назначения"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -118,7 +118,7 @@ msgstr ""
 "ТМЦ, и контролировать счета поставщиков."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Выбранный поставщик продает ТМЦ только по %s"
@@ -141,7 +141,7 @@ msgid "From a Pick list"
 msgstr "Из комплектовочного листа"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
 msgstr "Нет каталога !"
@@ -234,7 +234,7 @@ msgid "Partial Picking"
 msgstr "Частичное комплектование"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Заказ на закупку '%s' подтвержден."
@@ -281,7 +281,7 @@ msgid "Notes"
 msgstr "Примечания"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -360,7 +360,7 @@ msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "Закупленное количество сверх лимита"
@@ -414,7 +414,7 @@ msgid "Reference"
 msgstr "Ссылка"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "Нельзя удалить Заказ(ы) на закупку в стадии %s !"
@@ -436,7 +436,7 @@ msgid "Day"
 msgstr "День"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Заказ на закупку '%s' был установлен в состояние \"Черновик\"."
@@ -453,8 +453,8 @@ msgid "# of Lines"
 msgstr "Кол-во позиций"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -491,7 +491,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Показывает, что комплектование выполнено."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Неверная ед. изм."
@@ -596,7 +596,7 @@ msgid "Order Lines"
 msgstr "Позиции заказа"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
 msgstr "Нет партнера!"
@@ -645,9 +645,9 @@ msgid "Invoices generated for a purchase order"
 msgstr "Счета созданные для заказа на закупку"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -705,7 +705,7 @@ msgid "Reservation Destination"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
 msgstr "Неверное действие !"
@@ -785,7 +785,7 @@ msgid "    Month-1    "
 msgstr "    Месяц-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Журнал закупок не определен для этой компании:  \"%s\" (id:%d)"
@@ -796,7 +796,7 @@ msgid "Manual"
 msgstr "Вручную"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -914,7 +914,6 @@ msgid "Month"
 msgstr "Месяц"
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr "Ожидание"
@@ -1118,7 +1117,7 @@ msgid "Manual Invoices"
 msgstr "Счета вручную"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1135,14 +1134,14 @@ msgid "Extended Filters..."
 msgstr "Расширенные фильтры..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Счет расходов не определен для этого товара: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1191,7 +1190,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1460,7 +1459,7 @@ msgid "Date Approved"
 msgstr "Дата утверждения"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Не удалось отменить этот заказ на закупку"
@@ -1572,7 +1571,7 @@ msgid "Total Qty and Amount by month"
 msgstr "Общее кол-во и сумма по месяцу"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr "Не удалось отменить заказ на закупку !"
@@ -1724,7 +1723,7 @@ msgstr ""
 "пользователем заказа на закупку."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Заказ на закупку '%s' отменен."
@@ -1804,7 +1803,7 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1853,18 +1852,6 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr "Панель закупок"
-
-#~ msgid "You can not have 2 pricelist version that overlaps!"
-#~ msgstr "Невозможно использовать 2 перекрывающиеся версии каталогов!"
-
-#~ msgid ""
-#~ "Please note that orders will only be merged if they are to the same partner "
-#~ "and going to the same location, and lines will only be merged if they are "
-#~ "exactly the same except for the quantity and unit."
-#~ msgstr ""
-#~ "Учтите, что заказы могут быть объединены, только если они относятся к одному "
-#~ "партнеру и местоположению, а позиции могут быть объединены, только если они "
-#~ "абсолютно одинаковы, кроме количества."
 
 #~ msgid "Purchase Orders in Progress"
 #~ msgstr "Выполняемые заказы на закупку"
@@ -2021,15 +2008,6 @@ msgstr "Панель закупок"
 #~ msgstr ""
 #~ "Предварительно созданный счет поставщика для контроля основанного на заказе"
 
-#~ msgid "Manual in progress"
-#~ msgstr "Выполняется вручную"
-
-#~ msgid "In progress"
-#~ msgstr "Выполняется"
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "Расписание ожидания"
-
 #~ msgid "From Picking"
 #~ msgstr "Из прихода"
 
@@ -2061,9 +2039,6 @@ msgstr "Панель закупок"
 #~ msgid "Request For Quotations"
 #~ msgstr "Запрос цен"
 
-#~ msgid "Quotation"
-#~ msgstr "Предложение (оферта)"
-
 #~ msgid ""
 #~ "Module for purchase management\n"
 #~ "    Request for quotation, Create Supplier Invoice, Print Order..."
@@ -2077,47 +2052,5 @@ msgstr "Панель закупок"
 #~ msgid "Product Receipt"
 #~ msgstr "Получение ТМЦ"
 
-#~ msgid ""
-#~ "If you set the invoicing control on a purchase order as \"Manual\", you can "
-#~ "track here all the purchase order lines for which you did not received the "
-#~ "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
-#~ "can generate a draft supplier invoice based on the lines from this menu."
-#~ msgstr ""
-#~ "Если, при заказе на закупку, вы установили метод управления счетами "
-#~ "\"Вручную\", то здесь вы можете отслеживать все позиции заказа на закупку на "
-#~ "которые вы не получили  счет от поставщика. При готовности получить счет от "
-#~ "поставщика, вы можете создать черновик счета основанный на позициях заказа "
-#~ "из этого меню."
-
-#~ msgid "To be Invoiced"
-#~ msgstr "Счет будет выставлен"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
-
-#~ msgid "An invoice generated for a purchase order"
-#~ msgstr "Счет созданный для заказа на закупку"
-
 #~ msgid "Purchase Lines Not Invoiced"
 #~ msgstr "Закупаемые позиции без счетов"
-
-#~ msgid "The name of the group must be unique !"
-#~ msgstr "Название группы должно быть уникальным !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "Product UoM"
-#~ msgstr "Ед. изм. ТМЦ"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Правила не поддерживаются в объектах osv_memory !"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:10+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:09+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -489,8 +489,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1127,6 +1125,7 @@ msgstr "# Broj transakcija"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1314,6 +1313,16 @@ msgstr ""
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Sa saldom različitim od 0"
 
@@ -2085,6 +2094,8 @@ msgstr "Računovodstveni podaci"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Stavke poredane po"
 
@@ -2106,11 +2117,16 @@ msgstr ""
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2433,6 +2449,7 @@ msgstr "Popust(%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2678,6 +2695,8 @@ msgstr "Financijsko računovodstvo"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr ""
 
@@ -2950,7 +2969,6 @@ msgstr "Zadrži prazno za korištenje konta troška"
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -2964,6 +2982,17 @@ msgstr "Zadrži prazno za korištenje konta troška"
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Dnevnici"
 
@@ -3173,6 +3202,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr ""
 
@@ -3231,6 +3261,16 @@ msgstr "PDV :"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Kontni plan"
 
@@ -3674,11 +3714,10 @@ msgid "Analytic Balance"
 msgstr "Saldo analitike"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr ""
 
@@ -4492,7 +4531,6 @@ msgid "Analytic Balance -"
 msgstr "Analitički saldo -"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4505,10 +4543,8 @@ msgstr "Analitički saldo -"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4518,6 +4554,16 @@ msgstr "Analitički saldo -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Ciljna knjiženja"
 
@@ -4634,6 +4680,8 @@ msgstr "Rezultat zatvaranja"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr ""
 
@@ -5347,6 +5395,19 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Bez filtera"
@@ -6261,6 +6322,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7174,6 +7236,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7428,6 +7491,19 @@ msgstr ""
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Razdoblje"
@@ -7510,14 +7586,6 @@ msgstr "Tel.:"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Valuta preduzeca"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr ""
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7630,6 +7698,12 @@ msgstr "Dnevnik povrata"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr ""
 
@@ -7869,6 +7943,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8152,12 +8227,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr ""
 
@@ -8275,7 +8355,12 @@ msgstr "Ostavite prazno za konto prihoda"
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8294,6 +8379,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr ""
 
@@ -8508,12 +8602,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr ""
 
@@ -8716,6 +8815,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8797,6 +8897,18 @@ msgstr "Opšte"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9006,13 +9118,10 @@ msgid "Tax Source"
 msgstr "Izvor poreza"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr ""
 
@@ -9036,8 +9145,8 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "JNRL"
+msgid "JRNL"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9244,6 +9353,7 @@ msgstr "Račun dobavljača"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9317,6 +9427,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Sa prijenosima"
 
@@ -9686,6 +9806,18 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
+
 #~ msgid "Asset"
 #~ msgstr "Sredstvo"
 
@@ -9717,9 +9849,6 @@ msgstr ""
 
 #~ msgid "Total entries"
 #~ msgstr "Ukupno stavki"
-
-#~ msgid "Disc. (%)"
-#~ msgstr "Popust (%)"
 
 #~ msgid "Supplier invoice"
 #~ msgstr "Račun dobavljača"
@@ -9808,9 +9937,6 @@ msgstr ""
 #~ msgid "Reconcile Paid"
 #~ msgstr "Zatvori plaćene"
 
-#~ msgid "Accounts Fiscal Mapping"
-#~ msgstr "Fiskalno mapiranje konta"
-
 #~ msgid "Keep empty if the fiscal year belongs to several companies."
 #~ msgstr "Ostavi prazno ako je fiskalna godina vlasništvo više firmi."
 
@@ -9887,9 +10013,6 @@ msgstr ""
 #~ msgid "New Supplier Invoice"
 #~ msgstr "Novi nabavni račun"
 
-#~ msgid "Taxes Fiscal Mapping"
-#~ msgstr "Fiskalno mapiranje poreza"
-
 #~ msgid "Voucher Nb"
 #~ msgstr "Nbr Vaucera"
 
@@ -9902,9 +10025,6 @@ msgstr ""
 #~ msgid "Journal de vente"
 #~ msgstr "Dnevnik Prodaje"
 
-#~ msgid "Fiscal Mapping Templates"
-#~ msgstr "Predlozci poreskih mapiranja"
-
 #~ msgid "Period from :"
 #~ msgstr "Razdoblje od :"
 
@@ -9916,9 +10036,6 @@ msgstr ""
 
 #~ msgid "Tax Report"
 #~ msgstr "Porezki izvestaj"
-
-#~ msgid "Fiscal Mapping Template"
-#~ msgstr "Predlozak poreskog mapiranja"
 
 #~ msgid "Are you sure you want to close the fiscal year ?"
 #~ msgstr "Da li ste sigurni da želite zatvoriti fiskalnu godinu ?"
@@ -9973,13 +10090,6 @@ msgstr ""
 
 #~ msgid "Statement reconcile line"
 #~ msgstr "Red zatvaranja izvoda"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Partnerov bankovni racun da plati\n"
-#~ "Ostavite prazno da koristite zadane vrednosti"
 
 #~ msgid "Invoice Movement"
 #~ msgstr "Knjiženja računa"
@@ -10056,11 +10166,6 @@ msgstr ""
 #~ msgid "Account Manager"
 #~ msgstr "Upravnik računovodstva"
 
-#~ msgid ""
-#~ "The fiscal mapping will determine taxes and the accounts used for the "
-#~ "partner."
-#~ msgstr "Fiskalno mapiranje ce odrediti poreze i konta koristena za partnera"
-
 #~ msgid "Pay invoice"
 #~ msgstr "Plati račun"
 
@@ -10114,9 +10219,6 @@ msgstr ""
 
 #~ msgid "Invoice Sequence"
 #~ msgstr "Sekvenca računa"
-
-#~ msgid "Fiscal Mapping Remark :"
-#~ msgstr "Napomena Fiskalnog mapiranja:"
 
 #~ msgid "Payment Reconcile"
 #~ msgstr "Zatvaranje plaćanja"
@@ -10223,9 +10325,6 @@ msgstr ""
 #~ msgid "O_k"
 #~ msgstr "U _redu"
 
-#~ msgid "Partner ID"
-#~ msgstr "Šifra partnera"
-
 #~ msgid "_Go"
 #~ msgstr "_Kreni"
 
@@ -10291,9 +10390,6 @@ msgstr ""
 #~ msgid "Proposed invoice to be checked, validated and printed"
 #~ msgstr "Predložena faktura da bude potvrđena i ispisana"
 
-#~ msgid "account.move.line.select"
-#~ msgstr "selektovani.konto"
-
 #~ msgid ""
 #~ "The account moves of the invoice have been reconciled with account moves of "
 #~ "the payment(s)."
@@ -10355,9 +10451,6 @@ msgstr ""
 #~ msgid "Invoice line"
 #~ msgstr "Red računa"
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Donešeni saldo"
-
 #~ msgid "Pay and reconcile"
 #~ msgstr "Plati i zatvori"
 
@@ -10376,9 +10469,6 @@ msgstr ""
 #~ msgid "Entry Name"
 #~ msgstr "Ime stavke"
 
-#~ msgid "Template for Fiscal Mapping"
-#~ msgstr "Predlozak za Fiskalno mapiranje"
-
 #~ msgid "Define Fiscal Years and Select Charts of Account"
 #~ msgstr "Definisi fiskalne godine i odaberi kontne planove"
 
@@ -10388,9 +10478,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Označite ako želite stampati sve stavke kada ispisujete glavnu knjigu, u "
 #~ "supotnom će ispisati samo njen saldo."
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Period otpisa"
 
 #~ msgid "3 Months"
 #~ msgstr "3 meseca"
@@ -10406,9 +10493,6 @@ msgstr ""
 
 #~ msgid "Select Chart"
 #~ msgstr "Odaberi plan"
-
-#~ msgid "Template Tax Fiscal Mapping"
-#~ msgstr "Predlozak poreza fiskalnog mapiranja"
 
 #~ msgid "Overdue Payment Report Message"
 #~ msgstr "Poruka o dospecu zakasnelih placanja"
@@ -10747,9 +10831,6 @@ msgstr ""
 #~ msgid "Journal Purchase"
 #~ msgstr "Dnevnik nabavke"
 
-#~ msgid "All account entries"
-#~ msgstr "Sve stavke naloga"
-
 #~ msgid "Date Filter"
 #~ msgstr "Filter po datumu"
 
@@ -10862,163 +10943,11 @@ msgstr ""
 #~ msgid "Statement Process"
 #~ msgstr "Proces izvoda"
 
-#~ msgid "Fiscal Mappings"
-#~ msgstr "Fiskalna mapiranja"
-
 #~ msgid "Compute Entry Dates"
 #~ msgstr "Izračunaj datume stavki"
 
 #~ msgid "Statement reconcile"
 #~ msgstr "Zatvaranje izvoda"
-
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Analitički računi za zatvaranje"
-
-#~ msgid "My indicators"
-#~ msgstr "Moji Indikatori"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Fakture u pripremi"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Troškovi za fakturiranje"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Računi za fakturisanje"
-
-#~ msgid "Aged receivables"
-#~ msgstr "Dospela potraživanja"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Cela je selekcija bazirana na"
-
-#~ msgid "Notification"
-#~ msgstr "Obaveštenje"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Prikazi Dugovne/Kreditne Informacije"
-
-#~ msgid "All accounts"
-#~ msgstr "Svi nalozi"
-
-#~ msgid "Aged income"
-#~ msgstr "Dospeli Prihodi"
-
-#~ msgid "Financial Period"
-#~ msgstr "Finansijski period"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Uporedi odabrane godine pod uslovima da"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Odaberite razdoblje(a)"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Pokazi poredjenje u %"
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Prikaži izvještaj u 'Landscape' formi"
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr "Morate odabrati opciju 'Landscape'. Molimo označite je."
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Modul Salda Konta je dodao funkije mudulu Finansijskog Menadzmenta\n"
-#~ "    1.Ovaj vam moduk da razlicite opcije za stampu salda\n"
-#~ "    2.Mozete uporedjivati salde razlicitih godina\n"
-#~ "    3.Mozete postaviti gotovinsko ili procentualno poredjenje dve godine\n"
-#~ "    4.Mozete postaviti referentni nalog za procentualno poredjenje datih "
-#~ "godina\n"
-#~ "    5.Imate opciju da odstampate zeljeni izvestaj u  Landskape formatu\n"
-#~ "    "
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Saldo računa-Poredjenja godina"
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Odaberite referentni račun(za poredjenje u u %)"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Odaberite fiskalnu(ne) godine (a Maksimalno 3 godine)"
-
-#~ msgid "Don't Compare"
-#~ msgstr "Ne uporedjuj"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Prikaži račune"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. Odabrali ste više od 3 godine u svakom slučaju."
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Kontni i Finansijski menadzersko-uporedni nalozi"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "Mozes selektovati maksimalno 3 godine. Molim probaj ponovo."
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. Ti jesi selektovao opciju 'Procenat' sa vise od 2 godine, ali nisi "
-#~ "izabrao 'Landscape' format stampe."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Cini mi se da si napravio sledece greske. Molim ispravi ih, pa pokusaj "
-#~ "ponovo."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Ostavi prazno za poredjenje sa njegovim nadredjenim"
-
-#~ msgid "Creation Date"
-#~ msgstr "Datum kreiranja"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr ""
-#~ "2. Niste odabrali opciju 'Procenat', ali ste odabrali više od 2 godine."
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr "Morate odabrati bar 1 fiskalnu godinu. Pokušajte ponovno."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "Postoji mogućnost da ste odabrali opcije poredjenja sa više od 1 godine sa "
-#~ "stupcima duguje/potražuje i % opcijom. Ovo može biti uzrok ispisa van "
-#~ "papira. Molimo pokušajte ponovno."
-
-#~ msgid "Customize Report"
-#~ msgstr "Prilagodi Izvestaj"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr "Modul koji dodaje nove izvještaje na osnovi ACCOUNT Modula"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Konto Izvestaja - Izvještavanje"
 
 #~ msgid ""
 #~ "This type is used to differenciate types with special effects in Open ERP: "
@@ -11033,9 +10962,6 @@ msgstr ""
 #~ "Potraživanja: Salda konta partnera - kupci\n"
 #~ "Zatvoren: Za konta koja se više ne koriste"
 
-#~ msgid "account.move.line"
-#~ msgstr "account.move.line"
-
 #~ msgid "J.C. or Move name"
 #~ msgstr "J.C. ili pomeri ime"
 
@@ -11049,15 +10975,15 @@ msgstr ""
 #~ "Ako je dat podrazumevani porez partnera, on samo upisuje poreze iz naloga ( "
 #~ "ili proizvoda) iste grupe."
 
+#~ msgid "JNRL"
+#~ msgstr "JNRL"
+
 #~ msgid ""
 #~ "This account will be used instead of the default one to value outgoing stock "
 #~ "for the current product"
 #~ msgstr ""
 #~ "Ovaj nalog ce se koristiti umesto podrazumevanog da potvrdi izlazni magacin "
 #~ "za dati prozivod"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Tabla Naloga"
 
 #~ msgid ""
 #~ "If the Tax account is tax code account, this field will contain the taxed "

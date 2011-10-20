@@ -41,7 +41,7 @@ class purchase_requisition(osv.osv):
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','Draft'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
+        'state': fields.selection([('draft','New'),('in_progress','In Progress'),('cancel','Cancelled'),('done','Done')], 'State', required=True)
     }
     _defaults = {
         'date_start': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -164,7 +164,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.purchase_requisition:
                 requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
-                    'origin': procurement.name,
+                    'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
                     'company_id':procurement.company_id.id,

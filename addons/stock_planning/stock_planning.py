@@ -26,6 +26,10 @@ from dateutil.relativedelta import relativedelta
 from osv import osv, fields
 import netsvc
 from tools.translate import _
+import logging
+
+_logger = logging.getLogger('mps') 
+
 
 def rounding(fl, round_value):
     if not round_value:
@@ -37,11 +41,12 @@ def rounding(fl, round_value):
 class stock_period(osv.osv):
     _name = "stock.period"
     _description = "stock period"
+    _order = "date_start"
     _columns = {
         'name': fields.char('Period Name', size=64, required=True),
         'date_start': fields.datetime('Start Date', required=True),
         'date_stop': fields.datetime('End Date', required=True),
-        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State')
+        'state': fields.selection([('draft','Draft'), ('open','Open'),('close','Close')], 'State'),
     }
     _defaults = {
         'state': 'draft'
@@ -75,16 +80,16 @@ class stock_sale_forecast(osv.osv):
                                         help = 'Shows which period this forecast concerns.'),
         'product_id': fields.many2one('product.product', 'Product', readonly=True, required=True, states={'draft':[('readonly',False)]}, \
                                         help = 'Shows which product this forecast concerns.'),
-        'product_qty': fields.float('Product Quantity', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
-                                        help= 'Forecasted quantity.'),
+        'product_qty': fields.float('Forecast Quantity', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
+                                        help= 'Forecast Product quantity.'),
         'product_amt': fields.float('Product Amount', readonly=True, states={'draft':[('readonly',False)]}, \
                                         help='Forecast value which will be converted to Product Quantity according to prices.'),
         'product_uom_categ': fields.many2one('product.uom.categ', 'Product UoM Category'),  # Invisible field for product_uom domain
         'product_uom': fields.many2one('product.uom', 'Product UoM', required=True, readonly=True, states={'draft':[('readonly',False)]}, \
-                        help = "Unit of Measure used to show the quanities of stock calculation." \
+                        help = "Unit of Measure used to show the quantities of stock calculation." \
                         "You can use units form default category or from second category (UoS category)."),
         'product_uos_categ' : fields.many2one('product.uom.categ', 'Product UoS Category'), # Invisible field for product_uos domain
-# Field used in onchange_uom to check what uom was before change and recalculate quantities acording to old uom (active_uom) and new uom.
+# Field used in onchange_uom to check what uom was before change and recalculate quantities according to old uom (active_uom) and new uom.
         'active_uom': fields.many2one('product.uom',  string = "Active UoM"),
         'state': fields.selection([('draft','Draft'),('validated','Validated')],'State',readonly=True),
         'analyzed_period1_id': fields.many2one('stock.period', 'Period1', readonly=True, states={'draft':[('readonly',False)]},),
@@ -93,7 +98,7 @@ class stock_sale_forecast(osv.osv):
         'analyzed_period4_id': fields.many2one('stock.period', 'Period4', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_period5_id': fields.many2one('stock.period' , 'Period5', readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_user_id': fields.many2one('res.users', 'This User', required=False, readonly=True, states={'draft':[('readonly',False)]},),
-        'analyzed_dept_id': fields.many2one('hr.department', 'This Department', required=False, \
+        'analyzed_team_id': fields.many2one('crm.case.section', 'Sales Team', required=False, \
                                     readonly=True, states={'draft':[('readonly',False)]},),
         'analyzed_warehouse_id': fields.many2one('stock.warehouse' , 'This Warehouse', required=False, \
                                     readonly=True, states={'draft':[('readonly',False)]}),
@@ -114,7 +119,7 @@ class stock_sale_forecast(osv.osv):
         'analyzed_period3_per_warehouse': fields.float('This Warehouse Period3', readonly=True),
         'analyzed_period4_per_warehouse': fields.float('This Warehouse Period4', readonly=True),
         'analyzed_period5_per_warehouse': fields.float('This Warehouse Period5', readonly=True),
-        'analyzed_period1_per_company': fields.float('This Copmany Period1', readonly=True),
+        'analyzed_period1_per_company': fields.float('This Company Period1', readonly=True),
         'analyzed_period2_per_company': fields.float('This Company Period2', readonly=True),
         'analyzed_period3_per_company': fields.float('This Company Period3', readonly=True),
         'analyzed_period4_per_company': fields.float('This Company Period4', readonly=True),
@@ -137,7 +142,7 @@ class stock_sale_forecast(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Validated Sale Forecasts !'))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a validated sales forecast!'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -147,7 +152,7 @@ class stock_sale_forecast(osv.osv):
             return result
         result['warehouse_id'] = False
         result['analyzed_user_id'] = False
-        result['analyzed_dept_id'] = False
+        result['analyzed_team_id'] = False
         result['analyzed_warehouse_id'] = False
         return {'value': result}
 
@@ -196,7 +201,7 @@ class stock_sale_forecast(osv.osv):
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
         if uom.category_id.id <> product.uom_id.category_id.id:
-            coef = coef / product.uos_coeff
+            coef = coef * product.uos_coeff
         return product.uom_id.factor / coef
 
     def _from_default_uom_factor(self, cr, uid, product_id, uom_id, context=None):
@@ -206,7 +211,7 @@ class stock_sale_forecast(osv.osv):
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
         if uom.category_id.id <> product.uom_id.category_id.id:
-            res = res / product.uos_coeff
+            res = res * product.uos_coeff
         return res / product.uom_id.factor, uom.rounding
 
     def _sales_per_users(self, cr, uid, so, so_line, company, users):
@@ -237,35 +242,24 @@ class stock_sale_forecast(osv.osv):
             so_line_obj = self.pool.get('sale.order.line')
             so_line_product_ids = so_line_obj.search(cr, uid, [('product_id','=', obj.product_id.id)], context = context)
             if so_line_product_ids:
-                so_line_product_set = ','.join(map(str,so_line_product_ids))
+                shops = users = None
                 if obj.analyzed_warehouse_id:
                     shops = self.pool.get('sale.shop').search(cr, uid,[('warehouse_id','=', obj.analyzed_warehouse_id.id)], context = context)
-                    shops_set = ','.join(map(str,shops))
-                else:
-                    shops = False
-                if obj.analyzed_dept_id:
-                    dept_obj = self.pool.get('hr.department')
-                    dept_id =  obj.analyzed_dept_id.id and [obj.analyzed_dept_id.id] or []
-                    dept_ids = dept_obj.search(cr,uid,[('parent_id','child_of',dept_id)])
-                    cr.execute("SELECT user_id FROM resource_resource rsc, hr_employee emp WHERE (emp.resource_id = rsc.id and emp.department_id IN %s)" ,(tuple(dept_ids),))
-                    dept_users = [x for x, in cr.fetchall()]
-                    dept_users_set =  map(str,dept_users)
-                else:
-                    dept_users = False
-                factor, round_value = self._from_default_uom_factor(cr, uid, obj.product_id.id, obj.product_uom.id, context=context)
+                if obj.analyzed_team_id:
+                    users = [u.id for u in obj.analyzed_team_id.member_ids]
+                factor, _ = self._from_default_uom_factor(cr, uid, obj.product_id.id, obj.product_uom.id, context=context)
                 for i, period in enumerate(periods):
                     if period:
                         so_period_ids = so_obj.search(cr, uid, [('date_order','>=',period.date_start),('date_order','<=',period.date_stop) ], context = context)
                         if so_period_ids:
                             if obj.analyzed_user_id:
-                                user_set = str(obj.analyzed_user_id.id)
-                                sales[i][0] = self._sales_per_users(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, user_set)
+                                sales[i][0] = self._sales_per_users(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, [obj.analyzed_user_id.id])
                                 sales[i][0] *= factor
-                            if dept_users:
-                                sales[i][1] = self._sales_per_users(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, dept_users_set)
+                            if users:
+                                sales[i][1] = self._sales_per_users(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, users)
                                 sales[i][1] *= factor
                             if shops:
-                                sales[i][2] = self._sales_per_warehouse(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, shops_set)
+                                sales[i][2] = self._sales_per_warehouse(cr, uid, so_period_ids,  so_line_product_ids, obj.company_id.id, shops)
                                 sales[i][2] *= factor
                             if obj.analyze_company:
                                 sales[i][3] = self._sales_per_company(cr, uid, so_period_ids, so_line_product_ids, obj.company_id.id, )
@@ -343,13 +337,20 @@ class stock_planning(osv.osv):
                     GROUP BY planning.product_uom", \
                         (date_start, date_stop, val.product_id.id, val.company_id.id,))
         planning_qtys = cr.fetchall()
-        res = self._to_planning_uom(cr, uid, val, planning_qtys, context)
+        res = self._to_default_uom(cr, uid, val, planning_qtys, context)
         return res
 
-    def _to_planning_uom(self, cr, uid, val, qtys, context=None):
+    def _to_default_uom(self, cr, uid, val, qtys, context=None):
         res_qty = 0
         if qtys:
-            uom_obj = self.pool.get('product.uom')
+            for qty, prod_uom in qtys:
+                coef = self._to_default_uom_factor(cr, uid, val.product_id.id, prod_uom, context=context)
+                res_qty += qty * coef
+        return res_qty
+
+    def _to_form_uom(self, cr, uid, val, qtys, context=None):
+        res_qty = 0
+        if qtys:
             for qty, prod_uom in qtys:
                 coef = self._to_default_uom_factor(cr, uid, val.product_id.id, prod_uom, context=context)
                 res_coef, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, context=context)
@@ -369,7 +370,7 @@ class stock_planning(osv.osv):
                        'GROUP BY product_uom', \
                             (val.product_id.id,val.period_id.id, val.company_id.id))
             company_qtys = cr.fetchall()
-            res[val.id]['company_forecast'] = self._to_planning_uom(cr, uid, val, company_qtys, context)
+            res[val.id]['company_forecast'] = self._to_form_uom(cr, uid, val, company_qtys, context)
 
             cr.execute('SELECT sum(product_qty), product_uom \
                         FROM stock_sale_forecast \
@@ -377,8 +378,8 @@ class stock_planning(osv.osv):
                        'GROUP BY product_uom', \
                         (val.product_id.id,val.period_id.id, val.warehouse_id.id))
             warehouse_qtys = cr.fetchall()
-            res[val.id]['warehouse_forecast'] = self._to_planning_uom(cr, uid, val, warehouse_qtys, context)
-            res[val.id]['warehouse_forecast'] = rounding(res[val.id]['warehouse_forecast'],  val.product_id.uom_id.rounding)
+            res[val.id]['warehouse_forecast'] = self._to_form_uom(cr, uid, val, warehouse_qtys, context)
+#            res[val.id]['warehouse_forecast'] = rounding(res[val.id]['warehouse_forecast'],  val.product_id.uom_id.rounding)
         return res
 
     def _get_stock_start(self, cr, uid, val, date, context=None):
@@ -419,7 +420,7 @@ class stock_planning(osv.osv):
                 res_coef, round_value = self._from_default_uom_factor(cr, uid, val.product_id.id, val.product_uom.id, context=context)
                 coef = coef * res_coef
             res[val.id]['minimum_op'] = rounding(ret[0]*coef, round_value)
-            res[val.id]['maximum_op'] = ret[1]*coef
+            res[val.id]['maximum_op'] = rounding(ret[1]*coef, round_value)
         return res
 
     def onchange_company(self, cr, uid, ids, company_id=False):
@@ -451,11 +452,11 @@ class stock_planning(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse','Warehouse', required=True),
         'product_id': fields.many2one('product.product' , 'Product', required=True, help = 'Product which this planning is created for.'),
         'product_uom_categ' : fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uom domain
-        'product_uom': fields.many2one('product.uom', 'UoM', required=True, help = "Unit of Measure used to show the quanities of stock calculation." \
-                        "You can use units form default category or from second category (UoS category)."),
+        'product_uom': fields.many2one('product.uom', 'UoM', required=True, help = "Unit of Measure used to show the quantities of stock calculation." \
+                        "You can use units from default category or from second category (UoS category)."),
         'product_uos_categ': fields.many2one('product.uom.categ', 'Product UoM Category'), # Invisible field for product_uos domain
-# Field used in onchange_uom to check what uom was before change to recalculate quantities acording to old uom (active_uom) and new uom.
-        'active_uom': fields.many2one('product.uom',  string = "Active UoM"),
+# Field used in onchange_uom to check what uom was before change to recalculate quantities according to old uom (active_uom) and new uom.
+        'active_uom': fields.many2one('product.uom',  string = "Active UoM"), #  It works only in Forecast
         'planned_outgoing': fields.float('Planned Out', required=True,  \
                 help = 'Enter planned outgoing quantity from selected Warehouse during the selected Period of selected Product. '\
                         'To plan this value look at Confirmed Out or Sales Forecasts. This value should be equal or greater than Confirmed Out.'),
@@ -475,16 +476,16 @@ class stock_planning(osv.osv):
                 help = 'Quantity left to Planned incoming quantity. This is calculated difference between Planned In and Confirmed In. ' \
                         'For current period Already In is also calculated. This value is used to create procurement for lacking quantity.'),
         'outgoing_left': fields.float('Expected Out', readonly=True, \
-                help = 'Quantity expected to go out in selected period. As a difference between Planned Out and Confirmed Out. ' \
+                help = 'Quantity expected to go out in selected period besides Confirmed Out. As a difference between Planned Out and Confirmed Out. ' \
                         'For current period Already Out is also calculated'),
         'to_procure': fields.float(string='Planned In', required=True, \
                 help = 'Enter quantity which (by your plan) should come in. Change this value and observe Stock simulation. ' \
                         'This value should be equal or greater than Confirmed In.'),
-        'line_time': fields.function(_get_past_future,type='char', string='Past/Future'),
+        'line_time': fields.function(_get_past_future, type='char', string='Past/Future'),
         'minimum_op': fields.function(_get_op, type='float', string = 'Minimum Rule', multi= 'minimum', \
-                            help = 'Minimum quantity set in Minimum Stock Rules for this Warhouse'),
+                            help = 'Minimum quantity set in Minimum Stock Rules for this Warehouse'),
         'maximum_op': fields.function(_get_op, type='float', string = 'Maximum Rule', multi= 'maximum', \
-                            help = 'Maximum quantity set in Minimum Stock Rules for this Warhouse'),
+                            help = 'Maximum quantity set in Minimum Stock Rules for this Warehouse'),
         'outgoing_before': fields.float('Planned Out Before', readonly=True, \
                             help= 'Planned Out in periods before calculated. '\
                                     'Between start date of current period and one day before start of calculated period.'),
@@ -499,18 +500,18 @@ class stock_planning(osv.osv):
                             help= 'Quantity which is already picked up to this warehouse in current period.'),
         'stock_only': fields.boolean("Stock Location Only", help = "Check to calculate stock location of selected warehouse only. " \
                                         "If not selected calculation is made for input, stock and output location of warehouse."),
-        "procure_to_stock": fields.boolean("Procure To Stock Location", help = "Chect to make procurement to stock location of selected warehouse. " \
+        "procure_to_stock": fields.boolean("Procure To Stock Location", help = "Check to make procurement to stock location of selected warehouse. " \
                                         "If not selected procurement will be made into input location of warehouse."),
         "confirmed_forecasts_only": fields.boolean("Validated Forecasts", help = "Check to take validated forecasts only. " \
                     "If not checked system takes validated and draft forecasts."),
-        'supply_warehouse_id': fields.many2one('stock.warehouse','Source Warehouse', help = "Warehouse used as source in supply pick move created by 'Supply from Another Warhouse'."),
+        'supply_warehouse_id': fields.many2one('stock.warehouse','Source Warehouse', help = "Warehouse used as source in supply pick move created by 'Supply from Another Warehouse'."),
         "stock_supply_location": fields.boolean("Stock Supply Location", help = "Check to supply from Stock location of Supply Warehouse. " \
-                "If not checked supply will be made from Output location of Supply Warehouse. Used in 'Supply from Another Warhouse' with Supply Warehouse."),
+                "If not checked supply will be made from Output location of Supply Warehouse. Used in 'Supply from Another Warehouse' with Supply Warehouse."),
 
     }
 
     _defaults = {
-        'state': lambda *args: 'draft' ,
+        'state': 'draft' ,
         'to_procure': 0.0,
         'planned_outgoing': 0.0,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.planning', context=c),
@@ -525,7 +526,7 @@ class stock_planning(osv.osv):
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         coef = uom.factor
         if uom.category_id.id != product.uom_id.category_id.id:
-            coef = coef / product.uos_coeff
+            coef = coef * product.uos_coeff
         return product.uom_id.factor / coef
 
 
@@ -536,19 +537,22 @@ class stock_planning(osv.osv):
         uom = uom_obj.browse(cr, uid, uom_id, context=context)
         res = uom.factor
         if uom.category_id.id != product.uom_id.category_id.id:
-            res = res / product.uos_coeff
+            res = res * product.uos_coeff
         return res / product.uom_id.factor, uom.rounding
 
     def calculate_planning(self, cr, uid, ids, context, *args):
-        one_minute = relativedelta(minutes=1)
-        current_date_beginning_c = datetime.today()
-        current_date_end_c = current_date_beginning_c  + relativedelta(days=1, minutes=-1)  # to get hour 23:59:00
+        one_second = relativedelta(seconds=1)
+        today = datetime.today()
+        current_date_beginning_c = datetime(today.year, today.month, today.day)
+        current_date_end_c = current_date_beginning_c  + relativedelta(days=1, seconds=-1)  # to get hour 23:59:59
         current_date_beginning = current_date_beginning_c.strftime('%Y-%m-%d %H:%M:%S')
         current_date_end = current_date_end_c.strftime('%Y-%m-%d %H:%M:%S')
+        _logger.debug("Calculate Planning: current date beg: %s and end: %s", current_date_beginning, current_date_end)
         for val in self.browse(cr, uid, ids, context=context):
             day = datetime.strptime(val.period_id.date_start, '%Y-%m-%d %H:%M:%S')
-            dbefore = datetime(day.year, day.month, day.day) - one_minute
+            dbefore = datetime(day.year, day.month, day.day) - one_second
             day_before_calculated_period = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before start of calculated period
+            _logger.debug("Day before calculated period: %s ", day_before_calculated_period)
             cr.execute("SELECT date_start \
                     FROM stock_period AS period \
                     LEFT JOIN stock_planning AS planning \
@@ -558,10 +562,10 @@ class stock_planning(osv.osv):
             date = cr.fetchone()
             start_date_current_period = date and date[0] or False
             start_date_current_period = start_date_current_period or current_date_beginning
-            
             day = datetime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
-            dbefore = datetime(day.year, day.month, day.day) - one_minute
+            dbefore = datetime(day.year, day.month, day.day) - one_second
             date_for_start = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before current period
+            _logger.debug("Date for start: %s", date_for_start)
             already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done=True, context=context),
             already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done=True, context=context),
             outgoing = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='out', done=False, context=context),
@@ -623,7 +627,7 @@ class stock_planning(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'company_id' : obj.company_id.id,
-                        'name': _('Manual planning for %s') %(obj.period_id.name),
+                        'name': _('MPS planning for %s') %(obj.period_id.name),
                         'origin': _('MPS(%s) %s') %(user.login, obj.period_id.name),
                         'date_planned': obj.period_id.date_start,
                         'product_id': obj.product_id.id,
@@ -633,7 +637,7 @@ class stock_planning(osv.osv):
                         'product_uos': uos,
                         'location_id': obj.procure_to_stock and obj.warehouse_id.lot_stock_id.id or obj.warehouse_id.lot_input_id.id,
                         'procure_method': 'make_to_order',
-                        'note' : _(' Procurement created in MPS by user: %s   Creation Date: %s \
+                        'note' : _(' Procurement created by MPS for user: %s   Creation Date: %s \
                                         \n For period: %s \
                                         \n according to state: \
                                         \n Warehouse Forecast: %s \
@@ -653,7 +657,7 @@ class stock_planning(osv.osv):
             self.calculate_planning(cr, uid, ids, context)
             prev_text = obj.history or ""
             self.write(cr, uid, ids, {
-                    'history': _('%s Requisition (%s,  %s) %s %s \n') % (prev_text, user.login, time.strftime('%Y.%m.%d %H:%M'),
+                    'history': _('%s Procurement (%s,  %s) %s %s \n') % (prev_text, user.login, time.strftime('%Y.%m.%d %H:%M'),
                     obj.incoming_left, obj.product_uom.name)
                 })
 

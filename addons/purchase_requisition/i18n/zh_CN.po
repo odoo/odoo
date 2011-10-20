@@ -14,69 +14,69 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:54+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:51+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "进行中"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "No Product in Tender"
-msgstr ""
+msgstr "没请购的产品"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Confirm"
-msgstr ""
+msgstr "确认"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "负责人"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: field:purchase.requisition,state:0
 msgid "State"
-msgstr ""
+msgstr "状态"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Draft"
-msgstr ""
+msgstr "草稿"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Supplier"
-msgstr ""
+msgstr "供应商"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Requisition Type"
-msgstr ""
+msgstr "请购类型"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Product Detail"
-msgstr ""
+msgstr "产品详情"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition,date_start:0
 msgid "Requisition Date"
-msgstr ""
+msgstr "请购日期"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -88,67 +88,67 @@ msgstr ""
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "采购申请"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr ""
+msgstr "采购申请明细"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
 #: field:purchase.requisition.line,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "产品"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "单号必须唯一！"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition,description:0
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #. module: purchase_requisition
 #: help:product.product,purchase_requisition:0
 msgid ""
 "Check this box so that requisitions generates purchase requisitions instead "
 "of directly requests for quotations."
-msgstr ""
+msgstr "勾选选项，请购生成采购申请而不是直接生成询价单"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,company_id:0
 #: field:purchase.requisition.line,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "公司"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Request a Quotation"
-msgstr ""
+msgstr "请求询价"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Multiple Requisitions"
-msgstr ""
+msgstr "多个申请"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Approved by Supplier"
-msgstr ""
+msgstr "供应商已核审批"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "重置为草稿"
 
 #. module: purchase_requisition
 #: model:ir.module.module,description:purchase_requisition.module_meta_information
@@ -160,21 +160,25 @@ msgid ""
 "    This new object will regroup and will allow you to easily keep track and "
 "order all your purchase orders.\n"
 msgstr ""
+"\n"
+"    这模块允许您管理您的请购。\n"
+"生成与采购订相关的请购。\n"
+"它现在将重组和让您轻松跟踪和安排您所有的采购订单。\n"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
 msgid "Address"
-msgstr ""
+msgstr "地址"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Order Reference"
-msgstr ""
+msgstr "单号"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Start Date"
-msgstr ""
+msgstr "开始日期"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -185,53 +189,55 @@ msgid ""
 "negotiation, once you have reviewed all the supplier's offers, you can "
 "validate some and cancel others."
 msgstr ""
+"询价的前一步是采购申请，在采购申请您能记录您需求购买的产品并触发生成给供应商的询价单，之后经过协商，一旦您审阅过所有供应商提供的信息，您可以确认他并取消其"
+"他人。"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "采购申请"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "End Date"
-msgstr ""
+msgstr "结束日期"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition,name:0
 msgid "Requisition Reference"
-msgstr ""
+msgstr "采购申请"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
 msgid "Products to Purchase"
-msgstr ""
+msgstr "采购的产品"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Requisition Deadline"
-msgstr ""
+msgstr "请购截止日期"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Search Purchase Requisition"
-msgstr ""
+msgstr "搜索采购申请"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Notes"
-msgstr ""
+msgstr "备注"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "下单日期"
 
 #. module: purchase_requisition
 #: help:purchase.requisition,exclusive:0
@@ -242,172 +248,174 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
+"采购申请(排它的)：确认采购订单，它会取消剩下的采购订单。\n"
+"采购申请(复合的)：它允许有多个采购订单，确认采购订单它不会取消剩下的采购订单。"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel Purchase Order"
-msgstr ""
+msgstr "取消采购订单"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 #: view:purchase.requisition:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "采购订单"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "错误！"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
-msgstr ""
+msgstr "产品计量单位"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Products"
-msgstr ""
+msgstr "产品"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Order Date"
-msgstr ""
+msgstr "订单日期"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr ""
+msgstr "采购申请业务伙伴"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Quotation Detail"
-msgstr ""
+msgstr "询价详情"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr ""
+msgstr "采购申请"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr ""
+msgstr "采购订单"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 #: view:purchase.requisition:0
 #: field:purchase.requisition,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "源"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Reference"
-msgstr ""
+msgstr "单号"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "需求单"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "仓库"
 
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr ""
+msgstr "最近的请购"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Quotations"
-msgstr ""
+msgstr "询价单"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
-msgstr ""
+msgstr "数量"
 
 #. module: purchase_requisition
 #: selection:purchase.requisition,exclusive:0
 msgid "Purchase Requisition (exclusive)"
-msgstr ""
+msgstr "采购申请(排它的)"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "Create Quotation"
-msgstr ""
+msgstr "创建询价单"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "错误：无效的(EAN)条码"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #. module: purchase_requisition
 #: view:purchase.requisition.partner:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Confirm Purchase Order"
-msgstr ""
+msgstr "确认采购订单"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: purchase_requisition
 #: model:ir.module.module,shortdesc:purchase_requisition.module_meta_information
 msgid "Purchase - Purchase Requisition"
-msgstr ""
+msgstr "采购 - 采购申请"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned"
-msgstr ""
+msgstr "未分配"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Requisition"
-msgstr ""
+msgstr "采购申请"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
-msgstr ""
+msgstr "采购订单"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:90

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:45+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:48+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2118,8 +2118,8 @@ msgid "Future Qty"
 msgstr "Бъдещо количесто"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2176,7 +2176,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3955,10 +3955,6 @@ msgstr ""
 #~ msgid "Locations' Values"
 #~ msgstr "Стойности на местонахождение"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Бъдещи стоки"
-
 #~ msgid "LIFO"
 #~ msgstr "LIFO"
 
@@ -3998,16 +3994,8 @@ msgstr ""
 #~ msgid "Products Received"
 #~ msgstr "Получени продукти"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Бъдещи продукции"
-
 #~ msgid "Incoming Products"
 #~ msgstr "Пристигащи продукти"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Бъдещи получавания"
 
 #~ msgid "Force to use a Production Lot during receptions"
 #~ msgstr "Изискване при получване да се използва партида от продукция"
@@ -4140,9 +4128,6 @@ msgstr ""
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Календар на доставките"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Проследяване на входящи партиди"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4181,10 +4166,6 @@ msgstr ""
 
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Бъдещи доставки"
 
 #~ msgid "Tracking Number"
 #~ msgstr "Транспортен номер"
@@ -4290,9 +4271,6 @@ msgstr ""
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
 
-#~ msgid "Qty"
-#~ msgstr "К-во"
-
 #~ msgid "Draft Periodical Inventories"
 #~ msgstr "Проект на периодична наличност"
 
@@ -4322,10 +4300,6 @@ msgstr ""
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Бъдещо к-во"
 
 #~ msgid "Supplier Refund"
 #~ msgstr "Обезщетение на доставчик"
@@ -4532,9 +4506,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Проследяване на изходящи партиди"
-
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
 
@@ -4600,9 +4571,6 @@ msgstr ""
 #~ msgid "STOCK_UNINDENT"
 #~ msgstr "STOCK_UNINDENT"
 
-#~ msgid "Canceled"
-#~ msgstr "Прекратен"
-
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
 
@@ -4644,10 +4612,6 @@ msgstr ""
 
 #~ msgid "Split in Two"
 #~ msgstr "Разделяне на две"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Бъдещи печалби и загуби"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
@@ -4719,9 +4683,6 @@ msgstr ""
 #~ msgid "Move History"
 #~ msgstr "Хронология на движение"
 
-#~ msgid "weight"
-#~ msgstr "тегло"
-
 #~ msgid "Available Packing"
 #~ msgstr "Налична опаковка"
 
@@ -4758,37 +4719,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Планирана дата за придвижване на продукти, или реална дата, ако "
 #~ "придвижването е извършено."
-
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Модулът за управление на инвентар на OpenERP може да управлява многобройни "
-#~ "складове, многобройни и структурирани местонахождения в склад.\n"
-#~ "Благодарение на управлението с двойно вписване, контролирането на инвентара "
-#~ "е и мощно и гъвкаво:\n"
-#~ "*Хронология и планиране на движения\n"
-#~ "*Различни методи за инвентар (FIFO, LIFO, ...)\n"
-#~ "*Оценяване на склад (стандартни или средни цени, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "*Автоматични правила за предварителни поръчки (складови наличности, JIT, "
-#~ "...)\n"
-#~ "*Поддръжка на баркодове\n"
-#~ "*Светкавично откриване на грешки благодарение на управлението с двойно "
-#~ "вписване\n"
-#~ "*Проследимост (вертикална, производствени партиди, серийни номера, ...)\n"
-#~ "    "
 
 #, python-format
 #~ msgid "Product "

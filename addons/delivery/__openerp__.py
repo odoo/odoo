@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Carriers and Deliveries',
+    'name': 'Delivery Costs',
     'version': '1.0',
-    'category': 'Warehouse',
+    'category': 'Sales Management',
     'complexity': "normal",
     'description': """
 Allows you to add delivery methods in sale orders and picking.

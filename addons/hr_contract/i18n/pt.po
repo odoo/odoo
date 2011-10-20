@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:27+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:23+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -29,12 +29,12 @@ msgstr "Bruto"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Trial Period"
-msgstr "Período de teste"
+msgstr "Período experimental"
 
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr ""
+msgstr "Início período experimental"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -64,7 +64,7 @@ msgstr "Diversos"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Current"
-msgstr "Actual"
+msgstr "Atual"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,factor_type:0
@@ -74,7 +74,7 @@ msgstr "Factor de custo por hora"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Overpassed"
-msgstr ""
+msgstr "Caducado"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -89,7 +89,7 @@ msgstr "Departamento"
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
 msgid "Basic"
-msgstr ""
+msgstr "Base"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -145,7 +145,7 @@ msgstr "Procurar contrato"
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
 msgid "Latest contract of the employee"
-msgstr "Último contrato do empregado"
+msgstr "Último contrato do funcionário"
 
 #. module: hr_contract
 #: field:hr.contract,advantages_net:0
@@ -163,6 +163,14 @@ msgid ""
 "    You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"    Agregar todos os dados para a gestão de contratos:\n"
+"    * Estado civil\n"
+"    * Número de segurança social\n"
+"    * Local e data de nascimento\n"
+"    * etc.\n"
+"    É possível associar vários contratos ao mesmo funcionário.\n"
+"    "
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -173,7 +181,7 @@ msgstr "Vantagens"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Valid for"
-msgstr ""
+msgstr "Válido por"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -208,7 +216,7 @@ msgstr "Erro! Não pode criar hierarquias de funcionários recursivamente."
 #. module: hr_contract
 #: field:hr.contract,date_end:0
 msgid "End Date"
-msgstr "Data de Final"
+msgstr "Data de fim"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -218,7 +226,7 @@ msgstr "Salário"
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Reference"
-msgstr ""
+msgstr "Ref.ª Contrato"
 
 #. module: hr_contract
 #: help:hr.employee,vehicle_distance:0
@@ -236,7 +244,7 @@ msgstr "Notas"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
-"Erro! Não pode seleccionar um departamento cujo gestor é o empregado."
+"Erro ! Não pode seleccionar um departamento cujo gestor é o funcionário."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -258,7 +266,7 @@ msgstr "Tipo de Contrato"
 #. module: hr_contract
 #: view:hr.contract.wage.type.period:0
 msgid "Search Wage Period"
-msgstr ""
+msgstr "Procurar período de pagamento de salários"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -269,7 +277,7 @@ msgstr "Horário de trabalho"
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Job Info"
-msgstr ""
+msgstr "Informações sobre o cargo"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
@@ -291,12 +299,12 @@ msgstr "É gerente"
 #. module: hr_contract
 #: field:hr.contract,date_start:0
 msgid "Start Date"
-msgstr "Data de Início"
+msgstr "Data de início"
 
 #. module: hr_contract
 #: constraint:hr.contract:0
 msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
+msgstr "Erro! Data de início do contrato deve ser anterior à data de fim."
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -311,7 +319,7 @@ msgstr "Tipo"
 #. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
-msgstr ""
+msgstr "Fim do período experimental"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -322,7 +330,7 @@ msgstr "Agrupar por..."
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
 msgid "Period Name"
-msgstr "Nome do Período"
+msgstr "Nome do período"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -332,13 +340,13 @@ msgstr "Período"
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
 msgid "Place of Birth"
-msgstr "Local de Nascimento"
+msgstr "Local de nascimento"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
 msgid "Wage period"
-msgstr "Período Salarial"
+msgstr "Período salarial"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -347,8 +355,8 @@ msgid ""
 "This field is used by the timesheet system to compute the price of an hour "
 "of work wased on the contract of the employee"
 msgstr ""
-"Este campo é utilizado pelo sistema de horário para calcular o preço de uma "
-"hora de trabalho baseado no contrato do funcionário"
+"Este campo é utilizado pelas folhas de trabalho para calcular o preço de uma "
+"hora de trabalho cok base no contrato do funcionário"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -363,12 +371,12 @@ msgstr "Data do exame médico"
 #. module: hr_contract
 #: field:hr.contract,advantages_gross:0
 msgid "Allowances"
-msgstr ""
+msgstr "Abonos"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Main Data"
-msgstr ""
+msgstr "Dados principais"
 
 #. module: hr_contract
 #: view:hr.contract.type:0
@@ -434,33 +442,3 @@ msgstr "Procurar o tipo de contrato"
 
 #~ msgid "Contract Duration"
 #~ msgstr "Duração do Contrato"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "O ID do certificado do módulo tem de ser único!"
-
-#~ msgid "Calculations"
-#~ msgstr "Cálculos"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erro ! Não pode criar menus recursivos"
-
-#~ msgid "Description"
-#~ msgstr "Descrição"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "O nome do módulo deve ser único!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
-
-#~ msgid "Salary Structure"
-#~ msgstr "Estrutura do salário"
-
-#~ msgid "Salary Computation"
-#~ msgstr "Cálculo de salário"
-
-#~ msgid "Company contribution"
-#~ msgstr "Contribuição da empresa"
-
-#~ msgid "Contract Details"
-#~ msgstr "Detalhes do contrato"

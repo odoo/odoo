@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 "Language: lt\n"
 
 #. module: stock
@@ -2091,8 +2091,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2149,7 +2149,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3930,9 +3930,6 @@ msgstr ""
 #~ msgid "Dest. Address"
 #~ msgstr "Pristatymo adresas"
 
-#~ msgid "Qty"
-#~ msgstr "Kiekis"
-
 #~ msgid "FIFO"
 #~ msgstr "FIFO"
 
@@ -3959,10 +3956,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Objekto pavadinimas turi prasidėti x_ ir neturėti jokių specialių simbolių!"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Virtualios atsargos"
-
 #~ msgid "Sub Products"
 #~ msgstr "Vaikiniai produktai"
 
@@ -3984,14 +3977,6 @@ msgstr ""
 #~ msgid "Products Received"
 #~ msgstr "Produktai gauti"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Produktai ateityje"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Ateities užsakymas"
-
 #~ msgid "Force to use a Production Lot during receptions"
 #~ msgstr "Priverstinai naudoti gamybos partiją registruojant užsakymus"
 
@@ -4009,9 +3994,6 @@ msgstr ""
 
 #~ msgid "terp-purchase"
 #~ msgstr "OpenERP-pirkimai"
-
-#~ msgid "(Keep empty to open the current situation)"
-#~ msgstr "(Palikite tuščią, norėdami atidaryti dabartinę situaciją)"
 
 #~ msgid "Products Sent"
 #~ msgstr "Išsiųsti produktai"
@@ -4074,9 +4056,6 @@ msgstr ""
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Pristatymų kalendorius"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Sekti atvežamus produktus"
-
 #~ msgid "Latest Date of Inventory"
 #~ msgstr "Paskutinė inventorizacijos data"
 
@@ -4093,10 +4072,6 @@ msgstr ""
 #~ "Tracking lot is the code that will be put on the logistical unit/pallet"
 #~ msgstr "Partijos kodas, kuris bus įtrauktas į logistikos vienetą / padėklą."
 
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Pristatymai ateityje"
-
 #~ msgid "Tracking Number"
 #~ msgstr "Partijų numeriai"
 
@@ -4105,9 +4080,6 @@ msgstr ""
 
 #~ msgid "Packing List:"
 #~ msgstr "Važtaraščio sąrašas:"
-
-#~ msgid "weight"
-#~ msgstr "svoris"
 
 #~ msgid "Non Assigned Products:"
 #~ msgstr "Nepriskirti produktai:"
@@ -4320,9 +4292,6 @@ msgstr ""
 #~ msgid "Chained Delay (days)"
 #~ msgstr "Atidėjimas (dienomis)"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Sekti išvežamus produktus"
-
 #~ msgid ""
 #~ "This is used only if you selected a chained location type.\n"
 #~ "The 'Automatic Move' value will create a stock move after the current one "
@@ -4370,9 +4339,6 @@ msgstr ""
 #~ msgid "Stock by Lots"
 #~ msgstr "Atsargos pagal partiją"
 
-#~ msgid "Canceled"
-#~ msgstr "Atšaukta"
-
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
 #~ "instead of the default one, as the source location for stock moves generated "
@@ -4402,10 +4368,6 @@ msgstr ""
 
 #~ msgid "Split in Two"
 #~ msgstr "Suskaidyti į dvi"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Ateities P/N"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "

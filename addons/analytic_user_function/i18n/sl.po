@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:35+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:32+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
 msgid "Product"
-msgstr "Proizvod"
+msgstr "Izdelek"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:96
@@ -55,14 +55,14 @@ msgstr "Uporabnik"
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Napaka! Valuta mora biti enaka kot valuta izbranega podjetja"
 
 #. module: analytic_user_function
 #: code:addons/analytic_user_function/analytic_user_function.py:97
 #: code:addons/analytic_user_function/analytic_user_function.py:132
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Ni definiranega konta stroškov za ta izdelek: \"%s\" (id:%d)"
 
 #. module: analytic_user_function
 #: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
@@ -85,6 +85,18 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Ta modul vam omogoča, da določite, kaj je privzeta funkcija določenega "
+"uporabnika za določen račun. To se večinoma uporablja, ko uporabnik definira "
+"svoje opravljene ure: vrednosti so pridobljene in polja so avtomatsko "
+"vnešena ... ampak možnost spremembe teh vrednosti so še vedno na voljo.\n"
+"\n"
+"Seveda, če podatki niso bili  zapisani za trenutni račun, je privzeta "
+"vrednost, ki je ponavadi pridobljena iz podatkov zaposlenih, tako da je ta "
+"modul popolnoma združljiv s starejšimi konfiguracijami.\n"
+"\n"
+"    "
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information
@@ -108,12 +120,3 @@ msgstr "Uporabniški proizvodi za ta analitični konto"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Dolžina polja ne sme biti nikoli manj od 1!"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Ime modula mora biti enolično!"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Oznaka certifikata modula mora biti enolična!"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:01+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:01+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -34,7 +34,7 @@ msgstr "传真"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "title"
-msgstr ""
+msgstr "职位"
 
 #. module: base_contact
 #: help:res.partner.job,date_start:0
@@ -92,7 +92,7 @@ msgstr "定义职能与地址。"
 #. module: base_contact
 #: help:res.partner.job,date_stop:0
 msgid "Last date of job"
-msgstr ""
+msgstr "工作的最后日期"
 
 #. module: base_contact
 #: view:base.contact.installer:0
@@ -126,7 +126,7 @@ msgstr "省/ 州"
 msgid ""
 "If the active field is set to False,                 it will allow you to "
 "hide the partner contact without removing it."
-msgstr ""
+msgstr "如果有效性字段是假值，它可以允许你隐藏业务伙伴联系人不用删除它"
 
 #. module: base_contact
 #: model:ir.module.module,description:base_contact.module_meta_information
@@ -151,6 +151,20 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"        这个模块允许您完整地管理您的联系人。\n"
+"\n"
+"    它可以让你定义\n"
+"        *联系人不关联合作伙伴，\n"
+"        *联系人工作在几个地址（这些地址可能是几个业务伙伴）\n"
+"        *联系人几个地址可能是不同职务\n"
+"\n"
+"    它还增加了新的菜单位于\n"
+"        合作伙伴\\联系人\n"
+"        合作伙伴\\职位\n"
+"\n"
+"    注意，此模块转换成“地址+联系人”的现有地址。这意味着一些地址字段将会丢失（如联系人的姓名），因为这些都应该是在其他对象中定义的。\n"
+"    "
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -178,7 +192,7 @@ msgstr "分类"
 msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
-msgstr ""
+msgstr "在业务伙伴职位列表里按照职位重要性排列"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -225,7 +239,7 @@ msgstr "职能到地址"
 #. module: base_contact
 #: field:base.contact.installer,progress:0
 msgid "Configuration Progress"
-msgstr "配置进度"
+msgstr "设置进度"
 
 #. module: base_contact
 #: field:res.partner.contact,name:0
@@ -236,7 +250,7 @@ msgstr "姓"
 #: view:res.partner:0
 #: view:res.partner.contact:0
 msgid "Communication"
-msgstr ""
+msgstr "沟通"
 
 #. module: base_contact
 #: field:base.contact.installer,config_logo:0
@@ -257,7 +271,7 @@ msgstr "业务伙伴地址列表"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Address's Migration to Contacts"
-msgstr ""
+msgstr "地址的迁移到通讯录"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -284,7 +298,7 @@ msgstr "联系"
 msgid ""
 "Due to changes in Address and Partner's relation, some of the details from "
 "address are needed to be migrated into contact information."
-msgstr ""
+msgstr "由于地址和合作伙伴的关系的变化，一些细节需要迁移到联系信息。"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
@@ -314,12 +328,12 @@ msgstr "网站"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Otherwise these details will not be visible from address/contact."
-msgstr ""
+msgstr "否则这些细节在地址/联系人处不可见"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr "配置"
+msgstr "设置"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -330,7 +344,7 @@ msgstr "电子邮件"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
+msgstr "base.contact.installer"
 
 #. module: base_contact
 #: view:res.partner.job:0
@@ -365,7 +379,7 @@ msgstr "定义业务伙伴和地址"
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Seq."
-msgstr "序号"
+msgstr "序列"
 
 #. module: base_contact
 #: field:res.partner.contact,lang_id:0
@@ -405,7 +419,7 @@ msgstr "生日"
 #. module: base_contact
 #: help:base.contact.installer,migrate:0
 msgid "If you select this, all addresses will be migrated."
-msgstr ""
+msgstr "如果你选择这个,所有地址将被迁移。"
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -467,12 +481,12 @@ msgstr "开放的职位"
 #. module: base_contact
 #: field:base.contact.installer,name:0
 msgid "Name"
-msgstr "姓名"
+msgstr "名称"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
+msgstr "你可以迁移业务伙伴的当前地址到联系人上"
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
@@ -482,12 +496,12 @@ msgstr "主要雇主"
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
 msgid "Address Migration"
-msgstr ""
+msgstr "地址迁移"
 
 #. module: base_contact
 #: view:res.partner:0
 msgid "Postal Address"
-msgstr ""
+msgstr "邮政地址"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
@@ -510,7 +524,7 @@ msgstr "开始日期"
 msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
-msgstr ""
+msgstr "按照重要性列表这些联系人的地址"
 
 #~ msgid "Base Contact Process"
 #~ msgstr "基本联系人流程"

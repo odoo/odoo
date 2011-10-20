@@ -4,6 +4,7 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_plain_ftp(timeout=1.0)
+        cr.commit()
 - |
     I create two partners 'Partner1' and 'Partner2'.
     I create three partner categories: 'none', 'pat1' and 'all'
@@ -53,6 +54,7 @@
         dirs = ftp.nlst()
         for dir in [ 'All Partner1+2', 'No partners', 'Pat 1' ]:
             assert dir in dirs, "Dir %s not in folder" % dir
+        cr.commit()
 -
     I create a 'partners' folder by the first resource one.
 -
@@ -79,6 +81,7 @@
         for dir in correct:
             res = ftp.nlst(dir+'/Partners of Test')
             assert res == correct[dir], "Dir %s falsely contains %s" %(dir, res)
+        cr.commit()
 -
     I create an ir.attachment, attached (not related) to Partner1
 -

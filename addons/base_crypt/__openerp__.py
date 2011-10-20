@@ -24,14 +24,13 @@
     "author" : ['OpenERP SA', "FS3"],
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     'complexity': "easy",
     "description": """
 Replaces cleartext passwords in the database with a secure hash
 ===============================================================
 For your existing user base, the removal of the cleartext
-passwords occurs the first time a user logs into the database,
-after installing base_crypt.
+passwords occurs immediately when you instal base_crypt.
 
 All passwords will be replaced by a secure, salted, cryptographic
 hash, preventing anyone from reading the original password in
@@ -45,7 +44,7 @@ Security Warning
 ++++++++++++++++
 Installing this module does not mean you can ignore other security measures,
 as the password is still transmitted unencrypted on the network, unless you
-are using a secure protocol such as XML-RPCS.
+are using a secure protocol such as XML-RPCS or HTTPS.
 It also does not protect the rest of the content of the database, which may
 contain critical data. Appropriate security measures need to be implemented
 by the system administrator in all areas, such as: protection of database

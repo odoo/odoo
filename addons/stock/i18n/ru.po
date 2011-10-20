@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -567,11 +567,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
-"Вы найдете в этом списке все продукты, которые Вы должны доставить своим "
-"клиентам. Вы можете обработать доставки непосредственно из этого списка с "
+"Вы найдете в этом списке все ТМЦ, которые Вы должны отгрузить своим "
+"клиентам. Вы можете обработать отгрузки непосредственно из этого списка с "
 "помощью кнопки справа в каждой строке. Вы можете фильтровать ТМЦ для "
-"доставки по клиентам, по ТМЦ или заказам на продажу (с использованием поля "
-"происхождение)."
+"отгрузки по клиентам, по ТМЦ или заказам на продажу (используя поле "
+"Источник)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -824,7 +824,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr "Входящие поставки"
+msgstr "Поступающие грузы"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1051,6 +1051,29 @@ msgid ""
 "location consumes the raw material and produces finished products\n"
 "                      "
 msgstr ""
+"* Место хранения поставщика: виртуальное место хранения являющееся "
+"источником для ТМЦ поступающих от ваших поставщиков.\n"
+"                       \n"
+"* Вид: виртуальное место хранения используемое для организации иерархической "
+"структуры склада, включает в себя подчиненные места хранения; не может "
+"хранить ТМЦ.\n"
+"                       \n"
+"* Внутреннее место хранения: физическое место хранения внутри вашего "
+"склада.\n"
+"                       \n"
+"* Место хранения заказчика: виртуальное место хранения являющееся местом "
+"назначения для отгружаемых заказчику ТМЦ.\n"
+"                       \n"
+"* Инвентаризация: виртуальное место хранения корреспондирующее с операциями "
+"инвентаризации корректирующими остатки ТМЦ (физическими инвентаризациями).\n"
+"                       \n"
+"* Снабжение: виртуальное место хранения временно корреспондирующее для "
+"операций снабжения, когда источник (поставщик или производство) не известен. "
+"Это место хранения должно быть пустым по окончанию работы планировщика.\n"
+"                       \n"
+"* Производство: виртуальное место хранения для производственных операций: "
+"это место хранения потребляет сырьё и производит готовую продукцию.\n"
+"                      "
 
 #. module: stock
 #: field:stock.production.lot.revision,author_id:0
@@ -1404,7 +1427,7 @@ msgstr "Замена запасов"
 #. module: stock
 #: view:stock.inventory:0
 msgid "General Informations"
-msgstr "Обзая информация"
+msgstr "Общая информация"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -1438,6 +1461,7 @@ msgstr "Приход"
 msgid ""
 "By unchecking the active field, you may hide an INCOTERM without deleting it."
 msgstr ""
+"Сняв пометку с поля \"Активно\", вы можете скрыть ИНКОТЕРМС без его удаления."
 
 #. module: stock
 #: view:stock.move:0
@@ -1512,7 +1536,7 @@ msgstr ""
 " После этого состояние становится \"Не доступно\", если планировщик на нашел "
 "ТМЦ.\n"
 " Когда ТМЦ зарезервированы состояние \"Доступно\".\n"
-" Когда комплектование выполнено, то состояние \"Готово\".\n"
+" Когда комплектование выполнено, то состояние \"Сделано\".\n"
 "Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
 
 #. module: stock
@@ -1570,6 +1594,8 @@ msgstr "Отслеживать производимые партии"
 msgid ""
 "Please select multiple physical inventories to merge in the list view."
 msgstr ""
+"Пожалуйста, выберите несколько физических инвентаризаций для объединения в "
+"виде списка."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_open
@@ -1911,7 +1937,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_fill_inventory
 #: view:stock.fill.inventory:0
 msgid "Import Inventory"
-msgstr ""
+msgstr "Импорт инвентаризации"
 
 #. module: stock
 #: field:stock.incoterms,name:0
@@ -2186,9 +2212,9 @@ msgid "Future Qty"
 msgstr "Будущее Кол-во"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr "Счет изменения стоимости ТМЦ"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2244,7 +2270,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Место хранения, где система будет хранить готовую продукцию."
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -2261,6 +2287,11 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Здесь вы можете принимать отдельные ТМЦ, независимо от того откуда они "
+"взялись, из заказа на закупку или на комплектование. Вы найдете список всех "
+"ТМЦ, которые вы ждете. При получении заказа, вы можете фильтровать по "
+"названию поставщика или по описанию заказа на закупку. Затем, вы можете "
+"подтвердить получение всех ТМЦ с помощью кнопок справа в каждой строке."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2461,6 +2492,10 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Вывод последних инвентаризаций ТМЦ и их сортировка по различным критериям. "
+"Если вы делаете частые и частичные инвентаризации, вам нужен этот отчет для "
+"того, что бы быть уверенным, что каждый товар прошел инвентаризацию хотя бы "
+"раз в год."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2565,7 +2600,7 @@ msgstr "Да"
 #. module: stock
 #: field:stock.inventory,inventory_line_id:0
 msgid "Inventories"
-msgstr ""
+msgstr "Инвентаризации"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2606,6 +2641,7 @@ msgstr "Не определен счет входящих ТМЦ для: \"%s\" 
 #, python-format
 msgid "Can not consume a move with negative or zero quantity !"
 msgstr ""
+"Нельзя использовать перемещение с отрицательным или нулевым количеством !"
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -2641,7 +2677,7 @@ msgstr ""
 #. module: stock
 #: field:stock.production.lot.revision,date:0
 msgid "Revision Date"
-msgstr ""
+msgstr "Дата ревизии"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2753,7 +2789,7 @@ msgstr "Префикс учета"
 #. module: stock
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr ""
+msgstr "Описание инвентаризации"
 
 #. module: stock
 #: code:addons/stock/stock.py:1307
@@ -3126,7 +3162,7 @@ msgstr "В счет"
 #: code:addons/stock/wizard/stock_return_picking.py:120
 #, python-format
 msgid "Return lines"
-msgstr ""
+msgstr "Позиции для возврата"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -3251,7 +3287,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory.merge:0
 msgid "Do you want to merge theses inventories ?"
-msgstr ""
+msgstr "Вы действительно хотите объединить эти инвентаризации ?"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -3353,7 +3389,7 @@ msgstr "Значок, выводимый в древовидном обзоре"
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
 #: view:stock.inventory.merge:0
 msgid "Merge inventories"
-msgstr ""
+msgstr "Объединить инвентаризации"
 
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
@@ -3659,7 +3695,7 @@ msgstr ""
 "Когда перемещение ТМЦ создано, оно находится в состоянии \"Черновик\".\n"
 " После этого состояние становится \"Подтверждено\".\n"
 " Если ТМЦ доступны состояние становится \"Доступно\".\n"
-" Когда комплектование выполнено, то состояние \"Готово\".              \n"
+" Когда комплектование выполнено, то состояние \"Сделано\".              \n"
 "Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
 
 #. module: stock
@@ -3692,7 +3728,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1319
 #, python-format
 msgid "is ready to process."
-msgstr "готово к обработке."
+msgstr "готов к обработке."
 
 #. module: stock
 #: help:stock.picking,origin:0
@@ -4134,9 +4170,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "Dest. Address"
 #~ msgstr "Адрес назначения"
 
-#~ msgid "Qty"
-#~ msgstr "Кол-во"
-
 #~ msgid "Input Packing List"
 #~ msgstr "Lista de embalagens entradas"
 
@@ -4224,9 +4257,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "Packing List:"
 #~ msgstr "Упаковочный перечень"
 
-#~ msgid "weight"
-#~ msgstr "Вес"
-
 #~ msgid ""
 #~ "Tracking lot is the code that will be put on the logistical unit/pallet"
 #~ msgstr "Логистическая единица - это код, присваиваемый упаковке."
@@ -4249,9 +4279,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "Force to use a Production Lot during deliveries"
 #~ msgstr "Принудительно назначать серийный номер партии при перевозке"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Отслеживать исходящие партии"
-
 #~ msgid "Components"
 #~ msgstr "Компоненты"
 
@@ -4260,9 +4287,6 @@ msgstr "Дополнительные подробности локализаци
 
 #~ msgid "Set Stock to 0"
 #~ msgstr "Установить запасы в 0"
-
-#~ msgid "Canceled"
-#~ msgstr "Отменено"
 
 #~ msgid "Date Order"
 #~ msgstr "Дата заказа"
@@ -4350,17 +4374,8 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "is scheduled"
 #~ msgstr "запланировано"
 
-#, python-format
-#~ msgid ""
-#~ "There is no journal defined '\\n                                'on the "
-#~ "product category: \"%s\" (id: %d)"
-#~ msgstr "Журнал не определен '\\n 'для категории продукции: \"%s\" (id: %d)"
-
 #~ msgid "Packing Done"
 #~ msgstr "Упаковка произведена"
-
-#~ msgid "terp-rating-rated"
-#~ msgstr "terp-rating-rated"
 
 #~ msgid "STOCK_MEDIA_FORWARD"
 #~ msgstr "STOCK_MEDIA_FORWARD"
@@ -4374,23 +4389,14 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "terp-account"
 #~ msgstr "terp-account"
 
-#~ msgid "Outgoing Products delay"
-#~ msgstr "Задержка исходящей продукции"
-
 #~ msgid "STOCK_ZOOM_100"
 #~ msgstr "STOCK_ZOOM_100"
-
-#~ msgid "terp-mail-forward"
-#~ msgstr "terp-mail-forward"
 
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
 
 #~ msgid "STOCK_DELETE"
 #~ msgstr "STOCK_DELETE"
-
-#~ msgid "terp-stock_effects-object-colorize"
-#~ msgstr "terp-stock_effects-object-colorize"
 
 #~ msgid "terp-hr"
 #~ msgstr "terp-hr"
@@ -4407,9 +4413,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_FLOPPY"
 #~ msgstr "STOCK_FLOPPY"
 
-#~ msgid "terp-folder-blue"
-#~ msgstr "terp-folder-blue"
-
 #~ msgid "STOCK_FIND_AND_REPLACE"
 #~ msgstr "STOCK_FIND_AND_REPLACE"
 
@@ -4422,15 +4425,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "terp-graph"
 #~ msgstr "terp-graph"
 
-#~ msgid "terp-personal+"
-#~ msgstr "terp-personal+"
-
-#~ msgid "terp-dialog-close"
-#~ msgstr "terp-dialog-close"
-
-#~ msgid "terp-personal-"
-#~ msgstr "terp-personal-"
-
 #~ msgid "STOCK_MEDIA_REWIND"
 #~ msgstr "STOCK_MEDIA_REWIND"
 
@@ -4440,28 +4434,8 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_NEW"
 #~ msgstr "STOCK_NEW"
 
-#~ msgid "terp-dolar"
-#~ msgstr "terp-dolar"
-
-#~ msgid "terp-gtk-jump-to-ltr"
-#~ msgstr "terp-gtk-jump-to-ltr"
-
-#, python-format
-#~ msgid ""
-#~ "Total quantity after split exceeds the quantity to split ' \\n               "
-#~ "                     'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Общее количество после разделения превышает разделяемое количество ' \\n "
-#~ "'для этой продукции: \"%s\" (id: %d)"
-
-#~ msgid "terp-stock_symbol-selection"
-#~ msgstr "terp-stock_symbol-selection"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
-
-#~ msgid "terp-stage"
-#~ msgstr "terp-stage"
 
 #~ msgid "STOCK_INDEX"
 #~ msgstr "STOCK_INDEX"
@@ -4484,13 +4458,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_GO_FORWARD"
 #~ msgstr "STOCK_GO_FORWARD"
 
-#, python-format
-#~ msgid "No invoice were created"
-#~ msgstr "Счет не был создан"
-
-#~ msgid "terp-accessories-archiver-minus"
-#~ msgstr "terp-accessories-archiver-minus"
-
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
 
@@ -4506,14 +4473,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
 
-#, python-format
-#~ msgid ""
-#~ "There is no stock output account defined ' \\n                               "
-#~ "             'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Не определен счет для исходящих запасов' \\n 'для этой продукции: \"%s\" "
-#~ "(id: %d)"
-
 #~ msgid "STOCK_FILE"
 #~ msgstr "STOCK_FILE"
 
@@ -4522,12 +4481,6 @@ msgstr "Дополнительные подробности локализаци
 
 #~ msgid "terp-report"
 #~ msgstr "terp-report"
-
-#~ msgid "terp-emblem-important"
-#~ msgstr "terp-emblem-important"
-
-#~ msgid "terp-gdu-smart-failing"
-#~ msgstr "terp-gdu-smart-failing"
 
 #~ msgid "STOCK_GO_DOWN"
 #~ msgstr "STOCK_GO_DOWN"
@@ -4550,42 +4503,17 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_HELP"
 #~ msgstr "STOCK_HELP"
 
-#~ msgid "terp-face-plain"
-#~ msgstr "terp-face-plain"
-
 #~ msgid "STOCK_UNDO"
 #~ msgstr "STOCK_UNDO"
 
 #~ msgid "STOCK_GO_BACK"
 #~ msgstr "STOCK_GO_BACK"
 
-#~ msgid "terp-gnome-cpu-frequency-applet+"
-#~ msgstr "terp-gnome-cpu-frequency-applet+"
-
 #~ msgid "STOCK_PRINT"
 #~ msgstr "STOCK_PRINT"
 
-#~ msgid "terp-gtk-media-pause"
-#~ msgstr "terp-gtk-media-pause"
-
-#~ msgid "terp-stock_format-scientific"
-#~ msgstr "terp-stock_format-scientific"
-
-#~ msgid "terp-go-today"
-#~ msgstr "terp-go-today"
-
 #~ msgid "STOCK_JUSTIFY_FILL"
 #~ msgstr "STOCK_JUSTIFY_FILL"
-
-#, python-format
-#~ msgid ""
-#~ "There is no stock input account defined ' \\n                                "
-#~ "            'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Не определен счет входящих запасов ' \\n 'для этой продукции: \"%s\" (id: %d)"
-
-#~ msgid "terp-gtk-go-back-rtl"
-#~ msgstr "terp-gtk-go-back-rtl"
 
 #~ msgid "terp-administration"
 #~ msgstr "terp-administration"
@@ -4599,9 +4527,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "terp-crm"
 #~ msgstr "terp-crm"
 
-#~ msgid "terp-mail-"
-#~ msgstr "terp-mail-"
-
 #~ msgid "STOCK_STRIKETHROUGH"
 #~ msgstr "STOCK_STRIKETHROUGH"
 
@@ -4614,62 +4539,25 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_REMOVE"
 #~ msgstr "STOCK_REMOVE"
 
-#~ msgid "terp-call-start"
-#~ msgstr "terp-call-start module: stock"
-
 #~ msgid "STOCK_JUSTIFY_LEFT"
 #~ msgstr "STOCK_JUSTIFY_LEFT"
-
-#~ msgid "terp-personal"
-#~ msgstr "terp-personal"
-
-#~ msgid "terp-locked"
-#~ msgstr "terp-locked"
 
 #~ msgid "STOCK_HARDDISK"
 #~ msgstr "STOCK_HARDDISK"
 
-#~ msgid "Not from Picking"
-#~ msgstr "Не из комплектования"
-
 #~ msgid "Make Picking"
 #~ msgstr "Скомплектовать"
 
-#~ msgid "Inventory (with child locations)"
-#~ msgstr "Инвентаризация (с подчиненными местами хранения)"
-
 #~ msgid "Location Overview"
 #~ msgstr "Обзор мест хранения"
-
-#~ msgid ""
-#~ "When the stock move is created it is in the 'Draft' state.\n"
-#~ " After that it is set to 'Confirmed' state.\n"
-#~ " If stock is available state is set to 'Available'.\n"
-#~ " When the picking is done the state is 'Done'.                               "
-#~ "   \n"
-#~ "The state is 'Waiting' if the move is waiting for another one."
-#~ msgstr ""
-#~ "При создании перемещения ТМЦ его состояние - \"Черновик\".\n"
-#~ " После этого состояние устанавливается в \"Подтверждено\".\n"
-#~ " Если товар доступен, то состояние \"Доступно\".\n"
-#~ " Когда комплектование выполнено, состояние \"Выполнено\"."
 
 #, python-format
 #~ msgid "is consumed with"
 #~ msgstr "потребляется с"
 
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Правила не поддерживаются для объектов osv_memory !"
-
 #, python-format
 #~ msgid "Product "
 #~ msgstr "ТМЦ "
-
-#~ msgid "terp-gtk-go-back-ltr"
-#~ msgstr "terp-gtk-go-back-ltr"
-
-#~ msgid "terp-mail-replied"
-#~ msgstr "terp-mail-replied"
 
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
@@ -4677,47 +4565,8 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "terp-stock"
 #~ msgstr "terp-stock"
 
-#~ msgid "terp-folder-green"
-#~ msgstr "terp-folder-green"
-
-#~ msgid "terp-folder-orange"
-#~ msgstr "terp-folder-orange"
-
 #~ msgid "terp-purchase"
 #~ msgstr "terp-purchase"
-
-#~ msgid "terp-stock_align_left_24"
-#~ msgstr "terp-stock_align_left_24"
-
-#~ msgid "terp-accessories-archiver+"
-#~ msgstr "terp-accessories-archiver+"
-
-#~ msgid "terp-folder-yellow"
-#~ msgstr "terp-folder-yellow"
-
-#~ msgid "terp-dolar_ok!"
-#~ msgstr "terp-dolar_ok!"
-
-#~ msgid "terp-go-year"
-#~ msgstr "terp-go-year"
-
-#~ msgid "Serial Number"
-#~ msgstr "Серийный номер"
-
-#~ msgid "terp-gtk-jump-to-rtl"
-#~ msgstr "terp-gtk-jump-to-rtl"
-
-#~ msgid "terp-idea"
-#~ msgstr "terp-idea"
-
-#~ msgid "terp-stock_format-default"
-#~ msgstr "terp-stock_format-default"
-
-#~ msgid "terp-check"
-#~ msgstr "terp-check"
-
-#~ msgid "terp-camera_test"
-#~ msgstr "terp-camera_test"
 
 #~ msgid "terp-tools"
 #~ msgstr "terp-tools"
@@ -4725,23 +4574,11 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "terp-sale"
 #~ msgstr "terp-sale"
 
-#~ msgid "terp-gtk-stop"
-#~ msgstr "terp-gtk-stop"
-
-#~ msgid "terp-document-new"
-#~ msgstr "terp-document-new"
-
 #~ msgid "STOCK_DIRECTORY"
 #~ msgstr "STOCK_DIRECTORY"
 
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
-
-#~ msgid "terp-go-month"
-#~ msgstr "terp-go-month"
-
-#~ msgid "terp-mail_delete"
-#~ msgstr "terp-mail_delete"
 
 #~ msgid "STOCK_JUSTIFY_CENTER"
 #~ msgstr "STOCK_JUSTIFY_CENTER"
@@ -4752,16 +4589,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_MEDIA_PREVIOUS"
 #~ msgstr "STOCK_MEDIA_PREVIOUS"
 
-#, python-format
-#~ msgid "Not Available. Moves are not confirmed."
-#~ msgstr "Недоступно. Перемещения не подтверждены."
-
-#~ msgid "terp-gtk-select-all"
-#~ msgstr "terp-gtk-select-all"
-
-#~ msgid "Extended options..."
-#~ msgstr "Расширенные опции..."
-
 #~ msgid "terp-product"
 #~ msgstr "terp-product"
 
@@ -4771,9 +4598,6 @@ msgstr "Дополнительные подробности локализаци
 #, python-format
 #~ msgid "quantity."
 #~ msgstr "количество."
-
-#~ msgid "terp-mail-message-new"
-#~ msgstr "terp-mail-message-new"
 
 #~ msgid "STOCK_DIALOG_AUTHENTICATION"
 #~ msgstr "STOCK_DIALOG_AUTHENTICATION"
@@ -4808,15 +4632,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_ZOOM_IN"
 #~ msgstr "STOCK_ZOOM_IN"
 
-#~ msgid "terp-go-week"
-#~ msgstr "terp-go-week"
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные компании."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
 #~ msgid "STOCK_OPEN"
 #~ msgstr "STOCK_OPEN"
 
@@ -4826,9 +4641,6 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_NETWORK"
 #~ msgstr "STOCK_NETWORK"
 
-#~ msgid "terp-go-home"
-#~ msgstr "terp-go-home"
-
 #~ msgid "STOCK_REDO"
 #~ msgstr "STOCK_REDO"
 
@@ -4837,9 +4649,6 @@ msgstr "Дополнительные подробности локализаци
 
 #~ msgid "STOCK_REFRESH"
 #~ msgstr "STOCK_REFRESH"
-
-#~ msgid "terp-accessories-archiver"
-#~ msgstr "terp-accessories-archiver"
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
@@ -4901,35 +4710,9 @@ msgstr "Дополнительные подробности локализаци
 #~ msgid "STOCK_HOME"
 #~ msgstr "STOCK_HOME"
 
+#~ msgid "Stock Variation Account"
+#~ msgstr "Счет изменения стоимости ТМЦ"
+
 #, python-format
-#~ msgid "You are moving %.2f products but only %.2f available in this lot."
-#~ msgstr "Вы перемещаете %.2f ТМЦ, но только %.2f доступно в этой партии."
-
-#~ msgid ""
-#~ "The Periodical Inventories are used when you count your number of products "
-#~ "available per location. You can use it, once a year, when you do the general "
-#~ "inventory or, once you need it, to correct the current stock level of a "
-#~ "product."
-#~ msgstr ""
-#~ "Периодические инвентаризации используются для подсчета количеств ТМЦ в месте "
-#~ "хранения. Инвентаризации производятся раз в год, когда производится общая "
-#~ "инвентаризация, или когда вам надо, для корректировки количеств ТМЦ на "
-#~ "складе."
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr ""
-#~ "Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
-#~ "категориям."
-
-#~ msgid "stock.move.memory"
-#~ msgstr "stock.move.memory"
-
-#~ msgid ""
-#~ "This is the list of all delivery orders that must be prepared, according to "
-#~ "your different sales orders and your logistics rules."
-#~ msgstr ""
-#~ "Это список всех заказов на доставку, которые должны быть подготовлены в "
-#~ "соответствии с вашими заказами на продажу и логистическими правилами."
-
-#~ msgid "Outgoing Deliveries"
-#~ msgstr "Исходящие доставки"
+#~ msgid "INV: "
+#~ msgstr "ИНВ: "

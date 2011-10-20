@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:33+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:29+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "Storno Rechnungsausgleich"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:242
+#: code:addons/account_voucher/account_voucher.py:247
 #, python-format
 msgid "Write-Off"
 msgstr "Abschreibung"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -97,7 +97,7 @@ msgid "Bill Payment"
 msgstr "Rechnungsbezahlung"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -417,7 +417,7 @@ msgid "Voucher Entries"
 msgstr "Zahlungsbeleg Buchungen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -445,7 +445,7 @@ msgid "Sales Receipt"
 msgstr "Buchen von Einnahmen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Invalid action !"
 msgstr "Fehlerhafte Aktion"
@@ -479,7 +479,7 @@ msgid "Pay Invoice"
 msgstr "Zahle Rechnung"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Kein Steuerfinanzkonto und Steuerkonto definiert!"
@@ -540,6 +540,7 @@ msgstr "Dezember"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Zahlungspositionen"
@@ -729,7 +730,7 @@ msgid "Credit"
 msgstr "Konto entlasten (Haben)"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Definieren Sie bitte eine Reihenfolge für das Journal !"
@@ -1059,17 +1060,11 @@ msgstr "Offener Saldo"
 msgid "Total"
 msgstr "Summe"
 
-#~ msgid "Posted Cash Receipt"
-#~ msgstr "Versendeter Zahlungsbeleg"
-
 #~ msgid "State :"
 #~ msgstr "Status"
 
 #~ msgid "Ref. :"
 #~ msgstr "Bez. :"
-
-#~ msgid "Cancel Cash Receipt"
-#~ msgstr "Abbrechen Belegausgabe"
 
 #~ msgid "-"
 #~ msgstr "-"
@@ -1080,26 +1075,11 @@ msgstr "Summe"
 #~ msgid "Dated :"
 #~ msgstr "Datiert am :"
 
-#~ msgid "Pro-forma Cash Receipt"
-#~ msgstr "Pro-forma Zahlungsbeleg"
-
 #~ msgid "No."
 #~ msgstr "Nr."
 
-#~ msgid "Difference of Opening Bal."
-#~ msgstr "Differenz Anfangssaldo"
-
-#~ msgid "Draf Cash Receipt"
-#~ msgstr "Entwurf Zahlungsbeleg"
-
-#~ msgid "Entry"
-#~ msgstr "Eingabe"
-
 #~ msgid "Authorised Signatory"
 #~ msgstr "Autorisierte Signatur"
-
-#~ msgid "Accounting - Voucher Management"
-#~ msgstr "Buchhaltung - Belegverwaltung"
 
 #~ msgid "Bank Receipts"
 #~ msgstr "Bankauszug"
@@ -1230,10 +1210,6 @@ msgstr "Summe"
 #~ msgid "General Information"
 #~ msgstr "Grundinformation"
 
-#, python-format
-#~ msgid "Cannot delete invoice(s) which are already opened or paid !"
-#~ msgstr "Kann offene oder bezahlte Rechnungen nicht löschen"
-
 #~ msgid "Journal Voucher"
 #~ msgstr "Journal Beleg"
 
@@ -1279,92 +1255,5 @@ msgstr "Summe"
 #~ msgid "Entry Lines"
 #~ msgstr "Buchungen"
 
-#~ msgid "Journal:"
-#~ msgstr "Journal:"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
-
-#~ msgid "Extended options..."
-#~ msgstr "Erweiterte Optionen.."
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Regeln werden für osv_memory Objekt nicht unterstützt"
-
-#~ msgid "Form view not available for Payment Lines"
-#~ msgstr "Formular Ansicht nicht verfügbar für Zahlungspositionen"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
-
-#~ msgid "Unreconciled Amount"
-#~ msgstr "Nicht ausgeglichene Beträge"
-
-#~ msgid "Vendor"
-#~ msgstr "Lieferant"
-
-#, python-format
-#~ msgid "Please change partner and try again !"
-#~ msgstr "Bitte ändern Sie den Partner und versuchen Sie es dann nochmals !"
-
-#, python-format
-#~ msgid "Invalid Error !"
-#~ msgstr "Invalid !Fehler"
-
-#~ msgid "Originial Amount"
-#~ msgstr "Rechnungsbetrag"
-
-#~ msgid "Vendor Payment"
-#~ msgstr "Buchen von Auszahlungen"
-
-#~ msgid "Open Vendor Journal Entries"
-#~ msgstr "Offene Posten Lieferanten"
-
-#~ msgid "Vendor Invoices and Outstanding transactions"
-#~ msgstr "Eingangsrechnungen und andere offene Posten"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr ""
-#~ "Die Berechtigung für diese Regel sollte mindestens bei einem Benutzer "
-#~ "vorhanden sein !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
-
-#~ msgid "supplier Payment"
-#~ msgstr "Buchen von Auszahlungen"
-
-#~ msgid "supplier"
-#~ msgstr "Lieferant"
-
-#~ msgid "Open supplier Journal Entries"
-#~ msgstr "Offene Posten Lieferanten"
-
-#~ msgid "supplier Invoices and Outstanding transactions"
-#~ msgstr "Eingangsrechnungen und andere offene Posten"
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "Sie können keine Buchung auf Forderungs- oder Verbindlichkeitskonten "
-#~ "erstellen, ohne vorher einen Partner erstellt zu haben."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Falscher Buchungsbetrag in Soll oder Haben"
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr ""
-#~ "Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr ""
-#~ "Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."

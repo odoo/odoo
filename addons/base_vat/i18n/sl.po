@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:02+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:02+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -22,7 +22,7 @@ msgstr ""
 msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
-msgstr ""
+msgstr "DDV ni pravilen. Vnesti morate podobno kot je to%s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -37,22 +37,30 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Omoogčite DDV številko za vaše stranke. Preverite veljavnost DDV "
+"številk.\n"
+"\n"
+"    Ta modul upošteva metodo opisano na http://sima-pc.com/nif.php za\n"
+"    preverjanje veljavnosti VAT številk dodeljenih strankam iz evropskih "
+"držav.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "Osnovni DDV - za preverjanje veljavnosti DDV številk"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Napaka! Ni mogoče rekurzivno kreirati pridruženih članov"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "DDV številka je napačna. Začeti se mora s kodo države"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -60,16 +68,18 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Označite to polje, če je stranka predmet DDV-ja. Uporabljal se bo za izkaz "
+"DDV-ja."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Stranka"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "Proavno obvestilo za DDV"
+msgstr "Izkaz DDV-ja"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neveljaven XML za arhitekturo pogleda."

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:44+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -72,7 +72,7 @@ msgid "Procurement Method"
 msgstr "Método abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "No se ha definido una dirección para el proveedor"
@@ -331,7 +331,7 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -470,7 +470,7 @@ msgid "plus"
 msgstr "más"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -647,7 +647,7 @@ msgstr ""
 "¡No se puede eliminar orden(es) de abastecimiento que están en estado %s!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "¡Datos insuficientes!"
@@ -880,7 +880,7 @@ msgid "Product UoS"
 msgstr "UdV del producto"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "desde stock: productos asignados"
@@ -959,108 +959,3 @@ msgstr "Detalles de abastecimiento"
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de acción."
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML no válido para la estructura de la vista!"
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "Planificador MRP y Logística"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Argumentos no válidos"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "¡El nombre del módulo debe ser único!"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "¡Error! No puede crear menús recursivos."
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurements that are not between today and today+range "
-#~ "are skipped for futur computation."
-#~ msgstr ""
-#~ "Este es el período de tiempo analizado por el planificador al calcular los "
-#~ "abastecimientos. Todos los abastecimientos que no están entre hoy y "
-#~ "hoy+intervalo se omiten para el cálculo futuro."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid ""
-#~ "If the active field is set to true, it will allow you to hide the orderpoint "
-#~ "without removing it."
-#~ msgstr ""
-#~ "Si el campo activo se desmarca, permite ocultar la orden sin eliminarla."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
-
-#~ msgid ""
-#~ "You can define your minimum stock rules, so that OpenERP will trigger "
-#~ "automatically the propositions of manufacturing or purchase orders according "
-#~ "to the stock level. Once the virtual stock of a product (=stock on hand "
-#~ "minus all confirmed orders and reservations) is bellow the minimum quantity, "
-#~ "OpenERP will generate a procurement request in order to fullfil the stock up "
-#~ "to the maximum quantity."
-#~ msgstr ""
-#~ "Puede definir sus reglas de stock mínimo, de forma que OpenERP lance "
-#~ "automáticamente propuestas de órdenes de fabricación o de compra en función "
-#~ "de los niveles de stock. Una vez que el stock virtual de un producto (= "
-#~ "stock disponible menos todas las órdenes confirmadas y reservas) esté debajo "
-#~ "de la cantidad mínima, OpenERP generará una solicitud de abastecimiento para "
-#~ "satisfacer el stock hasta la cantidad máxima establecida para dicho producto."
-
-#~ msgid ""
-#~ "A procurement order is used to record a need in a specific product at a "
-#~ "specific location. They are usually created automatically by the sales "
-#~ "orders, the Pull Logistics rules or the minimum stock rules. When the "
-#~ "procurement order is confirmed, it creates automatically the necessary "
-#~ "operations to fullfil the need: purchase order proposition, manufacturing "
-#~ "order, etc."
-#~ msgstr ""
-#~ "Una orden de abastecimiento se utiliza para registrar una necesidad de un "
-#~ "producto específico en una ubicación específica. Normalmente son creadas "
-#~ "automáticamente por los pedidos de venta, las reglas de abastecimiento o "
-#~ "reglas de stock mínimo. Cuando la orden de abastecimiento es confirmada, se "
-#~ "crean automáticamente las operaciones necesarias para satisfacer dicha "
-#~ "necesidad: proposición de compra, orden de fabricación, etc."
-
-#~ msgid ""
-#~ "Procurement Orders represent the need for a certain quantity of products, at "
-#~ "a given time, in a given location. Sale Orders are one typical source of "
-#~ "Procurement Orders (but these are distinct documents). Depending on the "
-#~ "procurement parameters and the products configuration, the procurement "
-#~ "engine will attempt to satisfy the need by reserving products from stock, or "
-#~ "ordering products from a supplier, or passing a manufacturing order, etc. A "
-#~ "Procurement Exception occurs when the system cannot find a way to fulfill a "
-#~ "procurement. Some exceptions will resolve themselves automatically, but "
-#~ "others require manual intervention (those are identified by a specific error "
-#~ "message)"
-#~ msgstr ""
-#~ "Las órdenes de abastecimiento representan la necesidad de una determinada "
-#~ "cantidad de productos, en un momento dado, en una ubicación determinada. Los "
-#~ "pedidos de venta son una fuente típica de las órdenes de abastecimiento "
-#~ "(pero estos son documentos distintos). Dependiendo de los parámetros de "
-#~ "abastecimiento y la configuración de productos, el motor de abastecimientos "
-#~ "tratará de satisfacer la necesidad de reservar los productos del stock, u "
-#~ "ordenar productos de un proveedor, o crear una orden de producción, etc. Se "
-#~ "produce una excepción de abastecimiento cuando el sistema no puede encontrar "
-#~ "una manera de cumplir un abastecimiento. Algunas excepciones se resolverán "
-#~ "de forma automática, pero otras requieren intervención manual (las que se "
-#~ "identifican con un mensaje de error específico)."

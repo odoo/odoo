@@ -70,7 +70,7 @@
             <field name="inherit_id" ref="account.view_account_move_line_filter"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='ref']" position="after">
+                <xpath expr="//field[@name='move_id']" position="after">
                     <field name="internal_sequence_number"/>
                 </xpath>
             </data>

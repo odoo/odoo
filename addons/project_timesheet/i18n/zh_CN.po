@@ -8,37 +8,39 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-03-20 09:53+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:29+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:26+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:53
+#: code:addons/project_timesheet/project_timesheet.py:44
 #, python-format
 msgid "No employee defined for user \"%s\". You must create one."
-msgstr ""
+msgstr "用户 \"%s\" 没有对应的员工。请先新建。"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:61
+#: code:addons/project_timesheet/project_timesheet.py:52
 #, python-format
 msgid ""
 "No journal defined on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"相关的员工没有设置默认的账簿\n"
+"请在员工界面的计工单标签页输入默认账簿"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_timesheettask0
 msgid "Timesheet task"
-msgstr ""
+msgstr "计工单和任务"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "项目的签入/签出"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
@@ -48,151 +50,151 @@ msgstr "有关的时间ID"
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "任务进度"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
 msgid "report.timesheet.task.user"
-msgstr ""
+msgstr "report.timesheet.task.user"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: project_timesheet
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "错误！您不能创建递归的相关成员。"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "十月"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "年"
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic account/project"
-msgstr ""
+msgstr "辅助核算项目"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
 msgid "Task Hours"
-msgstr ""
+msgstr "任务工时"
 
 #. module: project_timesheet
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "错误！项目的开始日期必须小于项目的结束日期"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid " Year "
-msgstr ""
+msgstr " 年 "
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:229
+#: code:addons/project_timesheet/project_timesheet.py:220
 #, python-format
 msgid "Cannot delete Partner which is Assigned to project  !"
-msgstr ""
+msgstr "此业务伙伴已有相关项目，不能删除"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "三月"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "八月"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskinvoice0
 msgid "Task invoice"
-msgstr ""
+msgstr "任务结算"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_taskwork0
 msgid "Task Work"
-msgstr ""
+msgstr "任务进展"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "五月"
 
 #. module: project_timesheet
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "错误！不能创建循环引用的任务"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:229
+#: code:addons/project_timesheet/project_timesheet.py:220
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "无效动作！"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "任务"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks Work"
-msgstr ""
+msgstr "根据任务进展开发票"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: project_timesheet
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "不能升级到相同的项目"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
 msgid "Complete Your Timesheet."
-msgstr ""
+msgstr "完成任务"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Invoiceable"
-msgstr ""
+msgstr "需要开发票"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: project_timesheet
 #: model:ir.module.module,description:project_timesheet.module_meta_information
@@ -205,140 +207,145 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"        此模块允许你在创建、修改或删除任务进展时自动更新计工单\n"
+"\n"
+"    "
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 msgid "Bill Tasks Works"
-msgstr ""
+msgstr "根据任务进展开发票"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,timesheet_hrs:0
 msgid "Timesheet Hours"
-msgstr ""
+msgstr "计工单工时"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
 msgid "Task encoding"
-msgstr ""
+msgstr "输入任务"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_filltimesheet0
 msgid "Task summary is comes into the timesheet line"
-msgstr ""
+msgstr "任务工时合计已进入计工单"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "一月"
 
 #. module: project_timesheet
 #: model:process.node,name:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger Invoice"
-msgstr ""
+msgstr "触发发票"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "十一月"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Tasks by User"
-msgstr ""
+msgstr "按用户打印任务"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:57
+#: code:addons/project_timesheet/project_timesheet.py:48
 #, python-format
 msgid ""
 "No product defined on the related employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"没有为员工指定产品\n"
+"请在员工界面的计工单标签页输入"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
 #: model:ir.model,name:project_timesheet.model_project_project
 msgid "Project"
-msgstr ""
+msgstr "项目"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "四月"
 
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Invoicing Data"
-msgstr ""
+msgstr "发票数据"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
 msgid "Encode how much time u spent on your task"
-msgstr ""
+msgstr "输入你在此任务上花费的工时"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid " Month "
-msgstr ""
+msgstr " 月份 "
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Timesheet/Task hours Report Per Month"
-msgstr ""
+msgstr "按月输出计工单和任务工时"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:52
-#: code:addons/project_timesheet/project_timesheet.py:56
-#: code:addons/project_timesheet/project_timesheet.py:60
-#: code:addons/project_timesheet/project_timesheet.py:67
+#: code:addons/project_timesheet/project_timesheet.py:43
+#: code:addons/project_timesheet/project_timesheet.py:47
+#: code:addons/project_timesheet/project_timesheet.py:51
+#: code:addons/project_timesheet/project_timesheet.py:58
 #, python-format
 msgid "Bad Configuration !"
-msgstr ""
+msgstr "配置错误"
 
 #. module: project_timesheet
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing
 msgid "Invoicing"
-msgstr ""
+msgstr "开发票"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
 msgid "Work on task"
-msgstr ""
+msgstr "任务进展"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid " Month-1 "
-msgstr ""
+msgstr " 上个月 "
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "十二月"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskinvoice0
 msgid "After task is completed, Create its invoice."
-msgstr ""
+msgstr "当任务完成时创建相关发票"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_triggerinvoice0
 msgid "Trigger invoices from sale order lines"
-msgstr ""
+msgstr "按销售订单明细开发票"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #. module: project_timesheet
 #: model:ir.module.module,shortdesc:project_timesheet.module_meta_information
@@ -348,32 +355,40 @@ msgstr "项目时间表"
 #. module: project_timesheet
 #: view:project.project:0
 msgid "Invoice Task Work"
-msgstr ""
+msgstr "按任务进展开发票"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:68
+#: code:addons/project_timesheet/project_timesheet.py:59
 #, python-format
 msgid ""
 "No product and product category property account defined on the related "
 "employee.\n"
 "Fill in the timesheet tab of the employee form."
 msgstr ""
+"没有为员工对应的产品指定科目\n"
+"请在员工界面的计工单标签页输入"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
 #: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
 msgid "Task Hours Per Month"
-msgstr ""
+msgstr "每月的任务工时"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
-msgstr ""
+msgstr "输入计工单"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
 msgid ""
 "This lists show you every task work you can invoice to the customer. Select "
 "the lines in order to generate the invoices automatically."
-msgstr ""
+msgstr "这里列出了所有可以向客户开发票的工作进展。选择对应行生成发票"
+
+#~ msgid "Working Hours"
+#~ msgstr "工时"
+
+#~ msgid "My Timesheet"
+#~ msgstr "我的计工单"

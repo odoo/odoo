@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:44+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:46+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +28,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr "Ievietot uzdevuma aprakstu lietotāja uzdevumā"
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "Uzdevums '%s' tika deliģēts %s."
@@ -60,7 +60,7 @@ msgid "Deadlines"
 msgstr "Termiņi"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Darbība nav atļauta!"
@@ -249,7 +249,7 @@ msgid "Day"
 msgstr "Diena"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "Uzdevums '%s' izpildīts"
@@ -443,7 +443,7 @@ msgid "Reactivate Project"
 msgstr "Aktivizēt Projektu no jauna"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Uzdevums '%s' pabeigts"
@@ -493,8 +493,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Kļūda! Nedrīkst veidot rekursīvus analītiskos kontus"
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (kopija)"
@@ -637,7 +637,7 @@ msgid "Reevaluate"
 msgstr "Pārvērtēt"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Nosūtīt e-pastu pēc uzdevumu pabeigšanas"
@@ -732,7 +732,7 @@ msgid "Starting Date"
 msgstr "Sākuma Datums"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -760,7 +760,7 @@ msgstr ""
 "uzdevuma izpildes progresam."
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "Uzdevums '%s' nav pabeigts"
@@ -1183,7 +1183,6 @@ msgstr "Projekta tāfele"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "VirsProjekts"
 
@@ -1213,7 +1212,7 @@ msgid "Customer Email"
 msgstr "Klienta e-pasts"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Projekts '%s' ir pabeigts."
@@ -1263,7 +1262,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Kad uzdevums ir paveikts, tas tiek atzīmēts kā paveikts."
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Projets '%s' ir sākts"
@@ -1412,7 +1411,7 @@ msgstr ""
 "vidējos darba uzdevumu izpildes termiņu rādītājus."
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Uzdevuma '%s' progress"
@@ -1464,7 +1463,7 @@ msgid "Open"
 msgstr "Atvērt"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1802,7 +1801,7 @@ msgid "Spent Hours"
 msgstr "Iztērētās stundas"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "Uzdevums '%s' neizlemts."
@@ -1886,7 +1885,7 @@ msgid "Validation State"
 msgstr "Apstiprinājuma Statuss"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Uzdevums '%s' atcelts"
@@ -1916,7 +1915,7 @@ msgid "Create Date"
 msgstr "Izveidošanas datums"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "Uzdevums '%s' ir atcelts."
@@ -2258,9 +2257,3 @@ msgstr "Budžeti"
 
 #~ msgid "My Pending Tasks"
 #~ msgstr "Mani Uzdevumi (Gaida)"
-
-#~ msgid "Gives the sequence order when displaying a list of task"
-#~ msgstr "Ļauj attēlot uzdevumu sarakstu secībā pēc kārtas"
-
-#~ msgid "Scheduling"
-#~ msgstr "Plānošana"

@@ -7,7 +7,7 @@
         <field name="model">hr.applicant</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('open','pending','done','cancel');" string="Applicants Status">
+            <tree colors="blue:state == 'draft';black:state in ('open','pending','done','cancel');" string="Applicants Status">
                 <field name="create_date"/>
                 <field name="job_id"/>
                 <field name="partner_name"/>
@@ -38,13 +38,5 @@
           </xpath>
         </field>
     </record>
-    <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0"/>
-    <menuitem
-        action="hr.open_board_hr_manager"
-        icon="terp-graph"
-        id="base.menu_hr_manager"
-        parent="base.menu_hr_dasboard"
-        groups = "base.group_hr_manager"
-        sequence="5"/>
     </data>
 </openerp>

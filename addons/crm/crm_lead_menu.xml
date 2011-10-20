@@ -9,7 +9,7 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'search_default_current':1, 'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
+        <field name="context">{'search_default_new':1, 'default_type': 'lead', 'search_default_section_id': section_id, 'stage_type': 'lead'}</field>
         <field name="help">Leads allow you to manage and keep track of all initial contacts with a prospect or partner showing interest in your products or services. A lead is usually the first step in your sales cycle. Once qualified, a lead may be converted into a business opportunity, while creating the related partner for further detailed tracking of any linked activities. You can import a database of prospects, keep track of your business cards or integrate your website's contact form with the OpenERP Leads. Leads can be connected to the email gateway: new emails may create leads, each of them automatically gets the history of the conversation with the prospect.</field>
     </record>
 
@@ -34,6 +34,69 @@
         groups="base.group_extended"
         id="menu_crm_case_categ0_act_leads"
         action="crm_case_category_act_leads_all" sequence="1" />
+
+
+     <act_window
+            id="act_crm_opportunity_crm_phonecall_new"
+            name="Phone calls"
+            groups="base.group_extended"
+            res_model="crm.phonecall"
+            src_model="crm.lead"
+            view_mode="tree,calendar,form"
+            context="{'default_duration': 1.0 ,'default_opportunity_id': active_id,'default_partner_phone':phone}"
+            domain="[('opportunity_id', '=', active_id)]"
+            view_type="form"/>
+
+    <act_window
+            id="act_crm_opportunity_crm_meeting_new"
+            name="Meetings"
+            res_model="crm.meeting"
+            src_model="crm.lead"
+            view_mode="tree,form,calendar,"
+            context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"
+            domain="[('opportunity_id', '=', active_id)]"
+            view_type="form"/>
+
+     <record model="ir.actions.act_window" id="crm_case_category_act_oppor11">
+          <field name="name">Opportunities</field>
+          <field name="res_model">crm.lead</field>
+          <field name="view_mode">tree,form,graph,calendar,kanban</field>
+          <field name="domain">[('type','=','opportunity')]</field>
+          <field name="context">{'search_default_user_id':uid,'search_default_new':1, 'search_default_open':1, 'search_default_section_id':section_id, 'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
+          <field name="view_id" ref="crm_case_tree_view_oppor"/>
+          <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+          <field name="help">With opportunities you can manage and keep track of your sales pipeline by creating specific customer- or prospect-related sales documents to follow up potential sales. Information such as expected revenue, opportunity stage, expected closing date, communication history and much more can be stored. Opportunities can be connected to the email gateway: new emails may create opportunities, each of them automatically gets the history of the conversation with the customer.
+
+You and your team(s) will be able to plan meetings and phone calls from opportunities, convert them into quotations, manage related documents, track all customer related activities, and much more.</field>
+     </record>
+
+     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor11">
+          <field name="sequence" eval="1"/>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="crm_case_tree_view_oppor"/>
+          <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
+     </record>
+
+     <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_oppor11">
+          <field name="sequence" eval="2"/>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="crm_case_form_view_oppor"/>
+          <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
+     </record>
+
+     <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view_oppor11">
+          <field name="sequence" eval="4"/>
+          <field name="view_mode">graph</field>
+          <field name="view_id" ref="crm_case_graph_view_opportunity"/>
+          <field name="act_window_id" ref="crm_case_category_act_oppor11"/>
+     </record>
+
+     <menuitem id="base.menu_sales" name="Sales"
+         parent="base.menu_base_partner" sequence="1" />
+
+     <menuitem name="Opportunities" id="menu_crm_case_opp"
+         parent="base.menu_sales" action="crm_case_category_act_oppor11"
+         sequence="2" />
 
 </data>
 </openerp>

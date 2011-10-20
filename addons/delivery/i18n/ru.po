@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:51+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:53+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -50,7 +50,7 @@ msgstr "Нет каталога !"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "Строки поставки"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -93,6 +93,7 @@ msgstr "Счет на комплектование"
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr ""
+"Возвращает порядок следования при отображении списка доставочной сетки."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -148,11 +149,12 @@ msgstr "Движение ТМЦ"
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
+"Ни одна строка не совпала с этим порядком в выбранных доставочных сетках!"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Отслеживание доставки перевозчиком"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -166,6 +168,10 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"Создание и управление способами доставки, необходимыми для вашей торговой "
+"деятельности. Каждый способ доставки может быть отнесены к прайс-листу, "
+"который вычисляет цену доставки в соответствии с реализованной или "
+"доставленной продукцией."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
@@ -228,6 +234,12 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"Позволяет добавить методы доставки в заказы на продажу и комплектацию.\n"
+"     Можно определить собственные сетки цен доставки и перевозки.\n"
+"     При создании счетов по комплектации, OpenERP может добавить и вычислить "
+"строку доставки.\n"
+"\n"
+"     "
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -245,6 +257,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Если активное поле установлено в «Ложь», будет позволено спрятать "
+"доставочную сетку не удаляя её."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -293,7 +307,7 @@ msgstr ""
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Доступных позиций нет !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -437,7 +451,7 @@ msgstr "Цена"
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Нет сетки, совпадающей с этой перевозкой!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -459,7 +473,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "Перевозка %s (ID: %d) не имеет доставочной сетки!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -596,15 +610,3 @@ msgstr "Тип цены"
 #~ msgstr ""
 #~ "Этот метод доставки должен использоваться при фактурировании на основании "
 #~ "данных упаковки."
-
-#~ msgid "Sale Order"
-#~ msgstr "Заказ на продажу"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля никогда не может быть меньше 1 !"

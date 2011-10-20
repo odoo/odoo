@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            result = md.get_object_reference(cr, uid, 'product', 'product_consultant')
             return result[1]
         except ValueError:
             pass
@@ -66,8 +66,8 @@ class hr_analytic_timesheet(osv.osv):
     _inherits = {'account.analytic.line': 'line_id'}
     _order = "id desc"
     _columns = {
-        'line_id': fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
-        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='res.partner', store=True),
+        'line_id': fields.many2one('account.analytic.line', 'Analytic Line', ondelete='cascade', required=True),
+        'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner', relation='res.partner', store=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):

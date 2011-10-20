@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-06 04:35+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -59,7 +59,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "Últimos inventários"
 
 #. module: stock
 #: view:stock.move:0
@@ -75,7 +75,7 @@ msgstr "Número da Revisão"
 #: view:stock.move.memory.in:0
 #: view:stock.move.memory.out:0
 msgid "Product Moves"
-msgstr ""
+msgstr "Movimentações de produto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -90,6 +90,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
+"Número de referência interno, caso seja diferente do número de série do "
+"fabricante"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -102,7 +104,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "Lista de recolha"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -157,7 +159,7 @@ msgstr "UoM"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Inventário físico"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -169,7 +171,7 @@ msgstr "Diário de Stock"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr ""
+msgstr "Entrada"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -190,7 +192,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "Entregar/Receber Produtos"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -216,7 +218,7 @@ msgstr "Não aplicável"
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "Outra referência ou número de série"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -2090,8 +2092,8 @@ msgid "Future Qty"
 msgstr "Quantidade Futura"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2148,7 +2150,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3944,9 +3946,6 @@ msgstr ""
 #~ msgid "This account will be used to value the output stock"
 #~ msgstr "Esta conta será usada para validar o stock de saída"
 
-#~ msgid "Qty"
-#~ msgstr "Quantidade"
-
 #~ msgid "Validate"
 #~ msgstr "Validar"
 
@@ -4052,9 +4051,6 @@ msgstr ""
 #~ msgid "Customer Invoice"
 #~ msgstr "Factura a Clientes"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Rastrear lotes à entrada"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4099,9 +4095,6 @@ msgstr ""
 
 #~ msgid "STOCK_FILE"
 #~ msgstr "STOCK_FILE"
-
-#~ msgid "weight"
-#~ msgstr "peso"
 
 #~ msgid "terp-report"
 #~ msgstr "terp-report"
@@ -4265,9 +4258,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Rastrear lotes de saída"
-
 #~ msgid "STOCK_FIND"
 #~ msgstr "STOCK_FIND"
 
@@ -4306,9 +4296,6 @@ msgstr ""
 
 #~ msgid "STOCK_REVERT_TO_SAVED"
 #~ msgstr "STOCK_REVERT_TO_SAVED"
-
-#~ msgid "Canceled"
-#~ msgstr "Cancelado"
 
 #~ msgid "Close"
 #~ msgstr "Fechar"
@@ -4752,9 +4739,6 @@ msgstr ""
 #, python-format
 #~ msgid "Product "
 #~ msgstr "Artigo "
-
-#~ msgid "stock.move.memory"
-#~ msgstr "stock.move.memory"
 
 #, python-format
 #~ msgid "quantity."

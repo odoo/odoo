@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:01+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:02+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_contact
 #: field:res.partner.contact,title:0
@@ -34,27 +34,27 @@ msgstr "Fax"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "title"
-msgstr ""
+msgstr "título"
 
 #. module: base_contact
 #: help:res.partner.job,date_start:0
 msgid "Start date of job(Joining Date)"
-msgstr ""
+msgstr "Fecha inicial del trabajo (fecha de unión)."
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Select the Option for Addresses Migration"
-msgstr ""
+msgstr "Seleccione la opción para la migración de direcciones"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
 msgid "Function of this contact with this partner"
-msgstr ""
+msgstr "Función de este contacto con esta empresa."
 
 #. module: base_contact
 #: help:res.partner.job,state:0
 msgid "Status of Address"
-msgstr ""
+msgstr "Estado de la dirección."
 
 #. module: base_contact
 #: help:res.partner.job,name:0
@@ -62,11 +62,13 @@ msgid ""
 "You may                     enter Address first,Partner will be linked "
 "automatically if any."
 msgstr ""
+"Puede introducir primero una dirección, se relacionará automáticamente con "
+"la empresa si hay una."
 
 #. module: base_contact
 #: help:res.partner.job,fax:0
 msgid "Job FAX no."
-msgstr ""
+msgstr "Número del Fax del trabajo."
 
 #. module: base_contact
 #: field:res.partner.contact,mobile:0
@@ -77,7 +79,7 @@ msgstr "Móvil"
 #: view:res.partner.contact:0
 #: field:res.partner.contact,comment:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_contacts0
@@ -92,13 +94,13 @@ msgstr "Definir cargos y direcciones."
 #. module: base_contact
 #: help:res.partner.job,date_stop:0
 msgid "Last date of job"
-msgstr ""
+msgstr "Fecha final del trabajo."
 
 #. module: base_contact
 #: view:base.contact.installer:0
 #: field:base.contact.installer,migrate:0
 msgid "Migrate"
-msgstr ""
+msgstr "Migrar"
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -127,6 +129,8 @@ msgid ""
 "If the active field is set to False,                 it will allow you to "
 "hide the partner contact without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar el contacto de la empresa "
+"sin eliminarlo."
 
 #. module: base_contact
 #: model:ir.module.module,description:base_contact.module_meta_information
@@ -151,6 +155,25 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo le permite gestionar sus contactos de forma completa.\n"
+"\n"
+"    Le permite definir:\n"
+"        *contactos sin ninguna relación con una empresa,\n"
+"        *contactos que trabajan en varias direcciones (probablemente para "
+"distintas empresas),\n"
+"        *contactos con varias funciones para cada una de sus direcciones de "
+"trabajo\n"
+"\n"
+"    También añade nuevas entradas de menús localizadas en:\n"
+"        Empresas \\ Contactos\n"
+"        Empresas \\ Funciones\n"
+"\n"
+"    Tenga cuidado que este módulo convierte las direcciones existentes en "
+"\"direcciones + contactos\". Esto significa que algunos campos de las "
+"direcciones desaparecerán (como el nombre del contacto), ya que se supone "
+"que estarán definidos en otro objeto.\n"
+"    "
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -179,6 +202,8 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
+"Orden de importancia de este título de trabajo en la lista de títulos de "
+"trabajo de la empresa relacionada."
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -193,7 +218,7 @@ msgstr "Número de extensión telefónica interior/exterior"
 #. module: base_contact
 #: help:res.partner.job,phone:0
 msgid "Job Phone no."
-msgstr ""
+msgstr "Número de teléfono del trabajo."
 
 #. module: base_contact
 #: view:res.partner.contact:0
@@ -210,7 +235,7 @@ msgstr "Contacto"
 #. module: base_contact
 #: help:res.partner.job,email:0
 msgid "Job E-Mail"
-msgstr ""
+msgstr "Correo electrónico del trabajo."
 
 #. module: base_contact
 #: field:res.partner.job,sequence_partner:0
@@ -225,7 +250,7 @@ msgstr "Cargo a dirección"
 #. module: base_contact
 #: field:base.contact.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progreso de configuración"
 
 #. module: base_contact
 #: field:res.partner.contact,name:0
@@ -236,13 +261,13 @@ msgstr "Apellido"
 #: view:res.partner:0
 #: view:res.partner.contact:0
 msgid "Communication"
-msgstr ""
+msgstr "Comunicación"
 
 #. module: base_contact
 #: field:base.contact.installer,config_logo:0
 #: field:res.partner.contact,photo:0
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -252,12 +277,12 @@ msgstr "Anterior"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_res_partner_address
 msgid "Partner Addresses"
-msgstr ""
+msgstr "Direcciones de empresa"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Address's Migration to Contacts"
-msgstr ""
+msgstr "Migración de direcciones a contactos"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -267,7 +292,7 @@ msgstr "Sec. contacto"
 #. module: base_contact
 #: view:res.partner.address:0
 msgid "Search Contact"
-msgstr ""
+msgstr "Buscar contacto"
 
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_partner_contact_form
@@ -285,6 +310,9 @@ msgid ""
 "Due to changes in Address and Partner's relation, some of the details from "
 "address are needed to be migrated into contact information."
 msgstr ""
+"Debido a los cambios en la relación entre Direcciones y Empresas, algunos de "
+"los detalles de las direcciones son necesarios migrarlos a la información de "
+"contactos."
 
 #. module: base_contact
 #: model:process.node,note:base_contact.process_node_addresses0
@@ -294,7 +322,7 @@ msgstr "Direcciones de trabajo y privadas."
 #. module: base_contact
 #: help:res.partner.job,address_id:0
 msgid "Address which is linked to the Partner"
-msgstr ""
+msgstr "Dirección que está relacionada con la empresa."
 
 #. module: base_contact
 #: field:res.partner.job,function:0
@@ -314,12 +342,12 @@ msgstr "Sitio web"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Otherwise these details will not be visible from address/contact."
-msgstr ""
+msgstr "Sino estos detalles no serán visibles desde direcciones/contactos."
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -330,7 +358,7 @@ msgstr "Correo electrónico"
 #. module: base_contact
 #: model:ir.model,name:base_contact.model_base_contact_installer
 msgid "base.contact.installer"
-msgstr ""
+msgstr "Instalador de Módulo de Contactos"
 
 #. module: base_contact
 #: view:res.partner.job:0
@@ -345,7 +373,7 @@ msgstr "Teléfono"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Do you want to migrate your Address data in Contact Data?"
-msgstr ""
+msgstr "¿Desea migrar los datos de direcciones hacia los datos de contacto?"
 
 #. module: base_contact
 #: field:res.partner.contact,active:0
@@ -395,7 +423,7 @@ msgstr "General"
 #. module: base_contact
 #: view:res.partner.contact:0
 msgid "Photo"
-msgstr ""
+msgstr "Foto"
 
 #. module: base_contact
 #: field:res.partner.contact,birthdate:0
@@ -405,7 +433,7 @@ msgstr "Fecha nacimiento"
 #. module: base_contact
 #: help:base.contact.installer,migrate:0
 msgid "If you select this, all addresses will be migrated."
-msgstr ""
+msgstr "Si selecciona esta opción, todas las direcciones serán migradas."
 
 #. module: base_contact
 #: selection:res.partner.job,state:0
@@ -462,17 +490,17 @@ msgstr "Nacionalidad"
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Open Jobs"
-msgstr ""
+msgstr "Abrir trabajos"
 
 #. module: base_contact
 #: field:base.contact.installer,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
-msgstr ""
+msgstr "Puede migrar las direcciones actuales de la empresa al contacto."
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0
@@ -482,12 +510,12 @@ msgstr "Empleado principal"
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.action_base_contact_installer
 msgid "Address Migration"
-msgstr ""
+msgstr "Migración direcciones"
 
 #. module: base_contact
 #: view:res.partner:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Dirección postal"
 
 #. module: base_contact
 #: model:process.node,name:base_contact.process_node_addresses0
@@ -511,6 +539,8 @@ msgid ""
 "Order of                     importance of this address in the list of "
 "addresses of the linked contact"
 msgstr ""
+"Orden de importancia de esta dirección en la lista de direcciones del "
+"contacto relacionado."
 
 #~ msgid "res.partner.contact"
 #~ msgstr "res.partner.contact"

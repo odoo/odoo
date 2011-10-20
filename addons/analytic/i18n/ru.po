@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:44+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:40+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -84,6 +84,20 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* При создании счёта учёта, он находится в состоянии \"Черновик\".           "
+"                       \n"
+"* Если присутствует хотя бы один связанный партнёр, счёт может быть в "
+"состоянии \"Открыт\".                                  \n"
+"* Если присутствует хотя бы один ожидающий баланс, счёт может быть в "
+"состоянии \"В ожидании\".                                   \n"
+"* И наконец, при завершении всех транзакций, счёт может быть в состоянии "
+"\"Закрыт\".                                   \n"
+"* Проект может быть в сотояниях \"Шаблон\" или \"Выполняется\".\n"
+" Если он в состоянии \"Шаблон\", на его основе можно составлять другие "
+"проекты. Если он в состоянии \"Выполняется\" — это нормальный проект.        "
+"                         \n"
+" Если он требует рассмотрения, он находится в состоянии \"В ожидании\".\n"
+" При завершении проекта, состояние устанавливается в \"Выполнен\"."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -243,7 +257,7 @@ msgstr "Вид"
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Partner"
-msgstr "Партнер"
+msgstr "Контрагент"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0

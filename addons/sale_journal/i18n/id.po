@@ -13,33 +13,33 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:21+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:18+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
 msgid "Note"
-msgstr ""
+msgstr "Catatan"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Tipe jurnal yang digunakan untuk sales dan picking"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Referensi order harus unik !"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "invoicing"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Sales & Purchases"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -47,16 +47,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Jika kolom aktif diatur ke False, itu akan memungkinkan Anda untuk "
+"menyembunyikan jenis faktur tanpa menghapusnya."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
 msgid "Notes"
-msgstr ""
+msgstr "Catatan"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
-msgstr ""
+msgstr "Meotode Invoicing"
 
 #. module: sale_journal
 #: model:ir.module.module,description:sale_journal.module_meta_information
@@ -85,21 +87,48 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Modul sales jurnal memungkinkan Anda untuk mengkategorikan Anda\n"
+"sales dan pengiriman (daftar pengambilan) antara jurnal yang berbeda.\n"
+"Modul ini sangat membantu bagi perusahaan yang lebih besar yang\n"
+"bekerja dengan departemen.\n"
+"\n"
+"Dapat menggunakan jurnal untuk tujuan yang berbeda, beberapa contoh:\n"
+"* mengisolasi penjualan berbagai departemen\n"
+"* jurnal untuk pengiriman dengan truk atau dengan UPS\n"
+"\n"
+"Jurnal memiliki bertanggung jawab dan berkembang antara status yang "
+"berbeda:\n"
+"* draft, terbuka, membatalkan, dilakukan.\n"
+"\n"
+"Batch operasi dapat diproses pada jurnal yang berbeda untuk\n"
+"pastikan semua penjualan sekaligus, untuk memvalidasi atau pengemasan "
+"faktur, ...\n"
+"\n"
+"Ini juga mendukung metode faktur batch yang dapat dikonfigurasi oleh\n"
+"mitra dan pesanan penjualan, contoh:\n"
+"* invoicing harian,\n"
+"* invoicing bulanan, ...\n"
+"\n"
+"Beberapa statistik oleh jurnal disediakan.\n"
+"\n"
+"modul: sale_journal\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr ""
+msgstr "Tidak dikelompokan"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr ""
+msgstr "Dikelompokan"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Error! Anda tidak dapat membuat anggota terkait secara terus menerus"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -108,16 +137,19 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Jenis invoice digunakan untuk partner, order sales dan order pengiriman. "
+"Anda dapat membuat jurnal invoicing khusus untuk grup invoicing Anda sesuai "
+"dengan kebutuhan pelanggan Anda: harian, setiap Rabu, bulanan, dll"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr ""
+msgstr "Metoda invoicing"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Sales order"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -125,34 +157,34 @@ msgstr ""
 #: field:sale_journal.invoice.type,name:0
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr ""
+msgstr "Tipe Invoice"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Rekanan"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr ""
+msgstr "Jenis Invoice"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Daftar pengambilan"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr ""
+msgstr "Mengelola sales dan pengiriman berdasarkan jurnal"
 
 #~ msgid "All Months"
 #~ msgstr "Semua Bulan"

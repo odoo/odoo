@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:55+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:57+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
 msgid "invoice to associate"
-msgstr "发票关联"
+msgstr "商会发票"
 
 #. module: membership
 #: model:process.process,name:membership.process_process_membershipprocess0
@@ -37,32 +37,32 @@ msgstr "付费会员"
 #: view:report.membership:0
 #: view:res.partner:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: membership
 #: field:report.membership,num_paid:0
 msgid "# Paid"
-msgstr "笔已付款"
+msgstr "# 已付款"
 
 #. module: membership
 #: field:report.membership,tot_earned:0
 msgid "Earned Amount"
-msgstr ""
+msgstr "已实现收入"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
 msgid "Membership Analysis"
-msgstr ""
+msgstr "会员分析"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "March"
-msgstr "三月"
+msgstr "3月"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
 msgid "Set an associate member of partner."
-msgstr "设为准成员的业务伙伴"
+msgstr "设商会成员为业务伙伴"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
@@ -89,12 +89,12 @@ msgstr "等待发票"
 #. module: membership
 #: help:report.membership,date_to:0
 msgid "End membership date"
-msgstr ""
+msgstr "会员资格结束日期"
 
 #. module: membership
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr "供应商列表"
+msgstr "供应商"
 
 #. module: membership
 #: view:res.partner:0
@@ -120,12 +120,12 @@ msgstr "加入成员"
 #. module: membership
 #: field:res.partner,associate_member:0
 msgid "Associate member"
-msgstr "准会员"
+msgstr "商会成员"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_associatedmember0
 msgid "Member is associated."
-msgstr "是准会员"
+msgstr "是商会会员"
 
 #. module: membership
 #: field:report.membership,tot_pending:0
@@ -135,12 +135,12 @@ msgstr "未决金额"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr "准业务伙伴"
+msgstr "商会伙伴"
 
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr "笔已开票"
+msgstr "# 已开票"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -150,7 +150,7 @@ msgstr "会员分析"
 #. module: membership
 #: view:res.partner:0
 msgid "End Membership Date"
-msgstr ""
+msgstr "会员资格结束日期"
 
 #. module: membership
 #: field:product.product,membership_date_from:0
@@ -161,7 +161,7 @@ msgstr "日期格式"
 #: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "业务伙伴没有发票地址"
 
 #. module: membership
 #: model:ir.model,name:membership.model_res_partner
@@ -182,12 +182,12 @@ msgstr "业务伙伴"
 #. module: membership
 #: field:membership.membership_line,date_from:0
 msgid "From"
-msgstr "格式"
+msgstr "来自"
 
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr ""
+msgstr "错误，这个会员产品已过期"
 
 #. module: membership
 #: help:res.partner,membership_state:0
@@ -206,6 +206,13 @@ msgid ""
 "                    -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"会员的状态：\n"
+"非会员：      该客户还没有会员资格\n"
+"已退会员：   该客户已退出会员资格\n"
+"旧会员：      该客户的会员资格已过期\n"
+"待办会员：   该客户已签署会员资料等待开发票\n"
+"已开票会员：该客户的发票已开\n"
+"已付款会员：该客户已付款"
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
@@ -238,14 +245,14 @@ msgstr "付费会员"
 #. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
-msgstr "笔正在等待"
+msgstr "# 正在等待"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
 #: model:ir.ui.menu,name:membership.menu_members
 #: view:res.partner:0
 msgid "Members"
-msgstr "成员"
+msgstr "会员"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -262,7 +269,7 @@ msgstr "待处理发票"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "July"
-msgstr "七月"
+msgstr "7月"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
@@ -274,14 +281,14 @@ msgstr "金牌会员"
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "你将作为哪个客户的附属会员。你的会员资格会随着主会员的状态变化。"
 
 #. module: membership
 #: field:membership.membership_line,membership_id:0
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
-msgstr ""
+msgstr "会员产品"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -291,7 +298,7 @@ msgstr "定义会员产品"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
 msgid "Invoiced member may be Associated member."
-msgstr "已开发票的会员可能是准会员"
+msgstr "已开发票的会员可能是商会会员"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -302,7 +309,7 @@ msgstr "加入"
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "会员资格到哪一天结束"
 
 #. module: membership
 #: view:product.product:0
@@ -317,12 +324,12 @@ msgstr "加入日期"
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give membership free of cost."
-msgstr ""
+msgstr "勾选此项则此会员资格免费"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
 msgid "Set association"
-msgstr "设立协会"
+msgstr "设置商会"
 
 #. module: membership
 #: view:res.partner:0
@@ -347,7 +354,7 @@ msgstr "产品模板"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr "九月"
+msgstr "9月"
 
 #. module: membership
 #: model:ir.module.module,description:membership.module_meta_information
@@ -365,6 +372,15 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"此模块用于管理所有会员管理的日常运营。\n"
+"支持多种会员资格：\n"
+"  免费会员\n"
+"  附属会员（一组会员共用一个会员资格）\n"
+"  已付款会员特价会员\n"
+"\n"
+"与销售和财务系统集成并自动创建会员的发票和续费提醒\n"
+"    "
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -388,17 +404,24 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"会员的状态：\n"
+"非会员：客户还没有签署会员协议\n"
+"已退订会员：客户已退订会员资格\n"
+"旧会员：客户的会员资额已过期\n"
+"等待会员：客户已签署会员协议，等待发票\n"
+"已开票会员：会员的发票已开\n"
+"已付款会员：会员已付款"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,month:0
 msgid "Month"
-msgstr "月"
+msgstr "月份"
 
 #. module: membership
 #: view:product.product:0
 msgid "Group by..."
-msgstr "分组于"
+msgstr "分组"
 
 #. module: membership
 #: code:addons/membership/membership.py:411
@@ -415,18 +438,18 @@ msgstr "会员售价表"
 #: field:report.membership,associate_member_id:0
 #: view:res.partner:0
 msgid "Associate Member"
-msgstr ""
+msgstr "附属会员"
 
 #. module: membership
 #: help:product.product,membership_date_from:0
 #: help:res.partner,membership_start:0
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "会员资格开始生效的日期"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
-msgstr "相关的业务伙伴"
+msgstr "商会业务伙伴"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
@@ -439,7 +462,7 @@ msgstr "会员发票"
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr "销售员"
+msgstr "业务员"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -473,7 +496,7 @@ msgstr "会员售价表版本"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误:采购单位和计量单位不能是同一类型"
+msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
 
 #. module: membership
 #: view:report.membership:0
@@ -488,7 +511,7 @@ msgstr "会员"
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的相关成员。"
+msgstr "错误！您不能创建递归的商会会员。"
 
 #. module: membership
 #: view:product.product:0
@@ -498,12 +521,12 @@ msgstr "起始日期"
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
 msgid "Associated member"
-msgstr "准会员"
+msgstr "商会会员"
 
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
-msgstr ""
+msgstr "财务信息"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -513,12 +536,12 @@ msgstr "取消会员日期"
 #. module: membership
 #: view:res.partner:0
 msgid "Customers"
-msgstr "客户列表"
+msgstr "客户"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "August"
-msgstr "八月"
+msgstr "8月"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
@@ -530,7 +553,7 @@ msgstr "会员产品"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "June"
-msgstr "六月"
+msgstr "6月"
 
 #. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
@@ -554,7 +577,7 @@ msgstr "已开发票的会员"
 #. module: membership
 #: help:membership.membership_line,date:0
 msgid "Date on which member has joined the membership"
-msgstr ""
+msgstr "客户加入会员资格的日期"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -566,27 +589,27 @@ msgstr "等待会员"
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
 msgid "Association Partner"
-msgstr "协会业务伙伴"
+msgstr "商会业务伙伴"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "November"
-msgstr "十一月"
+msgstr "11月"
 
 #. module: membership
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr "扩展过滤器..."
+msgstr "增加筛选条件"
 
 #. module: membership
 #: field:membership.membership_line,state:0
 msgid "Membership State"
-msgstr ""
+msgstr "会员状态"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "October"
-msgstr "十月"
+msgstr "10月"
 
 #. module: membership
 #: view:product.product:0
@@ -596,7 +619,7 @@ msgstr "销售说明"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "January"
-msgstr "一月"
+msgstr "1月"
 
 #. module: membership
 #: view:product.product:0
@@ -611,17 +634,17 @@ msgstr "会员数"
 #. module: membership
 #: help:res.partner,membership_amount:0
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "客户协商后的价格"
 
 #. module: membership
 #: model:product.template,name:membership.membership_2_product_template
 msgid "Basic Membership"
-msgstr "基本会员"
+msgstr "基础会员"
 
 #. module: membership
 #: help:product.product,membership:0
 msgid "Select if a product is a membership product."
-msgstr ""
+msgstr "选择作为会员资格的产品"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -645,7 +668,7 @@ msgstr "当前会员状态"
 #. module: membership
 #: view:report.membership:0
 msgid "Last 365 Days"
-msgstr ""
+msgstr "最近365天"
 
 #. module: membership
 #: view:product.product:0
@@ -660,17 +683,17 @@ msgstr "发票现在是待处理"
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr "未活动的"
+msgstr "不活跃的"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "最近30天"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "December"
-msgstr "十二月"
+msgstr "12月"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -690,12 +713,12 @@ msgstr "信息"
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
-msgstr "账户发票明细"
+msgstr "帐户发票明细"
 
 #. module: membership
 #: view:product.product:0
 msgid "Categorization"
-msgstr ""
+msgstr "分类"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -718,7 +741,7 @@ msgstr "采购说明"
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr "货品"
+msgstr "产品"
 
 #. module: membership
 #: view:product.product:0
@@ -733,7 +756,7 @@ msgstr "免费会员"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr "五月"
+msgstr "5月"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
@@ -754,7 +777,7 @@ msgstr "结束日期"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr "二月"
+msgstr "2月"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
@@ -764,12 +787,12 @@ msgstr "已开发票会员"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr "四月"
+msgstr "4月"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "退订会员资格的日期"
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
@@ -785,7 +808,7 @@ msgstr "等待会员"
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr "起始日期"
+msgstr "开始日期"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -795,7 +818,7 @@ msgstr "会员产品"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr ""
+msgstr "会员资格的价格"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -807,7 +830,7 @@ msgstr "已取消的会员"
 #. module: membership
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "错误:无效EAN代码"
+msgstr "错误：无效的(EAN)条码"
 
 #. module: membership
 #: view:report.membership:0
@@ -818,7 +841,7 @@ msgstr "年"
 #. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
-msgstr ""
+msgstr "已实现收入"
 
 #~ msgid "Reporting"
 #~ msgstr "报表"
@@ -925,6 +948,3 @@ msgstr ""
 
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "错误：需要BVR参照"
-
-#~ msgid "Group By"
-#~ msgstr "分组于"

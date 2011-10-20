@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:06+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:06+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -41,7 +41,7 @@ msgid ""
 "Partner."
 msgstr ""
 "Δεν μπορείτε να καταργήσετε / απενεργοποίησετε έναν λογαριασμού που έχει "
-"οριστεί ως ιδιοτητα σε κάθε εταίρο"
+"οριστεί ως ιδιοτητα σε κάποιο Συνεργάτη"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -104,6 +104,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Η αναφορά Κερδών & Ζημιών σας δίνει μια σύνοψη των κερδών ή ζημιών της "
+"εταιρείας σας σε ένα έγγραφο"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -514,8 +516,6 @@ msgstr ""
 #: field:account.move.bank.reconcile,journal_id:0
 #: view:account.move.line:0
 #: field:account.move.line,journal_id:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
 #: code:addons/account/account_move_line.py:983
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,journal_id:0
@@ -1156,6 +1156,7 @@ msgstr "# Συναλλαγής"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.tax.code.entries:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -1346,6 +1347,16 @@ msgstr ""
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With balance is not equal to 0"
 msgstr "Με υπόλοιπο δάιφορο του 0"
 
@@ -2123,6 +2134,8 @@ msgstr "Λογιστικά Χαρακτηριστικά"
 #. module: account
 #: report:account.journal.period.print:0
 #: field:account.print.journal,sort_selection:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Entries Sorted By"
 msgstr "Εγγραφές Ταξινομημένες Ανά"
 
@@ -2144,11 +2157,16 @@ msgstr "Πρότυπο Προϊόντος"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.central.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: view:account.entries.report:0
 #: field:account.entries.report,fiscalyear_id:0
 #: field:account.fiscalyear,name:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: field:account.journal.period,fiscalyear_id:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
@@ -2472,6 +2490,7 @@ msgstr "Εκπτ.(%)"
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: report:account.overdue:0
 #: report:account.third_party_ledger:0
@@ -2718,6 +2737,8 @@ msgstr "Οικονομική Λογιστική"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Profit And Loss"
 msgstr ""
 
@@ -2993,7 +3014,6 @@ msgstr "Διατηρήστε κενό για να χρησιμοποιήσετε
 #: report:account.general.journal:0
 #: field:account.general.journal,journal_ids:0
 #: view:account.journal.period:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,journal_ids:0
 #: field:account.partner.ledger,journal_ids:0
 #: field:account.pl.report,journal_ids:0
@@ -3007,6 +3027,17 @@ msgstr "Διατηρήστε κενό για να χρησιμοποιήσετε
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.central.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Journals"
 msgstr "Ημερολόγια"
 
@@ -3217,6 +3248,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 msgid "Counterpart"
 msgstr ""
 
@@ -3275,6 +3307,16 @@ msgstr "ΦΠΑ :"
 #: model:ir.actions.act_window,name:account.action_account_chart
 #: model:ir.actions.act_window,name:account.action_account_tree
 #: model:ir.ui.menu,name:account.menu_action_account_tree2
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Chart of Accounts"
 msgstr "Λογιστικό Σχέδιο"
 
@@ -3721,11 +3763,10 @@ msgid "Analytic Balance"
 msgstr "Αναλυτικό Ισοζύγιο"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:76
-#: code:addons/account/report/account_balance_sheet.py:122
-#: code:addons/account/report/account_profit_loss.py:76
-#: code:addons/account/report/account_profit_loss.py:124
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Loss"
 msgstr ""
 
@@ -4549,7 +4590,6 @@ msgid "Analytic Balance -"
 msgstr "Αναλυτικό ισοζύγιο"
 
 #. module: account
-#: report:account.account.balance:0
 #: field:account.aged.trial.balance,target_move:0
 #: field:account.balance.report,target_move:0
 #: field:account.bs.report,target_move:0
@@ -4562,10 +4602,8 @@ msgstr "Αναλυτικό ισοζύγιο"
 #: field:account.common.report,target_move:0
 #: report:account.general.journal:0
 #: field:account.general.journal,target_move:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: field:account.move.journal,target_move:0
-#: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
 #: field:account.pl.report,target_move:0
@@ -4575,6 +4613,16 @@ msgstr "Αναλυτικό ισοζύγιο"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Target Moves"
 msgstr "Επιλεγμένες Κινήσεις"
 
@@ -4691,6 +4739,8 @@ msgstr "Αποτελέσματα Εκκαθάρισης"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 msgid "Balance Sheet"
 msgstr ""
 
@@ -5409,6 +5459,19 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/report/common_report_header.py:100
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "No Filter"
 msgstr "Κανένα Φίλτρο"
@@ -6322,6 +6385,7 @@ msgstr ""
 
 #. module: account
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.report.general.ledger:0
 #: model:ir.actions.act_window,name:account.action_account_general_ledger_menu
 #: model:ir.actions.report.xml,name:account.account_general_ledger
@@ -7235,6 +7299,7 @@ msgstr ""
 #: view:account.entries.report:0
 #: field:account.entries.report,partner_id:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: view:account.invoice:0
 #: field:account.invoice,partner_id:0
 #: field:account.invoice.line,partner_id:0
@@ -7490,6 +7555,19 @@ msgstr ""
 #: field:account.tax.chart,period_id:0
 #: code:addons/account/account_move_line.py:982
 #: field:validate.account.move,period_id:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
+#: report:account.vat.declaration:0
 #, python-format
 msgid "Period"
 msgstr "Περίοδος"
@@ -7573,14 +7651,6 @@ msgstr "Τηλ. :"
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
 msgstr "Νόμισμα Εταιρίας"
-
-#. module: account
-#: report:account.general.ledger:0
-#: report:account.partner.balance:0
-#: report:account.third_party_ledger:0
-#: report:account.third_party_ledger_other:0
-msgid "Chart of Account"
-msgstr ""
 
 #. module: account
 #: model:process.node,name:account.process_node_paymententries0
@@ -7694,6 +7764,12 @@ msgstr "Ημερολόγιο Επιστροφών"
 #: report:account.central.journal:0
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Filter By"
 msgstr ""
 
@@ -7936,6 +8012,7 @@ msgstr ""
 #: field:account.entries.report,currency_id:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: field:account.invoice,currency_id:0
 #: field:account.invoice.report,currency_id:0
 #: field:account.journal,currency:0
@@ -8219,12 +8296,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Start Period"
 msgstr ""
 
@@ -8342,7 +8424,12 @@ msgstr "Διατηρήστε το κενό για να χρησιμοποιηθ�
 #: report:account.central.journal:0
 #: field:account.entries.report,balance:0
 #: report:account.general.journal:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: field:account.move.line,balance:0
 #: report:account.partner.balance:0
 #: selection:account.payment.term.line,value:0
@@ -8361,6 +8448,15 @@ msgstr ""
 
 #. module: account
 #: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Display Account"
 msgstr ""
 
@@ -8579,12 +8675,17 @@ msgstr ""
 #: report:account.account.balance:0
 #: report:account.central.journal:0
 #: report:account.general.journal:0
-#: report:account.general.ledger:0
 #: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "End Period"
 msgstr ""
 
@@ -8787,6 +8888,7 @@ msgstr ""
 #: field:account.entries.report,credit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,credit:0
 #: field:account.move.line,credit:0
@@ -8868,6 +8970,18 @@ msgstr "Γενικά"
 #: selection:account.pl.report,filter:0
 #: selection:account.print.journal,filter:0
 #: selection:account.report.general.ledger,filter:0
+#: report:account.account.balance:0
+#: report:account.central.journal:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.journal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 #: report:account.vat.declaration:0
 #: view:account.vat.declaration:0
 #: selection:account.vat.declaration,filter:0
@@ -9077,13 +9191,10 @@ msgid "Tax Source"
 msgstr "Πηγή Φόρου"
 
 #. module: account
-#: code:addons/account/report/account_balance_sheet.py:71
-#: code:addons/account/report/account_balance_sheet.py:116
-#: code:addons/account/report/account_balance_sheet.py:119
-#: code:addons/account/report/account_balance_sheet.py:120
-#: code:addons/account/report/account_profit_loss.py:71
-#: code:addons/account/report/account_profit_loss.py:127
-#, python-format
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "Net Profit"
 msgstr "Καθαρό Κέρδος"
 
@@ -9107,8 +9218,8 @@ msgstr ""
 #: report:account.general.ledger:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
-msgid "JNRL"
-msgstr "JNRL"
+msgid "JRNL"
+msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9315,6 +9426,7 @@ msgstr "Τιμολόγιο Προμηθευτή"
 #: field:account.entries.report,debit:0
 #: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
 #: report:account.journal.period.print:0
 #: field:account.model.line,debit:0
 #: field:account.move.line,debit:0
@@ -9391,6 +9503,16 @@ msgstr ""
 #: selection:account.common.account.report,display_account:0
 #: selection:account.pl.report,display_account:0
 #: selection:account.report.general.ledger,display_account:0
+#: report:account.account.balance:0
+#: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
+#: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:pl.account:0
+#: report:pl.account.horizontal:0
 msgid "With movements"
 msgstr "Με κινήσεις"
 
@@ -9763,6 +9885,18 @@ msgid ""
 "in its currency (maybe different of the company currency)."
 msgstr ""
 
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet:0
+#: report:account.balancesheet.horizontal:0
+msgid "Liabilities"
+msgstr ""
+
 #~ msgid "Entries Encoding"
 #~ msgstr "Κωδικοποίηση Εγγραφών"
 
@@ -9811,18 +9945,6 @@ msgstr ""
 #~ msgid "Total entries"
 #~ msgstr "Σύνολο εγγραφών"
 
-#~ msgid "Disc. (%)"
-#~ msgstr "Έκπτωση (%)"
-
-#~ msgid ""
-#~ "Would your payment have been carried out after this mail was sent, please "
-#~ "consider the present one as void. Do not hesitate to contact our accounting "
-#~ "departement at +32 81 81 37 00."
-#~ msgstr ""
-#~ "Εφόσον έχετε τακτοποιήσει την πληρωμή μετά την αποστολή αυτής της "
-#~ "αλληλογραφίας, παρακαλούμε θεωρείστε την παρούσα άκυρη. Παρακαλούμε μην "
-#~ "διστάσετε να επικοινωνήσετε με το λογιστήριο στο +32 81 81 37 00."
-
 #~ msgid "Supplier invoice"
 #~ msgstr "Τιμολόγιο Προμηθευτή"
 
@@ -9837,9 +9959,6 @@ msgstr ""
 
 #~ msgid "Analytic Invoice"
 #~ msgstr "Τιμολόγιο Αναλυτικής"
-
-#~ msgid "account.move.line"
-#~ msgstr "λογαριασμός.κίνηση.γραμμή"
 
 #~ msgid "Partner account"
 #~ msgstr "Λογαριασμός συνεργάτη"
@@ -9913,9 +10032,6 @@ msgstr ""
 #~ msgid "Display accounts "
 #~ msgstr "Παρουσίαση λογαριασμών "
 
-#~ msgid "Crédit"
-#~ msgstr "Πίστωση"
-
 #~ msgid "Print General Journal"
 #~ msgstr "Εκτύπωση Γενικού Ημερολογίου"
 
@@ -9940,9 +10056,6 @@ msgstr ""
 #~ msgid "New Statement"
 #~ msgstr "Νέα Δήλωση"
 
-#~ msgid "Error! You can not create recursive account."
-#~ msgstr "Σφάλμα! Δεν μπορείτε να δημιουργήσετε επαναλαμβανόμενο λογαριασμό."
-
 #~ msgid "Account Entry Reconcile"
 #~ msgstr "Συμφωνία Εγγραφών Λογαριασμού"
 
@@ -9958,13 +10071,6 @@ msgstr ""
 #~ msgid "Select invoices you want to pay and manages advances"
 #~ msgstr ""
 #~ "Επιλέξτε τα τιμολόγια που θέλετε να πληρώσετε και διαχειριστείτε προκαταβολές"
-
-#~ msgid ""
-#~ "The partner bank account to pay\n"
-#~ "Keep empty to use the default"
-#~ msgstr ""
-#~ "Ο λογαριασμός τραπέζης του συνεργάτη προς πληρωμή\n"
-#~ "Διατηρήστε κενό για να χρησιμοποιηθεί η προκαθορισμένη"
 
 #~ msgid "Account to reconcile"
 #~ msgstr "Λογαριασμός προς συμφωνία"
@@ -10025,13 +10131,6 @@ msgstr ""
 
 #~ msgid "Validated accounting entries."
 #~ msgstr "Επικυρωμένες εγγραφές λογιστικής."
-
-#~ msgid "Débit"
-#~ msgstr "Χρέωση"
-
-#, python-format
-#~ msgid "Configration Error !"
-#~ msgstr "Σφάλμα Παραμετροποίησης!"
 
 #~ msgid "Date Invoiced"
 #~ msgstr "Ημερομηνία Τιμολόγησης"
@@ -10229,10 +10328,6 @@ msgstr ""
 #~ msgstr "Κλείσίμο Λογιστικής Χρήσης με νέες εγγραφές"
 
 #, python-format
-#~ msgid "The old fiscal year does not have any entry to reconcile!"
-#~ msgstr "Η παλαιά Λογιστική Χρήση δεν περιέχει εγγραφές για συμφωνία"
-
-#, python-format
 #~ msgid "Date not in a defined fiscal year"
 #~ msgstr "Η ημερομηνία δεν ανήκει σε Λογιστική Χρήση"
 
@@ -10252,10 +10347,6 @@ msgstr ""
 
 #~ msgid "Standard entry"
 #~ msgstr "Τυπική εγγραφή"
-
-#, python-format
-#~ msgid "You can not validate a non-balanced entry !"
-#~ msgstr "Δεν μπορείτε να επικυρώσετε μιά μή αντιλογισμένη εγγραφή!"
 
 #~ msgid "Journal de vente"
 #~ msgstr "Ημερολόγιο Πωλήσεων"
@@ -10372,9 +10463,6 @@ msgstr ""
 #~ msgid "Account No."
 #~ msgstr "Αρ. Λογαριασμού"
 
-#~ msgid "Keep empty to use the period of the validation date."
-#~ msgstr "Αφήστε το κενό για χρήση της περιόδου επικύρωσης"
-
 #~ msgid "Automatic reconciliation"
 #~ msgstr "Αυτόματη συμφωνία"
 
@@ -10433,9 +10521,6 @@ msgstr ""
 #~ msgid "_Go"
 #~ msgstr "_Go"
 
-#~ msgid "Partner ID"
-#~ msgstr "Αρ. Συνεργάτη"
-
 #~ msgid "Analytic account costs and revenues"
 #~ msgstr "Έσοδα και κόστος αναλυτικού λογαριασμού"
 
@@ -10489,17 +10574,11 @@ msgstr ""
 #~ msgid "Date to must be set between %s and %s"
 #~ msgstr "Η \"ημερομηνία σε\" πρέπει να οριστεί ανάμεσα στην %s και την %s"
 
-#~ msgid "Move name"
-#~ msgstr "Όνομα κίνησης"
-
 #~ msgid "Reconcilate the entries from payment"
 #~ msgstr "Συμφωνία εγγραφών από πληρωμές"
 
 #~ msgid "Proposed invoice to be checked, validated and printed"
 #~ msgstr "Προτεινόμενο τιμολόγιο για έλεγχο, επικύρωση και εκτύπωση"
-
-#~ msgid "account.move.line.select"
-#~ msgstr "account.move.line.select"
 
 #~ msgid "Journal de Banque CHF"
 #~ msgstr "Ημερολόγιο Ελβετικής Τράπεζας"
@@ -10510,10 +10589,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Οι κινήσεις λογαριασμού του τιμολογίου έχουν συμφωνηθεί με κινήσεις από "
 #~ "πληρωμές."
-
-#, python-format
-#~ msgid "The account is not defined to be reconcile !"
-#~ msgstr "Ο λογαριασμός δεν έχει οριστεί να συμφωνεί!"
 
 #~ msgid "Additionnal Information"
 #~ msgstr "Επιπλέον Πληροφορίες"
@@ -10558,9 +10633,6 @@ msgstr ""
 #~ msgid "Pay and reconcile"
 #~ msgstr "Πληρωμή και συμφωνία"
 
-#~ msgid "Balance brought forward"
-#~ msgstr "Υπόλοιπο από μεταφορά"
-
 #~ msgid "New Supplier Refund"
 #~ msgstr "Νέα Επιστροφή σε Προμηθευτή"
 
@@ -10578,9 +10650,6 @@ msgstr ""
 
 #~ msgid "Credit Note"
 #~ msgstr "Πιστωτικό Τιμολόγιο"
-
-#~ msgid "Write-Off Period"
-#~ msgstr "Περίοδος Παραγραφής"
 
 #~ msgid "3 Months"
 #~ msgstr "3 Μήνες"
@@ -10676,9 +10745,6 @@ msgstr ""
 
 #~ msgid "Payment date"
 #~ msgstr "Ημερ/νία πληρωμής"
-
-#~ msgid "Partner name"
-#~ msgstr "Όνομα συνεργάτη"
 
 #~ msgid "Canceled Invoice"
 #~ msgstr "Ακυρωμένο Τιμολόγιο"
@@ -10897,9 +10963,6 @@ msgstr ""
 #~ msgid "Cash Receipt"
 #~ msgstr "Απόδειξη Μετρητών"
 
-#~ msgid "All account entries"
-#~ msgstr "Όλες οι εγγραφές λογαριασμού"
-
 #~ msgid "Unpaid Customer Refunds"
 #~ msgstr "Επιστροφές Πελατών Πληρωτέες"
 
@@ -11055,6 +11118,9 @@ msgstr ""
 #~ msgid "Overdue Payment Report Message"
 #~ msgstr "Μήνυμα αναφοράς καθυστερημένων πληρωμών"
 
+#~ msgid "JNRL"
+#~ msgstr "JNRL"
+
 #~ msgid "Subscription Entries"
 #~ msgstr "Καταχωρήσεις προεγγραφής"
 
@@ -11124,220 +11190,6 @@ msgstr ""
 #~ "Αν είναι λογαριασμός φόρου εδώ θα περιέχει το ποσό μετά τον φόρο, αν είναι "
 #~ "λογαριασμός βάσης του φόρου θα περιέχει το αφορολόγητο ποσό."
 
-#~ msgid "Analytic accounts to close"
-#~ msgstr "Αναλυτικοί λογαριασμοί για κλείσιμο"
-
-#~ msgid "Draft invoices"
-#~ msgstr "Πρόχειρα τιμολόγια"
-
-#~ msgid "Accounts to invoice"
-#~ msgstr "Λογαριασμοί για τιμολόγηση"
-
-#~ msgid "Costs to invoice"
-#~ msgstr "Κόστη για τιμολόγηση"
-
-#~ msgid "Aged receivables"
-#~ msgstr "Παλαιωμένα εισπρακτέα"
-
-#~ msgid "Board for accountant"
-#~ msgstr "Πίνακας Λογιστηρίου"
-
-#~ msgid "My indicators"
-#~ msgstr "Οι δείκτες μου"
-
-#~ msgid "Aged income"
-#~ msgstr "Παλαιωμένα έσοδα"
-
-#~ msgid "Show Debit/Credit Information"
-#~ msgstr "Προβολή Πληροφοριών Χρέωσης/Πίστωσης"
-
-#~ msgid "All accounts"
-#~ msgstr "Όλοι οι λογαριασμοί"
-
-#~ msgid "Entries Selection Based on"
-#~ msgstr "Επιλογή Εγγραφών Βασισμένων σε"
-
-#~ msgid "Notification"
-#~ msgstr "Υπενθύμιση"
-
-#~ msgid "Financial Period"
-#~ msgstr "Οικονομική Περίοδος"
-
-#~ msgid "Select Period(s)"
-#~ msgstr "Επιλέξτε Περίοδο(ους)"
-
-#~ msgid "Compare Selected Years In Terms Of"
-#~ msgstr "Σύγκριση Επιλεγμένων Ετών σε Όρους"
-
-#~ msgid "Select Fiscal Year(s)(Maximum Three Years)"
-#~ msgstr "Επιλογή Λογιστικού Έτους(ων) (Μέγιστο Τρία Έτη)"
-
-#~ msgid "Select Reference Account(for  % comparision)"
-#~ msgstr "Επιλέξτε Λογαριασμό Αναφοράς (για % σύγκρισης)"
-
-#~ msgid "Account balance-Compare Years"
-#~ msgstr "Ισοζύγιο Λογαριασμού-Σύγκριση Ετών"
-
-#~ msgid ""
-#~ "Account Balance Module is an added functionality to the Financial Management "
-#~ "module.\n"
-#~ "\n"
-#~ "    This module gives you the various options for printing balance sheet.\n"
-#~ "\n"
-#~ "    1. You can compare the balance sheet for different years.\n"
-#~ "\n"
-#~ "    2. You can set the cash or percentage comparison between two years.\n"
-#~ "\n"
-#~ "    3. You can set the referential account for the percentage comparison for "
-#~ "particular years.\n"
-#~ "\n"
-#~ "    4. You can select periods as an actual date or periods as creation "
-#~ "date.\n"
-#~ "\n"
-#~ "    5. You have an option to print the desired report in Landscape format.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Το κομμάτι Ισολογισμών είναι ένα επιπρόσθετο λειτουργικό κομμάτι στο κομμάτι "
-#~ "της Οικονομικής Διαχείρισης\n"
-#~ "\n"
-#~ "    Αυτό το κομμάτι σου δίνει διάφορες επιλογές για εκτύπωση ισολογισμών.\n"
-#~ "\n"
-#~ "    1. Μπορείς να συγκρίνεις τους ισολογισμούς διαφόρων ετών.\n"
-#~ "\n"
-#~ "    2. Μπορείς να ορίσεις την απόλυτη ή επί τοις εκατό σύγκριση μεταξύ δύο "
-#~ "ετών.\n"
-#~ "\n"
-#~ "    3. Μπορείς να ορίσεις το ισολογισμό αναφοράς για την επί τοις εκατό "
-#~ "σύγκριση συγκεκριμένων ετών.\n"
-#~ "\n"
-#~ "    4. Μπορείς να επιλέξεις περιόδους ως πραγματική ημερομηνία ή περιόδους "
-#~ "ως ημέρα δημιουργίας.\n"
-#~ "\n"
-#~ "    5. Έχεις δυνατότητα να εκτυπώσεις την επιθυμητή αναφορά σε μορφή "
-#~ "Landscape.\n"
-#~ "    "
-
-#~ msgid "You have to select 'Landscape' option. Please Check it."
-#~ msgstr ""
-#~ "Θα πρέπει να επιλέξτε την επιλογή 'Landscape'. Παρακαλώ επιλέξτε την."
-
-#~ msgid "Show Report in Landscape Form"
-#~ msgstr "Εμφάνση Αναφοράς σε Φόρμα Landscape"
-
-#~ msgid "Show Comparision in %"
-#~ msgstr "Εμφάνιση Σύγκρισης σε %"
-
-#~ msgid "Don't Compare"
-#~ msgstr "Χωρίς Σύγκριση"
-
-#~ msgid "Show Accounts"
-#~ msgstr "Εμφάνιση Λογαριασμών"
-
-#~ msgid "1. You have selected more than 3 years in any case."
-#~ msgstr "1. Έχετε επιλέξτε περισσότερα απο 3 έτη σε κάθε περίπτωση."
-
-#~ msgid "Accounting and financial management-Compare Accounts"
-#~ msgstr "Λογιστική και οικονομική διαχείριση - Σύγκριση λογαριασμών"
-
-#~ msgid "You can select maximum 3 years. Please check again."
-#~ msgstr "Μπορείτε να επιλέξετε το πολύ 3 έτη. Παρακαλώ ελέγξτε ξανά."
-
-#~ msgid ""
-#~ "3. You have selected 'Percentage' option with more than 2 years, but you "
-#~ "have not selected landscape format."
-#~ msgstr ""
-#~ "3. Έχετε επιλέξτε επιλογή 'Ποσοστό' με περισσότερα απο 2 έτη, αλλα δεν έχετε "
-#~ "επιλέξει διάταξη landscape."
-
-#~ msgid ""
-#~ "You might have done following mistakes. Please correct them and try again."
-#~ msgstr ""
-#~ "Μπορεί να έχετε κάνει τα ακόλουθα λάθη. Παρακαλώ διορθώστε και "
-#~ "ξαναπροσπαθήστε."
-
-#~ msgid "Keep empty for comparision to its parent"
-#~ msgstr "Διατηρήστε κενα για σύγκριση με κατηγορίες"
-
-#~ msgid "Creation Date"
-#~ msgstr "Ημερομηνία Δημιουργίας"
-
-#~ msgid ""
-#~ "2. You have not selected 'Percentage' option, but you have selected more "
-#~ "than 2 years."
-#~ msgstr ""
-#~ "2. Δεν έχετε επιλέξει 'Ποσοστό', αλλα έχετε επιλέξει περισσότερο απο 2 έτη."
-
-#~ msgid ""
-#~ "You may have selected the compare options with more than 1 year with "
-#~ "credit/debit columns and % option.This can lead contents to be printed out "
-#~ "of the paper.Please try again."
-#~ msgstr ""
-#~ "Μπορεί να επιλέξατε την επιλογή σύγκρισης με περισσότερα απο 1 έτη με στήλες "
-#~ "χρέωσης/πίστωσης και %. Αυτό μπορεί να οδηγήσει σε περιεχόμενα που θα "
-#~ "εκτυπωθούν πέρα απο τα όρια του χαρτιού. Παρακαλώ επιλέξτε ξανά."
-
-#~ msgid "You have to select at least 1 Fiscal Year. Try again."
-#~ msgstr ""
-#~ "Θα πρέπει να επιλέξετε τουλάχιστον 1 λογιστικό έτος. Προσπαθήστε ξανά."
-
-#~ msgid "Customize Report"
-#~ msgstr "Παραμετροποίηση Αναφοράς"
-
-#~ msgid "A module that adds new reports based on the account module."
-#~ msgstr "Ένα πρόσθετο με νέες αναφορές βασισμένο στο account module"
-
-#~ msgid "Account Reporting - Reporting"
-#~ msgstr "Αναφορές Λογαρισμών - Αναφορές"
-
-#~ msgid "at"
-#~ msgstr "σε"
-
-#~ msgid "Printing date:"
-#~ msgstr "Ημερομηνία εκτύπωσης:"
-
-#~ msgid "Account Information"
-#~ msgstr "Πληροφορίες Λογαριασμού"
-
-#~ msgid "Currency:"
-#~ msgstr "Νόμισμα:"
-
-#~ msgid "Fiscal Mapping Template"
-#~ msgstr "Πρότυπα Οικονομικής Απεικόνισης"
-
-#~ msgid "Accounts Fiscal Mapping"
-#~ msgstr "Οικονομική Απεικόνιση Λογαριασμών"
-
-#~ msgid "Taxes Fiscal Mapping"
-#~ msgstr "Φορολογητέα Οικονομική Απεικόνικη"
-
-#~ msgid "Fiscal Mapping Templates"
-#~ msgstr "Πρότυπο Οικονομικής Απεικόνισης"
-
-#~ msgid "Template for Fiscal Mapping"
-#~ msgstr "Πρότυπο για Οικονομική Απεικόνιση"
-
-#~ msgid ""
-#~ "The fiscal mapping will determine taxes and the accounts used for the "
-#~ "partner."
-#~ msgstr ""
-#~ "Η οικονομική απεικόνιση θα προσδιορίσει τους φόρους ακι τους λογαριασμούς "
-#~ "που χρησιμοποιούνται για τον συνεργάτη"
-
-#~ msgid "Template Tax Fiscal Mapping"
-#~ msgstr "Πρότυπο για Φορολογητέα Οικονομική Απεικόνιση"
-
-#~ msgid "Fiscal Mapping Remark :"
-#~ msgstr "Παρατήρηση Οικονομικής Απεικόνισης"
-
-#~ msgid "Fiscal Mappings"
-#~ msgstr "Οικονομικές Απεικονίσεις"
-
-#~ msgid "supplier"
-#~ msgstr "προμηθευτής"
-
 #, python-format
 #~ msgid "UnknownError"
 #~ msgstr "Άγνωστο Λάθος"
-
-#~ msgid "End of Year"
-#~ msgstr "Τέλος του Έτους"

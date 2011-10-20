@@ -1,0 +1,84 @@
+# Slovenian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-09-14 11:36+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Slovenian <sl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:52+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
+
+#. module: base_crypt
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Ne morete imeti dva uporabnika z istim prijavnim imenom!"
+
+#. module: base_crypt
+#: model:ir.model,name:base_crypt.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: base_crypt
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "Izbrano podjetje ni v dovoljenih podjetjih za tega uporabnika"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Please specify the password !"
+msgstr "Prosim, navedite geslo !"
+
+#. module: base_crypt
+#: model:ir.module.module,shortdesc:base_crypt.module_meta_information
+msgid "Base - Password Encryption"
+msgstr "Osnovno - enkripcija gesla"
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:132
+#, python-format
+msgid "Error"
+msgstr "Napaka"
+
+#. module: base_crypt
+#: model:ir.module.module,description:base_crypt.module_meta_information
+msgid ""
+"This module replaces the cleartext password in the database with a password "
+"hash,\n"
+"preventing anyone from reading the original password.\n"
+"For your existing user base, the removal of the cleartext passwords occurs "
+"the first time\n"
+"a user logs into the database, after installing base_crypt.\n"
+"After installing this module it won't be possible to recover a forgotten "
+"password for your\n"
+"users, the only solution is for an admin to set a new password.\n"
+"\n"
+"Note: installing this module does not mean you can ignore basic security "
+"measures,\n"
+"as the password is still transmitted unencrypted on the network (by the "
+"client),\n"
+"unless you are using a secure protocol such as XML-RPCS.\n"
+"                    "
+msgstr ""
+"Ta modul nadomešča obliko besedilnega geslo v bazi podatkov z hash geslom,\n"
+"ki preprečuje komurkoli branje izvirnega gesla.\n"
+"Za vašo obstoječo bazo uporabnikov, odstranitev gesla v obliki besedila se "
+"pojavi pri\n"
+"prvi prijavi uporabnika v bazo podatkov, po namestitvi base_crypt.\n"
+"Po namestitvi tega modula ne bo mogoče obnoviti pozabiljenega gesla za vaše\n"
+"uporabnike, edina rešitev je, da admin nastavi novo geslo.\n"
+"\n"
+"Opomba: namestitev tega modula ne pomeni ignoriranja osnovnih varnostnih "
+"ukrepov,\n"
+"ker se geslo še vedno prenaša nešifrirano v omrežju (preko klienta),\n"
+"razen če ne uporabljate varni protokol kot je XML-RPCS.\n"
+"                    "

@@ -24,7 +24,7 @@
     'version' : "1.0",
     'depends' : ["base", "share"],
     'author' : "OpenERP SA",
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 This module defines 'portals' to customize the access to your OpenERP database
 for external users.

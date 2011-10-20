@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:46+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:48+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2254,9 +2254,9 @@ msgid "Future Qty"
 msgstr "Zukünftige Menge"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr "Bestandsveränderungskonto"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2312,7 +2312,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Lagerort, wo das System die Fertigprodukte lagert."
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -4217,10 +4217,6 @@ msgstr "Teillieferung"
 msgid "Optional localization details, for information purpose only"
 msgstr "Optionale Lagerort Details, nur als Information"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Virtuelles Lager"
-
 #~ msgid "LIFO"
 #~ msgstr "LiFo"
 
@@ -4257,16 +4253,8 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgid "Products Received"
 #~ msgstr "Bestandsbuchung"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Virtuelle Produktion"
-
 #~ msgid "Incoming Products"
 #~ msgstr "Wareneingang"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Virtueller Lieferschein"
 
 #~ msgid "Force to use a Production Lot during receptions"
 #~ msgstr "Erzwinge Verwendung der Fertigungsserie beim Warenzugang"
@@ -4402,9 +4390,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Kalender für Auslieferungen"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Verfolge Warenzugänge"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4446,10 +4431,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Virtuelle Auslieferungen"
 
 #~ msgid "Tracking Number"
 #~ msgstr "Seriennummer"
@@ -4562,9 +4543,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
 
-#~ msgid "Qty"
-#~ msgstr "Anz."
-
 #~ msgid "Draft Periodical Inventories"
 #~ msgstr "Entwurf Bestandsaufnahme"
 
@@ -4597,10 +4575,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Virtuelle Anz."
 
 #~ msgid "Supplier Refund"
 #~ msgstr "Lieferanten Gutschrift"
@@ -4911,9 +4885,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgid "STOCK_UNINDENT"
 #~ msgstr "STOCK_UNINDENT"
 
-#~ msgid "Canceled"
-#~ msgstr "Abgebrochen"
-
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
 
@@ -4955,10 +4926,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 
 #~ msgid "Split in Two"
 #~ msgstr "Aufteilen"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Virtuelle P&L"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
@@ -5052,9 +5019,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgid "Units"
 #~ msgstr "Einheiten"
 
-#~ msgid "weight"
-#~ msgstr "Gewichtung"
-
 #~ msgid "Total :"
 #~ msgstr "Summe :"
 
@@ -5065,41 +5029,8 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ "Geplantes Datum der Buchung oder tatsächliches Datum, wenn die Buchung "
 #~ "erfolgt ist."
 
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "OpenERP Lager Management  verwaltet  multiple-Warenläger, mehrfache und "
-#~ "strukturiert Lagerorte\n"
-#~ "Dank der doppelten Buchhaltung auch in der Lagerbuchhaltung ist die "
-#~ "Inventurkontrolle mächtig und flexibel.\n"
-#~ "* Lagerbuchungen - Journal und Planung\n"
-#~ "* Verschiedene Abfassungsmothoden (FIFO, LIFO)\n"
-#~ "* Lagerbewertung (Standard- und Durchschnittspreis)\n"
-#~ "* Behnadlung von Inventurdifferenzen\n"
-#~ "* Regeln für automatische Nachbestellung (Lagerort, JIT)\n"
-#~ "* Bar Code unterstützung\n"
-#~ "* Rasche Fehlererkennung duchr doppelte Buchhaltung\n"
-#~ "* Nachvollziehbarkeit (upstream/downstream, Produktionslose, Seriennummer, "
-#~ "...)\n"
-#~ "    "
-
 #~ msgid "Track Production Lots"
 #~ msgstr "Verfolge Produktion (Lose)"
-
-#~ msgid "Track Outging Lots"
-#~ msgstr "Verfolge Warenversand (Lose)"
 
 #~ msgid "Stock by Lots"
 #~ msgstr "Bestand je Fertigungslos"
@@ -5109,325 +5040,22 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #~ msgstr "Diese Losnummer wird für die logistische Einheit/Pallette vergeben"
 
 #, python-format
-#~ msgid "You are moving %.2f products but only %.2f available in this lot."
-#~ msgstr ""
-#~ "Sie befinden sich bewegenden %.2f Produkte, sondern nur %.2f in dieser "
-#~ "Partie."
-
-#~ msgid "terp-rating-rated"
-#~ msgstr "terp-rating-rated"
-
-#~ msgid "terp-mail-forward"
-#~ msgstr "terp-mail-forward"
-
-#~ msgid "terp-stock_effects-object-colorize"
-#~ msgstr "terp-stock_effects-object-colorize"
-
-#~ msgid "terp-folder-blue"
-#~ msgstr "terp-folder-blue"
-
-#~ msgid "terp-personal+"
-#~ msgstr "terp-personal+"
-
-#~ msgid "terp-dialog-close"
-#~ msgstr "terp-dialog-close"
-
-#~ msgid "terp-personal-"
-#~ msgstr "terp-personal-"
-
-#~ msgid "terp-dolar"
-#~ msgstr "terp-dolar"
-
-#~ msgid "terp-gtk-jump-to-ltr"
-#~ msgstr "terp-gtk-jump-to-ltr"
-
-#~ msgid "terp-stock_symbol-selection"
-#~ msgstr "terp-stock_symbol-selection"
-
-#~ msgid "terp-stage"
-#~ msgstr "terp-stage"
-
-#~ msgid "terp-accessories-archiver-minus"
-#~ msgstr "terp-accessories-archiver-minus"
-
-#~ msgid "terp-gdu-smart-failing"
-#~ msgstr "terp-gdu-smart-failing"
-
-#~ msgid "terp-emblem-important"
-#~ msgstr "terp-emblem-important"
-
-#~ msgid "terp-face-plain"
-#~ msgstr "terp-face-plain"
-
-#~ msgid "terp-gnome-cpu-frequency-applet+"
-#~ msgstr "terp-gnome-cpu-frequency-applet+"
-
-#~ msgid "terp-gtk-media-pause"
-#~ msgstr "terp-gtk-media-pause"
-
-#~ msgid "terp-stock_format-scientific"
-#~ msgstr "terp-stock_format-scientific"
-
-#~ msgid "terp-go-today"
-#~ msgstr "terp-go-today"
-
-#~ msgid "terp-gtk-go-back-rtl"
-#~ msgstr "terp-gtk-go-back-rtl"
-
-#~ msgid "terp-mail-"
-#~ msgstr "terp-mail-"
-
-#~ msgid "terp-call-start"
-#~ msgstr "terp-call-start module: stock"
-
-#~ msgid "terp-locked"
-#~ msgstr "terp-locked"
-
-#~ msgid "terp-personal"
-#~ msgstr "terp-personal"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Regeln werden für osv.memory Objekte nicht unterstützt!"
-
-#, python-format
 #~ msgid "Product "
 #~ msgstr "Produkt "
 
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler! Sie können keine rekursiven Menüeinträge erstellen."
-
-#~ msgid "Error! You can not create recursive companies."
-#~ msgstr "Fehler! Sie können keine rekursiven Betriebe erzeugen."
-
-#~ msgid "Extended options..."
-#~ msgstr "Erweiterte Optionen.."
-
-#~ msgid ""
-#~ "When the stock move is created it is in the 'Draft' state.\n"
-#~ " After that it is set to 'Confirmed' state.\n"
-#~ " If stock is available state is set to 'Available'.\n"
-#~ " When the picking is done the state is 'Done'.                               "
-#~ "   \n"
-#~ "The state is 'Waiting' if the move is waiting for another one."
-#~ msgstr ""
-#~ "Nach Erstellung hat die Lagerbuchung den Status \"Entwurf\".\n"
-#~ " Danach kommt \"Bestätigt\".\n"
-#~ " Wenn genung Lagerbestand vorhanden ist, kommt \"Verfügbar\"\n"
-#~ " Wenn der Lieferschein erledigt ist, kommt \"Erledigt.                       "
-#~ "           \n"
-#~ "Wenn der Status \"Schwebend\" ist, warted die Buchung auf eine andere."
-
-#, python-format
-#~ msgid "No invoice were created"
-#~ msgstr "Es wurden keine Rechnungen erzeugt"
-
-#, python-format
-#~ msgid ""
-#~ "Variation Account is not specified for Product Category: %s' % "
-#~ "(product_obj.categ_id.name)))\n"
-#~ "        move_ids = []\n"
-#~ "        loc_ids = location_obj.search(cr, uid,[('usage','=','internal"
-#~ msgstr ""
-#~ "Bestandveränderungskonto fehlt für Produktkategorie: %s' % "
-#~ "(product_obj.categ_id.name)))\n"
-#~ "        move_ids = []\n"
-#~ "        loc_ids = location_obj.search(cr, uid,[('usage','=','internal"
-
-#, python-format
-#~ msgid ""
-#~ "There is no stock input account defined ' \\n                                "
-#~ "            'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Kein Wareneingangskonto ' \\n                                            "
-#~ "'für Produkt: \"%s\" (id: %d)"
-
-#~ msgid "Inventory (with child locations)"
-#~ msgstr "Inventur (mit untergeordneten Lagerorten)"
-
-#~ msgid "terp-accessories-archiver"
-#~ msgstr "terp-accessories-archiver"
-
-#~ msgid "terp-gtk-go-back-ltr"
-#~ msgstr "terp-gtk-go-back-ltr"
-
-#~ msgid "terp-mail-replied"
-#~ msgstr "terp-mail-replied"
-
-#~ msgid "terp-folder-green"
-#~ msgstr "terp-folder-green"
-
-#, python-format
-#~ msgid "Currency in which Unit Cost is expressed"
-#~ msgstr "Währung für die Preisangabe"
-
-#~ msgid "terp-stock_align_left_24"
-#~ msgstr "terp-stock_align_left_24"
-
-#~ msgid "terp-folder-orange"
-#~ msgstr "terp-folder-orange"
-
-#~ msgid "terp-accessories-archiver+"
-#~ msgstr "terp-accessories-archiver+"
-
-#~ msgid "Unique serial number, will be displayed as: PREFIX/SERIAL [INT_REF]"
-#~ msgstr ""
-#~ "Eindeutige Seriennummer, wird wiefolgt angezeigt: PREFIX/SERIAL [INT_REF]"
-
-#~ msgid "terp-folder-yellow"
-#~ msgstr "terp-folder-yellow"
-
-#~ msgid "terp-dolar_ok!"
-#~ msgstr "terp-dolar_ok!"
-
-#~ msgid "terp-go-year"
-#~ msgstr "terp-go-year"
-
-#~ msgid "terp-gtk-jump-to-rtl"
-#~ msgstr "terp-gtk-jump-to-rtl"
-
-#~ msgid "Serial Number"
-#~ msgstr "Seriennummer"
-
-#, python-format
-#~ msgid "New picking invoices"
-#~ msgstr "Neue Lieferscheinbuchungen"
-
-#~ msgid "terp-idea"
-#~ msgstr "terp-idea"
-
-#~ msgid "terp-stock_format-default"
-#~ msgstr "terp-stock_format-default"
-
-#~ msgid "terp-check"
-#~ msgstr "terp-check"
-
-#~ msgid "terp-camera_test"
-#~ msgstr "terp-camera_test"
-
-#~ msgid "terp-gtk-stop"
-#~ msgstr "terp-gtk-stop"
-
-#~ msgid "terp-go-week"
-#~ msgstr "terp-go-week"
-
-#~ msgid "terp-go-home"
-#~ msgstr "terp-go-home"
-
-#~ msgid "terp-document-new"
-#~ msgstr "terp-document-new"
-
-#~ msgid "terp-mail_delete"
-#~ msgstr "terp-mail_delete"
-
-#~ msgid "terp-go-month"
-#~ msgstr "terp-go-month"
+#~ msgid "Stock Variation Account"
+#~ msgstr "Bestandsveränderungskonto"
 
 #, python-format
 #~ msgid "is scheduled"
 #~ msgstr "is geplant"
 
-#~ msgid "terp-gtk-select-all"
-#~ msgstr "terp-gtk-select-all"
-
-#~ msgid "terp-mail-message-new"
-#~ msgstr "terp-mail-message-new"
-
-#~ msgid "Outgoing Deliveries"
-#~ msgstr "Warenversand"
-
-#, python-format
-#~ msgid ""
-#~ "There is no journal defined '\\n                                'on the "
-#~ "product category: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Journaldefinition fehlt '\\n                                'für die "
-#~ "Produktkategorie: \"%s\" (id: %d)"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
 #, python-format
-#~ msgid ""
-#~ "Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
-#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "            move_product_qty[move.id] = product_qty\n"
-#~ "            product_uom = partial_data.get('product_uom',False)\n"
-#~ "            product_price = partial_data.get('product_price',0.0)\n"
-#~ "            product_currency = partial_data.get('product_currency',False)\n"
-#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
-#~ msgstr ""
-#~ "Kann keine zugehörigen Daten auffinden für Lagerbuchung :%s' %(move.id))\n"
-#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "            move_product_qty[move.id] = product_qty\n"
-#~ "            product_uom = partial_data.get('product_uom',False)\n"
-#~ "            product_price = partial_data.get('product_price',0.0)\n"
-#~ "            product_currency = partial_data.get('product_currency',False)\n"
-#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
-
-#~ msgid "Outgoing Products delay"
-#~ msgstr "Verzug bei Warenversand"
-
-#, python-format
 #~ msgid "is consumed with"
 #~ msgstr "wird verbraucht durch"
-
-#, python-format
-#~ msgid ""
-#~ "Total quantity after split exceeds the quantity to split ' \\n               "
-#~ "                     'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Dee Summe der geteilten Mengen ist größer als die zutelende Menge' \\n       "
-#~ "                             'für Produkt: \"%s\" (id: %d)"
-
-#, python-format
-#~ msgid "Bad Lot Assignation !"
-#~ msgstr "Fehler bei  Zuweisung eines Los !"
-
-#, python-format
-#~ msgid ""
-#~ "Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
-#~ "                product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "                move_product_qty[move.id] = product_qty\n"
-#~ "                product_uom = partial_data.get('product_uom',False)\n"
-#~ "                product_price = partial_data.get('product_price',0.0)\n"
-#~ "                product_currency = "
-#~ "partial_data.get('product_currency',False)\n"
-#~ "                prodlot_id = partial_data.get('prodlot_id"
-#~ msgstr ""
-#~ "Konnte keine Daten zu diesem Lieferschein auffinden :%s' %(move.id))\n"
-#~ "                product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "                move_product_qty[move.id] = product_qty\n"
-#~ "                product_uom = partial_data.get('product_uom',False)\n"
-#~ "                product_price = partial_data.get('product_price',0.0)\n"
-#~ "                product_currency = "
-#~ "partial_data.get('product_currency',False)\n"
-#~ "                prodlot_id = partial_data.get('prodlot_id"
-
-#, python-format
-#~ msgid ""
-#~ "There is no stock output account defined ' \\n                               "
-#~ "             'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Es ist kein Konto für das Ausgangslager definiert ' \\n                      "
-#~ "                      'für dieses Produkt: \"%s\" (id: %d)"
-
-#~ msgid "Not from Picking"
-#~ msgstr "Nicht vom Lieferschein"
-
-#, python-format
-#~ msgid ""
-#~ "The current move line is already assigned to a pack, please remove it first "
-#~ "if you really want to change it ' \\n            #                        "
-#~ "'for this product: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Der aktuelle Lieferschein wurde bereits einem Packmittel zugewiesen, bitte "
-#~ "entfernen Sie  zuerst den Eintrag per Hand, ehe Sie dann eine Änderung "
-#~ "vornehmen können bei  ' \\n            #                        'diesem "
-#~ "Produkt: \"%s\" (id: %d)"
-
-#, python-format
-#~ msgid "Not Available. Moves are not confirmed."
-#~ msgstr "Nicht verfügbar. Buchungen sind nicht bestätigt"
 
 #~ msgid "Packing List:"
 #~ msgstr "Lieferauftrag:"
@@ -5435,136 +5063,6 @@ msgstr "Optionale Lagerort Details, nur als Information"
 #, python-format
 #~ msgid "quantity."
 #~ msgstr "Anzahl"
-
-#~ msgid ""
-#~ "The Periodical Inventories are used when you count your number of products "
-#~ "available per location. You can use it, once a year, when you do the general "
-#~ "inventory or, once you need it, to correct the current stock level of a "
-#~ "product."
-#~ msgstr ""
-#~ "Die periodische Inventur wird genutzt, um die tatsächlich verfügbare Anzahl "
-#~ "Ihrer Produkte pro Lagerort zu erfassen. Sie können hierdurch die einmalige "
-#~ "Jahresinventur durchführen, oder auch jederzeit aktuelle Bestände erfassen "
-#~ "und damit den Buchbestand korrigieren."
-
-#~ msgid ""
-#~ "Define your locations in order to reflect to your warehouse structure and "
-#~ "organization. OpenERP is able to manage physical locations (warehouses, "
-#~ "shelves, bin, etc), partners location (customers, suppliers) and virtual "
-#~ "locations which are the counter-part of the stock operations like the "
-#~ "manufacturing orders consummations, the inventories, etc. Every stock "
-#~ "operation in OpenERP moves the products from one location to another one. "
-#~ "For instance, if you receive products from a supplier, OpenERP will move "
-#~ "products from the Supplier location into the Stock location. Each report can "
-#~ "be performed on physicals, partners or virtual locations."
-#~ msgstr ""
-#~ "Definieren Sie Ihre Lagerorte zur individuellen Abbildung Ihrer "
-#~ "Lagerorganisation. OpenERP ist in der Lage reale Lagerorte (Zentrallager, "
-#~ "Regale, etc.), Lagerorte bei Partnern (Kunden, Lieferanten) und virtuelle "
-#~ "Lagerorte, wie zum Beispiel das Materiallager der Produktion, abzubilden. "
-#~ "Jede Lieferung in OpenERP erzeugt eine Lagerbuchung für ein Produkt von "
-#~ "einem Ort zu einem Anderen. Für das Beispiel einer Produktlieferung von "
-#~ "einem Lieferanten, erzeugt OpenERP eine Lagerbuchung vom Lieferantenlagerort "
-#~ "zum Hauptlager. Jede Bestandsauswertung kann sowohl für reale als auch für "
-#~ "virtuelle Lagerorte erstellt werden."
-
-#~ msgid ""
-#~ "This is the list of all delivery orders that must be prepared, according to "
-#~ "your different sales orders and your logistics rules."
-#~ msgstr ""
-#~ "Dies ist eine Liste aller zu bearbeitenden Lieferaufträge in Abhängigkeit "
-#~ "der jeweiligen Verkaufsaufträge sowie der Einstellungen mit Auswirkungen auf "
-#~ "den Warenfluss."
-
-#~ msgid ""
-#~ "The Internal Moves lists all inventory operations you have to perform in "
-#~ "your warehouse. All operations can be categorized into stock journals, so "
-#~ "that each worker has it's own list of operations to perform in his own "
-#~ "journal. Most operations are prepared automatically by OpenERP according to "
-#~ "your pre-configured logistics rules but you can also record manual stock "
-#~ "operations."
-#~ msgstr ""
-#~ "Die Internen Lieferungen zeigen alle Bestandsbuchungen, die in Ihrem "
-#~ "Zentrallager stattfinden oder stattgefunden haben. Alle Liefervorgänge "
-#~ "können bei Bedarf in Lagerjournalen kategorisiert werden, so das jeder "
-#~ "Lagerarbeiter sein eigenes Journal mit seiner eigenen Liste von "
-#~ "durchzuführenden bzw. bereits erledigten Lieferungen, vorfinden kann. Die "
-#~ "meisten Lieferungen werden von OpenERP automatisch nach den von Ihnen "
-#~ "definierten Regeln für den Warenfluss ausgeführt, alternativ können Sie aber "
-#~ "auch manuelle Lieferungen erfassen."
-
-#~ msgid ""
-#~ "This menu gives you the full traceability of inventory operations made on a "
-#~ "specific product. You can filter on the product to see all the past or "
-#~ "future movements made on the product."
-#~ msgstr ""
-#~ "Dieses Menü gibt Ihnen die Möglichkeit alle Lieferungen und "
-#~ "Bestandsbuchungen eines bestimmten Produktes nachzuvollziehen. Sie können "
-#~ "hierbei Filter verwenden, um entweder alle bereits erfolgten oder alle "
-#~ "zukünftigen Lieferungen anzuzeigen."
-
-#~ msgid ""
-#~ "This is the structure of your company's warehouses and locations. You can "
-#~ "click on a location in order to get the list of the products and their stock "
-#~ "level in this particular location and all its children."
-#~ msgstr ""
-#~ "Sie sehen hier die Struktur Ihrer Zentralläger mit den dortigen Lagerorten. "
-#~ "Sie können auf einen Lagerort klicken, um eine Liste der dort gelagerten "
-#~ "Produkte sowie deren Lagerbestand auf diesem Lagerort mitsamt "
-#~ "untergeordneter Lagerorte zu betrachten."
-
-#~ msgid ""
-#~ "This is the list of all the production lots (serial numbers) you recorded. "
-#~ "After having selected a lot, you can get the up-stream or down-stream "
-#~ "traceability of the products contained in lot."
-#~ msgstr ""
-#~ "Diese Liste zeigt Ihnen alle Fertigungslose. Wenn Sie ein Los ausgewählt "
-#~ "haben, können Sie dann die zugehörigen Lieferungen sowohl upstream als auch "
-#~ "downstream zurück- bzw. nachverfolgen."
-
-#~ msgid ""
-#~ "This is the list of all your packs. After having selected a Pack, you can "
-#~ "get the up-stream or down-stream traceability of the products contained in "
-#~ "the pack."
-#~ msgstr ""
-#~ "Sie sehen hier eine Liste aller Pakete. Wählen Sie eins aus, um die "
-#~ "Produktlieferungen dieses Pakets zurück- bzw. nachzuverfolgen "
-#~ "(zurückverfolgen = Upstream, nachverfolgen = Downstream)."
-
-#~ msgid ""
-#~ "You will find here the list of all products you are waiting for, according "
-#~ "to your preceding purchase orders. Once you receive an order, you can filter "
-#~ "based on the name of the supplier or the purchase order reference. Then you "
-#~ "can confirm all products received using the buttons on the right of each "
-#~ "line."
-#~ msgstr ""
-#~ "Hier finden Sie eine Liste aller Produkte, auf deren Anlieferung Sie laut "
-#~ "Ihrer Bestellungen noch warten. Wenn Sie eine Lieferung erhalten, können Sie "
-#~ "hier nach Lieferanten oder Bestellnummmer filtern. Anschließend können Sie "
-#~ "den Erhalt der eingetroffenen Produkte einfach bestätigen, in dem Sie "
-#~ "innerhalb der Positionszeile die Buttons auf der rechten Seite nutzen."
-
-#~ msgid ""
-#~ "The 'Deliver Products' menu lists all products you have to deliver to your "
-#~ "customers. You can process the deliveries directly from this list, line by "
-#~ "or line or through the Delivery Orders menu."
-#~ msgstr ""
-#~ "Das Menü 'Produktabgänge' zeigt alle an Kunden auszuliefernden "
-#~ "Produktpositionen. Sie können die Auslieferung entweder direkt über diese "
-#~ "Liste positionsweise ausführen oder über das Menü Warenversand gesamte "
-#~ "Lieferaufträge bearbeiten."
-
-#~ msgid ""
-#~ "The stock journals system allows you assign each stock operation into a "
-#~ "specific journal according to the type of operation to perform or the "
-#~ "worker/team that should perform the operation. Examples of stock journals "
-#~ "may be: quality control, pick lists, packing, etc."
-#~ msgstr ""
-#~ "Die Systematik der Lagerjournale ermöglicht eine Zuweisung von "
-#~ "Lieferaufträgen zu bestimmten Lagerjournalen in Abhängigkeit des\r\n"
-#~ "jeweiligen Vorgangs, der im Lager durchzuführen ist. Als Beispiele können "
-#~ "genannt werden: Wareneingangskontrolle, Kommissionierung, Verpackung, "
-#~ "Versand etc."
 
 #, python-format
 #~ msgid "INV: "

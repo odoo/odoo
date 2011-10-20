@@ -188,11 +188,11 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Reception')], 'Invoicing Control', required=True,
-            help="From Order: a draft invoice will be generated based on the purchase order. The accountant " \
+        'invoice_method': fields.selection([('manual','Based on purchase order lines'),('order','Draft invoices pre-generated'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+            help="Based on orders: a draft invoice will be generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Reception: a draft invoice will be generated based on validated receptions.\n" \
-                "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
+                "Based on receptions: a draft invoice will be generated based on validated receptions.\n" \
+                "Pre-generate Invoice: allows you to generate draft suppliers invoices on validation of the PO."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -241,7 +241,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!')  % _(dict(purchase_order.STATE_SELECTION).get(s['state'])))
+                raise osv.except_osv(_('Invalid action !'), _('In order to delete a purchase order, it must be cancelled first!'))
 
         # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
@@ -289,7 +289,7 @@ class purchase_order(osv.osv):
         todo = []
         for po in self.browse(cr, uid, ids, context=context):
             if not po.order_line:
-                raise osv.except_osv(_('Error !'),_('You can not confirm purchase order without Purchase Order Lines.'))
+                raise osv.except_osv(_('Error !'),_('You cannot confirm a purchase order without any lines.'))
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
@@ -406,16 +406,16 @@ class purchase_order(osv.osv):
             for pick in purchase.picking_ids:
                 if pick.state not in ('draft','cancel'):
                     raise osv.except_osv(
-                        _('Could not cancel purchase order !'),
-                        _('You must first cancel all picking attached to this purchase order.'))
+                        _('Unable to cancel this purchase order!'),
+                        _('You must first cancel all receptions related to this purchase order.'))
             for pick in purchase.picking_ids:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
             for inv in purchase.invoice_ids:
                 if inv and inv.state not in ('cancel','draft'):
                     raise osv.except_osv(
-                        _('Could not cancel this purchase order !'),
-                        _('You must first cancel all invoices attached to this purchase order.'))
+                        _('Unable to cancel this purchase order!'),
+                        _('You must first cancel all invoices related to this purchase order.'))
                 if inv:
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
@@ -461,6 +461,7 @@ class purchase_order(osv.osv):
                         'location_id': loc_id,
                         'location_dest_id': dest,
                         'picking_id': picking_id,
+                        'address_id': order.dest_address_id.id or order.partner_address_id.id,
                         'move_dest_id': order_line.move_dest_id.id,
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
@@ -539,7 +540,7 @@ class purchase_order(osv.osv):
             if not order_infos:
                 order_infos.update({
                     'origin': porder.origin,
-                    'date_order': time.strftime('%Y-%m-%d'),
+                    'date_order': porder.date_order,
                     'partner_id': porder.partner_id.id,
                     'partner_address_id': porder.partner_address_id.id,
                     'dest_address_id': porder.dest_address_id.id,
@@ -552,6 +553,8 @@ class purchase_order(osv.osv):
                     'fiscal_position': porder.fiscal_position and porder.fiscal_position.id or False,
                 })
             else:
+                if porder.date_order < order_infos['date_order']:
+                    order_infos['date_order'] = porder.date_order
                 if porder.notes:
                     order_infos['notes'] = (order_infos['notes'] or '') + ('\n%s' % (porder.notes,))
                 if porder.origin:
@@ -612,6 +615,14 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
+    def _get_uom_id(self, cr, uid, context=None):
+        try:
+            proxy = self.pool.get('ir.model.data')
+            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
+            return result[1]
+        except Exception, ex:
+            return False
+    
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
@@ -639,6 +650,7 @@ class purchase_order_line(osv.osv):
 
     }
     _defaults = {
+        'product_uom' : _get_uom_id,
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,
@@ -655,7 +667,7 @@ class purchase_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         if not pricelist:
             raise osv.except_osv(_('No Pricelist !'), _('You have to select a pricelist or a supplier in the purchase form !\nPlease set one before choosing a product.'))
         if not  partner_id:
@@ -697,7 +709,7 @@ class purchase_order_line(osv.osv):
                 temp_qty = s.min_qty # supplier _qty assigned to temp
                 if qty < temp_qty: # If the supplier quantity is greater than entered from user, set minimal.
                     qty = temp_qty
-                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you cannot purchase less.') % qty}})
+                    res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier has a minimal quantity set to %s, you should not purchase less.') % qty}})
         qty_in_product_uom = product_uom_pool._compute_qty(cr, uid, uom, qty, to_uom_id=prod.uom_id.id)
         price = self.pool.get('product.pricelist').price_get(cr,uid,[pricelist],
                     product, qty_in_product_uom or 1.0, partner_id, {
@@ -728,10 +740,10 @@ class purchase_order_line(osv.osv):
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
-            name=False, price_unit=False, notes=False):
+            name=False, price_unit=False, notes=False, context={}):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
                 partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
-            name=name, price_unit=price_unit, notes=notes)
+            name=name, price_unit=price_unit, notes=notes, context=context)
         if 'product_uom' in res['value']:
             if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
@@ -761,6 +773,23 @@ class procurement_order(osv.osv):
         res = res.values()
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
+    def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line_vals, context=None):
+        """Create the purchase order from the procurement, using
+           the provided field values, after adding the given purchase
+           order line in the purchase order.
+
+           :params procurement: the procurement object generating the purchase order
+           :params dict po_vals: field values for the new purchase order (the
+                                 ``order_line`` field will be overwritten with one
+                                 single line, as passed in ``line_vals``).
+           :params dict line_vals: field values of the single purchase order line that
+                                   the purchase order will contain.
+           :return: id of the newly created purchase order
+           :rtype: int
+        """
+        po_vals.update({'order_line': [(0,0,line_vals)]})
+        return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
+
     def make_po(self, cr, uid, ids, context=None):
         """ Make purchase order from procurement
         @return: New created Purchase Orders procurement wise
@@ -774,7 +803,8 @@ class procurement_order(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
-        po_obj = self.pool.get('purchase.order')
+        seq_obj = self.pool.get('ir.sequence')
+        warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -783,7 +813,7 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-
+            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -792,42 +822,43 @@ class procurement_order(osv.osv):
 
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
-            newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            newdate = (newdate - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
+            order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
+            schedule_date = (order_date - relativedelta(days=company.po_lead))
+            order_dates = schedule_date - relativedelta(days=seller_delay)
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang': partner.lang, 'partner_id': partner_id})
 
             product = prod_obj.browse(cr, uid, procurement.product_id.id, context=context)
+            taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
+            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
 
-            line = {
+            line_vals = {
                 'name': product.partner_ref,
                 'product_qty': qty,
                 'product_id': procurement.product_id.id,
                 'product_uom': uom_id,
-                'price_unit': price,
-                'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
+                'price_unit': price or 0.0,
+                'date_planned': schedule_date.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_dest_id': res_id,
                 'notes': product.description_purchase,
+                'taxes_id': [(6,0,taxes)],
             }
-
-            taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
-            taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
-            line.update({
-                'taxes_id': [(6,0,taxes)]
-            })
-            purchase_id = po_obj.create(cr, uid, {
+            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
+            po_vals = {
+                'name': name,
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
+                'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
-                'order_line': [(0,0,line)],
+                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
-            })
-            res[procurement.id] = purchase_id
-            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': purchase_id})
+            }
+            res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+            self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
         return res
 
 procurement_order()

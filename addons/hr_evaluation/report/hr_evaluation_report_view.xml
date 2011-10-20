@@ -7,7 +7,7 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')"
+            <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')"
              string="Evaluations Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
@@ -52,7 +52,7 @@
                     <filter icon="terp-go-month" string=" Month " name="month" 
                             domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Evaluation done in current month"/>
-	                <filter icon="terp-go-month" string="    Month-1    " separator="1"
+	                <filter icon="terp-go-month" string="    Month-1    " 
                         domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Evaluation done in last month"/>
                     <separator orientation="vertical"/>

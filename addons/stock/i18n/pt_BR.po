@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:50+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -581,7 +581,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr "Controlo de inventário"
+msgstr "Controle de Estoque"
 
 #. module: stock
 #: view:stock.location:0
@@ -2233,9 +2233,9 @@ msgid "Future Qty"
 msgstr "Qtde Futura"
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
-msgstr "Conta para Variação de Estoque"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2255,7 +2255,7 @@ msgstr "Valor"
 #: field:stock.location,chained_picking_type:0
 #: field:stock.picking,type:0
 msgid "Shipping Type"
-msgstr "Tipo de Frete"
+msgstr "Tipo de Movimentação"
 
 #. module: stock
 #: code:addons/stock/stock.py:2175
@@ -2291,7 +2291,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Local onde o sistema estocará os produtos acabados"
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -4224,27 +4224,8 @@ msgstr "Detalhes opcionais do local, apenas em caráter informativo"
 #~ msgid "Periodical Inventory"
 #~ msgstr "Inventário Periódico"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Estoque futuro"
-
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Produções Futuras"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Recebimentos futuros"
-
 #~ msgid "Track line"
 #~ msgstr "Rastreamento"
-
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Rastrear lotes de entrada"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Entregas futuras"
 
 #~ msgid "terp-account"
 #~ msgstr "terp-account"
@@ -4480,9 +4461,6 @@ msgstr "Detalhes opcionais do local, apenas em caráter informativo"
 #~ msgid "The packing has been successfully made !"
 #~ msgstr "A embalagem foi realizada com sucesso !"
 
-#~ msgid "Qty"
-#~ msgstr "Qtd"
-
 #~ msgid "STOCK_MEDIA_FORWARD"
 #~ msgstr "STOCK_MEDIA_FORWARD"
 
@@ -4504,12 +4482,6 @@ msgstr "Detalhes opcionais do local, apenas em caráter informativo"
 #~ msgid "Include all childs for the location"
 #~ msgstr "Incluir todas as dependências para o local"
 
-#, python-format
-#~ msgid "You are moving %.2f products but only %.2f available in this lot."
-#~ msgstr ""
-#~ "Você está movimentando %.2f produtos mas há somente %.2f disponíveis neste "
-#~ "lote."
-
 #~ msgid "Draft Moves"
 #~ msgstr "Movimentações Provisórias"
 
@@ -4522,6 +4494,9 @@ msgstr "Detalhes opcionais do local, apenas em caráter informativo"
 #, python-format
 #~ msgid "Product "
 #~ msgstr "Produto "
+
+#~ msgid "Stock Variation Account"
+#~ msgstr "Conta para Variação de Estoque"
 
 #, python-format
 #~ msgid "INV: "

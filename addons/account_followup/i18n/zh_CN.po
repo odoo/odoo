@@ -13,19 +13,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:03+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:04+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:295
+#: code:addons/account_followup/wizard/account_followup_print.py:298
 #, python-format
 msgid "Follwoup Summary"
-msgstr ""
+msgstr "催款摘要"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr ""
+msgstr "催款搜索"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -51,11 +51,25 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    此模块会针对未付款的发票自动生成信件。\n"
+"可以定义多层催款层次。菜单是：\n"
+"  会计/设置/杂项/催款\n"
+"\n"
+"  定义好以后，你可以每天点击一下按钮自动生成和发送催款函\n"
+"  会计/定期处理/发票/发送催款函\n"
+"\n"
+"  它会根据催款层次自动生成PDF格式的催款函。\n"
+"  不同的公司策略也可以不同。还可以发邮件给客户。\n"
+"\n"
+"  如果想要改变某个客户或科目的催款层级，使用菜单：\n"
+"    会计/报告/通用报告/业务伙伴账户/发送催款函\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:290
@@ -72,7 +86,7 @@ msgstr ""
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 msgid "Follow-Up"
-msgstr "跟进"
+msgstr "催款"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -96,7 +110,7 @@ msgstr "电子邮件主题"
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr ""
+msgstr "您的合作伙伴发送提醒后续未付发票。"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -112,22 +126,22 @@ msgstr "确定"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr ""
+msgstr "选择合作伙伴，以提醒"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "您不能在关闭的科目上建立分录。"
 
 #. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "跟进发送日期"
+msgstr "催款发送日期"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "错误的分录"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -138,12 +152,12 @@ msgstr "净天数"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr "跟进"
+msgstr "催款"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "余额> 0"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -159,12 +173,12 @@ msgstr "%(heading):凭证明细的头"
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr "跟进消息"
+msgstr "催款消息"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
 msgid "Follow-up"
-msgstr "跟进"
+msgstr "催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -186,18 +200,18 @@ msgstr "日期:"
 #. module: account_followup
 #: field:account.followup.print.all,partner_ids:0
 msgid "Partners"
-msgstr "业务伙伴"
+msgstr "业务伙伴列表"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "发票提醒"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr ""
+msgstr "帐户催款"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -207,7 +221,7 @@ msgstr "月末"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "没争议"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -225,17 +239,17 @@ msgid ""
 "This feature allows you to send reminders to partners with pending invoices. "
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
-msgstr ""
+msgstr "如果您需要一个特定的信息此功能允许您向合作伙伴发送未付发票提醒，你可以向他们发送默认的消息，或手动输入信息以提醒他们。"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr "关联单号"
+msgstr "单号"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "输入序列用于显示催款列表"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -246,13 +260,13 @@ msgstr "电子邮件内容"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr "跟进等级"
+msgstr "催款等级"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr "最近跟进"
+msgstr "最近的催款"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -277,6 +291,27 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Copy text \t\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"We are disappointed to see that despite sending a reminder, that your "
+"account is now seriously overdue.\n"
+"\n"
+"It is essential that immediate payment is made, otherwise we will have to "
+"consider placing a stop on your account which means that we will no longer "
+"be able to supply your company with (goods/services).\n"
+"Please, take appropriate measures in order to carry out this payment in the "
+"next 8 days\n"
+"\n"
+"If there is a problem with paying invoice that we are not aware of, do not "
+"hesitate to contact our accounting department at (+32).10.68.94.39. so that "
+"we can resolve the matter quickly.\n"
+"\n"
+"Details of due payments is printed below.\n"
+"\n"
+"Best Regards,\n"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -306,18 +341,18 @@ msgstr "已打印消息"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr "发送跟进"
+msgstr "发送催款"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "提醒合作伙伴"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr "跟进"
+msgstr "催款"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -335,6 +370,20 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Copy text \t\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount staid unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -355,48 +404,63 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Despite several reminders, your account is still not settled.\n"
+"\n"
+"Unless full payment is made in next 8 days , then legal action for the "
+"recovery of the debt, will be taken without further notice.\n"
+"\n"
+"I trust that this action will prove unnecessary and details of due payments "
+"is printed below.\n"
+"\n"
+"In case of any queries concerning this matter, do not hesitate to contact "
+"our accounting department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "发送邮件"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "币别"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "业务伙伴的催款统计"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr "会计跟进管理"
+msgstr "会计催款管理"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "已封锁"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
-msgstr "这字段允许你选择一个预定计划日期去跟进"
+msgstr "这字段允许你选择一个预定计划日期去催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Due"
-msgstr "应付款"
+msgstr "到期日期"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr ""
+msgstr "选择业务伙伴"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -406,12 +470,12 @@ msgstr "电子邮件设置"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr ""
+msgstr "打印催款"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "最近跟进"
+msgstr "最近的催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -426,7 +490,7 @@ msgstr "余额:"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "催款统计"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -436,17 +500,17 @@ msgstr "已付"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(user_signature)s: 用户名"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "账簿明细"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "相关帐户和会计期限必须相同。"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -465,22 +529,22 @@ msgstr ""
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "错误！您不能创建递归公司."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr "用户公司名称:%(company_currency)s"
+msgstr "公司名称:%(company_currency)s"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "公司"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr ""
+msgstr "催款明细"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -495,12 +559,12 @@ msgstr "到期日期"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "%(partner_name)s: 业务伙伴名称"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr "跟进明细"
+msgstr "催款明细"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -523,23 +587,23 @@ msgstr "条件类型"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr ""
+msgstr "打印催款和发送邮件给客户"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr "最后"
+msgstr "最近"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr "跟进报表"
+msgstr "催款报表"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "会计期间"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -550,22 +614,22 @@ msgstr "取消"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Lines"
-msgstr "跟进明细"
+msgstr "催款明细"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "有争议"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "最高催款等级"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "应付项"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -581,7 +645,7 @@ msgstr "当前日期:%(date)s"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr ""
+msgstr "催款等级"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -593,7 +657,7 @@ msgstr "说明"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "本会计年度"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -605,19 +669,19 @@ msgstr "业务伙伴凭证"
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
-msgstr ""
+msgstr "如果你想按合作伙伴语言发送电子邮件，请配置公司语言不要改变消息的文本."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "应收项"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "已发送催款"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -653,7 +717,7 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print:0
 msgid "Continue"
-msgstr "继续"
+msgstr "下一步"
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
@@ -663,7 +727,7 @@ msgstr "拖延天数"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "文档: 客户科目对帐单"
+msgstr "文档: 客户帐户对帐单"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -679,7 +743,7 @@ msgstr "贷方合计"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr ""
+msgstr "%(line)s: 总帐总行数"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -689,12 +753,12 @@ msgstr "序列"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(company_name)s:用户的公司名称"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Customer Ref :"
-msgstr "关联客户:"
+msgstr "客户:"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -704,17 +768,17 @@ msgstr "业务伙伴名称:%(partner_name)s"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr ""
+msgstr "最近催款日期"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
+msgstr "催款标准"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "不能针对内部类型是视图的科目记账"
 
 #~ msgid "Amount In Currency"
 #~ msgstr "金额"
@@ -724,47 +788,6 @@ msgstr ""
 
 #~ msgid "Account Type"
 #~ msgstr "科目类型"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Modules to automate letters for unpaid invoices, with multi-level "
-#~ "recalls.\n"
-#~ "\n"
-#~ "    You can define your multiple levels of recall through the menu:\n"
-#~ "        Financial Management/Configuration/Payment Terms/Follow-Ups\n"
-#~ "\n"
-#~ "    Once it's defined, you can automatically prints recall every days\n"
-#~ "    through simply clicking on the menu:\n"
-#~ "        Financial_Management/Periodical_Processing/Print_Follow-Ups\n"
-#~ "\n"
-#~ "    It will generate a PDF with all the letters according the the\n"
-#~ "    different levels of recall defined. You can define different policies\n"
-#~ "    for different companies.\n"
-#~ "\n"
-#~ "\n"
-#~ "    Note that if you want to change the followup level for a given "
-#~ "partner/account entry, you can do it in the menu:\n"
-#~ "        Financial_Management/Reporting/Follow-Ups/All Receivable Entries\n"
-#~ "\n"
-#~ msgstr ""
-#~ "\n"
-#~ "    模块能自动发送未支付的发票和多次跟进\n"
-#~ "\n"
-#~ "你能在菜单定义的多层重复提醒:\n"
-#~ "财务管理/设置/付款条件/跟进\n"
-#~ "\n"
-#~ "一旦确定,你就能自动地打印每日的重复提醒事件,\n"
-#~ "通过简单点击菜单:\n"
-#~ "          财务管理/期间处理/打印跟进\n"
-#~ "\n"
-#~ "它将产生一定义的不同级别自动提醒的财务信函的PDF.\n"
-#~ "你能定义不同公司的不同格式\n"
-#~ "针对不同公司\n"
-#~ "\n"
-#~ "\n"
-#~ "注意:如果你想要变更一业务伙伴/凭证的跟进级别,你可以在菜单:\n"
-#~ "          财务管理/报表/跟进/所有应收账款凭证\n"
-#~ "\n"
 
 #~ msgid "%(line)s: Account Move lines"
 #~ msgstr "凭证明细:%(line)s"
@@ -894,4 +917,32 @@ msgstr ""
 #~ "\n"
 #~ msgstr ""
 #~ "电子邮件不发送到下列业务伙伴,电子邮箱无效!\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "所有邮件已成功发送到业务伙伴：\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "成功发送邮件到下列业务伙伴\n"
+#~ "\n"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "电子邮件发送到下面业务伙伴，电子邮件无效!\n"
 #~ "\n"

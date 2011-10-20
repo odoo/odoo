@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-28 03:06+0000\n"
+"PO-Revision-Date: 2011-09-27 10:25+0000\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:50+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -163,7 +163,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr ""
+msgstr "庫存日誌"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -473,7 +473,7 @@ msgstr "調動統計"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr ""
+msgstr "生產批次篩選"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -634,7 +634,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "指定了不同產品的批次"
 
 #. module: stock
 #: view:res.partner:0
@@ -1150,7 +1150,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "is in draft state."
-msgstr "尚在草案階段"
+msgstr "尚在草案階段。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_tracking_form
@@ -1399,6 +1399,12 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* 草案(Draft): 未確認，不會安排處理直至確認\n"
+"* 確認(Confirmed): 仍等候產品有貨供應\n"
+"* 供貨(Available): 已預留產品，只等候確認\n"
+"* 等待(Waiting): 自動供貨前要再等候下一步 (如於「接單生產(Make-To-Order)」流程)\n"
+"* 完成(Done): 已處理，無法再修改或取消\n"
+"* 取消(Cancelled): 已取消，無法再確認"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1437,6 +1443,11 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"建立調動時先處於「草案(Draft)」狀態。\n"
+"  然後，如安排者找不到貨，設為「無貨(Not Available)」狀態。\n"
+"  當已預留貨物，變成「供貨(Available)」。\n"
+"  完成提貨後狀態為「完成(Done)」。              \n"
+"如調動正等候其他工作完成，狀態為「等待(Waiting)」。"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1483,7 +1494,7 @@ msgstr "貨幣"
 #. module: stock
 #: field:product.product,track_production:0
 msgid "Track Manufacturing Lots"
-msgstr ""
+msgstr "追蹤生產批次"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:44
@@ -1534,7 +1545,7 @@ msgstr "貨架 2"
 #. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
-msgstr ""
+msgstr "追蹤批次"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1555,7 +1566,7 @@ msgstr "本地化"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by tracking lots"
-msgstr ""
+msgstr "按追蹤批次庫存報告"
 
 #. module: stock
 #: code:addons/stock/product.py:367
@@ -2087,8 +2098,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2115,7 +2126,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2175
 #, python-format
 msgid "You can only delete draft moves."
-msgstr "不能刪除調動草案"
+msgstr "只能刪除調動草案。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:74
@@ -2145,7 +2156,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -2538,7 +2549,7 @@ msgstr "數量（量度單位）"
 #, python-format
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
-msgstr ""
+msgstr "您正移動%.2f件 %s 產品，但此批次只有%.2f件 %s。"
 
 #. module: stock
 #: view:stock.move:0
@@ -3027,7 +3038,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr ""
+msgstr "批次存貨"
 
 #. module: stock
 #: view:stock.move:0
@@ -3495,6 +3506,11 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"建立調動時先處於「草案(Draft)」狀態。\n"
+"  然後設為「確認(Confirmed)」狀態。\n"
+"  如庫存有貨，變成「供貨(Available)」。\n"
+"  完成提貨後狀態為「完成(Done)」。              \n"
+"如調動正等候其他工作完成，狀態為「等待(Waiting)」。"
 
 #. module: stock
 #: view:board.board:0
@@ -3714,7 +3730,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "須為此產品分配生產批次"
+msgstr "須為此產品指定生產批次"
 
 #. module: stock
 #: view:stock.move:0
@@ -3809,7 +3825,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr "生產批次回報之庫存"
+msgstr "按生產批次庫存報告"
 
 #. module: stock
 #: view:stock.location:0
@@ -3869,7 +3885,7 @@ msgstr "輸出"
 #. module: stock
 #: selection:stock.move.split.lines,action:0
 msgid "Keep in one lot"
-msgstr ""
+msgstr "保持為同一批次"
 
 #. module: stock
 #: view:product.product:0

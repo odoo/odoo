@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2102,8 +2102,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2160,7 +2160,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -4009,9 +4009,6 @@ msgstr ""
 #~ msgid "New Reception Packing"
 #~ msgstr "Шинэ савлагаа хүлээн авах"
 
-#~ msgid "weight"
-#~ msgstr "Жин"
-
 #~ msgid "Non Assigned Products:"
 #~ msgstr "Эрсдэлгүй бүтээгдэхүүнүүд"
 
@@ -4147,9 +4144,6 @@ msgstr ""
 #~ msgid "Stock by Lots"
 #~ msgstr "Барааны цувралын жагсаалт"
 
-#~ msgid "Canceled"
-#~ msgstr "Цуцлагдсан"
-
 #~ msgid "STOCK_DIRECTORY"
 #~ msgstr "Бараа_Удирдлага"
 
@@ -4213,36 +4207,8 @@ msgstr ""
 #~ msgid "Packing List:"
 #~ msgstr "Савлагааны жагсаалт"
 
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "OpenERP бүртгэлийн менежментийн модуль нь олон тооны агуулах, олон тооны мөн "
-#~ "тодорхой бүтэцтэй агуулахын байршилыг зохион байгуулж чаддагДавхар нэвтрэх "
-#~ "боломжтой менежментийн ачаар, бүртгэлийн хяналт чадалтай мөн уян хатан "
-#~ "чанартай болсон:төлөвлөгөө болон түүхийг шилжүүлдэг, янз бүрийн бүртгэлийн "
-#~ "аргууд, агуулахын барагцаалал (үнийн стандарт эсвэл дундаж), бүртгэлийн "
-#~ "өөрчлөлттэй зэрэгцсэн тогтвортой байдал, дүрмийг автоматаар дахин шинэчлэх "
-#~ "(агуулахын төвшин), дэмжигдсэн коддавхар нэвтрэлтийн системийн алдааг "
-#~ "илрүүлэх, мөрдөгдөх чанар (өссөн/багассан, барааны цуврал, серийн дугаар)\n"
-#~ "    "
-
 #~ msgid "Force to use a Production Lot during deliveries"
 #~ msgstr "Тарааж байх үед барааны цувралыг хурдасгах"
-
-#~ msgid "Track Outging Lots"
-#~ msgstr "гаралтын цувралын замыг тодорхойлох"
 
 #~ msgid ""
 #~ "This is used only if you selected a chained location type.\n"
@@ -4301,10 +4267,6 @@ msgstr ""
 #~ msgid "terp-purchase"
 #~ msgstr "terp-purchase"
 
-#, python-format
-#~ msgid "Bad Lot Assignation !"
-#~ msgstr "Хүчингүй сери олгосон байна!"
-
 #~ msgid "Track line"
 #~ msgstr "Тээвэрлэлтийн мөр"
 
@@ -4322,9 +4284,6 @@ msgstr ""
 
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Хүргэлтийн календар"
-
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Ирэх тээвэрлэлтийн сери"
 
 #~ msgid "Latest Date of Inventory"
 #~ msgstr "Бүртгэлийн сүүлийн огноо"
@@ -4707,65 +4666,3 @@ msgstr ""
 
 #~ msgid "Set Stocks to Zero"
 #~ msgstr "Барааг тэглэх"
-
-#, python-format
-#~ msgid ""
-#~ "Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
-#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "            move_product_qty[move.id] = product_qty\n"
-#~ "            product_uom = partial_data.get('product_uom',False)\n"
-#~ "            product_price = partial_data.get('product_price',0.0)\n"
-#~ "            product_currency = partial_data.get('product_currency',False)\n"
-#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
-#~ msgstr ""
-#~ "Агуулахын Хөдөлгөөний Мөрийн зарим өгөгдөл олдсонгүй :%s' %(move.id))\n"
-#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
-#~ "            move_product_qty[move.id] = product_qty\n"
-#~ "            product_uom = partial_data.get('product_uom',False)\n"
-#~ "            product_price = partial_data.get('product_price',0.0)\n"
-#~ "            product_currency = partial_data.get('product_currency',False)\n"
-#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
-
-#, python-format
-#~ msgid ""
-#~ "There is no journal defined '\\n                                'on the "
-#~ "product category: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Бүтээгдэхүүний категори: \"%s\" (id: %d) '\\n                                "
-#~ "' журнал тодорхойлогдоогүй байна."
-
-#~ msgid ""
-#~ "When the stock move is created it is in the 'Draft' state.\n"
-#~ " After that it is set to 'Confirmed' state.\n"
-#~ " If stock is available state is set to 'Available'.\n"
-#~ " When the picking is done the state is 'Done'.                               "
-#~ "   \n"
-#~ "The state is 'Waiting' if the move is waiting for another one."
-#~ msgstr ""
-#~ "Барааны хөдөлгөөнийг үүсгэсэн дараа 'Ноорог' төлөвтэй байна.\n"
-#~ " Дараа нь 'Батлагдсан' төлөвт оруулна.\n"
-#~ " Бараа байвал 'Байгаа' төлөвтэй байна.\n"
-#~ " Цуглуулах ажил хийгдсэн дараа 'Хийгдсэн' төлөвт шилжинэ.                    "
-#~ "              \n"
-#~ "Харин өөр хөдөлгөөнийг хүлээж байгаа бол 'Хүлээж байгаа' төлөвтэй байна."
-
-#~ msgid "Outgoing Deliveries"
-#~ msgstr "Гарч байгаа Хүргэлт"
-
-#~ msgid "terp-emblem-important"
-#~ msgstr "terp-emblem-important"
-
-#~ msgid "terp-mail-forward"
-#~ msgstr "terp-mail-forward"
-
-#~ msgid "terp-stock_effects-object-colorize"
-#~ msgstr "terp-stock_effects-object-colorize"
-
-#~ msgid "terp-folder-blue"
-#~ msgstr "terp-folder-blue"
-
-#~ msgid "terp-dialog-close"
-#~ msgstr "terp-dialog-close"
-
-#~ msgid "terp-personal-"
-#~ msgstr "terp-personal-"

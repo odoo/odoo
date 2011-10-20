@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:43+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -70,7 +70,7 @@ msgid "Procurement Method"
 msgstr "Metodo approvvigionamento"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:298
+#: code:addons/procurement/procurement.py:304
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "Nessun indirizzo definito per il fornitore"
@@ -323,7 +323,7 @@ msgid "Quantity"
 msgstr "Quantità"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:370
+#: code:addons/procurement/procurement.py:377
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
@@ -462,7 +462,7 @@ msgid "plus"
 msgstr "più"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:319
+#: code:addons/procurement/procurement.py:325
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -640,7 +640,7 @@ msgstr ""
 "Impossibile eliminare Ordini di approvvigionamento che sono nella stato %s!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:318
+#: code:addons/procurement/procurement.py:324
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Dati insufficienti !"
@@ -868,7 +868,7 @@ msgid "Product UoS"
 msgstr "Unità di vendita del prodotto"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:347
+#: code:addons/procurement/procurement.py:353
 #, python-format
 msgid "from stock: products assigned."
 msgstr "Da magazzino: prodotto assegnato."
@@ -933,70 +933,3 @@ msgstr "Dettagli approvvigionamento"
 #, python-format
 msgid "SCHEDULER"
 msgstr "PIANIFICATORE"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome del modello non valido nella definizione dell'azione."
-
-#~ msgid ""
-#~ "A procurement order is used to record a need in a specific product at a "
-#~ "specific location. They are usually created automatically by the sales "
-#~ "orders, the Pull Logistics rules or the minimum stock rules. When the "
-#~ "procurement order is confirmed, it creates automatically the necessary "
-#~ "operations to fullfil the need: purchase order proposition, manufacturing "
-#~ "order, etc."
-#~ msgstr ""
-#~ "Un ordine di approvvigionamento è utilizzato per registrare la necessità di "
-#~ "uno specifico prodotto in una specifica locazione. Solitamente sono generati "
-#~ "automaticamente dagli ordini di vendita, dalle regole logistiche 'Pull' o "
-#~ "dalle regole di stock minimo. Quando l'ordine di approvvigionamento è "
-#~ "confermato, crea automaticamente le operazioni necessarie per rispondere "
-#~ "alla richiesta: proposta di ordine d'acquisto, ordine di produzione, ecc."
-
-#~ msgid ""
-#~ "You can define your minimum stock rules, so that OpenERP will trigger "
-#~ "automatically the propositions of manufacturing or purchase orders according "
-#~ "to the stock level. Once the virtual stock of a product (=stock on hand "
-#~ "minus all confirmed orders and reservations) is bellow the minimum quantity, "
-#~ "OpenERP will generate a procurement request in order to fullfil the stock up "
-#~ "to the maximum quantity."
-#~ msgstr ""
-#~ "E' possibile definire regole di stock minimo, di modo che OpenERP genererà "
-#~ "automaticamente le proposte di ordini di produzione o di acquisto a seconda "
-#~ "del livello di giacenza. Una volta che la giacenza virtuale di un prodotto "
-#~ "(=giacenza a disposizione meno tutti gli ordini confermati e le riserve) "
-#~ "scende sotto la quantità minima, OpenERP genererà una richiesta di "
-#~ "approvvigionamento per riempire il magazzino fino alla quantità massima."
-
-#~ msgid ""
-#~ "Procurement Orders represent the need for a certain quantity of products, at "
-#~ "a given time, in a given location. Sale Orders are one typical source of "
-#~ "Procurement Orders (but these are distinct documents). Depending on the "
-#~ "procurement parameters and the products configuration, the procurement "
-#~ "engine will attempt to satisfy the need by reserving products from stock, or "
-#~ "ordering products from a supplier, or passing a manufacturing order, etc. A "
-#~ "Procurement Exception occurs when the system cannot find a way to fulfill a "
-#~ "procurement. Some exceptions will resolve themselves automatically, but "
-#~ "others require manual intervention (those are identified by a specific error "
-#~ "message)"
-#~ msgstr ""
-#~ "Gli ordini di approvvigionamento rappresentano la necessità di avere una "
-#~ "certa quantità di prodotti, in un momento stabilito, in un posto stabilito. "
-#~ "Gli ordini di vendita sono una tipica origine di ordini di "
-#~ "approvvigionamento (ma sono documenti diversi). A seconda dei parametri di "
-#~ "approvvigionamento e della configurazione dei prodotti, il motore di "
-#~ "approvvigionamento cercherà di soddisfare le necessità conservando i "
-#~ "prodotti in magazzino, ordinando prodotti ad un fornitore, proponendo un "
-#~ "ordine di produzione, ecc... Gli errori di approvvigionamento si verificano "
-#~ "quando il sistema non trova il modo di soddisfare un approvvigionamento. "
-#~ "Qualche errore si risolve automaticamente, ma altri richiedono l'intervento "
-#~ "manuale (questi sono identificati da un messaggio di errore specifico)"
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurements that are not between today and today+range "
-#~ "are skipped for futur computation."
-#~ msgstr ""
-#~ "Questa è la cornice di tempo analizzata dal pianificatore al momento di "
-#~ "calcolare gli approvvigionamenti. Tutti gli approvvigionamenti che non si "
-#~ "trovano nell'intervallo fra oggi e oggi+range vengono saltati per un calcolo "
-#~ "futuro."

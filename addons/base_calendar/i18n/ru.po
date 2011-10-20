@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:49+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:46+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -144,6 +144,7 @@ msgid "March"
 msgstr "Март"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -261,7 +262,7 @@ msgid "Invitation Detail"
 msgstr "Детали приглашения"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -372,12 +373,12 @@ msgstr "Необязательное участие"
 #: field:calendar.event,date_deadline:0
 #: field:calendar.todo,date_deadline:0
 msgid "Deadline"
-msgstr "Крайний срок"
+msgstr "Последний срок"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Предупреждение!"
@@ -841,7 +842,7 @@ msgid "Hours"
 msgstr "Часы"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr "Счетчик не может быть отрицательным"
@@ -891,7 +892,6 @@ msgstr "Напоминание"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr "Установить правило"
@@ -1074,7 +1074,7 @@ msgid "Wednesday"
 msgstr "Среда"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr "Интервал не может быть отрицательным"
@@ -1688,3 +1688,6 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "Пятый"
+
+#~ msgid "Set Exclude range"
+#~ msgstr "Задать исключаемый интервал"

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:44+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:46+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,10 +28,10 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "Oppgaven '%s' er tildelt til %s."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -49,7 +49,7 @@ msgstr ""
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "Legg inn antall timer som trengs for å avslutte oppgaven"
 
 #. module: project
 #: view:project.task:0
@@ -57,7 +57,7 @@ msgid "Deadlines"
 msgstr "Tidsfrister"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Operasjon er ikke tillatt !"
@@ -245,7 +245,7 @@ msgid "Day"
 msgstr "Dag"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
 msgstr "Oppgaven '%s' er ferdig"
@@ -437,7 +437,7 @@ msgid "Reactivate Project"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Task '%s' lukket"
@@ -487,8 +487,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
 msgstr " (kopi)"
@@ -627,7 +627,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
 msgstr "Send e-post etter at oppgave er lukket"
@@ -722,7 +722,7 @@ msgid "Starting Date"
 msgstr "Startdato"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -747,7 +747,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -1149,7 +1149,6 @@ msgstr "Prosjektkonsoll"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Overordnet prosjekt"
 
@@ -1179,7 +1178,7 @@ msgid "Customer Email"
 msgstr "Kundens e-post"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1227,7 +1226,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Når oppgaven er fullført vil den få status ferdig"
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1372,7 +1371,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr ""
@@ -1424,7 +1423,7 @@ msgid "Open"
 msgstr "Åpne"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1756,7 +1755,7 @@ msgid "Spent Hours"
 msgstr "Timer brukt"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1833,7 +1832,7 @@ msgid "Validation State"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Oppgave '%s' er kansellert"
@@ -1861,7 +1860,7 @@ msgid "Create Date"
 msgstr "Opprettet dato"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""

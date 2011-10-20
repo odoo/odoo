@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:45+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:41+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: email_template
 #: help:email_template.account,auto_delete:0
@@ -967,7 +967,7 @@ msgid "Close"
 msgstr "Sluiten"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:49
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr "Fout bij het verzenden van mail: %s"
@@ -1063,7 +1063,7 @@ msgid "Email Mailbox"
 msgstr "Email postvak"
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:116
+#: code:addons/email_template/email_template_mailbox.py:104
 #, python-format
 msgid ""
 "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
@@ -1182,7 +1182,9 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Emails"
 
@@ -1358,135 +1360,6 @@ msgstr "Heeft bijlagen"
 msgid "No Description"
 msgstr "Geen beschrijving"
 
-#~ msgid "Email Data"
-#~ msgstr "Email Data"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
-
-#~ msgid "My Accounts"
-#~ msgstr "Mijn accounts"
-
-#~ msgid "E-MAIL Templates"
-#~ msgstr "E-MAIL Sjablonen"
-
-#~ msgid "Download Full Mail"
-#~ msgstr "Download volledig bericht"
-
-#~ msgid "The default recipient of email.Placeholders can be used here."
-#~ msgstr ""
-#~ "De standaard ontvanger van email. Hierin kunnen plaatsvervangers worden "
-#~ "gebruikt."
-
-#~ msgid "Mailboxes"
-#~ msgstr "Mailboxen"
-
-#~ msgid "Track campaign items"
-#~ msgstr "Volg campagne items"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Ongeldige argumenten"
-
-#~ msgid "SMTP Server"
-#~ msgstr "SMTP Server"
-
-#~ msgid ""
-#~ "Add here all attachments of the current document you want to include in the "
-#~ "e-mail."
-#~ msgstr ""
-#~ "Voeg hier alle bijlagen van het huidige document toe die u wilt bijvoegen "
-#~ "bij de email."
-
-#~ msgid "The default subject of email. Placeholders can be used here."
-#~ msgstr ""
-#~ "Het standaard-onderwerp van email. Plaatsvervangers kunnen hier worden "
-#~ "gebruikt."
-
-#, python-format
-#~ msgid ""
-#~ "Error sending mail: %s\" % str(e)))\n"
-#~ "        \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "        if ids is None:\n"
-#~ "            ids = []\n"
-#~ "        if context is None:\n"
-#~ "            context = {}\n"
-#~ "        filters = [('folder', '=', 'outbox"
-#~ msgstr ""
-#~ "Fout bij versturen mail: %s\" % str(e)))\n"
-#~ "        \n"
-#~ "    def send_all_mail(self, cr, uid, ids=None, context=None):\n"
-#~ "        if ids is None:\n"
-#~ "            ids = []\n"
-#~ "        if context is None:\n"
-#~ "            context = {}\n"
-#~ "        filters = [('folder', '=', 'outbox"
-
 #, python-format
 #~ msgid "Copy of template "
 #~ msgstr "Sjabloon kopie "
-
-#~ msgid ""
-#~ "File name pattern can be specified with placeholders.eg. 2009_SO003.pdf"
-#~ msgstr ""
-#~ "Bestandsnaam patroon kan met plaatsvervangers worden opgegeven.bijv. "
-#~ "2009_SO003.pdf"
-
-#~ msgid "Enter port number,eg:SMTP-587 "
-#~ msgstr "Vul poortnummer in, bijv. SMTP-587 "
-
-#, python-format
-#~ msgid "Mako templates not installed"
-#~ msgstr "Mako sjablonen niet geïnstalleerd"
-
-#~ msgid "eg: yourname@yourdomain.com "
-#~ msgstr "bijv: uwnaam@uwdomein.nl "
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave opbouw!"
-
-#, python-format
-#~ msgid ""
-#~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
-#~ msgstr ""
-#~ "Datumtijd extractie mislukt.Datum:%s \\n                      \tFout:%s"
-
-#, python-format
-#~ msgid ""
-#~ "Mail from Account %s failed. Probable Reason:Server Send Error\n"
-#~ "Description: %s"
-#~ msgstr ""
-#~ "Mail van account %s mislukt. Waarschijnlijke reden:Server verzend fout\n"
-#~ "Omschrijving: %s"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fout ! U kunt geen recursief menu maken."
-
-#, python-format
-#~ msgid "Django templates not installed"
-#~ msgstr "Django sjablonen niet geïnstalleerd"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Het kwaliteitscertificaat id van de module moet uniek zijn !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "De modulenaam moet uniek zijn !"
-
-#~ msgid ""
-#~ "An email template is an email document that will be sent as part of a "
-#~ "marketing campaign. You can personalize it based on specific customer "
-#~ "profile fields so that their names or other partner related information can "
-#~ "be automatically inserted in it."
-#~ msgstr ""
-#~ "Een email sjabloon is een email document dat wordt verstuurd als onderdeel "
-#~ "van een marketing campagne. U kunt het personaliseren op basis van "
-#~ "specifieke velden zodat hun namen of andere relatie informatie automatisch "
-#~ "kan worden ingevoegd."

@@ -1,43 +1,48 @@
 -
   In order to test Forward Partner functionality, I create an opportunity and forward it to partner.
-- 
+-
   I assign an email address to Administrator.
-- 
+-
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
-- 
+-
   I create some partner grades.
 -
   I create a grade 'First'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_first0}:
     name: First
     sequence: 1
-- 
+-
   I create another grade 'Second'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_second0}:
     name: Second
     sequence: 2
-- 
+-
   I create one more grade 'Third'.
-- 
+-
   !record {model: res.partner.grade, id: res_partner_grade_third0}:
     name: Third
     sequence: 3
-- 
+-
   I assign grade 'First' to the partner 'Axelor'.
-- 
+-
   !record {model: res.partner, id: base.res_partner_desertic_hispafuentes}:
     grade_id: res_partner_grade_first0
 -
+  I change the User email id or partner if needed.
+-
+  !python {model: res.partner}: |
+    self.geo_localize(cr, uid, [ref('base.res_partner_desertic_hispafuentes')], context)
+-
   I assgin a reply-to email address to Sales Team.
-- 
+-
   !record {model: crm.case.section, id: crm.section_sales_department}:
     reply_to: sales_openerp@openerp.com
-- 
+-
   I create an opportunity 'Questionnaire on OpenERP'.
-- 
+-
   !record {model: crm.lead, id: crm_lead_questionnaireonopenerp0}:
     categ_id: crm.categ_oppor7
     section_id: crm.section_sales_department
@@ -57,17 +62,76 @@
     probability: 0.0
     type: opportunity
 -
-  Now I click on Forward button.
+  I change the assigned partner.
+-
+  !python {model: crm.lead}: |
+    self.onchange_assign_id(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'), context)
+    self.assign_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context)
+-
+  I change the User email id or partner if needed.
 -
   !python {model: crm.lead.forward.to.partner}: |
-    import tools
+    context.update({'history': 'latest', })
+    user = ref('base.user_root')
+    self.on_change_email(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], user)
+    self.on_change_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'))
+-
+  I change in history define.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'info', })
+    self.on_change_history(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context.get('history'), context)
+-
+  I check the case history.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'latest', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+    
+    context.update({'history': 'info', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+    
+    context.update({'history': 'whole', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+-
+  I get lead details.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    self.get_lead_details(cr, uid, ref('crm_lead_questionnaireonopenerp0'), context)
+-
+  I click on Forward button.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    from tools import config
     vals = {
-       'name': 'email',
+       'subject': 'email',
        'email_to': 'info@axelor.com',
        'email_from': 'Administrator <admin@openerp.com>',
-       'reply_to': 'sales_openerp@openerp.com'
+       'reply_to': 'sales_openerp@openerp.com',
+       'state': 'draft',
+       'history': 'latest', 
     }
     ids = self.create(cr, uid, vals, context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    assert tools.config.get('smtp_user', False), 'SMTP not configured !'
-    self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    
+    host = config.get('smtp_user', '127.0.0.1')
+    assert config.get(host, True), 'SMTP not configured !'
+    try:
+      self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
+    except:
+      pass
+-
+  I create the opportunity.
+-
+   !record {model: crm.lead, id: crm_opportunity2}:
+    email_from: info@balmerinc.be
+    name: 'FUEL CO 829264 - 10002 units'
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    probability: 1.0
+    stage_id: crm.stage_lead1
+    categ_id: crm.categ_oppor2
+    section_id: crm.section_sales_department
+-  |
+   I Update the data.
+-
+   !python {model: crm.merge.opportunity}: |
+    self._update_data([ref('crm_opportunity2')], ref('crm_lead_questionnaireonopenerp0'))

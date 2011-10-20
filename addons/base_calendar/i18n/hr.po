@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-09-09 07:22+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-10-17 21:12+0000\n"
+"Last-Translator: Ivan Marijanović <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:49+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:46+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -46,7 +46,7 @@ msgstr ""
 #. module: base_calendar
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Odabrana tvrtka nije među dozvoljenim tvrtkama za ovog korisnika"
 
 #. module: base_calendar
 #: field:calendar.event.edit.all,name:0
@@ -133,7 +133,7 @@ msgstr "Javni"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -143,6 +143,7 @@ msgid "March"
 msgstr "Ožujak"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:414
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
@@ -260,7 +261,7 @@ msgid "Invitation Detail"
 msgstr "Detalji poziva"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/base_calendar.py:1355
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -327,7 +328,7 @@ msgstr "Grupiraj prema..."
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,email:0
 msgid "Provide external email address who will receive this invitation."
-msgstr ""
+msgstr "Unesite vanjski email osobe koja će primiti ovaj poziv."
 
 #. module: base_calendar
 #: model:ir.module.module,description:base_calendar.module_meta_information
@@ -353,7 +354,7 @@ msgstr "Odredite tip poziva"
 #: selection:calendar.event,freq:0
 #: selection:calendar.todo,freq:0
 msgid "Years"
-msgstr ""
+msgstr "Godine"
 
 #. module: base_calendar
 #: field:calendar.alarm,event_end_date:0
@@ -374,8 +375,8 @@ msgstr "Završni rok"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1088
 #: code:addons/base_calendar/base_calendar.py:1090
-#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje!"
@@ -419,7 +420,7 @@ msgstr "Događaj"
 #: help:calendar.event,edit_all:0
 #: help:calendar.todo,edit_all:0
 msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr ""
+msgstr "Uređivanje svih pojava ponavljajućeg sastanka."
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
@@ -607,7 +608,7 @@ msgstr "Očekivan odgovor"
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 msgid "Forever"
-msgstr ""
+msgstr "Zauvijek"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -835,7 +836,7 @@ msgid "Hours"
 msgstr "Sati"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1092
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -885,7 +886,6 @@ msgstr "Podsjetnik"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr "Postavi pravilo iznimke"
@@ -1067,7 +1067,7 @@ msgid "Wednesday"
 msgstr "Srijeda"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1088
 #, python-format
 msgid "Interval can not be Negative"
 msgstr ""
@@ -1679,37 +1679,3 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "Peti"
-
-#~ msgid "Select data for Custom Rule"
-#~ msgstr "Odaberite podatke za korisničko pravilo"
-
-#~ msgid ""
-#~ "defines a rule or repeating pattern for an exception to a recurrence set"
-#~ msgstr ""
-#~ "Definira pravilo ili ponavljajući uzorak za iznimku u skupu ponavljanja"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Neispravan naziv modela u definiciji akcije"
-
-#~ msgid "Invalid arguments"
-#~ msgstr "Neispravni argumenti"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Neispravan XML za arhitekturu View-a"
-
-#~ msgid "Select data for ExRule"
-#~ msgstr "Odaberi podatke za pravilo iznimke"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Pogreška ! Ne možete kreirati rekurzivne izbornike."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Naziv objekta mora počinjati s x_ i ne smije sadržavati posebne znakove !"
-
-#~ msgid "ExRule"
-#~ msgstr "Pravilo iznimke"
-
-#~ msgid "Custom"
-#~ msgstr "Korisnički definirano"

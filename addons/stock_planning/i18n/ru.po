@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:44+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -32,6 +32,8 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Отметьте для расчета мест хранения выбранного склада. Если не отмечено, "
+"расчет производится для входа, хранения и выхода склада."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
@@ -41,7 +43,7 @@ msgstr "Правило максимума"
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Copmany Period1"
-msgstr ""
+msgstr "Период1 этой компании"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -73,7 +75,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "No products in selected category !"
 msgstr "В выбранной категории нет товаров !"
@@ -114,11 +116,12 @@ msgstr ""
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
+"Количество подтвержденных исходящих перемещений в рассчитанном периоде."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Daily Periods"
-msgstr ""
+msgstr "Создать ежедневные периоды"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -158,7 +161,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Minimum Stock Rule Indicators"
-msgstr ""
+msgstr "Индикаторы правил минимальных запасов"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
@@ -168,13 +171,13 @@ msgstr "Период, которого касаются прогнозы"
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr ""
+msgstr "Только место хранения"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
-msgstr ""
+msgstr "Количество, которое уже отправлено с этого склада в текущем периоде."
 
 #. module: stock_planning
 #: help:stock.planning,procure_to_stock:0
@@ -236,7 +239,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Stock and Sales Forecast"
-msgstr ""
+msgstr "Прогноз запасов и продаж"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
@@ -256,7 +259,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
 msgid "Stock Simulation"
-msgstr ""
+msgstr "Моделирование запасов"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
@@ -274,12 +277,12 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Search  Sales Forecast"
-msgstr ""
+msgstr "Поиск прогноза продаж"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_user:0
 msgid "This User Period5"
-msgstr ""
+msgstr "Приод5 этого пользователя"
 
 #. module: stock_planning
 #: help:stock.planning,history:0
@@ -296,23 +299,23 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
 msgid "This User Period1"
-msgstr ""
+msgstr "Приод1 этого пользователя"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_user:0
 msgid "This User Period3"
-msgstr ""
+msgstr "Приод3 этого пользователя"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
 msgid "Stock Planning"
-msgstr ""
+msgstr "Планирование запасов"
 
 #. module: stock_planning
 #: field:stock.planning,minimum_op:0
 msgid "Minimum Rule"
-msgstr ""
+msgstr "Правило минимума"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -336,7 +339,7 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr ""
+msgstr "Создать"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -351,7 +354,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "  Creation Date: "
-msgstr ""
+msgstr "  Дата создания: "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -372,7 +375,7 @@ msgstr "Состояние"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
-msgstr ""
+msgstr "Категория ТМЦ, для ТМЦ которых коснется созданный прогноз."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
@@ -406,17 +409,17 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
-msgstr ""
+msgstr "Отметьте, чтобы увидеть продажи всей компании."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
 msgid "Name"
-msgstr ""
+msgstr "Название"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr ""
+msgstr "Поиск планирования запасов"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
@@ -435,7 +438,7 @@ msgstr "Категория ТМЦ"
 #: code:addons/stock_planning/stock_planning.py:665
 #: code:addons/stock_planning/stock_planning.py:667
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "Error !"
 msgstr "Ошибка !"
@@ -463,12 +466,12 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
-msgstr ""
+msgstr "Прогнозы"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr ""
+msgstr "Поставить с другого склада"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -505,23 +508,25 @@ msgstr "Неверное действие !"
 #. module: stock_planning
 #: help:stock.planning,stock_start:0
 msgid "Stock quantity one day before current period."
-msgstr ""
+msgstr "Складские остатки за день перед текущим периодом."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr ""
+msgstr "Создать еженедельные периоды"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
 msgstr ""
+"Максимальное количество, установленное правилом минимальных запасов для "
+"этого склада"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:665
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "Необходимо указать склад источник!"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -531,13 +536,13 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
-msgstr ""
+msgstr "Период4 этого пользователя"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Note: Doesn't duplicate existing lines created by you."
-msgstr ""
+msgstr "Примечание: не дублировать существующие строки, созданные вами."
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -547,7 +552,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr ""
+msgstr "Прогноз по организации"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -567,7 +572,7 @@ msgstr "На пользователя:"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr ""
+msgstr "Прогнозы продаж"
 
 #. module: stock_planning
 #: field:stock.period,name:0
@@ -583,27 +588,27 @@ msgstr "Создано/Утверждено"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr ""
+msgstr "Внутренний источник"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "Период4 этой организации"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr ""
+msgstr "Период5 этой организации"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr ""
+msgstr "Период2 этой организации"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr ""
+msgstr "Период3 этой организации"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
@@ -623,7 +628,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr ""
+msgstr "Утвержденные прогнозы"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -645,7 +650,7 @@ msgstr "По отделу :"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr ""
+msgstr "Прогноз"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
@@ -657,7 +662,7 @@ msgstr "Черновик"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Закрыто"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -677,7 +682,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create periods for Stock and Sales Planning"
-msgstr ""
+msgstr "Создать периоды для планирования запасов и продаж"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -924,7 +929,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr ""
+msgstr "Нельзя удалить проверенный прогноз продаж !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -1528,5 +1533,6 @@ msgstr "Начальный остаток"
 #~ msgid "Manual planning for "
 #~ msgstr "Планирование вручную для "
 
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
+#, python-format
+#~ msgid "Pick List "
+#~ msgstr "Комплектовочный лист "

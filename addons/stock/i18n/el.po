@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:46+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:48+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -2105,8 +2105,8 @@ msgid "Future Qty"
 msgstr "Μελοντική Ποσ."
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2163,7 +2163,7 @@ msgid "Location where the system will stock the finished products."
 msgstr "Τοποθεσία όπου το σύστημα θα αποθηκεύσει τα ολοκληρωμένα προϊόντα."
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3934,19 +3934,11 @@ msgstr ""
 #~ msgid "LIFO"
 #~ msgstr "LIFO"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Μελλοντικό Απόθεμα"
-
 #~ msgid "Amount"
 #~ msgstr "Ποσό"
 
 #~ msgid "Return packing"
 #~ msgstr "Επιστροφή Συσκευασίας"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Μελλοντικές Παραλαβές"
 
 #~ msgid "Incoming Products"
 #~ msgstr "Εισερχόμενα Προϊόντα"
@@ -4010,10 +4002,6 @@ msgstr ""
 
 #~ msgid "Products Received"
 #~ msgstr "Παραληφθέντα Προϊόντα"
-
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Μελλοντική Παραγωγή"
 
 #~ msgid "STOCK_NEW"
 #~ msgstr "STOCK_NEW"
@@ -4125,9 +4113,6 @@ msgstr ""
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Ημερολόγιο Παραλαβών"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Ανίχενυση Εισερχομένων Παρτίδων"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4172,10 +4157,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Παρτίδα Αναφοράς είναι ο κωδικός που τοποθετείται στην τροφοδοτική μονάδα / "
 #~ "παλλέτα"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Μελλοντικές Παραλαβές"
 
 #~ msgid "Tracking Number"
 #~ msgstr "Αριθμός Αναφοράς"
@@ -4266,9 +4247,6 @@ msgstr ""
 #~ msgid "terp-partner"
 #~ msgstr "terp-partner"
 
-#~ msgid "Qty"
-#~ msgstr "Ποσ."
-
 #~ msgid "STOCK_MISSING_IMAGE"
 #~ msgstr "STOCK_MISSING_IMAGE"
 
@@ -4289,10 +4267,6 @@ msgstr ""
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Μελλοντική Ποσ."
 
 #~ msgid "Supplier Refund"
 #~ msgstr "Επιστροφή σε Προμηθευτή"
@@ -4493,9 +4467,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Ανίχνευση Εξερχομένων ΠΑρτίδων"
-
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
 
@@ -4566,9 +4537,6 @@ msgstr ""
 #~ msgid "Stock by Lots"
 #~ msgstr "Απόθεμα ανά Παρτίδα"
 
-#~ msgid "Canceled"
-#~ msgstr "Ακυρώθηκε"
-
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
 
@@ -4601,10 +4569,6 @@ msgstr ""
 
 #~ msgid "Split in Two"
 #~ msgstr "Δαιχωρισμός σε δύο"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "Μελλοντικό  P&L"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
@@ -4770,40 +4734,8 @@ msgstr ""
 #~ msgid "Delivery"
 #~ msgstr "Παράδοση"
 
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "Το πρόσθετο Διαχείρισης Αποθεμάτων της OpenERP μπορεί να διαχειριστεί "
-#~ "πολλαπλές αποθήκες, πολλές και δομημένες τοποθεσίες αποθεμάτων.\n"
-#~ "Χάρις στο διπλογραφικό σύστημα, η διαχείριση είναι ισχυρή και ευέλικτη:\n"
-#~ "* Ιστορικό και προγραμματισμό κινήσεων.\n"
-#~ "* Διάφορες μεθόδους απογραφής (FIFO, LIFO, ...)\n"
-#~ "* Αποτίμηση (στάνταρ ή μέση τιμή, ...)\n"
-#~ "* Ευρωστία στις διαφορές αποθεμάτων\n"
-#~ "* Αυτόματοι κανόνες προμηθειών ( ύψος αποθεμάτων, JIT, ...)\n"
-#~ "* Υποστήριξη bar code\n"
-#~ "* Γρήγορη ανίχνευση λαθών μέσω του διπλογραφικού συτήματος\n"
-#~ "* Παρακολούθηση κινήσεων (εισαγωγών/εξαγωγών, παρτίδες παραγωγής, σειριακός "
-#~ "αριθμός, ...)\n"
-#~ "    "
-
 #~ msgid "Units"
 #~ msgstr "Μονάδες"
-
-#~ msgid "weight"
-#~ msgstr "βάρος"
 
 #~ msgid "Total :"
 #~ msgstr "Σύνολο:"

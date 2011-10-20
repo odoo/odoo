@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:50+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2103,8 +2103,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2161,7 +2161,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -3925,13 +3925,6 @@ msgstr ""
 #~ msgid "STOCK_SAVE"
 #~ msgstr "STOCK_SAVE"
 
-#, python-format
-#~ msgid ""
-#~ "There is no journal defined '\\n                                'on the "
-#~ "product category: \"%s\" (id: %d)"
-#~ msgstr ""
-#~ "Ni jedan dnevnik nije defnisan '\\n' za kategoriju projekata: \"%s\" (id: %d)"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Neispravan naziv modela u definiciji akcije."
 
@@ -3943,9 +3936,6 @@ msgstr ""
 
 #~ msgid "STOCK_ZOOM_100"
 #~ msgstr "STOCK_ZOOM_100"
-
-#~ msgid "Outgoing Products delay"
-#~ msgstr "Kasnjenje izlaza Proizvoda"
 
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
@@ -4234,29 +4224,17 @@ msgstr ""
 #~ msgid "Sub Products"
 #~ msgstr "Pod proizvod"
 
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "Buduće zalihe"
-
 #~ msgid "Amount"
 #~ msgstr "Iznos"
 
 #~ msgid "Fill Inventory for specific location"
 #~ msgstr "Popunite popis za određenu lokaciju"
 
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "Buduća proizvodnja"
-
 #~ msgid "Products Received"
 #~ msgstr "Primljeni proizvodi"
 
 #~ msgid "Return packing"
 #~ msgstr "Povratno pakovanje"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "Budući prijemi"
 
 #~ msgid "Incoming Products"
 #~ msgstr "Dolazni proizvodi"
@@ -4324,9 +4302,6 @@ msgstr ""
 #~ msgid "Force to use a Production Lot during production order"
 #~ msgstr "Mora da se koristi proizvodna partija u toku prijema"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Praćenje dolaznih partija"
-
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Kalendar isporuka"
 
@@ -4344,10 +4319,6 @@ msgstr ""
 
 #~ msgid "Tracking Number"
 #~ msgstr "Broj za praćenje"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "Buduće isporuke"
 
 #~ msgid "Non Assigned Products:"
 #~ msgstr "Nedodeljeni proizvodi"
@@ -4406,9 +4377,6 @@ msgstr ""
 #~ msgid "Periodical Inventory"
 #~ msgstr "Periodični popis"
 
-#~ msgid "Qty"
-#~ msgstr "Kol."
-
 #~ msgid "Draft Periodical Inventories"
 #~ msgstr "Nacrt periodičnog popisa"
 
@@ -4429,10 +4397,6 @@ msgstr ""
 
 #~ msgid "Input Packing List"
 #~ msgstr "Ulazna otpremnica"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "Buduća kol."
 
 #~ msgid "Not from Packing"
 #~ msgstr "Nije iz pakovanja"
@@ -4551,9 +4515,6 @@ msgstr ""
 #~ msgid "Chained Delay (days)"
 #~ msgstr "Povezano kašnjenje (dani)"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Praćenje izlaznih partija"
-
 #~ msgid ""
 #~ "This account will be used, instead of the default one, to value input stock"
 #~ msgstr ""
@@ -4590,9 +4551,6 @@ msgstr ""
 #, python-format
 #~ msgid "Please select one and only one inventory !"
 #~ msgstr "Izaberite samo jedan popis"
-
-#~ msgid "Canceled"
-#~ msgstr "Otkazan"
 
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "

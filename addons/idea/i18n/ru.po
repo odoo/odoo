@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:17+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:14+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr "Если отмечено создатель идеи будит виден остальным"
+msgstr "Показывать автора идеи"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
@@ -71,6 +71,15 @@ msgid ""
 "    The managers can obtain an easy view on best ideas from all the users.\n"
 "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"    Этот модуль позволяет пользователю легко и эффективно участвовать в "
+"инновациях на предприятии.\n"
+"    Он позволяет каждому выразить свои идеи на разные темы.\n"
+"    Затем, другие пользователи могут комментировать эти идеи и голосовать за "
+"отдельные идеи.\n"
+"    Каждая идея получает очки, основанные на голосовании.\n"
+"    Начальники могут получить обзор лучших идей пользователей.\n"
+"    После установки, проверьте меню \"Идеи\" в главном меню \"Инструменты\"."
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
@@ -267,6 +276,9 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"Когда идея создается, состояние \"Черновик\".\n"
+" При открытии пользователем, состояние \"Открыто\".\n"
+"Если идея принята, состояние \"Принято\"."
 
 #. module: idea
 #: field:idea.category,visibility:0
@@ -318,7 +330,7 @@ msgstr "Статистика голосов"
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "Максимальное количество голосов на пользователя"
 
 #. module: idea
 #: view:idea.category:0
@@ -388,7 +400,7 @@ msgstr "Открыто"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "Голоса за идею"
 
 #. module: idea
 #: view:idea.idea:0
@@ -532,6 +544,7 @@ msgstr "Проголосовать"
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
 msgstr ""
+"Выберите один, если вам требуется только один голос на одного пользователя"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -566,7 +579,7 @@ msgstr "Идеи"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Проголосовать"
 
 #. module: idea
 #: view:idea.idea:0
@@ -606,7 +619,7 @@ msgstr "Отказано"
 #: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
+msgstr "Нельзя голосовать за черновики/принятые/отмененные идеи"
 
 #. module: idea
 #: view:idea.vote:0
@@ -641,7 +654,7 @@ msgstr "Подсчет комментариев"
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Статус голосования"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -668,7 +681,7 @@ msgstr "Принять"
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Проголосовать"
 
 #. module: idea
 #: view:report.vote:0
@@ -679,7 +692,7 @@ msgstr "Год"
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Выберите идею для голосования"
 
 #~ msgid "My Ideas"
 #~ msgstr "Мои идеи"
@@ -750,15 +763,3 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Название модуля должно быть уникальным !"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Ошибка ! Нельзя создать зацикленные меню."
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "Размер поля не может быть меньше 1 !"

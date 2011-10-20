@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:33+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:29+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "Transacciones no conciliadas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:242
+#: code:addons/account_voucher/account_voucher.py:247
 #, python-format
 msgid "Write-Off"
 msgstr "Desajuste"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Agrupar por..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -96,7 +96,7 @@ msgid "Bill Payment"
 msgstr "Pago factura"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -414,7 +414,7 @@ msgid "Voucher Entries"
 msgstr "Comprobantes"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Error !"
 msgstr "¡Error!"
@@ -442,7 +442,7 @@ msgid "Sales Receipt"
 msgstr "Recibo de ventas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Invalid action !"
 msgstr "¡ Acción invalida !"
@@ -476,7 +476,7 @@ msgid "Pay Invoice"
 msgstr "Pagar factura"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "¡No código base contable y código impuesto contable!"
@@ -537,6 +537,7 @@ msgstr "Diciembre"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Líneas de comprobante"
@@ -725,7 +726,7 @@ msgid "Credit"
 msgstr "Haber"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "¡Defina una secuencia en el diario!"
@@ -1070,9 +1071,6 @@ msgstr "Total"
 #~ msgid "Dated :"
 #~ msgstr "Fechado :"
 
-#~ msgid "Entry"
-#~ msgstr "Entrada"
-
 #~ msgid "Create"
 #~ msgstr "Crear"
 
@@ -1120,13 +1118,6 @@ msgstr "Total"
 
 #~ msgid "Bank Payments"
 #~ msgstr "Pagos bancarios"
-
-#, python-format
-#~ msgid "Cannot delete invoice(s) which are already opened or paid !"
-#~ msgstr "¡ No es posible borrar factura(s) abiertas o pagadas !"
-
-#~ msgid "Cancel Cash Receipt"
-#~ msgstr "Cancelar recibo de caja"
 
 #~ msgid "Contra Voucher"
 #~ msgstr "Contra comprobante"
@@ -1179,23 +1170,11 @@ msgstr "Total"
 #~ msgid "Voucher Report"
 #~ msgstr "Informe de comprobantes"
 
-#~ msgid "Accounting - Voucher Management"
-#~ msgstr "Contabilidad - Gestión de comprobantes"
-
-#~ msgid "Pro-forma Cash Receipt"
-#~ msgstr "Pro-forma recibo en efectivo"
-
 #~ msgid "Closing Balance"
 #~ msgstr "Saldo de cierre"
 
-#~ msgid "Difference of Opening Bal."
-#~ msgstr "Diferencia de saldo de apertura"
-
 #~ msgid "No."
 #~ msgstr "Nº"
-
-#~ msgid "Draf Cash Receipt"
-#~ msgstr "Recibo de caja borrador"
 
 #~ msgid "Opening Balance"
 #~ msgstr "Saldo de apertura"
@@ -1229,9 +1208,6 @@ msgstr "Total"
 
 #~ msgid "Sub Currency"
 #~ msgstr "Sub moneda"
-
-#~ msgid "Posted Cash Receipt"
-#~ msgstr "Recibo de caja emitido"
 
 #~ msgid "Cash Payments"
 #~ msgstr "Pagos en efectivo"
@@ -1275,94 +1251,5 @@ msgstr "Total"
 #~ msgid "Bank Receipt Voucher"
 #~ msgstr "Comprobante de cobro bancario"
 
-#~ msgid "Form view not available for Payment Lines"
-#~ msgstr "Vista formulario no disponible para líneas de pago"
-
-#~ msgid "Originial Amount"
-#~ msgstr "Importe original"
-
-#~ msgid "Journal:"
-#~ msgstr "Diario:"
-
-#~ msgid "Vendor Payment"
-#~ msgstr "Pago del vendedor"
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "¡Error! No puede crear menús recursivos."
-
-#~ msgid "Unreconciled Amount"
-#~ msgstr "Importe no conciliado"
-
-#~ msgid "Vendor"
-#~ msgstr "Vendedor"
-
-#~ msgid "Extended options..."
-#~ msgstr "Opciones extras..."
-
-#~ msgid "Open Vendor Journal Entries"
-#~ msgstr "Abrir entradas diario de vendedores"
-
-#, python-format
-#~ msgid "Invalid Error !"
-#~ msgstr "¡Error no válido!"
-
-#, python-format
-#~ msgid "Please change partner and try again !"
-#~ msgstr "¡Cambie la empresa y pruebe de nuevo!"
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "¡Las reglas no son soportadas en objetos osv_memory!"
-
-#~ msgid "Vendor Invoices and Outstanding transactions"
-#~ msgstr "Facturas de vendedor y transacciones de salida"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "¡El ID del certificado del módulo debe ser único!"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "¡El nombre del módulo debe ser único!"
-
-#~ msgid "Rule must have at least one checked access right !"
-#~ msgstr "¡La regla debe tener por lo menos un derecho de acceso marcado!"
-
 #~ msgid "Authorised Signatory"
 #~ msgstr "Firma autorizada"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "¡Valor haber o debe erróneo en el asiento contable!"
-
-#~ msgid "Write-Off journal"
-#~ msgstr "Diario de desajuste"
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "No puede crear una línea de movimiento en una cuenta a cobrar/a pagar sin "
-#~ "una empresa."
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
-
-#~ msgid "Payment Option"
-#~ msgstr "Opción de pago"
-
-#~ msgid "Comment"
-#~ msgstr "Comentario"
-
-#~ msgid "Without Write-off"
-#~ msgstr "Sin desajuste"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
-
-#~ msgid "Writeoff Amount"
-#~ msgstr "Importe desajuste"
-
-#~ msgid "With Write-off"
-#~ msgstr "Con desajuste"

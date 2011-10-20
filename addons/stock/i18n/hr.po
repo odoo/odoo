@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-10-19 04:49+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Prati izlazne lotove"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
@@ -2090,8 +2090,8 @@ msgid "Future Qty"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_variation:0
-msgid "Stock Variation Account"
+#: field:product.category,property_stock_valuation_account_id:0
+msgid "Stock Valuation Account"
 msgstr ""
 
 #. module: stock
@@ -2148,7 +2148,7 @@ msgid "Location where the system will stock the finished products."
 msgstr ""
 
 #. module: stock
-#: help:product.category,property_stock_variation:0
+#: help:product.category,property_stock_valuation_account_id:0
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
@@ -4023,14 +4023,6 @@ msgstr ""
 #~ msgid "Include all childs for the location"
 #~ msgstr "Uključi sve podređene lokacije"
 
-#, python-format
-#~ msgid "Bad Lot Assignation !"
-#~ msgstr "Loša dodjela lota !"
-
-#, python-format
-#~ msgid "You are moving %.2f products but only %.2f available in this lot."
-#~ msgstr "Prebacujete %.2f proizvoda ali samo %.2f je dostupno na ovom lotu."
-
 #~ msgid "Track line"
 #~ msgstr "Stavka praćenja"
 
@@ -4091,9 +4083,6 @@ msgstr ""
 #~ msgid "Calendar of Deliveries"
 #~ msgstr "Kalendar dostava"
 
-#~ msgid "Track Incomming Lots"
-#~ msgstr "Prati ulazne lotove"
-
 #~ msgid "STOCK_SAVE_AS"
 #~ msgstr "STOCK_SAVE_AS"
 
@@ -4149,9 +4138,6 @@ msgstr ""
 
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
-
-#~ msgid "weight"
-#~ msgstr "težina"
 
 #~ msgid "Non Assigned Products:"
 #~ msgstr "Nepridruženi proizvodi:"
@@ -4355,36 +4341,6 @@ msgstr ""
 #~ msgstr "Predviđanje buduće zalihe"
 
 #~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "OpenERP modul za upravljanje inventarom može upravljati sa višeskladišnom, "
-#~ "višelokacijskom zalihom i strukturiranom lokacijom zalihe.\n"
-#~ "Zahvaljujući upravljanju dvostrukim unosima, kontrola inventara pruža mnogo "
-#~ "mogućnosti i fleksibilnosti:\n"
-#~ "* Povijest prijenosa i planiranje,\n"
-#~ "* Različite metode inventorija (FIFO, LIFO, ...)\n"
-#~ "* Vrednovanje zalihe (standardna ili prosječna cijena, ...)\n"
-#~ "* Robusnost pri razlikama inventara\n"
-#~ "* Automatska pravila promjene redoslijeda (nivo zalihe, JIT, ...)\n"
-#~ "* Podržan barkod\n"
-#~ "* Brzo otkrivanje pogrešaka preko sustava dvostrukog unosa\n"
-#~ "* Sljedivost (od izvora proizvoda/tokom proizvoda, lotovi proizvodnje, "
-#~ "serijski broj, ...)\n"
-#~ "    "
-
-#~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Naziv objekta mora započinjati sa x_ i ne smije sadržavati specijalne "
@@ -4516,9 +4472,6 @@ msgstr ""
 #~ msgid "STOCK_MEDIA_PAUSE"
 #~ msgstr "STOCK_MEDIA_PAUSE"
 
-#~ msgid "Track Outging Lots"
-#~ msgstr "Prati izlazne lotove"
-
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
 
@@ -4588,9 +4541,6 @@ msgstr ""
 
 #~ msgid "Stock by Lots"
 #~ msgstr "Zaliha po serijama proizvoda"
-
-#~ msgid "Canceled"
-#~ msgstr "Poništeno"
 
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
