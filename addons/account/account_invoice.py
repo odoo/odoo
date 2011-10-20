@@ -209,7 +209,7 @@ class account_invoice(osv.osv):
             \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
             \n* The \'Paid\' state is set automatically when invoice is paid.\
             \n* The \'Cancelled\' state is used when user cancel invoice.'),
-        'date_invoice': fields.date('Invoice Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, select=True, help="Keep empty to use the current date"),
+        'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', states={'paid':[('readonly',True)], 'open':[('readonly',True)], 'close':[('readonly',True)]}, select=True,
             help="If you use payment terms, the due date will be computed automatically at the generation "\
                 "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. The payment term may compute several due dates, for example 50% now, 50% in one month."),
@@ -880,7 +880,7 @@ class account_invoice(osv.osv):
                         'account_id': acc_id,
                         'date_maturity': t[0],
                         'amount_currency': diff_currency_p \
-                                and  amount_currency or False,
+                                and amount_currency or False,
                         'currency_id': diff_currency_p \
                                 and inv.currency_id.id or False,
                         'ref': ref,

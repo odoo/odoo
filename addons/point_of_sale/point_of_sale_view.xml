@@ -153,7 +153,7 @@
             </field>
         </record>
 
-        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
         <menuitem name="New Sale Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
@@ -594,6 +594,30 @@
             </field>
         </record>
 
+        <!-- Categories tree view -->
+        <record id="pos_category_tree_view" model="ir.ui.view">
+            <field name="name">pos.category.tree</field>
+            <field name="model">pos.category</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Pos Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="pos_category_action" model="ir.actions.act_window">
+            <field name="name">Products by POS-Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="pos_category_tree_view"/>
+            <field name="help">Here is a list of all your products classified by POS category. You can click a category to get the list of all products linked to this category or to a child of this       category.</field>
+        </record>
+        <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <!-- END -->
+
         <record id="product_input_output_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
@@ -646,7 +670,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('income_pdt','=',True)]</field>
+            <field name="domain">[('expense_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_input_tree_tag">
             <field name="sequence" eval="1"/>
@@ -672,7 +696,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('expense_pdt','=',True)]</field>
+            <field name="domain">[('income_pdt','=',True)]</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_product_output_tree_tag">
             <field name="sequence" eval="1"/>
@@ -767,6 +791,16 @@
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
+        <record model="ir.actions.client" id="action_pos_pos">
+          <field name="name">Start Point of Sale</field>
+          <field name="tag">pos.ui</field>
+        </record>
 
+        <record id="menu_pos_pos" model="ir.ui.menu">
+          <field name="name">Start Point of Sale</field>
+          <field name="sequence" eval="5"/>
+          <field name="parent_id" ref="menu_point_root"/>
+          <field name="action" ref="action_pos_pos"/>
+        </record>
     </data>
 </openerp>

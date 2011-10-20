@@ -267,7 +267,7 @@
               </search>
             </field>
         </record>
-        
+
         <record id="view_purchase_order_filter" model="ir.ui.view">
             <field name="name">purchase.order.list.select</field>
             <field name="model">purchase.order</field>
@@ -275,13 +275,14 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                  <group>
-                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase order which are in draft state"/>
-                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state', '=', 'confirmed')]" help="Purchase order which are yet not approve"/>
-                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','in',('approved','done'))]"  help="Approved purchase order"/>
+                    <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]"  help="Purchase orders which are in draft state"/>
+                    <filter icon="terp-gtk-jump-to-ltr" name="to_approve" string="To Approve" domain="[('state','in',('draft','wait','confirmed'))]" help="Purchase orders which are not approved yet."/>
+                    <filter icon="terp-check" name="approved" string="Approved" domain="[('state','=','approved')]"  help="Approved purchase orders"/>
+                    <filter icon="terp-accessories-archiver+" string="Done" domain="[('state','=','done')]" help="Purchase orders which are in done state."/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]"  help="Purchase order which are in the exception state"/>
+                    <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-gtk-go-back-rtl" string="Not invoices" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
+                    <filter icon="terp-gtk-go-back-rtl" string="Not invoiced" domain="[('invoice_ids','=', False)]"  help="Purchase orders that include lines not invoiced." groups="base.group_extended"/>
                     <separator orientation="vertical"/>
                     <field name="name" string="Reference"/>
                     <field name="partner_id"/>

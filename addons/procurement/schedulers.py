@@ -75,8 +75,7 @@ class procurement_order(osv.osv):
             report_except = 0
             report_later = 0
             while True:
-                cr.execute("select id from procurement_order where state='confirmed' and procure_method='make_to_order' order by priority,date_planned limit 500 offset %s", (offset,))
-                ids = map(lambda x: x[0], cr.fetchall())
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'confirmed'), ('procure_method', '=', 'make_to_order')], offset=offset, limit=500, order='priority, date_planned', context=context)
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if maxdate >= proc.date_planned:
                         wf_service.trg_validate(uid, 'procurement.order', proc.id, 'button_check', cr)
@@ -164,11 +163,7 @@ class procurement_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-
-        cr.execute('select p.id from product_product p \
-                        join product_template t on (p.product_tmpl_id=t.id) \
-                        where p.active=True and t.purchase_ok=True')
-        products_id = [x for x, in cr.fetchall()]
+        products_id = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
@@ -191,6 +186,7 @@ class procurement_order(osv.osv):
                     'product_qty': -product.virtual_available,
                     'product_uom': product.uom_id.id,
                     'location_id': location_id,
+                    'company_id': warehouse.company_id.id,
                     'procure_method': 'make_to_order',
                     })
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
@@ -249,8 +245,7 @@ class procurement_order(osv.osv):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
                             pro_ids = [x.id for x in op.procurement_draft_ids]
-                            cr.execute('select id, product_qty from procurement_order where id in %s order by product_qty desc', (tuple(pro_ids), ))
-                            procure_datas = cr.dictfetchall()
+                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context, order='product_qty desc')
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
@@ -267,6 +262,7 @@ class procurement_order(osv.osv):
                             'date_planned': newdate.strftime('%Y-%m-%d'),
                             'product_id': op.product_id.id,
                             'product_qty': qty,
+                            'company_id': op.company_id.id,
                             'product_uom': op.product_uom.id,
                             'location_id': op.location_id.id,
                             'procure_method': 'make_to_order',

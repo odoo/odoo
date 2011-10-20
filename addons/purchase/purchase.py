@@ -821,6 +821,8 @@ class procurement_order(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
+        seq_obj = self.pool.get('ir.sequence')
+        warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -829,7 +831,7 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-
+            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -860,12 +862,14 @@ class procurement_order(osv.osv):
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
             }
-
+            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             po_vals = {
+                'name': name,
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
+                'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
                 'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
                 'company_id': procurement.company_id.id,
