@@ -37,15 +37,18 @@ class procurement_order(osv.osv):
         line_pool=self.pool.get('sale.order.line')
         project_pool=self.pool.get('project.project')
         for procurement in self.browse(cr, uid, ids, context=context):
-            project_id = False
-            line_ids = line_pool.search(cr, uid , [('procurement_id', '=', procurement.id)])
-            order_lines = line_pool.browse(cr, uid, line_ids)
-            for line in order_lines:
-                if line.product_id and  line.product_id.project_id:            
-                    project_id = line.product_id.project_id.id
-                if not project_id and line.order_id.project_id:
-                    project_id = project_pool.search(cr, uid , [('name', '=', line.order_id.project_id.name)])
-                    project_id = project_id and project_id[0] or False
+            # project_id = the product's associated project if it exists,
+            #              the sales order's associated project otherwise
+            if procurement.product_id.project_id:
+                project_id = procurement.product_id.project_id.id
+            else:
+                project_id = False
+                line_ids = line_pool.search(cr, uid , [('procurement_id', '=', procurement.id)])
+                for line in line_pool.browse(cr, uid, line_ids):
+                    if line.order_id.project_id:
+                        project_id = line.order_id.project_id.id
+                        break
+
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
