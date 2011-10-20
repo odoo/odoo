@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-
-import tools
+from osv import fields, osv
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
@@ -35,7 +33,6 @@ class procurement_order(osv.osv):
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         line_pool=self.pool.get('sale.order.line')
-        project_pool=self.pool.get('project.project')
         for procurement in self.browse(cr, uid, ids, context=context):
             # project_id = the product's associated project if it exists,
             #              the sales order's associated project otherwise
