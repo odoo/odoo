@@ -201,8 +201,10 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.do_switch_view('form');
     },
     do_edit_record: function(record_id) {
-        this.form_dialog.load_id(record_id);
-        this.form_dialog.open();
+        var self = this;
+        this.form_dialog.select_id(record_id).then(function() {
+            self.form_dialog.open();
+        });
     },
     on_record_saved: function(r) {
         var id = this.form_dialog.form.datarecord.id;

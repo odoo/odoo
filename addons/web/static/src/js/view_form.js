@@ -551,11 +551,13 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         return this;
     },
-    load_id: function(id) {
-        var self = this;
-        return this.dataset.read_ids([id], _.keys(this.form.fields_view.fields), function(records) {
-            self.form.on_record_loaded(records[0]);
-        });
+    select_id: function(id) {
+        if (this.form.dataset.select_id(id)) {
+            return this.form.do_show();
+        } else {
+            this.do_warn("Could not find id in dataset");
+            return $.Deferred().reject();
+        }
     },
     on_form_dialog_saved: function(r) {
         this.close();
