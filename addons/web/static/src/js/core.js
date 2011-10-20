@@ -10,8 +10,6 @@ if (!console.debug) {
 }
 
 openerp.web.core = function(openerp) {
-openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 /**
  * John Resig Class with factory improvement
  */
@@ -1040,6 +1038,21 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
 });
 
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+openerp.web.qweb = new QWeb2.Engine();
+openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.format_text_node = function(s) {
+    // Note that 'this' is the Qweb Node of the text
+    var translation = this.node.parentElement.attributes['t-translation'];
+    if (translation && translation.value === 'off') {
+        return s;
+    }
+    var ts = _.trim(s);
+    if (ts.length === 0) {
+        return s;
+    }
+    var tr = openerp.web._t(ts);
+    return tr === ts ? s : tr;
+}
 
 };
 
