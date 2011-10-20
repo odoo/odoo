@@ -471,8 +471,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             _.each(self.aggregates, function(value, key) {
                 group_aggregates[value] = group.aggregates[key];
             });
-            self.dataset.read_slice([], {'domain': group.domain, 'conext': group.context}, function(records) {
-                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids, 'aggregates': group_aggregates});
+            var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
+            dataset.read_slice(_.keys(self.fields_view.fields), {'domain': group.domain, 'conext': group.context}, function(records) {
+                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': dataset.ids, 'aggregates': group_aggregates});
                 if (datagroups.length == self.all_display_data.length) {
                     self.$element.find(".oe_kanban_view").remove();
                     self.on_show_data();
