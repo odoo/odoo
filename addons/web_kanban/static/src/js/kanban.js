@@ -442,7 +442,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             },
             function (dataset) {
                 self.groups = [];
-                self.dataset.read_slice([], {}, function(records) {
+                self.dataset.read_slice(_.keys(self.fields_view.fields), {}, function(records) {
                     if (records.length) {
                         self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
                     } else {
