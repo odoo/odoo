@@ -1,5 +1,5 @@
 -
-  In order to test the PDF reports defined on a Purchase Order, we will print a Request Quotation report
+  In order to test the PDF reports defined on a Purchase Order, I print a Request Quotation report
 -
   !python {model: purchase.order}: |
     import netsvc, tools, os
@@ -7,7 +7,7 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase-request_quotation'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Purchase Order, we will print Purchase Order report
+  I print Purchase Order report
 -
   !python {model: purchase.order}: |
     import netsvc, tools, os

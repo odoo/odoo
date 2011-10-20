@@ -1,0 +1,24 @@
+-
+ I confirm another order where invoice control is 'Based on receptions'.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase2}
+-
+  I check that the invoice of order.
+-
+  !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("order_purchase2"))
+    assert len(purchase_order.invoice_ids) == 0, "Invoice should not be generated on order confirmation."
+-
+  Now I create an invoice for order on reception.
+-
+  !python {model: stock.picking}: |
+    pick_ids = self.search(cr, uid, [('purchase_id','=',ref('order_purchase2'))])
+    self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
+-
+ I check that the invoice of order.
+-
+ !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("order_purchase2"))
+    assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."
+
+

@@ -1,0 +1,59 @@
+-
+  In order to test to cancel confirmed purchase order.
+-
+  First I cancel  receptions related to this order if order shipped.
+-
+  !python {model: purchase.order}: |
+    order = self.browse(cr, uid, ref("order_purchase1"))
+    self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
+
+-
+  I check order status in "Shipping Exception".
+-
+  !python {model: purchase.order}: |
+    order = self.browse(cr, uid, ref("order_purchase1"))
+    assert order.state == "except_picking", "order should be in Ship Exception state after cancel shipment"
+
+- 
+  Now I cancel invoice related to this order if order invoiced.
+-
+  !python {model: purchase.order}: |
+    order = self.browse(cr, uid, ref("order_purchase1"))
+    self.pool.get('account.invoice').action_cancel(cr, uid, [invoice.id for invoice in  order.invoice_ids])
+
+-
+  I check order status in "Invoice Exception".
+-
+  !python {model: purchase.order}: |
+    order = self.browse(cr, uid, ref("order_purchase1"))
+    assert order.state == "except_invoice", "order should be in Invoice Exception state after cancel invoice"
+-
+  Now I am able to cancel purchase order.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel(cr, uid, [ref("order_purchase1")])
+
+-
+  I check that order is cancelled.
+-
+  !assert {model: purchase.order, id: order_purchase1}:
+    - state == 'cancel'
+-
+  Now again set cancelled order to draft.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order_purchase1")])
+    
+-
+  Now I again to cancel draft order.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel(cr, uid, [ref("order_purchase1")])
+
+-
+  I check that order is cancelled.
+-
+  !assert {model: purchase.order, id: order_purchase1}:
+    - state == 'cancel'
+
+

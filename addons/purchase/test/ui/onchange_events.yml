@@ -1,0 +1,26 @@
+-
+  In order to test the onchange events of order.
+-
+  I call onchange event to change the warehouse of order.
+-
+  !python {model: purchase.order}: |
+    self.onchange_warehouse_id(cr, uid, [ref('order_purchase1')], ref('stock.stock_warehouse_shop1'))
+-
+  I call onchange event to change the supplier of order.
+-
+  !python {model: purchase.order}: |
+    self.onchange_partner_id(cr, uid, ref('order_purchase1'),  ref('base.res_partner_3'))
+-
+  I call onchange event to change the supplier address of order.
+-
+  !python {model: purchase.order}: |
+    self.onchange_dest_address_id(cr, uid, [ref('order_purchase1')], ref('base.res_partner_address_8'))
+
+-
+  I call onchange event to change the product of order line.
+-
+  !python {model: purchase.order.line}: |
+    self.product_id_change(cr, uid, [ref('line1_purchase')], ref('purchase.list0'), ref('product.product_product_pc3'), 400, ref('product.product_uom_unit'), ref('base.res_partner_3'))
+
+
+

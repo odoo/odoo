@@ -1,0 +1,34 @@
+-
+  In order to merge RFQ, I merge two RFQ which has same supplier and check new merged order.
+-
+  !python {model: purchase.order}: |
+    new_id = self.do_merge(cr, uid, [ref('order_purchase3'), ref('order_purchase7')])
+    order3 = self.browse(cr, uid, ref('order_purchase3'))
+    order7 = self.browse(cr, uid, ref('order_purchase7'))
+    assert order3.state == 'cancel', "Merged order should be canceled"
+    assert order7.state == 'cancel', "Merged order should be canceled"
+
+    def merge(lines, product_id):
+        res = {}
+        for line in lines:
+            if product_id == line.product_id.id:
+                res[product_id] += line.qty
+        return res
+    for order in self.browse(cr, uid, new_id.keys()):
+       assert order.partner_id and order3.partner_id and order7.partner_id, "Supplier are not corresponded"
+       total_lines = 0
+       for line in order.lines:
+            qty3 = merge(order3.lines, line.product_id.id)
+            qty7 = merge(order7.lines, line.product_id.id)
+            qty = 0
+            if line.product_id.id in qty3:
+                qty += qty3[line.product_id.id]
+            elif line.product_id.id in qty7:
+                qty += qty7[line.product_id.id]
+            else:
+                raise AssertionError('product line does not corresponding')
+            assert line.qty == qty, 'merged quantity is not proper'
+            
+       
+
+

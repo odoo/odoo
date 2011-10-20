@@ -1,0 +1,8 @@
+-
+  In order to test the duplicate order and check duplicate details.
+-
+  I duplicate order.
+-
+  !python {model: purchase.order}: |
+    self.copy(cr, uid, ref('order_purchase1'))
+
