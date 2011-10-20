@@ -156,7 +156,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
-                this.notification.warn("Start date is not defined for event :", evt['id']);
+                if (this.session.debug) {
+                    this.do_warn("Start date is not defined for event :", evt['id']);
+                }
                 break;
             }
 
