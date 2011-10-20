@@ -2872,10 +2872,9 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend(
 openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.extend({
     set_value: function (value) {
         value = value || null;
-        this._super(value);
         this.invalid = false;
         var self = this;
-        this.tmp_value = value;
+        this.value = value;
         self.update_dom();
         self.on_value_changed();
         var real_set_value = function(rval) {
