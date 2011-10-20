@@ -41,7 +41,7 @@ It also has been merged with the earlier CRM & SRM segmentation tool because the
     'init_xml': [],
     'update_xml': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
     'demo_xml': ['crm_profiling_demo.xml'],
-    'test': ['test/test_crm_profiling.yml',
+    'test': ['test/process/profiling.yml',
              'test/test_crm_segmentation.yml',],
     'installable': True,
     'active': False,
