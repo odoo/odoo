@@ -1146,8 +1146,11 @@ class stock_picking(osv.osv):
 
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
     
-    def validate_picking(self, cr, uid, id, context=None):
-        for picking in self.browse(cr, uid, id, context=context):
+    def do_validate(self, cr, uid, ids, context=None):
+        """
+        forcefully to validate picking with move lines
+        """
+        for picking in self.browse(cr, uid, ids, context=context):
             partial_datas = {
                 'partner_id': picking.address_id.partner_id.id,
                 'address_id': picking.address_id.id,

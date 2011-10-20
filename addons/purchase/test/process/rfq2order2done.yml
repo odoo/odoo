@@ -79,7 +79,7 @@
 -
   !python {model: stock.picking}: |
     pick_ids = self.search(cr, uid, [('purchase_id','=',ref('order_purchase1'))])
-    self.validate_picking(cr, uid, pick_ids)
+    self.do_validate(cr, uid, pick_ids)
 -
   I check that purchase order is shipped.
 -
