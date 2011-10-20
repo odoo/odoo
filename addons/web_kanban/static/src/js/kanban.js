@@ -18,10 +18,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.qweb = new QWeb2.Engine();
         this.aggregates = {};
         this.NO_OF_COLUMNS = 3;
-        if (this.options.action_views_ids.form) {
-            this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
-            this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
-        }
+        this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
+        this.form_dialog.on_form_dialog_saved.add_last(this.on_record_saved);
     },
     start: function() {
         this._super();
@@ -203,12 +201,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.do_switch_view('form');
     },
     do_edit_record: function(record_id) {
-        if (this.form_dialog) {
-            this.form_dialog.load_id(record_id);
-            this.form_dialog.open();
-        } else {
-            this.notification.warn("Kanban", "No form view defined for this object");
-        }
+        this.form_dialog.load_id(record_id);
+        this.form_dialog.open();
     },
     on_record_saved: function(r) {
         var id = this.form_dialog.form.datarecord.id;
