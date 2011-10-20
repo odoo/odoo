@@ -1,0 +1,18 @@
+-
+  For onchange on partner , i assign an email address to Administrator user.
+-
+  !record {model: res.users, id: base.user_root}:
+    user_email: admin@openerp.com
+
+-
+  I check onchange on email, partner, history and test the data accordingly change.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'latest', 'active_id': ref('crm.crm_case_abcfuelcounits0')})
+    email = self.on_change_email(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], ref('base.user_root'))
+    assert email['value']['email_to'] == "Administrator <admin@openerp.com>", "Email is not correct"
+    partner = self.on_change_partner(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], ref('base.res_partner_desertic_hispafuentes'))
+    assert partner['value']['address_id'] == ref('base.res_partner_desertic_hispafuentes'), "Address invalid"
+    assert partner['value']['email_to'] == 'info@axelor.com', "Email id incorrect"
+    history = self.on_change_history(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], context.get('history'), context)
+    assert history, "History is blank"
