@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Project Timesheet',
+    'name': 'Bill Time on Tasks',
     'version': '1.0',
     'category': 'Project Management',
     'description': """

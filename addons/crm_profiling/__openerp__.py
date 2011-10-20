@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'CRM Profiling Management - To Perform Segmentation within Partners',
+    'name': 'Profiling Tools',
     'version': '1.3',
-    'category': 'Sales',
+    'category': 'Marketing',
     'complexity': "easy",
     'description': """
 This module allows users to perform segmentation within partners.
@@ -39,8 +39,9 @@ It also has been merged with the earlier CRM & SRM segmentation tool because the
     'website': 'http://www.openerp.com',
     'depends': ['base', 'crm'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'crm_profiling_view.xml'],
     'demo_xml': ['crm_profiling_demo.xml'],
+    'test': ['test/test_crm_profiling.yml'],
     'installable': True,
     'active': False,
     'certificate': '0033984979005',

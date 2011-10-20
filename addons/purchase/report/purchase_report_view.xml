@@ -53,7 +53,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Purchase Orders">
-            <group colspan="10" col="12">
+            <group>
                 <filter icon="terp-go-year" string="  Year  "
                 domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                 help="Order in current year"/>
@@ -63,7 +63,6 @@
                         help="Order in  current month"/>
                 <filter icon="terp-go-month"
                          string="    Month-1    "
-                         separator="1"
                          domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Order in last month"/>
                 <separator orientation="vertical"/>
@@ -80,7 +79,7 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <separator orientation="vertical"/>
@@ -94,14 +93,14 @@
                     <field name="expected_date"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
  					<separator orientation="vertical"/>
                     <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Category" name="group_category_id" icon="terp-accessories-archiver" context="{'group_by':'category_id'}"/>
-                    <filter string="Reference UOM" name="group_product_uom" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
+                    <filter string="Category" name="group_category_id" icon="terp-stock_symbol-selection" context="{'group_by':'category_id'}"/>
+                    <filter string="Reference UOM" name="group_product_uom" icon="terp-mrp" context="{'group_by':'product_uom'}"/>
                     <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'warehouse_id'}" groups="base.group_extended"/>
                     <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>
                     <separator orientation="vertical"/>
@@ -180,7 +179,8 @@
         <field name="res_model">report.stock.move</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_in': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="search_view_id"  ref="stock.view_stock_search"/>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
         <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>

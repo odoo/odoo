@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-12-23 15:36+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-10-06 13:45+0000\n"
+"Last-Translator: Milan Milosevic <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:10+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:02+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
-msgstr "PDV izgleda da nije korektan. Trebas upisati nesto kao %s"
+msgstr "PDV izgleda da nije korektan. Trebalo je uneti nešto kao %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -38,22 +38,28 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Omogući PDV brojeve za partnera. Proverite validnost tog PDV broja.\n"
+"\n"
+"    Ovaj modul prati metode opisane na http://sima-pc.com/nif.php  za\n"
+"    proveru validnosti PDV broja pripisane partnerima u evropskim zemljama.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr "Osnovni PDV - Za Proveru validnosti PDV cifre"
+msgstr "Osnovni PDV - Za Proveru validnosti PDV broja"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Greška ! Ne možete da pravite rekurzivne povezane članove."
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr "PDV je neispravan, trebalo bi da zapocne sa kodom zemlje"
+msgstr "PDV je neispravan, trebalo bi da počinje kodom zemlje"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -61,7 +67,7 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
-"Cekiraj ovu kucicu ukoliko je PDV naslovljen na partnera. On ce koristiti "
+"Označi ovu kućicu ukoliko je PDV naslovljen na partnera. Biće korišćen za "
 "zakonsku PDV izjavu."
 
 #. module: base_vat

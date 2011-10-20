@@ -37,22 +37,13 @@
                             help="Idea Vote created in current month"/>
                         <filter icon="terp-go-month"
                              string="    Month-1    "
-                             separator="1"
                              domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created last month"/>
                          <separator orientation="vertical"/>
-                         <filter icon="terp-go-today"
-                             string="    Today    "
-                             name="today"
-                             separator="1"
-                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d'))]"
-                             help="Idea Vote created by today"/>
-                        <separator orientation="vertical"/>
                         <filter icon="terp-camera_test"
-                            string="Open"
+                            string="In Progress"
                             domain="[('idea_state','=',('open'))]"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test"
+                        <filter icon="terp-check"
                             string="Accepted"
                             domain="[('idea_state','=',('close'))]"/>
                         <filter icon="terp-gtk-stop"
@@ -64,7 +55,7 @@
                         <field name="user_id"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
+                    <group expand="1" string="Group By...">
                         <filter string="Creator" icon="terp-personal" context="{'group_by':'creater_id'}"/>
                         <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>

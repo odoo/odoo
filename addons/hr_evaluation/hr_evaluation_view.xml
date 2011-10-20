@@ -8,7 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation Plan">
-                   <group col='15' colspan='4'>
+                   <group>
                        <field name="name"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -170,7 +170,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Appraisal">
-                            <field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4" widget="one2many">
+                            <field name="survey_request_ids" nolabel="1" colspan="4" widget="one2many">
                                 <form string="Interview Evaluation">
                                     <group col="4" colspan="4">
                                         <field name="survey_id"/>
@@ -201,7 +201,7 @@
                     </notebook>
                     <newline/>
                     <group col="8" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                         <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
                                 icon="gtk-cancel"/>
                         <button name="button_plan_in_progress" string="Start Evaluation" states="draft" type="object"
@@ -251,9 +251,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                   <group col='10' colspan='4'>
-                    <filter icon="terp-check" string="Current" domain="[('state','=','wait')]" help="Evaluations that are in waiting state"/>
-                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in progress state"/>
+                   <group>
+                    <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Evaluations that are in Plan In Progress state"/>
+                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in waiting appreciation state"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-week" string="7 Days" help="Evaluations to close within the next 7 days"
                         domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
@@ -345,7 +345,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                   <group col='10' colspan='4'>
+                   <group>
                         <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>

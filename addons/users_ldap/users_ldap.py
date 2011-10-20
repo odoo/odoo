@@ -43,7 +43,7 @@ class CompanyLDAP(osv.osv):
         'ldap_password': fields.char('LDAP password', size=64,
             help=("The password of the user account on the LDAP server that is "
                   "used to query the directory.")),
-        'ldap_filter': fields.char('LDAP filter', size=64, required=True),
+        'ldap_filter': fields.char('LDAP filter', size=256, required=True),
         'ldap_base': fields.char('LDAP base', size=64, required=True),
         'user': fields.many2one('res.users', 'Model User',
             help="Model used for user creation"),

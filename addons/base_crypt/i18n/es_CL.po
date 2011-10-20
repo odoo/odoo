@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-06-06 18:09+0000\n"
-"Last-Translator: doingit.cl <Unknown>\n"
+"PO-Revision-Date: 2011-10-03 17:17+0000\n"
+"Last-Translator: David Acevedo Toledo <Unknown>\n"
 "Language-Team: Spanish (Chile) <es_CL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:58+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-10-19 05:52+0000\n"
+"X-Generator: Launchpad (build 14157)\n"
 
 #. module: base_crypt
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "¡No puede tener dos usuarios con el mismo nombre!"
 
 #. module: base_crypt
 #: model:ir.model,name:base_crypt.model_res_users
@@ -31,18 +31,19 @@ msgstr "res.users"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
-"La compañía seleccionada no está autorizada como compañía para este usuario"
+"La compañía seleccionada no está dentro de las compañías autorizadas para "
+"este usuario"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
 #, python-format
 msgid "Please specify the password !"
-msgstr ""
+msgstr "¡Por favor, escriba una contraseña!"
 
 #. module: base_crypt
 #: model:ir.module.module,shortdesc:base_crypt.module_meta_information
 msgid "Base - Password Encryption"
-msgstr ""
+msgstr "Base - Encriptación de la Contraseña"
 
 #. module: base_crypt
 #: code:addons/base_crypt/crypt.py:132
@@ -70,3 +71,19 @@ msgid ""
 "unless you are using a secure protocol such as XML-RPCS.\n"
 "                    "
 msgstr ""
+"Este módulo sustituye la contraseña escrita en texto plano por una "
+"codificada,\n"
+"previniendo que alguien pueda leer la contraseña original.\n"
+"Para un usuario existente, el sustitución de la contraseña en texto plano se "
+"realiza la primera vez\n"
+"que el usuario se conecte después de instalar base_crypt.\n"
+"Después de instalar este módulo los usuarios no podrán recuperar su "
+"contraseña olvidada,\n"
+"un administrador tendrá que cambiarla por una nueva.\n"
+"\n"
+"Nota: instalar este módulo no significa que pueda ignorar las medidas "
+"básicas de seguridad,\n"
+"como la contraseña que es enviada por el cliente que sigue sin ser "
+"codificada en la red,\n"
+"a menos que utilice un protocolo seguro como XML-RPCS.\n"
+"                    "

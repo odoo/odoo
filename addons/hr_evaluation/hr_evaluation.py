@@ -39,6 +39,8 @@ class hr_evaluation_plan(osv.osv):
     }
     _defaults = {
         'active': True,
+        'month_first': 6,
+        'month_next': 12,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 hr_evaluation_plan()
@@ -158,7 +160,7 @@ class hr_evaluation(osv.osv):
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
-            ('draft','Draft'),
+            ('draft','New'),
             ('wait','Plan In Progress'),
             ('progress','Waiting Appreciation'),
             ('done','Done'),

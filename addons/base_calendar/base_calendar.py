@@ -386,7 +386,7 @@ property or property parameter."),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate a calendar attendee.'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -998,14 +998,14 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative'))
             if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative'))
             result[event] = self.compute_rule_string(datas)
         return result
 
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
@@ -1396,13 +1396,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if fields and 'duration' not in fields:
             fields.append('duration')
 
+        real_data = super(calendar_event, self).read(cr, uid,
+                    [real_id for base_calendar_id, real_id in select],
+                    fields=fields, context=context, load=load)
+        real_data = dict(zip([x['id'] for x in real_data], real_data))
 
         for base_calendar_id, real_id in select:                
-            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-           
-            if not res :
-                continue
+            res = real_data[real_id].copy()
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
