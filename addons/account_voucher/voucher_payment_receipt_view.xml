@@ -74,14 +74,14 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -92,7 +92,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
+                            <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Open Supplier Journal Entries" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -106,7 +106,7 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
+                            <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Open Customer Journal Entries" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
@@ -137,15 +137,15 @@
             <field name="arch" type="xml">
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
+                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
                         <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -279,19 +279,19 @@
             <field name="arch" type="xml">
                 <form string="Customer Payment">
                     <group col="6" colspan="4">
-                        <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="amount"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -303,7 +303,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -318,7 +318,7 @@
                                     <field name="amount" sum="Payment"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
+                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, context)">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
