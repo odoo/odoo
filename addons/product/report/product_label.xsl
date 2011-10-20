@@ -70,7 +70,7 @@
 				</td>
 			</tr><tr>
 				<td>
-				<barCode><xsl:value-of select="code"/></barCode>
+				<barCode><xsl:value-of select="ean13"/></barCode>
 				</td><td>
 					<para style="nospace"><xsl:value-of select="product"/></para><xsl:text>, </xsl:text>
 					<para style="nospace"><xsl:value-of select="variant"/></para>
