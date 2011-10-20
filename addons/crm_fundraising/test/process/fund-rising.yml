@@ -1,0 +1,34 @@
+-
+  In order to check Fund Raising for "Renovating government schools" which contain information 
+  about donation for schools, so i open Funds rising.
+-
+  !python {model: crm.fundraising}: |
+    self.case_open(cr, uid, [ref('crm_case_renovatinggovernmentschools0')])
+-
+  In order to test fundraising, i test fundraising is in open stage.
+-
+  !assert {model: crm.fundraising, id: crm_case_renovatinggovernmentschools0, string: fundraising in open state}:
+     - state == "open"
+-
+  I create the message regarding the all details of fundraising.
+-
+  !python {model: crm.fundraising}: |
+    msg = {
+       'subject': 'fundraising_email',
+       'body_text': 'fundraising details',
+       'from': 'Administrator <admin@openerp.com>',
+       'priority':'3',
+      }
+    self.message_new(cr, uid, msg, context=None)
+
+-
+  After a request via email now I close this fundraising Request.
+-
+  !python {model: crm.fundraising}: |
+    self.case_close(cr, uid, [ref('crm_case_renovatinggovernmentschools0')])
+-
+  After closed this fundraising Request, i test fundraising is in done stage.
+-
+  !assert {model: crm.fundraising, id: crm_case_renovatinggovernmentschools0, string: fundraising in done state}:
+     - state == "done"
+    
