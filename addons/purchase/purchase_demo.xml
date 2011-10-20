@@ -51,6 +51,13 @@
             <field name="partner_id" ref="base.res_partner_vickingdirect0"/>
             <field name="partner_address_id" ref="base.res_partner_address_brussels0"/>
         </record>
+        
+        <record id="order_purchase7" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
+            <field name="partner_address_id" ref="base.res_partner_address_3000"/>
+        </record>
         <!--Resource: purchase.order.line-->
 
         <record id="line1_purchase" model="purchase.order.line">
@@ -101,6 +108,26 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">100</field>
             <field name="product_qty">5</field>
+        </record>
+
+        <record id="line71_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase7"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">Onsite Senior Intervention</field>
+            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">900</field>
+            <field name="product_qty">5</field>
+        </record>
+
+        <record id="line72_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase7"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">Onsite Intervention</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">100</field>
+            <field name="product_qty">15</field>
         </record>
 
         <record id="line6_purchase" model="purchase.order.line">
