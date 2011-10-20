@@ -2,13 +2,6 @@
 <openerp>
     <data>
 
-        <wizard
-            string="Using a questionnaire"
-            model="crm_profiling.questionnaire"
-            name="open_questionnaire"
-            menu="False"
-            id="wizard_open_questionnaire"/>
-
         <record model="ir.actions.act_window" id="open_questionnaires">
           <field name="name">Questionnaires</field>
           <field name="res_model">crm_profiling.questionnaire</field>
@@ -140,7 +133,7 @@
             <notebook position="inside">
                 <page string="Profiling">
                   <button string="Use a questionnaire"
-                      name="%(wizard_open_questionnaire)d" type="action" colspan="1"
+                      name="%(action_open_questionnaire)d" type="action" colspan="1"
                       icon="gtk-justify-fill" />
                   <newline/>
                   <field name="answers_ids" colspan="4" nolabel="1"/>

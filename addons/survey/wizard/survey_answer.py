@@ -30,6 +30,7 @@ from osv import fields
 from tools import to_xml
 from tools.translate import _
 import addons
+from tools.safe_eval import safe_eval
 
 class survey_question_wiz(osv.osv_memory):
     _name = 'survey.question.wiz'
@@ -522,7 +523,7 @@ class survey_question_wiz(osv.osv_memory):
 
             sur_name_read = surv_name_wiz.read(cr, uid, context.get('sur_name_id',False))
             ans_list = []
-            for key,val in sur_name_read['store_ans'].items():
+            for key,val in safe_eval(sur_name_read.get('store_ans',"{}")).items():
                 for field in fields_list:
                     if field in list(val):
                         value[field] = val[field]
