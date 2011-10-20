@@ -207,6 +207,7 @@ QWeb2.Engine = (function() {
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
+        this.format_text_node = null;
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -486,12 +487,16 @@ QWeb2.Element = (function() {
         },
         _compile : function() {
             switch (this.node.nodeType) {
-              case 3:
-              case 4:
-                this.top_string(this.node.data);
+                case 3:
+                case 4:
+                    var text = this.node.data;
+                    if (this.engine.format_text_node) {
+                        text = this.engine.format_text_node.call(this, text);
+                    }
+                    this.top_string(text);
                 break;
-              case 1:
-                this.compile_element();
+                case 1:
+                    this.compile_element();
             }
             var r = this._top.join('');
             if (this.process_children) {
