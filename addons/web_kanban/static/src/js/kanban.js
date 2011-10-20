@@ -242,7 +242,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     */
     on_reload_record: function (record_id){
         var self = this;
-        this.dataset.read_ids([record_id], [], function (records) {
+        this.dataset.read_ids([record_id], _.keys(self.fields_view.fields), function (records) {
             if (records.length > 0) {
                 for (var i=0, ii=self.all_display_data.length; i < ii; i++) {
                     for(j=0, jj=self.all_display_data[i].records.length; j < jj;  j++) {
