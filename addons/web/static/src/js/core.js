@@ -361,6 +361,9 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
+        // TODO: session should have an optional name indicating that they'll
+        //       be saved to (and revived from) cookies
+        this.name = 'session';
     },
     start: function() {
         this.session_restore();
@@ -525,7 +528,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param name the cookie's name
      */
     get_cookie: function (name) {
-        var nameEQ = this.element_id + '|' + name + '=';
+        if (!this.name) { return null; }
+        var nameEQ = this.name + '|' + name + '=';
         var cookies = document.cookie.split(';');
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
@@ -544,9 +548,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
      */
     set_cookie: function (name, value, ttl) {
+        if (!this.name) { return; }
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            this.name + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            'path=/',
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
