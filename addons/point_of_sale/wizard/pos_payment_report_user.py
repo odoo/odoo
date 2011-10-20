@@ -46,7 +46,7 @@ class pos_payment_report_user(osv.osv_memory):
         }
 
     _columns = {
-        'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
+        'user_id': fields.many2many('res.users', 'res_user_sale_user', 'user_id', 'sale_id', 'Salesman')
     }
 
 pos_payment_report_user()
