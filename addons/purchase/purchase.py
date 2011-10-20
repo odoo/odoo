@@ -254,31 +254,32 @@ class purchase_order(osv.osv):
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
-    def onchange_dest_address_id(self, cr, uid, ids, adr_id):
-        if not adr_id:
+    def onchange_dest_address_id(self, cr, uid, ids, address_id):
+        if not address_id:
             return {}
+        address = self.pool.get('res.partner.address')
         values = {'warehouse_id': False}
-        part_id = self.pool.get('res.partner.address').browse(cr, uid, adr_id).partner_id
-        if part_id:
-            loc_id = part_id.property_stock_customer.id
-            values.update({'location_id': loc_id})
+        supplier = address.browse(cr, uid, address_id).partner_id
+        if supplier:
+            location_id = supplier.property_stock_customer.id
+            values.update({'location_id': location_id})
         return {'value':values}
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
         if not warehouse_id:
             return {}
-        res = self.pool.get('stock.warehouse').read(cr, uid, [warehouse_id], ['lot_input_id'])[0]['lot_input_id'][0]
-        return {'value':{'location_id': res, 'dest_address_id': False}}
+        warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id)
+        return {'value':{'location_id': warehouse.lot_input_id.id, 'dest_address_id': False}}
 
-    def onchange_partner_id(self, cr, uid, ids, part):
-
-        if not part:
+    def onchange_partner_id(self, cr, uid, ids, partner_id):
+        partner = self.pool.get('res.partner')
+        if not partner_id:
             return {'value':{'partner_address_id': False, 'fiscal_position': False}}
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['default'])
-        part = self.pool.get('res.partner').browse(cr, uid, part)
-        pricelist = part.property_product_pricelist_purchase.id
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
-        return {'value':{'partner_address_id': addr['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
+        supplier_address = partner.address_get(cr, uid, [partner_id], ['default'])
+        supplier = partner.browse(cr, uid, partner_id)
+        pricelist = supplier.property_product_pricelist_purchase.id
+        fiscal_position = supplier.property_account_position and supplier.property_account_position.id or False
+        return {'value':{'partner_address_id': supplier_address['default'], 'pricelist_id': pricelist, 'fiscal_position': fiscal_position}}
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': time.strftime('%Y-%m-%d')})
@@ -345,6 +346,9 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
+    #TOFIX
+    # - implement hook method on create invoice and invoice line
+    # - doc string
     def action_invoice_create(self, cr, uid, ids, *args):
         res = False
 
@@ -425,6 +429,9 @@ class purchase_order(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
+    #TOFIX:
+    # - implement hook method on create picking and move line
+    # - docstring
     def action_picking_create(self,cr, uid, ids, *args):
         picking_id = False
         for order in self.browse(cr, uid, ids):
@@ -491,6 +498,9 @@ class purchase_order(osv.osv):
         return super(purchase_order, self).copy(cr, uid, id, default, context)
 
 
+    #TOFIX: 
+    # - split into internal methods
+    # - docstring
     def do_merge(self, cr, uid, ids, context=None):
         """
         To merge similar type of purchase orders.
@@ -510,6 +520,7 @@ class purchase_order(osv.osv):
          @return: new purchase order id
 
         """
+        #TOFIX: merged order line should be unlink
         wf_service = netsvc.LocalService("workflow")
         def make_key(br, fields):
             list_key = []
@@ -665,6 +676,11 @@ class purchase_order_line(osv.osv):
         default.update({'state':'draft', 'move_ids':[],'invoiced':0,'invoice_lines':[]})
         return super(purchase_order_line, self).copy_data(cr, uid, id, default, context)
 
+    #TOFIX:
+    # - name of method should "onchange_product_id"
+    # - docstring
+    # - merge 'product_uom_change' method
+    # - split into small internal methods for clearity 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -738,6 +754,8 @@ class purchase_order_line(osv.osv):
         res['domain'] = domain
         return res
 
+    #TOFIX:
+    # - merge into 'product_id_change' method
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context={}):
@@ -858,23 +876,4 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
-
-class stock_invoice_onshipping(osv.osv_memory):
-    _inherit = "stock.invoice.onshipping"
-
-    def create_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
-        purchase_obj = self.pool.get('purchase.order')
-        picking_obj = self.pool.get('stock.picking')
-        for pick_id in res:
-            pick = picking_obj.browse(cr, uid, pick_id, context=context)
-            if pick.purchase_id:
-                purchase_obj.write(cr, uid, [pick.purchase_id.id], {
-                    'invoice_ids': [(4, res[pick_id])]}, context=context)
-        return res
-
-stock_invoice_onshipping()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
