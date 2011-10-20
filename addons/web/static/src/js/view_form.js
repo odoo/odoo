@@ -1257,7 +1257,7 @@ openerp.web.DateTimeWidget = openerp.web.Widget.extend({
         });
         this.$element.find('img.oe_datepicker_trigger').click(function() {
             if (!self.readonly) {
-                self.picker('setDate', self.value || new Date());
+                self.picker('setDate', self.value ? openerp.web.auto_str_to_date(self.value) : new Date());
                 self.$element.find('.oe_datepicker').toggle();
             }
         });
@@ -2835,10 +2835,10 @@ openerp.web.form.FieldEmailReadonly = openerp.web.form.FieldURIReadonly.extend({
 });
 openerp.web.form.FieldUrlReadonly = openerp.web.form.FieldURIReadonly.extend({
     set_value: function (value) {
-        var s = /(\w+):(\.+)/.match(value);
-        if (!(s[0] === 'http' || s[0] === 'https')) { return; }
-        this.scheme = s[0];
-        this._super(s[1]);
+        var s = /(\w+):(.+)/.exec(value);
+        if (!s || !(s[1] === 'http' || s[1] === 'https')) { return; }
+        this.scheme = s[1];
+        this._super(s[2]);
     }
 });
 openerp.web.form.FieldBooleanReadonly = openerp.web.form.FieldCharReadonly.extend({
