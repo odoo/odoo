@@ -13,7 +13,7 @@
                 <newline/>
                 <field name="chart_tax_id" widget='selection'/>
                 <field name="fiscalyear_id"/>
-                <field name="based_on"/>
+                <!--- <field name="based_on"/>--> <!-- the option based_on 'payment' is probably not fully compliant with what the users understand with that term. So, currently, it's seems better to remove it from the view to avoid further problems -->
                 <separator string="Periods"  colspan="4"/>
                 <field name="period_from"  domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" />
                 <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" />

@@ -97,7 +97,7 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_sum_dis_2(self,form,user):
         res4=[]
-        self.cr.execute ("select sum(pol.price_ded * pol.qty)" \
+        self.cr.execute ("select sum(pol.qty)" \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('paid')  " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \

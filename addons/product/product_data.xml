@@ -164,5 +164,23 @@ parameter) will see those record just disappear.
             <field name="name">Product UoM</field>
             <field name="digits" eval="3"/>
         </record>
+        <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
+            <field name="name">Product UoS</field>
+            <field name="digits" eval="3"/>
+        </record>        
+
+        <!--
+        Product
+        -->
+        <record id="product_consultant" model="product.product">
+            <field name="list_price">75.0</field>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="product.uom_hour"/>
+            <field name="uom_po_id" ref="product.uom_hour"/>
+            <field name="name">Service on Timesheet</field>
+            <field name="categ_id" ref="product.cat0"/>
+            <field name="type">service</field>
+            <field eval="False" name="purchase_ok"/>
+        </record>
     </data>
 </openerp>

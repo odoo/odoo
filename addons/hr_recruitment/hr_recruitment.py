@@ -87,6 +87,9 @@ class hr_recruitment_degree(osv.osv):
     _defaults = {
         'sequence': 1,
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
+    ]
 hr_recruitment_degree()
 
 class hr_applicant(crm.crm_case, osv.osv):
@@ -177,6 +180,7 @@ class hr_applicant(crm.crm_case, osv.osv):
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
+        'color': fields.integer('Color Index'),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -191,6 +195,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'color': 0,
     }
 
     def onchange_job(self,cr, uid, ids, job, context=None):
@@ -282,7 +287,6 @@ class hr_applicant(crm.crm_case, osv.osv):
                 id3 = data_obj.browse(cr, uid, id3, context=context).res_id
 
             context = {
-                'default_opportunity_id': opp.id,
                 'default_partner_id': opp.partner_id and opp.partner_id.id or False,
                 'default_email_from': opp.email_from,
                 'default_state': 'open',
@@ -440,7 +444,28 @@ class hr_applicant(crm.crm_case, osv.osv):
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
+    
+    def set_priority(self, cr, uid, ids, priority):
+        """Set lead priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
 
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set lead priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set lead priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'stage_id' in vals and vals['stage_id']:
+            stage = self.pool.get('hr.recruitment.stage').browse(cr, uid, vals['stage_id'], context=context)
+            text = _("Changed Stage to: %s") % stage.name
+            self.message_append(cr, uid, ids, text, body_text=text, context=context)
+        return super(hr_applicant,self).write(cr, uid, ids, vals, context=context)
 
 hr_applicant()
 

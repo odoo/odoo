@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="action_evaluation_plans_installer">
+            <field name="name">Review Evaluation Plans</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_evaluation.plan</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="todo_evaluation_plans_installer" model="ir.actions.todo">
+            <field name="action_id" ref="action_evaluation_plans_installer" />
+            <field name="category_id" ref="hr.category_hr_management_config" />
+        </record>
+    </data>
+</openerp>

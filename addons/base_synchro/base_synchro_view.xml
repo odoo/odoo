@@ -36,12 +36,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Transfered Ids Details">
-                    <group colspan="4" col="10">
+                    <group>
                       <field name="name"/>
                       <field name="obj_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="4">
+                    <group expand="0" string="Group By">
                       <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'obj_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'name'}"/>
@@ -118,12 +118,12 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Synchronized objects">
-                    <group colspan="4" col="10">
+                    <group>
                       <field name="model_id"/>
                       <field name="synchronize_date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By" colspan="4">
+                    <group expand="0" string="Group By">
                       <filter string="Object to synchronize" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Latest synchronization" icon="terp-go-month" domain="[]" context="{'group_by':'synchronize_date'}"/>

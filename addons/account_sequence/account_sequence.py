@@ -35,7 +35,7 @@ class account_move(osv.osv):
         seq_no = False
         for move in self.browse(cr, uid, ids, context=context):
             if move.journal_id.internal_sequence_id:
-                seq_no = obj_sequence.get_id(cr, uid, move.journal_id.internal_sequence_id.id, context=context)
+                seq_no = obj_sequence.next_by_id(cr, uid, move.journal_id.internal_sequence_id.id, context=context)
             if seq_no:
                 self.write(cr, uid, [move.id], {'internal_sequence_number': seq_no})
         return res

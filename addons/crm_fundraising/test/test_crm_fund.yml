@@ -1,11 +1,11 @@
 - |
-  Now I start test Fund Raising  which contain information about Donation or charity 
+  I start test Fund Raising  which contain information about Donation or charity
   given by user.
 - |
-  I start by creating new Funds entry for donation for books to poor school children 
+  I start by creating new Funds entry for donation for books to poor school children
   with cost 500000.00 and category as "Learning And Education"
-  I make payment by Cheque so I make sure that the mode on fund is selected as cheque
-- 
+  I make payment by Cheque so I make sure that the mode on fund is selected as cheque.
+-
   !record {model: crm.fundraising, id: crm_fundraising_donationforbookstopoorschoolchildren0}:
     categ_id: crm_fundraising.categ_fund2
     email_from: info@balmerinc.be
@@ -21,12 +21,25 @@
   !assert {model: crm.fundraising, id: crm_fundraising_donationforbookstopoorschoolchildren0}:
     - state == 'draft'
 - |
-  Now I open Funds by click on "Open" button
+  I open Funds by click on "Open" button.
 -
   !python {model: crm.fundraising}: |
-    self.case_open(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])  
-- |   
-  I can close Funds by click on "Done" button.
+    self.case_open(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])
+-
+  I create the message regarding the all details of fundraising.
 -
   !python {model: crm.fundraising}: |
-    self.case_close(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])  
+    msg = {
+       'subject': 'fundraising_email',
+       'body_text': 'fundraising details',
+       'from': 'Administrator <admin@openerp.com>',
+       'priority':'3',
+      }
+    context = None
+    self.message_new(cr, uid,msg,context)
+
+- |
+  After a request via email now I close this fundraising Request by clicking on "Done" button.
+-
+  !python {model: crm.fundraising}: |
+    self.case_close(cr, uid, [ref('crm_fundraising_donationforbookstopoorschoolchildren0')])
