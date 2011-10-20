@@ -780,7 +780,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
                 if (row_id !== undefined) {
-                    self.dataset.index = self.dataset.ids.indexOf(row_id);
+                    if (!self.dataset.select_id(row_id)) {
+                        throw "Could not find id in dataset"
+                    }
                     self.row_clicked(e);
                 }
             });
