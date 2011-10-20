@@ -318,12 +318,14 @@ QWeb2.Engine = (function() {
                     "   dict = dict || {};\n" +
                     "   dict['__template__'] = '" + template + "';\n" +
                     "   var r = [];\n" +
-                    "   /* START TEMPLATE */ try {\n" +
+                    "   /* START TEMPLATE */" +
+                    (this.debug ? "" : " try {\n") +
                     (e.compile()) + "\n" +
-                    "   /* END OF TEMPLATE */ } catch(error) {\n" +
+                    "   /* END OF TEMPLATE */" +
+                    (this.debug ? "" : " } catch(error) {\n" +
                     "       if (console && console.exception) console.exception(error);\n" +
-                    "       context.engine.tools.exception('Runtime Error: ' + error, context);\n" +
-                    "   }\n" +
+                    "       context.engine.tools.exception('Runtime Error: ' + error, context);\n") +
+                    (this.debug ? "" : "   }\n") +
                     "   return r.join('');";
         },
         render : function(template, dict) {
