@@ -631,7 +631,7 @@ class many2many(_column):
                 if not cr.fetchone():
                     cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
-                cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
+                cr.execute('delete from '+self._rel+' where ' + self._id1 + ' = %s', (id,))
             elif act[0] == 6:
 
                 d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
