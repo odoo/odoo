@@ -41,7 +41,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
 
         if (this.$element.find('#oe_edi_import_openerp').attr('checked') == 'checked') {
             var server_url = this.$element.find('#oe_edi_txt_server_url').val()
-            window.location = 'http://' + server_url + '/web/import_url?url=' + encodeURIComponent(url_download);
+            window.location = 'http://' + server_url + '/edi/import_url?url=' + encodeURIComponent(url_download);
         } else if (this.$element.find('#oe_edi_import_saas').attr('checked') == 'checked') {
             window.location = "https://cc.my.openerp.com/odms/create_edi?url=" + encodeURIComponent(url_download);
         } else if (this.$element.find('#oe_edi_import_download').attr('checked') == 'checked') {
@@ -58,63 +58,52 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
         this.template = "EdiEmpty";
     },
     start: function() {
-    },
-    import_edi: function(edi_url) {
-        var self = this;
-        this.params = {};
-        if(edi_url)
-            this.params['edi_url'] = decodeURIComponent(edi_url);
-        if (!this.session.db){
-            this.start();
-            this.session.on_session_valid.add_last(self.do_import);
-        } else{
-            self.do_import();
-        }
+        console.log("import valid",this.url);
+        this.session.on_session_valid.add_last(self.do_import);
+        this.session.start();
     },
     do_import: function() {
-        this.rpc('/edi/import_edi_url', this.params, this.on_imported);
+        console.log("import okokoko",this.url);
+        this.rpc('/edi/import_edi_url', {"url": this.url}, this.on_imported, this.on_imported_error);
     },
     on_imported: function(response){
-        if (response.length) {
-            $('<div>Import successful, click Ok to see the new document</div>').dialog({
-            modal: true,
-            title: 'Successful',
-            buttons: {
-                Ok: function() {
-                    $(this).dialog("close");
-                    var action = {
-                        "res_model": response[0][0],
-                        "res_id": parseInt(response[0][1], 10),
-                        "views":[[false,"form"]],
-                        "type":"ir.actions.act_window",
-                        "view_type":"form",
-                        "view_mode":"form"
-                    }
-                    action.flags = {
-                        search_view: false,
-                        sidebar : false,
-                        views_switcher : false,
-                        action_buttons : false,
-                        pager: false
-                    }
-                    var action_manager = new openerp.web.ActionManager(self);
-                    action_manager.appendTo($("#oe_app"));
-                    action_manager.start();
-                    action_manager.do_action(action);
-                   }
-                }
-            });
-        } else {
-            $(QWeb.render("DialogWarning", "Sorry, Import is not successful.")).dialog({
-                modal: true,
-                buttons: {
-                    Ok: function() {
-                        $(this).dialog("close");
-                    }
-                }
-            });
-        }
+        $('<div>Import successful, click Ok to see the new document</div>').dialog({
+        modal: true,
+        title: 'Successful',
+        buttons: {
+            Ok: function() {
+                $(this).dialog("close");
+//                var action = {
+//                    "res_model": response[0][0],
+//                    "res_id": parseInt(response[0][1], 10),
+//                    "views":[[false,"form"]],
+//                    "type":"ir.actions.act_window",
+//                    "view_type":"form",
+//                    "view_mode":"form"
+//                }
+//                action.flags = {
+//                    search_view: false,
+//                    sidebar : false,
+//                    views_switcher : false,
+//                    action_buttons : false,
+//                    pager: false
+//                }
+//                var action_manager = new openerp.web.ActionManager(self);
+//                action_manager.appendTo($("#oe_app"));
+//                action_manager.start();
+//                action_manager.do_action(action);
+               }
+            }
+        });
     },
+    on_imported_error: function(response){
+        $(openerp.web.qweb.render("DialogWarning", "Sorry, Import is not successful.")).dialog({
+            modal: true,
+            buttons: {
+                Ok: function() { $(this).dialog("close"); }
+            }
+        });
+    }
 });
 
 }

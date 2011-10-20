@@ -30,7 +30,7 @@ class EDI(openerpweb.Controller):
     @openerpweb.httprequest
     def import_url(self, req, url):
         d = self.template(req)
-        d["init"] = 'new s.edi.EdiImportUrl(null,"%s").appendTo($("body"));'%(url)
+        d["init"] = 'new s.edi.EdiImport(null,"%s").appendTo($("body"));'%(url)
         r = web.controllers.main.html_template % d
         return r
 
