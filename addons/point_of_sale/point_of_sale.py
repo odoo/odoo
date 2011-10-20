@@ -679,11 +679,22 @@ class pos_order_line(osv.osv):
 
 pos_order_line()
 
+class pos_category(osv.osv):
+    _name = 'pos.category'
+    _inherit = 'product.category'
+    _columns = {
+        'parent_id': fields.many2one('pos.category','Parent Category', select=True),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+    }
+pos_category()
+
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'income_pdt': fields.boolean('Product for Input'),
         'expense_pdt': fields.boolean('Product for Output'),
+        'img': fields.binary('Pos Image, must be 50x50'),
+        'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
     }
 product_product()
 

@@ -103,9 +103,10 @@ class idea_post_vote(osv.osv_memory):
         @param ids: List of Idea Post vote’s IDs.
         @return: Dictionary {}
         """
+        
+        ctx_key = 'idea_ids' if context.get('idea_ids') is not None else 'active_ids'
 
-        vote_ids = context and context.get('active_ids', []) or []
-        vote_id = context['active_ids'][0]
+        idea_id = context[ctx_key][0]
         vote_pool = self.pool.get('idea.vote')
         idea_pool = self.pool.get('idea.idea')
         comment_pool = self.pool.get('idea.comment')
@@ -114,19 +115,19 @@ class idea_post_vote(osv.osv_memory):
             score = str(do_vote_obj['vote'])
             comment = do_vote_obj.get('note', False)
             vote = {
-                'idea_id': vote_id,
+                'idea_id': idea_id,
                 'user_id': uid,
                 'score': score
             }
             if comment:
                 comment = {
                     'user_id':uid,
-                    'idea_id':vote_id,
+                    'idea_id':idea_id,
                     'content': comment,
                 }
                 comment = comment_pool.create(cr, uid, comment)
 
-            idea_pool._vote_save(cr, uid, vote_id, None, score, context)
+            idea_pool._vote_save(cr, uid, idea_id, None, score, context)
             #vote = vote_pool.create(cr, uid, vote)
             return {'type': 'ir.actions.act_window_close'}
 
