@@ -34,7 +34,7 @@ class res_partner(osv.osv):
             'Phonecalls'),
     }
 
-    def make_opportunity(self, cr, uid, ids, opportunity, planned_revenue=0.0, probability=0.0, partner_id=None. context=None):
+    def make_opportunity(self, cr, uid, ids, opportunity, planned_revenue=0.0, probability=0.0, partner_id=None, context=None):
         categ = self.pool.get('crm.case.categ')
         address = self.address_get(cr, uid, ids)
         categ_ids = categ.search(cr, uid, [('object_id.model','=','crm.lead')])

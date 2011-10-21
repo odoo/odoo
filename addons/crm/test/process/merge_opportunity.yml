@@ -1,17 +1,8 @@
 -
-  I have two opportunity ,so i merge this two Opportunities.
--
-  !python {model: crm.merge.opportunity}: |
-    op_ids=self.pool.get('crm.lead').browse(cr, uid, [ref('crm_case_bankwealthy2'), ref('crm_case_unifliege')])
-    self.merge(cr, uid, op_ids)
-
--
-  I test which two opportunity has been merged .
+  I have two opportunity ,so i merge this two Opportunities, I test which two opportunity has been merged .
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_bankwealthy2'))
-    merge = 'Merged opportunities' in lead.message_ids[0].subject
-    assert merge,'Fail to create Merge opportunity'
-    assert lead.type == 'opportunity', 'Merged opportunity type not change!'
-    assert lead.partner_id.id == ref("base.res_partner_accent"), 'Partner missmatch!'
-    assert lead.stage_id.id == ref("stage_lead2"), 'Stage of probability is incorrect!'
+    op_list = [ref('crm_case_bankwealthy2'),ref('crm_case_unifliege')]
+    op_ids=self.pool.get('crm.lead').browse(cr,uid,op_list)
+    lead_ids = [ref('crm_case_qrecorp0')]
+    self.merge_opportunity(cr, uid, op_ids, {'lead_ids': lead_ids})

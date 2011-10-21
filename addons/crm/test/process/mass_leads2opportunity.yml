@@ -1,16 +1,8 @@
 -
-  Using mass wizard convert two lead to opportunity ,so first i create mass record for 
-  converting in opportunity.
+  Convert two Leads to two opportunity(Mass conversion).
 -
-  !record {model: crm.lead2opportunity.partner.mass, id: crm_lead2opportunity_partner_mass0}:
-    user_ids:
-      - base.user_root
-    section_id: crm.section_sales_department
--
-  Convert mass Leads to opportunity.
--
-  !python {model: crm.lead2opportunity.partner.mass}: |
-    self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_case_employee0"), ref("crm_case_electonicgoodsdealer0")], 'active_id': ref("crm_case_qrecorp0")})
+  !python {model: crm.lead}: |
+    self.convert_opportunity(cr, uid, [ref("crm_case_employee0"), ref("crm_case_electonicgoodsdealer0")], mass_convert=True)
 -
   First lead converted on opportunity.i test it.
 -

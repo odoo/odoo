@@ -120,7 +120,7 @@ Creates a dashboard for CRM that includes:
     ],
     'test': [
             'test/process/draft2open_lead.yml',
-            'test/process/lead2opportunity_win_lost.yml',
+            'test/process/lead2opportunity2win.yml',
             'test/process/merge_opportunity.yml',
             'test/process/partner2opportunity.yml',
             'test/process/cancel_lead.yml',
