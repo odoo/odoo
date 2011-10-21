@@ -1233,6 +1233,19 @@ openerp.web.form.FieldUrl = openerp.web.form.FieldChar.extend({
 });
 
 openerp.web.form.FieldFloat = openerp.web.form.FieldChar.extend({
+    init: function (view, node) {
+        this._super(view, node);
+        if (node.attrs.digits) {
+            this.parse_digits(node.attrs.digits);
+        } else {
+            this.digits = view.fields_view.fields[node.attrs.name].digits;
+        }
+    },
+    parse_digits: function (digits_attr) {
+        // could use a Python parser instead.
+        var match = /^\s*[\(\[](\d+),\s*(\d+)/.exec(digits_attr);
+        return [parseInt(match[1], 10), parseInt(match[2], 10)];
+    },
     set_value: function(value) {
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
