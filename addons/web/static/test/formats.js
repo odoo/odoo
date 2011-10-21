@@ -27,6 +27,18 @@ $(document).ready(function () {
         var fl = 12.1234;
         var str = openerp.web.format_value(fl, {type:"float"});
         equal(str, "12.12");
+        equal(openerp.web.format_value(12.02, {type: 'float'}),
+              '12.02');
+        equal(openerp.web.format_value(0.0002, {type: 'float', digits: [1, 3]}),
+              '0.000');
+        equal(openerp.web.format_value(0.0002, {type: 'float', digits: [1, 4]}),
+              '0.0002');
+        equal(openerp.web.format_value(0.0002, {type: 'float', digits: [1, 6]}),
+              '0.000200');
+        equal(openerp.web.format_value(1, {type: 'float', digits: [1, 6]}),
+              '1.000000');
+        equal(openerp.web.format_value(1, {type: 'float'}),
+              '1.00');
     });
     test("parse_datetime", function () {
         var val = openerp.web.str_to_datetime("2009-05-04 12:34:23");
