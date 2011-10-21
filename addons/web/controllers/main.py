@@ -1373,10 +1373,9 @@ class Reports(View):
         if 'report_type' in action:
             report_data['report_type'] = action['report_type']
         if 'datas' in action:
-            if 'form' in action['datas']:
-                report_data['form'] = action['datas']['form']
             if 'ids' in action['datas']:
-                report_ids = action['datas']['ids']
+                report_ids = action['datas'].pop('ids')
+            report_data.update(action['datas'])
 
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
