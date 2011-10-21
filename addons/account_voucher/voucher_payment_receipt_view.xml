@@ -75,13 +75,13 @@
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                        <field name="amount" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
+                            on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                        <field name="date" select="1" on_change="onchange_date(date, currency_id, amount, context)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -138,14 +138,14 @@
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" domain="[('supplier','=',True)]" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
+                            on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, amount, context)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -186,12 +186,14 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <group col="2" colspan="1">
+                                <group col="2" colspan="1" attrs="{'invisible':[('currency_id','=',False)]}">
+                                    <separator string="Currency Options" colspan="2"/>
                                     <field name="exchange_acc_id"
-                                           attrs="{'invisible':[('currency_id','=',False)]}"
                                            domain="[('type','=','other')]"/>
-                                    <field name="analytic_id"
-                                           groups="analytic.group_analytic_accounting"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)"/>
+                                    <field name="paid_amount_in_company_currency"/>
+                                </group>
+                                <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
@@ -201,12 +203,13 @@
                                            domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
                                 </group>
-                                <separator string="Other Information" colspan="2"/>
-                                <group col="2" colspan="1">
-                                    <field name="number"/>
-                                    <field name="currency_id" invisible="1"/>
+                                <group col="4" colspan="2">
+                                    <separator string="Other Information" colspan="4"/>
+                                    <field name="number" colspan="4"/>
+                                    <field name="currency_id" invisible="1" colspan="4"/>
                                 </group>
                             </group>
                         </page>
@@ -284,14 +287,14 @@
                         <field name="amount"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                            on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, context)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
                             widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)"
+                            on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, context)"
                             string="Payment Method"/>
-                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date, context)"/>
+                        <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, amount, context)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -332,13 +335,15 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
+                                <group col="2" colspan="1" attrs="{'invisible':[('currency_id','=',False)]}">
+                                    <separator string="Currency Options" colspan="2"/>
+                                    <field name="exchange_acc_id"
+                                           domain="[('type','=','other')]"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)"/>
+                                    <field name="paid_amount_in_company_currency"/>
+                                </group>
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
-                                    <field name="analytic_id"
-                                           groups="analytic.group_analytic_accounting"/>
-                                    <field name="exchange_acc_id"
-                                           attrs="{'invisible':[('currency_id','=',False)]}"
-                                           domain="[('type','=','other')]"/>
                                     <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
@@ -347,10 +352,12 @@
                                            domain="[('type','=','other')]"/>
                                     <field name="comment"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="analytic_id"
+                                           groups="analytic.group_analytic_accounting"/>
                                 </group>
-                                <separator string="Other Information" colspan="2"/>
-                                <group col="4" colspan="1">
-                                    <field name="number"/>
+                                <group col="4" colspan="2">
+                                    <separator string="Other Information" colspan="4"/>
+                                    <field name="number" colspan="4"/>
                                 </group>
                             </group>
                         </page>
