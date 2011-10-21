@@ -1,0 +1,51 @@
+-
+  Communication by mail, Customer Interest with our product and to take functional
+  training with us.
+-
+  !python {model: crm.lead}: |
+    #create message manually to create lead by(Mail) self.message_new(cr, uid, msg, context=None)
+-
+  After getting the mail, I call to customer for more communication.
+-
+  !python {model: crm.lead}: |
+    #schedule phonecall to customer
+    #search lead which came by customer and create function in crm.lead-schedule_phonecall to customer
+-
+  Communication by phonecall with customer, customer want to meet us so I arrage
+  meeting for customer.
+-
+  !python {model: crm.lead}: |
+    #schedule to arrange meeting with customer.
+    #search lead which came by customer and call to action_makeMeeting.
+-
+  Customer do initial discussion with us on meeting, so I check confirm 
+  meeting and after completed, meeting will be close. 
+-
+  !python {model: crm.meeting}: |
+    #open and close the meeting.
+    #search id from lead and open and close this meeting.
+-
+  After communicated by meeting with customer, I send mail to more discussion 
+  with Customer.
+-
+  !python {model: crm.lead}: |
+    #send mail to customer.
+-
+  Also another communication send Fax to customer and maintain communication history.
+-
+  !record {model: crm.add.note, id: crm_add_note_time_schedule}:
+    #create fax history
+    #body: 'Timining Scenario to come office'
+-
+  I give Fax to customer for our detail scenario of functional training timing 
+  schedule. 
+-
+  !python {model: crm.add.note}: |
+    #add this fax history to lead
+    #self.action_add(cr, uid, [ref("crm_add_note_time_schedule")], {"active_model": "crm.lead","active_ids": [ref("crm_case_qrecorp0")]})
+-
+  After Adding Fax scenario, I test it.
+-
+  !python {model: crm.lead}: |
+    #checked Fax history added.
+    #search lead history and compare with record

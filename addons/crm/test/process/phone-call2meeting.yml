@@ -1,6 +1,0 @@
--
-  I test to arrage meeting from Phonecall, so i convert and check phonecall to meeting.
--
-  !python {model: crm.phonecall}: |
-    res = self.action_make_meeting(cr, uid, [ref('crm_case_phone06')])
-    assert res, "No create Meeting from phonecall"
