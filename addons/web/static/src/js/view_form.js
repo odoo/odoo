@@ -1406,11 +1406,7 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.$element.find('input').click(function() {
-            if ($(this).is(':checked') != self.value) {
-                self.on_ui_change();
-            }
-        });
+        this.$element.find('input').click(self.on_ui_change);
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
