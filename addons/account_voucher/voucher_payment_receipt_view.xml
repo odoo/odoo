@@ -122,6 +122,8 @@
                             <group col="2" colspan="1">
                                 <separator string="Other Information" colspan="2"/>
                                 <field name="currency_id"/>
+                                <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)" groups='base.group_extended'/>
+                                <field name="paid_amount_in_company_currency" groups='base.group_extended'/>
                                 <field name="number"/>
                             </group>
                         </page>
@@ -190,8 +192,8 @@
                                     <separator string="Currency Options" colspan="2"/>
                                     <field name="exchange_acc_id"
                                            domain="[('type','=','other')]"/>
-                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)"/>
-                                    <field name="paid_amount_in_company_currency"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)" groups='base.group_extended'/>
+                                    <field name="paid_amount_in_company_currency" groups='base.group_extended'/>
                                 </group>
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
@@ -339,8 +341,8 @@
                                     <separator string="Currency Options" colspan="2"/>
                                     <field name="exchange_acc_id"
                                            domain="[('type','=','other')]"/>
-                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)"/>
-                                    <field name="paid_amount_in_company_currency"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, context)" groups='base.group_extended'/>
+                                    <field name="paid_amount_in_company_currency" groups='base.group_extended'/>
                                 </group>
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
