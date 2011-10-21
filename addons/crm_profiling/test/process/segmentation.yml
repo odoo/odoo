@@ -1,0 +1,14 @@
+- 
+  In order to test segmentation process which create specific partner categories criteria.so i start
+  the process.
+-
+  !python {model: crm.segmentation}: |
+    self.process_start(cr, uid, [ref("crm_segmentation3")],context)
+    #Todo: Need to check after segmentation started
+-
+  I continue the segmentation process.
+-
+  !python {model: crm.segmentation}: |
+    context.update({'start': True})
+    self.process_continue(cr, uid, [ref("crm_segmentation3")], context)
+    #Todo: Need to check After segmentation process completed

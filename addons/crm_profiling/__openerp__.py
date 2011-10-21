@@ -42,7 +42,7 @@ It also has been merged with the earlier CRM & SRM segmentation tool because the
     'update_xml': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
     'demo_xml': ['crm_profiling_demo.xml'],
     'test': [#'test/process/profiling.yml', #TODO:It's not debuging because problem to write data for open.questionnaire from partner section.
-             'test/test_crm_segmentation.yml',],
+             'test/process/segmentation.yml',],
     'installable': True,
     'active': False,
     'certificate': '0033984979005',
