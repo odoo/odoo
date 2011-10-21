@@ -161,8 +161,18 @@
             <field name="product_qty">10</field>
         </record>
 
-        <record id="line12_purchase" model="purchase.order.line">
+        <record id="line15_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase6"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[HDD3] HDD Seagate 7200.8 80GB</field>
+            <field name="product_id" ref="product.product_product_hdd3"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70</field>
+            <field name="product_qty">10</field>
+        </record>
+
+        <record id="line12_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase5"/>
             <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[HDD2] HDD Seagate 7200.8 120GB</field>
             <field name="product_id" ref="product.product_product_hdd2"/>
@@ -172,7 +182,7 @@
         </record>
 
         <record id="line12_purchase" model="purchase.order.line">
-            <field name="order_id" ref="order_purchase6"/>
+            <field name="order_id" ref="order_purchase5"/>
             <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[RAM] DDR 256MB PC400</field>
             <field name="product_id" ref="product.product_product_ram"/>
@@ -182,7 +192,7 @@
         </record>
 
         <record id="line13_purchase" model="purchase.order.line">
-            <field name="order_id" ref="order_purchase6"/>
+            <field name="order_id" ref="order_purchase4"/>
             <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[RAM512] DDR 512MB PC400</field>
             <field name="product_id" ref="product.product_product_ram512"/>
