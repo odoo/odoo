@@ -268,6 +268,7 @@ class account_voucher(osv.osv):
         'tax_id': _get_tax,
         'payment_option': 'without_writeoff',
         'comment': _('Write-Off'),
+        'payment_rate': 1.0,
     }
 
     def compute_tax(self, cr, uid, ids, context=None):
