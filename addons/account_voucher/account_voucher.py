@@ -247,7 +247,7 @@ class account_voucher(osv.osv):
         'comment': fields.char('Counterpart Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_amount': fields.function(_get_writeoff_amount, string='Reconcile Amount', type='float', readonly=True),
-        'payment_rate': fields.float('Payment Rate', digits=(12,6), required=True,
+        'payment_rate': fields.float('Payment Rate', digits=(12,6), required=True, readonly=True, states={'draft': [('readonly', False)]},
             help='The rate between the journal currency and the company currency for this particular payment.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
     }
@@ -616,7 +616,7 @@ class account_voucher(osv.osv):
             tax_id = account_id.tax_ids[0].id
 
         vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
-        vals['value'].update({'tax_id':tax_id})
+        vals['value'].update({'tax_id':tax_id,'amount': amount})
         currency_id = False
         if journal.currency:
             currency_id = journal.currency.id
