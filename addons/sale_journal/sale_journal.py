@@ -50,7 +50,7 @@ class res_partner(osv.osv):
             string = "Invoicing Method",
             view_load = True,
             group_name = "Accounting Properties",
-            help = "The type of journal used for sales and picking."),
+            help = "This invoicing method will be used, for invoicing to the current partner."),
     }
 res_partner()
 
