@@ -131,12 +131,24 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
+    def __init__(self, string='unknown', required=False, **args):
+        super(boolean, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making a boolean field `required` has no effect, as NULL values are "
+                          "automatically turned into False", PendingDeprecationWarning, stacklevel=2)
+
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+
+    def __init__(self, string='unknown', required=False, **args):
+        super(integer, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making an integer field `required` has no effect, as NULL values are "
+                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
 
 class integer_big(_column):
     """Experimental 64 bit integer column type, currently unused.
@@ -154,6 +166,12 @@ class integer_big(_column):
     _symbol_f = lambda x: int(x or 0)
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
+
+    def __init__(self, string='unknown', required=False, **args):
+        super(integer_big, self).__init__(string=string, required=required, **args)
+        if required:
+            warnings.warn("Making an integer_big field `required` has no effect, as NULL values are "
+                          "automatically turned into 0", PendingDeprecationWarning, stacklevel=2)
 
 class reference(_column):
     _type = 'reference'
@@ -208,10 +226,13 @@ class float(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0.0
 
-    def __init__(self, string='unknown', digits=None, digits_compute=None, **args):
-        _column.__init__(self, string=string, **args)
+    def __init__(self, string='unknown', digits=None, digits_compute=None, required=False, **args):
+        _column.__init__(self, string=string, required=required, **args)
         self.digits = digits
         self.digits_compute = digits_compute
+        if required:
+            warnings.warn("Making a float field `required` has no effect, as NULL values are "
+                          "automatically turned into 0.0", PendingDeprecationWarning, stacklevel=2)
 
 
     def digits_change(self, cr):
