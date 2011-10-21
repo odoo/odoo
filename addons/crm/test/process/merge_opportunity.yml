@@ -4,5 +4,5 @@
   !python {model: crm.lead}: |
     op_list = [ref('crm_case_bankwealthy2'),ref('crm_case_unifliege')]
     op_ids=self.pool.get('crm.lead').browse(cr,uid,op_list)
-    lead_ids = [ref('crm_case_qrecorp0')]
+    lead_ids = [ref('crm_case_bankwealthy2')]
     self.merge_opportunity(cr, uid, op_ids, {'lead_ids': lead_ids})
