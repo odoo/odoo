@@ -334,7 +334,331 @@ class crm_lead(crm_case, osv.osv):
         """
         return self.set_priority(cr, uid, ids, '3')
 
-    def convert_opportunity(self, cr, uid, ids, context=None):
+    
+    def _merge_data(self, cr, uid, ids, oldest, context=None):
+        # prepare opportunity data into dictionary for merging
+        opportunities = self.browse(cr, uid, ids, context=context)
+        def _get_first_not_null(attr):
+            if hasattr(oldest, attr):
+                return getattr(oldest, attr)
+            for opportunity in opportunities:
+                if hasattr(opportunity, attr):
+                    return getattr(opportunity, attr)
+            return False
+
+        def _get_first_not_null_id(attr):
+            res = _get_first_not_null(attr)
+            return res and res.id or False
+    
+        def _concat_all(attr):
+            return ', '.join([getattr(opportunity, attr) for opportunity in opportunities if hasattr(opportunity, attr)])
+
+        data = {
+            'partner_id': _get_first_not_null_id('partner_id'),  # !!
+            'title': _get_first_not_null_id('title'),
+            'name' : _get_first_not_null('name'),  #not lost
+            'categ_id' : _get_first_not_null_id('categ_id'), # !!
+            'channel_id' : _get_first_not_null_id('channel_id'), # !!
+            'city' : _get_first_not_null('city'),  # !!
+            'company_id' : _get_first_not_null_id('company_id'), #!!
+            'contact_name' : _get_first_not_null('contact_name'), #not lost
+            'country_id' : _get_first_not_null_id('country_id'), #!!
+            'partner_address_id' : _get_first_not_null_id('partner_address_id'), #!!
+            'type_id' : _get_first_not_null_id('type_id'), #!!
+            'user_id' : _get_first_not_null_id('user_id'), #!!
+            'section_id' : _get_first_not_null_id('section_id'), #!!
+            'state_id' : _get_first_not_null_id('state_id'),
+            'description' : _concat_all('description'),  #not lost
+            'email' : _get_first_not_null('email'), # !!
+            'fax' : _get_first_not_null('fax'),
+            'mobile' : _get_first_not_null('mobile'),
+            'partner_name' : _get_first_not_null('partner_name'),
+            'phone' : _get_first_not_null('phone'),
+            'probability' : _get_first_not_null('probability'),
+            'planned_revenue' : _get_first_not_null('planned_revenue'),
+            'street' : _get_first_not_null('street'),
+            'street2' : _get_first_not_null('street2'),
+            'zip' : _get_first_not_null('zip'),
+            'state' : 'open',
+            'create_date' : _get_first_not_null('create_date'),
+            'date_action_last': _get_first_not_null('date_action_last'),
+            'date_action_next': _get_first_not_null('date_action_next'),
+            'email_from' : _get_first_not_null('email_from'),
+            'email_cc' : _get_first_not_null('email_cc'),
+            'partner_name' : _get_first_not_null('partner_name'),
+        }
+        return data
+
+    def _merge_find_oldest(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if context.get('convert'):
+            ids = list(set(ids) - set(context.get('lead_ids', False)) )
+
+        #search opportunities order by create date
+        opportunity_ids = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
+        oldest_id = opportunity_ids[0]
+        return self.browse(cr, uid, oldest_id, context=context)
+
+    def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
+        #TOFIX: mail template should be used instead of fix body, subject text
+        details = []
+        merge_message = _('Merged opportunities')
+        subject = [merge_message]
+        for opportunity in opportunities:
+            subject.append(opportunity.name)
+            details.append(_('%s : %s\n  Partner: %s\n  Stage: %s\n  Section: %s\n   Salesman: %s\n   Category: %s\n   Channel: %s\n   Company: %s\n   Contact name: %s\n   Email: %s\n   Phone number: %s\n   Fax: %s\n   Mobile: %s\n   State: %s\n   Description: %s\n   Probability: %s\n   Planned revennue: %s\n   Country: %s\n   City: %s\n   Street: %s\n   Street 2: %s\n   Zip 2: %s')  % (merge_message, opportunity.name, opportunity.partner_id.name or '',
+                        opportunity.stage_id.name or '',
+                        opportunity.section_id.name or '',
+                        opportunity.user_id.name or '',
+                        opportunity.categ_id.name or '',
+                        opportunity.channel_id.name or '',
+                        opportunity.company_id.name or '',
+                        opportunity.contact_name or '',
+                        opportunity.email_from or '',
+                        opportunity.phone or '',
+                        opportunity.fax or '',
+                        opportunity.mobile or '',
+                        opportunity.state_id.name or '',
+                        opportunity.description or '',
+                        opportunity.probability or '',
+                        opportunity.planned_revenue or '',
+                        opportunity.country_id.name or '',
+                        opportunity.city or '',
+                        opportunity.street or '',
+                        opportunity.street2 or '',
+                        opportunity.zip or '',
+                        ))
+        subject = subject[0] + ", ".join(subject[1:])
+        details = "\n\n".join(details)
+        return self.message_append(cr, uid, [opportunity_id], subject, body_text=details, context=context)
+        
+    def _merge_opportunity_history(self, cr, uid, opportunity_id, opportunities, context=None):
+        message = self.pool.get('mail.message')
+        for opportunity in opportunities:
+            for history in opportunity.message_ids:
+                message.write(cr, uid, history.id, {
+                        'res_id': opportunity_id, 
+                        'subject' : _("From %s : %s") % (opportunity.name, history.subject) 
+                }, context=context)
+
+        return True
+
+    def _merge_opportunity_attachments(self, cr, uid, opportunity_id, opportunities, context=None):
+        attachment = self.pool.get('ir.attachment')
+
+        # return attachments of opportunity
+        def _get_attachments(opportunity_id):
+            attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', opportunity_id)], context=context)
+            return attachment.browse(cr, uid, attachment_ids, context=context)
+
+        count = 1
+        first_attachments = _get_attachments(opportunity_id)
+        for opportunity in opportunities:
+            attachments = _get_attachments(opportunity.id)
+            for first in first_attachments:
+                for attachment in attachments:
+                    if attachment.name == first.name:
+                        values = dict(
+                            name = "%s (%s)" % (attachment.name, count,),
+                            res_id = opportunity_id,
+                        )
+                        attachment.write(values)
+                        count+=1
+                    
+        return True    
+
+    def merge_opportunity(self, cr, uid, ids, context=None):
+        """
+        To merge opportunities
+            :param ids: list of opportunities ids to merge
+        """
+        if context is None: context = {}
+        
+        #TOCHECK: where pass lead_ids in context?
+        lead_ids = context and context.get('lead_ids', []) or []
+
+        if len(ids) <= 1:
+            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
+
+        opportunities = self.browse(cr, uid, lead_ids, context=context)
+        opportunities_list = list(set(ids) - set(opportunities))
+        oldest = self._find_oldest_opportunity(cr, uid, ids, context=context)
+        if opportunities :
+            first_opportunity = opportunities[0]
+            tail_opportunities = opportunities_list
+        else:
+            first_opportunity = opportunities_list[0]
+            tail_opportunities = opportunities_list[1:]
+
+        data = self._merge_data(cr, uid, ids, oldest, context=context)
+
+        # merge data into first opportunity
+        self.write(cr, uid, [first_opportunity.id], data, context=context)
+
+        #copy message and attachements into the first opportunity
+        self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
+        self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)        
+        
+        #Notification about loss of information
+        self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
+        #delete tail opportunities
+        self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
+
+        return first_opportunity.id
+
+    def _convert_opportunity_data(self, lead):
+        crm_stage = self.pool.get('crm.case.stage')
+        if lead.section_id:
+            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+        else:
+            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
+
+        return {
+                'planned_revenue': lead.planned_revenue,
+                'probability': lead.probability,
+                'name': lead.name,
+                'partner_id': customer.id,
+                'user_id': (lead.user_id and lead.user_id.id),
+                'type': 'opportunity',
+                'stage_id': stage_ids and stage_ids[0] or False,
+                'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'partner_address_id': len(customer.address_id) and customer.address_id[0] or False
+        }
+    def _convert_opportunity_notification(self, cr, uid, lead, context=context):
+        success_message = _("Lead '%s' has been converted to an opportunity.") % lead.name
+        self.message_append(cr, uid, [lead.id], success_message, body_text=success_message, context=context)
+        self.log(cr, uid, [lead.id], success_message)
+        self._send_mail_to_salesman(cr, uid, lead, context=context)
+        return True
+
+    def convert_opportunity(self, cr, uid, ids, partner_id, mass_convert=False, merge=False, context=None):
+        partner = self.pool.get('res.partner')
+        mail_message = self.pool.get('mail.message')
+        customer = partner.browse(cr, uid, partner_id, context=context)
+        
+        for lead in self.browse(cr, uid, ids, context=context):
+            vals = self._convert_opportunity_data(lead)
+            self.write(cr, uid, [lead.id], vals, context=context)
+            self._convert_opportunity_notification(cr, uid, lead, context=context)
+            #TOCHECK: why need to change partner details in all messages of lead ?
+            if lead.partner_id:
+                msg_ids = [ x.id for x in lead.message_ids]
+                mail_message.write(cr, uid, msg_ids, {
+                        'partner_id': lead.partner_id.id
+                    }, context=context)
+         return True
+
+    def _lead_create_partner(self, cr, uid, lead, context=None):
+        partner = self.pool.get('res.partner')
+        partner_id = partner.create(cr, uid, {
+                    'name': lead.partner_name or lead.contact_name or lead.name,
+                    'user_id': lead.user_id.id,
+                    'comment': lead.description,
+                    'address': []
+        })
+        return partner_id
+
+    def _lead_assign_partner(self, cr, uid, ids, partner_id, context=None):
+        return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+
+    def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
+        address = self.pool.get('res.partner.address')
+        return address.create(cr, uid, {
+                    'partner_id': partner_id,
+                    'name': lead.contact_name,
+                    'phone': lead.phone,
+                    'mobile': lead.mobile,
+                    'email': lead.email_from,
+                    'fax': lead.fax,
+                    'title': lead.title and lead.title.id or False,
+                    'function': lead.function,
+                    'street': lead.street,
+                    'street2': lead.street2,
+                    'zip': lead.zip,
+                    'city': lead.city,
+                    'country_id': lead.country_id and lead.country_id.id or False,
+                    'state_id': lead.state_id and lead.state_id.id or False,
+                })
+
+    def convert_partner(self, cr, uid, ids, action='new', partner_id=False, context=None):
+        """
+        This function convert partner based on action.
+        if action is 'new', create new partner with contact and assign lead to new partner_id.
+        otherwise assign lead to specified partner_id
+        """
+        if context is None:
+            context = {}
+        partner_ids = []
+        for lead in self.browse(cr, uid, ids, context=context):
+            if action == 'create':
+               partner_id = self._lead_create_partner(cr, uid, lead, context=context)
+            self._lead_assign_partner(cr, uid, [lead.id], partner_id, context=context)
+            partner_ids.append(partner_id)
+        return partner_ids
+
+    def _send_mail_to_salesman(self, cr, uid, lead, context=None):
+        """
+        Send mail to salesman with updated Lead details.
+        @ lead: browse record of 'crm.lead' object.
+        """
+        #TOFIX: mail template should be used here instead of fix subject, body text. 
+        message = self.pool.get('mail.message')
+        email_to = lead.user_id and lead.user_id.user_email
+        if not email_to:
+            return False
+        
+        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
+        partner = lead.partner_id and lead.partner_id.name or lead.partner_name
+        subject = "lead %s converted into opportunity" % lead.name
+        body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
+        return message.schedule_with_attach(cr, uid, email_from, [email_to], subject, body)
+
+
+    def allocate_salesman(self, cr, uid, ids, user_ids, team_id=False, context=None):
+        index = 0
+        for lead_id in ids:
+            value = {}
+            if team_id:
+                value['section_id'] = team_id
+            if index < len(user_ids):
+                value['user_id'] = user_ids[index]
+                index += 1
+            if value:
+                self.write(cr, uid, [lead_id], value, context=context)
+        return True
+
+    def redirect_opportunity_view(self, cr, uid, opportunity_id, context=None):
+        models_data = self.pool.get('ir.model.data')
+
+        # Get Opportunity views
+        opportunity_view_form = models_data._get_id(
+            cr, uid, 'crm', 'crm_case_form_view_oppor')
+        opportunity_view_tree = models_data._get_id(
+            cr, uid, 'crm', 'crm_case_tree_view_oppor')
+        if opportunity_view_form:
+            opportunity_view_form = models_data.browse(
+                cr, uid, opportunity_view_form, context=context).res_id
+        if opportunity_view_tree:
+            opportunity_view_tree = models_data.browse(
+                cr, uid, opportunity_view_tree, context=context).res_id
+
+        return {
+                'name': _('Opportunity'),
+                'view_type': 'form',
+                'view_mode': 'tree, form',
+                'res_model': 'crm.lead',
+                'domain': [('type', '=', 'opportunity')],
+                'res_id': int(opportunity_id),
+                'view_id': False,
+                'views': [(opportunity_view_form, 'form'),
+                          (opportunity_view_tree, 'tree'),
+                          (False, 'calendar'), (False, 'graph')],
+                'type': 'ir.actions.act_window',
+        }
+
+
+    def button_convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
         """
         if context is None:

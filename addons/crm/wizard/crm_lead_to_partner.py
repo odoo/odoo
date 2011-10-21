@@ -25,7 +25,6 @@ import re
 
 class crm_lead2partner(osv.osv_memory):
     """ Converts lead to partner """
-
     _name = 'crm.lead2partner'
     _description = 'Lead to Partner'
 
@@ -35,18 +34,10 @@ class crm_lead2partner(osv.osv_memory):
                                     'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
     }
-
     def view_init(self, cr, uid, fields, context=None):
         """
         This function checks for precondition before wizard executes
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
         """
-
         lead_obj = self.pool.get('crm.lead')
         rec_ids = context and context.get('active_ids', [])
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
@@ -57,15 +48,7 @@ class crm_lead2partner(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
-
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         partner_id = False
@@ -90,8 +73,6 @@ class crm_lead2partner(osv.osv_memory):
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
                 
             partner_id = partner_ids and partner_ids[0] or False
-            
-            
 
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
@@ -105,17 +86,7 @@ class crm_lead2partner(osv.osv_memory):
     def open_create_partner(self, cr, uid, ids, context=None):
         """
         This function Opens form of create partner.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for next form.
         """
-        if context is None:
-            context = {}
-
         view_obj = self.pool.get('ir.ui.view')
         view_id = view_obj.search(cr, uid, [('model', '=', 'crm.lead2partner'), \
                                      ('name', '=', 'crm.lead2partner.view')])
@@ -129,80 +100,23 @@ class crm_lead2partner(osv.osv_memory):
             'target': 'new',
             }
 
-
     def _create_partner(self, cr, uid, ids, context=None):
         """
         This function Creates partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary {}.
         """
         if context is None:
             context = {}
-
-        lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
-        partner_ids = []
-        partner_id = False
-        rec_ids = context and context.get('active_ids', [])
-
+        lead = self.pool.get('crm.lead')
+        lead_ids = context and context.get('active_ids') or []
         for data in self.browse(cr, uid, ids, context=context):
-            for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
-                if data.action == 'create':
-                    partner_id = partner_obj.create(cr, uid, {
-                        'name': lead.partner_name or lead.contact_name or lead.name,
-                        'user_id': lead.user_id.id,
-                        'comment': lead.description,
-                        'address': []
-                    })
-                    contact_obj.create(cr, uid, {
-                        'partner_id': partner_id,
-                        'name': lead.contact_name,
-                        'phone': lead.phone,
-                        'mobile': lead.mobile,
-                        'email': lead.email_from,
-                        'fax': lead.fax,
-                        'title': lead.title and lead.title.id or False,
-                        'function': lead.function,
-                        'street': lead.street,
-                        'street2': lead.street2,
-                        'zip': lead.zip,
-                        'city': lead.city,
-                        'country_id': lead.country_id and lead.country_id.id or False,
-                        'state_id': lead.state_id and lead.state_id.id or False,
-                    })
-
-                else:
-                    if data.partner_id:
-                        partner_id = data.partner_id.id
-                self.assign_partner(cr, uid, lead.id, partner_id)
-                partner_ids.append(partner_id)
+            partner_id = data.partner_id and data.partner_id.id or False
+            partner_ids += lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
         return partner_ids
-
-
-    def assign_partner(self, cr, uid, lead_id, partner_id):
-        self.pool.get("crm.lead").write(cr, uid, [lead_id], {'partner_id' : partner_id})
-
 
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Lead to Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Partner form.
         """
-        if context is None:
-            context = {}
-
         partner_ids = self._create_partner(cr, uid, ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

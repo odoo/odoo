@@ -33,6 +33,29 @@ class res_partner(osv.osv):
         'phonecall_ids': fields.one2many('crm.phonecall', 'partner_id',\
             'Phonecalls'),
     }
+
+    def make_opportunity(self, cr, uid, ids, opportunity, planned_revenue=0.0, probability=0.0, partner_id=None. context=None):
+        categ = self.pool.get('crm.case.categ')
+        address = self.address_get(cr, uid, ids)
+        categ_ids = categ.search(cr, uid, [('object_id.model','=','crm.lead')])
+        lead = self.pool.get('crm.lead')
+        opportunity_ids = []    
+        for partner in self.browse(cr, uid, ids, context=context):
+            address = self.address_get(cr, uid, partner.id)
+            if not partner_id:
+                partner_id = partner.id
+            opportunity_id = lead.create(cr, uid, {
+                'name' : opportunity,
+                'planned_revenue' : planned_revenue,
+                'probability' : probability,
+                'partner_id' : partner_id,
+                'partner_address_id' : address['default'],
+                'categ_id' : categ_ids and categ_ids[0] or '',
+                'state' :'draft',
+                'type': 'opportunity'
+            })
+            opportunity_id.add(opportunity_id)
+        return opportunity_ids
 res_partner()
 
 

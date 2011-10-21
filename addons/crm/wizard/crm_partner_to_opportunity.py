@@ -38,13 +38,6 @@ class crm_partner2opportunity(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
         """
         partner_obj = self.pool.get('res.partner')
         data = context and context.get('active_ids', []) or []
@@ -58,56 +51,17 @@ class crm_partner2opportunity(osv.osv_memory):
         return res
 
     def make_opportunity(self, cr, uid, ids, context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-
-        data = context and context.get('active_ids', []) or []
-        make_opportunity = self.pool.get('crm.partner2opportunity')
-        data_obj = self.pool.get('ir.model.data')
-        part_obj = self.pool.get('res.partner')
-        categ_obj = self.pool.get('crm.case.categ')
-        case_obj = self.pool.get('crm.lead')
-        
-        for make_opportunity_obj in make_opportunity.browse(cr, uid, ids, context=context):
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_opportunities_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
-
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_oppor')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_oppor')
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-            address = part_obj.address_get(cr, uid, data)
-            categ_ids = categ_obj.search(cr, uid, [('object_id.model','=','crm.lead')])
-
-            opp_id = case_obj.create(cr, uid, {
-                'name' : make_opportunity_obj.name,
-                'planned_revenue' : make_opportunity_obj.planned_revenue,
-                'probability' : make_opportunity_obj.probability,
-                'partner_id' : make_opportunity_obj.partner_id.id,
-                'partner_address_id' : address['default'],
-                'categ_id' : categ_ids and categ_ids[0] or '',
-                'state' :'draft',
-                'type': 'opportunity'
+        partner_ids = context and context.get('active_ids', []) or []
+        partner = self.pool.get('res.partner')
+        lead = self.pool.get('crm.lead')
+        for data in self.browse(cr, uid, ids, context=context):
+            opportunity_ids = partner.make_opportunity(cr, uid, partner_ids,
+                data.name,
+                data.planned_revenue,
+                data.probability,
             })
-            value = {
-                'name' : _('Opportunity'),
-                'view_type' : 'form',
-                'view_mode' : 'form,tree',
-                'res_model' : 'crm.lead',
-                'res_id' : opp_id,
-                'view_id' : False,
-                'views' : [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
-                'type' : 'ir.actions.act_window',
-                'search_view_id' : res['res_id']
-            }
-            return value
+            opportunity_id = len(opportunity_ids) and opportunity_ids[0] or False
+            return lead.redirect_opportunity_view(cr, uid, opportunity_id, context=context)
 
 crm_partner2opportunity()
 
