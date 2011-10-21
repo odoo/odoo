@@ -526,7 +526,7 @@ def fix_view_modes(action):
     if 'views' not in action:
         generate_views(action)
 
-    if action.pop('view_type') != 'form':
+    if action.pop('view_type', 'form') != 'form':
         return action
 
     action['views'] = [
