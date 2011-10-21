@@ -337,9 +337,10 @@ class account_account(osv.osv):
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
-            if account.parent_id:
-                obj = self.browse(cr, uid, account.parent_id.id)
-                level = obj.level + 1
+            parent = account.parent_id
+            while parent:
+                level += 1
+                parent = parent.parent_id
             res[account.id] = level
         return res
 
