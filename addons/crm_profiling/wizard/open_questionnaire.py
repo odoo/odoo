@@ -18,72 +18,50 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import pooler
+import wizard
+from tools import UpdateableStr, UpdateableDict
 
-from osv import osv, fields
-from tools.translate import _
+_QUEST_FORM = UpdateableStr()
+_QUEST_FIELDS=UpdateableDict()
 
-class open_questionnaire(osv.osv_memory):
-    _name = 'open.questionnaire'
-    _columns = {
-        'questionnaire_id': fields.many2one('crm_profiling.questionnaire', 'Questionnaire name', required=True),
+class open_questionnaire(wizard.interface):
+
+    def _questionnaire_compute(self, cr, uid, data, context):
+        pooler.get_pool(cr.dbname).get(data['model'])._questionnaire_compute(cr, uid, data, context)
+        return {}
+
+
+    def build_form(self, cr, uid, data, context):
+        quest_form, quest_fields = pooler.get_pool(cr.dbname).get('crm_profiling.questionnaire').build_form(cr, uid, data, context)
+        _QUEST_FORM. __init__(quest_form)
+        _QUEST_FIELDS.__init__(quest_fields)
+        return{}
+
+    _questionnaire_choice_arch = '''<?xml version="1.0"?>
+    <form string="Questionnaire">
+        <field name="questionnaire_name"/>
+    </form>'''
+
+    _questionnaire_choice_fields = {
+            'questionnaire_name': {'string': 'Questionnaire name', 'type': 'many2one', 'relation': 'crm_profiling.questionnaire', 'required': True },
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(open_questionnaire, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
-        if context.has_key('form') and context.has_key('fields'):
-            field  = {}
-            form = context.get('form')
-            form += """
-                    <newline/>
-                    <separator string="" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2"/>
-                        <button special="cancel" icon="gtk-cancel" string="Cancel"/>
-                        <button name="questionnaire_compute" string="Save Data" icon="terp-stock_format-scientific" type="object"/>
-                    </group>
-                </form>
-            """
-            res['fields'] = context.get('fields')
-            for key, value in res['fields'].items():
-                 field[key] = fields.many2one('crm_profiling.answer', value['string'])
-                 self._columns.update(field)
-            res['arch'] = form
-        return res
-
-
-    def questionnaire_compute(self, cr, uid, ids, context=None):
-        """ Adds selected answers in partner form """
-        model = context.get('active_model')
-        if model == 'res.partner':
-            data = self.read(cr, uid, ids, context.get('fields').keys(), context=context)[0]
-            self.pool.get(model)._questionnaire_compute(cr, uid, data, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-
-
-    def build_form(self, cr, uid, ids, context=None):
-        """ Dynamically generates form according to selected questionnaire """
-        models_data = self.pool.get('ir.model.data')
-        questionnaire_id = self.browse(cr, uid, ids, context=context)[0].questionnaire_id.id
-        quest_form, quest_fields = self.pool.get('crm_profiling.questionnaire').build_form(cr, uid, questionnaire_id, context=context)
-        context.update({
-                        'form': quest_form,
-                        'fields': quest_fields
-        })
-
-        result = models_data._get_id(cr, uid, 'crm_profiling', 'view_open_questionnaire_form')
-        res_id = models_data.browse(cr, uid, result, context=context).res_id
-
-        return {
-            'name': _('Questionnaire'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'open.questionnaire',
-            'type': 'ir.actions.act_window',
-            'views': [(res_id,'form')],
-            'target': 'new',
-            'context': context
+    states = {
+        'init': {
+            'actions': [],
+            'result': {'type': 'form', 'arch': _questionnaire_choice_arch, 'fields': _questionnaire_choice_fields, 'state':[('end', 'Cancel','gtk-cancel'), ('open', 'Open Questionnaire','terp-camera_test')]}
+        },
+        'open': {
+            'actions': [build_form],
+            'result': {'type': 'form', 'arch':_QUEST_FORM, 'fields': _QUEST_FIELDS, 'state':[('end', 'Cancel','gtk-cancel'), ('compute', 'Save Data','terp-stock_format-scientific')]}
+        },
+        'compute': {
+            'actions': [],
+            'result': {'type': 'action', 'action': _questionnaire_compute, 'state':'end'}
         }
+    }
 
-open_questionnaire()
+open_questionnaire('open_questionnaire')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
