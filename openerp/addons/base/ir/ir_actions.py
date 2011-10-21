@@ -117,7 +117,7 @@ class report_xml(osv.osv):
         'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
         'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'auto': fields.boolean('Custom python parser', required=True),
+        'auto': fields.boolean('Custom python parser'),
 
         'header': fields.boolean('Add RML header', help="Add or not the coporate RML header"),
 
