@@ -378,8 +378,8 @@ openerp.web_dashboard.apps = {
                 module: 'account_voucher', name: 'Invoicing',
                 help: "Send invoice, track payments and reminders"
             }, {
-                module: 'project', name: 'Projects',
-                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
+                module: 'point_of_sale', name: 'Point of Sales',
+                help: "Manage shop sales, use touch-screen POS"
             }
         ], [
             {
@@ -389,19 +389,19 @@ openerp.web_dashboard.apps = {
                 module: 'stock', name: 'Warehouse',
                 help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
             }, {
-                module: 'hr', name: 'Human Resources',
-                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
+                module: 'mrp', name: 'Manufacturing',
+                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
             }, {
-                module: 'point_of_sale', name: 'Point of Sales',
-                help: "Manage shop sales, use touch-screen POS"
+                module: 'account_accountant', name: 'Accounting and Finance',
+                help: "Record financial operations, automate followup, manage multi-currency, \u2026"
             }
         ], [
             {
-                module: 'profile_tools', name: 'Extra Tools',
-                help: "Track ideas, manage lunch, create surveys, share data"
+                module: 'project', name: 'Projects',
+                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
             }, {
-                module: 'mrp', name: 'Manufacturing',
-                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
+                module: 'hr', name: 'Human Resources',
+                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
             }, {
                 module: 'marketing', name: 'Marketing',
                 help: "Manage campaigns, follow activities, automate emails, \u2026"
