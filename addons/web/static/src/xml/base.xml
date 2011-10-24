@@ -568,21 +568,7 @@
                                 Delete
                             </button>
                         </td>
-                        <th t-if="options.pager !== false" class="oe-list-pager">
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="first">First</button>
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="previous"
-                                    >&lt;</button>
-
-                            <span class="oe-pager-state">
-                            </span>
-
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="next">&gt;</button>
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="last">Last</button>
-                        </th>
+                        <t t-call="Listview.navigation.button"/>
                     </tr>
                 </table>
             </th>
@@ -612,8 +598,26 @@
             </td>
             <td t-if="options.deletable"/>
         </tr>
+        <tr>
+            <t t-call="Listview.navigation.button"/>
+        </tr>
     </tfoot>
 </table>
+<th t-name="Listview.navigation.button" t-if="options.pager !== false"
+        class="oe-list-pager" t-att-colspan="columns_count">
+    <button type="button" disabled="disabled"
+            data-pager-action="first">First</button>
+    <button type="button" disabled="disabled"
+            data-pager-action="previous">&lt;</button>
+
+    <span class="oe-pager-state">
+    </span>
+
+    <button type="button" disabled="disabled"
+            data-pager-action="next">&gt;</button>
+    <button type="button" disabled="disabled"
+            data-pager-action="last">Last</button>
+</th>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
