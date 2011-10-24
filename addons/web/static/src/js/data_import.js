@@ -1,5 +1,6 @@
 openerp.web.data_import = function(openerp) {
-var QWeb = openerp.web.qweb;
+var QWeb = openerp.web.qweb,
+    _t = openerp.web._t;
 /**
  * Safari does not deal well at all with raw JSON data being returned. As a
  * result, we're going to cheat by using a pseudo-jsonp: instead of getting
@@ -37,6 +38,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.model = parent.model;
         this.fields = [];
         this.all_fields = [];
+        this.fields_with_defaults = [];
         this.required_fields = null;
 
         var convert_fields = function (root, prefix) {
@@ -50,7 +52,9 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         };
         this.ready  = $.Deferred.queue().then(function () {
             self.required_fields = _(self.fields).chain()
-                .filter(function (field) { return field.required; })
+                .filter(function (field) {
+                    return field.required &&
+                           !_.include(self.fields_with_defaults, field.id); })
                 .pluck('name')
                 .value();
             convert_fields(self);
@@ -82,14 +86,32 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.ready.push(new openerp.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
                 self.graft_fields(fields);
-            }));
+                self.ready.push(new openerp.web.DataSet(self, self.model)
+                        .default_get(_.pluck(self.fields, 'id'), function (fields) {
+                    _.each(fields, function(val, key) {
+                        if (val) {
+                            self.fields_with_defaults.push(key);
+                        }
+                    });
+                })
+            )
+        }));
     },
     graft_fields: function (fields, parent, level) {
         parent = parent || this;
         level = level || 0;
 
         var self = this;
+        if (level === 0) {
+            parent.fields.push({
+                id: 'id',
+                name: 'id',
+                string: _t('External ID'),
+                required: false
+            });
+        }
         _(fields).each(function (field, field_name) {
+            if (field_name === 'id') { return; }
             var f = {
                 id: field_name,
                 name: field_name,
@@ -198,16 +220,49 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             });
             // Column auto-detection
             _(headers).each(function (header, index) {
-                var f =_(self.fields).detect(function (field) {
-                    // TODO: levenshtein between header and field.string
-                    return field.name === header || field.string.toLowerCase() === header;
-                });
-                if (f) {
-                    $fields.eq(index).val(f.name);
+                var field_name = self.match_column_to_field(header);
+                if (field_name) {
+                    $fields.eq(index).val(field_name);
                 }
             });
             self.on_check_field_values();
         });
+    },
+    /**
+     * Returns the name of the field (nested) matching the provided column name
+     *
+     * @param {String} name column name to look for
+     * @param {Array} [fields] fields to look into for the provided name
+     * @returns {String|undefined}
+     */
+    match_column_to_field: function (name, fields) {
+        fields = fields || this.fields;
+        var f;
+        f = _(fields).detect(function (field) {
+            // TODO: levenshtein between header and field.string
+            return field.name === name
+                || field.string.toLowerCase() === name.toLowerCase();
+        });
+        if (f) { return f.name; }
+
+        // if ``name`` is a path (o2m), we need to recurse through its .fields
+        var index = name.indexOf('/');
+        if (index === -1) { return undefined; }
+        // Get the first path section, try to find the matching field
+        var column_name = name.substring(0, index);
+        f = _(fields).detect(function (field) {
+            // field.name for o2m is $foo/id, so we want to match on id
+            return field.id === column_name
+                || field.string.toLowerCase() === column_name.toLowerCase()
+        });
+        if (!f) { return undefined; }
+
+        // if we found a matching field for the first path section, recurse in
+        // its own .fields to try and get the rest of the path matched
+        var rest = this.match_column_to_field(
+                name.substring(index+1), f.fields);
+        if (!rest) { return undefined; }
+        return f.id + '/' + rest;
     },
     /**
      * Looks through all the field selections, and tries to find if two

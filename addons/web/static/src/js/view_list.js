@@ -1,4 +1,5 @@
 openerp.web.list = function (openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
@@ -10,7 +11,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': "New",
+        'addable': _t("New"),
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,
@@ -252,7 +253,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                                 '<option value="100">100</option>' +
                                 '<option value="200">200</option>' +
                                 '<option value="500">500</option>' +
-                                '<option value="NaN">Unlimited</option>')
+                                '<option value="NaN">' + _t("Unlimited") + '</option>')
                         .change(function () {
                             var val = parseInt($select.val(), 10);
                             self._limit = (isNaN(val) ? null : val);
@@ -463,7 +464,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
-        if (!ids.length) {
+        if (!(ids.length && confirm(_t("Are you sure to remove those records ?")))) {
             return;
         }
         var self = this;
@@ -767,27 +768,54 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                        $row = $target.closest('tr'),
                   record_id = self.row_id($row);
 
-                $(self).trigger('action', [field, record_id, function () {
+                // note: $.data converts data to number if it's composed only
+                // of digits, nice when storing actual numbers, not nice when
+                // storing strings composed only of digits. Force the action
+                // name to be a string
+                $(self).trigger('action', [field.toString(), record_id, function () {
                     return self.reload_record(self.records.get(record_id));
                 }]);
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                self.dataset.index = self.records.indexOf(
-                    self.records.get(
-                        self.row_id(e.currentTarget)));
-                self.row_clicked(e);
+                var row_id = self.row_id(e.currentTarget);
+                if (row_id !== undefined) {
+                    if (!self.dataset.select_id(row_id)) {
+                        throw "Could not find id in dataset"
+                    }
+                    self.row_clicked(e);
+                }
             });
     },
     row_clicked: function () {
         $(this).trigger(
             'row_link',
-            [this.records.at(this.dataset.index).get('id'),
+            [this.dataset.ids[this.dataset.index],
              this.dataset]);
     },
     render_cell: function (record, column) {
-        if (column.type === 'many2one') {
-            var value = record.get(column.id);
+        var value;
+        if(column.type === 'reference') {
+            value = record.get(column.id);
+            var ref_match;
+            // Ensure that value is in a reference "shape", otherwise we're
+            // going to loop on performing name_get after we've resolved (and
+            // set) a human-readable version. m2o does not have this issue
+            // because the non-human-readable is just a number, where the
+            // human-readable version is a pair
+            if (value && (ref_match = /([\w\.]+),(\d+)/.exec(value))) {
+                // reference values are in the shape "$model,$id" (as a
+                // string), we need to split and name_get this pair in order
+                // to get a correctly displayable value in the field
+                var model = ref_match[1],
+                    id = parseInt(ref_match[2], 10);
+                new openerp.web.DataSet(this.view, model).name_get([id], function(names) {
+                    if (!names.length) { return; }
+                    record.set(column.id, names[0][1]);
+                });
+            }
+        } else if (column.type === 'many2one') {
+            value = record.get(column.id);
             // m2o values are usually name_get formatted, [Number, String]
             // pairs, but in some cases only the id is provided. In these
             // cases, we need to perform a name_get call to fetch the actual
@@ -1095,7 +1123,7 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
                 $group_column.html(openerp.web.format_cell(
-                    row_data, group_column, "Undefined"
+                    row_data, group_column, _t("Undefined")
                 ));
                 if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
