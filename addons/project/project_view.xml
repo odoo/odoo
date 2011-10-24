@@ -321,6 +321,10 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="type_id" >
+                    <field name="color"/>
+                    <field name="priority"/>
+                    <field name="state"/>
+                    <field name="type_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>

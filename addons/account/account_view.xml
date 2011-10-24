@@ -1714,35 +1714,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Term">
-                    <field name="name" select="1"/>
-                    <field name="sequence"/>
-                    <group colspan="2" col="4">
-                        <separator string="Amount Computation" colspan="4"/>
-                        <field name="value" colspan="4"/>
-                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+                    <group>
+	                    <group colspan="2" col="4">
+	                        <field name="name" select="1"/>
+	                        <separator string="Amount Computation" colspan="4"/>
+	                        <field name="value" colspan="4"/>
+	                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+	                    </group>
+	                    <group colspan="2" col="4">
+	                        <field name="sequence"/>
+	                        <separator string="Due Date Computation" colspan="4"/>
+	                        <field name="days" colspan="4"/>
+	                        <field name="days2" colspan="4"/>
+	                    </group>
                     </group>
-                    <group colspan="2" col="4">
-                        <separator string="Due date Computation" colspan="4"/>
-                        <field name="days" colspan="4"/>
-                        <field name="days2" colspan="4"/>
-                    </group>
-                    <label string=""/>
                     <newline/>
-                    <label string="Example: at 14 net days 2 percents, remaining amount at 30 days end of month." colspan="4"/>
+                    <separator string="Example" colspan="4"/>
+                    <label string="At 14 net days 2 percent, remaining amount at 30 days end of month." colspan="4"/>
                     <group colspan="2" col="2">
                         <label string="Line 1:" colspan="2"/>
-                        <label string="  valuation: percent"/>
-                        <label string="  number of days: 14"/>
-                        <label string="  value amount: 0.02"/>
-                        <label string="  day of the month: 0"/>
+                        <label string="  Valuation: Percent"/>
+                        <label string="  Number of Days: 14"/>
+                        <label string="  Value amount: 0.02"/>
+                        <label string="  Day of the Month: 0"/>
                     </group>
                     <newline/>
                     <group colspan="2" col="2">
                         <label string="Line 2:" colspan="2"/>
-                        <label string="  valuation: balance"/>
-                        <label string="  number of days: 30"/>
-                        <label string="  value amount: n.a"/>
-                        <label string="  day of the month= -1"/>
+                        <label string="  Valuation: Balance"/>
+                        <label string="  Number of Days: 30"/>
+                        <label string="  Value amount: n.a"/>
+                        <label string="  Day of the Month= -1"/>
                     </group>
                 </form>
             </field>
@@ -1769,7 +1771,7 @@
                     <separator colspan="4" string="Information"/>
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
-                    <separator colspan="4" string="Description on invoices"/>
+                    <separator colspan="4" string="Description On Invoices"/>
                     <field colspan="4" name="note" nolabel="1"/>
                     <separator colspan="4" string="Computation"/>
                     <field colspan="4" name="line_ids" nolabel="1"/>
