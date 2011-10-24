@@ -1409,7 +1409,8 @@
     <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
 </t>
 <t t-name="ImportDataView">
-<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data">
+<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
+        class="oe-import">
     <input type="hidden" name="session_id" t-att-value="session.session_id"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
@@ -1440,9 +1441,9 @@
                 <t t-esc="cell"/></td>
         </tr>
     </table>
-    <fieldset>
-        <legend style="cursor:pointer;">Import Options</legend>
-        <table style="display:none">
+    <fieldset class="oe-closed">
+        <legend>Import Options</legend>
+        <table>
             <tr>
                 <td colspan="4">
                     <label for="file_has_headers">Does your file have titles?</label>

@@ -81,7 +81,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         this.$element.find('#csvfile').change(this.on_autodetect_data);
         this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.delegate('fieldset legend', 'click', function() {
-            $(this).next().toggle();
+            $(this).parent().toggleClass('oe-closed');
         });
         this.ready.push(new openerp.web.DataSet(this, this.model).call(
             'fields_get', [], function (fields) {
