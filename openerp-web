@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     os.environ["TZ"] = "UTC"
 
-    if sys.version_info >= (2, 7):
+    if sys.version_info >= (2, 7) and os.path.exists(options.log_config):
         with open(options.log_config) as file:
             dct = json.load(file)
         logging.config.dictConfig(dct)
