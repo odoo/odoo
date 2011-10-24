@@ -63,11 +63,11 @@ Dashboard for purchase management that includes:
              'test/process/rfq2order2done.yml',
              'test/process/generate_invoice_from_reception.yml',
              #'test/process/run_scheduler.yml', #TOFIX: Sequence of new generated order
-             #'test/process/merge_order.yml', #TOFIX: Sequence of new merged order
+             'test/process/merge_order.yml', #TOFIX: Sequence of new merged order
              #'test/process/cancel_order.yml', #TOFIX: shipping exception after cancel shipment and also invoice exception after cancel invoice
              'test/ui/print_report.yml',
              'test/ui/onchange_events.yml',
-             #'test/ui/duplicate_order.yml', #TOFIX: Sequence of duplicated order
+             'test/ui/duplicate_order.yml', #TOFIX: Sequence of duplicated order
              'test/ui/delete_order.yml',
             ],
     'demo': [
