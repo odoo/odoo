@@ -859,9 +859,9 @@
 </t>
 <t t-name="FieldMany2One.context_menu">
     <ul>
-        <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
+        <li t-att-id="widget.cm_id + '_open'" style="color:grey" class="oe_m2o_menu_item_mandatory">Open...</li>
         <li t-att-id="widget.cm_id + '_create'">Create...</li>
-        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_mandatory">Search...</li>
+        <li t-att-id="widget.cm_id + '_search'">Search...</li>
         <t t-set="i" t-value="0"/>
         <t t-foreach="widget.related_entries" t-as="entry">
             <li t-att-id="widget.cm_id + '_related_' + i" style="color:grey" class="oe_m2o_menu_item_mandatory">
