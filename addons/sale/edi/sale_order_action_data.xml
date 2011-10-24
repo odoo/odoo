@@ -12,11 +12,10 @@ try:
         tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'email_template_edi_sale')
 
         edi_token = self.pool.get('edi.document').export_edi(cr, uid, [object], context = context)[0]
-        context.update(edi_web_url_view='%s/edi/view?idebug=1&db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
+        context.update(edi_web_url_view='%s/edi/view?debug=1&db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
         self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
 except:
-    pass
-            ]]></field>
+    pass]]></field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="sale.model_sale_order"/>

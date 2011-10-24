@@ -15,8 +15,7 @@ try:
         context.update(edi_web_url_view='%s/web/view_edi?db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
         self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
 except:
-    pass
-            ]]></field>
+    pass]]></field>
             <field eval="6" name="sequence"/>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
