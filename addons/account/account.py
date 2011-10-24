@@ -1422,7 +1422,7 @@ class account_move(osv.osv):
         for move in self.browse(cr, uid, ids, context):
             # Unlink old analytic lines on move_lines
             if not move.line_id:
-                if 'voucher_cancel' not in context and 'invoice_cancel' not in context:
+                if 'lines_cancel' not in context:
                     raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
