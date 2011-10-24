@@ -1628,6 +1628,11 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                         } else {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
                         }
+                        if (!self.readonly) {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").removeClass("oe-m2o-disabled-cm");
+                        } else {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_noreadonly").addClass("oe-m2o-disabled-cm");
+                        }
                         return true;
                     }, menuStyle: {width: "200px"}
                 });
@@ -1647,6 +1652,8 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             }
         });
         this.$drop_down.click(function() {
+            if (self.readonly)
+                return;
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
             } else {
@@ -1853,6 +1860,10 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     },
     focus: function () {
         this.$input.focus();
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$input.attr('disabled', this.readonly);
     }
 });
 
