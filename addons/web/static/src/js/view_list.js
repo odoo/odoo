@@ -202,6 +202,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
 
         this.$element.html(QWeb.render("ListView", this));
         // Head hook
+        this.$element.find('.all-record-selector').click(function(){
+            self.$element.find(':checkbox').prop('checked', 
+                self.$element.find('.all-record-selector').prop('checked')  || false);
+        });
+
         this.$element.find('#all_checked').click(this.do_all_checked);
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
