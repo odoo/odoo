@@ -2,21 +2,21 @@
  * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.web.views = function(db) {
+openerp.web.views = function(session) {
 
-var _t = db.web._t;
+var _t = session.web._t;
 
 /**
  * Registry for all the client actions key: tag value: widget
  */
-db.web.client_actions = new db.web.Registry();
+session.web.client_actions = new session.web.Registry();
 
 /**
  * Registry for all the main views
  */
-db.web.views = new db.web.Registry();
+session.web.views = new session.web.Registry();
 
-db.web.ActionManager = db.web.Widget.extend({
+session.web.ActionManager = session.web.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
         this._super(parent);
@@ -93,20 +93,20 @@ db.web.ActionManager = db.web.Widget.extend({
     ir_actions_act_window: function (action, on_close) {
         if (action.target === 'new') {
             if (this.dialog == null) {
-                this.dialog = new db.web.Dialog(this, { title: action.name, width: '80%' });
+                this.dialog = new session.web.Dialog(this, { title: action.name, width: '80%' });
                 if(on_close)
                     this.dialog.on_close.add(on_close);
                 this.dialog.start();
             } else {
                 this.dialog_viewmanager.stop();
             }
-            this.dialog_viewmanager = new db.web.ViewManagerAction(this, action);
+            this.dialog_viewmanager = new session.web.ViewManagerAction(this, action);
             this.dialog_viewmanager.appendTo(this.dialog.$element);
             this.dialog.open();
         } else  {
             this.dialog_stop();
             this.content_stop();
-            this.inner_viewmanager = new db.web.ViewManagerAction(this, action);
+            this.inner_viewmanager = new session.web.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.url_update(action);
         }
@@ -124,7 +124,7 @@ db.web.ActionManager = db.web.Widget.extend({
         if (this.dialog && action.context) {
             var model = action.context.active_model;
             if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
-                db.webclient.do_reload();
+                session.webclient.do_reload();
             }
         }
         this.dialog_stop();
@@ -140,7 +140,7 @@ db.web.ActionManager = db.web.Widget.extend({
     },
     ir_actions_client: function (action) {
         this.content_stop();
-        var ClientWidget = db.web.client_actions.get_object(action.tag);
+        var ClientWidget = session.web.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
@@ -164,12 +164,12 @@ db.web.ActionManager = db.web.Widget.extend({
     }
 });
 
-db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
+session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.ViewManager# */{
     identifier_prefix: "viewmanager",
     template: "ViewManager",
     /**
-     * @constructs db.web.ViewManager
-     * @extends db.web.Widget
+     * @constructs session.web.ViewManager
+     * @extends session.web.Widget
      *
      * @param parent
      * @param dataset
@@ -185,10 +185,10 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
-        this.registry = db.web.views;
+        this.registry = session.web.views;
     },
     render: function() {
-        return db.web.qweb.render(this.template, {
+        return session.web.qweb.render(this.template, {
             self: this,
             prefix: this.element_id,
             views: this.views_src});
@@ -284,7 +284,7 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new db.web.SearchView(
+        this.searchview = new session.web.SearchView(
                 this, this.dataset,
                 view_id, search_defaults, this.flags.search_view === false);
 
@@ -334,13 +334,13 @@ db.web.ViewManager =  db.web.Widget.extend(/** @lends db.web.ViewManager# */{
     on_action_executed: function () {}
 });
 
-db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
+session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
     template:"ViewManagerAction",
     /**
-     * @constructs db.web.ViewManagerAction
-     * @extends db.web.ViewManager
+     * @constructs session.web.ViewManagerAction
+     * @extends session.web.ViewManager
      *
-     * @param {db.web.ActionManager} parent parent object/widget
+     * @param {session.web.ActionManager} parent parent object/widget
      * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
      */
     init: function(parent, action) {
@@ -350,7 +350,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         this._super(parent, null, action.views);
         this.session = parent.session;
         this.action = action;
-        var dataset = new db.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        var dataset = new session.web.DataSetSearch(this, action.res_model, action.context, action.domain);
         if (action.res_id) {
             dataset.ids.push(action.res_id);
             dataset.index = 0;
@@ -400,12 +400,12 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
 
         this.$element.find('.oe_get_xml_view').click(function () {
             // TODO: add search view?
-            $('<pre>').text(db.web.json_node_to_xml(
+            $('<pre>').text(session.web.json_node_to_xml(
                 self.views[self.active_view].controller.fields_view.arch, true))
                     .dialog({ width: '95%'});
         });
         if (this.action.help && !this.flags.low_profile) {
-            var Users = new db.web.DataSet(self, 'res.users'),
+            var Users = new session.web.DataSet(self, 'res.users'),
                 header = this.$element.find('.oe-view-manager-header');
             header.delegate('blockquote button', 'click', function() {
                 var $this = $(this);
@@ -451,7 +451,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
         var grandparent = this.widget_parent && this.widget_parent.widget_parent;
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        if (!(grandparent instanceof db.web.WebClient) ||
+        if (!(grandparent instanceof session.web.WebClient) ||
             !(view.view_type === this.views_src[0].view_type
                 && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
@@ -488,7 +488,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
      * Intercept do_action resolution from children views
      */
     on_action_executed: function () {
-        return new db.web.DataSet(this, 'res.log')
+        return new session.web.DataSet(this, 'res.log')
                 .call('get', [], this.do_display_log);
     },
     /**
@@ -515,7 +515,7 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
     }
 });
 
-db.web.Sidebar = db.web.Widget.extend({
+session.web.Sidebar = session.web.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -524,7 +524,7 @@ db.web.Sidebar = db.web.Widget.extend({
     start: function() {
         this._super(this);
         var self = this;
-        this.$element.html(db.web.qweb.render('Sidebar'));
+        this.$element.html(session.web.qweb.render('Sidebar'));
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.do_toggle();
         });
@@ -601,7 +601,7 @@ db.web.Sidebar = db.web.Widget.extend({
 
         if(!$section) {
             section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
-            var $section = $(db.web.qweb.render("Sidebar.section", {
+            var $section = $(session.web.qweb.render("Sidebar.section", {
                 section_id: section_id,
                 name: name,
                 classname: 'oe_sidebar_' + code,
@@ -633,7 +633,7 @@ db.web.Sidebar = db.web.Widget.extend({
                 this.items[items[i].element_id] = items[i];
             }
 
-            var $items = $(db.web.qweb.render("Sidebar.section.items", {items: items}));
+            var $items = $(session.web.qweb.render("Sidebar.section.items", {items: items}));
 
             $items.find('a.oe_sidebar_action_a').click(function() {
                 var item = self.items[$(this).attr('id')];
@@ -687,7 +687,7 @@ db.web.Sidebar = db.web.Widget.extend({
     }
 });
 
-db.web.TranslateDialog = db.web.Dialog.extend({
+session.web.TranslateDialog = session.web.Dialog.extend({
     dialog_title: _t("Translations"),
     init: function(view) {
         // TODO fme: should add the language to fields_view_get because between the fields view get
@@ -707,14 +707,14 @@ db.web.TranslateDialog = db.web.Dialog.extend({
         this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name });
         this.languages = null;
         this.languages_loaded = $.Deferred();
-        (new db.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
+        (new session.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
             [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }, this.on_languages_loaded);
     },
     start: function() {
         var self = this;
         this._super();
         $.when(this.languages_loaded).then(function() {
-            self.$element.html(db.web.qweb.render('TranslateDialog', { widget: self }));
+            self.$element.html(session.web.qweb.render('TranslateDialog', { widget: self }));
             self.$element.tabs();
             if (!(self.view.translatable_fields && self.view.translatable_fields.length)) {
                 self.hide_tabs('fields');
@@ -819,7 +819,7 @@ db.web.TranslateDialog = db.web.Dialog.extend({
     }
 });
 
-db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
+session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     template: "EmptyComponent",
     set_default_options: function(options) {
         this.options = options || {};
@@ -833,7 +833,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     open_translate_dialog: function(field) {
         if (!this.translate_dialog) {
-            this.translate_dialog = new db.web.TranslateDialog(this).start();
+            this.translate_dialog = new session.web.TranslateDialog(this).start();
         }
         this.translate_dialog.open(field);
     },
@@ -845,7 +845,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
      * @param {String} [action_data.special=null] special action handlers (currently: only ``'cancel'``)
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
-     * @param {db.web.DataSet} dataset a dataset object used to communicate with the server
+     * @param {session.web.DataSet} dataset a dataset object used to communicate with the server
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
@@ -857,12 +857,12 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                 return self.widget_parent.on_action_executed.apply(null, arguments);
             }
         };
-        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
+        var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
         
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                var ncontext = new db.web.CompoundContext(context);
+                var ncontext = new session.web.CompoundContext(context);
                 if (record_id) {
                     ncontext.add({
                         active_id: record_id,
@@ -899,7 +899,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
-     * of db.web.View must use the provided view instead of any other one.
+     * of session.web.View must use the provided view instead of any other one.
      *
      * @param embedded_view A view.
      */
@@ -917,7 +917,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
-            $('<xmp>' + db.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            $('<xmp>' + session.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         } else {
             this.do_warn("Manage Views", "Could not find current view declaration");
         }
@@ -929,11 +929,11 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
         console.log('Todo');
     },
     on_sidebar_import: function() {
-        var import_view = new db.web.DataImport(this, this.dataset);
+        var import_view = new session.web.DataImport(this, this.dataset);
         import_view.start();
     },
     on_sidebar_export: function() {
-        var export_view = new db.web.DataExport(this, this.dataset);
+        var export_view = new session.web.DataExport(this, this.dataset);
         export_view.start();
     },
     on_sidebar_translate: function() {
@@ -943,7 +943,7 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     }
 });
 
-db.web.json_node_to_xml = function(node, single_quote, indent) {
+session.web.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
 
@@ -972,7 +972,7 @@ db.web.json_node_to_xml = function(node, single_quote, indent) {
         r += '>\n';
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {
-            childs.push(db.web.json_node_to_xml(node.children[i], single_quote, indent + 1));
+            childs.push(session.web.json_node_to_xml(node.children[i], single_quote, indent + 1));
         }
         r += childs.join('\n');
         r += '\n' + sindent + '</' + node.tag + '>';
