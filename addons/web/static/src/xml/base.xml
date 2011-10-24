@@ -1461,7 +1461,8 @@
     </tr>
     <tr>
         <td t-foreach="records[0]" t-as="column">
-            <input class="sel_fields" placeholder="--- Don't Import ---"/>
+            <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
+                    <img src="/web/static/src/img/down-arrow.png" /></span>
         </td>
     </tr>
     <tr t-foreach="records" t-as="record" class="oe_import_grid-row">

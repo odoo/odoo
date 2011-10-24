@@ -205,6 +205,10 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             return;
         }
 
+        this.$element.delegate('.oe-m2o-drop-down-button', 'click', function () {
+            $(this).prev('input').focus();
+        });
+
         var self = this;
         this.ready.then(function () {
             var $fields = self.$element.find('.sel_fields').bind('blur', function () {
