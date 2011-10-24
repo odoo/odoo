@@ -65,7 +65,7 @@ setup(
         'Environment :: Web Environment',
         'Topic :: Office/Business :: Financial',
         ],
-    scripts=['openerp-web.py'],
+    scripts=['openerp-web'],
     data_files=(find_data_files('addons')
               + opts.pop('data_files', [])
     ),
