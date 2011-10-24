@@ -10,8 +10,6 @@ if (!console.debug) {
 }
 
 openerp.web.core = function(openerp) {
-openerp.web.qweb = new QWeb2.Engine();
-openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 /**
  * John Resig Class with factory improvement
  */
@@ -287,14 +285,12 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      */
     get_any: function (keys) {
         for (var i=0; i<keys.length; ++i) {
-            try {
-                return this.get_object(keys[i]);
-            } catch (e) {
-                if (e instanceof openerp.web.KeyNotFound) {
-                    continue;
-                }
-                throw e;
+            var key = keys[i];
+            if (key === undefined || !(key in this.map)) {
+                continue;
             }
+
+            return this.get_object(key);
         }
         throw new openerp.web.KeyNotFound(keys.join(','));
     },
@@ -365,6 +361,9 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
+        // TODO: session should have an optional name indicating that they'll
+        //       be saved to (and revived from) cookies
+        this.name = 'session';
     },
     start: function() {
         this.session_restore();
@@ -386,6 +385,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
+        if (this.debug)
+            params.debug = 1;
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
@@ -480,14 +481,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     session_login: function(db, login, password, success_callback) {
         var self = this;
         var params = { db: db, login: login, password: password };
-        this.rpc("/web/session/login", params, function(result) {
+        return this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
-            if (self.uid)
-                self.on_session_valid();
             return true;
         }).then(success_callback);
     },
@@ -529,7 +528,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param name the cookie's name
      */
     get_cookie: function (name) {
-        var nameEQ = this.element_id + '|' + name + '=';
+        if (!this.name) { return null; }
+        var nameEQ = this.name + '|' + name + '=';
         var cookies = document.cookie.split(';');
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
@@ -548,9 +548,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
      */
     set_cookie: function (name, value, ttl) {
+        if (!this.name) { return; }
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            this.name + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            'path=/',
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
@@ -570,15 +572,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 var file_list = ["/web/static/lib/datejs/globalization/" +
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
-                if(self.debug) {
-                    self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
-                    self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
-                        self.do_load_js(file_list.concat(files));
-                    });
-                } else {
-                    self.do_load_css(["/web/webclient/css?mods="+modules]);
-                    self.do_load_js(file_list.concat(["/web/webclient/js?mods="+modules]));
-                }
+
+                self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
+                    self.do_load_js(file_list.concat(files));
+                });
                 openerp._modules_loaded = true;
             });
         });
@@ -587,7 +585,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file + (self.debug ? '?debug=' + (new Date().getTime()) : ''),
+                'href': file,
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -599,14 +597,15 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file + (this.debug ? '?debug=' + (new Date().getTime()) : '');
+            tag.src = file;
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
                 self.do_load_js(files);
             };
-            document.head.appendChild(tag);
+            var head = document.head || document.getElementsByTagName('head')[0];
+            head.appendChild(tag);
         } else {
             this.on_modules_loaded();
         }
@@ -1045,6 +1044,21 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
 });
 
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
+openerp.web.qweb = new QWeb2.Engine();
+openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+openerp.web.qweb.format_text_node = function(s) {
+    // Note that 'this' is the Qweb Node of the text
+    var translation = this.node.parentNode.attributes['t-translation'];
+    if (translation && translation.value === 'off') {
+        return s;
+    }
+    var ts = _.trim(s);
+    if (ts.length === 0) {
+        return s;
+    }
+    var tr = openerp.web._t(ts);
+    return tr === ts ? s : tr;
+}
 
 };
 

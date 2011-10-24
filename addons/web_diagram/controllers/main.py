@@ -1,4 +1,4 @@
-import web.common as openerpweb
+import web.common.http as openerpweb
 from web.controllers.main import View
 
 class DiagramView(View):

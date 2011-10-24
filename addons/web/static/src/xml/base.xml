@@ -2,9 +2,8 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="Interface">
-    <div id="oe_loading" class="loading"></div>
-    <div id="oe_notification" class="oe_notification">
+<t t-name="Notification">
+    <div class="oe_notification">
         <div id="oe_notification_default">
             <a class="ui-notify-cross ui-notify-close" href="#">x</a>
             <h1>#{title}</h1>
@@ -17,6 +16,9 @@
             <p>#{text}</p>
         </div>
     </div>
+</t>
+<t t-name="Interface">
+    <div id="oe_loading" class="loading"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2" valign="top">
@@ -242,7 +244,23 @@
         </table>
     </form>
 </t>
+
+<t t-name="Login_dblist">
+    <select name="db">
+        <t t-foreach="db_list" t-as="db">
+            <t t-if="selected_db === db">
+                <option t-att-value="db" selected="true">
+                    <t t-esc="db"/></option>
+            </t>
+            <t t-if="selected_db !== db">
+                <option t-att-value="db"><t t-esc="db"/></option>
+            </t>
+        </t>
+    </select>
+</t>
+
 <t t-name="Login">
+    <div>
     <form class="oe_forms">
         <fieldset>
             <legend style="">
@@ -253,33 +271,18 @@
                     <tr>
                         <td><label for="db">Database:</label></td>
                         <td>
-                            <t t-if="!db_list">
-                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
-                            </t>
-                            <t t-if="db_list">
-                                <select name="db">
-                                    <t t-foreach="db_list" t-as="db">
-                                        <t t-if="selected_db === db">
-                                            <option t-att-value="db" selected="true">
-                                                <t t-esc="db"/></option>
-                                        </t>
-                                        <t t-if="selected_db !== db">
-                                            <option t-att-value="db"><t t-esc="db"/></option>
-                                        </t>
-                                    </t>
-                                </select>
-                            </t>
+                            <input type="text" name="db" t-att-value="widget.selected_db || ''" autofocus="true"/>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="login">User:</label></td>
                         <td><input type="text" name="login"
-                            t-att-value="selected_login || ''" autofocus="true"/></td>
+                            t-att-value="widget.selected_login || ''" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
                         <td><input type="password" name="password"
-                                t-att-value="selected_password || ''"/></td>
+                                t-att-value="widget.selected_password || ''"/></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -329,6 +332,7 @@
             </tbody>
         </table>
 
+    </div>
     </div>
 </t>
 <t t-name="Header">
@@ -445,11 +449,11 @@
         </blockquote>
     	<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
     	   href="javascript: void(0)"> </a>
-        <h2 class="oe_view_title">
-            <t t-esc="self.action.name"/>
-            <button t-if="self.session.debug" class="oe_get_xml_view">
-                View#<span></span>
-            </button>
+        <button t-if="self.session.debug" class="oe_get_xml_view">
+            View#<span></span>
+        </button>
+        <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
+            <t t-if="self.flags.display_title !== false" t-esc="self.action.name"/>
         </h2>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">
@@ -465,17 +469,20 @@
     </div>
 </t>
 <t t-name="Sidebar.section">
-    <h2><t t-esc="name"/></h2>
     <div t-att-id="section_id" t-att-class="classname">
-        <ul t-if="items">
+        <h2><t t-esc="name"/></h2>
+    </div>
+</t>
+
+
+<t t-name="Sidebar.section.items">
             <li t-foreach="items" t-as="item" t-att-class="item.classname">
                 <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
                     <t t-esc="item.label"/>
                 </a>
             </li>
-        </ul>
-    </div>
 </t>
+
 <t t-name="TranslateDialog">
     <ul class="oe_translate_tabs">
         <li><a t-attf-href="##{widget.element_id}_fields">Fields</a></li>
@@ -537,7 +544,7 @@
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
         t-att-data-id="record.id"
-        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
+        t-att-style="color_for(record) + (!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px;' : '')"
         t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
@@ -561,21 +568,7 @@
                                 Delete
                             </button>
                         </td>
-                        <th t-if="options.pager !== false" class="oe-list-pager">
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="first">First</button>
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="previous"
-                                    >&lt;</button>
-
-                            <span class="oe-pager-state">
-                            </span>
-
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="next">&gt;</button>
-                            <button type="button" disabled="disabled"
-                                    data-pager-action="last">Last</button>
-                        </th>
+                        <t t-call="Listview.navigation.button"/>
                     </tr>
                 </table>
             </th>
@@ -605,8 +598,26 @@
             </td>
             <td t-if="options.deletable"/>
         </tr>
+        <tr>
+            <t t-call="Listview.navigation.button"/>
+        </tr>
     </tfoot>
 </table>
+<th t-name="Listview.navigation.button" t-if="options.pager !== false"
+        class="oe-list-pager" t-att-colspan="columns_count">
+    <button type="button" disabled="disabled"
+            data-pager-action="first">First</button>
+    <button type="button" disabled="disabled"
+            data-pager-action="previous">&lt;</button>
+
+    <span class="oe-pager-state">
+    </span>
+
+    <button type="button" disabled="disabled"
+            data-pager-action="next">&gt;</button>
+    <button type="button" disabled="disabled"
+            data-pager-action="last">Last</button>
+</th>
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
@@ -614,7 +625,8 @@
     </t>
 </t>
 <tr t-name="ListView.row" t-att-class="row_parity"
-        t-att-data-id="record.get('id')">
+        t-att-data-id="record.get('id')"
+        t-att-style="view.color_for(record)">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
@@ -628,7 +640,7 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-raw="render_cell(record.toForm().data, column)"/>
+            <t t-raw="render_cell(record, column)"/>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete' width="1">
@@ -639,19 +651,15 @@
     <t t-raw="frame.render()"/>
 </t>
 <t t-name="FormView">
-    <div class="oe_form_header" t-att-id="view.element_id + '_header'">
+    <div class="oe_form_header">
         <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
-            <!--<button type="button" class="oe_form_button_save">
+            <button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
                 <span class="oe_form_on_create">Create</span>
-            </button>-->
-            <button type="button" class="oe_form_button_save_edit">
-                <span class="oe_form_on_update">Save &amp; Edit</span>
-                <span class="oe_form_on_create">Create &amp; Edit</span>
             </button>
-            <!--<button type="button" class="oe_form_button_cancel">Cancel</button>-->
             <button type="button" class="oe_form_button_new">New</button>
             <button type="button" class="oe_form_button_duplicate oe_form_on_update">Duplicate</button>
+            <button type="button" class="oe_form_button_toggle">Readonly/Editable</button>
         </div>
         <div class="oe_form_pager" t-if="view.options.pager !== false">
             <button type="button" data-pager-action="first">First</button>
@@ -711,8 +719,7 @@
                 t-att-width="td.width"
                 t-att-nowrap="td.nowrap or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
-                t-att-id="td.element_id"
-                t-attf-class="oe_form_frame_cell #{td.classname}"
+                t-attf-class="oe_form_frame_cell #{td.classname} #{td.element_class}"
             >
                 <t t-raw="td.render()"/>
             </td>
@@ -722,8 +729,8 @@
 </t>
 <t t-name="WidgetNotebook">
     <ul>
-        <li t-foreach="widget.pages" t-as="page" t-att-id="page.element_tab_id">
-            <a t-att-href="'#' + page.element_id">
+        <li t-foreach="widget.pages" t-as="page">
+            <a href="#">
                 <t t-esc="page.string"/>
             </a>
         </li>
@@ -733,9 +740,15 @@
     </t>
 </t>
 <t t-name="WidgetNotebookPage">
-    <div t-att-id="widget.element_id">
+    <div>
         <t t-call="WidgetFrame"/>
     </div>
+</t>
+<t t-name="WidgetNotebook.readonly">
+    <t t-foreach="widget.pages" t-as="page">
+        <h3><t t-esc="page.string"/></h3>
+        <t t-raw="page.render()"/>
+    </t>
 </t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
@@ -743,7 +756,7 @@
     </div>
 </t>
 <t t-name="WidgetLabel">
-    <label t-att-for="widget.element_id + '_field'"
+    <label t-att-for="widget.element_id"
            t-att-class="'oe_label' + (widget.help ? '_help' : '')"
            t-att-title="widget.help">
         <t t-esc="widget.string"/>
@@ -757,11 +770,21 @@
 <t t-name="FieldChar">
     <input type="text" size="1"
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+</t>
+<t t-name="FieldChar.readonly">
+    <div
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
+        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%">
+    </div>
+</t>
+<t t-name="FieldURI.readonly">
+    <a href="#">#</a>
 </t>
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -794,8 +817,8 @@
 <t t-name="FieldText">
     <textarea rows="6"
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     ></textarea>
     <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
@@ -814,8 +837,8 @@
 <t t-name="FieldSelection">
     <select
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"
         style="width: 100%">
             <t t-foreach="widget.values" t-as="option">
                 <option><t t-esc="option[1]"/></option>
@@ -823,9 +846,10 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div t-att-id="widget.element_id" class="oe-m2o">
-        <input t-att-id="widget.element_id + '_input'" type="text" size="1" style="width: 100%;"/>
-        <span class="oe-m2o-drop-down-button" t-att-id="widget.element_id + '_drop_down'">
+    <div class="oe-m2o">
+        <input type="text" size="1" style="width: 100%;"
+                t-att-id="widget.element_id"/>
+        <span class="oe-m2o-drop-down-button">
             <img src="/web/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/web/static/src/img/icons/gtk-index.png"/></span>
@@ -848,8 +872,6 @@
     </ul>
 </t>
 <t t-name="FieldOne2Many">
-    <div t-att-id="widget.element_id">
-    </div>
 </t>
 <t t-name="FieldMany2Many">
     <div t-att-id="widget.list_id"></div>
@@ -857,10 +879,10 @@
 <t t-name="FieldReference">
     <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
     <tr>
-        <td t-att-id="widget.selection.element_id" class="oe_form_frame_cell oe_form_selection">
+        <td t-attf-class="oe_form_frame_cell oe_form_selection #{widget.selection.element_class}">
             <t t-raw="widget.selection.render()"/>
         </td>
-        <td t-att-id="widget.m2o.element_id" class="oe_form_frame_cell oe_form_many2one" nowrap="true">
+        <td t-attf-class="oe_form_frame_cell oe_form_many2one #{widget.m2o.element_class}" nowrap="true" style="display: none">
             <t t-raw="widget.m2o.render()"/>
         </td>
     </tr>
@@ -869,8 +891,8 @@
 <t t-name="FieldBoolean">
     <input type="checkbox"
         t-att-name="widget.name"
-        t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type"/>
+        t-att-id="widget.element_id"
+        t-attf-class="field_#{widget.type}"/>
 </t>
 <t t-name="FieldProgressBar">
     <div t-opentag="true" class="oe-progressbar">
@@ -885,7 +907,7 @@
                 t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
-                t-att-class="'field_' + widget.type"
+                t-attf-class="field_#{widget.type}"
                 t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
                 t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"
             />
@@ -933,7 +955,7 @@
             <input type="text" size="1"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
-                t-att-class="'field_' + widget.type" style="width: 100%"
+                t-attf-class="field_#{widget.type}" style="width: 100%"
             />
         </td>
         <td class="oe-binary" nowrap="true">
@@ -978,7 +1000,6 @@
 </t>
 <t t-name="WidgetButton">
     <button type="button"
-        t-att-id="widget.element_id + '_button'"
         t-att-title="widget.help"
         style="width: 100%" class="button">
         <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
@@ -1075,14 +1096,14 @@
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
                 t-att-autofocus="attrs.default_focus === '1' || undefined">
-            <option/>
+            <option t-if="prepend_empty"/>
             <t t-foreach="attrs.selection" t-as="option">
                 <t t-set="selected" t-value="defaults[attrs.name] === option[0]"/>
                 <option t-if="selected"
-                        t-att-value="option[0]" selected="selected">
+                        t-att-value="option_index" selected="selected">
                     <t t-esc="option[1]"/>
                 </option>
-                <option t-if="!selected" t-att-value="option[0]">
+                <option t-if="!selected" t-att-value="option_index">
                     <t t-esc="option[1]"/>
                 </option>
             </t>
@@ -1383,6 +1404,79 @@
         </table>
     </form>
 </t>
+
+<t t-name="ImportView">
+    <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
+</t>
+<t t-name="ImportDataView">
+<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+    <h2 class="separator horizontal">1. Import a .CSV file</h2>
+    <p>Select a .CSV file to import. If you need a sample of file to import,
+       you should use the export tool with the "Import Compatible" option.
+    </p>
+    <p>
+        <label for="csvfile">CSV File:</label>
+        <input type="file" id="csvfile" size="50" name="csvfile"/>
+    </p>
+    <h2 class="separator horizontal">2. Check your file format</h2>
+    <div id="result"></div>
+    <fieldset>
+        <legend style="cursor:pointer;">Import Options</legend>
+        <table style="display:none">
+            <tr>
+                <td colspan="4">
+                    <label for="file_has_headers">Does your file have titles?</label>
+                    <input type="checkbox" checked="checked"
+                           id="file_has_headers"/>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="csv_separator">Separator:</label></td>
+                <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
+                <td><label for="csv_delimiter">Delimiter:</label></td>
+                <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
+            </tr>
+            <tr>
+                <td><label for="csv_encoding">Encoding:</label></td>
+                <td>
+                    <select name="csvcode" id="csv_encoding">
+                        <option value="utf-8">UTF-8</option>
+                        <option value="latin1">Latin 1</option>
+                    </select>
+                </td>
+                <td><label for="csv_skip" title="For use if CSV files have titles on multiple lines, skips more than a single line during import">
+                    Lines to skip<sup>?</sup>:</label></td>
+                <td><input type="number" id="csv_skip" value="0" min="0"/></td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+</t>
+<table t-name="ImportView.result"
+        class="oe_import_grid" width="100%" style="margin: 5px 0;">
+    <tr t-if="headers" class="oe_import_grid-header">
+        <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
+            <t t-esc="header"/></td>
+    </tr>
+    <tr>
+        <td t-foreach="records[0]" t-as="column">
+            <input class="sel_fields"/>
+        </td>
+    </tr>
+    <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
+        <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
+            <t t-esc="cell"/></td>
+    </tr>
+</table>
+<t t-name="ImportView.error">
+    <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
+    <t t-if="error.preview">
+        <p>Here is a preview of the file we could not import:</p>
+        <pre><t t-esc="error.preview"/></pre>
+    </t>
+</t>
+
 <t t-name="About-Page">
     <div>
         <h1>OpenERP Web</h1>

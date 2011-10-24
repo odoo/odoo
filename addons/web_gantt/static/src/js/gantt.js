@@ -71,7 +71,7 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
-        ganttChartControl.showContextMenu(true);
+        ganttChartControl.showContextMenu(false);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
 
@@ -302,37 +302,6 @@ init: function(parent, dataset, view_id) {
         });
 
         jQuery("div #_1, div #_1 + div").hide();
-        
-        //Custom events
-        var context_menu = ganttChartControl.contextMenu,
-        	buttons = [],
-        	values = {};
-        
-        _.each(context_menu.arrTabs, function(tab, tab_index) {
-        	buttons.push(_.filter(tab.arrItems,function(b) {
-        		return b.control.type == "button";
-        	})[0]);
-        });
-        _.each(buttons, function(b, index) {
-        	$(b.control).click(function() {
-        		if(!context_menu.arrTabs[index].object.parentTask)
-        			return false;
-        		var task_info = context_menu.arrTabs[index].object.TaskInfo;
-        			project_id = task_info.Id;;
-        		switch(index) {
-        			case 0:
-        				values[self.text] = task_info.Name;
-        				return self.dataset.write(project_id, values);
-        			case 1:
-        				return self.dataset.unlink([project_id]);
-        			case 3:
-        				if(self.date_delay) {
-        					values[self.date_delay] = task_info.Duration;
-        					return self.dataset.write(project_id, values);
-        				}
-        		}
-        	})
-        });
     },
 
     set_width: function() {
@@ -417,7 +386,7 @@ init: function(parent, dataset, view_id) {
     },
 
     open_popup : function(task) {
-    	var self = this;
+        var self = this;
         var event_id = task.getId();
         if(event_id.toString().search("_") != -1)
             return;
@@ -436,7 +405,7 @@ init: function(parent, dataset, view_id) {
                     var form_view = action_manager.inner_viewmanager.views.form.controller;
 
                     form_view.do_save(function() {
-                    	self.get_events();
+                        self.get_events();
                     });
                     $(this).dialog('destroy');
                 }
@@ -534,15 +503,7 @@ init: function(parent, dataset, view_id) {
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.grp = groupbys;
-        return this.rpc('/web/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.reload_gantt();
-        });
+        self.reload_gantt();
     }
 
 });

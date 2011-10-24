@@ -233,6 +233,7 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
 });
 
 openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet# */{
+    identifier_prefix: "dataset",
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
@@ -242,15 +243,11 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(source_controller, model, context) {
-        // we don't want the dataset to be a child of anything!
-        this._super(null);
-        this.session = source_controller ? source_controller.session : undefined;
+    init: function(parent, model, context) {
+        this._super(parent);
         this.model = model;
         this.context = context || {};
         this.index = null;
-    },
-    start: function() {
     },
     previous: function () {
         this.index -= 1;
@@ -265,6 +262,15 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
             this.index = 0;
         }
         return this;
+    },
+    select_id: function(id) {
+        var idx = _.indexOf(this.ids, id);
+        if (idx === -1) {
+            return false;
+        } else {
+            this.index = idx;
+            return true;
+        }
     },
     /**
      * Read records.
@@ -487,7 +493,7 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
             offset = options.offset || 0,
             limit = options.limit || false,
             fields = fields || false;
-        var end_pos = limit && limit !== -1 ? offset + limit : undefined;
+        var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
     set_ids: function (ids) {
@@ -549,13 +555,11 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
             sort: this.sort(),
             offset: offset,
             limit: options.limit || false
-        }, function (result) {
+        }).pipe(function (result) {
             self.ids = result.ids;
             self.offset = offset;
-            if (callback) {
-                callback(result.records);
-            }
-        });
+            return result.records;
+        }).then(callback);
     },
     get_domain: function (other_domain) {
         if (other_domain) {
@@ -603,20 +607,27 @@ openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.D
 });
 openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
-    virtual_id_regex: /one2many_v_id_.*/,
     debug_mode: true,
     init: function() {
         this._super.apply(this, arguments);
         this.reset_ids([]);
+        this.last_default_get = {};
+    },
+    default_get: function(fields, callback) {
+        return this._super(fields).then(this.on_default_get).then(callback);
+    },
+    on_default_get: function(res) {
+        this.last_default_get = res;
     },
     create: function(data, callback, error_callback) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
-        this.to_create.push(cached);
+        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
+            defaults: this.last_default_get};
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
         this.on_change();
-        var to_return =  $.Deferred().then(callback);
-        to_return.resolve({result: cached.id});
-        return to_return.promise();
+        var prom = $.Deferred().then(callback);
+        prom.resolve({result: cached.id});
+        return prom.promise();
     },
     write: function (id, data, options, callback) {
         var self = this;
@@ -637,6 +648,10 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        if (!cached) {
+            cached = {id: id, values: {}};
+            this.cache.push(cached);
+        }
         $.extend(cached.values, record.values);
         if (dirty)
             this.on_change();
@@ -676,7 +691,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
             var cached = _.detect(self.cache, function(x) {return x.id === id;});
             var created = _.detect(self.to_create, function(x) {return x.id === id;});
             if (created) {
-                _.each(fields, function(x) {if (cached.values[x] === undefined) cached.values[x] = false;});
+                _.each(fields, function(x) {if (cached.values[x] === undefined)
+                    cached.values[x] = created.defaults[x] || false;});
             } else {
                 if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
                     to_get.push(id);
@@ -692,7 +708,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                     throw "Record not correctly loaded";
                 }
             }
-            setTimeout(function () {completion.resolve(records);}, 0);
+            completion.resolve(records);
         };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
@@ -715,23 +731,53 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         return completion.promise();
     }
 });
-openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
+openerp.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
+
+openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.create_function = null;
+        this.write_function = null;
+        this.read_function = null;
+    },
+    read_ids: function () {
+        if (this.read_function) {
+            return this.read_function.apply(null, arguments);
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
+    default_get: function(fields, callback) {
+        return this._super(fields, callback).then(this.on_default_get);
+    },
+    on_default_get: function(result) {},
     create: function(data, callback, error_callback) {
         this.on_create(data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
-        return to_return.promise();
+        if (this.create_function) {
+            return this.create_function(data, callback, error_callback);
+        } else {
+            console.warn("trying to create a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+            return to_return.promise();
+        }
     },
     on_create: function(data) {},
     write: function (id, data, options, callback) {
         this.on_write(id, data);
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({"result": true});}, 0);
-        return to_return.promise();
+        if (this.write_function) {
+            return this.write_function(id, data, options, callback);
+        } else {
+            console.warn("trying to write a record using default proxy dataset behavior");
+            var to_return = $.Deferred().then(callback);
+            setTimeout(function () {to_return.resolve({"result": true});}, 0);
+            return to_return.promise();
+        }
     },
     on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
+        console.warn("trying to unlink a record using default proxy dataset behavior");
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();

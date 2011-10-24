@@ -1,5 +1,6 @@
 {
     "name" : "Base Kanban",
+    "category" : "Hidden",
     "version" : "2.0",
     "depends" : ["web"],
     "js": [

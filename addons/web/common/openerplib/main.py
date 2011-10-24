@@ -38,6 +38,7 @@ Code repository: https://code.launchpad.net/~niv-openerp/openerp-client-lib/trun
 import xmlrpclib
 import logging 
 import socket
+import sys
 
 try:
     import cPickle as pickle
@@ -54,6 +55,33 @@ _logger = logging.getLogger(__name__)
 def _getChildLogger(logger, subname):
     return logging.getLogger(logger.name + "." + subname)
 
+#----------------------------------------------------------
+# Exceptions
+# TODO openerplib should raise those instead of xmlrpc faults:
+#----------------------------------------------------------
+
+class LibException(Exception):
+    """ Base of all client lib exceptions """
+    def __init__(self,code=None,message=None):
+        self.code = code
+        self.message = message
+
+class ApplicationError(LibException):
+    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
+
+class Warning(LibException):
+    """ maps to code: 2, server side: openerp.exceptions.Warning"""
+
+class AccessError(LibException):
+    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
+
+class AccessDenied(LibException):
+    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
+
+#----------------------------------------------------------
+# Connectors
+#----------------------------------------------------------
+
 class Connector(object):
     """
     The base abstract class representing a connection to an OpenERP Server.
@@ -69,6 +97,14 @@ class Connector(object):
         """
         self.hostname = hostname
         self.port = port
+
+    def get_service(self, service_name):
+        """
+        Returns a Service instance to allow easy manipulation of one of the services offered by the remote server.
+
+        :param service_name: The name of the service.
+        """
+        return Service(self, service_name)
 
 class XmlRPCConnector(Connector):
     """
@@ -90,6 +126,7 @@ class XmlRPCConnector(Connector):
     def send(self, service_name, method, *args):
         url = '%s/%s' % (self.url, service_name)
         service = xmlrpclib.ServerProxy(url)
+        # TODO should try except and wrap exception into LibException
         return getattr(service, method)(*args)
 
 class NetRPC_Exception(Exception):
@@ -190,6 +227,47 @@ class NetRPCConnector(Connector):
         socket.disconnect()
         return result
 
+class LocalConnector(Connector):
+    """
+    A type of connector that uses the XMLRPC protocol.
+    """
+    PROTOCOL = 'local'
+    
+    __logger = _getChildLogger(_logger, 'connector.local')
+
+    def __init__(self):
+        pass
+
+    def send(self, service_name, method, *args):
+        import openerp
+        import traceback
+        try:
+            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except Exception,e:
+        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
+            if isinstance(e, openerp.osv.osv.except_osv):
+                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + e.value, '')
+            elif isinstance(e, openerp.exceptions.Warning):
+                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessError):
+                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
+            elif isinstance(e, openerp.exceptions.AccessDenied):
+                fault = xmlrpclib.Fault('AccessDenied', str(e))
+            elif isinstance(e, openerp.exceptions.DeferredException):
+                info = e.traceback
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+            else:
+                info = sys.exc_info()
+                formatted_info = "".join(traceback.format_exception(*info))
+                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
+            raise fault
+        return result
+
+#----------------------------------------------------------
+# Public api
+#----------------------------------------------------------
+
 class Service(object):
     """
     A class to execute RPC calls on a specific service of the remote server.
@@ -272,7 +350,7 @@ class Connection(object):
             return
         
         if not self.database or not self.login or self.password is None:
-            raise AuthenticationError("Creditentials not provided")
+            raise AuthenticationError("Credentials not provided")
         
         self.user_id = self.get_service("common").login(self.database, self.login, self.password)
         if not self.user_id:
@@ -295,7 +373,7 @@ class Connection(object):
 
         :param service_name: The name of the service.
         """
-        return Service(self.connector, service_name)
+        return self.connector.get_service(service_name)
 
 class AuthenticationError(Exception):
     """
@@ -342,7 +420,7 @@ class Model(object):
                     index = {}
                     for r in result:
                         index[r['id']] = r
-                    result = [index[x] for x in args[0]]
+                    result = [index[x] for x in args[0] if x in index]
             self.__logger.debug('result: %r', result)
             return result
         return proxy
@@ -363,7 +441,7 @@ class Model(object):
         records = self.read(record_ids, fields or [], context or {})
         return records
 
-def get_connector(hostname, protocol="xmlrpc", port="auto"):
+def get_connector(hostname=None, protocol="xmlrpc", port="auto"):
     """
     A shortcut method to easily create a connector to a remote server using XMLRPC or NetRPC.
 
@@ -377,10 +455,12 @@ def get_connector(hostname, protocol="xmlrpc", port="auto"):
         return XmlRPCConnector(hostname, port)
     elif protocol == "netrpc":
         return NetRPCConnector(hostname, port)
+    elif protocol == "local":
+        return LocalConnector()
     else:
-        raise ValueError("You must choose xmlrpc or netrpc")
+        raise ValueError("You must choose xmlrpc or netrpc or local")
 
-def get_connection(hostname, protocol="xmlrpc", port='auto', database=None,
+def get_connection(hostname=None, protocol="xmlrpc", port='auto', database=None,
                  login=None, password=None, user_id=None):
     """
     A shortcut method to easily create a connection to a remote OpenERP server.
