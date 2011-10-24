@@ -1,51 +1,54 @@
 -
-  Communication by mail, Customer Interest with our product and to take functional
-  training with us.
+  Customer would like to purchase our product. so He send request by email to our mail server.
+-
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
+-
+  !python {model: mail.thread}: |
+    import addons
+    request_file = open(addons.get_module_resource('crm','test', 'customer_request.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.lead', request_message)
+
+-
+  After getting the mail, I check details of new lead of that customer.
 -
   !python {model: crm.lead}: |
-    #create message manually to create lead by(Mail) self.message_new(cr, uid, msg, context=None)
+    lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert lead_ids and len(lead_ids), "Lead is not created after getting request"
+    lead = self.browse(cr, uid, lead_ids[0], context=context)
+    assert not lead.partner_id, "Customer should be a new"
+    assert lead.name == "Fournir votre devis avec le meilleur prix.", "Subject does not match"
 -
-  After getting the mail, I call to customer for more communication.
+  I reply him request with welcome message.
 -
-  !python {model: crm.lead}: |
-    #schedule phonecall to customer
-    #search lead which came by customer and create function in crm.lead-schedule_phonecall to customer
+  !python {model: mail.compose.message}: |
+    lead_ids = self.pool.get('crm.lead').search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    context.update({'active_model': 'crm.lead','active_id': lead_ids[0]})
+    id = self.create(cr, uid, {'body_text': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci"}, context=context)
+    try:
+        self.send_mail(cr, uid, [id], context=context)
+    except:
+        pass
+
+
 -
-  Communication by phonecall with customer, customer want to meet us so I arrage
-  meeting for customer.
--
-  !python {model: crm.lead}: |
-    #schedule to arrange meeting with customer.
-    #search lead which came by customer and call to action_makeMeeting.
--
-  Customer do initial discussion with us on meeting, so I check confirm 
-  meeting and after completed, meeting will be close. 
--
-  !python {model: crm.meeting}: |
-    #open and close the meeting.
-    #search id from lead and open and close this meeting.
--
-  After communicated by meeting with customer, I send mail to more discussion 
-  with Customer.
+  Now, I convert him into customer and put into regular customer list.
 -
   !python {model: crm.lead}: |
-    #send mail to customer.
+    lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    self.convert_partner(cr, uid, lead_ids, context=context)
+
 -
-  Also another communication send Fax to customer and maintain communication history.
--
-  !record {model: crm.add.note, id: crm_add_note_time_schedule}:
-    #create fax history
-    #body: 'Timining Scenario to come office'
--
-  I give Fax to customer for our detail scenario of functional training timing 
-  schedule. 
--
-  !python {model: crm.add.note}: |
-    #add this fax history to lead
-    #self.action_add(cr, uid, [ref("crm_add_note_time_schedule")], {"active_model": "crm.lead","active_ids": [ref("crm_case_qrecorp0")]})
--
-  After Adding Fax scenario, I test it.
+  Now, I search customer in regular customer list.
 -
   !python {model: crm.lead}: |
-    #checked Fax history added.
-    #search lead history and compare with record
+    partner_ids = self.message_partner_by_email(cr, uid, 'Mr. John Right <info@customer.com>')
+    assert partner_ids.get('partner_id'), "Customer is not found in regular customer list."
+
+-
+  I convert one phonecall request as a customer and put into regular customer list.
+-
+  !python {model: crm.phonecall}: |
+    self.convert_partner(cr, uid, [ref('crm.crm_case_phone06')], context=context)
+
+

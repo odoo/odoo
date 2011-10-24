@@ -28,33 +28,11 @@ import time
 
 class crm_opportunity2phonecall(osv.osv_memory):
     """Converts Opportunity to Phonecall"""
-
+    _inherit = 'crm.phonecall2phonecall'
     _name = 'crm.opportunity2phonecall'
     _description = 'Opportunity to Phonecall'
 
-    _columns = {
-        'name' : fields.char('Call summary', size=64, required=True, select=1),
-        'user_id' : fields.many2one('res.users', "Assign To"),
-        'partner_id' : fields.many2one('res.partner', "Partner"),
-        'date': fields.datetime('Date'),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category',  \
-                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"),
-        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True), 
-    }
-
     def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
-        """
         opp_obj = self.pool.get('crm.lead')
         categ_id = False
         data_obj = self.pool.get('ir.model.data')
@@ -78,83 +56,20 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'partner_id': opp.partner_id and opp.partner_id.id or False})
         return res
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """
-        Closes Opportunity to Phonecall form
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Opportunity to Phonecall's IDs
-        @param context: A standard dictionary for contextual values
-        """
-        return {'type': 'ir.actions.act_window_close'}
-
-    def action_apply(self, cr, uid, ids, context=None):
-        """
-        This converts Opportunity to Phonecall and opens Phonecall view
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user's ID for security checks,
-        @param ids: List of Opportunity to Phonecall IDs
-        @param context: A standard dictionary for contextual values
-
-        @return : Dictionary value for created Opportunity form
-        """
+    def action_schedule(self, cr, uid, ids, context=None):
         value = {}
-        record_ids = context and context.get('active_ids', []) or []
-
-        phonecall_obj = self.pool.get('crm.phonecall')
-        opp_obj = self.pool.get('crm.lead')
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
-
-        data_obj = self.pool.get('ir.model.data')
-
-        # Select the view
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-        for this in self.browse(cr, uid, ids, context=context):
-            for opp in opp_obj.browse(cr, uid, record_ids, context=context):
-                vals = {
-                        'name' : opp.name,
-                        'case_id' : opp.id,
-                        'user_id' : this.user_id and this.user_id.id or False,
-                        'categ_id' : this.categ_id.id,
-                        'description' : opp.description or False,
-                        'date' : this.date,
-                        'section_id' : this.section_id.id or False,
-                        'partner_id': opp.partner_id and opp.partner_id.id or False,
-                        'partner_address_id': opp.partner_address_id and opp.partner_address_id.id or False,
-                        'partner_phone' : opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False),
-                        'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
-                        'priority': opp.priority,
-                        'opportunity_id': opp.id,
-                        'date_open': time.strftime('%Y-%m-%d %H:%M:%S')
-                }
-                
-                new_case = phonecall_obj.create(cr, uid, vals, context=context)
-               
-                if this.action == 'log':
-                    phonecall_obj.case_close(cr, uid, [new_case])
-
-            value = {
-                'name': _('Phone Call'),
-                'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
-                'view_type': 'form',
-                'view_mode': 'tree,form',
-                'res_model': 'crm.phonecall',
-                'res_id' : new_case,
-                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
-                'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
-            }
-        return value
+        if context is None:
+            context = {}
+        phonecall = self.pool.get('crm.phonecall')
+        opportunity_ids = context and context.get('active_ids') or []
+        opportunity = self.pool.get('crm.lead')
+        data = self.browse(cr, uid, ids, context=context)[0]
+        call_ids = opportunity.schedule_phonecall(cr, uid, opportunity_ids, data.date, data.name, \
+                data.user_id and data.user_id.id or False, \
+                data.section_id and data.section_id.id or False, \
+                data.categ_id and data.categ_id.id or False, \
+                action=data.action, context=context)
+        return phonecall.redirect_phonecall_view(cr, uid, call_ids[opportunity_ids[0]], context=context)
 
 crm_opportunity2phonecall()
 

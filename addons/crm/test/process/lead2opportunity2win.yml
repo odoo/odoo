@@ -1,10 +1,21 @@
 -
-  Convert opportunity based on exiting partner.
+  I open customer lead.
+-
+   !python {model: crm.lead}: |
+     self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
+- 
+  I check lead is in open stage.
+-
+  !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
+     - state == "open"
+
+-
+  I convert lead into opportunity for exiting customer.
 -
   !python {model: crm.lead}: |
     self.convert_opportunity(cr, uid ,[ref("crm_case_qrecorp0")], ref("base.res_partner_agrolait"))
 -
-  After converted in opportunity, I test that lead is converted to opportunity.
+  I check details of converted opportunity. 
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))
@@ -12,12 +23,28 @@
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
-  Finally, i won this opportunity, so I close this opportunity.
+  Now I start Communication by phonecall with customer.
+-
+  !python {model: crm.opportunity2phonecall}: |
+    import time
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_qrecorp0')]})
+    call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
+                'name': "Bonjour M. Jean, Comment êtes-vous? J'ai obtenu votre demande. peut-on parler au sujet de ce pour quelques minutes?"}, context=context)
+    self.action_schedule(cr, uid, [call_id], context=context)
+-
+  After communicated  with customer, I put some notes with Contract details.
+-
+  !python {model: crm.add.note}: |
+    context.update({'active_model': 'crm.lead', 'active_id': ref('crm_case_qrecorp0')})
+    note_id = self.create(cr, uid, {'body': "ces détails envoyés par le client sur ​​le FAX pour la qualité"})
+    self.action_add(cr, uid, [note_id], context=context)
+-
+  Finally, I won this opportunity, so I close this opportunity.
 -
   !python {model: crm.lead}: |
     self.case_mark_won(cr, uid, [ref("crm_case_qrecorp0")])
 -
-  After wininng the opportunity , I test the opportunity.
+  I check details of the opportunity After won the opportunity.
 -
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref('crm_case_qrecorp0'))

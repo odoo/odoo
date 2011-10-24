@@ -27,7 +27,7 @@ from tools.translate import _
 from crm import crm_case
 import binascii
 import tools
-
+from mail.mail_message import to_email
 
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -351,7 +351,7 @@ class crm_lead(crm_case, osv.osv):
             return res and res.id or False
     
         def _concat_all(attr):
-            return ', '.join([getattr(opportunity, attr) for opportunity in opportunities if hasattr(opportunity, attr)])
+            return ', '.join([getattr(opportunity, attr) or '' for opportunity in opportunities if hasattr(opportunity, attr)])
 
         data = {
             'partner_id': _get_first_not_null_id('partner_id'),  # !!
@@ -392,11 +392,12 @@ class crm_lead(crm_case, osv.osv):
     def _merge_find_oldest(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        #TOCHECK: where pass 'convert' in context ?
         if context.get('convert'):
             ids = list(set(ids) - set(context.get('lead_ids', False)) )
 
         #search opportunities order by create date
-        opportunity_ids = lead_obj.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
+        opportunity_ids = self.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
         oldest_id = opportunity_ids[0]
         return self.browse(cr, uid, oldest_id, context=context)
 
@@ -481,11 +482,12 @@ class crm_lead(crm_case, osv.osv):
         if len(ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
 
-        opportunities = self.browse(cr, uid, lead_ids, context=context)
-        opportunities_list = list(set(ids) - set(opportunities))
-        oldest = self._find_oldest_opportunity(cr, uid, ids, context=context)
-        if opportunities :
-            first_opportunity = opportunities[0]
+        ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
+        opportunities = self.browse(cr, uid, ids, context=context)
+        opportunities_list = list(set(opportunities) - set(ctx_opportunities))
+        oldest = self._merge_find_oldest(cr, uid, ids, context=context)
+        if ctx_opportunities :
+            first_opportunity = ctx_opportunities[0]
             tail_opportunities = opportunities_list
         else:
             first_opportunity = opportunities_list[0]
@@ -507,13 +509,16 @@ class crm_lead(crm_case, osv.osv):
 
         return first_opportunity.id
 
-    def _convert_opportunity_data(self, lead):
+    def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
         crm_stage = self.pool.get('crm.case.stage')
-        if lead.section_id:
-            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+        contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+        if not section_id:
+            section_id = lead.section_id and lead.section_id.id or False
+        if section_id:
+            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
         else:
-            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
-
+            stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])            
+        stage_id = stage_ids and stage_ids[0] or False
         return {
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
@@ -521,25 +526,32 @@ class crm_lead(crm_case, osv.osv):
                 'partner_id': customer.id,
                 'user_id': (lead.user_id and lead.user_id.id),
                 'type': 'opportunity',
-                'stage_id': stage_ids and stage_ids[0] or False,
+                'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'partner_address_id': len(customer.address_id) and customer.address_id[0] or False
+                'partner_address_id': contact_id
         }
-    def _convert_opportunity_notification(self, cr, uid, lead, context=context):
+    def _convert_opportunity_notification(self, cr, uid, lead, context=None):
         success_message = _("Lead '%s' has been converted to an opportunity.") % lead.name
         self.message_append(cr, uid, [lead.id], success_message, body_text=success_message, context=context)
-        self.log(cr, uid, [lead.id], success_message)
+        self.log(cr, uid, lead.id, success_message)
         self._send_mail_to_salesman(cr, uid, lead, context=context)
         return True
 
-    def convert_opportunity(self, cr, uid, ids, partner_id, mass_convert=False, merge=False, context=None):
+    def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
         mail_message = self.pool.get('mail.message')
+        
         customer = partner.browse(cr, uid, partner_id, context=context)
         
         for lead in self.browse(cr, uid, ids, context=context):
-            vals = self._convert_opportunity_data(lead)
+            if lead.state in ('done', 'cancel'):
+                continue
+            if user_ids or section_id:
+                self.allocate_salesman(cr, uid, [lead.id], user_ids, section_id, context=context)
+            
+            vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
+            
             self._convert_opportunity_notification(cr, uid, lead, context=context)
             #TOCHECK: why need to change partner details in all messages of lead ?
             if lead.partner_id:
@@ -547,7 +559,7 @@ class crm_lead(crm_case, osv.osv):
                 mail_message.write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
-         return True
+        return True
 
     def _lead_create_partner(self, cr, uid, lead, context=None):
         partner = self.pool.get('res.partner')
@@ -560,7 +572,8 @@ class crm_lead(crm_case, osv.osv):
         return partner_id
 
     def _lead_assign_partner(self, cr, uid, ids, partner_id, context=None):
-        return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+        contact_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id])['default']
+        return self.write(cr, uid, ids, {'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
         address = self.pool.get('res.partner.address')
@@ -569,7 +582,7 @@ class crm_lead(crm_case, osv.osv):
                     'name': lead.contact_name,
                     'phone': lead.phone,
                     'mobile': lead.mobile,
-                    'email': lead.email_from,
+                    'email': to_email(lead.email_from)[0],
                     'fax': lead.fax,
                     'title': lead.title and lead.title.id or False,
                     'function': lead.function,
@@ -581,7 +594,7 @@ class crm_lead(crm_case, osv.osv):
                     'state_id': lead.state_id and lead.state_id.id or False,
                 })
 
-    def convert_partner(self, cr, uid, ids, action='new', partner_id=False, context=None):
+    def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
         This function convert partner based on action.
         if action is 'new', create new partner with contact and assign lead to new partner_id.
@@ -589,12 +602,15 @@ class crm_lead(crm_case, osv.osv):
         """
         if context is None:
             context = {}
-        partner_ids = []
+        partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            if action == 'create':
-               partner_id = self._lead_create_partner(cr, uid, lead, context=context)
+            partner_id = lead.partner_id and lead.partner_id.id or False
+            if action == 'create': 
+                if not partner_id:
+                    partner_id = self._lead_create_partner(cr, uid, lead, context=context)
+                self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
             self._lead_assign_partner(cr, uid, [lead.id], partner_id, context=context)
-            partner_ids.append(partner_id)
+            partner_ids[lead.id] = partner_id
         return partner_ids
 
     def _send_mail_to_salesman(self, cr, uid, lead, context=None):
@@ -627,6 +643,45 @@ class crm_lead(crm_case, osv.osv):
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
+
+    def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
+        """
+        action :('schedule','Schedule a call'), ('log','Log a call')
+        """
+        phonecall = self.pool.get('crm.phonecall')
+        model_data = self.pool.get('ir.model.data')
+        phonecall_dict = {}
+        if not categ_id:
+            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
+            if res_id:
+                categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not section_id:
+                section_id = lead.section_id and lead.section_id.id or False
+            if not user_id:
+                user_id = lead.user_id and lead.user_id.id or False
+            vals = {
+                    'name' : call_summary,
+                    'opportunity_id' : lead.id,
+                    'user_id' : user_id or False,
+                    'categ_id' : categ_id or False,
+                    'description' : lead.description or False,
+                    'date' : schedule_time,
+                    'section_id' : section_id or False,
+                    'partner_id': lead.partner_id and lead.partner_id.id or False,
+                    'partner_address_id': lead.partner_address_id and lead.partner_address_id.id or False,
+                    'partner_phone' : lead.phone or (lead.partner_address_id and lead.partner_address_id.phone or False),
+                    'partner_mobile' : lead.partner_address_id and lead.partner_address_id.mobile or False,
+                    'priority': lead.priority,
+            }
+            
+            new_id = phonecall.create(cr, uid, vals, context=context)
+            phonecall.case_open(cr, uid, [new_id])
+            if action == 'log':
+                phonecall.case_close(cr, uid, [new_id])
+            phonecall_dict[lead.id] = new_id
+        return phonecall_dict
+
 
     def redirect_opportunity_view(self, cr, uid, opportunity_id, context=None):
         models_data = self.pool.get('ir.model.data')

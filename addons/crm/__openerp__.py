@@ -119,17 +119,11 @@ Creates a dashboard for CRM that includes:
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/process/draft2open_lead.yml',
+            'test/process/communication_with_customer.yml',
             'test/process/lead2opportunity2win.yml',
             'test/process/merge_opportunity.yml',
-            'test/process/partner2opportunity.yml',
             'test/process/cancel_lead.yml',
-            'test/process/meeting.yml',
-            'test/process/mass_leads2opportunity.yml',
             'test/ui/lead_form.yml',
-            'test/process/phone-call2opportunity.yml',
-            'test/process/phone-call2meeting.yml',
-            'test/process/schedule_other_phone-call.yml'
              ],
     'installable': True,
     'active': False,

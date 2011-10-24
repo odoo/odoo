@@ -54,14 +54,14 @@ class crm_partner2opportunity(osv.osv_memory):
         partner_ids = context and context.get('active_ids', []) or []
         partner = self.pool.get('res.partner')
         lead = self.pool.get('crm.lead')
-        for data in self.browse(cr, uid, ids, context=context):
-            opportunity_ids = partner.make_opportunity(cr, uid, partner_ids,
-                data.name,
-                data.planned_revenue,
-                data.probability,
-            })
-            opportunity_id = len(opportunity_ids) and opportunity_ids[0] or False
-            return lead.redirect_opportunity_view(cr, uid, opportunity_id, context=context)
+        data = self.browse(cr, uid, ids, context=context)[0]
+        opportunity_ids = partner.make_opportunity(cr, uid, partner_ids,
+            data.name,
+            data.planned_revenue,
+            data.probability,
+        )
+        opportunity_id = opportunity_ids[partner_ids[0]]
+        return lead.redirect_opportunity_view(cr, uid, opportunity_id, context=context)
 
 crm_partner2opportunity()
 

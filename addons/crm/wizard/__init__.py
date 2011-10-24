@@ -24,11 +24,11 @@ import crm_add_note
 
 import crm_lead_to_partner
 import crm_lead_to_opportunity
-import crm_opportunity_to_phonecall
 import crm_phonecall_to_phonecall
+import crm_opportunity_to_phonecall
 import crm_phonecall_to_partner
-import crm_phonecall_to_opportunity
 import crm_partner_to_opportunity
+import crm_phonecall_to_opportunity
 
 import crm_merge_opportunities
 

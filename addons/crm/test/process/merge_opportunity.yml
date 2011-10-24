@@ -1,8 +1,30 @@
 -
-  I have two opportunity ,so i merge this two Opportunities, I test which two opportunity has been merged .
+  I make direct opportunity for Customer.
+-
+  !python {model: crm.partner2opportunity}: |
+    context.update({'active_model': 'res.partner', 'active_ids': [ref("base.res_partner_9")]})
+    res_id = self.create(cr, uid, {'name': "enquête pour l'achat de services"}, context=context)
+    self.make_opportunity(cr, uid, [res_id], context=context)
+    
+-
+  I make another opportunity from phonecall for same customer.
+-
+  !python {model: crm.phonecall2opportunity}: |
+    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")]})
+    res_id = self.create(cr, uid, {'name': "Quoi de prix de votre autre service?", 'partner_id': ref("base.res_partner_9")}, context=context)
+    self.make_opportunity(cr, uid, [res_id], context=context)
+-
+ Now I merge all opportunities of customer.
 -
   !python {model: crm.lead}: |
-    op_list = [ref('crm_case_bankwealthy2'),ref('crm_case_unifliege')]
-    op_ids=self.pool.get('crm.lead').browse(cr,uid,op_list)
-    lead_ids = [ref('crm_case_bankwealthy2')]
-    self.merge_opportunity(cr, uid, op_ids, {'lead_ids': lead_ids})
+    opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
+    self.merge_opportunity(cr, uid, opportunity_ids, context=context)
+
+-
+  Now I schedule another phonecall to customer after merged.
+-
+  !python {model: crm.phonecall2phonecall}: |
+    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")]})
+    res_id = self.create(cr, uid, {'name': "vos chances sont fusionnés en un seul"}, context=context)
+    self.action_schedule(cr, uid, [res_id], context=context)
+

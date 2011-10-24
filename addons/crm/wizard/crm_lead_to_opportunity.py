@@ -102,7 +102,30 @@ class crm_lead2opportunity_partner(osv.osv_memory):
                 raise osv.except_osv(_("Warning !"), _("Closed/Cancelled Leads can not be converted into Opportunity"))
         return False
 
-    
+    def _convert_opportunity(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        lead = self.pool.get('crm.lead')
+        partner_ids = self._create_partner(cr, uid, ids, context=context)
+        partner_id = partner_ids and partner_ids[0] or False
+        lead_ids = context.get('active_ids', [])
+        user_ids = context.get('user_ids', False)
+        team_id = context.get('section_id', False)
+        return lead.convert_opportunity(cr, uid, lead_ids, partner_id, user_ids, team_id, context=context) 
+
+    def _merge_opportunity(self, cr, uid, ids, opportunity_ids, action='merge', context=None):
+        #TOFIX: is it usefully ?
+        if context is None:
+            context = {}
+        merge_opportunity = self.pool.get('crm.merge.opportunity')
+        res = False
+        #If we convert in mass, don't merge if there is no other opportunity but no warning
+        if action == 'merge' and (len(opportunity_ids) > 1 or not context.get('mass_convert') ):
+            self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [opportunity_ids[0].id])]}, context=context)
+            context.update({'lead_ids' : record_id, "convert" : True})
+            res = merge_opportunity.merge(cr, uid, data.opportunity_ids, context=context)
+        return res
+
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
@@ -112,20 +135,13 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         """
         if not context:
             context = {}
-        if not record_id:
-            return {'type': 'ir.actions.act_window_close'}
+        
+        lead = self.pool.get('crm.lead')
+        data = self.browse(cr, uid, ids, context=context)[0]
+        self._convert_opportunity(cr, uid, ids, context=context)
+        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.action, context=context)
 
-        partner_ids = self._create_partner(cr, uid, ids, context=context)
-        partner_id = partner_ids and partner_ids[0] or False
-        leads.convert_opportunity(cr, uid, lead_ids, partner_id, context=context) 
-        #If we convert in mass, don't merge if there is no other opportunity but no warning
-        if data.name == 'merge' and (len(data.opportunity_ids) > 1 or not context.get('mass_convert') ):
-            merge_obj = self.pool.get('crm.merge.opportunity')
-            self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, [data.opportunity_ids[0].id])]}, context=context)
-            context.update({'lead_ids' : record_id, "convert" : True})
-            return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
-
-        return leads.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
+        return lead.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
 crm_lead2opportunity_partner()
 
@@ -150,13 +166,14 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
 
         salesteam_id = data.section_id and data.section_id.id or False
-        salesmans = []
+        salesman = []
         if data.user_ids:
-            salesmans = [x.id for x in data.user_ids]
-        lead.allocate_salesman(cr, uid, active_ids, salesman, salesteam_id, context=context)
+            salesman = [x.id for x in data.user_ids]
+        
         value = self.default_get(cr, uid, ['partner_id', 'opportunity_ids'], context=context)
         value['opportunity_ids'] = [(6, 0, value['opportunity_ids'])]
         self.write(cr, uid, ids, value, context=context)
+        context.update({'user_ids': salesman, 'section_id': salesteam_id})
         return self.action_apply(cr, uid, ids, context=context)
 crm_lead2opportunity_mass_convert()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

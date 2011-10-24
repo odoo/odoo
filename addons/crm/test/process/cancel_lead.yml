@@ -1,76 +1,31 @@
 -
-  Cheking for lead from draft to cancel, I cancel this lead.
+  I cancel unqualified lead.
 -
   !python {model: crm.lead}: |
     self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I test lead is on cancel state.
+  I check cancelled lead.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
      - state == "cancel"
 -
-  Checking for lead from cancel to reset, I reset this lead.
+  I reset cancelled lead into unqualified lead.
 -
   !python {model: crm.lead}: |
     self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I test lead is on draft state.
+  I check unqualified lead after reset.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in draft state}:
      - state == "draft"
 -
-  Cheking for lead from reset to pending, I pending this lead.
+  I put unqualified lead into pending.
 -
   !python {model: crm.lead}: |
     self.case_pending(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
 -
-  I test lead is on pending state.
+  I check status of pending lead.
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
      - state == "pending"
--
-  Cheking for lead from pending to cancel, I cancel this lead.
--
-  !python {model: crm.lead}: |
-    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
--
-  I test lead is on cancel state.
--
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
-     - state == "cancel"
--
-  I create sales executive department that will be work under Sales Department.
--
-  !record {model: crm.case.section, id: section_sales_exe_department}:
-    name: "Sales Executive"
-    parent_id: crm.section_sales_department
 
--
-  Escalate lead from sales executive department to sales department,
-  for that purpose i assign sales executive department on lead, 
-  after i will be process to escalate lead to sales department 
--
-  !record {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0}:
-    section_id: section_sales_exe_department
--
-  Processing on Lead escalate to sales departemnt, i check for lead escalate to sales Department from Executive
-  department or not.
--
-  !python {model: crm.lead}: |
-    self.case_reset(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
-    self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
--
-  I test lead escalate from sales department from Executive  department.
--
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Escalate lead to on sales team from Executive teame}:
-     - section_id.name == "Sales Department"
--
-  Cheking for lead from escalate to cancel, I cancel this lead.
--
-  !python {model: crm.lead}: |
-    self.case_cancel(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
--
-  I test lead is on cancel state.
--
-  !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in cancel state}:
-     - state == "cancel"

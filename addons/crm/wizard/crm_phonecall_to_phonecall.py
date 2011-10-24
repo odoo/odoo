@@ -25,108 +25,47 @@ from tools.translate import _
 import time
 
 class crm_phonecall2phonecall(osv.osv_memory):
-    """ Converts Phonecall to Phonecall"""
-
     _name = 'crm.phonecall2phonecall'
     _description = 'Phonecall To Phonecall'
+
+    _columns = {
+        'name' : fields.char('Call summary', size=64, required=True, select=1),
+        'user_id' : fields.many2one('res.users',"Assign To"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+                domain="['|',('section_id','=',False),('section_id','=',section_id),\
+                ('object_id.model', '=', 'crm.phonecall')]"), 
+        'date': fields.datetime('Date'),
+        'section_id':fields.many2one('crm.case.section','Sales Team'),
+        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
+        'partner_id' : fields.many2one('res.partner', "Partner"),
+    }
+
 
     def action_cancel(self, cr, uid, ids, context=None):
         """
         Closes Phonecall to Phonecall form
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Phonecall's IDs
-        @param context: A standard dictionary for contextual values
         """
         return {'type':'ir.actions.act_window_close'}
 
-    def action_apply(self, cr, uid, ids, context=None):
-        """
-        This converts Phonecall to Phonecall and opens Phonecall view
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Phonecall IDs
-        @param context: A standard dictionary for contextual values
+    def action_schedule(self, cr, uid, ids, context=None):
+        value = {}
+        if context is None:
+            context = {}
+        phonecall = self.pool.get('crm.phonecall')
+        phonecall_ids = context and context.get('active_ids') or []
+        for this in self.browse(cr, uid, ids, context=context):
+            phocall_ids = phonecall.schedule_another_phonecall(cr, uid, phonecall_ids, this.date, this.name, \
+                    this.user_id and this.user_id.id or False, \
+                    this.section_id and this.section_id.id or False, \
+                    this.categ_id and this.categ_id or False, \
+                    action=this.action, context=context)
 
-        @return : Dictionary value for created Opportunity form
-        """
-        res = {}
-        record_id = context and context.get('active_id', False) or False
-        phonecall_obj = self.pool.get('crm.phonecall')
-
-        if record_id:
-            data_obj = self.pool.get('ir.model.data')
-
-            # Get Phonecall views
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-
-            phonecall = phonecall_obj.browse(cr, uid, record_id, context=context)
-
-            for this in self.browse(cr, uid, ids, context=context):
-                values = {
-                        'name': this.name,
-                        'user_id': this.user_id and this.user_id.id,
-                        'categ_id': this.categ_id.id,
-                        'section_id': this.section_id.id or (phonecall.section_id and phonecall.section_id.id),
-                        'description': phonecall.description or '',
-                        'partner_id': phonecall.partner_id.id,
-                        'partner_address_id': phonecall.partner_address_id.id,
-                        'partner_mobile': phonecall.partner_mobile or False,
-                        'priority': phonecall.priority,
-                        'partner_phone': phonecall.partner_phone or False,
-                        'date': this.date
-                          }
-                phonecall_id = phonecall_obj.create(cr, uid, values, context=context)
-                if this.action == 'schedule':
-                    phonecall_obj.case_open(cr, uid, [phonecall_id])
-                elif this.action == 'log':
-                    phonecall_obj.case_close(cr, uid, [phonecall_id])
-            
-            res = {
-                'name': _('Phone Call'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'crm.phonecall',
-                'view_id': False,
-                'views': [(id2, 'form'), (id3, 'tree'), (False, 'calendar'), (False, 'graph')],
-                'type': 'ir.actions.act_window',
-                'res_id': phonecall_id, 
-                'domain': [('id', '=', phonecall_id)], 
-                'search_view_id': res['res_id']
-                }
-        return res
-
-    _columns = {
-                'name' : fields.char('Call summary', size=64, required=True, select=1),
-                'user_id' : fields.many2one('res.users',"Assign To"),
-                'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                        domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"), 
-                'date': fields.datetime('Date'),
-                'section_id':fields.many2one('crm.case.section','Sales Team'),
-                'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
-                'partner_id' : fields.many2one('res.partner', "Partner"),
-                }
-
+        return phonecall.redirect_phonecall_view(cr, uid, phocall_ids[phonecall_ids[0]], context=context)
+    
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param fields: List of fields for default value
-        @param context: A standard dictionary for contextual values
-
-        @return : default values of fields.
+        
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False

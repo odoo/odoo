@@ -102,11 +102,6 @@ class crm_phonecall(crm_base, osv.osv):
 
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting close date
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         res = True
         for phone in self.browse(cr, uid, ids):
@@ -121,11 +116,6 @@ class crm_phonecall(crm_base, osv.osv):
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as Todo
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         res = super(crm_phonecall, self).case_reset(cr, uid, ids, args, 'crm.phonecall')
         self.write(cr, uid, ids, {'duration': 0.0})
@@ -134,25 +124,155 @@ class crm_phonecall(crm_base, osv.osv):
 
     def case_open(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting Open Date
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's Ids
-        @param *args: Give Tuple Value
         """
         res = super(crm_phonecall, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         return res
 
+    def schedule_another_phonecall(self, cr, uid, ids, schedule_time, call_summary, \
+                    user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
+        """
+        action :('schedule','Schedule a call'), ('log','Log a call')
+        """
+        model_data = self.pool.get('ir.model.data')
+        phonecall_dict = {}
+        if not categ_id:
+            res_id = model_data._get_id(cr, uid, 'crm', 'categ_phone2')
+            if res_id:
+                categ_id = model_data.browse(cr, uid, res_id, context=context).res_id
+        for call in self.browse(cr, uid, ids, context=context):
+            if not section_id:
+                section_id = call.section_id and call.section_id.id or False
+            if not user_id:
+                user_id = call.user_id and call.user_id.id or False
+            vals = {
+                    'name' : call_summary,
+                    'user_id' : user_id or False,
+                    'categ_id' : categ_id or False,
+                    'description' : call.description or False,
+                    'date' : schedule_time,
+                    'section_id' : section_id or False,
+                    'partner_id': call.partner_id and call.partner_id.id or False,
+                    'partner_address_id': call.partner_address_id and call.partner_address_id.id or False,
+                    'partner_phone' : call.partner_phone,
+                    'partner_mobile' : call.partner_mobile,
+                    'priority': call.priority,
+            }
+            
+            new_id = self.create(cr, uid, vals, context=context)
+            self.case_open(cr, uid, [new_id])
+            if action == 'log':
+                self.case_close(cr, uid, [new_id])
+            phonecall_dict[call.id] = new_id
+        return phonecall_dict
+
+    def _call_create_partner(self, cr, uid, phonecall, context=None):
+        partner = self.pool.get('res.partner')
+        partner_id = partner.create(cr, uid, {
+                    'name': phonecall.name,
+                    'user_id': phonecall.user_id.id,
+                    'comment': phonecall.description,
+                    'address': []
+        })
+        return partner_id
+
+    def _call_assign_partner(self, cr, uid, ids, partner_id, context=None):
+        return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
+
+    def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
+        address = self.pool.get('res.partner.address')
+        return address.create(cr, uid, {
+                    'partner_id': partner_id,
+                    'name': phonecall.name,
+                    'phone': phonecall.partner_phone,
+        })
+
+    def convert_partner(self, cr, uid, ids, action='new', partner_id=False, context=None):
+        """
+        This function convert partner based on action.
+        if action is 'create', create new partner with contact and assign lead to new partner_id.
+        otherwise assign lead to specified partner_id
+        """
+        if context is None:
+            context = {}
+        partner_ids = {}
+        for call in self.browse(cr, uid, ids, context=context):
+            partner_id = call.partner_id and call.partner_id.id or False
+            if action == 'create':
+               if not partner_id:
+                   partner_id = self._call_create_partner(cr, uid, call, context=context)
+               self._call_create_partner_address(cr, uid, call, partner_id, context=context)
+            self._call_assign_partner(cr, uid, [call.id], partner_id, context=context)
+            partner_ids[call.id] = partner_id
+        return partner_ids
+
+
+    def redirect_phonecall_view(self, cr, uid, phonecall_id, context=None):
+        model_data = self.pool.get('ir.model.data')
+        # Select the view
+        id2 = model_data._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
+        id3 = model_data._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
+        if id2:
+            id2 = model_data.browse(cr, uid, id2, context=context).res_id
+        if id3:
+            id3 = model_data.browse(cr, uid, id3, context=context).res_id
+
+        result = model_data._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
+        res = model_data.read(cr, uid, result, ['res_id'])
+
+        value = {
+                'name': _('Phone Call'),
+                'view_type': 'form',
+                'view_mode': 'tree,form',
+                'res_model': 'crm.phonecall',
+                'res_id' : int(phonecall_id),
+                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
+                'type': 'ir.actions.act_window',
+                'search_view_id': res['res_id'],
+        }
+        return value
+
+
+    def convert_opportunity(self, cr, uid, ids, opportunity_summary=False, partner_id=False, planned_revenue=0.0, probability=0.0, context=None):
+        partner = self.pool.get('res.partner')
+        address = self.pool.get('res.partner.address')
+        opportunity = self.pool.get('crm.lead')
+        opportunity_dict = {}
+        for call in self.browse(cr, uid, ids, context=context):
+            if not partner_id:
+                partner_id = call.partner_id and call.partner_id.id or False
+            if partner_id:
+                address_id = partner.address_get(cr, uid, [partner_id])['default']
+                if address_id:
+                    default_contact = address.browse(cr, uid, address_id, context=context)
+            opportunity_id = opportunity.create(cr, uid, {
+                            'name': opportunity_summary or call.name,
+                            'planned_revenue': planned_revenue,
+                            'probability': probability,
+                            'partner_id': partner_id or False,
+                            'partner_address_id': default_contact and default_contact.id, 
+                            'phone': default_contact and default_contact.phone,
+                            'mobile': default_contact and default_contact.mobile,
+                            'section_id': call.section_id and call.section_id.id or False,
+                            'description': call.description or False,
+                            'phonecall_id': call.id,
+                            'priority': call.priority,
+                            'type': 'opportunity', 
+                            'phone': call.partner_phone or False,
+                        })
+            vals = {
+                    'partner_id': partner_id,
+                    'opportunity_id' : opportunity_id,
+            }
+            self.write(cr, uid, [call.id], vals)
+            self.case_close(cr, uid, [call.id])
+            opportunity.case_open(cr, uid, [opportunity_id])
+            opportunity_dict[call.id] = opportunity_id
+        return opportunity_dict   
+
     def action_make_meeting(self, cr, uid, ids, context=None):
         """
         This opens Meeting's calendar view to schedule meeting on current Phonecall
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Meeting IDs
-        @param context: A standard dictionary for contextual values
-
         @return : Dictionary value for created Meeting view
         """
         value = {}
