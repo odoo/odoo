@@ -1617,5 +1617,71 @@
             <field name="currency_id" ref="MUR"/>
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
+
+        <record id="XOF" model="res.currency">
+            <field name="name">XOF</field>
+            <field name="symbol">CFA</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateXOF" model="res.currency.rate">
+           <field name="rate">655.957</field>
+           <field name="currency_id" ref="XOF"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
+
+        <record id="XAF" model="res.currency">
+            <field name="name">XAF</field>
+            <field name="symbol">FCFA</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateXAF" model="res.currency.rate">
+           <field name="rate">655.957</field>
+           <field name="currency_id" ref="XAF"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
+
+        <record id="UGX" model="res.currency">
+            <field name="name">UGX</field>
+            <field name="symbol">USh</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateUGX" model="res.currency.rate">
+            <field name="rate">3401.91388</field>
+            <field name="currency_id" ref="UGX"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
+        <record id="HNL" model="res.currency">
+            <field name="name">HNL</field>
+            <field name="symbol">L</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateHNL" model="res.currency.rate">
+            <field name="rate">25</field>
+            <field name="currency_id" ref="HNL"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
+        <!-- Chilean peso -->
+        <record id="CLP" model="res.currency">
+            <field name="name">CLP</field>
+            <field name="symbol">$</field>
+            <field name="rounding">0.01</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateCLP" model="res.currency.rate">
+            <field name="rate">710</field>
+            <field name="currency_id" ref="CLP"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
     </data>
 </openerp>
