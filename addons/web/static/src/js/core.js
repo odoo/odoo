@@ -1048,7 +1048,7 @@ openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 openerp.web.qweb.format_text_node = function(s) {
     // Note that 'this' is the Qweb Node of the text
-    var translation = this.node.parentElement.attributes['t-translation'];
+    var translation = this.node.parentNode.attributes['t-translation'];
     if (translation && translation.value === 'off') {
         return s;
     }
