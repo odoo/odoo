@@ -10,11 +10,6 @@ import logging.config
 import werkzeug.serving
 import werkzeug.contrib.fixers
 
-path_root = os.path.dirname(os.path.abspath(__file__))
-path_addons = os.path.join(path_root, 'addons')
-if path_addons not in sys.path:
-    sys.path.insert(0, path_addons)
-
 optparser = optparse.OptionParser()
 optparser.add_option("-s", "--session-path", dest="session_storage",
                      default=os.path.join(tempfile.gettempdir(), "oe-sessions"),
@@ -25,7 +20,7 @@ optparser.add_option("--server-port", dest="server_port", default=8069,
                      help="OpenERP server port", type="int", metavar="NUMBER")
 optparser.add_option("--db-filter", dest="dbfilter", default='.*',
                      help="Filter listed database", metavar="REGEXP")
-optparser.add_option('--addons-path', dest='addons_path', default=[path_addons], action='append',
+optparser.add_option('--addons-path', dest='addons_path', default=[], action='append',
                     help="Path do addons directory", metavar="PATH")
 optparser.add_option('--load', dest='server_wide_modules', default=['web'], action='append',
                     help="Load a additional module before login (by default only 'web' is loaded)", metavar="MODULE")
@@ -55,12 +50,41 @@ logging_opts.add_option("--log-config", dest="log_config", default=os.path.join(
                         help="Logging configuration file", metavar="FILE")
 optparser.add_option_group(logging_opts)
 
-import web.common.http
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
-    options.backend =  'xmlrpc'
 
+    if not options.addons_path:
+        path_root = os.path.dirname(os.path.abspath(__file__))
+        path_addons = os.path.join(path_root, 'addons')
+        if os.path.exists(path_addons):
+            options.addons_path.append(path_addons)
+
+    def remove_end_slash(text):
+        if text[-1] in '/\\':
+            return text[:-1]
+        return text
+
+    def drop_false_path(path):
+        if os.path.exists(path):
+            return True
+
+    options.addons_path = map(remove_end_slash, options.addons_path)
+    options.addons_path = filter(drop_false_path, options.addons_path)
+
+    if not options.addons_path:
+        raise('Error Importing web modules. Missing or incorrect --addons-path ')
+
+    for path_addons in options.addons_path:
+        if path_addons not in sys.path:
+            sys.path.insert(0, path_addons)
+
+    try:
+        import web.common.http
+    except:
+        raise('Error Importing web modules. addons_path must be wrong.')
+
+    options.backend =  'xmlrpc'
     os.environ["TZ"] = "UTC"
 
     if sys.version_info >= (2, 7) and os.path.exists(options.log_config):
