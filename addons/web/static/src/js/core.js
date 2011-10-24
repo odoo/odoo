@@ -346,12 +346,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
-    init: function(server, port) {
+    init: function(server) {
         this._super();
-        this.server = (server == undefined) ? location.hostname : server;
-        this.port = (port == undefined) ? location.port : port;
-        this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
-        this.debug = (window.location.search.indexOf('?debug') !== -1);
+        var hostname = _('%s//%s').sprintf(location.protocol, location.host);
+        this.server = (server == undefined) ? hostname : server;
+        this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
+        this.debug = ($.deparam($.param.querystring()).debug != undefined);
         this.session_id = false;
         this.uid = false;
         this.user_context= {};
@@ -390,13 +390,9 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
-        this.rpc_ajax(url, {
-            jsonrpc: "2.0",
-            method: "call",
-            params: params,
-            id: _.uniqueId('browser-client-')
-        }).then(function () {deferred.resolve.apply(deferred, arguments);},
-                function(error) {deferred.reject(error, $.Event());});
+        this.rpc_ajax(url, params)
+            .then(function () {deferred.resolve.apply(deferred, arguments);},
+                  function(error) {deferred.reject(error, $.Event());});
         return deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
@@ -422,10 +418,11 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         var ajax = _.extend({
             type: "POST",
             url: url,
-            dataType: 'json',
+            dataType: this.rpc_mode,
             contentType: 'application/json',
-            data: JSON.stringify(payload),
-            processData: false
+            data: payload,
+            processData: false,
+            openerp: _.extend({}, this),    // need a plainObject
         }, url);
         var deferred = $.Deferred();
         $.ajax(ajax).done(function(response, textStatus, jqXHR) {
@@ -440,7 +437,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             }
             self.uid = false;
             self.on_session_invalid(function() {
-                self.rpc(url, payload.params,
+                self.rpc(url, payload,
                     function() {
                         deferred.resolve.apply(deferred, arguments);
                     },

@@ -28,7 +28,8 @@ class OpenERPSession(object):
         Used to store references to non-literal domains which need to be
         round-tripped to the client browser.
     """
-    def __init__(self):
+    def __init__(self, sid):
+        self.id = sid
         self.config = None
         self._db = False
         self._uid = False
@@ -37,6 +38,7 @@ class OpenERPSession(object):
         self.context = {}
         self.contexts_store = {}
         self.domains_store = {}
+        self.jsonp_requests = {}     # FIXME use a LRU
         
     def __getstate__(self):
         state = dict(self.__dict__)
