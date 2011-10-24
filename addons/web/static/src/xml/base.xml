@@ -1410,7 +1410,7 @@
 </t>
 <t t-name="ImportDataView">
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
-        class="oe-import">
+        class="oe-import oe-import-no-result">
     <input type="hidden" name="session_id" t-att-value="session.session_id"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
@@ -1420,28 +1420,9 @@
         <label for="csvfile">CSV File:</label>
         <input type="file" id="csvfile" size="50" name="csvfile"/>
     </p>
-    <div id="result"></div>
-</form>
-</t>
-<t t-name="ImportView.result">
-    <h2 class="separator horizontal">2. Check your file format</h2>
-    <table class="oe_import_grid" width="100%" style="margin: 5px 0;">
-        <tr t-if="headers" class="oe_import_grid-header">
-            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
-                <t t-esc="header"/></td>
-        </tr>
-        <tr>
-            <td t-foreach="records[0]" t-as="column">
-                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
-                        <img src="/web/static/src/img/down-arrow.png" /></span>
-            </td>
-        </tr>
-        <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
-            <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
-                <t t-esc="cell"/></td>
-        </tr>
-    </table>
-    <fieldset class="oe-closed">
+    <h2 class="separator horizontal oe-import-result">2. Check your file format</h2>
+    <div id="result" class="oe-import-result"></div>
+    <fieldset class="oe-closed oe-import-result">
         <legend>Import Options</legend>
         <table>
             <tr>
@@ -1471,6 +1452,25 @@
             </tr>
         </table>
     </fieldset>
+</form>
+</t>
+<t t-name="ImportView.result">
+    <table class="oe_import_grid" width="100%" style="margin: 5px 0;">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
+                <t t-esc="header"/></td>
+        </tr>
+        <tr>
+            <td t-foreach="records[0]" t-as="column">
+                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
+                        <img src="/web/static/src/img/down-arrow.png" /></span>
+            </td>
+        </tr>
+        <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
+            <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
+                <t t-esc="cell"/></td>
+        </tr>
+    </table>
 </t>
 <t t-name="ImportView.error">
     <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>

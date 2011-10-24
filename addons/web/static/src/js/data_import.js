@@ -194,9 +194,11 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                           : with_headers ? results.records.slice(1)
                           : results.records
             }));
+            this.$element.find('fieldset').addClass('oe-closed');
         } else if (results['error']) {
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
+            this.$element.find('fieldset').removeClass('oe-closed');
         } else if (results['success']) {
             if (this.widget_parent.widget_parent.active_view == "list") {
                 this.widget_parent.reload_content();
@@ -204,6 +206,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             this.stop();
             return;
         }
+        this.$element.find('form').removeClass('oe-import-no-result');
 
         this.$element.delegate('.oe-m2o-drop-down-button', 'click', function () {
             $(this).prev('input').focus();
