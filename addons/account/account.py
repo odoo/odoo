@@ -308,6 +308,13 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+                    if current.currency_id and current.exchange_rate:
+                        # Computing Adjusted Balance and Unrealized Gains and losses
+                        # Adjusted Balance = Foreign Balance / Exchange Rate
+                        # Unrealized Gains and losses = Adjusted Balance - Balance 
+                        if fn == 'adjusted_balance':
+                            sums[current.id].update({fn: sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate})
+
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
