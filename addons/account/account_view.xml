@@ -296,7 +296,7 @@
         </record>
 
          <record id="view_account_gain_loss_tree" model="ir.ui.view">
-           <field name="name">Unrealized Gains and losses</field>
+           <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
@@ -308,13 +308,13 @@
                     <field name="foreign_balance"/>
                     <field name="adjusted_balance"/>
                     <field name="balance"/>
-                    <field name="gain_loss_unrealized"/>
+                    <field name="unrealized_gain_loss"/>
                 </tree>
             </field>
         </record>
 
           <record id="action_account_gain_loss" model="ir.actions.act_window">
-            <field name="name">Unrealized Gains &amp; Losses </field>
+            <field name="name">Unrealized Gain or Loss</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
@@ -323,7 +323,7 @@
         </record>
 
         <menuitem
-            name="Unrealized Gains &amp; Losses"
+            name="Unrealized Gain or Loss"
             action="action_account_gain_loss"
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
