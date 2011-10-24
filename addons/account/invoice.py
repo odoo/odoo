@@ -1021,6 +1021,7 @@ class account_invoice(osv.osv):
             # delete the move this invoice was pointing to
             # Note that the corresponding move_lines and move_reconciles
             # will be automatically deleted too
+            context.update({'invoice_cancel': 'cancel'})
             account_move_obj.unlink(cr, uid, move_ids, context=context)
         self._log_event(cr, uid, ids, -1.0, 'Cancel Invoice')
         return True

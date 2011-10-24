@@ -594,7 +594,8 @@ class account_voucher(osv.osv):
 
             if voucher.move_id:
                 move_pool.button_cancel(cr, uid, [voucher.move_id.id])
-                move_pool.unlink(cr, uid, [voucher.move_id.id])
+                context.update({'voucher_cancel': 'cancel'})
+                move_pool.unlink(cr, uid, [voucher.move_id.id], context=context)
         res = {
             'state':'cancel',
             'move_id':False,
