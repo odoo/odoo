@@ -1437,9 +1437,6 @@ openerp.web.form.FieldBoolean = openerp.web.form.Field.extend({
         this._super.apply(this, arguments);
         this.$element.find('input').attr('disabled', this.readonly);
     },
-    validate: function() {
-        this.invalid = this.required && !this.$element.find('input').is(':checked');
-    },
     focus: function() {
         this.$element.find('input').focus();
     }
