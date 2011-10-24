@@ -121,6 +121,12 @@ db.web.ActionManager = db.web.Widget.extend({
         if (!this.dialog && on_closed) {
             on_closed();
         }
+        if (this.dialog && action.context) {
+            var model = action.context.active_model;
+            if (model === 'base.module.upgrade' || model === 'base.setup.installer' || model === 'base.module.upgrade') {
+                db.webclient.do_reload();
+            }
+        }
         this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
@@ -152,6 +158,9 @@ db.web.ActionManager = db.web.Widget.extend({
                 complete: $.unblockUI
             });
         });
+    },
+    ir_actions_act_url: function (action) {
+        window.open(action.url, action.target === 'self' ? '_self' : '_blank');
     }
 });
 
@@ -425,10 +434,16 @@ db.web.ViewManagerAction = db.web.ViewManager.extend(/** @lends oepnerp.web.View
     on_mode_switch: function (view_type) {
         var self = this;
         return $.when(
-            this._super(view_type),
-            this.shortcut_check(this.views[view_type])).then(function () {
-                var view_id = self.views[self.active_view].controller.fields_view.view_id;
+                this._super(view_type),
+                this.shortcut_check(this.views[view_type])
+            ).then(function() {
+                var controller = self.views[self.active_view].controller,
+                    fvg = controller.fields_view,
+                    view_id = (fvg && fvg.view_id) || '--';
                 self.$element.find('.oe_get_xml_view span').text(view_id);
+                if (!self.action.name && fvg) {
+                    self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
+                }
         });
     },
     shortcut_check : function(view) {
@@ -514,9 +529,57 @@ db.web.Sidebar = db.web.Widget.extend({
             self.do_toggle();
         });
     },
+
+    call_default_on_sidebar: function(item) {
+        var func_name = 'on_sidebar_' + _.underscored(item.label);
+        var fn = this.widget_parent[func_name];
+        if(typeof fn === 'function') {
+            fn(item);
+        }
+    },
+
+    add_default_sections: function() {
+        this.add_section(_t('Customize'), 'customize');
+        this.add_items('customize', [
+            {
+                label: _t("Manage Views"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+            }, {
+                label: _t("Edit Workflow"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+                classname: 'oe_hide oe_sidebar_edit_workflow'
+            }, {
+                label: _t("Customize Object"),
+                callback: this.call_default_on_sidebar,
+                title: _t("Manage views of the current object"),
+            }
+        ]);
+
+        this.add_section(_t('Other Options'), 'other');
+        this.add_items('other', [ 
+            {
+                label: _t("Import"),
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: _t("Export"),
+                callback: this.call_default_on_sidebar,
+            }, {
+                label: _t("Translate"),
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_sidebar_translate oe_hide'
+            }, {
+                label: _t("View Log"),
+                callback: this.call_default_on_sidebar,
+                classname: 'oe_hide oe_sidebar_view_log'
+            }
+        ]);
+    },
+
     add_toolbar: function(toolbar) {
         var self = this;
-        _.each([['print', "Reports"], ['action', "Actions"], ['relate', "Links"]], function(type) {
+        _.each([['print', _t("Reports")], ['action', _t("Actions")], ['relate', _t("Links")]], function(type) {
             var items = toolbar[type[0]];
             if (items.length) {
                 for (var i = 0; i < items.length; i++) {
@@ -526,15 +589,30 @@ db.web.Sidebar = db.web.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_section(type[0], type[1], items);
+                self.add_section(type[1], type[0]);
+                self.add_items(type[0], items);
             }
         });
     },
-    add_section: function(code, name, items) {
-        // For each section, we pass a name/label and optionally an array of items.
-        // If no items are passed, then the section will be created as a custom section
-        // returning back an element_id to be used by a custom controller.
-        // Else, the section is a standard section with items displayed as links.
+    
+    add_section: function(name, code) {
+        if(!code) code = _.underscored(name);
+        var $section = this.sections[code];
+
+        if(!$section) {
+            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            var $section = $(db.web.qweb.render("Sidebar.section", {
+                section_id: section_id,
+                name: name,
+                classname: 'oe_sidebar_' + code,
+            }));
+            $section.appendTo(this.$element.find('div.sidebar-actions'));
+            this.sections[code] = $section;
+        }
+        return $section;
+    },
+
+    add_items: function(section_code, items) {
         // An item is a dictonary : {
         //    label: label to be displayed for the link,
         //    action: action to be launch when the link is clicked,
@@ -543,25 +621,24 @@ db.web.Sidebar = db.web.Widget.extend({
         //    title: optional title for the link
         // }
         // Note: The item should have one action or/and a callback
+        //
+
         var self = this,
-            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            $section = this.add_section(_.titleize(section_code.replace('_', ' ')), section_code),
+            section_id = $section.attr('id');
+
         if (items) {
             for (var i = 0; i < items.length; i++) {
                 items[i].element_id = _.uniqueId(section_id + '_item_');
                 this.items[items[i].element_id] = items[i];
             }
-        }
-        var $section = $(db.web.qweb.render("Sidebar.section", {
-            section_id: section_id,
-            name: name,
-            classname: 'oe_sidebar_' + code,
-            items: items
-        }));
-        if (items) {
-            $section.find('a.oe_sidebar_action_a').click(function() {
+
+            var $items = $(db.web.qweb.render("Sidebar.section.items", {items: items}));
+
+            $items.find('a.oe_sidebar_action_a').click(function() {
                 var item = self.items[$(this).attr('id')];
                 if (item.callback) {
-                    item.callback();
+                    item.callback.apply(self, [item]);
                 }
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
@@ -591,10 +668,13 @@ db.web.Sidebar = db.web.Widget.extend({
                 }
                 return false;
             });
+        
+            var $ul = $section.find('ul');
+            if(!$ul.length) {
+                $ul = $('<ul/>').appendTo($section);
+            }
+            $items.appendTo($ul);
         }
-        $section.appendTo(this.$element.find('div.sidebar-actions'));
-        this.sections[code] = $section;
-        return section_id;
     },
     do_fold: function() {
         this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
@@ -777,33 +857,41 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
                 return self.widget_parent.on_action_executed.apply(null, arguments);
             }
         };
+        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
+        
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
-                return self.rpc('/web/session/eval_domain_and_context', {
-                    contexts: [dataset.get_context(), action.context || {}, {
-                        active_id: record_id || false,
-                        active_ids: [record_id || false],
+                var ncontext = new db.web.CompoundContext(context);
+                if (record_id) {
+                    ncontext.add({
+                        active_id: record_id,
+                        active_ids: [record_id],
                         active_model: dataset.model
-                    }],
+                    });
+                }
+                ncontext.add(action.context || {});
+                return self.rpc('/web/session/eval_domain_and_context', {
+                    contexts: [ncontext],
                     domains: []
                 }).pipe(function (results) {
-                    action.context = results.context
+                    action.context = results.context;
+                    /* niv: previously we were overriding once more with action_data.context,
+                     * I assumed this was not a correct behavior and removed it
+                     */
                     return self.do_action(action, result_handler);
-                });
+                }, null);
             } else {
                 return result_handler();
             }
         };
-
-        var context = new db.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
         if (action_data.special) {
             return handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
+            return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context, do_not_eval: true}, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
         }
@@ -823,46 +911,15 @@ db.web.View = db.web.Widget.extend(/** @lends db.web.View# */{
     },
     do_search: function(view) {
     },
+
     set_common_sidebar_sections: function(sidebar) {
-        sidebar.add_section('customize', "Customize", [
-            {
-                label: "Manage Views",
-                callback: this.on_sidebar_manage_view,
-                title: "Manage views of the current object"
-            }, {
-                label: "Edit Workflow",
-                callback: this.on_sidebar_edit_workflow,
-                title: "Manage views of the current object",
-                classname: 'oe_hide oe_sidebar_edit_workflow'
-            }, {
-                label: "Customize Object",
-                callback: this.on_sidebar_customize_object,
-                title: "Manage views of the current object"
-            }
-        ]);
-        sidebar.add_section('other', "Other Options", [
-            {
-                label: "Import",
-                callback: this.on_sidebar_import
-            }, {
-                label: "Export",
-                callback: this.on_sidebar_export
-            }, {
-                label: "Translate",
-                callback: this.on_sidebar_translate,
-                classname: 'oe_sidebar_translate oe_hide'
-            }, {
-                label: "View Log",
-                callback: this.on_sidebar_view_log,
-                classname: 'oe_hide oe_sidebar_view_log'
-            }
-        ]);
+        sidebar.add_default_sections();
     },
-    on_sidebar_manage_view: function() {
+    on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
             $('<xmp>' + db.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         } else {
-            this.notification.warn("Manage Views", "Could not find current view declaration");
+            this.do_warn("Manage Views", "Could not find current view declaration");
         }
     },
     on_sidebar_edit_workflow: function() {

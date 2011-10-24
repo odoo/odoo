@@ -32,6 +32,8 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
         this.records = {};
 
         this.options = _.extend({}, this.defaults, options || {});
+
+        _.bindAll(this, 'color_for');
     },
 
     start: function () {
@@ -107,6 +109,43 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
                 $select.change();
             }
         });
+
+        if (!this.fields_view.arch.attrs.colors) {
+            return;
+        }
+        this.colors = _(this.fields_view.arch.attrs.colors.split(';')).chain()
+            .compact()
+            .map(function(color_pair) {
+                var pair = color_pair.split(':'),
+                    color = pair[0],
+                    expr = pair[1];
+                return [color, py.parse(py.tokenize(expr)), expr];
+            }).value();
+    },
+    /**
+     * Returns the color for the provided record in the current view (from the
+     * ``@colors`` attribute)
+     *
+     * @param {Object} record record for the current row
+     * @returns {String} CSS color declaration
+     */
+    color_for: function (record) {
+        if (!this.colors) { return ''; }
+        var context = _.extend({}, record, {
+            uid: this.session.uid,
+            current_date: new Date().toString('yyyy-MM-dd')
+            // TODO: time, datetime, relativedelta
+        });
+        for(var i=0, len=this.colors.length; i<len; ++i) {
+            var pair = this.colors[i],
+                color = pair[0],
+                expression = pair[1];
+            if (py.evaluate(expression, context)) {
+                return 'color: ' + color + ';';
+            }
+            // TODO: handle evaluation errors
+        }
+        return '';
     },
     /**
      * Sets up opening a row
@@ -159,7 +198,8 @@ openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# 
                 'fields_view': self.fields_view.arch.children,
                 'fields': self.fields,
                 'level': $curr_node.data('level') || 0,
-                'render': openerp.web.format_value
+                'render': openerp.web.format_value,
+                'color_for': self.color_for
             });
 
             if ($curr_node.length) {

@@ -54,7 +54,7 @@ def extract_qweb(fileobj, keywords, comment_tags, options):
         for el in current_element:
             if "t-js" not in el.attrib and \
                     not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
-                    not ("t-trad" in el.attrib and el.attrib["t-trad"].strip() == "off"):
+                    not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
                 handle_text(el.text)
                 iter_elements(el)
             handle_text(el.tail)

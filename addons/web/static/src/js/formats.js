@@ -28,10 +28,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
             var int_part = Math.floor(value);
-            var dec_part = Math.abs(Math.floor((value % 1) * Math.pow(10, precision)));
-            return _.sprintf('%d%s%d',
-                        int_part,
-                        openerp.web._t.database.parameters.decimal_point, dec_part);
+            var dec_part = _.sprintf(
+                    '%.' + precision + 'f',
+                    Math.abs(value) % 1).substring(2);
+            return _.sprintf('%d%s%s',
+                    int_part,
+                    openerp.web._t.database.parameters.decimal_point,
+                    dec_part);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -69,6 +72,13 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             } catch (e) {
                 return value.format("%H:%M:%S");
             }
+        case 'selection':
+            // Each choice is [value, label]
+            var result = _(descriptor.selection).detect(function (choice) {
+                return choice[0] === value;
+            });
+            if (result) { return result[1]; }
+            return;
         default:
             return value;
     }

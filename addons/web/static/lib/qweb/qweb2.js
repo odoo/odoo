@@ -207,6 +207,7 @@ QWeb2.Engine = (function() {
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
         this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
         this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
+        this.format_text_node = null;
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -317,12 +318,14 @@ QWeb2.Engine = (function() {
                     "   dict = dict || {};\n" +
                     "   dict['__template__'] = '" + template + "';\n" +
                     "   var r = [];\n" +
-                    "   /* START TEMPLATE */ try {\n" +
+                    "   /* START TEMPLATE */" +
+                    (this.debug ? "" : " try {\n") +
                     (e.compile()) + "\n" +
-                    "   /* END OF TEMPLATE */ } catch(error) {\n" +
+                    "   /* END OF TEMPLATE */" +
+                    (this.debug ? "" : " } catch(error) {\n" +
                     "       if (console && console.exception) console.exception(error);\n" +
-                    "       context.engine.tools.exception('Runtime Error: ' + error, context);\n" +
-                    "   }\n" +
+                    "       context.engine.tools.exception('Runtime Error: ' + error, context);\n") +
+                    (this.debug ? "" : "   }\n") +
                     "   return r.join('');";
         },
         render : function(template, dict) {
@@ -486,12 +489,16 @@ QWeb2.Element = (function() {
         },
         _compile : function() {
             switch (this.node.nodeType) {
-              case 3:
-              case 4:
-                this.top_string(this.node.data);
+                case 3:
+                case 4:
+                    var text = this.node.data;
+                    if (this.engine.format_text_node) {
+                        text = this.engine.format_text_node.call(this, text);
+                    }
+                    this.top_string(text);
                 break;
-              case 1:
-                this.compile_element();
+                case 1:
+                    this.compile_element();
             }
             var r = this._top.join('');
             if (this.process_children) {
