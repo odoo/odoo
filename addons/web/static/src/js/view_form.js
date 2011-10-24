@@ -2813,9 +2813,6 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     }
 });
 
-openerp.web.form.WidgetNotebookReadonly = openerp.web.form.WidgetNotebook.extend({
-    template: 'WidgetNotebook.readonly'
-});
 openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 
 });
@@ -2934,7 +2931,6 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'statusbar': 'openerp.web.form.FieldStatus'
 });
 openerp.web.form.readonly = openerp.web.form.widgets.clone({
-    'notebook': 'openerp.web.form.WidgetNotebookReadonly',
     'char': 'openerp.web.form.FieldCharReadonly',
     'email': 'openerp.web.form.FieldEmailReadonly',
     'url': 'openerp.web.form.FieldUrlReadonly',

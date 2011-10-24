@@ -744,12 +744,6 @@
         <t t-call="WidgetFrame"/>
     </div>
 </t>
-<t t-name="WidgetNotebook.readonly">
-    <t t-foreach="widget.pages" t-as="page">
-        <h3><t t-esc="page.string"/></h3>
-        <t t-raw="page.render()"/>
-    </t>
-</t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
         <t t-esc="widget.string"/>
