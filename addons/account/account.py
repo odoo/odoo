@@ -332,19 +332,18 @@ class account_account(osv.osv):
                 for acc in record.child_consol_ids:
                     if acc.id not in result[record.id]:
                         result[record.id].append(acc.id)
-                        
+
         return result
-    
+
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
-            parent_id = account.parent_id
-            while parent_id:
-                obj = self.browse(cr, uid, parent_id.id)
+            parent = account.parent_id
+            while parent:
                 level += 1
-                parent_id = obj.parent_id
+                parent = parent.parent_id
             res[account.id] = level
         return res
 
@@ -369,8 +368,8 @@ class account_account(osv.osv):
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
-            ('journal_id','=',jids[0]), 
-            ('period_id','=',pids[0]), 
+            ('journal_id','=',jids[0]),
+            ('period_id','=',pids[0]),
             ('account_id','=', account_id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
@@ -935,7 +934,7 @@ class account_period(osv.osv):
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
-    
+
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
