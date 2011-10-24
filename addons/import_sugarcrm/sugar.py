@@ -32,13 +32,21 @@ import import_sugarcrm
 
 import logging
 
+import sys
+
+
+debug = False
+
 
 class LoginError(Exception): pass
 
 def login(username, password, url):
     setURL(url)
     loc = sugarsoapLocator()
-    portType = loc.getsugarsoapPortType(url)
+    if debug:
+        portType = loc.getsugarsoapPortType(url, tracefile=sys.stdout)
+    else:
+        portType = loc.getsugarsoapPortType(url)
     request = loginRequest()
     uauth = ns0.user_auth_Def(request)
     request._user_auth = uauth
