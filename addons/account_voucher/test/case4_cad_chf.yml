@@ -97,7 +97,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_john0"), ref('bank_journal_CHF'), 200.00, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_john0"), ref('bank_journal_CHF'), 200.00, ref('base.CHF'), ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 200.00,
@@ -107,13 +107,14 @@
         'partner_id': ref('res_partner_john0'),
         'period_id': ref('account.period_3'),
         'type': 'receipt',
-        'date': time.strftime("%Y-03-01"),
+        'date': time.strftime("%Y-%m-%d"),
         'payment_option': 'with_writeoff',
         'writeoff_acc_id': ref('account.a_expense'),
         'exchange_acc_id': ref('account.o_expense'),
         'comment': 'Write Off',
         'name': 'First payment',
     }
+    vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-03-01'), ref('base.CHF'), 200.0)['value'])
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     for item in res['value']['line_cr_ids']:
