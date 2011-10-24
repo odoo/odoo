@@ -22,3 +22,4 @@
 import edi
 import res_partner
 import res_company
+import res_currency
