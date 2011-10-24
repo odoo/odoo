@@ -47,7 +47,13 @@
         "__import_model": "purchase.order",
         "__version": [6,1,0],
         "name": "SO008", 
-        "currency_id": ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.EUR", "EUR (€)"],
+        "currency": {
+                "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.EUR",
+                "__module": "base",
+                "__model": "res.currency",
+                "code": "EUR",
+                "symbol": "€",
+        },
         "date_order": "2011-09-13", 
         "partner_id": ["sale:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_test22", "Junjun wala"],
         "partner_address": {

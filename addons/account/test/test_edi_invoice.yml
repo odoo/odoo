@@ -65,7 +65,13 @@
                 "street": "Chaussee de Namur 40"
         }, 
         "company_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_company_test11", "Thomson pvt. ltd."], 
-        "currency_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR", "EUR (€)"], 
+        "currency": {
+            "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR",
+            "__module": "base",
+            "__model": "res.currency",
+            "code": "EUR",
+            "symbol": "€",
+        }, 
         "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"],
         "partner_address": {
                 "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",

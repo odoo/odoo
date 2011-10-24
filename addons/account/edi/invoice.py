@@ -54,7 +54,7 @@ INVOICE_EDI_STRUCT = {
     'date_due': True,
     'partner_id': True,
     'payment_term': True,
-    'currency_id': True, # TODO: should perhaps include sample rate + rounding
+    #custom: currency_id
     'invoice_line': INVOICE_LINE_EDI_STRUCT,
     'tax_line': INVOICE_TAX_LINE_EDI_STRUCT,
 }
@@ -77,6 +77,8 @@ class account_invoice(osv.osv, EDIMixin):
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
                     'company_paypal_account': invoice.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [invoice.address_invoice_id], context=context)[0],
+
+                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context),
                     #'company_logo': #TODO
             })
             edi_doc_list.append(edi_doc)
@@ -169,7 +171,14 @@ class account_invoice(osv.osv, EDIMixin):
         """
         if context is None:
             context = {}
-        self._edi_requires_attributes(('company_id','company_address','type','invoice_line'), edi_document)
+        self._edi_requires_attributes(('company_id','company_address','type','invoice_line','currency'), edi_document)
+
+        # extract currency info
+        res_currency = self.pool.get('res.currency')
+        currency_info = edi_document.pop('currency')
+        currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
+        currency = res_currency.browse(cr, uid, currency_id)
+        edi_document['currency_id'] =  self.edi_m2o(cr, uid, currency, context=context)
 
         # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
         invoice_type = edi_document['type']

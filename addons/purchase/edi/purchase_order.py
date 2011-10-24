@@ -79,7 +79,8 @@ class purchase_order(osv.osv, EDIMixin):
                     'company_paypal_account': order.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_address_id], context=context)[0],
 
-                    'currency_id': self.edi_m2o(cr, uid, order.pricelist_id.currency_id, context=context),
+                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
+                                                                         context=context)[0],
                     #'company_logo': #TODO
             })
             edi_doc_list.append(edi_doc)
@@ -152,15 +153,15 @@ class purchase_order(osv.osv, EDIMixin):
         return self.edi_m2o(cr, uid, location, context=context)
 
     def edi_import(self, cr, uid, edi_document, context=None):
-        self._edi_requires_attributes(('company_id','company_address','order_line','date_order','currency_id'), edi_document)
+        self._edi_requires_attributes(('company_id','company_address','order_line','date_order','currency'), edi_document)
 
         #import company as a new partner
         partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
 
         # currency for rounding the discount calculations and for the pricelist
-        currency_id, currency_name = edi_document.pop('currency_id')
-        currency_id = self.edi_import_relation(cr, uid, 'res.currency', currency_name, currency_id, context=context)
         res_currency = self.pool.get('res.currency')
+        currency_info = edi_document.pop('currency')
+        currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
         order_currency = res_currency.browse(cr, uid, currency_id)
 
         partner_ref = edi_document.pop('partner_ref', False)
