@@ -593,7 +593,8 @@
                     <t t-esc="column.string"/>
                 </th>
             </t>
-            <th t-if="options.selectable" width="1"/>
+            <th t-if="options.selectable" width="1"  >
+                <input type="checkbox" id ="all_checked"/> </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">

@@ -201,8 +201,8 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.setup_columns(this.fields_view.fields, grouped);
 
         this.$element.html(QWeb.render("ListView", this));
-
         // Head hook
+        this.$element.find('#all_checked').click(this.do_all_checked);
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
@@ -268,6 +268,11 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
         }
+    },
+
+    do_all_checked:function (ev) {
+        var all_checkbox = this.$element.find('.oe-record-selector :checkbox')
+        all_checkbox.attr('checked', !all_checkbox.attr('checked'));
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -650,6 +655,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             $first_header.attr('colspan', parseInt(colspan, 10) + count);
         }
         // Padding for column titles, footer and data rows
+
         var $rows = this.$element
                 .find('.oe-listview-header-columns, tr:not(thead tr)')
                 .not(options['except']);
