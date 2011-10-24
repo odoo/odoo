@@ -58,7 +58,7 @@ class base_setup_installer(osv.osv_memory):
         if fields is None:
             fields = {}
 
-        fields = {} 
+        fields = {}
         category_proxy = self.pool.get('ir.module.category')
         domain = [('parent_id', '=', False),
                   ('name', '!=', 'Uncategorized'),
@@ -310,6 +310,7 @@ class base_setup_installer(osv.osv_memory):
             if need_update:
                 cr.commit()
                 self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
+            return self.pool.get('res.config').next(cr, uid, [], context=context)
 
         if 'html' in context:
             return {'type' : 'ir.actions.reload'}
@@ -389,14 +390,14 @@ class user_preferences_config(osv.osv_memory):
                                   ('extended','Extended')],
                                  'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
         'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
-                                 
+
     }
     _defaults={
                'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
                'context_lang' : 'en_US',
                'menu_tips' : True
     }
-    
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
