@@ -1276,8 +1276,7 @@ class account_move(osv.osv):
                     if not l[0]:
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
-
-        if 'line_id' in vals:
+        if vals.get('line_id'):
             c = context.copy()
             c['novalidate'] = True
             result = super(account_move, self).create(cr, uid, vals, c)
@@ -1413,6 +1412,8 @@ class account_move(osv.osv):
     # Validate a balanced move. If it is a centralised journal, create a move.
     #
     def validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if context and ('__last_update' in context):
             del context['__last_update']
 
@@ -1422,7 +1423,7 @@ class account_move(osv.osv):
 
         for move in self.browse(cr, uid, ids, context):
             # Unlink old analytic lines on move_lines
-            if not move.line_id:
+            if not move.line_id and not context.get('lines_cancel'):
                 raise osv.except_osv(_('No Move Lines !'), _('Please create some move lines.'))
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:

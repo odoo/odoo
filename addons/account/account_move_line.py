@@ -1095,6 +1095,7 @@ class account_move_line(osv.osv):
             context['period_id'] = line.period_id.id
             result = super(account_move_line, self).unlink(cr, uid, [line.id], context=context)
             if check:
+                context.update({'lines_cancel': 'cancel'})
                 move_obj.validate(cr, uid, [line.move_id.id], context=context)
         return result
 
