@@ -166,6 +166,17 @@ class product_uom(osv.osv):
         if value == 'reference':
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
+    
+    def write(self, cr, uid, ids, vals, context=None, update_check=True):
+        if context is None:
+            context={}
+        category_browse = self.browse(cr, uid,ids)[0]
+        old_category = category_browse.category_id
+        if 'category_id' in vals.keys():
+            if vals['category_id'] <> old_category.id:
+                raise osv.except_osv(_('Warning'),_("User can not change the existing UOM category '%s' !! ") % (old_category.name,))
+        res = super(product_uom, self).write(cr, uid, ids, vals, context=context)
+        return res
 
 product_uom()
 
@@ -327,6 +338,20 @@ class product_template(osv.osv):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
         return False
+
+    def write(self, cr, uid, ids, vals, context=None, update_check=True):
+        if context is None:
+            context={}
+        product = self.pool.get('product.product')
+        uom_obj = self.pool.get('product.uom')
+        product_uom1  = product.browse(cr, uid, ids)[0]
+        category_1 = uom_obj.browse(cr, uid, product_uom1.uom_id.id).category_id
+        if 'uom_po_id' in vals.keys():
+            category_2 = uom_obj.browse(cr, uid, vals['uom_po_id']).category_id
+            if category_1.id != category_2.id:
+                raise osv.except_osv(_('UOM categories Mismatch !'),_("You can not change the UoM/Purchase UoM category from '%s' to '%s' ! \n Old UoM And New UoM should be belongs to same category ") % (category_1.name,category_2.name,))
+        res = super(product_template, self).write(cr, uid, ids, vals, context=context)
+        return res
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
