@@ -1419,8 +1419,27 @@
         <label for="csvfile">CSV File:</label>
         <input type="file" id="csvfile" size="50" name="csvfile"/>
     </p>
-    <h2 class="separator horizontal">2. Check your file format</h2>
     <div id="result"></div>
+</form>
+</t>
+<t t-name="ImportView.result">
+    <h2 class="separator horizontal">2. Check your file format</h2>
+    <table class="oe_import_grid" width="100%" style="margin: 5px 0;">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
+                <t t-esc="header"/></td>
+        </tr>
+        <tr>
+            <td t-foreach="records[0]" t-as="column">
+                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
+                        <img src="/web/static/src/img/down-arrow.png" /></span>
+            </td>
+        </tr>
+        <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
+            <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
+                <t t-esc="cell"/></td>
+        </tr>
+    </table>
     <fieldset>
         <legend style="cursor:pointer;">Import Options</legend>
         <table style="display:none">
@@ -1451,25 +1470,7 @@
             </tr>
         </table>
     </fieldset>
-</form>
 </t>
-<table t-name="ImportView.result"
-        class="oe_import_grid" width="100%" style="margin: 5px 0;">
-    <tr t-if="headers" class="oe_import_grid-header">
-        <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
-            <t t-esc="header"/></td>
-    </tr>
-    <tr>
-        <td t-foreach="records[0]" t-as="column">
-            <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
-                    <img src="/web/static/src/img/down-arrow.png" /></span>
-        </td>
-    </tr>
-    <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
-        <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
-            <t t-esc="cell"/></td>
-    </tr>
-</table>
 <t t-name="ImportView.error">
     <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
     <t t-if="error.preview">
