@@ -295,14 +295,13 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
-         <record id="view_account_gain" model="ir.ui.view">
-           <field name="name">account.account.tree1</field>
+         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+           <field name="name">Unrealized Gains and losses</field>
             <field name="model">account.account</field>
             <field name="type">tree</field>
-            <field name="priority">21</field>
             <field name="arch" type="xml">
-                <tree string="Unrealized Gains and losses ">
-                     <field name="code"/>
+                <tree string="Unrealized Gains and losses">
+                    <field name="code"/>
                     <field name="name"/>
                     <field name="currency_id"/>
                     <field name="foreign_balance"/>
@@ -313,19 +312,21 @@
             </field>
         </record>
 
-          <record id="action_account_gain" model="ir.actions.act_window">
-            <field name="name">Unrealized Gains and losses </field>
+          <record id="action_account_gain_loss" model="ir.actions.act_window">
+            <field name="name">Unrealized Gains &amp; Losses </field>
             <field name="res_model">account.account</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_account_gain"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_gain_loss_tree"/>
             <field name="domain">[('currency_id','!=',False)]</field>
         </record>
 
         <menuitem
-            name="Unrealized Gains and losses"
-            action="action_account_gain"
+            name="Unrealized Gains &amp; Losses"
+            action="action_account_gain_loss"
             id="menu_unrealized_gains_losses"
-            parent="account.next_id_currency"/>
+            parent="account.menu_multi_currency"/>
+
         <!--
         Journal
 
