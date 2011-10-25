@@ -77,10 +77,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 if (attrs.nodeName == "name") {
                 render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"'; }
             }
-            if (attrs.nodeName != "position") {
-                obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
-            }
-        });
+            obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
+            });
         render_name+= ">";
         });
         obj.name = render_name;
@@ -189,7 +187,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     check_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),""));
                 });
             } else {
-                    check_list = [_.flatten(xpath_object[0].child_id[0].att_list)];
+                    var temp = [];
+                    _.each(xpath_object[0].child_id[0].att_list, function(list){
+                        if(!_.include(list, "position")){
+                           temp.push(list);
+                        }
+                    });
+                    check_list = [_.flatten(temp)];
             }
             self.full_path_search(check_list ,one_object ,xpath_object);
         });
@@ -345,10 +349,13 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         }
                     }
-                    if (last_tr.length != 0 &&  parseInt(last_tr.attr('level')) == level) {
+                    if (last_tr.length != 0 
+                            && parseInt(last_tr.attr('level')) == level
+                                && ($(last_tr).find('a').text()).search("view_id") == -1) {
                         _.each(list_shift, function(rec) {
                              $(last_tr).before(rec);
                         });
+                        self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level, "up");
                     }
                 break;
             case "side-down":
@@ -379,25 +386,40 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             last_tr = next_tr;
                         }
                     }
+                    
                     list_shift.reverse();
-                    _.each(list_shift, function(rec) {
-                       $(last_tr).after(rec);
-                    });
-                    self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level);
+                    if(($(side.next()).find('a').text()).search("view_id") == -1){
+                        _.each(list_shift, function(rec) {
+                           $(last_tr).after(rec);
+                        });
+                        self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level, "down");
+                    }
                 }
                 break;
             }
         });
     },
-    save_move_arch: function(one_object, view_id, view_xml_id, id_tr, level){
+
+    save_move_arch: function(one_object, view_id, view_xml_id, id_tr, level, move_direct){
         var self = this;
         var arch = _.detect(one_object['arch'],function(element){
             return element.view_id == view_id;
         });
         var obj = self.get_view_object(view_xml_id, one_object['main_object'], []);
+        if(($(arch.arch).filter("data")).length != 0 && view_xml_id != 0){
+            var check_list = _.flatten(obj[0].child_id[0].att_list);
+            arch.arch = _.detect($(arch.arch).children(), function(xml_child){
+                var temp_obj = self.check_attr(xml_child, xml_child.tagName.toLowerCase());
+                var main_list = _.flatten(temp_obj.att_list);
+                check_list = _.uniq(check_list);
+                var insert = _.intersection(main_list,check_list);
+                if(insert.length == check_list.length ){return xml_child;}
+            });
+        }
         return self.get_node(arch.arch, obj[0].child_id[0], parseInt(id_tr), [], parseInt(level),
-                        parseInt(view_id), arch);
+                        parseInt(view_id), arch, move_direct);
     },
+
     get_view_object: function(view_xml_id, one_object,result){
         var self = this;
         if(result.length==0){
@@ -411,42 +433,49 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         return result;
     },
-    get_node: function(arch1, obj, id, child_list, level, view_id, arch){
+
+    get_node: function(arch1, obj, id, child_list, level, view_id, arch, move_direct){
         var self = this;
-        console.log(obj.id,id);
         var children_list =  $(arch1).children();
-        if(obj.level <= level){
-            if(parseInt(id) == obj.id){
-                var next = $(arch1).next()
-                $(next).after(arch1);
+        var list_obj_xml = _.zip(children_list,obj.child_id);
+        if(id){
+            if(obj.id == id){
+                var id;
                 var parent = $(arch1).parents();
-                console.log(id,"--------",obj.id);
-                console.log(next,"========",arch1);
-                parent = parent[parent.length-1];
-                var convert_to_utf = "";
-                var s = new XMLSerializer();  
-                var stream = {  
-                    write : function(string)  
-                    {convert_to_utf = convert_to_utf + string + "";}
-                };  
                 var index = _.indexOf(child_list,obj)
                 var re_insert_obj = child_list.splice(index,1);
-                child_list.splice(index+1, 0, re_insert_obj[0]);
-                s.serializeToStream(parent, stream, "UTF-8");
+                if(move_direct == "down"){
+                    var next = $(arch1).next();
+                    $(next).after(arch1);
+                    child_list.splice(index+1, 0, re_insert_obj[0]);
+                }else{
+                    var prev = $(arch1).prev();
+                    $(prev).before(arch1);
+                    child_list.splice(index-1, 0, re_insert_obj[0]);
+                }
+                parent = parent[parent.length-1];
+                var convert_to_utf = "";
+                var xml_serilalizer = new XMLSerializer();
+                var stream = {
+                    write : function(string)
+                    {convert_to_utf = convert_to_utf + string + "";}
+                };
+                xml_serilalizer.serializeToStream(parent, stream, "UTF-8");
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                 convert_to_utf = '<?xml version="1.0" encoding="utf-8"?>' + convert_to_utf;
                 arch.arch = convert_to_utf;
                 dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-                dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
+                    dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
                 });
-            }else{
-                for(var i=0;i< children_list.length; i++){
-                    if(obj.child_id){var child_list = obj.child_id};
-                    self.get_node(children_list[i], obj.child_id[i], id, child_list, level, view_id, arch);
-                }
+            }
+            if(obj.level <= level){
+                _.each(list_obj_xml, function(child_node){
+                    self.get_node(child_node[0], child_node[1], id, obj.child_id, level, view_id, arch, move_direct);
+                });
             }
         }
     },
+
     on_expand: function(self){
         var level = parseInt($(self).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(self).closest("tr[id^='viewedit-']");
@@ -458,6 +487,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             } else return nxt_tr;
         }
     },
+
     on_collapse: function(self, parent_child_id, id, main_object) {
         var id = self.id.split('-')[1];
         var datas = _.detect(parent_child_id,function(res) {
@@ -469,5 +499,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             tr.show();
         });
     }
+
 });
 };
