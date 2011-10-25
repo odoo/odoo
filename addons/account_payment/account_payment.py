@@ -108,6 +108,7 @@ class payment_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'draft'})
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
+            wf_service.trg_delete(uid, 'payment.order', id, cr)
             wf_service.trg_create(uid, 'payment.order', id, cr)
         return True
 
