@@ -1145,25 +1145,7 @@ class stock_picking(osv.osv):
                 move_obj.unlink(cr, uid, ids2, ctx)
 
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
-    
-    def do_validate(self, cr, uid, ids, context=None):
-        """
-        forcefully to validate picking with move lines
-        """
-        for picking in self.browse(cr, uid, ids, context=context):
-            partial_datas = {
-                'partner_id': picking.address_id.partner_id.id,
-                'address_id': picking.address_id.id,
-                'delivery_date' : time.strftime('%Y-%m-%d')
-               }
-            for move in picking.move_lines:     
-              partial_datas['move%s'%(move.id)]= {
-                  'product_id': move.product_id,
-                  'product_qty': move.product_qty,
-                  'product_uom': move.product_uom.id,
-              }
-            val = self.do_partial(cr, uid, [picking.id], partial_datas, context=context)
-        return val  
+
     # FIXME: needs refactoring, this code is partially duplicated in stock_move.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
         """ Makes partial picking and moves done.

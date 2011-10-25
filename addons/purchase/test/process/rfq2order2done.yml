@@ -73,13 +73,13 @@
         assert picking.move_lines[index].product_uos_qty == purchase_order.order_line[index].product_qty,"UOS Quantity is not correspond"
         assert picking.move_lines[index].product_uos == purchase_order.order_line[index].product_uom ,"UOS is not correspond"
         assert picking.move_lines[index].price_unit == purchase_order.order_line[index].price_unit ,"Price unit is not correspond"
-
 -
   Reception is ready for process so now done the reception.
 -
-  !python {model: stock.picking}: |
-    pick_ids = self.search(cr, uid, [('purchase_id','=',ref('order_purchase1'))])
-    self.do_validate(cr, uid, pick_ids)
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase1")).picking_ids
+    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[1].id]})
+    self.do_partial(cr, uid, [partial_id])
 -
   I check that purchase order is shipped.
 -
