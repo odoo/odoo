@@ -1206,6 +1206,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         var options = { offset: page * limit, limit: limit };
         //TODO xmo: investigate why we need to put the setTimeout
         setTimeout(function() {dataset.read_slice(fields, options , function (records) {
+            // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
+            if (self.records.length) {
+                self.records.reset(null, {silent: true});
+            }
             if (!self.datagroup.openable) {
                 view.configure_pager(dataset);
             } else {
@@ -1546,7 +1550,8 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * @param {Array} [records]
      * @returns this
      */
-    reset: function (records) {
+    reset: function (records, options) {
+        options = options || {};
         _(this._proxies).each(function (proxy) {
             proxy.reset();
         });
@@ -1557,7 +1562,9 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
         if (records) {
             this.add(records);
         }
-        this.trigger('reset', this);
+        if (!options.silent) {
+            this.trigger('reset', this);
+        }
         return this;
     },
     /**
