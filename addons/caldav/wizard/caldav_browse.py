@@ -24,6 +24,7 @@ from tools import config
 import base64
 import addons
 from tools.translate import _
+import tools
 
 class caldav_browse(osv.osv_memory):
 
@@ -176,16 +177,6 @@ configuration
         pref_ids = pref_obj.browse(cr, uid ,context.get('rec_id',False), context=context)
         res = {}
         host = context.get('host')
-        port = ''
-        prefix = 'http://'
-        if not config.get('xmlrpc'):
-            if not config.get('netrpc'):
-                prefix = 'https://'
-                port = config.get('xmlrpcs_port', 8071)
-            else:
-                port = config.get('netrpc_port',8070)
-        else:
-            port = config.get('xmlrpc_port',8069)
         if not config.get_misc('webdav','enable',True):
             raise Exception("WebDAV is disabled, cannot continue")
         user_pool = self.pool.get('res.users')
@@ -195,16 +186,16 @@ configuration
         if pref_ids:
             pref_ids = pref_ids[0]
             if pref_ids.device == 'iphone':
-                url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'
+                url = host + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'
             else :
-                url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
+                url = host + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
 
             res['description'] = self.__doc.get(pref_ids.device , self.__doc['other'])
         file = open(addons.get_module_resource('caldav','doc', 'caldav_doc.pdf'),'rb')
         res['caldav_doc_file'] = base64.encodestring(file.read())
 
         #res['doc_link'] = 'http://doc.openerp.com/'
-        res['url'] = prefix+url
+        res['url'] = url
         return res
 
     def browse_caldav(self, cr, uid, ids, context):
@@ -239,12 +230,8 @@ class user_preference(osv.osv_memory):
         return ids[0]
     
     def _get_default_host(self, cr, uid, context):
-        ids=self.search(cr,uid,[])
-        host_name = ''
-        if ids:
-            ids = len(ids)> 1 and len(ids)-1 or ids[0] # Use len(ids)-1 for taking the value of last id 
-            host_name = self.browse(cr, uid,[ids],context=context)[0].host_name
-        return host_name
+
+        return self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
 
     _defaults={
               'service': 'webdav',
