@@ -201,8 +201,15 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.setup_columns(this.fields_view.fields, grouped);
 
         this.$element.html(QWeb.render("ListView", this));
-
         // Head hook
+        this.$element.find('.all-record-selector').click(function(){
+            self.$element.find('.oe-record-selector input').prop('checked',
+                self.$element.find('.all-record-selector').prop('checked')  || false);
+            var selection = self.groups.get_selection();
+            $(self.groups).trigger(
+                'selected', [selection.ids, selection.records]);
+        });
+
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
