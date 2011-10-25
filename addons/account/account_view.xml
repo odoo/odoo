@@ -320,6 +320,7 @@
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_account_gain_loss_tree"/>
             <field name="domain">[('currency_id','!=',False)]</field>
+            <field name="help">When doing multi-currency transactions, you may loose or gain some amount due to changes in exchange rate, Unrealized Gain or Loss shows this amount for accounts (having secondary currency).</field>
         </record>
 
         <menuitem
