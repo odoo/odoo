@@ -901,9 +901,16 @@ class account_fiscalyear(osv.osv):
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
-        ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
                 raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
