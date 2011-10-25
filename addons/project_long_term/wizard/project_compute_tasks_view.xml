@@ -2,39 +2,39 @@
 <openerp>
     <data>
 
-    	<record id="view_project_compute_tasks" model="ir.ui.view">
+        <record id="view_project_compute_tasks" model="ir.ui.view">
             <field name="name">Compute Task Scheduling</field>
             <field name="model">project.compute.tasks</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Compute Scheduling of Task">
-	                <group colspan="4">
- 					    <separator colspan="4" string="Compute Scheduling of Task for specified project." />
-                        <field name="project_id" widget="selection" colspan="4"/>
+                 <form string="Compute Scheduling of Task">
+                    <group colspan="4">
+                         <separator colspan="4" string="Compute Scheduling of Task for specified project." />
+                        <field name="project_id" colspan="4"/>
                         <separator colspan="4"/>
                         <group colspan="2" col="2">
                         </group>
                         <group colspan="2" col="2">
                             <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
-		            	    <button icon="gtk-ok" name="compute_date" string="C_ompute" type="object"/>
-		              </group>
-		            </group>
-			  	</form>
+                            <button icon="gtk-ok" name="compute_date" string="C_ompute" type="object"/>
+                      </group>
+                    </group>
+                  </form>
             </field>
-		</record>
+        </record>
 
-		<record id="action_project_compute_tasks" model="ir.actions.act_window">
-	           <field name="name">Compute Task Scheduling</field>
-	           <field name="type">ir.actions.act_window</field>
-	           <field name="res_model">project.compute.tasks</field>
-	           <field name="view_type">form</field>
-	           <field name="view_mode">form</field>
-	           <field name="view_id" ref="view_project_compute_tasks"/>
-	           <field name="target">new</field>
-    	</record>
+        <record id="action_project_compute_tasks" model="ir.actions.act_window">
+               <field name="name">Compute Task Scheduling</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">project.compute.tasks</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="view_id" ref="view_project_compute_tasks"/>
+               <field name="target">new</field>
+        </record>
 
- 		<menuitem id="menu_compute_tasks" name="Compute Task Scheduling"
-        	parent="menu_phase_schedule" action="action_project_compute_tasks"/>
+         <menuitem id="menu_compute_tasks" name="Compute Task Scheduling"
+            parent="menu_phase_schedule" action="action_project_compute_tasks"/>
 
     </data>
 </openerp>
