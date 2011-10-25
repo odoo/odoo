@@ -88,7 +88,7 @@ if __name__ == "__main__":
         with open(options.log_config) as file:
             dct = json.load(file)
         logging.config.dictConfig(dct)
-        logging.getLogger("").setLevel(getattr(logging, options.log_level.upper()))
+        logging.getLogger().setLevel(getattr(logging, options.log_level.upper()))
     else:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
 
