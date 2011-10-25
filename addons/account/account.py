@@ -290,7 +290,7 @@ class account_account(osv.osv):
             sums = {}
             currency_obj = self.pool.get('res.currency')
             while brs:
-                current = brs[0]
+                current = brs.pop(0)
 #                can_compute = True
 #                for child in current.child_id:
 #                    if child.id not in sums:
@@ -300,7 +300,6 @@ class account_account(osv.osv):
 #                        except ValueError:
 #                            brs.insert(0, child)
 #                if can_compute:
-                brs.pop(0)
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
@@ -308,12 +307,15 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-                    if current.currency_id and current.exchange_rate:
-                        # Computing Adjusted Balance and Unrealized Gains and losses
-                        # Adjusted Balance = Foreign Balance / Exchange Rate
-                        # Unrealized Gains and losses = Adjusted Balance - Balance 
-                        if fn == 'adjusted_balance':
-                            sums[current.id].update({fn: sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate})
+
+                # as we have to relay on values computed before this is calculated separately than previous fields
+                if current.currency_id and current.exchange_rate and \
+                            ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
+                    # Computing Adjusted Balance and Unrealized Gains and losses
+                    # Adjusted Balance = Foreign Balance / Exchange Rate
+                    # Unrealized Gains and losses = Adjusted Balance - Balance
+                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
+                    sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
 
             for id in ids:
                 res[id] = sums.get(id, null_result)
