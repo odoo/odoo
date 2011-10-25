@@ -1170,6 +1170,10 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
 
 openerp.web.form.FieldChar = openerp.web.form.Field.extend({
     template: 'FieldChar',
+    init: function (view, node) {
+        this._super(view, node);
+        this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
+    },
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input').change(this.on_ui_change);
@@ -2858,9 +2862,16 @@ openerp.web.form.FieldReadonly = openerp.web.form.Field.extend({
 });
 openerp.web.form.FieldCharReadonly = openerp.web.form.FieldReadonly.extend({
     template: 'FieldChar.readonly',
+    init: function(view, node) {
+        this._super(view, node);
+        this.password = this.node.attrs.password === 'True' || this.node.attrs.password === '1';
+    },
     set_value: function (value) {
         this._super.apply(this, arguments);
         var show_value = openerp.web.format_value(value, this, '');
+        if (this.password) {
+            show_value = new Array(show_value.length + 1).join('*');
+        }
         this.$element.find('div').text(show_value);
         return show_value;
     }
