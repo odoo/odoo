@@ -2196,6 +2196,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this._super(view, node);
         this.list_id = _.uniqueId("many2many");
         this.is_started = $.Deferred();
+        this.is_setted = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -2207,18 +2208,10 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.dataset.on_unlink.add_last(function(ids) {
             self.on_ui_change();
         });
-
-        this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': 'Add',
-                    'selectable': self.multi_selection
-            });
-        this.list_view.m2m_field = this;
-        this.list_view.on_loaded.add_last(function() {
-            self.is_started.resolve();
+        
+        this.is_setted.then(function() {
+            self.load_view();
         });
-        setTimeout(function () {
-            self.list_view.appendTo($("#" + self.list_id));
-        }, 0);
     },
     set_value: function(value) {
         value = value || [];
@@ -2229,15 +2222,51 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.dataset.set_ids(value);
         var self = this;
         $.when(this.is_started).then(function() {
+            console.log("lalala");
             self.list_view.reload_content();
         });
+        this.is_setted.resolve();
     },
     get_value: function() {
         return [commands.replace_with(this.dataset.ids)];
     },
     validate: function() {
         this.invalid = false;
-        // TODO niv
+    },
+    load_view: function() {
+        console.info("yop");
+        var self = this;
+        this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
+                    'addable': self.readonly ? null : 'Add',
+                    'deletable': self.readonly ? false : true,
+                    'selectable': self.multi_selection
+            });
+        this.list_view.m2m_field = this;
+        var loaded = $.Deferred();
+        this.list_view.on_loaded.add_last(function() {
+            self.is_started.resolve();
+            loaded.resolve();
+        });
+        setTimeout(function () {
+            self.list_view.appendTo($("#" + self.list_id));
+        }, 0);
+        return loaded;
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        var self = this;
+        if (this.previous_readonly !== this.readonly) {
+            this.previous_readonly = this.readonly;
+            if (this.list_view) {
+                $.when(this.is_started).then(function() {
+                    self.list_view.stop();
+                    $.when(self.load_view()).then(function() {
+                        console.log("lalala2");
+                        self.list_view.reload_content();
+                    });
+                });
+            }
+        }
     }
 });
 
