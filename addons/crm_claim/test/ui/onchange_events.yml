@@ -1,8 +1,14 @@
 -
-  In order to test for changes on partner, data change automatically according to partner.
+  I call onchange_event to change partner on claim form.
 -
   !python {model: crm.claim}: |
     partner_onchange = self.onchange_partner_id(cr, uid, [ref('crm_case_claim04')], ref('base.res_partner_10'))
     assert partner_onchange['value']['partner_phone'] == "+33-658-256545" ,"Phone number is wrong"
-    assert partner_onchange['value']['partner_address_id'] == 20 ,"Address is wrong"
     assert partner_onchange['value']['email_from'] == 'l.dupont@tecsas.fr' ,"Email address is wrong"
+
+-
+  I call onchange event to change contact details on claim form.
+-
+  !python {model: crm.claim}: |
+    self.onchange_partner_address_id(cr, uid, ref('crm_case_claim04'), ref("base.res_partner_address_notsotinysarl0"), email=False)
+    

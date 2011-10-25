@@ -49,7 +49,7 @@ automatically new claims based on incoming emails.
         'crm_claim_demo.xml',
     ],
     'test': ['test/process/claim.yml',
-             'test/ui/claim_form.yml'],
+             'test/ui/onchange_events.yml'],
     'installable': True,
     'active': False,
     'certificate' : '00612027414703404749',

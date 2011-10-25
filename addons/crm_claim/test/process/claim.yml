@@ -1,18 +1,48 @@
 -
-  I check claim which contain customer claim information about 
-  product related problem.
+  Customer claim after sale our product. so He send claim request by email.
 -
-  I make this claim as Open.
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
+-
+  !python {model: mail.thread}: |
+    import addons
+    request_file = open(addons.get_module_resource('crm_claim','test', 'customer_claim.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.claim', request_message)
+
+-
+  After getting the mail, I check details of new claim of that customer.
 -
   !python {model: crm.claim}: |
-    self.case_open(cr, uid, [ref('crm_case_claim04')])
-    claim = self.browse(cr, uid, ref('crm_case_claim04'))
+    from openerp import tools
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert claim_ids and len(claim_ids), "Claim is not created after getting request"
+    claim = self.browse(cr, uid, claim_ids[0], context=context)
+    assert claim.name == tools.ustr("demande derèglement de votre produit."), "Subject does not match"
+
+-
+  I open customer claim.
+-
+  !python {model: crm.claim}: |
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    self.case_open(cr, uid, claim_ids)
+-
+  I check Claim Details after open. 
+-
+  !python {model: crm.claim}: |
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    claim = self.browse(cr, uid, claim_ids[0])
     assert claim.state == "open", "Claim is not in Open state"
     assert claim.stage_id.id == ref("crm.stage_lead1"), "Claim is not in New stage"
 -
-  After complete all service from our side i close this claim.
+  After complete all service from our side, I close this claim.
 -
   !python {model: crm.claim}: |
-    self.case_close(cr, uid, [ref('crm_case_claim04')])
-    claim = self.browse(cr, uid, ref('crm_case_claim04'))
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    self.case_close(cr, uid, claim_ids)
+-
+  I check Claim details after closed
+-
+  !python {model: crm.claim}: |
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    claim = self.browse(cr, uid, claim_ids[0])
     assert claim.state == "done", "Claim is not in close state"

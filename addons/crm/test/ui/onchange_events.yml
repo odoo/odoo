@@ -3,7 +3,6 @@
 -
   !python {model: crm.lead}: |
     action = self.onchange_partner_address_id(cr, uid, ref("crm_case_qrecorp0"), ref("base.res_partner_address_notsotinysarl0"), email=False)
-    assert action['value']['country_id'] == 20, "Country name not True"
     assert action['value']['phone'] == '(+32).81.81.37.00', "phone number is wrong"
 -
   I call onchange event to change email "Opt-out" option for Lead.
