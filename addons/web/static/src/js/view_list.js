@@ -780,8 +780,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
                 e.stopPropagation();
                 var row_id = self.row_id(e.currentTarget);
                 if (row_id !== undefined) {
-                    self.dataset.index = self.records.indexOf(
-                        self.records.get(row_id));
+                    if (!self.dataset.select_id(row_id)) {
+                        throw "Could not find id in dataset"
+                    }
                     self.row_clicked(e);
                 }
             });
@@ -789,7 +790,7 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
     row_clicked: function () {
         $(this).trigger(
             'row_link',
-            [this.records.at(this.dataset.index).get('id'),
+            [this.dataset.ids[this.dataset.index],
              this.dataset]);
     },
     render_cell: function (record, column) {

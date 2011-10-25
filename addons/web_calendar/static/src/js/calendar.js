@@ -156,7 +156,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
-                this.notification.warn("Start date is not defined for event :", evt['id']);
+                if (this.session.debug) {
+                    this.do_warn("Start date is not defined for event :", evt['id']);
+                }
                 break;
             }
 
@@ -267,12 +269,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     do_edit_event: function(event_id) {
+        var self = this;
         event_id = parseInt(event_id, 10);
         var index = _.indexOf(this.dataset.ids, event_id);
         if (index > -1) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show();
-            this.form_dialog.open();
+            this.form_dialog.form.do_show().then(function() {
+                self.form_dialog.open();
+            });
             return false;
         }
         return true;
