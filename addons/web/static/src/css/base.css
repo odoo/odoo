@@ -1410,12 +1410,30 @@ ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
     border-left-color: #B5B9FF;
 }
-.openerp .view_editor{
+.openerp .oe_view_editor {
+    border-collapse: collapse;
+    padding: 0;
+    align: left;
+    width: 100%;
+}
+.openerp .oe_view_editor_colum{
     font-size: 90%;
     font-weight: normal;
-    height : 10%;
     padding: 0;
     border-bottom: 1px solid #CFCCCC;
 }
-
-
+.openerp .oe_view_editor_row:hover{
+    background-color: #F3F3F3;
+}
+.openerp .oe_view_editor_tree_grid{
+    text-align: left;
+    white-space: nowrap;
+    border-collapse: collapse;
+    width: 100%;
+}
+.openerp .oe_view_editor_tree_grid a:hover {
+    color: blue;
+}
+.openerp .oe_view_editor_tree_grid a {
+    display: block;
+}
