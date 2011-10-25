@@ -55,7 +55,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             record: this.do_transform_record(record),
             kanban_color: _.bind(this.kanban_color, this),
             kanban_gravatar: _.bind(this.kanban_gravatar, this),
-            kanban_image: _.bind(this.kanban_image, this)
+            kanban_image: _.bind(this.kanban_image, this),
+            '_' : _
         }
     },
     kanban_color: function(variable) {
