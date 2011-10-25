@@ -378,8 +378,8 @@ openerp.web_dashboard.apps = {
                 module: 'account_voucher', name: 'Invoicing',
                 help: "Send invoice, track payments and reminders"
             }, {
-                module: 'project', name: 'Projects',
-                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
+                module: 'point_of_sale', name: 'Point of Sales',
+                help: "Manage shop sales, use touch-screen POS"
             }
         ], [
             {
@@ -389,19 +389,19 @@ openerp.web_dashboard.apps = {
                 module: 'stock', name: 'Warehouse',
                 help: "Track your stocks, schedule product moves, manage incoming and outgoing shipments, \u2026"
             }, {
-                module: 'hr', name: 'Human Resources',
-                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
+                module: 'mrp', name: 'Manufacturing',
+                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
             }, {
-                module: 'point_of_sale', name: 'Point of Sales',
-                help: "Manage shop sales, use touch-screen POS"
+                module: 'account_accountant', name: 'Accounting and Finance',
+                help: "Record financial operations, automate followup, manage multi-currency, \u2026"
             }
         ], [
             {
-                module: 'profile_tools', name: 'Extra Tools',
-                help: "Track ideas, manage lunch, create surveys, share data"
+                module: 'project', name: 'Projects',
+                help: "Manage projects, track tasks, invoice task works, follow issues, \u2026"
             }, {
-                module: 'mrp', name: 'Manufacturing',
-                help: "Manage your manufacturing, control your supply chain, personalize master data, \u2026"
+                module: 'hr', name: 'Human Resources',
+                help: "Manage employees and their contracts, follow laves, recruit people, \u2026"
             }, {
                 module: 'marketing', name: 'Marketing',
                 help: "Manage campaigns, follow activities, automate emails, \u2026"
@@ -420,18 +420,15 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         // Check for installed application
         var Installer = new openerp.web.DataSet(this, 'base.setup.installer');
         Installer.call('default_get', [], function (installed_modules) {
-            var installed = false;
-            _.each(installed_modules, function(v,k) {
-                if(_.startsWith(k,"cat")) {
-                   installed =installed || v;
-                }
-            });
+            var installed = _(installed_modules).any(function (active, name) {
+                return _.startsWith(name, 'cat') && active; });
+
             if(installed) {
                 self.do_display_root_menu();
             } else {
                 self.do_display_installer();
             }
-        } );
+        });
     },
     do_display_root_menu: function() {
         var self = this;
@@ -446,10 +443,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
             self.$element.append(tiles)
                 .find('.oe-dashboard-home-tile')
                     .click(function () {
-                        var $this = $(this);
-                        $this.closest('.openerp')
-                             .find('.menu a[data-menu=' + $this.data('menuid') + ']')
-                             .click();});
+                        openerp.webclient.menu.on_menu_click(null, $(this).data('menuid'))
+                    });
         });
         return  r;
     },
@@ -490,9 +485,8 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
         var self = this;
         new openerp.web.DataSet(this, 'res.config').call('start', [[]], function (action) {
             $.unblockUI();
-            self.do_action(action, function () {
-                // TODO: less brutal reloading
-                window.location.reload(true);
+            self.widget_parent.widget_parent.do_action(action, function () {
+                openerp.webclient.do_reload();
             });
         });
     }

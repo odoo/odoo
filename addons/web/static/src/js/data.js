@@ -263,6 +263,15 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
         }
         return this;
     },
+    select_id: function(id) {
+        var idx = _.indexOf(this.ids, id);
+        if (idx === -1) {
+            return false;
+        } else {
+            this.index = idx;
+            return true;
+        }
+    },
     /**
      * Read records.
      *
@@ -484,7 +493,7 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
             offset = options.offset || 0,
             limit = options.limit || false,
             fields = fields || false;
-        var end_pos = limit && limit !== -1 ? offset + limit : undefined;
+        var end_pos = limit && limit !== -1 ? offset + limit : this.ids.length;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
     set_ids: function (ids) {

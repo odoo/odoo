@@ -40,6 +40,9 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 }
 
 /* Loading */
+.loading {
+    cursor: wait;
+}
 .openerp .loading {
     display: none;
     z-index: 100;
@@ -156,7 +159,7 @@ body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp optio
 }
 
 .db_container {
-    width: 15%;
+    width: 196px;
     background: #666666;
 }
 
@@ -222,6 +225,7 @@ label.error {
     background: #f0eeee;
 }
 .openerp .oe-application-container {
+    width: 100%;
     height: 100%;
 }
 
@@ -797,13 +801,15 @@ label.error {
     -moz-border-radius-topright: 7px;
     border-top-right-radius: 7px;
 }
-.openerp .oe-listview table.oe-listview-content tfoot td:first-child,
+.openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:first-child,
+.openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:first-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child th:first-child {
     -webkit-border-bottom-left-radius: 7px;
     -moz-border-radius-bottomleft: 7px;
     border-bottom-left-radius: 7px;
 }
-.openerp .oe-listview table.oe-listview-content tfoot td:last-child,
+.openerp .oe-listview table.oe-listview-content tfoot tr:last-child th:last-child,
+.openerp .oe-listview table.oe-listview-content tfoot tr:last-child td:last-child,
 .openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child td:last-child {
     -webkit-border-bottom-right-radius: 7px;
     -moz-border-radius-bottomright: 7px;
@@ -1369,19 +1375,20 @@ label.error {
 }
 
 ul.oe-arrow-list {
-    padding-left: 0.5em;
+    padding-left: 1.1em;
     margin: 0;
+    white-space: nowrap;
 }
 ul.oe-arrow-list li {
     display: inline-block;
-    margin-left: -0.5em;
+    margin-left: -1em;
 }
 ul.oe-arrow-list li span {
     vertical-align: top;
     display: inline-block;
     border-width:1em;
     border-style:solid;
-    border-color: white;
+    border-color: #DEDEDE;
     line-height:0em;
 }
 ul.oe-arrow-list .oe-arrow-list-before {
@@ -1390,25 +1397,43 @@ ul.oe-arrow-list .oe-arrow-list-before {
 }
 ul.oe-arrow-list .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
-    border-left-color: white;
+    border-left-color: #DEDEDE;
     border-right-width:0;
 }
 ul.oe-arrow-list li.oe-arrow-list-selected span {
-    border-color: #CFCCCC;
+    border-color: #B5B9FF;
 }
 ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-before {
     border-left-color: rgba(0,0,0,0);
 }
 ul.oe-arrow-list li.oe-arrow-list-selected .oe-arrow-list-after {
     border-color: rgba(0,0,0,0);
-    border-left-color: #CFCCCC;
+    border-left-color: #B5B9FF;
 }
-.openerp .view_editor{
+.openerp .oe_view_editor {
+    border-collapse: collapse;
+    padding: 0;
+    align: left;
+    width: 100%;
+}
+.openerp .oe_view_editor_colum{
     font-size: 90%;
     font-weight: normal;
-    height : 10%;
     padding: 0;
     border-bottom: 1px solid #CFCCCC;
 }
-
-
+.openerp .oe_view_editor_row:hover{
+    background-color: #F3F3F3;
+}
+.openerp .oe_view_editor_tree_grid{
+    text-align: left;
+    white-space: nowrap;
+    border-collapse: collapse;
+    width: 100%;
+}
+.openerp .oe_view_editor_tree_grid a:hover {
+    color: blue;
+}
+.openerp .oe_view_editor_tree_grid a {
+    display: block;
+}

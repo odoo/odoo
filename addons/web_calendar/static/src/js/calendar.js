@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web_calendar = function(openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
@@ -18,10 +19,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.has_been_loaded = $.Deferred();
         this.creating_event_id = null;
         this.dataset_events = [];
-        if (this.options.action_views_ids.form) {
-            this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
-            this.form_dialog.start();
-        }
+        this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+        this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -84,8 +83,8 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
-            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
+            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this);
+            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this);
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
@@ -157,7 +156,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
-                this.notification.warn("Start date is not defined for event :", evt['id']);
+                if (this.session.debug) {
+                    this.do_warn("Start date is not defined for event :", evt['id']);
+                }
                 break;
             }
 
@@ -182,10 +183,10 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_start] = openerp.web.auto_str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
-                evt[this.date_stop] = openerp.web.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_stop] = openerp.web.auto_str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
             res_events.push(this.convert_event(evt));
         }
@@ -268,12 +269,14 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     do_edit_event: function(event_id) {
+        var self = this;
         event_id = parseInt(event_id, 10);
         var index = _.indexOf(this.dataset.ids, event_id);
         if (index > -1) {
             this.dataset.index = index;
-            this.form_dialog.form.do_show();
-            this.form_dialog.open();
+            this.form_dialog.form.do_show().then(function() {
+                self.form_dialog.open();
+            });
             return false;
         }
         return true;
@@ -362,13 +365,16 @@ openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
 });
 
 openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section(_t('Responsible'), 'responsible');
+        this.$div = $('<div></div>');
+        $section.append(this.$div);
+        this._super(parent, $section.attr('id'));
         this.view = view;
         this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
-        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$div.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
     },
     on_filter_click: function(e) {
         var responsibles = [],
@@ -388,8 +394,9 @@ openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
 });
 
 openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
-    init: function(parent, element_id, view) {
-        this._super(parent, element_id);
+    init: function(parent, view) {
+        var $section = parent.add_section(_t('Navigator'), 'navigator');
+        this._super(parent, $section.attr('id'));
         this.view = view;
     },
     on_events_loaded: function(events) {

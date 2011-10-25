@@ -21,12 +21,14 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         if isinstance(object, Domain):
             return {
                 '__ref': 'domain',
-                '__id': object.key
+                '__id': object.key,
+                '__debug': object.get_domain_string()
             }
         elif isinstance(object, Context):
             return {
                 '__ref': 'context',
-                '__id': object.key
+                '__id': object.key,
+                '__debug': object.get_context_string()
             }
         elif isinstance(object, CompoundDomain):
             return {
@@ -42,7 +44,7 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
             }
         raise TypeError('Could not encode unknown non-literal %s' % object)
     
-_ALLOWED_KEYS = frozenset(['__ref', "__id", '__domains',
+_ALLOWED_KEYS = frozenset(['__ref', "__id", '__domains', '__debug',
                            '__contexts', '__eval_context', 'own_values'])
 
 def non_literal_decoder(dct):
@@ -53,8 +55,8 @@ def non_literal_decoder(dct):
     ``own_values`` dict key.
     """
     if '__ref' in dct:
-        for x in dct.keys():
-            if not x in _ALLOWED_KEYS:
+        for x in dct:
+            if x not in _ALLOWED_KEYS:
                 raise ValueError("'%s' key not allowed in non literal domain/context" % x)
         if dct['__ref'] == 'domain':
             domain = Domain(None, key=dct['__id'])
@@ -131,7 +133,10 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_domain_string(), SuperDict(ctx))
+        try:
+            return eval(self.get_domain_string(), SuperDict(ctx))
+        except NameError as e:
+            raise ValueError('Error during evaluation of this domain: "%s", message: "%s"' % (self.get_domain_string(), e.message))
 
 class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
@@ -176,7 +181,10 @@ class Context(BaseContext):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_context_string(), SuperDict(ctx))
+        try:
+            return eval(self.get_context_string(), SuperDict(ctx))
+        except NameError as e:
+            raise ValueError('Error during evaluation of this context: "%s", message: "%s"' % (self.get_context_string(), e.message))
 
 class SuperDict(dict):
     def __getattr__(self, name):

@@ -63,6 +63,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
         rows.push(row);
         var filters = [];
         _.each(items, function (item) {
+            if (item.attrs.invisible === '1') { return; }
             if (filters.length && item.tag !== 'filter') {
                 row.push(
                     new openerp.web.search.FilterGroup(
@@ -336,7 +337,7 @@ openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.Search
      * @param {Array} errors a never-empty array of error objects
      */
     on_invalid: function (errors) {
-        this.notification.notify("Invalid Search", "triggered from search view");
+        this.do_notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
         this.$element.find('.filter_label, .filter_icon').removeClass('enabled');
@@ -643,6 +644,12 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
         this.attrs = _.extend({}, field, view_section.attrs);
         this.filters = new openerp.web.search.FilterGroup(_.map(
             view_section.children, function (filter_node) {
+                if (filter_node.attrs.string &&
+                        typeof console !== 'undefined' && console.debug) {
+                    console.debug("Filter-in-field with a 'string' attribute "
+                                + "in view", view);
+                }
+                delete filter_node.attrs.string;
                 return new openerp.web.search.Filter(
                     filter_node, view);
         }), view);

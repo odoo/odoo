@@ -227,7 +227,7 @@ class HttpRequest(WebRequest):
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
         r = method(controller, self, **self.params)
         if self.debug or 1:
-            if isinstance(r, werkzeug.wrappers.BaseResponse):
+            if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
                 _logger.debug('<-- %s', r)
             else:
                 _logger.debug("<-- size: %s", len(r))
@@ -296,6 +296,35 @@ def session_context(request, storage_path, session_cookie='sessionid'):
     try:
         yield request.session
     finally:
+        # Remove all OpenERPSession instances with no uid, they're generated
+        # either by login process or by HTTP requests without an OpenERP
+        # session id, and are generally noise
+        for key, value in request.session.items():
+            if isinstance(value, session.OpenERPSession) and not value._uid:
+                del request.session[key]
+
+        # FIXME: remove this when non-literals disappear
+        if sid:
+            # Re-load sessions from storage and merge non-literal
+            # contexts and domains (they're indexed by hash of the
+            # content so conflicts should auto-resolve), otherwise if
+            # two requests alter those concurrently the last to finish
+            # will overwrite the previous one, leading to loss of data
+            # (a non-literal is lost even though it was sent to the
+            # client and client errors)
+            #
+            # note that domains_store and contexts_store are append-only (we
+            # only ever add items to them), so we can just update one with the
+            # other to get the right result, if we want to merge the
+            # ``context`` dict we'll need something smarter
+            in_store = session_store.get(sid)
+            for k, v in request.session.iteritems():
+                stored = in_store.get(k)
+                if stored and isinstance(v, session.OpenERPSession)\
+                        and v != stored:
+                    v.contexts_store.update(stored.contexts_store)
+                    v.domains_store.update(stored.domains_store)
+
         session_store.save(request.session)
 
 #----------------------------------------------------------
@@ -395,7 +424,8 @@ class Root(object):
                 else:
                     response = result
 
-                response.set_cookie(self.session_cookie, session.sid)
+                if hasattr(response, 'set_cookie'):
+                    response.set_cookie(self.session_cookie, session.sid)
 
         return response(environ, start_response)
 
@@ -437,8 +467,8 @@ class Root(object):
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
-        if len(l) > 1:
-            for i in range(len(l), 1, -1):
+        if len(l):
+            for i in range(len(l), 0, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
                     c = controllers_path[ps]
