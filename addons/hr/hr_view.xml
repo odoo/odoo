@@ -132,31 +132,20 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="department_id">
+                <field name="color"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.name.raw_value)"/>
                         <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle"><field name="name"/></td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="oe_kanban_title1"><field name="name"/></div>
                                 </div>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                     <table class="oe_kanban_table">
                                         <tr>
                                             <td valign="top" width="22">
-                                                <t t-if="record.photo.raw_value">
-                                                    <img t-att-src="'data:image/png;base64,'+record.photo.raw_value" width='48' height='48'/>
-                                                </t>
-                                                <t t-if="!record.photo.raw_value">
-                                                    <img src="/web/static/src/img/employee.png"/>
-                                                </t> 
+                                                <img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" width="48"/>
                                             </td>
                                             <td>
                                                 <div class="oe_kanban_title2"><field name="job_id"/></div>
