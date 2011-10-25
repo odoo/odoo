@@ -19,7 +19,7 @@
 ##############################################################################
 
 {
-    "name"      : "Anglo-Saxon Accouting",
+    "name"      : "Anglo-Saxon Accounting",
     "version"   : "1.2",
     "author"    : "OpenERP SA, Veritos",
     "website"   : "http://tinyerp.com - http://veritos.nl",
