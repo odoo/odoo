@@ -43,7 +43,7 @@ init: function(parent, dataset, view_id) {
 
         this.name =  this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
-
+    	
         this.date_start = this.fields_view.arch.attrs.date_start;
         this.date_delay = this.fields_view.arch.attrs.date_delay;
         this.date_stop = this.fields_view.arch.attrs.date_stop;
@@ -71,7 +71,7 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
-        ganttChartControl.showContextMenu(true);
+        ganttChartControl.showContextMenu(false);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
 
@@ -228,7 +228,7 @@ init: function(parent, dataset, view_id) {
         var evt_date = "";
         var evt_duration = "";
         var evt_end_date = "";
-
+        var project_tree_field = [];
         for (var i in final_events){
             evt_id = final_events[i];
             evt_date = all_events[evt_id]['evt'][2];
@@ -254,7 +254,7 @@ init: function(parent, dataset, view_id) {
             self.render_events(all_events, 0);
         }
 
-        for (var i in final_events){
+        for (var i in final_events) {
             evt_id = final_events[i];
             res = all_events[evt_id];
             task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
@@ -278,8 +278,9 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
+        
         ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
-
+        
         var taskdiv = jQuery("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
         taskdiv.prev().addClass('ganttDayPanel');
@@ -293,7 +294,7 @@ init: function(parent, dataset, view_id) {
             self.set_width();
         });
 
-        jQuery(window).bind('resize',function(){
+        jQuery(window).bind('resize',function() {
             window.clearTimeout(ganttChartControl._resize_timer);
             ganttChartControl._resize_timer = window.setTimeout(function(){
                 self.reload_gantt();
@@ -385,53 +386,46 @@ init: function(parent, dataset, view_id) {
     },
 
     open_popup : function(task) {
+        var self = this;
         var event_id = task.getId();
         if(event_id.toString().search("_") != -1)
             return;
         if(event_id) event_id = parseInt(event_id, 10);
+        
+        var action_manager = new openerp.web.ActionManager(this);
+        
+        var dialog = new openerp.web.Dialog(this, {
+            width: 800,
+            height: 600,
+            buttons : {
+                Cancel : function() {
+                    $(this).dialog('destroy');
+                },
+                Save : function() {
+                    var form_view = action_manager.inner_viewmanager.views.form.controller;
 
-        var action = {
-            "res_model": this.dataset.model,
-            "res_id": event_id,
-            "views":[[false,"form"]],
-            "type":"ir.actions.act_window",
-            "view_type":"form",
-            "view_mode":"form"
-        };
-
-        action.flags = {
-            search_view: false,
-            sidebar : false,
-            views_switcher : false,
-            pager: false
-        };
-        var element_id = _.uniqueId("act_window_dialog");
-        var dialog = jQuery('<div>', {
-            'id': element_id
-            }).dialog({
-                modal: true,
-                width: 'auto',
-                height: 'auto',
-                buttons: {
-                    Cancel: function() {
-                        $(this).dialog("destroy");
-                    },
-                    Save: function() {
-                        var view_manager = action_manager.viewmanager;
-                        var _dialog = this;
-                        view_manager.views[view_manager.active_view].controller.do_save(function(r) {
-                            $(_dialog).dialog("destroy");
-                            self.reload_gantt();
-                        })
-                    }
+                    form_view.do_save(function() {
+                        self.get_events();
+                    });
+                    $(this).dialog('destroy');
                 }
+            }
+        }).start().open();
+        action_manager.appendTo(dialog.$element);
+        action_manager.do_action({
+            res_model : this.dataset.model,
+            res_id: event_id,
+            views : [[false, 'form']],
+            type : 'ir.actions.act_window',
+            auto_search : false,
+            flags : {
+                search_view: false,
+                sidebar : false,
+                views_switcher : false,
+                action_buttons : false,
+                pager: false
+            }
         });
-        var action_manager = new openerp.web.ActionManager(this, element_id);
-        action_manager.start();
-        action_manager.do_action(action);
-
-        //Default_get
-        if(!event_id) action_manager.viewmanager.dataset.index = null;
     },
 
     on_drag_start : function(task){
