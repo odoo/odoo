@@ -69,7 +69,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
-        var email_md5 = '2eb60ad22dadcf4dc456b28390a80268';
+        var email_md5 = $.md5(email);
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size;
     },
     transform_qweb_template: function(node) {
