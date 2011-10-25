@@ -207,7 +207,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                 self.$element.find('.all-record-selector').prop('checked')  || false);
         });
 
-        this.$element.find('#all_checked').click(this.do_all_checked);
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
