@@ -188,11 +188,11 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','From PO/PO lines'),('order','Draft invoices pre-generated'),('picking','From receptions')], 'Invoicing Control', required=True,
-            help="From Order: a draft invoice will be generated based on the purchase order. The accountant " \
+        'invoice_method': fields.selection([('manual','Based on purchase order lines'),('order','Draft invoices pre-generated'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+            help="Based on orders: a draft invoice will be generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Reception: a draft invoice will be generated based on validated receptions.\n" \
-                "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
+                "Based on receptions: a draft invoice will be generated based on validated receptions.\n" \
+                "Pre-generate Invoice: allows you to generate draft suppliers invoices on validation of the PO."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -803,6 +803,8 @@ class procurement_order(osv.osv):
         pricelist_obj = self.pool.get('product.pricelist')
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
+        seq_obj = self.pool.get('ir.sequence')
+        warehouse_obj = self.pool.get('stock.warehouse')
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -811,7 +813,7 @@ class procurement_order(osv.osv):
             partner_id = partner.id
             address_id = partner_obj.address_get(cr, uid, [partner_id], ['delivery'])['delivery']
             pricelist_id = partner.property_product_pricelist_purchase.id
-
+            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
             uom_id = procurement.product_id.uom_po_id.id
 
             qty = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
@@ -842,12 +844,14 @@ class procurement_order(osv.osv):
                 'notes': product.description_purchase,
                 'taxes_id': [(6,0,taxes)],
             }
-
+            name = seq_obj.get(cr, uid, 'purchase.order') or _('PO: %s') % procurement.name
             po_vals = {
+                'name': name,
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
+                'warehouse_id': warehouse_id and warehouse_id[0] or False,
                 'pricelist_id': pricelist_id,
                 'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
                 'company_id': procurement.company_id.id,

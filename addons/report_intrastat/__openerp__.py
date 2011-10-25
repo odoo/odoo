@@ -23,7 +23,7 @@
 {
     'name': 'Intrastat Reporting',
     'version': '1.0',
-    'category': 'Warehouse',
+    'category': 'Hidden',
     'description': """
 A module that adds intrastat reports.
 =====================================

@@ -1,14 +1,13 @@
-- |
+-
   In order to test "mrp_repair" module, I start with creating repair order, confirm it, and start repair.
-
-- |
+-
   Given that I have already  stock move line created.
 -
   !record {model: stock.move, id: stock_move_pcbasicpc0}:
     company_id: base.main_company
     date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     date_expected: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-    location_dest_id: stock.stock_location_stock
+    location_dest_id: stock.stock_location_14
     location_id: stock.stock_location_stock
     name: '[PC1] Basic PC'
     product_id: product.product_product_pc1
@@ -16,8 +15,8 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 1.0
 
-- |
-  I start by creating new Repair order for "Basic Pc" product.
+-
+  I start by creating new Repair order for "Basic PC" product.
 -
   !record {model: mrp.repair, id: mrp_repair_rma0}:
     address_id: base.res_partner_address_1
@@ -39,53 +38,81 @@
         state: draft
         to_invoice: 1
         type: add
+    fees_lines:
+      - name: 'HDD1 Seagate repair fees'
+        product_id: product.product_product_hdd1
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_unit
+        price_unit: 50.0
     partner_id: base.res_partner_9
     product_id: product.product_product_pc1
-
-- |
+-
+  On change of product sets some values
+-
+  !python {model: mrp.repair}: |
+    self.onchange_product_id(cr, uid, [ref('mrp_repair_rma0')], product_id=False)
+-
+  On change of move id sets values of guarantee limit, source location, destination location, partner and partner address.
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    self.onchange_move_id(cr, uid, [ref('mrp_repair_rma0')], False, repair_id.move_id)
+-
+  On change of operation type it sets source location, destination location and to invoice field
+-
+  !python {model: mrp.repair.line}: |
+    self.onchange_operation_type(cr, uid, [ref('mrp_repair_rma0')], type, False)
+-
+  On change of partner sets the values of partner address, partner invoice address and pricelist.
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    self.onchange_partner_id(cr, uid, [ref('mrp_repair_rma0')], False, repair_id.address_id)
+-
+  On change of production lot sets the values of source location, destination location, move and guarantee limit
+-
+  !python {model: mrp.repair}: |
+    repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
+    self.onchange_lot_id(cr, uid, [ref('mrp_repair_rma0')], False, repair_id.product_id)
+-
   I check that Repair order is in "Draft" state.
 -
   !assert {model: mrp.repair, id: mrp_repair_rma0}:
       - state == 'draft'
-
-- |
+-
   I confirm This Repair order.
 -
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rma0}
 
-- |
-  I start the repairing  process by   click on "Start Repair" Button.
+-
+  I start the repairing  process by click on "Start Repair" Button For Invoice Type After repair.
 -
   !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rma0}
 
-- |
+-
   I check that state is "Under Repair".
 -
   !assert {model: mrp.repair, id: mrp_repair_rma0}:
       - state == 'under_repair'
-- |
+-
   Repairing Process for product is Done and I End Repair process by click on "End Repair" button.
 -
   !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rma0}
-- |
+
+-
   I select invoiced after repair option in this "RMA00004" Repair order.
   so I create Invoice by click on "Make Invoice" wizard.
 -
   !record {model: mrp.repair.make_invoice, id: mrp_repair_make_invoice_0}:
     group: 1
-- |
+-
   I click on "Create Invoice" button of this wizard to make invoice.
 -
   !python {model: mrp.repair.make_invoice}: |
     self.make_invoices(cr, uid, [ref("mrp_repair_make_invoice_0")], {"active_ids": [ref("mrp_repair.mrp_repair_rma0")]})
-- |
+-
   I check that Invoice is created for this repair order.
 -
   !python {model: mrp.repair}: |
-     obj_lines = self.pool.get('account.invoice.line')
-     inv_obj = self.pool.get('account.invoice')
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rma0')], context=context)[0]
-     invoice_ids = inv_obj.search(cr, uid, [('partner_id', '=', repair_id.partner_id.id)])
-     invoice_id = inv_obj.browse(cr, uid, invoice_ids)[0]
-
-     assert repair_id.partner_id.id == invoice_id.partner_id.id, "No invoice existing for the same partner"
+     assert repair_id.invoice_id.id, _("No invoice exists for this repair order")

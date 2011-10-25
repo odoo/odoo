@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            result = md.get_object_reference(cr, uid, 'product', 'product_consultant')
             return result[1]
         except ValueError:
             pass

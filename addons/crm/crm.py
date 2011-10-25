@@ -71,6 +71,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', help="Setting this stage will change the probability automatically on the opportunity."),
         'requirements': fields.text('Requirements'),
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
+        'case_default': fields.boolean('Common to All Teams', help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
     }
 
     _defaults = {
@@ -106,10 +107,14 @@ class crm_case_section(osv.osv):
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
     }
+    def _get_stage_common(self, cr, uid, context):
+        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
+        return ids
 
     _defaults = {
         'active': lambda *a: 1,
         'allow_unlink': lambda *a: 1,
+        'stage_ids': _get_stage_common
     }
 
     _sql_constraints = [
@@ -479,10 +484,10 @@ class crm_case(crm_base):
                 case_email = case.user_id.user_email
 
             src = case_email
-            dest = case.user_id
+            dest = case.user_id.user_email or ""
             body = case.description or ""
             if case.message_ids:
-                body = case.message_ids[0].description or ""
+                body = case.message_ids[0].body_text or ""
             if not destination:
                 src, dest = dest, case.email_from
                 if body and case.user_id.signature:

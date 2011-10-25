@@ -469,7 +469,8 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
+        'color': fields.integer('Color Index'),
     }
 
     _defaults = {
@@ -484,6 +485,21 @@ class task(osv.osv):
     }
 
     _order = "sequence,priority, date_start, name, id"
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set task priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set task priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
