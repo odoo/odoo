@@ -325,8 +325,10 @@
                     <field name="priority"/>
                     <field name="state"/>
                     <field name="type_id"/>
+                    <field name="user_email"/>
                     <templates>
                         <t t-name="kanban-box">
+                            <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>
                             <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_kanban_box oe_kanban_color_border">
@@ -338,7 +340,7 @@
                                                 <field name="name"/>
                                             </td>
                                             <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/>
                                             </td>
                                         </tr>
                                     </table>
@@ -350,9 +352,7 @@
                                             <field name="project_id"/>
                                         </div>
                                         <div class="oe_kanban_small">
-                                            <a target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.raw_value.toLowerCase().replace(' ','-')">
-                                                http://pad.openerp.com/<t t-esc="record.name.raw_value.toLowerCase().replace(' ','-')"/>
-                                            </a>
+                                            <a target="_blank" t-att-href="pad_url"><t t-esc="pad_url"/></a>
                                         </div>
                                         <div class="oe_kanban_small">
                                             <i><field name="date_deadline"/></i>
@@ -360,17 +360,17 @@
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>                                               
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                             <a string="" />
-                                            <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="'http://pad.openerp.com/'+record.name.value" style="text-decoration: none;" >
-                                                <img src="/web/static/src/img/icons/pad-openerp.png" border="0" width="16" height="16"/>
-                                            </a>                                                
+                                            <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="pad_url" style="text-decoration: none;" >
+                                                <img src="/project/static/src/img/kanban-pad-openerp.png" border="0" width="16" height="16"/>
+                                            </a>
                                             <a name="%(action_project_task_delegate)d" string="Delegate" states="pending,open,draft" type="action" icon="gtk-sort-descending" />
                                         </div>
                                         <div class="oe_kanban_right">
                                             <a name="do_cancel" string="Mark Lost" states="draft,open,pending" type="object" icon="lead-stage-lost"/>
-                                            <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>        
+                                            <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>
                                             <a name="action_close" string="Mark Won"  states="pending,open" type="object" icon="lead-stage-won"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
