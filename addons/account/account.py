@@ -243,7 +243,8 @@ class account_account(osv.osv):
             'balance': "COALESCE(SUM(l.debit),0) " \
                        "- COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit"
+            'credit': "COALESCE(SUM(l.credit), 0) as credit",
+            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
@@ -270,7 +271,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ', '.join(map(mapping.__getitem__, field_names)) +
+                       ', '.join(map(mapping.__getitem__, mapping.keys())) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
@@ -289,7 +290,7 @@ class account_account(osv.osv):
             sums = {}
             currency_obj = self.pool.get('res.currency')
             while brs:
-                current = brs[0]
+                current = brs.pop(0)
 #                can_compute = True
 #                for child in current.child_id:
 #                    if child.id not in sums:
@@ -299,7 +300,6 @@ class account_account(osv.osv):
 #                        except ValueError:
 #                            brs.insert(0, child)
 #                if can_compute:
-                brs.pop(0)
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
@@ -307,6 +307,16 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+
+                # as we have to relay on values computed before this is calculated separately than previous fields
+                if current.currency_id and current.exchange_rate and \
+                            ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
+                    # Computing Adjusted Balance and Unrealized Gains and losses
+                    # Adjusted Balance = Foreign Balance / Exchange Rate
+                    # Unrealized Gains and losses = Adjusted Balance - Balance
+                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
+                    sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
+
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
@@ -418,7 +428,14 @@ class account_account(osv.osv):
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
         'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
+        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
+                                           help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance', 
+                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance', 
+                                                help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
+        'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
