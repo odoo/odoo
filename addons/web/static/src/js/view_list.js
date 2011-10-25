@@ -424,10 +424,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     },
     /**
      * re-renders the content of the list view
+     *
+     * @returns {$.Deferred} promise to content reloading
      */
     reload_content: function () {
         var self = this;
         this.records.reset();
+        var reloaded = $.Deferred();
         this.$element.find('.oe-listview-content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
@@ -438,7 +441,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     }
                 }
                 self.compute_aggregates();
+                reloaded.resolve();
             }));
+        return reloaded.promise();
     },
     /**
      * Handler for the result of eval_domain_and_context, actually perform the
