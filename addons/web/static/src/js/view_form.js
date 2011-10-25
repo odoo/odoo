@@ -1936,7 +1936,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         });
 
         var modes = this.node.attrs.mode;
-        modes = !!modes ? modes.split(",") : ["tree", "form"];
+        modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
         _.each(modes, function(mode) {
             var view = {
