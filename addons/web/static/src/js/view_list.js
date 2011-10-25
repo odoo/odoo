@@ -275,10 +275,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         }
     },
 
-    do_all_checked:function (ev) {
-        var all_checkbox = this.$element.find('.oe-record-selector :checkbox')
-        all_checkbox.attr('checked', !all_checkbox.attr('checked'));
-    },
     /**
      * Configures the ListView pager based on the provided dataset's information
      *
