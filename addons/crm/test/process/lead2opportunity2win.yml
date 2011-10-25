@@ -1,10 +1,12 @@
 -
+  In order to test convert customer lead into opportunity, 
+-
   I open customer lead.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_case_qrecorp0")])
 - 
-  I check lead is in open stage.
+  I check lead is in open.
 -
   !assert {model: crm.lead, id: crm.crm_case_qrecorp0, string: Lead in open state}:
      - state == "open"
@@ -23,7 +25,7 @@
     assert lead.partner_id.id == ref("base.res_partner_agrolait"), 'Partner missmatch!'
     assert lead.stage_id.id == ref("stage_lead1"), 'Stage of opportunity is incorrect!'
 -
-  Now I start Communication by phonecall with customer.
+  Now I start Communication and schedule phonecall with customer.
 -
   !python {model: crm.opportunity2phonecall}: |
     import time
@@ -31,6 +33,19 @@
     call_id = self.create(cr, uid, {'date': time.strftime('%Y-%m-%d %H:%M:%S'), 
                 'name': "Bonjour M. Jean, Comment êtes-vous? J'ai obtenu votre demande. peut-on parler au sujet de ce pour quelques minutes?"}, context=context)
     self.action_schedule(cr, uid, [call_id], context=context)
+-
+  I check that phonecall is scheduled for that opportunity.
+-
+  !python {model: crm.phonecall}: |
+    ids = self.search(cr, uid, [('opportunity_id', '=', ref('crm_case_qrecorp0'))])
+    assert len(ids), 'phonecall is not scheduled'
+
+-
+  Now I schedule Meeting with Customer.
+-
+  !python {model: crm.lead}: |
+    self.action_makeMeeting(cr, uid, [ref('crm_case_qrecorp0')])
+
 -
   After communicated  with customer, I put some notes with Contract details.
 -
@@ -51,3 +66,12 @@
     assert lead.state == 'done', 'Opportunity is not in done state!'
     assert lead.stage_id.name == 'Won', ' Stage of Opportunity is not win!'
     assert lead.probability == 100.0, 'probability revenue should not  be 100.0!'
+
+-
+  I convert mass lead into opportunity customer.
+-
+  !python {model: crm.lead2opportunity.partner.mass}: |
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_itdeveloper0')]})
+    id = self.create(cr, uid, {'user_ids': [ref('base.user_root')], 'section_id': ref('crm.section_sales_department')}, context=context)
+    self.mass_convert(cr, uid, [id], context=context)   
+

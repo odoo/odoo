@@ -1,0 +1,51 @@
+-
+  I call onchange event to change partner address for lead.
+-
+  !python {model: crm.lead}: |
+    action = self.onchange_partner_address_id(cr, uid, ref("crm_case_qrecorp0"), ref("base.res_partner_address_notsotinysarl0"), email=False)
+    assert action['value']['country_id'] == 20, "Country name not True"
+    assert action['value']['phone'] == '(+32).81.81.37.00', "phone number is wrong"
+-
+  I call onchange event to change email "Opt-out" option for Lead.
+-
+  !python {model: crm.lead}: |
+    self.on_change_optout(cr, uid, ref("crm_case_qrecorp0"), True)
+
+-
+  I call onchange event to convert the Opt-out to Opt-in to show email receive preference for lead.
+-
+  !python {model: crm.lead}: |
+    self.on_change_optin(cr, uid, ref("crm_case_qrecorp0"), True)
+
+-
+  I setting next stage "New" for the lead.
+-
+   !python {model: crm.lead}: |
+     self.stage_next(cr, uid, [ref("crm_case_qrecorp0")], context={'stage_type': 'lead'})
+-
+  I call onchange event to assigning won stage for Lead.
+-
+  !python {model: crm.lead}: |
+    stage_id = self.stage_find_won(cr, uid, ref('crm.section_sales_department'))
+    self.onchange_stage_id(cr, uid, [ref("crm_case_qrecorp0")], stage_id, context)
+-
+  I make duplicate the Lead.
+-
+   !python {model: crm.lead}: |
+     self.copy(cr, uid, ref("crm_case_qrecorp0"))
+
+-
+  I Unlink the Lead.
+-
+  !python {model: crm.lead}: |
+     self.unlink(cr, uid, [ref("crm_case_qrecorp0")])
+
+-
+  I call onchange event to change Contact Detail for Phonecall.
+-
+  !python {model: crm.phonecall}: |
+    self.onchange_partner_address_id(cr, uid,[ref("crm.crm_case_phone06")], ref("base.res_partner_address_8invoice"))
+
+    
+
+

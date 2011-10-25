@@ -28,3 +28,20 @@
     res_id = self.create(cr, uid, {'name': "vos chances sont fusionnés en un seul"}, context=context)
     self.action_schedule(cr, uid, [res_id], context=context)
 
+- 
+  I schedule Meeting on this phonecall.
+-
+   !python {model: crm.phonecall}: |
+     self.action_make_meeting(cr, uid, [ref("crm.crm_case_phone06")])
+
+-
+  I setting Phone call to Held (Done).
+-
+  !python {model: crm.phonecall}: |
+    self.case_close(cr, uid, [ref("crm.crm_case_phone06")])
+-
+  I check that the hone call is in 'Held' state.
+-
+  !assert {model: crm.phonecall, id: crm.crm_case_phone06, string: Phone call Helded}:
+    - state == "done"
+

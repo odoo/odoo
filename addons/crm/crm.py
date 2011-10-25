@@ -467,10 +467,12 @@ class crm_case(crm_base):
         self._action(cr, uid, cases, state)
         return True
 
+    #DEAD Code
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
+    #DEAD Code
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
         mail_message = self.pool.get('mail.message')
         for case in self.browse(cr, uid, ids, context=context):

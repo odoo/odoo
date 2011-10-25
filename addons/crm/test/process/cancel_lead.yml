@@ -28,4 +28,17 @@
 -
   !assert {model: crm.lead, id: crm.crm_case_itisatelesalescampaign0, string: Lead is in pending state}:
      - state == "pending"
+-
+  I Escalate the Lead to Parent Team.
+-
+  !python {model: crm.lead}: |
+    self.case_escalate(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+
+-
+  I mark as lost the Lead.
+-
+  !python {model: crm.lead}: |
+    self.case_mark_won(cr, uid, [ref("crm_case_itisatelesalescampaign0")])
+
+
 

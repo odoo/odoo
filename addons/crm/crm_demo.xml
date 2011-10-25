@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/> 
         </record>
@@ -10,6 +10,12 @@
         <field name="resource">ir.ui.menu</field>
         <field name="user_id" ref="base.user_demo"/>
         <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
+    </record>
+
+    <record model="crm.case.section" id="section_sales_marketing_department">
+            <field name="name">Sales Marketing Department</field>
+            <field name="code">Sales Marketing</field>
+            <field name="parent_id" ref="crm.section_sales_department"></field>
     </record>
 
     </data>

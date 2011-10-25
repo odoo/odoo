@@ -105,17 +105,17 @@ class crm_lead2partner(osv.osv_memory):
             context = {}
         lead = self.pool.get('crm.lead')
         lead_ids = context and context.get('active_ids') or []
-        for data in self.browse(cr, uid, ids, context=context):
-            partner_id = data.partner_id and data.partner_id.id or False
-            partner_ids += lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
-        return partner_ids
+        data = self.browse(cr, uid, ids, context=context)[0]
+        partner_id = data.partner_id and data.partner_id.id or False
+        partner_ids = lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
+        return partner_ids[lead_ids[0]]
 
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
         """
-        partner_ids = self._create_partner(cr, uid, ids, context=context)
-        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids[0], context=context)
+        partner_id = self._create_partner(cr, uid, ids, context=context)
+        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_id, context=context)
 
 crm_lead2partner()
 
