@@ -917,7 +917,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
-            var view_editor = new db.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
+            var view_editor = new session.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
             view_editor.start();
         } else {
             this.do_warn("Manage Views", "Could not find current view declaration");
