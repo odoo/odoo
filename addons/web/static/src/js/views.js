@@ -444,6 +444,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 if (!self.action.name && fvg) {
                     self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
                 }
+
+                var $title = self.$element.find('.oe_view_title'),
+                    $search_prefix = $title.find('span');
+                if (controller.searchable !== false) {
+                    if (!$search_prefix.length) {
+                        $title.prepend('<span>' + _t("Search:") + '</span>');
+                    }
+                } else {
+                    $search_prefix.remove();
+                }
         });
     },
     shortcut_check : function(view) {
