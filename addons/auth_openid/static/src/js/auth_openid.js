@@ -15,7 +15,7 @@ instance.web.Login = instance.web.Login.extend({
 
 
         var openIdProvider = null;
-        if (this.has_local_storage && this.remember_creditentials) {
+        if (this.has_local_storage && this.remember_credentials) {
             openIdProvider = localStorage.getItem('openid-provider');
         }
 
@@ -23,7 +23,7 @@ instance.web.Login = instance.web.Login.extend({
             $openid_selected_provider = openIdProvider;
             this.do_openid_select('a[href="#' + openIdProvider + '"]', openIdProvider, true);
 
-            if (this.has_local_storage && this.remember_creditentials) {
+            if (this.has_local_storage && this.remember_credentials) {
                 this.$openid_selected_input.find('input').val(localStorage.getItem('openid-login'));
             }
         }
@@ -54,7 +54,7 @@ instance.web.Login = instance.web.Login.extend({
             self.$openid_selected_input.find('input:first').focus();
             self.$openid_selected_provider = (self.$openid_selected_button.attr('href') || '').substr(1);
 
-            if (self.has_local_storage && self.remember_creditentials) {
+            if (self.has_local_storage && self.remember_credentials) {
                 localStorage.setItem('openid-provider', self.$openid_selected_provider);
             }
 
@@ -91,7 +91,7 @@ instance.web.Login = instance.web.Login.extend({
             ev.preventDefault();
 
             var id = this.$openid_selected_input.find('input').val();
-            if (this.has_local_storage && this.remember_creditentials) {
+            if (this.has_local_storage && this.remember_credentials) {
                 localStorage.setItem('openid-login', id);
             }
 
