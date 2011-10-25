@@ -29,6 +29,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Grant instant access to your documents">
+                    <group name="groups_group" colspan="4" col="4">
+	                    <separator colspan="4" string="Who do you want to share with?"/>
+	                    <field name="user_type" />
+                    </group>
                     <group colspan="4" name="emails_group" attrs="{'invisible':[('user_type','!=','emails')]}">
                         <separator colspan="4" string="Share with these people (one e-mail per line)"/>
                         <field colspan="4" nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails')]}"/>
@@ -78,7 +82,6 @@
                     - 'action_id' (id of action)
                     - 'domain' (string expression for full domain to apply as sent to server, 
                                with dynamic data like 'uid' replaced by actual value (i.e. after eval)!)
-                    - 'share_root_url' : URL for direct access to share page (may include %(login)s and %(password)s placeholders)
          -->
         <record id="action_share_wizard" model="ir.actions.act_window">
             <field name="name">Share Wizard</field>
@@ -94,7 +97,6 @@
                     - 'action_id' (id of action)
                     - 'domain' (string expression for full domain to apply as sent to server, 
                                with dynamic data like 'uid' replaced by actual value (i.e. after eval)!)
-                    - 'share_root_url' : URL for direct access to share page (may include %(login)s and %(password)s placeholders)
          -->
         <record id="action_share_wizard_step1" model="ir.actions.act_window">
             <field name="name">Share Wizard</field>
