@@ -136,20 +136,10 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     }
 });
 
-openerp.web.CrashManager = openerp.web.Dialog.extend(/** @lends openerp.web.CrashManager# */{
-    identifier_prefix: 'dialog_crash',
-    /**
-     * @constructs opener.web.CrashManager
-     * @extends openerp.web.Dialog
-     *
-     * @param parent
-     */
+openerp.web.CrashManager = openerp.web.SessionAware.extend({
     init: function(parent) {
-        this._super(parent);
+        this._super((parent || {}).session);
         this.session.on_rpc_error.add(this.on_rpc_error);
-    },
-    on_button_Ok: function() {
-        this.close();
     },
     on_rpc_error: function(error) {
         this.error = error;
@@ -161,20 +151,36 @@ openerp.web.CrashManager = openerp.web.Dialog.extend(/** @lends openerp.web.Cras
             }
         }
         if (error.code === 200 && error.type) {
-            this.dialog_title = "OpenERP " + _.capitalize(error.type);
-            this.template = 'DialogWarning';
-            this.open({
-                width: 'auto',
-                height: 'auto'
-            });
+            this.on_managed_error(error);
         } else {
-            this.dialog_title = "OpenERP Error";
-            this.template = 'DialogTraceback';
-            this.open({
-                width: 'auto',
-                height: 'auto'
-            });
+            this.on_traceback(error);
         }
+    },
+    on_managed_error: function(error) {
+        $('<div>' + QWeb.render('DialogWarning', {error: error}) + '</div>').dialog({
+            title: "OpenERP " + _.capitalize(error.type),
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        });
+    },
+    on_traceback: function(error) {
+        var dialog = new openerp.web.Dialog(this, {
+            title: "OpenERP " + _.capitalize(error.type),
+            autoOpen: true,
+            width: '90%',
+            height: '90%',
+            min_width: '800px',
+            min_height: '600px',
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        }).start();
+        dialog.$element.html(QWeb.render('DialogTraceback', {error: error}));
     }
 });
 
@@ -198,8 +204,10 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
             //this.$element.html(QWeb.render("Loading", {}));
             this.$element.html("Loading ("+this.count+")");
             this.$element.show();
+            this.widget_parent.$element.addClass('loading');
         } else {
             this.$element.fadeOut();
+            this.widget_parent.$element.removeClass('loading');
         }
     }
 });
@@ -466,7 +474,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 });
 
 openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
-    remember_creditentials: true,
+    remember_credentials: true,
     
     template: "Login",
     identifier_prefix: 'oe-app-login-',
@@ -484,7 +492,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.selected_db = null;
         this.selected_login = null;
 
-        if (this.has_local_storage && this.remember_creditentials) {
+        if (this.has_local_storage && this.remember_credentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
             if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
@@ -550,7 +558,7 @@ openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
-                    if(self.remember_creditentials) {
+                    if(self.remember_credentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
                         if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
@@ -946,7 +954,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session = new openerp.web.Session();
         this.loading = new openerp.web.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.web.CrashManager(this);
-        this.crashmanager.start();
 
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);

@@ -350,7 +350,7 @@ class Connection(object):
             return
         
         if not self.database or not self.login or self.password is None:
-            raise AuthenticationError("Creditentials not provided")
+            raise AuthenticationError("Credentials not provided")
         
         self.user_id = self.get_service("common").login(self.database, self.login, self.password)
         if not self.user_id:
