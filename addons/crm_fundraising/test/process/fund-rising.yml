@@ -1,34 +1,22 @@
 -
-  In order to check Fund Raising for "Renovating government schools" which contain information 
-  about donation for schools, so i open Funds rising.
+  Customer is very happy with our service and he interest to contribute into our fund. so He sent request by email for Fundraising.
 -
-  !python {model: crm.fundraising}: |
-    self.case_open(cr, uid, [ref('crm_case_renovatinggovernmentschools0')])
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
 -
-  In order to test fundraising, i test fundraising is in open stage.
--
-  !assert {model: crm.fundraising, id: crm_case_renovatinggovernmentschools0, string: fundraising in open state}:
-     - state == "open"
--
-  I create the message regarding the all details of fundraising.
--
-  !python {model: crm.fundraising}: |
-    msg = {
-       'subject': 'fundraising_email',
-       'body_text': 'fundraising details',
-       'from': 'Administrator <admin@openerp.com>',
-       'priority':'3',
-      }
-    self.message_new(cr, uid, msg, context=None)
+  !python {model: mail.thread}: |
+    import addons
+    request_file = open(addons.get_module_resource('crm_fundraising','test', 'customer_fundraising.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.fundraising', request_message)
 
 -
-  After a request via email now I close this fundraising Request.
+  After getting the mail, I check details of new fundraising of that customer.
 -
   !python {model: crm.fundraising}: |
-    self.case_close(cr, uid, [ref('crm_case_renovatinggovernmentschools0')])
--
-  After closed this fundraising Request, i test fundraising is in done stage.
--
-  !assert {model: crm.fundraising, id: crm_case_renovatinggovernmentschools0, string: fundraising in done state}:
-     - state == "done"
-    
+    from openerp import tools
+    fund_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert fund_ids and len(fund_ids), "Fund is not created after getting request"
+    fund = self.browse(cr, uid, fund_ids[0], context=context)
+    assert fund.name == tools.ustr("Demande de controbute dans votre fonds."), "Subject does not match"
+
+
