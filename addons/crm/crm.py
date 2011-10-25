@@ -236,13 +236,12 @@ class crm_base(object):
         :param add: Id of Partner's address
         :param email: Partner's email ID
         """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        if address.email:
-            return {'value': {'email_from': address.email, 'phone': address.phone}}
-        else:
-            return {'value': {'phone': address.phone}}
+        data = {'value': {'email_from': False, 'phone':False}}
+        if add:
+            address = self.pool.get('res.partner.address').browse(cr, uid, add)
+            data['value'] = {'email_from': address and address.email or False ,
+                             'phone':  address and address.phone or False}
+        return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
