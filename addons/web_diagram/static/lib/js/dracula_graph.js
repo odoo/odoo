@@ -164,7 +164,7 @@ Graph.Renderer.Raphael = function(element, graph, width, height) {
             this.dx = e.clientX;
             this.dy = e.clientY;
             selfRef.isDrag = this;
-            this.set && this.set.animate({"fill-opacity": .1}, 200) && this.set.toFront();
+            this.set && this.set.animate({"fill-opacity": .1}, 200);
             e.preventDefault && e.preventDefault();
         }
     };
