@@ -332,9 +332,11 @@ class resource_resource(osv.osv):
         for week in weeks:
             res_str = ""
             day = None
-            if week_days.has_key(week['dayofweek']):
+            if week_days.get(week['dayofweek'],False):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
+            else:
+                raise osv.except_osv(_('Configuration Error!'),_('Make sure the Working time has been configured with proper week days!'))
             hour_from_str = convert_timeformat(week['hour_from'])
             hour_to_str = convert_timeformat(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
