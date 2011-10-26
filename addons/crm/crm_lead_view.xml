@@ -59,10 +59,10 @@
                         widget="selection"
                         domain="[('object_id.model','=','crm.lead')]"/>
                     <button
-                         name="button_convert_opportunity"
+                         name="%(crm.action_crm_lead2opportunity_partner)d"
                          string="Convert to Opportunity"
                          help="Convert to Opportunity" icon="gtk-go-forward"
-                         type="object"/>
+                         />
                     <newline />
                     <field name="user_id" />
                     <field name="section_id" widget="selection" />

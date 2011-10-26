@@ -568,16 +568,13 @@ class crm_lead(crm_case, osv.osv):
         })
         return partner_id
 
-    def assign_partner(self, cr, uid, ids, partner_id=None, context=None):
+    def _lead_set_partner(self, cr, uid, lead, partner_id, context=None):
         res = False
         res_partner = self.pool.get('res.partner')
         if partner_id:
             contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
-            res = self.write(cr, uid, ids, {'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
-            partner = res_partner.browse(cr, uid, partner_id, context=context)
-            if partner.user_id:
-                for lead_id in ids:
-                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
+            res = lead.write({'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
+            
         return res
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
@@ -602,7 +599,7 @@ class crm_lead(crm_case, osv.osv):
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
         This function convert partner based on action.
-        if action is 'new', create new partner with contact and assign lead to new partner_id.
+        if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
         """
         if context is None:
@@ -614,7 +611,7 @@ class crm_lead(crm_case, osv.osv):
                 if not partner_id:
                     partner_id = self._lead_create_partner(cr, uid, lead, context=context)
                 self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
-            self.assign_partner(cr, uid, [lead.id], partner_id, context=context)
+            self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
 
@@ -717,37 +714,6 @@ class crm_lead(crm_case, osv.osv):
                 'type': 'ir.actions.act_window',
         }
 
-
-    def button_convert_opportunity(self, cr, uid, ids, context=None):
-        """ Precomputation for converting lead to opportunity
-        """
-        if context is None:
-            context = {}
-        context.update({'active_ids': ids})
-
-        data_obj = self.pool.get('ir.model.data')
-        value = {}
-
-
-        for case in self.browse(cr, uid, ids, context=context):
-            context.update({'active_id': case.id})
-            data_id = data_obj._get_id(cr, uid, 'crm', 'view_crm_lead2opportunity_partner')
-            view_id1 = False
-            if data_id:
-                view_id1 = data_obj.browse(cr, uid, data_id, context=context).res_id
-            value = {
-                    'name': _('Create Partner'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'crm.lead2opportunity.partner',
-                    'view_id': False,
-                    'context': context,
-                    'views': [(view_id1, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'new',
-                    'nodestroy': True
-            }
-        return value
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically calls when new email message arrives"""

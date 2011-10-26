@@ -118,15 +118,19 @@ class crm_lead(osv.osv):
                          'user_id' : user_id}
                    }
 
-    def assign_partner(self, cr, uid, ids, partner_id=None, context=None):
+    def assign_partner(self, cr, uid, ids, partner_id=False, context=None):
         partner_ids = {}
         res = False
-        if partner_id is None:
+        res_partner = self.pool.get('res.partner')
+        if not partner_id:
             partner_ids = self.search_geo_partner(cr, uid, ids, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             if not partner_id:
                 partner_id = partner_ids.get(lead.id, False)
-            res = super(crm_lead, self).assign_partner(cr, uid, [lead.id], partner_id, context=context)
+            partner = res_partner.browse(cr, uid, partner_id, context=context)
+            if partner.user_id:
+                for lead_id in ids:
+                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
             self.write(cr, uid, [lead.id], {'date_assign': time.strftime('%Y-%m-%d'), 'partner_assigned_id': partner_id}, context=context)
         return res
         
