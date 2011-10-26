@@ -93,7 +93,6 @@ class DiagramView(View):
             n.update(
                 id=act['id'],
                 color='white',
-                shape='ellipse',
                 options={}
             )
             for color, expr in bgcolors.items():

@@ -121,9 +121,8 @@ openerp.web.DiagramView = openerp.web.View.extend({
         //Custom logic
         var self = this;
         var renderer = function(r, n) {
-            var shape = n.node.shape;
-            if(shape == 'rectangle')
-                shape = 'rect';
+            var shape = (n.node.shape === 'rectangle') ? 'rect' : 'ellipse';
+
             var node = r[shape](n.node.x, n.node.y).attr({
                 "fill": n.node.color
             }).dblclick(function() {
@@ -139,11 +138,11 @@ openerp.web.DiagramView = openerp.web.View.extend({
                         .dblclick(propagate_to_previous_sibling)
                 ).attr("cursor", "pointer");
 
-            if(shape == "ellipse")
-                node.attr({rx: "40", ry: "20"});
-            else if(shape == 'rect') {
+            if (shape === 'rect') {
                 node.attr({width: "60", height: "44"});
                 node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
+            } else {
+                node.attr({rx: "40", ry: "20"});
             }
 
             return nodes;
