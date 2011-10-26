@@ -33,7 +33,7 @@
     """,
     "version": "0.1",
     "depends": ["base_tools"],
-    "category" : "Hidden",
+    "category" : "Human Resources",
     'description': """
     The base module to manage lunch
 
