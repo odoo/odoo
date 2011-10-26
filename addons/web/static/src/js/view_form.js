@@ -2232,7 +2232,8 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.list_id = _.uniqueId("many2many");
-        this.is_started = $.Deferred();
+        this.is_loaded = $.Deferred();
+        this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
     },
     start: function() {
@@ -2258,9 +2259,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this._super(value);
         this.dataset.set_ids(value);
         var self = this;
-        $.when(this.is_started).then(function() {
-            self.list_view.reload_content();
-        });
+        self.reload_content();
         this.is_setted.resolve();
     },
     get_value: function() {
@@ -2279,7 +2278,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.list_view.m2m_field = this;
         var loaded = $.Deferred();
         this.list_view.on_loaded.add_last(function() {
-            self.is_started.resolve();
+            self.initial_is_loaded.resolve();
             loaded.resolve();
         });
         setTimeout(function () {
@@ -2287,16 +2286,22 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         }, 0);
         return loaded;
     },
+    reload_content: function() {
+        var self = this;
+        this.is_loaded = this.is_loaded.pipe(function() {
+            return self.list_view.reload_content();
+        });
+    },
     update_dom: function() {
         this._super.apply(this, arguments);
         var self = this;
         if (this.previous_readonly !== this.readonly) {
             this.previous_readonly = this.readonly;
             if (this.list_view) {
-                $.when(this.is_started).then(function() {
+                this.is_loaded = this.is_loaded.pipe(function() {
                     self.list_view.stop();
-                    $.when(self.load_view()).then(function() {
-                        self.list_view.reload_content();
+                    return $.when(self.load_view()).then(function() {
+                        self.reload_content();
                     });
                 });
             }
