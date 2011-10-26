@@ -102,7 +102,7 @@
 	Profiles / crm.segmentation
 	-->
 
-	<record model="crm.segmentation" id="crm_segmentation0">
+	<record model="crm.segmentation" id="crm.crm_segmentation0">
 		<field name="name">OpenERP partners</field>
 		<field name="answer_yes" eval="[(6,0,[partner_tiny1])]" />
 		<field name="categ_id" ref="base.res_partner_category_2"/>
@@ -111,21 +111,21 @@
 	<record model="crm.segmentation" id="crm_segmentation1">
 		<field name="name">Bronze partners</field>
 		<field name="answer_yes" eval="[(6,0,[partner_quality1])]" />
-		<field name="parent_id" ref="crm_segmentation0"/>
+		<field name="parent_id" ref="crm.crm_segmentation0"/>
 		<field name="categ_id" ref="base.res_partner_category_3"/>
 		<field name="profiling_active">True</field>
 	</record>
 	<record model="crm.segmentation" id="crm_segmentation2">
 		<field name="name">Silver partners</field>
 		<field name="answer_yes" eval="[(6,0,[partner_quality2])]" />
-		<field name="parent_id" ref="crm_segmentation0"/>
+		<field name="parent_id" ref="crm.crm_segmentation0"/>
 		<field name="categ_id" ref="base.res_partner_category_4"/>
 		<field name="profiling_active">True</field>
 	</record>
 	<record model="crm.segmentation" id="crm_segmentation3">
 		<field name="name">Gold partners</field>
 		<field name="answer_yes" eval="[(6,0,[partner_quality3])]" />
-		<field name="parent_id" ref="crm_segmentation0"/>
+		<field name="parent_id" ref="crm.crm_segmentation0"/>
 		<field name="categ_id" ref="base.res_partner_category_5"/>
 		<field name="exclusif">True</field>
 		<field name="profiling_active">True</field>
