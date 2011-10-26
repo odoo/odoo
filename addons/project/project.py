@@ -485,7 +485,7 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence,priority, date_start, name, id"
+    _order = "priority, sequence, date_start, name, id"
 
     def set_priority(self, cr, uid, ids, priority):
         """Set task priority

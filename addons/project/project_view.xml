@@ -323,14 +323,14 @@
                 <kanban default_group_by="type_id" >
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="state"/>
                     <field name="type_id"/>
+                    <field name="user_id"/>
                     <field name="user_email"/>
+                    <field name="description"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
-                            <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type_id.raw_value)"/>
-                            <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div t-att-class="kanban_color(record.color.raw_value) + (record.state.raw_value === 'pending' ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <tr>
@@ -340,38 +340,31 @@
                                                 <field name="name"/>
                                             </td>
                                             <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/>
+                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar" t-att-title="record.user_id.value"/>
                                             </td>
                                         </tr>
                                     </table>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                        <div class="oe_kanban_right oe_kanban_small">
-                                            <field name="user_id"/>
+                                        <div class="oe_kanban_right">
+                                            <b>
+                                                <field name="project_id"/><br/>
+                                                <field name="state"/><t t-if="record.date_deadline.value"> - </t>
+                                                <i><field name="date_deadline"/></i>
+                                            </b>
                                         </div>
-                                        <div class="oe_kanban_title2">
-                                            <field name="project_id"/>
+                                        <div>
+                                            <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/>
                                         </div>
-                                        <div class="oe_kanban_small">
-                                            <a target="_blank" t-att-href="pad_url"><t t-esc="pad_url"/></a>
-                                        </div>
-                                        <div class="oe_kanban_small">
-                                            <i><field name="date_deadline"/></i>
-                                        </div>
+                                        <br class="oe_kanban_clear"/>
                                     </div>
                                     <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                                         <div class="oe_kanban_left">
                                             <a string="Edit" icon="gtk-edit" type="edit"/>
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                            <a string="" />
-                                            <a title="OpenERP Pad" icon="pad-openerp" target="_blank" t-att-href="pad_url" style="text-decoration: none;" >
-                                                <img src="/project/static/src/img/kanban-pad-openerp.png" border="0" width="16" height="16"/>
-                                            </a>
-                                            <a name="%(action_project_task_delegate)d" string="Delegate" states="pending,open,draft" type="action" icon="gtk-sort-descending" />
                                         </div>
                                         <div class="oe_kanban_right">
-                                            <a name="do_cancel" string="Mark Lost" states="draft,open,pending" type="object" icon="lead-stage-lost"/>
-                                            <a name="do_pending" string="Pending"  states="open" type="object" icon="gtk-media-pause"/>
-                                            <a name="action_close" string="Mark Won"  states="pending,open" type="object" icon="lead-stage-won"/>
+                                            <a name="do_pending" string="Set Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
+                                            <a name="do_open" string="Open" states="pending" type="object" icon="gtk-media-play"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>
@@ -467,8 +460,8 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group>
-                        <filter string="New" domain="[('state','=','draft')]"  name="current" help="New Tasks" icon="terp-check"/>
-                        <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
+                        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
+                        <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <filter name="edit"
@@ -511,7 +504,7 @@
             <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
             <field eval="False" name="filter"/>
             <field name="view_id" ref="view_task_tree2"/>
-            <field name="context">{"search_default_user_id":uid, "search_default_current": 1}</field>
+            <field name="context">{"search_default_user_id":uid, "search_default_draft": 1, "search_default_open":1 }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
