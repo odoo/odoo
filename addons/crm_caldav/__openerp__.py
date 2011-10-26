@@ -24,7 +24,7 @@
 {
     'name': 'Calendar Synchronizing',
     'version': '1.1',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales Management',
     'complexity': "normal",
     'description': """
 Caldav features in Meeting.

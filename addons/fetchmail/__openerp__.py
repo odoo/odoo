@@ -25,7 +25,7 @@
     "version" : "1.0",
     "depends" : ["base", 'mail'],
     "author" : "OpenERP SA",
-    "category": 'Customer Relationship Management',
+    'category': 'Sales Management',
     "description": """
 Retrieve incoming email on POP / IMAP servers
 =============================================

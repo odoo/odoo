@@ -21,7 +21,7 @@
 
 
 {
-    'category': 'Customer Relationship Management', 
+    'category': 'Sales Management',
     'name': 'Fundraising',
     'version': '1.0',
     'complexity': "easy",

@@ -23,7 +23,7 @@
 {
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
-    'category': 'Customer Relationship Management',
+    'category': 'Sales Management',
     'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.
