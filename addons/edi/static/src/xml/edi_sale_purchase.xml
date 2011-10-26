@@ -33,7 +33,7 @@
        </div>
    </div>
 
-   <h1 class="oe_edi_doc_title">Order <t t-esc="doc.name"/>: <t t-esc="doc.amount_total"/> <t t-esc="doc.currency.code"/></h1>
+   <h1 class="oe_edi_doc_title">Order <t t-esc="doc.name"/>: <t t-esc="_.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></h1>
 
     <table width="100%" class="oe_edi_data oe_edi_shade">
         <tr class="oe_edi_floor">
@@ -68,11 +68,11 @@
                     </t>
                 </td>
                 <td align="right">
-                    <t t-esc="doc_line.product_qty"/> <t t-esc="doc_line.product_uom[1]"/>
+                    <t t-esc="_.sprintf('%.2f',doc_line.product_qty)"/> <t t-esc="doc_line.product_uom[1]"/>
                 </td>
-                <td align="right"><t t-esc="doc_line.price_unit"/></td>
-                <td align="right"><t t-esc="doc_line.discount"/></td>
-                <td align="right"><t t-esc="doc_line.price_subtotal"/> <t t-esc="doc.currency.code"/></td>
+                <td align="right"><t t-esc="_.sprintf('%.2f',doc_line.price_unit)"/></td>
+                <td align="right"><t t-esc="_.sprintf('%.2f',doc_line.discount or 0.0)"/></td>
+                <td align="right"><t t-esc="_.sprintf('%.2f',doc_line.price_subtotal)"/> <t t-esc="doc.currency.code"/></td>
             </tr>
         </t>
         <tr>
@@ -82,7 +82,7 @@
                     Net Total:
                 </div>
                 <div class="oe_edi_summary_value">
-                    <t t-esc="doc.amount_untaxed"/> <t t-esc="doc.currency.code"/>
+                    <t t-esc="_.sprintf('%.2f',doc.amount_untaxed)"/> <t t-esc="doc.currency.code"/>
                 </div>
             </td>
         </tr>
@@ -93,7 +93,7 @@
                     Taxes:
                 </div>
                 <div class="oe_edi_summary_value">
-                    <t t-esc="doc.amount_tax or 0.0"/> <t t-esc="doc.currency.code"/>
+                    <t t-esc="_.sprintf('%.2f',doc.amount_tax)"/> <t t-esc="doc.currency.code"/>
                 </div>
             </td>
         </tr>
@@ -104,7 +104,7 @@
                     Total:
                 </div>
                 <div class="oe_edi_summary_value">
-                    <t t-esc="doc.amount_total"/> <t t-esc="doc.currency.code"/>
+                    <t t-esc="_.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/>
                 </div>
             </th>
         </tr>
