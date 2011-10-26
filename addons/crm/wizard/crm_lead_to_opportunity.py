@@ -54,6 +54,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         email = False
         for lead in lead_obj.browse(cr, uid, opportunities, context=context):
             partner_id = lead.partner_id and lead.partner_id.id or False
+
+            #TOFIX: use mail.mail_message.to_mail
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
             email = map(lambda x: "'" + x + "'", email)
 
