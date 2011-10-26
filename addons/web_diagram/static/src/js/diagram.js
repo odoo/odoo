@@ -126,6 +126,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
         });
     },
     draw_diagram: function(result) {
+        this.selected_node = null;
         var diagram = new Graph();
 
         this.active_model = result['id_model'];
