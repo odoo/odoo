@@ -54,7 +54,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
         // New Node,Edge
         this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node);});
-        this.$element.find('#new_edge.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.connector);});
 
         if(this.id) {
             self.get_diagram_info();
@@ -109,7 +108,23 @@ openerp.web.DiagramView = openerp.web.View.extend({
             this.get_diagram_info();
         }
     },
-
+    select_node: function (node, element) {
+        if (!this.selected_node) {
+            this.selected_node = node;
+            element.attr('stroke', 'red');
+            return;
+        }
+        // Re-click selected node, deselect it
+        if (node.id === this.selected_node.id) {
+            this.selected_node = null;
+            element.attr('stroke', 'black');
+            return;
+        }
+        this.add_edit_node(null, this.connector, {
+            act_from: this.selected_node.id,
+            act_to: node.id
+        });
+    },
     draw_diagram: function(result) {
         var diagram = new Graph();
 
@@ -131,6 +146,13 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 .attr("cursor", "pointer")
                 .dblclick(function() {
                     self.add_edit_node(n.node.id, self.node);
+                })
+                .mousedown(function () { node.moved = false; })
+                .mousemove(function () { node.moved = true; })
+                .click(function () {
+                    // Ignore click from move event
+                    if (node.moved) { return; }
+                    self.select_node(n.node, node);
                 });
 
             if (shape === 'rect') {
@@ -169,7 +191,8 @@ openerp.web.DiagramView = openerp.web.View.extend({
         });
     },
 
-    add_edit_node: function(id, model) {
+    add_edit_node: function(id, model, defaults) {
+        defaults = defaults || {};
         var self = this;
 
         if(!model)
@@ -235,6 +258,15 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 form_controller.on_record_loaded.add_last(function() {
                     form_controller.fields[fld].set_value([self.id,self.active_model]);
                     form_controller.fields[fld].dirty = true;
+                });
+            });
+        }
+        if (!_.isEmpty(defaults)) {
+            form_controller.on_record_loaded.add_last(function () {
+                _(form_fields).each(function (field) {
+                    if (!defaults[field]) { return; }
+                    form_controller.fields[field].set_value(defaults[field]);
+                    form_controller.fields[field].dirty = true;
                 });
             });
         }
