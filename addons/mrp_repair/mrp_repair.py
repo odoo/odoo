@@ -665,7 +665,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
      'product_uom_qty': lambda *a: 1,
     }
 
-    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit):
+    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit, company_id=False, context=None):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
         @param product: Changed operation type.
@@ -676,27 +676,32 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
-                }
-            }
+                }}
+        warehouse_obj = self.pool.get('stock.warehouse')
+        location_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)
+        location_id = location_id and location_id[0] or False
 
-        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
-        if type != 'add':
+        if type == 'add':
+            # TOCHECK: Find stock location for user's company warehouse or 
+            # repair order's company's warehouse (company_id field is added in fix of lp:831583)
+            args = company_id and [('company_id', '=', company_id)] or []
+            warehouse_ids = warehouse_obj.search(cr, uid, args, context=context)
+            stock_id = False
+            if warehouse_ids:
+                stock_id = warehouse_obj.browse(cr, uid, warehouse_ids[0], context=context).lot_stock_id.id
+            to_invoice = (guarantee_limit and datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+
             return {'value': {
-                'to_invoice': False,
-                'location_id': product_id,
-                'location_dest_id': False
-                }
-            }
+                'to_invoice': to_invoice,
+                'location_id': stock_id,
+                'location_dest_id': location_id
+                }}
 
-        stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-        to_invoice = (guarantee_limit and
-                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
         return {'value': {
-            'to_invoice': to_invoice,
-            'location_id': stock_id,
-            'location_dest_id': product_id
-            }
-        }
+                'to_invoice': False,
+                'location_id': location_id,
+                'location_dest_id': False
+                }}
 
 mrp_repair_line()
 
