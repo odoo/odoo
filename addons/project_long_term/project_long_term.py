@@ -184,8 +184,7 @@ class project_phase(osv.osv):
             duration = str(phase.duration) + duration_uom
             result += '''
     def Phase_%s():
-        title = \"%s\"
-        effort = \"%s\"''' % (phase.id, phase.name, duration)
+        effort = \"%s\"''' % (phase.id, duration)
             start = []
             if phase.constraint_date_start:
                 start.append('datetime.datetime.strptime("'+str(phase.constraint_date_start)+'", "%Y-%m-%d %H:%M:%S")')
@@ -252,9 +251,8 @@ class project(osv.osv):
             for key, vals in resource_objs.items():
                 result +='''
 class User_%s(Resource):
-    title = \"%s\"
     efficiency = %s
-''' % (key,  vals.get('name',False), vals.get('efficiency', False))
+''' % (key,  vals.get('efficiency', False))
 
         result += '''
 def Project():
@@ -268,12 +266,11 @@ def Project():
         # TODO: check if we need working_..., default values are ok.
         result = """
   def Project_%d():
-    title = \"%s\"
     start = \'%s\'
     working_days = %s
     resource = %s
 """       % (
-            project.id, project.name,
+            project.id, 
             project.date_start, working_days,
             '|'.join(['User_'+str(x.id) for x in project.members])
         )
@@ -379,9 +376,8 @@ class project_task(osv.osv):
                 continue
             result += '''
 %sdef Task_%s():
-%s  title = \"%s\"
 %s  todo = \"%.2fH\"
-%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.name, ident,task.remaining_hours, ident,task.total_hours)
+%s  effort = \"%.2fH\"''' % (ident,task.id, ident,task.remaining_hours, ident,task.total_hours)
             start = []
             for t2 in task.parent_ids:
                 start.append("up.Task_%s.end" % (t2.id,))
