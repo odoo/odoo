@@ -9,7 +9,7 @@ instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.exte
         var self = this;
         var $padbtn = self.$element.find('button.pad');
         var is_pad = function(a) {
-            return a.type == 'url' && _(a.url).startsWith(self.pad_prefix);
+            return a.type == 'url' && a.name == 'Pad';
         };
         if (_.any(attachments, is_pad)) {
             $padbtn.hide();
