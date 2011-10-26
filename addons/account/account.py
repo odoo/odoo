@@ -350,9 +350,10 @@ class account_account(osv.osv):
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
-            if account.parent_id:
-                obj = self.browse(cr, uid, account.parent_id.id)
-                level = obj.level + 1
+            parent = account.parent_id
+            while parent:
+                level += 1
+                parent = parent.parent_id
             res[account.id] = level
         return res
 
@@ -377,8 +378,8 @@ class account_account(osv.osv):
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
-            ('journal_id','=',jids[0]), 
-            ('period_id','=',pids[0]), 
+            ('journal_id','=',jids[0]),
+            ('period_id','=',pids[0]),
             ('account_id','=', account_id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
@@ -453,7 +454,10 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'level': fields.function(_get_level, string='Level', method=True, type='integer',
+             store={
+                    'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
+                   }),
     }
 
     _defaults = {
@@ -954,7 +958,7 @@ class account_period(osv.osv):
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
-    
+
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
