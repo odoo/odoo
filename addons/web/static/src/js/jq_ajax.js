@@ -41,6 +41,8 @@
 
         $.ajaxPrefilter("oe-jsonp", function(options, originalOptions, jqXHR) {
             
+            options.crossDomain = true;
+
             var data = null;
             if (options.data) {
                 data = $.param({r:JSON.stringify(options.data)});
