@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_quality_save_report" model="ir.ui.view">
+            <field name="name">view_quality_save_report</field>
+            <field name="model">save.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Standard Entries">
+                    <field name="name"/>
+                    <newline/>
+                    <field name="module_file"/>
+                    <separator colspan="4"/>
+                    <label string=" " colspan="2"/>
+                    <button special="cancel" string="Close" icon="gtk-close"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_view_quality_save_report">
+            <field name="name">Standard Entries</field>
+            <field name="res_model">save.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_quality_save_report"/>
+        </record>
+
+    </data>
+</openerp>

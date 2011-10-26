@@ -295,6 +295,40 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
+         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+           <field name="name">Unrealized Gain or Loss</field>
+            <field name="model">account.account</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Unrealized Gains and losses">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <field name="exchange_rate"/>
+                    <field name="foreign_balance"/>
+                    <field name="adjusted_balance"/>
+                    <field name="balance"/>
+                    <field name="unrealized_gain_loss"/>
+                </tree>
+            </field>
+        </record>
+
+          <record id="action_account_gain_loss" model="ir.actions.act_window">
+            <field name="name">Unrealized Gain or Loss</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_gain_loss_tree"/>
+            <field name="domain">[('currency_id','!=',False)]</field>
+            <field name="help">When doing multi-currency transactions, you may loose or gain some amount due to changes of exchange rate. This menu gives you a forecast of the Gain or Loss you'd realized if those transactions were ended today. Only for accounts having a secondary currency set.</field>
+        </record>
+
+        <menuitem
+            name="Unrealized Gain or Loss"
+            action="action_account_gain_loss"
+            id="menu_unrealized_gains_losses"
+            parent="account.menu_multi_currency"/>
+
         <!--
         Journal
 
@@ -455,9 +489,9 @@
 <!--                                <field name="invoice_sequence_id"/>-->
                                 <field name="group_invoice_lines"/>
                             </group>
-                            <group colspan="2" col="2" groups="base.group_extended">
+                            <group colspan="2" col="2"> <!-- can't set the field as hidden for certain groups as it's required in the object and not in the view, and GTK doesn't handle that correctly -->
                                 <separator string="Sequence" colspan="4"/>
-                                <field name="sequence_id"/>
+                                <field name="sequence_id" required="0"/>
                             </group>
                         </page>
                         <page string="Entry Controls" groups="base.group_extended">
@@ -1714,35 +1748,37 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Payment Term">
-                    <field name="name" select="1"/>
-                    <field name="sequence"/>
-                    <group colspan="2" col="4">
-                        <separator string="Amount Computation" colspan="4"/>
-                        <field name="value" colspan="4"/>
-                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+                    <group>
+	                    <group colspan="2" col="4">
+	                        <field name="name" select="1"/>
+	                        <separator string="Amount Computation" colspan="4"/>
+	                        <field name="value" colspan="4"/>
+	                        <field name="value_amount" colspan="4" attrs="{'readonly':[('value','=','balance')]}"/>
+	                    </group>
+	                    <group colspan="2" col="4">
+	                        <field name="sequence"/>
+	                        <separator string="Due Date Computation" colspan="4"/>
+	                        <field name="days" colspan="4"/>
+	                        <field name="days2" colspan="4"/>
+	                    </group>
                     </group>
-                    <group colspan="2" col="4">
-                        <separator string="Due date Computation" colspan="4"/>
-                        <field name="days" colspan="4"/>
-                        <field name="days2" colspan="4"/>
-                    </group>
-                    <label string=""/>
                     <newline/>
-                    <label string="Example: at 14 net days 2 percents, remaining amount at 30 days end of month." colspan="4"/>
+                    <separator string="Example" colspan="4"/>
+                    <label string="At 14 net days 2 percent, remaining amount at 30 days end of month." colspan="4"/>
                     <group colspan="2" col="2">
                         <label string="Line 1:" colspan="2"/>
-                        <label string="  valuation: percent"/>
-                        <label string="  number of days: 14"/>
-                        <label string="  value amount: 0.02"/>
-                        <label string="  day of the month: 0"/>
+                        <label string="  Valuation: Percent"/>
+                        <label string="  Number of Days: 14"/>
+                        <label string="  Value amount: 0.02"/>
+                        <label string="  Day of the Month: 0"/>
                     </group>
                     <newline/>
                     <group colspan="2" col="2">
                         <label string="Line 2:" colspan="2"/>
-                        <label string="  valuation: balance"/>
-                        <label string="  number of days: 30"/>
-                        <label string="  value amount: n.a"/>
-                        <label string="  day of the month= -1"/>
+                        <label string="  Valuation: Balance"/>
+                        <label string="  Number of Days: 30"/>
+                        <label string="  Value amount: n.a"/>
+                        <label string="  Day of the Month= -1"/>
                     </group>
                 </form>
             </field>
@@ -1769,7 +1805,7 @@
                     <separator colspan="4" string="Information"/>
                     <field name="name" select="1"/>
                     <field name="active" select="1"/>
-                    <separator colspan="4" string="Description on invoices"/>
+                    <separator colspan="4" string="Description On Invoices"/>
                     <field colspan="4" name="note" nolabel="1"/>
                     <separator colspan="4" string="Computation"/>
                     <field colspan="4" name="line_ids" nolabel="1"/>
