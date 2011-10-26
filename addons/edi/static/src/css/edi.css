@@ -33,6 +33,7 @@ button.oe_edi_action_print img {
 .oe_edi_nested_block {
     margin-left: 25px;
     padding: 0px;
+    display: none; /* made visible by click on parent input/label */
 }
 .oe_edi_right_top .oe_edi_nested_block label {
     float: left;
@@ -42,6 +43,16 @@ button.oe_edi_action_print img {
     font-weight: bold;
     min-width: 5em;
 }
+.oe_edi_option {
+    padding-left: 5px;
+    line-height: 2em;
+}
+.oe_edi_option:hover {
+    background: #e8e8e8;
+}
+.oe_edi_import_button {
+    margin: 1em 2em;
+}
 
 /** Paperbox, from http://www.sitepoint.com/pure-css3-paper-curl/ **/
 body {
@@ -50,7 +61,8 @@ body {
 .oe_edi_paperbox {
     position: relative;
     width: 700px;
-    padding: 5%;
+    padding: 30px;
+    padding-bottom: 50px;
     margin: 0 auto;
     background-color: #fff;
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);

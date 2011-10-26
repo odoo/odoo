@@ -25,29 +25,42 @@
                         <p class="oe_edi_sidebar_title">
                             Import this document
                         </p>
-
-                        <input type="radio" id="oe_edi_import_openerp" name="oe_edi_import"/>
-                        <label for="oe_edi_import_openerp">Import it into an existing OpenERP instance</label>
-                        <p class="oe_edi_nested_block">
-                            <label for="oe_edi_txt_saas_url">OpenERP instance address:</label>
+                        <div class="oe_edi_option">
+                            <input type="radio" id="oe_edi_import_openerp" name="oe_edi_import" class="oe_edi_import_choice"/>
+                            <label for="oe_edi_import_openerp" id="oe_edi_import_openerp" class="oe_edi_import_choice_label">Import it into an existing OpenERP instance</label>
+                        </div>
+                        <p class="oe_edi_nested_block" id="oe_edi_import_openerp_nested">
+                            <label for="oe_edi_txt_server_url">OpenERP instance address:</label>
                             <br/>
                             http://<input type="text" id="oe_edi_txt_server_url"/>
                         </p>
 
-                        <input type="radio" id="oe_edi_import_saas" name="oe_edi_import"/>
-                        <label for="oe_edi_import_saas">Import it into a new OpenERP Online instance:</label>
-                        <br/>
-                        <br/>
-                        <input type="radio" id="oe_edi_import_download" name="oe_edi_import"/>
-                        <label for="oe_edi_import_download">Import into another application</label>
-                        <br/>
-                        <br/>
+                        <div class="oe_edi_option">
+                        <input type="radio" id="oe_edi_import_saas" name="oe_edi_import" class="oe_edi_import_choice"/>
+                        <label for="oe_edi_import_saas"  id="oe_edi_import_saas" class="oe_edi_import_choice_label">Import it into a new OpenERP Online instance:</label>
+                        </div>
+
+                        <div class="oe_edi_option">
+                        <input type="radio" id="oe_edi_import_download" name="oe_edi_import" class="oe_edi_import_choice"/>
+                        <label for="oe_edi_import_download" id="oe_edi_import_download" class="oe_edi_import_choice_label">Import into another application</label>
+                        </div>
 
                         <button type="button" class="oe_edi_import_button">Continue</button>
 
                         <div class="oe_edi_right_bottom">
                             <t t-raw="widget.sidebar"/>
                         </div>
+
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                console.log('installing');
+                                $('.oe_edi_import_choice, .oe_edi_import_choice_label').click(function($event) {
+                                    $('.oe_edi_nested_block').hide();
+                                    $('#'+$event.target.id+'_nested').show();
+                                    return true;
+                                });
+                            });
+                        </script>
                     </td>
                 </tr>
             </table>
