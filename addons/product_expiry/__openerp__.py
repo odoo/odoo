@@ -21,7 +21,7 @@
     "name" : "Products Expiry Date",
     "version" : "1.0",
     "author" : "OpenERP SA",
-    "category" : "Vertical Applications",
+    "category" : "Specific Industry Applications",
     'complexity': "easy",
     "depends" : ["stock"],
     "init_xml" : [],
