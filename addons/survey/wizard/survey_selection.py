@@ -41,6 +41,7 @@ class survey_name_wiz(osv.osv_memory):
         'transfer': 1,
         'response': 0,
         'survey_id': lambda self,cr,uid,context:context.get('survey_id',False),
+        'store_ans': '{}' #Setting the default pattern as '{}' as the field is of type text. The field always gets the value in dict format
     }
 
     def action_next(self, cr, uid, ids, context=None):
@@ -68,7 +69,6 @@ class survey_name_wiz(osv.osv_memory):
             raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
 
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
-
         return {
             'view_type': 'form',
             "view_mode": 'form',
