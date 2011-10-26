@@ -176,7 +176,7 @@ class crm_phonecall(crm_base, osv.osv):
         })
         return partner_id
 
-    def _call_assign_partner(self, cr, uid, ids, partner_id, context=None):
+    def _call_set_partner(self, cr, uid, ids, partner_id, context=None):
         return self.write(cr, uid, ids, {'partner_id' : partner_id}, context=context)
 
     def _call_create_partner_address(self, cr, uid, phonecall, partner_id, context=None):
@@ -187,7 +187,7 @@ class crm_phonecall(crm_base, osv.osv):
                     'phone': phonecall.partner_phone,
         })
 
-    def convert_partner(self, cr, uid, ids, action='new', partner_id=False, context=None):
+    def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
         This function convert partner based on action.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
@@ -202,7 +202,7 @@ class crm_phonecall(crm_base, osv.osv):
                if not partner_id:
                    partner_id = self._call_create_partner(cr, uid, call, context=context)
                self._call_create_partner_address(cr, uid, call, partner_id, context=context)
-            self._call_assign_partner(cr, uid, [call.id], partner_id, context=context)
+            self._call_set_partner(cr, uid, [call.id], partner_id, context=context)
             partner_ids[call.id] = partner_id
         return partner_ids
 
