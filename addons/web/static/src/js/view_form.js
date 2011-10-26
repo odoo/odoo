@@ -1923,7 +1923,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
-        this.is_started = $.Deferred();
+        this.is_loaded = $.Deferred();
+        this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
@@ -1982,7 +1983,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             self.init_form_last_update.resolve();
         });
         var def = $.Deferred().then(function() {
-            self.is_started.resolve();
+            self.initial_is_loaded.resolve();
         });
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
@@ -2018,20 +2019,23 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     reload_current_view: function() {
         var self = this;
-        var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-        if(self.viewmanager.active_view === "list") {
-            view.reload_content();
-        } else if (self.viewmanager.active_view === "form") {
-            if (this.dataset.index === null && this.dataset.ids.length >= 1) {
-                this.dataset.index = 0;
+        self.is_loaded = self.is_loaded.pipe(function() {
+            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+            if(self.viewmanager.active_view === "list") {
+                return view.reload_content();
+            } else if (self.viewmanager.active_view === "form") {
+                if (self.dataset.index === null && self.dataset.ids.length >= 1) {
+                    self.dataset.index = 0;
+                }
+                var act = function() {
+                    return view.do_show();
+                }
+                self.form_last_update = self.form_last_update.pipe(act, act);
+                return self.form_last_update;
+            } else if (self.viewmanager.active_view === "graph") {
+                return view.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
-            var act = function() {
-                return view.do_show();
-            }
-            this.form_last_update = this.form_last_update.pipe(act, act);;
-        } else if (self.viewmanager.active_view === "graph") {
-            view.do_search(this.build_domain(), this.dataset.get_context(), []);
-        }
+        });
     },
     set_value: function(value) {
         value = value || [];
@@ -2088,9 +2092,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
-        $.when(this.is_started).then(function() {
-            self.reload_current_view();
-        });
+        self.reload_current_view();
         this.is_setted.resolve();
     },
     get_value: function() {
@@ -2158,9 +2160,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         if (this.previous_readonly !== this.readonly) {
             this.previous_readonly = this.readonly;
             if (this.viewmanager) {
-                $.when(this.is_started).then(function() {
+                this.is_loaded = this.is_loaded.pipe(function() {
                     self.viewmanager.stop();
-                    $.when(self.load_views()).then(function() {
+                    return $.when(self.load_views()).then(function() {
                         self.reload_current_view();
                     });
                 });
