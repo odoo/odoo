@@ -160,10 +160,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
         });
 
-
-        if ($('div#dia-canvas').children().length > 0) {
-            $('div#dia-canvas').children().remove();
-        }
+        self.$element.find('.diagram').empty();
 
         var layouter = new Graph.Layout.Ordered(diagram);
         var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
