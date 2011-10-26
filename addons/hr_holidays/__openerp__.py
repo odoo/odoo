@@ -21,7 +21,7 @@
 
 
 {
-    "name": "Leaves Management",
+    "name": "Leave Management",
     "version": "1.5",
     "author": ['OpenERP SA', 'Axelor'],
     "category": "Human Resources",

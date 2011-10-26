@@ -4,6 +4,8 @@
   !record {model: project.project, id: project_project_developyamlproject_2}:
     name: "Develop Yaml Project Module"
     date_start: !eval time.strftime('%Y-%m-%d')
+    members:
+      - base.user_admin
 
 - 
   I have set Working Time from Monday to  Friday from 9am to 17pm.
@@ -107,7 +109,6 @@
   !record {model: project.compute.phases, id: project_compute_phases_0}:
     project_id: project_project_developyamlproject_2
     target_project: one
-    
 - 
   Schedule project phases using Compute Phase Scheduling
 - 
@@ -120,7 +121,7 @@
   !python {model: project.project}: |
      proj=self.browse(cr, uid, [ref("project_project_developyamlproject_2")])[0]
      for phase in proj.phase_ids:
-        if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
-           raise AssertionError("Phases not scheduled")      
-      
+        if (not phase.date_start) or (not phase.date_end):
+           raise AssertionError("Phases not scheduled")
+
 

@@ -59,7 +59,7 @@
                                         <field name="location_id"/>
                                         <field name="location_dest_id"/>
                                         <newline/>
-                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                         <group colspan="2">
                                             <field name="to_invoice"/>
                                             <field name="invoiced"/>
@@ -77,7 +77,7 @@
                                  </notebook>
                             </form>
                             <tree string="Operations" editable="bottom">
-                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
                                 <field name="prodlot_id" />
