@@ -3,13 +3,13 @@
     <data>
 
         <record id="view_project_compute_phases_select" model="ir.ui.view">
-            <field name="name">Compute Scheduling of Phases</field>
+            <field name="name">Schedule Phases</field>
             <field name="model">project.compute.phases</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                  <form string="Compute Scheduling of Phases">
+                  <form string="Schedule Phases">
                     <group colspan="4" col="4">
-                        <separator colspan="4" string="Compute Scheduling of phases for all or specified project" />
+                        <separator colspan="4" string="Schedule Phases" />
                         <field name="target_project" colspan="4"/>
                         <field name="project_id" colspan="4" attrs="{'invisible':[('target_project','=','all')], 'required':[('target_project','!=','all')]}"/>
                         <separator colspan="4"/>
@@ -25,7 +25,7 @@
         </record>
 
         <record id="action_project_compute_phases" model="ir.actions.act_window">
-               <field name="name">Compute Phase Scheduling</field>
+               <field name="name">Schedule Phases</field>
                <field name="type">ir.actions.act_window</field>
                <field name="res_model">project.compute.phases</field>
                <field name="view_type">form</field>
@@ -36,7 +36,7 @@
                </field>
         </record>
 
-        <menuitem id="menu_compute_phase" name="Compute Phase Scheduling"
+        <menuitem id="menu_compute_phase"
             parent="menu_phase_schedule" action="action_project_compute_phases"/>
 
     </data>
