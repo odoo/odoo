@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <menuitem id="base.menu_project_long_term" name="Long Term Planning" parent="base.menu_main_pm" sequence="1"/>
+    <menuitem id="base.menu_project_long_term" name="Planning" parent="base.menu_main_pm" sequence="1"/>
 
     # ------------------------------------------------------
     # Project User Allocation
@@ -71,7 +71,7 @@
             <field name="model">project.user.allocation</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Users Allocation">
+                <search string="Planning of Users">
                     <group>
                         <field name="user_id"/>
                         <field name="phase_id"/>
@@ -88,7 +88,7 @@
             </field>
         </record>
        <record id="act_resouce_allocation" model="ir.actions.act_window">
-            <field name="name">Users Allocation</field>
+            <field name="name">Planning of Users</field>
             <field name="res_model">project.user.allocation</field>
             <field name="view_type">form</field>
             <field name="view_mode">gantt,tree,form,calendar</field>
@@ -118,14 +118,14 @@
                         </group>
                     </group>
                     <notebook colspan="4">
-                        <page string="Users Allocation">
+                        <page string="Planning of Users">
                             <field colspan="4" name="user_ids" nolabel="1">
-                                 <tree editable="bottom" string="Project User Allocation">
+                                 <tree editable="bottom" string="Project Users">
                                     <field name="user_id"/>
                                     <field name="date_start"/>
                                     <field name="date_end"/>
                                   </tree>
-                                  <form string="Project Users Allocation">
+                                  <form string="Project Users">
                                     <field name="user_id"/>
                                     <field name="date_start" /> 
                                     <field name="date_end"/>
@@ -377,7 +377,7 @@
 
         <menuitem id="menu_resouce_allocation" action="act_resouce_allocation"
             icon="STOCK_INDENT"
-            name="Users Allocations" parent="base.menu_project_long_term" sequence="2"/>
+            parent="base.menu_project_long_term" sequence="2"/>
 
         <menuitem id="menu_pm_users_project1"
             groups="base.group_extended"

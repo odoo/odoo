@@ -3,13 +3,12 @@
     <data>
 
         <record id="view_project_compute_tasks" model="ir.ui.view">
-            <field name="name">Compute Task Scheduling</field>
+            <field name="name">Schedule Tasks</field>
             <field name="model">project.compute.tasks</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                 <form string="Compute Scheduling of Task">
+                 <form string="Schedule Tasks">
                     <group colspan="4">
-                         <separator colspan="4" string="Compute Scheduling of Task for specified project." />
                         <field name="project_id" colspan="4"/>
                         <separator colspan="4"/>
                         <group colspan="2" col="2">
@@ -24,7 +23,7 @@
         </record>
 
         <record id="action_project_compute_tasks" model="ir.actions.act_window">
-               <field name="name">Compute Task Scheduling</field>
+               <field name="name">Schedule Tasks</field>
                <field name="type">ir.actions.act_window</field>
                <field name="res_model">project.compute.tasks</field>
                <field name="view_type">form</field>
@@ -33,7 +32,7 @@
                <field name="target">new</field>
         </record>
 
-         <menuitem id="menu_compute_tasks" name="Compute Task Scheduling"
+         <menuitem id="menu_compute_tasks"
             parent="menu_phase_schedule" action="action_project_compute_tasks"/>
 
     </data>
