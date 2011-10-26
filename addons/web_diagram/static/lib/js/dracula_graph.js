@@ -378,6 +378,8 @@ Graph.Layout.Spring.prototype = {
     },
 
     layoutRepulsive: function(node1, node2) {
+        if (typeof node1 == 'undefined' || typeof node2 == 'undefined')
+            return;
         var dx = node2.layoutPosX - node1.layoutPosX;
         var dy = node2.layoutPosY - node1.layoutPosY;
         var d2 = dx * dx + dy * dy;
