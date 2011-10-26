@@ -23,7 +23,7 @@
 {
     'name': 'Ideas Box',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Human Resources',
     'complexity': "easy",
     'description': """
 This module allows your user to easily and efficiently participate in enterprise innovation.
