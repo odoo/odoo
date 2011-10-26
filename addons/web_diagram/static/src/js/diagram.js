@@ -56,10 +56,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
         this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node);});
         this.$element.find('#new_edge.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.connector);});
 
-        this.$element.find('#toggle_grid').click(function() {
-            self.$element.find('.diagram').toggleClass('show_grid');
-        });
-
         if(this.id) {
             self.get_diagram_info();
         }
