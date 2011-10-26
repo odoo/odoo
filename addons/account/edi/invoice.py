@@ -31,6 +31,9 @@ INVOICE_LINE_EDI_STRUCT = {
     'quantity': True,
     'discount': True,
     'note': True,
+
+    # fields used for web preview only - discarded on import
+    'price_subtotal': True,
 }
 
 INVOICE_TAX_LINE_EDI_STRUCT = {
@@ -57,6 +60,12 @@ INVOICE_EDI_STRUCT = {
     #custom: currency_id
     'invoice_line': INVOICE_LINE_EDI_STRUCT,
     'tax_line': INVOICE_TAX_LINE_EDI_STRUCT,
+
+    # fields used for web preview only - discarded on import
+    #custom: 'partner_ref'
+    'amount_total': True,
+    'amount_untaxed': True,
+    'amount_tax': True,
 }
 
 class account_invoice(osv.osv, EDIMixin):
@@ -71,15 +80,14 @@ class account_invoice(osv.osv, EDIMixin):
         for invoice in records:
             # generate the main report
             self._edi_generate_report_attachment(cr, uid, invoice, context=context)
-
             edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)[0]
             edi_doc.update({
                     'company_address': res_company.edi_export_address(cr, uid, invoice.company_id, context=context),
                     'company_paypal_account': invoice.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [invoice.address_invoice_id], context=context)[0],
 
-                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context),
-                    #'company_logo': #TODO
+                    'currency': self.pool.get('res.currency').edi_export(cr, uid, [invoice.currency_id], context=context)[0],
+                    'partner_ref': invoice.reference or False,
             })
             edi_doc_list.append(edi_doc)
         return edi_doc_list
@@ -200,6 +208,9 @@ class account_invoice(osv.osv, EDIMixin):
         # internal number: reset to False, auto-generated
         edi_document['internal_number'] = False
 
+        # discard web preview fields, if present
+        edi_document.pop('partner_ref', None)
+
         # journal_id: should be selected based on type: simply put the 'type' in the context when calling create(), will be selected correctly
         context.update(type=invoice_type)
 
@@ -212,6 +223,9 @@ class account_invoice(osv.osv, EDIMixin):
             # TODO: could be improved with fiscal positions perhaps
             # account = fpos_obj.map_account(cr, uid, fiscal_position_id, account.id)
             edi_invoice_line['account_id'] = self.edi_m2o(cr, uid, account, context=context) if account else False
+
+            # discard web preview fields, if present
+            edi_invoice_line.pop('price_subtotal', None)
 
         # for tax lines, we disconnect from the invoice.line, so all tax lines will be of type 'manual', and default accounts should be picked based
         # on the tax config of the DB where it is imported.

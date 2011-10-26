@@ -3,19 +3,7 @@
     <data>
         <!--Export edi document  -->
         <record id="ir_actions_server_edi_purchase" model="ir.actions.server">
-            <field name="code"><![CDATA[
-try:
-    if not object.partner_id.opt_out:
-        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default="<WEB_ROOT_URL>")
-
-        # accessing the template will fail if it has been deleted - so we'll skip everything
-        tmpl = self.pool.get('ir.model.data').get_object(cr, uid, 'purchase', 'email_template_edi_purchase')
-
-        edi_token = self.pool.get('edi.document').export_edi(cr, uid, [object], context = context)[0]
-        context.update(edi_web_url_view='%s/web/view_edi?db=%s&token=%s' %(web_root_url, cr.dbname, edi_token))
-        self.pool.get('email.template').send_mail(cr, uid,tmpl.id,object.id,context=context)
-except:
-    pass]]></field>
+            <field name="code"><![CDATA[if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)]]></field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -63,7 +51,7 @@ except:
     <p>
     You can view the order confirmation document, download it and pay online using the following link:
     </p>
-            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;" 
+            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
 
     % if object.company_id.paypal_account:
@@ -80,7 +68,7 @@ except:
     %>
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
-        <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-radius: 2px 2px; background-position: 0% 0%; background-repeat: repeat no-repeat;"
+        <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;"
            href="${paypal_url}">Pay with Paypal</a>
     % endif
 
@@ -89,12 +77,12 @@ except:
     <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>
     <br/>
     <br/>
-    <div style="width: 375px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; overflow-x: hidden; overflow-y: hidden; zoom: 1; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(142, 0, 0); border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; border-bottom-right-radius: 0px 0px; border-bottom-left-radius: 0px 0px; background-position: 0% 0%; background-repeat: repeat no-repeat; ">
-        <h3 style="margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 9px; padding-right: 14px; padding-bottom: 9px; padding-left: 14px; font-size: 12px; font-weight: normal; font-style: normal; color: rgb(255, 255, 255); ">
+    <div style="width: 375px; margin: 0px; padding: 0px; background-color: #8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; background-repeat: repeat no-repeat;">
+        <h3 style="margin: 0px; padding: 2px 14px; font-size: 12px; color: #FFF;">
             <strong style="text-transform:uppercase;">${object.company_id.name}</strong></h3>
     </div>
-    <div style="width: 347px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; padding-top: 12px; padding-right: 14px; padding-bottom: 12px; padding-left: 14px; overflow-x: hidden; overflow-y: hidden; zoom: 1; line-height: 16px; background-image: initial; background-attachment: initial; background-origin: initial; background-clip: initial; background-color: rgb(242, 242, 242); ">
-        <span style="color: rgb(38, 72, 149); margin-bottom: 5px; display: block; ">
+    <div style="width: 347px; margin: 0px; padding: 5px 14px; line-height: 16px; background-color: #F2F2F2;">
+        <span style="color: #222; margin-bottom: 5px; display: block; ">
         % if object.company_id.street:
             ${object.company_id.street}<br/>
         % endif

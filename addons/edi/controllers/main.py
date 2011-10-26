@@ -53,10 +53,21 @@ class EDI(openerpweb.Controller):
             filename_utf8 = attachment['file_name']
             filename_encoded = "%s=%s" % ('filename*',
                                           utils.encode_rfc2231(filename_utf8, 'utf-8'))
-            response = werkzeug.wrappers.Response( result, headers=[('Content-Type', 'application/pdf'),
-                                                                    ('Content-Disposition', 'inline; ' + filename_encoded),
-                                                                    ('Content-Length', len(result))])
+            response = werkzeug.wrappers.Response(result, headers=[('Content-Type', 'application/pdf'),
+                                                                   ('Content-Disposition', 'inline; ' + filename_encoded),
+                                                                   ('Content-Length', len(result))])
             return response
+
+    @openerpweb.httprequest
+    def binary(self, req, db, token, field_path="company_address.logo", content_type='image/png'):
+        result = req.session.proxy('edi').get_edi_document(db, token)
+        doc = json.loads(result)[0]
+        for name in field_path.split("."):
+            doc = doc[name]
+        result = doc.decode('base64')
+        response = werkzeug.wrappers.Response(result, headers=[('Content-Type', content_type),
+                                                                ('Content-Length', len(result))])
+        return response
 
     @openerpweb.jsonrequest
     def get_edi_document(self, req, db, token):

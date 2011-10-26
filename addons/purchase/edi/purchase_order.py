@@ -35,6 +35,9 @@ PURCHASE_ORDER_LINE_EDI_STRUCT = {
     'price_unit': True,
     'product_qty': True,
     'notes': True,
+
+    # fields used for web preview only - discarded on import
+    'price_subtotal': True,
 }
 
 PURCHASE_ORDER_EDI_STRUCT = {
@@ -174,6 +177,7 @@ class purchase_order(osv.osv, EDIMixin):
         edi_document.pop('amount_total', None)
         edi_document.pop('amount_tax', None)
         edi_document.pop('amount_untaxed', None)
+        edi_document.pop('payment_term', None)
 
         for order_line in edi_document['order_line']:
             self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
@@ -185,6 +189,8 @@ class purchase_order(osv.osv, EDIMixin):
             # sale order lines have sequence numbers, not purchase order lines
             order_line.pop('sequence', None)
 
+            # discard web preview fields, if present
+            order_line.pop('price_subtotal', None)
         return super(purchase_order,self).edi_import(cr, uid, edi_document, context=context)
 
 class purchase_order_line(osv.osv, EDIMixin):

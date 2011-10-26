@@ -11,6 +11,8 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this.token = token;
         this.session = new openerp.web.Session();
         this.template = "EdiEmpty";
+        this.content = "";
+        this.sidebar = "";
     },
     start: function() {
         this._super();
@@ -20,12 +22,18 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
-        //console.log("docs",this.doc);
-        var template = "Edi." + this.doc.__model + ".content";
+        console.log("docs",this.doc);
+        var template_content = "Edi." + this.doc.__model + ".content";
+        var template_sidebar = "Edi." + this.doc.__model + ".sidebar";
         var param = {"widget":this, "doc":this.doc};
-        this.center = openerp.web.qweb.render(template, param);
-        //console.log(this.center);
-        this.right = "";
+        if (openerp.web.qweb.templates[template_sidebar]) {
+            this.sidebar = openerp.web.qweb.render(template_sidebar, param);
+        }
+        console.log("sidebar",this.sidebar);
+        if (openerp.web.qweb.templates[template_content]) {
+            this.content = openerp.web.qweb.render(template_content, param);
+        }
+        console.log("sidebar",this.sidebar);
         this.$element.html(openerp.web.qweb.render("EdiView", param));
         this.$element.find('button.oe_edi_action_print').bind('click', this.do_print);
         this.$element.find('button.oe_edi_import_button').bind('click', this.do_import);

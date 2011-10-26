@@ -40,7 +40,11 @@ class res_company(osv.osv):
         res_partner_address = self.pool.get('res.partner.address')
         addresses = res_partner.address_get(cr, uid, [company.partner_id.id], ['default', 'contact', 'invoice'])
         addr_id = addresses['invoice'] or addresses['contact'] or addresses['default']
+        result = {}
         if addr_id:
             address = res_partner_address.browse(cr, uid, addr_id, context=context)
-            return res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
-        return {}
+            result = res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
+        if company.logo:
+            result['logo'] = company.logo # already base64-encoded
+
+        return result

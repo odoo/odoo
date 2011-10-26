@@ -1,80 +1,137 @@
 <template>
 <t t-name="Edi.sale.order.content">
-   <h1>Order <t t-esc="doc.name"/>: <t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/></h1>
-   <p>
-        <b><t t-esc="doc.company_id[1]"/></b><br/>
-        <t t-if="doc.company_address">
-            <t t-esc="doc.company_address.zip"/> <t t-esc="doc.company_address.street"/><br/>
-            <t t-esc="doc.company_address.city"/><br/>
-            <t t-if="doc.company_address.country_id" t-esc="doc.company_address.country_id[1]"/><br/>
-            Phone: <t t-esc="doc.company_address.phone"/>
-        </t>
-    </p> 
-    <p align="right">
-        <b><t t-esc="doc.partner_id[1]"/></b><br/>
-        <t t-if="doc.partner_order_id" t-esc="doc.partner_order_id[1]"/>
-        <t t-if="doc.partner_address_id" t-esc="doc.partner_address_id[1]"/>
-    </p>
-    <table width="100%">
-        <tr>
-            <th align="left">Description</th>
-            <th align="left">Date</th>
-            <th align="left">Origin</th>
+<div class="oe_edi_paperbox">
+   <div class="oe_edi_address_from">
+       <div class="oe_edi_company_block_title">
+           <span class="oe_edi_company_name"><t t-esc="doc.company_id[1]"/></span>
+       </div>
+       <div class="oe_edi_company_block_body">
+            <p>
+                <t t-if="doc.company_address">
+                   <t t-if="doc.company_address.street" t-esc="doc.company_address.street"/><br/>
+                   <t t-if="doc.company_address.street2"><t t-esc="doc.company_address.street2"/><br/></t>
+                   <t t-if="doc.company_address.zip" t-esc="doc.company_address.zip"/> <t t-if="doc.company_address.city" t-esc="doc.company_address.city"/> <br/>
+                   <t t-if="doc.company_address.country_id"><t t-esc="doc.company_address.country_id[1]"/><br/></t>
+               </t>
+            </p>
+       </div>
+   </div>
+
+   <div class="oe_edi_address_to">
+       <div class="oe_edi_company_block_title">
+           <span class="oe_edi_company_name"><t t-esc="doc.partner_id[1]"/></span>
+       </div>
+       <div class="oe_edi_company_block_body">
+            <p>
+                <t t-if="doc.partner_address">
+                   <t t-if="doc.partner_address.street" t-esc="doc.partner_address.street"/><br/>
+                   <t t-if="doc.partner_address.street2"><t t-esc="doc.partner_address.street2"/><br/></t>
+                   <t t-if="doc.partner_address.zip" t-esc="doc.partner_address.zip"/> <t t-if="doc.partner_address.city" t-esc="doc.partner_address.city"/> <br/>
+                   <t t-if="doc.partner_address.country_id"><t t-esc="doc.partner_address.country_id[1]"/><br/></t>
+               </t>
+            </p>
+       </div>
+   </div>
+
+   <h1 class="oe_edi_doc_title">Order <t t-esc="doc.name"/>: <t t-esc="doc.amount_total"/> <t t-esc="doc.currency.code"/></h1>
+
+    <table width="100%" class="oe_edi_data oe_edi_shade">
+        <tr class="oe_edi_floor">
             <th align="left">Your Reference</th>
+            <th align="left">Date</th>
+            <th align="left">Salesman</th>
+            <th align="left">Payment terms</th>
         </tr>
-        <tr>
-            <td align="left"><t t-esc="doc.name"/></td>
+        <tr class="oe_edi_data_row">
+            <td align="left"><t t-if="doc.partner_ref" t-esc="doc.partner_ref"/></td>
             <td align="left"><t t-esc="doc.date_order"/></td>
-            <td align="left"><t t-esc="doc.origin"/></td>
+            <td align="left">TODO</td>
             <td align="left">
-                <t t-if="doc.partner_ref" t-esc="doc.partner_ref"/>
-                <t t-if="doc.client_order_ref" t-esc="doc.client_order_ref"/>
+                <t t-if="doc.payment_term" t-esc="doc.payment_term[1]"/>
             </td>
         </tr>
     </table>
-    <table width="100%" >
-        <tr>
+    <p/>
+    <table width="100%" class="oe_edi_data">
+        <tr class="oe_edi_floor">
             <th align="left">Product Description</th>
-            <th align="center">Unit Price</th>
-            <th align="center">Quantity</th>
-            <th align="center">UOM</th>
+            <th align="right">Quantity</th>
+            <th align="right">Unit Price</th>
+            <th align="right">Discount(%)</th>
             <th align="right">Price</th>
         </tr>
         <t t-if="doc.order_line" t-foreach="doc.order_line" t-as="doc_line">
-            <tr>
-            <td align="left"><t t-esc="doc_line.product_id[1]"/></td>
-            <td align="center"><t t-esc="doc_line.price_unit"/></td>
-            <td align="center">
-                <t t-if="doc_line.product_qty" t-esc="doc_line.product_qty"/>
-                <t t-if="doc_line.product_uom_qty" t-esc="doc_line.product_uom_qty"/>
-            </td>
-            <td align="center"><t t-esc="doc_line.product_uom[1]"/></td>
-            <td align="right"><t t-esc="doc_line.price_subtotal"/><t t-esc="doc.currency_id[1]"/></td>
+            <tr class="oe_edi_data_row">
+                <td align="left"><t t-esc="doc_line.name"/>
+                    <t t-if="doc_line.notes">
+                        <pre class="oe_edi_inner_note"><t t-esc="doc_line.notes"/></pre>
+                    </t>
+                </td>
+                <td align="right">
+                    <t t-esc="doc_line.product_qty"/> <t t-esc="doc_line.product_uom[1]"/>
+                </td>
+                <td align="right"><t t-esc="doc_line.price_unit"/></td>
+                <td align="right"><t t-esc="doc_line.discount"/></td>
+                <td align="right"><t t-esc="doc_line.price_subtotal"/> <t t-esc="doc.currency.code"/></td>
             </tr>
         </t>
         <tr>
             <td colspan="3"></td>
-            <td colspan="2"><hr/></td>
+            <td colspan="2" class="oe_edi_ceiling">
+                <div class="oe_edi_summary_label">
+                    Net Total:
+                </div>
+                <div class="oe_edi_summary_value">
+                    <t t-esc="doc.amount_untaxed"/> <t t-esc="doc.currency.code"/>
+                </div>
+            </td>
         </tr>
         <tr>
             <td colspan="3"></td>
-            <td>Net Total: </td>
-            <td align="right"><t t-esc="doc.amount_untaxed"/><t t-esc="doc.currency_id[1]"/><t/></td>
+            <td colspan="2" class="oe_edi_floor">
+                <div class="oe_edi_summary_label">
+                    Taxes:
+                </div>
+                <div class="oe_edi_summary_value">
+                    <t t-esc="doc.amount_tax or 0.0"/> <t t-esc="doc.currency.code"/>
+                </div>
+            </td>
         </tr>
         <tr>
             <td colspan="3"></td>
-            <td>Taxes: </td>
-            <td align="right"><t t-esc="doc.amount_tax"/><t t-esc="doc.currency_id[1]"/><t/></td>
-        </tr>
-        <tr>
-            <td colspan="3"></td>
-            <td colspan="2"><hr/></td>
-        </tr>
-        <tr>
-            <td colspan="3"></td>
-            <td>Total: </td>
-            <td align="right"><t t-esc="doc.amount_total"/><t t-esc="doc.currency_id[1]"/><t/></td>
+            <th colspan="2" class="oe_edi_shade">
+                <div class="oe_edi_summary_label">
+                    Total:
+                </div>
+                <div class="oe_edi_summary_value">
+                    <t t-esc="doc.amount_total"/> <t t-esc="doc.currency.code"/>
+                </div>
+            </th>
         </tr>
     </table>
+    <t t-if="doc.notes">
+        <p>Notes:</p>
+        <pre class="oe_edi_inner_note"><t t-esc="doc.notes"/></pre>
+    </t>
+</div>
+</t>
+<t t-name="Edi.sale.order.sidebar">
+    <t t-if="doc">
+        <p class="oe_edi_sidebar_title">Pay Online</p>
+
+        <input type="radio" id="oe_edi_pay_paypal" name="oe_edi_invoice_rd_pay" value="paypal"/>
+        <label for="oe_edi_pay_paypal">Paypal</label>
+        <a href="#"><img src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/></a>
+        <br/>
+
+        <input type="radio" id="oe_edi_pay_bank" name="oe_edi_invoice_rd_pay" value="bank"/>
+        <label for="oe_edi_pay_paypal">Bank wire Transfer</label>
+    </t>
+</t>
+<t t-name="Edi.purchase.order.content">
+    <t t-call="Edi.sale.order.content"/>
+</t>
+<t t-name="Edi.purchase.order.sidebar">
+    <t t-call="Edi.sale.order.sidebar"/>
 </t>
 </template>

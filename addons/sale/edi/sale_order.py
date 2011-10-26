@@ -36,6 +36,9 @@ SALE_ORDER_LINE_EDI_STRUCT = {
     #custom: 'product_qty'
     'discount': True,
     'notes': True,
+
+    # fields used for web preview only - discarded on import
+    'price_subtotal': True,
 }
 
 SALE_ORDER_EDI_STRUCT = {
@@ -53,6 +56,7 @@ SALE_ORDER_EDI_STRUCT = {
     'amount_total': True,
     'amount_untaxed': True,
     'amount_tax': True,
+    'payment_term': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
@@ -186,6 +190,9 @@ class sale_order(osv.osv, EDIMixin):
                 delay = (datetime.strptime(date_planned, DEFAULT_SERVER_DATE_FORMAT) - \
                          datetime.strptime(date_order, DEFAULT_SERVER_DATE_FORMAT)).days
             order_line['delay'] = delay
+
+            # discard web preview fields, if present
+            order_line.pop('price_subtotal', None)
         return super(sale_order,self).edi_import(cr, uid, edi_document, context=context)
 
 class sale_order_line(osv.osv, EDIMixin):

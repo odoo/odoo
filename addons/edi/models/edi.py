@@ -24,24 +24,27 @@ import hashlib
 import json
 import logging
 import re
+import threading
 import time
 import urllib2
 
 import openerp
 import openerp.release as release
 import netsvc
-from osv import osv,fields
+import pooler
+from osv import osv,fields,orm
 from tools.translate import _
 from tools.parse_version import parse_version
 from tools.safe_eval import safe_eval as eval
 
-EXTERNAL_ID_PATTERN = re.compile(r'^(\S+:)?(\S+?)\.(\S+)$')
+EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
+EDI_VIEW_WEB_URL = '%s/edi/view?debug=1&db=%s&token=%s'
 
 def split_external_id(ext_id):
     match = EXTERNAL_ID_PATTERN.match(ext_id)
     assert match, \
             _("'%s' is an invalid external ID") % (ext_id)
-    return {'module': match.group(1) and match.group(1)[:-1],
+    return {'module': match.group(1),
             'db_uuid': match.group(2),
             'id': match.group(3),
             'full': match.group(0)}
@@ -408,11 +411,8 @@ class EDIMixin(object):
             for field in fields_to_export:
                 column = self._all_columns[field].column
                 value = getattr(record, field)
-                if not value:
+                if not value and value not in ('', 0):
                     continue
-                #if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
-                #    # Do not Export Function Fields and related fields
-                #    continue
                 elif column._type == 'many2one':
                     value = self.edi_m2o(cr, uid, value, context=context)
                 elif column._type == 'many2many':
@@ -422,6 +422,48 @@ class EDIMixin(object):
                 edi_dict[field] = value
             results.append(edi_dict)
         return results
+
+    def edi_export_and_email(self, cr, uid, ids, template_ext_id, context=None):
+        """Export the given records just like :meth:`~.export_edi`, the render the
+           given email template, in order to trigger appropriate notifications.
+           This method is intended to be called as part of business documents'
+           lifecycle, so it silently ignores any error occurring during the process,
+           as this is usually non-critical. To avoid any delay, it is also asynchronous
+           and will spawn a short-lived thread to perform the action.
+
+           :param str template_ext_id: external id of the email.template to use for
+                the mail notifications
+           :return: True
+        """
+        def email_task():
+            db = pooler.get_db(cr.dbname)
+            local_cr = None
+            try:
+                time.sleep(1) # FIXME: workaround to wait for commit of parent transaction
+                # grab a fresh browse_record on local cursor
+                local_cr = db.cursor()
+                web_root_url = self.pool.get('ir.config_parameter').get_param(local_cr, uid, 'web.base.url')
+                if not web_root_url:
+                    _logger.warning('Ignoring EDI mail notification, web.base.url not defined in parameters')
+                    return
+                mail_tmpl = self._edi_get_object_by_external_id(local_cr, uid, template_ext_id, 'email.template', context=context)
+                if not mail_tmpl:
+                    # skip EDI export if the template was not found
+                    _logger.warning('Ignoring EDI mail notification, template %s cannot be located', template_ext_id)
+                    return
+                for edi_record in self.browse(local_cr, uid, ids, context=context):
+                    edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
+                    edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
+                    self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id, context=edi_context)
+            except Exception:
+                _logger.warning('Ignoring EDI mail notification, failed to generate it.', exc_info=True)
+            finally:
+                if local_cr:
+                    local_cr.commit()
+                    local_cr.close()
+
+        threading.Thread(target=email_task, name='EDI ExportAndEmail for %s %r' % (self._name, ids)).start()
+        return True
 
     def _edi_get_object_by_name(self, cr, uid, name, model_name, context=None):
         model = self.pool.get(model_name)
@@ -448,7 +490,9 @@ class EDIMixin(object):
             if not report.attachment or not eval(report.attachment, eval_context):
                 # no auto-saving of report as attachment, need to do it manually
                 result = base64.b64encode(result)
-                file_name = report.report_name+".printout.pdf"
+                file_name = record.name_get()[0][1]
+                file_name = re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)
+                file_name += ".pdf"
                 ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
                                                                       {'name': file_name,
                                                                        'datas': result,
@@ -493,9 +537,11 @@ class EDIMixin(object):
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
         module = ext_id_members['module']
         ext_id = ext_id_members['id']
-        ext_module = '%s:%s' % (module, ext_id_members['db_uuid'])
-        modules = [ext_module]
-        if ext_id_members['db_uuid'] == db_uuid:
+        modules = []
+        ext_db_uuid = ext_id_members['db_uuid']
+        if ext_db_uuid:
+            modules.append('%s:%s' % (module, ext_id_members['db_uuid']))
+        if ext_db_uuid is None or ext_db_uuid == db_uuid:
             # local records may also be registered without the db_uuid
             modules.append(module)
         data_ids = ir_model_data.search(cr, uid, [('model','=',model),
