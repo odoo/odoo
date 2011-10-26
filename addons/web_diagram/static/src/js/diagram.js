@@ -125,18 +125,13 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
             var node = r[shape](n.node.x, n.node.y).attr({
                 "fill": n.node.color
-            }).dblclick(function() {
-                self.add_edit_node(n.node.id, self.node);
             });
 
-            var propagate_to_previous_sibling = function (e) {
-                $(this).prev().trigger(e.type);
-            };
-            var nodes = r.set()
-                .push(node, r.text(n.node.x, n.node.y, (n.label || n.id))
-                        .click(propagate_to_previous_sibling)
-                        .dblclick(propagate_to_previous_sibling)
-                ).attr("cursor", "pointer");
+            var nodes = r.set(node, r.text(n.node.x, n.node.y, (n.label || n.id)))
+                .attr("cursor", "pointer")
+                .dblclick(function() {
+                    self.add_edit_node(n.node.id, self.node);
+                });
 
             if (shape === 'rect') {
                 node.attr({width: "60", height: "44"});
