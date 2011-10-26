@@ -105,17 +105,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
-        this.$form_header.find('button.oe_form_button_toggle').click(function () {
-            self.translatable_fields = [];
-            self.widgets = {};
-            self.fields = {};
-            self.$form_header.find('button').unbind('click');
-            self.registry = self.registry === openerp.web.form.widgets
-                    ? openerp.web.form.readonly
-                    : openerp.web.form.widgets;
-            self.on_loaded(self.fields_view);
-            self.reload();
-        });
+        this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
@@ -126,6 +116,18 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.set_common_sidebar_sections(this.sidebar);
         }
         this.has_been_loaded.resolve();
+    },
+    on_toggle_readonly: function() {
+        var self = this;
+        self.translatable_fields = [];
+        self.widgets = {};
+        self.fields = {};
+        self.$form_header.find('button').unbind('click');
+        self.registry = self.registry === openerp.web.form.widgets
+                ? openerp.web.form.readonly
+                : openerp.web.form.widgets;
+        self.on_loaded(self.fields_view);
+        self.reload();
     },
     do_show: function () {
         var promise;
@@ -1974,7 +1976,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
-            form: 'openerp.web.form.One2ManyFormView'
+            form: 'openerp.web.FormView'
         });
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
@@ -1988,6 +1990,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 if (self.readonly)
                     controller.set_editable(false);
             } else if (view_type == "form") {
+                if (self.readonly) {
+                    controller.on_toggle_readonly();
+                    $(controller.$element.find(".oe_form_buttons")[0]).children().remove();
+                }
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
@@ -2168,9 +2174,6 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
         this.context = this.o2m.build_context();
         return this.context;
     }
-});
-
-openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
 });
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
