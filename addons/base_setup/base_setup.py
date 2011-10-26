@@ -34,7 +34,7 @@ DEFAULT_MODULES = {
     'Sales Management' : ['sale',],
     'Project Management' : ['project',],
     'Knowledge Management' : ['document',],
-    'Warehouse Management' : ['stock',],
+    'Warehouse Management' : ['stock', 'procurement'],
     'Manufacturing' : ['mrp'],
     'Accounting & Finance' : ['account'],
     'Purchase Management' : ['purchase'],
