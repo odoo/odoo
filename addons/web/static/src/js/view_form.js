@@ -1939,6 +1939,13 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             self.on_ui_change();
         });
 
+        this.is_setted.then(function() {
+            self.load_views();
+        });
+    },
+    load_views: function() {
+        var self = this;
+        
         var modes = this.node.attrs.mode;
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
@@ -1953,13 +1960,17 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
+                if (self.readonly) {
+                    view.options.addable = null;
+                    view.options.deletable = null;
+                }
             } else if (view.view_type === "form") {
                 view.options.not_interactible_on_create = true;
             }
             views.push(view);
         });
         this.views = views;
-
+        
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
@@ -1968,9 +1979,14 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         var once = $.Deferred().then(function() {
             self.init_form_last_update.resolve();
         });
+        var def = $.Deferred().then(function() {
+            self.is_started.resolve();
+        });
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 controller.o2m = self;
+                if (self.readonly)
+                    controller.set_editable(false);
             } else if (view_type == "form") {
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
@@ -1982,7 +1998,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
-            self.is_started.resolve();
+            def.resolve();
         });
         this.viewmanager.on_mode_switch.add_first(function() {
             self.save_form_view();
@@ -1992,6 +2008,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 self.viewmanager.appendTo(self.$element);
             }, 0);
         });
+        return def;
     },
     reload_current_view: function() {
         var self = this;
@@ -2131,7 +2148,18 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.toggleClass('disabled', this.readonly);
+        var self = this;
+        if (this.previous_readonly !== this.readonly) {
+            this.previous_readonly = this.readonly;
+            if (this.viewmanager) {
+                $.when(this.is_started).then(function() {
+                    self.viewmanager.stop();
+                    $.when(self.load_views()).then(function() {
+                        self.reload_current_view();
+                    });
+                });
+            }
+        }
     }
 });
 
@@ -2175,6 +2203,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
+        if (self.o2m.readonly)
+            return;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
