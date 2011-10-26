@@ -47,7 +47,8 @@ class hr_employee_category(osv.osv):
         'name': fields.char("Category", size=64, required=True),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
-        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
+        'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories'),
+        'employee_ids': fields.many2many('hr.employee', 'employee_category_rel', 'category_id', 'emp_id', 'Employees'),
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
