@@ -2007,8 +2007,11 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             }
             def.resolve();
         });
-        this.viewmanager.on_mode_switch.add_first(function() {
-            self.save_form_view();
+        this.viewmanager.on_mode_switch.add_first(function(n_mode, b, c, d, e) {
+            $.when(self.save_form_view()).then(function() {
+                if(n_mode === "list")
+                    setTimeout(function() {self.reload_current_view();}, 0);
+            });
         });
         this.is_setted.then(function() {
             setTimeout(function () {
