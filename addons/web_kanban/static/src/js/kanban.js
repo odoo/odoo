@@ -56,6 +56,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             kanban_color: _.bind(this.kanban_color, this),
             kanban_gravatar: _.bind(this.kanban_gravatar, this),
             kanban_image: _.bind(this.kanban_image, this),
+            kanban_text_ellipsis: _.bind(this.kanban_text_ellipsis, this),
             '_' : _
         }
     },
@@ -85,6 +86,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         id = id || '';
         return '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
     },
+    kanban_text_ellipsis: function(s, size) {
+        size = size || 160;
+        if (!s) {
+            return '';
+        }
+        return s.substr(0, size) + '...';
+    },
     transform_qweb_template: function(node) {
         var qweb_prefix = QWeb.prefix;
         switch (node.tag) {
@@ -104,7 +112,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                     });
                     if (node.attrs['data-states']) {
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
-                            return "record.state.value == '" + _.trim(state) + "'";
+                            return "record.state.raw_value == '" + _.trim(state) + "'";
                         });
                         node.attrs['t-if'] = states.join(' or ');
                     }
@@ -161,7 +169,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             stop: self.on_receive_record,
             scroll: false
         });
-        this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
         this.$element.find(".fold-columns-icon").click(function(event) {
             self.do_fold_unfold_columns(event, this.id);
