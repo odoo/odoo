@@ -1960,6 +1960,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
+                if (self.readonly) {
+                    view.options.addable = null;
+                    view.options.deletable = null;
+                }
             } else if (view.view_type === "form") {
                 view.options.not_interactible_on_create = true;
             }
@@ -1981,6 +1985,8 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 controller.o2m = self;
+                if (self.readonly)
+                    controller.set_editable(false);
             } else if (view_type == "form") {
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
@@ -2197,6 +2203,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
+        if (self.o2m.readonly)
+            return;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
