@@ -2226,7 +2226,6 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.dataset.set_ids(value);
         var self = this;
         $.when(this.is_started).then(function() {
-            console.log("lalala");
             self.list_view.reload_content();
         });
         this.is_setted.resolve();
@@ -2238,7 +2237,6 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.invalid = false;
     },
     load_view: function() {
-        console.info("yop");
         var self = this;
         this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
                     'addable': self.readonly ? null : 'Add',
@@ -2265,7 +2263,6 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
                 $.when(this.is_started).then(function() {
                     self.list_view.stop();
                     $.when(self.load_view()).then(function() {
-                        console.log("lalala2");
                         self.list_view.reload_content();
                     });
                 });
