@@ -45,7 +45,7 @@
                     <group col="4" colspan="4">
                         <label string="" colspan="1"/>
                         <button icon="gtk-close" special="cancel" string="Close"/>
-                        <button icon="gtk-ok" name="send_mail" string="Send" type="object"/>
+                        <button name="action_forward" string="Send" type="object" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -61,56 +61,14 @@
         </record>
 
 
-        <record model="ir.ui.view" id="crm_forward_mass_mail_view">
-            <field name="name">crm.new.mass.forward.mail.form</field>
-            <field name="model">crm.lead.mass.forward.to.partner</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Send Mail" col="4">
-                    <group colspan="4" col="2">
-                    <separator string="Forward to Partner" colspan="4" />
-
-                    <field name="history" colspan="2" on_change="on_change_history(history, context)" invisible="1"/>
-                    <field name="email_from"/>
-                    <field name="reply_to"/>
-                    <field name="email_to" invisible="1" />
-                    <field name="email_cc" invisible="1" />
-                    <field name="subject"  invisible="1" />
-                    <field name="html"/>
-                    </group>
-                    <notebook colspan="6" >
-                        <page string="Message" >
-                            <field name="body_text" nolabel="1" colspan="4" default_focus="1" readonly="1"/>
-                        </page>
-                        <page string="Attachments" >
-                            <field name="attachment_ids" colspan="4" nolabel="1">
-                                <form string="Attachment">
-                                    <field name="binary" filename="name" />
-                                    <field name="name" />
-                                </form>
-                                <tree string="Attachments">
-                                    <field name="name" />
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                    <separator string="" colspan="6"/>
-                    <group colspan="6" col="4" >
-                        <field name="state" />
-                        <button string="_Cancel" icon="gtk-cancel" special="cancel" />
-                        <button name="action_mass_forward" type="object" string="_Mass forward" icon="gtk-go-forward" />
-                    </group>
-                </form>
-            </field>
-        </record>
-
+        
         <act_window id="action_crm_send_mass_forward"
             multi="True"
             key2="client_action_multi" name="Mass forward to partner"
-            res_model="crm.lead.mass.forward.to.partner" src_model="crm.lead"
+            res_model="crm.lead.forward.to.partner" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
-            context="{'mass_forward' : True}"
-            view_id="crm_forward_mass_mail_view"
+            context="{'mail.compose.message.mode' : 'mass_mail'}"
+            view_id="crm_lead_forward_to_partner_form"
         />
 
 

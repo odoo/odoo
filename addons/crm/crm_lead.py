@@ -335,7 +335,7 @@ class crm_lead(crm_case, osv.osv):
         return self.set_priority(cr, uid, ids, '3')
 
     
-    def _merge_data(self, cr, uid, ids, oldest, context=None):
+    def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
         # prepare opportunity data into dictionary for merging
         opportunities = self.browse(cr, uid, ids, context=context)
         def _get_first_not_null(attr):
@@ -353,40 +353,20 @@ class crm_lead(crm_case, osv.osv):
         def _concat_all(attr):
             return ', '.join([getattr(opportunity, attr) or '' for opportunity in opportunities if hasattr(opportunity, attr)])
 
-        data = {
-            'partner_id': _get_first_not_null_id('partner_id'),  # !!
-            'title': _get_first_not_null_id('title'),
-            'name' : _get_first_not_null('name'),  #not lost
-            'categ_id' : _get_first_not_null_id('categ_id'), # !!
-            'channel_id' : _get_first_not_null_id('channel_id'), # !!
-            'city' : _get_first_not_null('city'),  # !!
-            'company_id' : _get_first_not_null_id('company_id'), #!!
-            'contact_name' : _get_first_not_null('contact_name'), #not lost
-            'country_id' : _get_first_not_null_id('country_id'), #!!
-            'partner_address_id' : _get_first_not_null_id('partner_address_id'), #!!
-            'type_id' : _get_first_not_null_id('type_id'), #!!
-            'user_id' : _get_first_not_null_id('user_id'), #!!
-            'section_id' : _get_first_not_null_id('section_id'), #!!
-            'state_id' : _get_first_not_null_id('state_id'),
-            'description' : _concat_all('description'),  #not lost
-            'email' : _get_first_not_null('email'), # !!
-            'fax' : _get_first_not_null('fax'),
-            'mobile' : _get_first_not_null('mobile'),
-            'partner_name' : _get_first_not_null('partner_name'),
-            'phone' : _get_first_not_null('phone'),
-            'probability' : _get_first_not_null('probability'),
-            'planned_revenue' : _get_first_not_null('planned_revenue'),
-            'street' : _get_first_not_null('street'),
-            'street2' : _get_first_not_null('street2'),
-            'zip' : _get_first_not_null('zip'),
-            'state' : 'open',
-            'create_date' : _get_first_not_null('create_date'),
-            'date_action_last': _get_first_not_null('date_action_last'),
-            'date_action_next': _get_first_not_null('date_action_next'),
-            'email_from' : _get_first_not_null('email_from'),
-            'email_cc' : _get_first_not_null('email_cc'),
-            'partner_name' : _get_first_not_null('partner_name'),
-        }
+        data = {}
+        for field_name in fields:
+            field_info = self._all_columns.get(field_name)
+            if field_info is None:
+                continue
+            field = field_info.column
+            if field._type in ('many2many', 'one2many'):
+                continue  
+            elif field._type == 'many2one':
+                data[field_name] = _get_first_not_null_id(field_name)  # !!
+            elif field._type == 'text':
+                data[field_name] = _concat_all(field_name)  #not lost
+            else:
+                data[field_name] = _get_first_not_null(field_name)  #not lost
         return data
 
     def _merge_find_oldest(self, cr, uid, ids, context=None):
@@ -401,35 +381,45 @@ class crm_lead(crm_case, osv.osv):
         oldest_id = opportunity_ids[0]
         return self.browse(cr, uid, oldest_id, context=context)
 
+    def _mail_body_text(self, cr, uid, lead, fields, title=False, context=None):
+        body = []
+        if title:
+            body.append("%s\n" % (title))
+        for field_name in fields:
+            field_info = self._all_columns.get(field_name)
+            if field_info is None:
+                continue
+            field = field_info.column
+            value = None
+
+            if field._type == 'selection':
+                if hasattr(field.selection, '__call__'):
+                    key = field.selection(self, cr, uid, context=context)
+                else:
+                    key = field.selection
+                value = dict(key).get(lead[field_name], lead[field_name])
+            elif field._type == 'many2one':
+                if lead[field_name]:
+                    value = lead[field_name].name_get()[0][1]
+            else:
+                value = lead[field_name]
+
+            body.append("%s: %s\n" % (field.string, value or ''))
+        return "\n".join(body + ['---'])
+
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
         merge_message = _('Merged opportunities')
         subject = [merge_message]
+        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_id', 'channel_id', 'company_id', 'contact_name',
+                  'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
+                  'country_id', 'city', 'street', 'street2', 'zip']
         for opportunity in opportunities:
             subject.append(opportunity.name)
-            details.append(_('%s : %s\n  Partner: %s\n  Stage: %s\n  Section: %s\n   Salesman: %s\n   Category: %s\n   Channel: %s\n   Company: %s\n   Contact name: %s\n   Email: %s\n   Phone number: %s\n   Fax: %s\n   Mobile: %s\n   State: %s\n   Description: %s\n   Probability: %s\n   Planned revennue: %s\n   Country: %s\n   City: %s\n   Street: %s\n   Street 2: %s\n   Zip 2: %s')  % (merge_message, opportunity.name, opportunity.partner_id.name or '',
-                        opportunity.stage_id.name or '',
-                        opportunity.section_id.name or '',
-                        opportunity.user_id.name or '',
-                        opportunity.categ_id.name or '',
-                        opportunity.channel_id.name or '',
-                        opportunity.company_id.name or '',
-                        opportunity.contact_name or '',
-                        opportunity.email_from or '',
-                        opportunity.phone or '',
-                        opportunity.fax or '',
-                        opportunity.mobile or '',
-                        opportunity.state_id.name or '',
-                        opportunity.description or '',
-                        opportunity.probability or '',
-                        opportunity.planned_revenue or '',
-                        opportunity.country_id.name or '',
-                        opportunity.city or '',
-                        opportunity.street or '',
-                        opportunity.street2 or '',
-                        opportunity.zip or '',
-                        ))
+            title = "%s : %s" % (merge_message, opportunity.name)
+            details.append(self._mail_body_text(cr, uid, opportunity, fields, title=title, context=context))
+            
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details)
         return self.message_append(cr, uid, [opportunity_id], subject, body_text=details, context=context)
@@ -493,7 +483,12 @@ class crm_lead(crm_case, osv.osv):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        data = self._merge_data(cr, uid, ids, oldest, context=context)
+        fields = ['partner_id', 'title', 'name', 'categ_id', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 
+            'partner_address_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+            'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
+            'date_action_next', 'email_from', 'email_cc', 'partner_name']
+        
+        data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
 
         # merge data into first opportunity
         self.write(cr, uid, [first_opportunity.id], data, context=context)
@@ -507,6 +502,8 @@ class crm_lead(crm_case, osv.osv):
         #delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
+        #open first opportunity
+        self.case_open(cr, uid, [first_opportunity.id])
         return first_opportunity.id
 
     def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
@@ -571,9 +568,17 @@ class crm_lead(crm_case, osv.osv):
         })
         return partner_id
 
-    def _lead_assign_partner(self, cr, uid, ids, partner_id, context=None):
-        contact_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id])['default']
-        return self.write(cr, uid, ids, {'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
+    def assign_partner(self, cr, uid, ids, partner_id=None, context=None):
+        res = False
+        res_partner = self.pool.get('res.partner')
+        if partner_id:
+            contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
+            res = self.write(cr, uid, ids, {'partner_id' : partner_id, 'partner_address_id': contact_id}, context=context)
+            partner = res_partner.browse(cr, uid, partner_id, context=context)
+            if partner.user_id:
+                for lead_id in ids:
+                    self.allocate_salesman(cr, uid, [lead_id], [partner.user_id.id], context=context)
+        return res
 
     def _lead_create_partner_address(self, cr, uid, lead, partner_id, context=None):
         address = self.pool.get('res.partner.address')
@@ -609,7 +614,7 @@ class crm_lead(crm_case, osv.osv):
                 if not partner_id:
                     partner_id = self._lead_create_partner(cr, uid, lead, context=context)
                 self._lead_create_partner_address(cr, uid, lead, partner_id, context=context)
-            self._lead_assign_partner(cr, uid, [lead.id], partner_id, context=context)
+            self.assign_partner(cr, uid, [lead.id], partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
 

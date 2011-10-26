@@ -24,6 +24,7 @@ import time
 import re
 from osv import osv, fields
 from tools.translate import _
+from mail.mail_message import to_email
 
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
@@ -46,48 +47,8 @@ class crm_lead_forward_to_partner(osv.osv_memory):
     }
 
 
-    def get_whole_history(self, cr, uid, ids, context=None):
-        """This function gets whole communication history and returns as top posting style
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of history IDs
-        @param context: A standard dictionary for contextual values
-        """
-        whole = []
-        for hist_id in ids:
-            whole.append(self.get_latest_history(cr, uid, hist_id, context=context))
-        whole = '\n\n'.join(whole)
-        return whole or ''
-
-    def get_latest_history(self, cr, uid, hist_id, context=None):
-        """This function gets latest communication and returns as top posting style
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param hist_id: Id of latest history
-        @param context: A standard dictionary for contextual values
-        """
-        log_pool = self.pool.get('mail.message')
-        hist = log_pool.browse(cr, uid, hist_id, context=context)
-        header = '-------- Original Message --------'
-        sender = 'From: %s' %(hist.email_from or '')
-        to = 'To: %s' % (hist.email_to or '')
-        sentdate = 'Date: %s' % (hist.date or '')
-        desc = '\n%s'%(hist.body_text)
-        original = [header, sender, to, sentdate, desc]
-        original = '\n'.join(original)
-        return original
-
+    
     def on_change_email(self, cr, uid, ids, user):
-        """This function fills email information based on user selected
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Mail’s IDs
-        @param user: Changed User id
-        @param partner: Changed Partner id
-        """
         if not user:
             return {'value': {'email_to': False}}
         email = self.pool.get('res.users')._get_email_from(cr, uid, [user])[user]
@@ -98,54 +59,19 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             * info: Forward the case information
             * whole: Send the whole history
             * latest: Send the latest histoy
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of history IDs
-        @param context: A standard dictionary for contextual values
         """
         #TODO: ids and context are not comming
-        res = False
+        res = {}
         res_id = context.get('active_id')
-        msg_val = self._get_case_history(cr, uid, history_type, res_id, context=context)
+        model = context.get('active_model')
+        body_text = self._get_body_text(cr, uid, model, res_id, history_type, context=context)
+        context['mail.compose.message.body'] = history_type
         if msg_val:
-            res = {'value': {'body_text' : '\n\n' + msg_val}}
+            res = {'value': {'body_text' : body_text}}
         return res
-
-    def _get_case_history(self, cr, uid, history_type, res_id, context=None):
-        if not res_id:
-            return
-
-        msg_val = ''
-        case_info = self.get_lead_details(cr, uid, res_id, context=context)
-        model_pool = self.pool.get('crm.lead')
-
-        if history_type == 'info':
-            msg_val = case_info
-
-        elif history_type == 'whole':
-            log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = map(lambda x: x.id, filter(lambda x: x.email_from, log_ids))
-            msg_val = case_info + '\n\n' + self.get_whole_history(cr, uid, log_ids, context=context)
-
-        elif history_type == 'latest':
-            log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = filter(lambda x: x.email_from and x.id, log_ids)
-            if not log_ids:
-                msg_val = case_info
-            else:
-                msg_val = case_info + '\n\n' + self.get_latest_history(cr, uid, log_ids[0].id, context=context)
-
-        return msg_val
-
+    
     def on_change_partner(self, cr, uid, ids, partner_id):
         """This function fills address information based on partner/user selected
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Mail’s IDs
-        @param user: Changed User id
-        @param partner: Changed Partner id
         """
         if not partner_id:
             return {'value' : {'email_to' : False, 'address_id': False}}
@@ -158,11 +84,11 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         partner = partner_obj.browse(cr, uid, [partner_id])
         user_id = partner and partner[0].user_id or False
         email = user_id and user_id.user_email or ''
-        data.update({'email_cc' : email})
+        data.update({'email_cc' : email, 'user_id': user_id and user_id.id or False})
         return {
             'value' : data,
             'domain' : {'address_id' : partner_id and "[('partner_id', '=', partner_id)]" or "[]"}
-            }
+        }
 
     def on_change_address(self, cr, uid, ids, address_id):
         email = ''
@@ -170,155 +96,126 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             email = self.pool.get('res.partner.address').browse(cr, uid, address_id).email
         return {'value': {'email_to' : email}}
 
-    def send_mail(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        super(crm_lead_forward_to_partner, self).send_mail(cr, uid, ids, context=context)
-        self.action_forward(cr, uid, ids, context)
-        return {'type': 'ir.actions.act_window_close'}
-
     def action_forward(self, cr, uid, ids, context=None):
         """
         Forward the lead to a partner
         """
         if context is None:
             context = {}
+        res = {'type': 'ir.actions.act_window_close'}
+        model = context.get('active_model')
+        if model not in ('crm.lead'):
+            return res
+
         this = self.browse(cr, uid, ids[0], context=context)
-        case_pool = self.pool.get(context.get('active_model'))
-        res_id = context and context.get('active_id', False) or False
-        case = case_pool.browse(cr, uid, res_id, context=context)
-        context.update({'mail': 'forward'})
-
-        to_write = {'date_assign': time.strftime('%Y-%m-%d')}
-        if (this.send_to == 'partner' and this.partner_id):
-            to_write['partner_assigned_id'] = this.partner_id.id
-
-        if this.send_to == 'user':
-            to_write.update({'user_id' : this.user_id.id})
-        email_re = r'([^ ,<@]+@[^> ,]+)'
-        email_cc = re.findall(email_re, case.email_cc or '')
-        new_cc = []
-        if case.email_cc:
-            new_cc.append(case.email_cc)
-        for to in this.email_to.split(','):
-            email_to = re.findall(email_re, to)
-            email_to = email_to and email_to[0] or ''
-            if email_to not in email_cc:
-                new_cc.append(to)
-        to_write.update({'email_cc' : ', '.join(new_cc) })
-        case_pool.write(cr, uid, case.id, to_write, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-
-    def get_lead_details(self, cr, uid, lead_id, context=None):
-        body = []
-        lead_proxy = self.pool.get('crm.lead')
-        lead = lead_proxy.browse(cr, uid, lead_id, context=context)
-        if not lead.type or lead.type == 'lead' or not lead.partner_address_id:
-                field_names = [
-                    'partner_name', 'title', 'function', 'street', 'street2',
-                    'zip', 'city', 'country_id', 'state_id', 'email_from',
-                    'phone', 'fax', 'mobile', 'categ_id', 'description',
-                ]
-
-                for field_name in field_names:
-                    field_definition = lead_proxy._columns[field_name]
-                    value = None
-
-                    if field_definition._type == 'selection':
-                        if hasattr(field_definition.selection, '__call__'):
-                            key = field_definition.selection(lead_proxy, cr, uid, context=context)
-                        else:
-                            key = field_definition.selection
-                        value = dict(key).get(lead[field_name], lead[field_name])
-                    elif field_definition._type == 'many2one':
-                        if lead[field_name]:
-                            value = lead[field_name].name_get()[0][1]
-                    else:
-                        value = lead[field_name]
-
-                    body.append("%s: %s" % (field_definition.string, value or ''))
-        elif lead.type == 'opportunity':
-            pa = lead.partner_address_id
-            body += [
-                "Partner: %s" % (lead.partner_id and lead.partner_id.name_get()[0][1]),
-                "Contact: %s" % (pa.name or ''),
-                "Title: %s" % (pa.title or ''),
-                "Function: %s" % (pa.function or ''),
-                "Street: %s" % (pa.street or ''),
-                "Street2: %s" % (pa.street2 or ''),
-                "Zip: %s" % (pa.zip or ''),
-                "City: %s" % (pa.city or ''),
-                "Country: %s" % (pa.country_id and pa.country_id.name_get()[0][1] or ''),
-                "State: %s" % (pa.state_id and pa.state_id.name_get()[0][1] or ''),
-                "Email: %s" % (pa.email or ''),
-                "Phone: %s" % (pa.phone or ''),
-                "Fax: %s" % (pa.fax or ''),
-                "Mobile: %s" % (pa.mobile or ''),
-                "Lead Category: %s" % (lead.categ_id and lead.categ_id.name or ''),
-                "Details: %s" % (lead.description or ''),
-            ]
-        return "\n".join(body + ['---'])
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        """
-
-        if context is None:
-            context = {}
-
-        defaults = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
-        active_id = context.get('active_id')
-        if not active_id:
-            return defaults
-
-        lead_proxy = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
-        lead = lead_proxy.browse(cr, uid, active_id, context=context)
-
-        email_cc = ''
-        email = ''
-        if lead.partner_assigned_id:
-            partner = partner_obj.browse(cr, uid, [lead.partner_assigned_id.id])
-            user_id = partner and partner[0].user_id or False
-            email_cc = user_id and user_id.user_email or ''
-
-            addr = partner_obj.address_get(cr, uid, [partner[0].id], ['contact'])
-            email = self.pool.get('res.partner.address').browse(cr, uid, addr['contact']).email
-
-        body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
-        defaults.update({
-            'subject' : '%s: %s - %s' % (_('Fwd'), 'Openerp lead forward', lead.name),
-            'body_text' : body,
-            'email_cc' : email_cc,
-            'email_to' : email or 'dummy@dummy.ly'
-        })
-        return defaults
-
-class crm_lead_mass_forward_to_partner(osv.osv_memory):
-    _name = 'crm.lead.mass.forward.to.partner'
-    _inherit = 'crm.lead.forward.to.partner'
-
-    def action_mass_forward(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
-
-        active_ids = context.get('active_ids')
-        case_obj = self.pool.get('crm.lead')
-        for case in case_obj.browse(cr, uid, active_ids, context=context):
-            if not case.partner_assigned_id:
-                case_obj.assign_partner(cr,uid, [case.id], context=context)
-                case = case_obj.browse(cr, uid, case.id, context=context)
-
-            if not case.partner_assigned_id:
-                continue
-
-            context.update({'active_id' : case.id})
+        lead = self.pool.get(model)
+        lead_id = context and context.get('active_id', False) or False
+        lead_ids = lead_id and [lead_id] or []
+        mode = context.get('mail.compose.message.mode')
+        if mode == 'mass_mail':
+            lead_ids = context and context.get('active_ids', []) or []
             value = self.default_get(cr, uid, ['body_text', 'email_to', 'email_cc', 'subject', 'history'], context=context)
             self.write(cr, uid, ids, value, context=context)
-            self.action_forward(cr,uid, ids, context=context)
+            context['mail.compose.message.mode'] = mode
 
-        return {'type': 'ir.actions.act_window_close'}
+        self.send_mail(cr, uid, ids, context=context)
+        for case in lead.browse(cr, uid, lead_ids, context=context):
+            if (this.send_to == 'partner' and this.partner_id):
+                lead.assign_partner(cr, uid, [case.id], this.partner_id.id, context=context)
 
+            if this.send_to == 'user':
+                lead.assign_salesman(cr, uid, [case.id], [this.user_id.id], context=context)
 
+            email_cc = to_email(case.email_cc)
+            email_cc = email_to and email_cc[0] or ''
+            new_cc = []
+            if email_cc:
+                new_cc.append(email_cc)
+            for to in this.email_to.split(','):
+                email_to = to_email(to)
+                email_to = email_to and email_to[0] or ''
+                if email_to not in new_cc:
+                    new_cc.append(to)
+            update_vals = {'email_cc' : ', '.join(new_cc) }
+            lead.write(cr, uid, case.id, update_vals, context=context)
+        return res
+
+    def _get_info_body_text(self, cr, uid, lead, context=None):
+        field_names = []
+        proxy = self.pool.get(lead._name)
+        if lead.type == 'opportunity':
+            field_names += ['partner_id']
+        field_names += [
+           'partner_name' , 'title', 'function', 'street', 'street2',
+            'zip', 'city', 'country_id', 'state_id', 'email_from',
+            'phone', 'fax', 'mobile', 'categ_id', 'description',
+        ]
+        return proxy._mail_body_text(cr, uid, lead, field_names, context=context)
+
+    def _get_message_body_text(self, cr, uid, lead, mode='whole', context=None):
+        """This function gets whole communication history and returns as top posting style
+        """
+        mail_message = self.pool.get('mail.message')
+        message_ids = []
+        body = self._get_info_body_text(cr, uid, lead, context=context)
+        if mode in ('whole', 'latest'):
+            message_ids = lead.message_ids
+            message_ids = map(lambda x: x.id, filter(lambda x: x.email_from, message_ids))
+            if mode == 'latest' and len(message_ids):
+                message_ids = [message_ids[0]]
+            for message in mail_message.browse(cr, uid, message_ids, context=context):
+                header = '-------- Original Message --------'
+                sender = 'From: %s' %(message.email_from or '')
+                to = 'To: %s' % (message.email_to or '')
+                sentdate = 'Date: %s' % (message.date or '')
+                desc = '\n%s'%(message.body_text)
+                original = [header, sender, to, sentdate, desc]
+                original = '\n'.join(original)
+                body += original
+        return body or ''
+
+    def get_value(self, cr, uid, model, res_id, context=None):
+        if context is None:
+            context = {}
+        res = super(crm_lead_forward_to_partner, self).get_value(cr, uid,  model, res_id, context=context)
+        if model not in ("crm.lead"):
+            return res
+        proxy = self.pool.get(model)
+        partner = self.pool.get('res.partner')
+        lead = proxy.browse(cr, uid, res_id, context=context)
+        mode = context.get('mail.compose.message.mode')
+        if mode == "forward":
+            body_type = context.get('mail.compose.message.body')
+            email_cc = res.get('email_cc', "")
+            email = res.get('email_to', "")
+            subject = '%s: %s - %s' % (_('Fwd'), 'Lead forward', lead.name)
+            body = self._get_message_body_text(cr, uid, lead, body_type, context=context)
+            partner_assigned_id = lead.partner_assigned_id and lead.partner_assigned_id.id or False
+            user_id = False
+            if not partner_assigned_id:
+                partner_assigned_id = lead.search_geo_partner(cr, uid, [lead.id], context=None).get(lead.id, False)
+            if partner_assigned_id:
+                assigned_partner = partner.browse(cr, uid, partner_assigned_id, context=context)
+                user_id = assigned_partner.user_id and assigned_partner.user_id.id or False
+                email_cc = assigned_partner.user_id and assigned_partner.user_id.user_email or ''
+                email = assigned_partner.email
+            
+            
+            res.update({
+                'subject' : subject,
+                'body_text' : body,
+                'email_cc' : email_cc,
+                'email_to' : email,
+                'partner_assigned_id': partner_assigned_id,
+                'user_id': user_id,
+            })
+        return res
+        
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        context['mail.compose.message.mode'] = 'forward'
+        context['mail.compose.message.body'] = 'info'
+        return super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

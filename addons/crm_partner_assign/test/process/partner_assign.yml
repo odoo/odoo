@@ -1,58 +1,38 @@
 -
   In order to test find nearest Partner functionality and assign to opportunity ,
-  so First i create a grade 'First' for partner.
 -
-  !record {model: res.partner.grade, id: res_partner_grade_first}:
-    name: First
-    sequence: 1
--
-  I assign grade 'First' to the partner 'Eric' and give more probability to assign a lead to this partner.
--
-  !record {model: res.partner, id: base.res_partner_ericdubois0}:
-    grade_id: res_partner_grade_first
-    partner_weight: 10
--
-  Set Lattitude and Longitude according to partner address.
+  I Set Geo Lattitude and Longitude according to partner address.
 -
   !python {model: res.partner}: |
     self.geo_localize(cr, uid, [ref('base.res_partner_ericdubois0')], context)
+-
+ I check Geo Lattitude and Longitude of partner after set
+-
+  !python {model: res.partner}: |
     partner = self.browse(cr, uid, ref('base.res_partner_ericdubois0'))
     assert partner.partner_latitude == 50.4530495 , "Lattitude is wrong"
     assert partner.partner_longitude == 3.9693885 , "Longitude is wrong"
 -
-  I would like to change the assign partner on opportunity, so find nearest partner assign to this opportunity.
+  I assign nearest partner to opportunity.
 -
   !python {model: crm.lead}: |
-    res = self.onchange_assign_id(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], ref('base.res_partner_ericdubois0'), context)
-    assert res['value']['user_id'] == ref('base.user_demo'), "User not correct"
-    self.assign_partner(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], context)
+    self.assign_partner(cr, uid, [ref('crm.crm_case_abcfuelcounits0')], context=context)
 -
-  In order to assigned partner to opportunity, so i test latitude and longitude of partner of opportunity
-  and opportuniy assign to assigned partner.
+  I check assigned partner of opportunity who is nearest Geo Lattitude and Longitude of opportunity.
 -
   !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, [ref('crm.crm_case_abcfuelcounits0')])[0]
+    lead = self.browse(cr, uid, ref('crm.crm_case_abcfuelcounits0'))
+    assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy is not assigned nearest partner"
     assert lead.partner_latitude == 50.8495239 , "Lattitude is wrong"
     assert lead.partner_longitude == 4.3667002 , "Longitude is wrong"
-    assert lead.partner_assigned_id.id == ref('base.res_partner_ericdubois0') , "Opportuniy not assign partner"
+    
 -
-  Oppportuniry forword to its nearest partner, so first i create record of forword mail
--
-  !record {model: crm.lead.forward.to.partner, id: crm_lead_forward_to_partner_rec}:
-    send_to: email
-    email_from: 'admin@openerp.com'
-    email_to: 'admin@tinyerp.com'
-    subject: 'Openerp lead forward'
-    history: latest 
--
-  I forword this opportunity to its nearest partner.
+  I forward this opportunity to its nearest partner.
 -
   !python {model: crm.lead.forward.to.partner}: |
-    from tools import config
-    host = config.get('smtp_user', '127.0.0.1')
-    assert config.get(host, True), 'SMTP not configured !'
+    context.update({'active_model': 'crm.lead', 'active_id': ref('crm.crm_case_abcfuelcounits0'), 'active_ids': [ref('crm.crm_case_abcfuelcounits0')]})
+    forward_id = self.create(cr, uid, {'send_to': 'partner'}, context=context)
     try:
-      self.action_forward(cr, uid, ref("crm_lead_forward_to_partner_rec"), context={'active_id': ref('crm.crm_case_abcfuelcounits0'),
-      'active_ids': [ref('crm.crm_case_abcfuelcounits0')], 'active_model': 'crm.lead'})
+      self.action_forward(cr, uid, ref("crm_lead_forward_to_partner_rec"), context=context)
     except:
       pass

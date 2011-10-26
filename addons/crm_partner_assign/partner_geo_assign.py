@@ -24,22 +24,25 @@ from osv import fields
 import urllib,re
 import random, time
 from tools.translate import _
+import tools
 
 def geo_find(addr):
+    addr = addr.encode('utf8')
+    regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
+    url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
     try:
-        regex = '<coordinates>([+-]?[0-9\.]+),([+-]?[0-9\.]+),([+-]?[0-9\.]+)</coordinates>'
-        url = 'http://maps.google.com/maps/geo?q=' + urllib.quote(addr) + '&output=xml&oe=utf8&sensor=false'
         xml = urllib.urlopen(url).read()
-        if '<error>' in xml:
-            return None
-        result = re.search(regex, xml, re.M|re.I)
-        if not result:
-            return None
-        return float(result.group(2)),float(result.group(1))
     except Exception, e:
         raise osv.except_osv(_('Network error'),
                              _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
 
+    if '<error>' in xml:
+        return None
+    result = re.search(regex, xml, re.M|re.I)
+    if not result:
+        return None
+    return float(result.group(2)),float(result.group(1))
+    
 
 class res_partner_grade(osv.osv):
     _order = 'sequence'
@@ -74,9 +77,13 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.address:
                 continue
-            part = partner.address[0]
-            addr = ', '.join(filter(None, [part.street, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
-            result = geo_find(addr.encode('utf8'))
+            contact = partner.address[0] #TOFIX: should be get latitude and longitude for default contact?
+            addr = ', '.join(filter(None, [
+                    contact.street, 
+                    "%s %s" % (contact.zip , contact.city), 
+                    contact.state_id and contact.state_id.name, 
+                    contact.country_id and contact.country_id.name]))
+            result = geo_find(tools.ustr(addr))
             if result:
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
@@ -94,14 +101,13 @@ class crm_lead(osv.osv):
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
+    def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
+        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
+        return super(crm_lead, self)._merge_data(cr, uid, ids, oldest, fields, context=context)
+
     def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage’s IDs
-            @stage_id: change state id on run time """
-
+        """
         if not partner_assigned_id:
             return {'value':{'date_assign': False}}
         else:
@@ -112,72 +118,102 @@ class crm_lead(osv.osv):
                          'user_id' : user_id}
                    }
 
-    def assign_partner(self, cr, uid, ids, context=None):
-        ok = False
-        for part in self.browse(cr, uid, ids, context=context):
-            if not part.country_id:
-                continue
-            addr = ', '.join(filter(None, [part.street, (part.zip or '')+' '+(part.city or ''), part.state_id and part.state_id.name, part.country_id and part.country_id.name]))
-            result = geo_find(addr.encode('utf8'))
-            if result:
-                self.write(cr, uid, [part.id], {
-                    'partner_latitude': result[0],
-                    'partner_longitude': result[1]
-                }, context=context)
+    def assign_partner(self, cr, uid, ids, partner_id=None, context=None):
+        partner_ids = {}
+        res = False
+        if partner_id is None:
+            partner_ids = self.search_geo_partner(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not partner_id:
+                partner_id = partner_ids.get(lead.id, False)
+            res = super(crm_lead, self).assign_partner(cr, uid, [lead.id], partner_id, context=context)
+            self.write(cr, uid, [lead.id], {'date_assign': time.strftime('%Y-%m-%d'), 'partner_assigned_id': partner_id}, context=context)
+        return res
+        
 
+    def assign_geo_localize(self, cr, uid, ids, latitude=False, longitude=False, context=None):
+        for lead in self.browse(cr, uid, ids, context=context):
+            if not lead.country_id:
+                continue
+            addr = ', '.join(filter(None, [
+                    lead.street, 
+                    "%s %s" % (lead.zip, lead.city), 
+                    lead.state_id and lead.state_id.name or '', 
+                    lead.country_id and lead.country_id.name or ''
+            ]))
+            result = geo_find(tools.ustr(addr))
+            if not latitude and result:
+                latitude = result[0]
+            if not longitude and result:
+                longitude = result[1]
+            self.write(cr, uid, [lead.id], {
+                'partner_latitude': latitude,
+                'partner_longitude': longitude
+            }, context=context)
+        return True
+        
+    def search_geo_partner(self, cr, uid, ids, context=None):
+        res_partner = self.pool.get('res.partner')
+        res_partner_ids = {}
+        self.assign_geo_localize(cr, uid, ids, context=context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            partner_ids = []
+            if not lead.country_id:
+                continue
+            latitude = lead.partner_latitude
+            longitude = lead.partner_longitude
+            if latitude and longitude:
                 # 1. first way: in the same country, small area
-                part_ids = self.pool.get('res.partner').search(cr, uid, [
-                    ('partner_weight','>',0),
-                    ('partner_latitude','>',result[0]-2), ('partner_latitude','<',result[0]+2),
-                    ('partner_longitude','>',result[1]-1.5), ('partner_longitude','<',result[1]+1.5),
-                    ('country', '=', part.country_id.id),
+                partner_ids = res_partner.search(cr, uid, [
+                    ('partner_weight', '>', 0),
+                    ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
+                    ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
+                    ('country', '=', lead.country_id.id),
                 ], context=context)
 
                 # 2. second way: in the same country, big area
-                if not part_ids:
-                    part_ids = self.pool.get('res.partner').search(cr, uid, [
-                        ('partner_weight','>',0),
-                        ('partner_latitude','>',result[0]-4), ('partner_latitude','<',result[0]+4),
-                        ('partner_longitude','>',result[1]-3), ('partner_longitude','<',result[1]+3),
-                        ('country', '=', part.country_id.id),
+                if not partner_ids:
+                    partner_ids = res_partner.search(cr, uid, [
+                        ('partner_weight', '>', 0),
+                        ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
+                        ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
+                        ('country', '=', lead.country_id.id),
                     ], context=context)
 
 
                 # 5. fifth way: anywhere in same country
-                if not part_ids:
+                if not partner_ids:
                     # still haven't found any, let's take all partners in the country!
-                    part_ids = self.pool.get('res.partner').search(cr, uid, [
-                        ('partner_weight','>',0),
-                        ('country', '=', part.country_id.id),
+                    partner_ids = partner.search(cr, uid, [
+                        ('partner_weight', '>', 0),
+                        ('country', '=', lead.country_id.id),
                     ], context=context)
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result
-                if not part_ids:
+                if not partner_ids:
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     cr.execute("""SELECT id, distance
                                   FROM  (select id, (point(partner_longitude, partner_latitude) <-> point(%s,%s)) AS distance FROM res_partner
                                   WHERE partner_longitude is not null
                                         AND partner_latitude is not null
                                         AND partner_weight > 0) AS d
-                                  ORDER BY distance LIMIT 1""", (result[1],result[0]))
+                                  ORDER BY distance LIMIT 1""", (longitude, latitude))
                     res = cr.dictfetchone()
                     if res:
-                        part_ids.append(res['id'])
+                        partner_ids.append(res['id'])
 
-                total = 0
+                total_weight = 0
                 toassign = []
-                for part2 in self.pool.get('res.partner').browse(cr, uid, part_ids, context=context):
-                    total += part2.partner_weight
-                    toassign.append( (part2.id, total) )
+                for partner in res_partner.browse(cr, uid, partner_ids, context=context):
+                    total_weight += partner.partner_weight
+                    toassign.append( (partner.id, total_weight) )
+
                 random.shuffle(toassign) # avoid always giving the leads to the first ones in db natural order!
-                mypartner = random.randint(0,total)
-                for t in toassign:
-                    if mypartner<=t[1]:
-                        vals = self.onchange_assign_id(cr,uid, ids, t[0], context=context)['value']
-                        vals.update({'partner_assigned_id': t[0], 'date_assign': time.strftime('%Y-%m-%d')})
-                        self.write(cr, uid, [part.id], vals, context=context)
+                nearest_weight = random.randint(0, total_weight)
+                for partner_id, weight in toassign:
+                    if nearest_weight <= weight:
+                        res_partner_ids[lead.id] = partner_id
                         break
-            ok = True
-        return ok
+        return res_partner_ids
 crm_lead()
 
