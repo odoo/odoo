@@ -30,8 +30,7 @@ from lxml import etree
 
 #Application and feature chooser, this could be done by introspecting ir.modules
 DEFAULT_MODULES = {
-    'Customer Relationship Management' : ['crm',],
-    'Sales Management' : ['sale',],
+    'Sales Management' : ['sale', 'crm'],
     'Project Management' : ['project',],
     'Knowledge Management' : ['document',],
     'Warehouse Management' : ['stock', 'procurement'],
