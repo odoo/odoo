@@ -343,7 +343,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
                         $.unblockUI();
@@ -392,7 +392,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
             .html(QWeb.render("BackupDB", self))
             .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 self.session.get_file({
                     form: form,
                     error: function (body) {
@@ -413,7 +413,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 $(form).ajaxSubmit({
                     url: '/web/database/restore',
                     type: 'POST',

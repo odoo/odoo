@@ -1043,6 +1043,10 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.we
     }
 });
 
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
+}
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
