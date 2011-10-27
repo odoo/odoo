@@ -8,7 +8,7 @@
         'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js',
         'static/src/js/calendar.js'
     ],
-    "css": ['static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css',
+    "css": [
             'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css',
             'static/src/css/web_calendar.css'
             ],

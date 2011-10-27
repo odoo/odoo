@@ -15,7 +15,10 @@
 	position:relative;
 	overflow:hidden;
 }
-	
+.openerp .dhx_cal_container.dhx_mini_calendar {
+	background-color:#eee;
+}
+		
 .openerp .dhx_cal_container div{
 	-moz-user-select:none;
 	-moz-user-select:-moz-none;
@@ -29,9 +32,6 @@
 	white-space:nowrap;
 }
 
-.openerp .dhx_cal_navline * {
-	vertical-align:middle;
-}
 .openerp .dhx_cal_navline .dhx_cal_date{
 	font-weight:bold;
 	float:left;
@@ -44,18 +44,19 @@
 .openerp .dhx_cal_today_button, .openerp .dhx_cal_prev_button, .openerp .dhx_cal_next_button {
 	color:white;
 	height:17px;
+	line-height:17px;
     font-weight:bold;
 	cursor:pointer;	
 	font-size:90%;
 	text-decoration:none;
 	float:left;
-
 	margin:0px 3px;
 	padding:2px 2px;
 	border:1px solid black;
 	border-radius: 3px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
+	vertical-align:0px;
 }
 
 .openerp .dhx_cal_today_button {
@@ -165,14 +166,16 @@
 
 .openerp .dhx_cal_tab {
 	width:59px;
-	height:18px;
+	height:16px;
+	line-height:16px;
 	text-align:center;
 	text-transform:uppercase;
 	text-decoration:none;
 	font-weight:bold;
-	font-size:0.8em;
+	font-size:80%;
 	color:#555;
-	margin:2px 1px 0px 1px;
+	margin:6px 1px 0px 1px;
+	padding-top:2px;
 	cursor:pointer;
 	float:right;
 	background-color:#bbb;
@@ -182,7 +185,6 @@
 	-moz-border-radius-topright:4px;
 	border-top-left-radius:4px;
 	border-top-right-radius:4px;
-	vertical-align:50% !important;
 }
 .openerp .dhx_cal_tab[name="month_tab"] { right:16px; }
 .openerp .dhx_cal_tab[name="week_tab"] { right:78px; }
@@ -193,9 +195,12 @@
 }	
 
 .openerp .dhx_cal_tab.active{
+	height:17px;
+	line-height:17px;
 	text-decoration:none;
 	cursor:default;
-	border-bottom:0;
+	border:1px dotted #8894A3;
+	border-bottom:0px;
 	background-color:white /*#F4F4F4;*/
 }
 
@@ -213,6 +218,7 @@
 	font-weight:bold;
 	color:#1F1F1F;
 	border-bottom:1px dotted #8894A3;
+	border-top:1px dotted #8894A3;
 	/*border-right:1px dotted #8894A3;z-index:2;*/
 	overflow:hidden;
 	background-color: white; /*#F4F4F4;*/
@@ -250,8 +256,10 @@ openerp .dhx_scale_hour{height:41px;width:50px;border-bottom:1px dotted #8894A3;
 	font-weight:bold;
 	text-align:center;
 	border-right:1px dotted #586A7E;
-	height:18px;padding-right:5px;
-	padding-top:3px;text-align:right;
+	height:18px;
+	padding-right:6px;
+	padding-top:4px;
+	text-align:right;
 	font-size:0.9em;
 }
 
@@ -314,7 +322,7 @@ dhx_multi_day_icon{background-image:url(/web_calendar/static/lib/dhtmlxScheduler
 	cursor:pointer;
 	vertical-align:middle;
 	padding-top:2px;
-	font-size: 120%;
+	font-size: 90%;
 	-moz-border-radius-topleft: 3px; -webkit-border-top-left-radius: 3px; border-top-left-radius: 3px; -moz-border-radius-topright: 3px; -webkit-border-top-right-radius: 3px; border-top-right-radius: 3px;
 }
 
@@ -322,7 +330,7 @@ dhx_multi_day_icon{background-image:url(/web_calendar/static/lib/dhtmlxScheduler
 	border-width:0 1px 1px 1px;
 	padding:5px;
 	-moz-border-radius-bottomleft: 3px; -webkit-border-bottom-left-radius: 3px; border-bottom-left-radius: 3px; -moz-border-radius-bottomright: 3px; -webkit-border-bottom-right-radius: 3px; border-bottom-right-radius: 3px;
-	font-size:120%;
+	font-size:90%;
 }
 
 .openerp .dhx_resize_denied .dhx_cal_event .dhx_footer{cursor:default;}
@@ -433,7 +441,8 @@ div.openerp .dhx_menu_icon{background-image:url(/web_calendar/static/lib/dhtmlxS
 
 .openerp .dhx_year_month{
 	height:18px;
-	padding-top:3px;
+	line-height:18px;
+	padding-top:2px;
 	text-align:center;
 	vertical-align:middle;
 	text-transform:uppercase;
@@ -441,6 +450,7 @@ div.openerp .dhx_menu_icon{background-image:url(/web_calendar/static/lib/dhtmlxS
 	font-size:0.9em;
 	text-shadow: 0 1px 0 white;	
 	border:0px;
+	color:#444;
 }
 /*.openerp .dhx_mini_calendar .openerp .dhx_year_month{
 	padding-top:0px;
