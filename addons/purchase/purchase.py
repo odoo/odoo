@@ -480,7 +480,8 @@ class purchase_order(osv.osv):
                                will be added. A new picking will be created if ommitted.
         :return: True
         """
-        picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
+        if not picking_id: 
+            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
         todo_moves = []
         for order_line in order_lines:
             if not order_line.product_id:
@@ -499,7 +500,7 @@ class purchase_order(osv.osv):
     
     def action_picking_create(self,cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
-            picking_id = self._create_pickings(cr, uid, order, [order_line for order_line in order.order_line], False, args)
+            picking_id = self._create_pickings(cr, uid, order, [order_line for order_line in order.order_line], None, args)
         return picking_id #FIXME this is brittle to assume there is only 1 picking_id, but has been kept for API compatibility
 
     def copy(self, cr, uid, id, default=None, context=None):
