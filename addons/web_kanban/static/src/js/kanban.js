@@ -485,6 +485,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                 self.all_display_data[index] = {"value" : group_value, "records" : records, 'header' : group_name, 'ids' : dataset.ids, 'aggregates' : group_aggregates};
                 if (!remaining--) {
+                    self.dataset.index = self.dataset.ids.length ? 0 : null;
                     self.on_show_data();
                 }
             });
