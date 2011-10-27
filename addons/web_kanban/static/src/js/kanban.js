@@ -438,6 +438,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         self.datagroup.list(
             _.keys(self.fields_view.fields),
             function (groups) {
+                self.dataset.ids = [];
                 self.groups = groups;
                 if (groups.length) {
                     self.do_render_group(groups);
@@ -481,6 +482,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             var dataset = new openerp.web.DataSetSearch(self, self.dataset.model, group.context, group.domain);
             self.$element.find(".oe_kanban_view").remove();
             dataset.read_slice(_.keys(self.fields_view.fields), {'domain': group.domain, 'context': group.context}, function(records) {
+                self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                 self.all_display_data[index] = {"value" : group_value, "records" : records, 'header' : group_name, 'ids' : dataset.ids, 'aggregates' : group_aggregates};
                 if (!remaining--) {
                     self.on_show_data();
