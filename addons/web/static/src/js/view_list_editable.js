@@ -316,7 +316,9 @@ openerp.web.list_editable = function (openerp) {
                     })).then(function () {
                         done.resolve();
                     });
-            }, this.options.editable === 'top');
+            }, this.options.editable === 'top').fail(function () {
+                done.reject();
+            });
             return done.promise();
         },
         /**
