@@ -61,7 +61,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     kanban_color: function(variable) {
-        var number_of_color_schemes = 8,
+        var number_of_color_schemes = 10,
             index = 0;
         switch (typeof(variable)) {
             case 'string':
@@ -75,7 +75,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             default:
                 return '';
         }
-        return 'oe_kanban_color_' + ((index % number_of_color_schemes) || number_of_color_schemes);
+        var color = (index % number_of_color_schemes);
+        return 'oe_kanban_color_' + color;
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
@@ -222,7 +223,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     do_change_color: function(record_id, $e) {
         var self = this,
             id = record_id,
-            colors = '#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#E3C7FF,#FFC7F1'.split(','),
+            colors = '#FFFFFF,#CCCCCC,#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#E3C7FF,#FFC7F1'.split(','),
             $cpicker = $(QWeb.render('KanbanColorPicker', { colors : colors, columns: 2 }));
         $e.after($cpicker);
         $cpicker.mouseenter(function() {
