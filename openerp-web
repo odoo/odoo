@@ -13,17 +13,17 @@ import werkzeug.contrib.fixers
 optparser = optparse.OptionParser()
 optparser.add_option("-s", "--session-path", dest="session_storage",
                      default=os.path.join(tempfile.gettempdir(), "oe-sessions"),
-                     help="directory used for session storage", metavar="DIR")
+                     help="Directory used for session storage", metavar="DIR")
 optparser.add_option("--server-host", dest="server_host",
                      default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
 optparser.add_option("--server-port", dest="server_port", default=8069,
                      help="OpenERP server port", type="int", metavar="NUMBER")
 optparser.add_option("--db-filter", dest="dbfilter", default='.*',
-                     help="Filter listed database", metavar="REGEXP")
+                     help="Filter listed databases", metavar="REGEXP")
 optparser.add_option('--addons-path', dest='addons_path', default=[], action='append',
-                    help="Path do addons directory", metavar="PATH")
+                    help="Path to addons directory", metavar="PATH")
 optparser.add_option('--load', dest='server_wide_modules', default=['web'], action='append',
-                    help="Load a additional module before login (by default only 'web' is loaded)", metavar="MODULE")
+                    help="Load an additional module before login (by default only 'web' is loaded)", metavar="MODULE")
 
 server_options = optparse.OptionGroup(optparser, "Server configuration")
 server_options.add_option("-p", "--port", dest="socket_port", default=8002,
