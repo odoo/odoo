@@ -392,7 +392,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Employees" icon="terp-personal" name="employee_id" context="{'group_by':'employee_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="PaySlip Run" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
+                        <filter string="PaySlip Generation" name="payslip_run_id" icon="terp-folder-orange" context="{'group_by':'payslip_run_id'}"/>
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Companies" name="company_id" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                         <separator orientation="vertical"/>
@@ -684,9 +684,9 @@
             <field name="model">hr.payslip.run</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Payslip Runs">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Runs"/>
-                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Runs"/>
+                <search string="Search Payslip Generations">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Payslip Generations"/>
+                    <filter icon="terp-camera_test" string="Done" domain="[('state','=','close')]" help="Done Payslip Generations"/>
                     <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="date_start"/>
