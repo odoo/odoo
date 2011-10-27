@@ -73,8 +73,8 @@ Web client WYSIWYG
                     """,
     "version" : "0.9",
     "depends" : ["base"],
-    "author" : "Camptocamp SA - NBessi",
-    "category": "Hidden",
+    "author" : "Camptocamp",
+    "category": "Hidden", # i.e a technical module, not shown in Application install menu
     "url": "http://http://www.camptocamp.com/",
     "data": [ "security/ir.model.access.csv",
               "data.xml",
