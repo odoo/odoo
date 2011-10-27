@@ -123,7 +123,7 @@ class ReportXML(osv.osv):
                                             'ir.header_webkit',
                                             type='many2one',
                                             relation='ir.header_webkit',
-                                            string='WebKit Header',
+                                            string='Webkit Header',
                                             help="The header linked to the report",
                                             view_load=True,
                                             required=True
