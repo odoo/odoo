@@ -717,6 +717,16 @@ openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.
         this.invisible = this.modifiers['invisible'] === true;
         this.classname = 'oe_form_' + this.type;
 
+        this.align = parseFloat(this.node.attrs.align);
+        if (isNaN(this.align) || this.align === 1) {
+            this.align = 'right';
+        } else if (this.align === 0) {
+            this.align = 'left';
+        } else {
+            this.align = 'center';
+        }
+
+
         this.width = this.node.attrs.width;
     },
     start: function() {
@@ -1046,8 +1056,7 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
 
         this._super(view, node);
 
-        // TODO fme: support for attrs.align
-        if (this.node.tag == 'label' && (this.node.attrs.colspan || (this.string && this.string.length > 32))) {
+        if (this.node.tag == 'label' && (this.align === 'left' || this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
             this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
         } else {

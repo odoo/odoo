@@ -752,7 +752,7 @@
 </t>
 <t t-name="WidgetLabel">
     <label t-att-for="widget.element_id"
-           t-att-class="'oe_label' + (widget.help ? '_help' : '')"
+           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}"
            t-att-title="widget.help">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
@@ -760,7 +760,7 @@
     </label>
 </t>
 <t t-name="WidgetParagraph">
-    <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
+    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
     <input t-att-type="widget.password ? 'password' : 'text'" size="1"
