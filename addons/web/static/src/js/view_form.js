@@ -89,7 +89,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.fields_view = data;
             var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
-            this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'view': this });
+            this.rendered = QWeb.render(this.form_template, { 'frame': frame, 'widget': this });
         }
         this.$element.html(this.rendered);
         _.each(this.widgets, function(w) {
