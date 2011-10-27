@@ -136,10 +136,9 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     }
 });
 
-openerp.web.CrashManager = openerp.web.SessionAware.extend({
-    init: function(parent) {
-        this._super((parent || {}).session);
-        this.session.on_rpc_error.add(this.on_rpc_error);
+openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
+    init: function() {
+        openerp.connector.on_rpc_error.add(this.on_rpc_error);
     },
     on_rpc_error: function(error) {
         this.error = error;
@@ -951,7 +950,6 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.$element.html(QWeb.render("Interface", params));
 
         this.notification = new openerp.web.Notification();
-        this.session = new openerp.web.Session();
         this.loading = new openerp.web.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.web.CrashManager(this);
 

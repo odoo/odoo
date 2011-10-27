@@ -32,7 +32,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * @constructs openerp.web.DataGroup
      * @extends openerp.web.Widget
      *
-     * @param {openerp.web.Session} session Current OpenERP session
+     * @param {openerp.web.Widget} parent widget
      * @param {String} model name of the model managed by this DataGroup
      * @param {Array} domain search domain for this DataGroup
      * @param {Object} context context of the DataGroup's searches
@@ -785,10 +785,14 @@ openerp.web.ProxyDataSet = openerp.web.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.web.Model = openerp.web.SessionAware.extend({
-    init: function(session, model_name) {
-        this._super(session);
+openerp.web.Model = openerp.web.CallbackEnabled.extend({
+    init: function(_, model_name) {
+        this._super();
         this.model_name = model_name;
+    },
+    rpc: function() {
+        var c = openerp.connector;
+        return c.rpc.apply(c, arguments);
     },
     get_func: function(method_name) {
         var self = this;
