@@ -271,6 +271,10 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                 }
             }
         }
+        $.when(view_promise).then(function () {
+            self.$element.find('.oe_view_title:first').text(
+                    self.display_title());
+        });
         return view_promise;
     },
     /**
@@ -331,7 +335,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     /**
      * Called by children view after executing an action
      */
-    on_action_executed: function () {}
+    on_action_executed: function () {},
+    display_title: function () {
+        var view = this.views[this.active_view];
+        if (view) {
+            // ick
+            return view.controller.fields_view.arch.attrs.string;
+        }
+        return '';
+    }
 });
 
 session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
@@ -522,6 +534,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     return false;
                 });
         });
+    },
+    display_title: function () {
+        return this.action.name;
     }
 });
 
