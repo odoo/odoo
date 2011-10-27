@@ -113,6 +113,9 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
 
         scheduler.init('openerp_scheduler', null, this.mode || 'month');
 
+        // Remove hard coded style attributes from dhtmlx scheduler
+        this.$element.find(".dhx_cal_navline div").removeAttr('style');
+
         scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
