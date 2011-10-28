@@ -45,7 +45,7 @@ class followup(osv.osv):
                 company.append(l.company_id.id)
         return True
     _constraints = [
-        (check_company_uniq, 'Only One Folllowup by Company.',['company_id'] )
+        (check_company_uniq, 'Only One Followup by Company.',['company_id'] )
         ]
 
 followup()
@@ -85,7 +85,7 @@ class account_move_line(osv.osv):
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
         'followup_date': fields.date('Latest Follow-up', select=True),
-                }
+    }
 
 account_move_line()
 

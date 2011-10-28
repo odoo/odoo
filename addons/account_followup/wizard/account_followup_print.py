@@ -32,7 +32,7 @@ class account_followup_print(osv.osv_memory):
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
         'followup_id': fields.many2one('account_followup.followup', 'Follow-up', required=True)
-                }
+    }
 
     def _get_followup(self, cr, uid, context=None):
         if context is None:
@@ -289,7 +289,7 @@ class account_followup_print_all(osv.osv_memory):
             if not msg_unsent:
                 summary = _("All E-mails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
-                msg_unsent = _("E-Mail not sent to following Partners, Email not available !\n\n%s") % msg_unsent
+                msg_unsent = _("E-Mail not sent to following Partners, E-mail not available !\n\n%s") % msg_unsent
                 msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n%s") % msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
@@ -298,7 +298,7 @@ class account_followup_print_all(osv.osv_memory):
             context.update({'summary': '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
 
         return {
-            'name': _('Follwoup Summary'),
+            'name': _('Followup Summary'),
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',
