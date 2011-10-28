@@ -569,7 +569,7 @@ session.web.Sidebar = session.web.Widget.extend({
             {
                 label: _t("Manage Views"),
                 callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
+                title: _t("Manage views of the current object")
             }, {
                 label: _t("Edit Workflow"),
                 callback: this.call_default_on_sidebar,
@@ -578,7 +578,7 @@ session.web.Sidebar = session.web.Widget.extend({
             }, {
                 label: _t("Customize Object"),
                 callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
+                title: _t("Manage views of the current object")
             }
         ]);
 
@@ -586,10 +586,10 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [ 
             {
                 label: _t("Import"),
-                callback: this.call_default_on_sidebar,
+                callback: this.call_default_on_sidebar
             }, {
                 label: _t("Export"),
-                callback: this.call_default_on_sidebar,
+                callback: this.call_default_on_sidebar
             }, {
                 label: _t("Translate"),
                 callback: this.call_default_on_sidebar,
@@ -629,7 +629,7 @@ session.web.Sidebar = session.web.Widget.extend({
             var $section = $(session.web.qweb.render("Sidebar.section", {
                 section_id: section_id,
                 name: name,
-                classname: 'oe_sidebar_' + code,
+                classname: 'oe_sidebar_' + code
             }));
             $section.appendTo(this.$element.find('div.sidebar-actions'));
             this.sections[code] = $section;
