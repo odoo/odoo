@@ -59,5 +59,17 @@ class res_partner_address(osv.osv, EDIMixin):
                                                           edi_struct or dict(RES_PARTNER_ADDRESS_EDI_STRUCT),
                                                           context=context)
 
-class res_partner_bank(osv.osv, EDIMixin):
-    _inherit = "res.partner.bank"
+    def edi_import(self, cr, uid, edi_document, context=None):
+        # handle bank info, if any
+        edi_bank_ids = edi_document.pop('bank_ids', None)
+        result = super(res_partner_address,self).edi_import(cr, uid, edi_document, context=context)
+        if edi_bank_ids:
+            partner = self._edi_get_object_by_external_id(cr, uid, edi_document['partner_id'][0],
+                                                          'res.partner', context=context)
+            assert partner is not None
+            import_ctx = dict(context, default_partner_id=partner.id)
+            bank_ids = []
+            for ext_bank_id, bank_name in edi_bank_ids:
+                bank_ids.append(self.edi_import_relation(cr, uid, 'res.partner.bank',
+                                                         bank_name, ext_bank_id, context=import_ctx))
+        return 

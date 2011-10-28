@@ -30,9 +30,8 @@ button.oe_edi_action_print img {
     font-weight: bold;
     font-size: 1.3em;
 }
-.oe_edi_nested_block {
+.oe_edi_nested_block, .oe_edi_nested_block_import, .oe_edi_nested_block_pay {
     margin: 0px 40px;
-    padding: 0px;
     display: none; /* made visible by click on parent input/label */
 }
 .oe_edi_right_top .oe_edi_nested_block label {
@@ -56,6 +55,12 @@ button.oe_edi_action_print img {
 .oe_edi_small, .oe_edi_small input {
     font-size: 90%;
 }
+
+/** Sidebar bottom **/
+.oe_edi_paypal_button {
+    margin: 6px;
+}
+
 
 /** Paperbox, from http://www.sitepoint.com/pure-css3-paper-curl/ **/
 body {

@@ -39,7 +39,8 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this.$element.find('button#oe_edi_import_existing').bind('click', this.do_import_existing);
         this.$element.find('button#oe_edi_import_create').bind('click', this.do_import_create);
         this.$element.find('button#oe_edi_download').bind('click', this.do_download);
-        this.$element.find('.oe_edi_import_choice, .oe_edi_import_choice_label').bind('click', this.toggle_choice);
+        this.$element.find('.oe_edi_import_choice, .oe_edi_import_choice_label').bind('click', this.toggle_choice('import'));
+        this.$element.find('.oe_edi_pay_choice, .oe_edi_pay_choice_label').bind('click', this.toggle_choice('pay'));
         this.$element.find('#oe_edi_download_show_code').bind('click', this.show_code);
     },
     show_code: function($event) {
@@ -51,10 +52,27 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         var url_prefix = l.protocol + '//' + l.host;
         return url_prefix +'/edi/download?db=' + this.db + '&token=' + this.token;
     },
-    toggle_choice: function($e) {
-        $('.oe_edi_nested_block').hide();
-        $('.'+$e.target.id+'_nested').show();
-        return true;
+    get_paypal_url: function(document_type, ref_field) {
+        comp_name = encodeURIComponent(this.doc.company_id[1]);
+        doc_ref = encodeURIComponent(this.doc[ref_field]);
+        paypal_account = encodeURIComponent(this.doc.company_address.paypal_account);
+        amount = encodeURIComponent(this.doc.amount_total);
+        cur_code = encodeURIComponent(this.doc.currency.code);
+        paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick" +
+                     "&business=" + paypal_account +
+                     "&item_name=" + document_type + "%20" + comp_name + "%20" + doc_ref +
+                     "&invoice=" + doc_ref + 
+                     "&amount=" + amount +
+                     "&currency_code=" + cur_code +
+                     "&button_subtype=services&amp;no_note=1&amp;bn=OpenERP_PayNow_" + cur_code;
+        return paypal_url;
+    },
+    toggle_choice: function(mode) {
+        return function($e) {
+            $('.oe_edi_nested_block_'+mode).hide();
+            $('.'+$e.target.id+'_nested').show();
+            return true;
+        }
     },
     do_print: function(e){
         var l = window.location;

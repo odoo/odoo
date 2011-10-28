@@ -46,5 +46,9 @@ class res_company(osv.osv):
             result = res_partner_address.edi_export(cr, uid, [address], edi_struct=edi_address_struct, context=context)[0]
         if company.logo:
             result['logo'] = company.logo # already base64-encoded
-
+        if company.paypal_account:
+            result['paypal_account'] = company.paypal_account
+        # bank info
+        if company.bank_ids:
+            result['bank_ids'] = res_partner_address.edi_m2m(cr, uid, company.bank_ids, context=context)
         return result
