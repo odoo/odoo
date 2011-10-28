@@ -68,8 +68,9 @@
     %>
     <br/>
     <p>It is also possible to directly pay with Paypal:</p>
-        <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;"
-           href="${paypal_url}">Pay with Paypal</a>
+        <a style="margin-left: 120px;" href="${paypal_url}">
+            <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+        </a>
     % endif
 
     <br/>
