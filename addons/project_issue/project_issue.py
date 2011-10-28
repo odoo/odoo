@@ -92,8 +92,8 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+            res[issue.id] = {}
             for field in fields:
-                res[issue.id] = {}
                 duration = 0
                 ans = False
                 hours = 0
