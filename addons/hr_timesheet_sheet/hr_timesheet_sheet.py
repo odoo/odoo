@@ -143,25 +143,6 @@ class hr_timesheet_sheet(osv.osv):
             res[record[0]]['total_difference'] = record[3]
         return res
 
-    def _state_attendance(self, cr, uid, ids, name, args, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        result = {}
-        link_emp = {}
-        emp_ids = []
-
-        for sheet in self.browse(cr, uid, ids, context=context):
-            result[sheet.id] = 'none'
-            emp_ids2 = emp_obj.search(cr, uid,
-                    [('user_id', '=', sheet.user_id.id)], context=context)
-            if emp_ids2:
-                link_emp[emp_ids2[0]] = sheet.id
-                emp_ids.append(emp_ids2[0])
-        for emp in emp_obj.browse(cr, uid, emp_ids, context=context):
-            if emp.id in link_emp:
-                sheet_id = link_emp[emp.id]
-                result[sheet_id] = emp.state
-        return result
-
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
         ids_signin = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_in')])
         ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
@@ -286,7 +267,7 @@ class hr_timesheet_sheet(osv.osv):
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
-        'state_attendance' : fields.function(_state_attendance, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
+        'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status'),
         'total_attendance_day': fields.function(_total_day, string='Total Attendance', multi="_total_day"),
         'total_timesheet_day': fields.function(_total_day, string='Total Timesheet', multi="_total_day"),
         'total_difference_day': fields.function(_total_day, string='Difference', multi="_total_day"),
