@@ -144,78 +144,78 @@
     #total_entry_encoding
     #user_id
     
--
-  I import the payment line
--
-  !python {model: account.payment.populate.statement}: |
-    wiz_id = self.create(cr,uid,[])
-    wiz = self.browse(cr, uid, wiz_id)
-    
-    line_obj = self.pool.get('payment.line')
-    pay_line_ids = line_obj.search(cr, uid, [('communication','=','111111111111111111111111111111'),('amount','=','7000')])
-    
-    data = { 'lines': [(6, 0, [pay_line_ids[0]])],}
-    wiz.write(data)
-    
-    context['active_id'] = ref('dta_bank_statement')
-    context['active_ids'] = [ref('dta_bank_statement')]
-    
-    self.populate_statement(cr, uid, [wiz_id], context=context)
-
-
--
-  I check the statement line is created
--
-  !assert {model: account.bank.statement, id: dta_bank_statement, string: statement_line_ids is not empty}:
-    - line_ids
-
--
-  I check the voucher line is created
--
-  !python {model: account.bank.statement}: |
-    statement = self.browse(cr, uid, ref('dta_bank_statement'))
-    
-    assert statement.line_ids[0].voucher_id.line_ids, "Voucher line is missing"
-    assert len(statement.line_ids[0].voucher_id.line_ids) == 1, "There are too many voucher lines"
-
--
-  In order to confirm my bank statement, I enter the closing balance and press on compute button
--
-  !python {model: account.bank.statement}: |
-    statement = self.browse(cr, uid, ref('dta_bank_statement'))
-    statement.write({'balance_end_real': -7000.0})
-    self.button_dummy(cr, uid, [ref('dta_bank_statement')], context=context)
-    statement = self.browse(cr, uid, ref('dta_bank_statement'))
-
--
-  I confirm my bank statement
--
-  !python {model: account.bank.statement}: |
-    self.button_confirm_bank(cr, uid, [ref('dta_bank_statement')], context=context)
-
-
--
-  I check the move lines have been defined
--
-  !assert {model: account.bank.statement, id: dta_bank_statement, string: move_line_ids is not empty}:
-    - move_line_ids
-
-    
--
-  I check bank statement is Closed and balance is -7000
--
-  !assert {model: account.bank.statement, id: dta_bank_statement, string: state is Closed and balance is -7000}:
-    - state == 'confirm'
-    - balance_end == -7000.0
-    
--
-  I check the residual amount of invoice, should be 0 in residual currency and 0 in amount_residual and paid
--
-  !python {model: account.invoice}: |
-    invoice_id = self.browse(cr, uid, ref("dta_account_invoice"))
-    move_line_obj = self.pool.get('account.move.line')
-    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
-    move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert move_line.amount_residual_currency == 0.0, "Residual amount currency is not correct : %.2f" % move_line.amount_residual_currency
-    assert move_line.amount_residual == 0.0 , "Residual amount of invoice is not correct : %.2f" % move_line.amount_residual
-    assert invoice_id.state == 'paid', "Invoice state is not Paid"
+#-
+#  I import the payment line
+#-
+#  !python {model: account.payment.populate.statement}: |
+#    wiz_id = self.create(cr,uid,[])
+#    wiz = self.browse(cr, uid, wiz_id)
+#    
+#    line_obj = self.pool.get('payment.line')
+#    pay_line_ids = line_obj.search(cr, uid, [('communication','=','111111111111111111111111111111'),('amount','=','7000')])
+#    
+#    data = { 'lines': [(6, 0, [pay_line_ids[0]])],}
+#    wiz.write(data)
+#    
+#    context['active_id'] = ref('dta_bank_statement')
+#    context['active_ids'] = [ref('dta_bank_statement')]
+#    
+#    self.populate_statement(cr, uid, [wiz_id], context=context)
+#
+#
+#-
+#  I check the statement line is created
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: statement_line_ids is not empty}:
+#    - line_ids
+#
+#-
+#  I check the voucher line is created
+#-
+#  !python {model: account.bank.statement}: |
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#    
+#    assert statement.line_ids[0].voucher_id.line_ids, "Voucher line is missing"
+#    assert len(statement.line_ids[0].voucher_id.line_ids) == 1, "There are too many voucher lines"
+#
+#-
+#  In order to confirm my bank statement, I enter the closing balance and press on compute button
+#-
+#  !python {model: account.bank.statement}: |
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#    statement.write({'balance_end_real': -7000.0})
+#    self.button_dummy(cr, uid, [ref('dta_bank_statement')], context=context)
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#
+#-
+#  I confirm my bank statement
+#-
+#  !python {model: account.bank.statement}: |
+#    self.button_confirm_bank(cr, uid, [ref('dta_bank_statement')], context=context)
+#
+#
+#-
+#  I check the move lines have been defined
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: move_line_ids is not empty}:
+#    - move_line_ids
+#
+#    
+#-
+#  I check bank statement is Closed and balance is -7000
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: state is Closed and balance is -7000}:
+#    - state == 'confirm'
+#    - balance_end == -7000.0
+#    
+#-
+#  I check the residual amount of invoice, should be 0 in residual currency and 0 in amount_residual and paid
+#-
+#  !python {model: account.invoice}: |
+#    invoice_id = self.browse(cr, uid, ref("dta_account_invoice"))
+#    move_line_obj = self.pool.get('account.move.line')
+#    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+#    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+#    assert move_line.amount_residual_currency == 0.0, "Residual amount currency is not correct : %.2f" % move_line.amount_residual_currency
+#    assert move_line.amount_residual == 0.0 , "Residual amount of invoice is not correct : %.2f" % move_line.amount_residual
+#    assert invoice_id.state == 'paid', "Invoice state is not Paid"
