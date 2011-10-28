@@ -61,7 +61,10 @@
                 "street": "Chaussee de Namur 40", 
                 "city": "Gerompont", 
                 "zip": "1367", 
-                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"],
+                "bank_ids": [
+                    ["base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_bank-ZrTWzesfsdDJzGbp","Sample bank: 123465789-156113"]
+                ],
         }, 
         "partner_id": ["purchase:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_test20", "jones white"], 
         "partner_address": {
@@ -104,6 +107,11 @@
     new_sale_order_id = sale_order_pool.edi_import(cr, uid, edi_document, context=context)
     assert new_sale_order_id,  'Sale order import failed'
     order_new = sale_order_pool.browse(cr, uid, new_sale_order_id)
+
+    # check bank info on partner
+    assert len(order_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
+    bank_info = order_new.partner_id.bank_ids[0]
+    assert bank_info.acc_number == "Sample bank: 123465789-156113", 'Expected "Sample bank: 123465789-156113", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list was not automatically assigned"
     assert order_new.amount_total == 350, "Amount total is wrong"

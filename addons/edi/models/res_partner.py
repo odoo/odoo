@@ -68,8 +68,14 @@ class res_partner_address(osv.osv, EDIMixin):
                                                           'res.partner', context=context)
             assert partner is not None
             import_ctx = dict(context, default_partner_id=partner.id)
+
+            # get the first bank type
+            res_partner_bank_type = self.pool.get('res.partner.bank.type')
+            bank_code_ids = res_partner_bank_type.search(cr, uid, [], context=context)
+            assert bank_code_ids, 'Please define at least one "bank type" before importing bank accounts'
+            import_ctx['default_state'] = res_partner_bank_type.browse(cr, uid, bank_code_ids[0]).code
             bank_ids = []
             for ext_bank_id, bank_name in edi_bank_ids:
                 bank_ids.append(self.edi_import_relation(cr, uid, 'res.partner.bank',
                                                          bank_name, ext_bank_id, context=import_ctx))
-        return 
+        return result
