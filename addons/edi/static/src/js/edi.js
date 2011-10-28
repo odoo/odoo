@@ -36,25 +36,41 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         console.log("sidebar",this.sidebar);
         this.$element.html(openerp.web.qweb.render("EdiView", param));
         this.$element.find('button.oe_edi_action_print').bind('click', this.do_print);
-        this.$element.find('button.oe_edi_import_button').bind('click', this.do_import);
+        this.$element.find('button#oe_edi_import_existing').bind('click', this.do_import_existing);
+        this.$element.find('button#oe_edi_import_create').bind('click', this.do_import_create);
+        this.$element.find('button#oe_edi_download').bind('click', this.do_download);
+        this.$element.find('.oe_edi_import_choice, .oe_edi_import_choice_label').bind('click', this.toggle_choice);
+        this.$element.find('#oe_edi_download_show_code').bind('click', this.show_code);
+    },
+    show_code: function($event) {
+        $('#oe_edi_download_code').show();
+        return false;
+    },
+    get_download_url: function() {
+        var l = window.location;
+        var url_prefix = l.protocol + '//' + l.host;
+        return url_prefix +'/edi/download?db=' + this.db + '&token=' + this.token;
+    },
+    toggle_choice: function($e) {
+        $('.oe_edi_nested_block').hide();
+        $('.'+$e.target.id+'_nested').show();
+        return true;
     },
     do_print: function(e){
         var l = window.location;
         window.location = l.protocol + '//' + l.host + "/edi/download_attachment?db=" + this.db + "&token=" + this.token;
     },
-    do_import: function(e){
-        var l = window.location;
-        var url_prefix = l.protocol + '//' + l.host;
-        var url_download = url_prefix +'/edi/download?db=' + this.db + '&token=' + this.token;
-
-        if (this.$element.find('#oe_edi_import_openerp').attr('checked') == 'checked') {
-            var server_url = this.$element.find('#oe_edi_txt_server_url').val()
-            window.location = 'http://' + server_url + '/edi/import_url?url=' + encodeURIComponent(url_download);
-        } else if (this.$element.find('#oe_edi_import_saas').attr('checked') == 'checked') {
-            window.location = "https://cc.my.openerp.com/odms/create_edi?url=" + encodeURIComponent(url_download);
-        } else if (this.$element.find('#oe_edi_import_download').attr('checked') == 'checked') {
-            window.location = url_download
-        }
+    do_import_existing: function(e) {
+        var url_download = this.get_download_url();
+        var server_url = this.$element.find('#oe_edi_txt_server_url').val()
+        window.location = 'http://' + server_url + '/edi/import_url?url=' + encodeURIComponent(url_download);
+    },
+    do_import_create: function(e){
+        var url_download = this.get_download_url();
+        window.location = "https://cc.my.openerp.com/odms/create_edi?url=" + encodeURIComponent(url_download);
+    },
+    do_download: function(e){
+        window.location = this.get_download_url();
     }
 });
 

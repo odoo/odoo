@@ -29,38 +29,50 @@
                             <input type="radio" id="oe_edi_import_openerp" name="oe_edi_import" class="oe_edi_import_choice"/>
                             <label for="oe_edi_import_openerp" id="oe_edi_import_openerp" class="oe_edi_import_choice_label">Import it into an existing OpenERP instance</label>
                         </div>
-                        <p class="oe_edi_nested_block" id="oe_edi_import_openerp_nested">
+                        <p class="oe_edi_nested_block oe_edi_import_openerp_nested">
                             <label for="oe_edi_txt_server_url">OpenERP instance address:</label>
                             <br/>
-                            http://<input type="text" id="oe_edi_txt_server_url"/>
+                            http://<input type="text" id="oe_edi_txt_server_url"/><br/>
+                            <button type="button" class="oe_edi_import_button" id="oe_edi_import_existing">Import</button>
                         </p>
 
                         <div class="oe_edi_option">
                         <input type="radio" id="oe_edi_import_saas" name="oe_edi_import" class="oe_edi_import_choice"/>
                         <label for="oe_edi_import_saas"  id="oe_edi_import_saas" class="oe_edi_import_choice_label">Import it into a new OpenERP Online instance:</label>
                         </div>
+                        <p class="oe_edi_nested_block oe_edi_import_saas_nested">
+                            <button type="button" class="oe_edi_import_button" id="oe_edi_import_create">Create my new OpenERP instance</button>
+                        </p>
 
                         <div class="oe_edi_option">
                         <input type="radio" id="oe_edi_import_download" name="oe_edi_import" class="oe_edi_import_choice"/>
                         <label for="oe_edi_import_download" id="oe_edi_import_download" class="oe_edi_import_choice_label">Import into another application</label>
                         </div>
-
-                        <button type="button" class="oe_edi_import_button">Continue</button>
+                        <p class="oe_edi_nested_block oe_edi_small oe_edi_import_download_nested">
+                            OpenERP's Electronic Data Interchange documents are based on a generic and language
+                            independent <a href="http://json.org">JSON</a> serialization of the document's attribute.
+                            It is usually very quick and straightforward to create a small plug-in for your preferred
+                            application that will be capable of importing any OpenERP EDI document.
+                            You can find out more details about how to do this and what the content of OpenERP EDI documents
+                            is like in the <a href="http://doc.openerp.com/search.html?q=edi">OpenERP documentation</a>.
+                            <br/>
+                            To get started immediately, <a href="#" id="oe_edi_download_show_code">see is all it takes to use this EDI document in Python</a>.
+                        </p>
+                        <div class="python oe_edi_nested_block oe_edi_small" id="oe_edi_download_code">
+                        <ol><li class="li1"><div class="de1"><span class="kw1">import</span> <span class="kw3">urllib2</span><span class="sy0">,</span> simplejson</div></li>
+                        <li class="li1"><div class="de1">edi_document <span class="sy0">=</span> <span class="kw3">urllib2</span>.<span class="me1">urlopen</span><span class="br0">(</span><span class="st0">'<t t-esc="widget.get_download_url()"/>'</span><span class="br0">)</span>.<span class="me1">read</span><span class="br0">(</span><span class="br0">)</span></div></li>
+                        <li class="li2"><div class="de2">document_data <span class="sy0">=</span> simplejson.<span class="me1">loads</span><span class="br0">(</span>edi_document<span class="br0">)</span><span class="br0">[</span><span class="nu0">0</span><span class="br0">]</span></div></li>
+                        <li class="li1"><div class="de1"><span class="kw1">print</span> <span class="st0">"Amount: "</span><span class="sy0">,</span> document_data<span class="br0">[</span><span class="st0">'amount_total'</span><span class="br0">]</span></div></li>
+                        </ol></div>
+                        <p class="oe_edi_nested_block oe_edi_small oe_edi_import_download_nested">
+                            You can download the raw EDI document here:<br/>
+                            <input type="text" readonly="readonly" t-att-value="widget.get_download_url()"/>
+                            <button type="button" class="oe_edi_import_button" id="oe_edi_download">Download</button>
+                        </p>
 
                         <div class="oe_edi_right_bottom">
                             <t t-raw="widget.sidebar"/>
                         </div>
-
-                        <script type="text/javascript">
-                            $(document).ready(function() {
-                                console.log('installing');
-                                $('.oe_edi_import_choice, .oe_edi_import_choice_label').click(function($event) {
-                                    $('.oe_edi_nested_block').hide();
-                                    $('#'+$event.target.id+'_nested').show();
-                                    return true;
-                                });
-                            });
-                        </script>
                     </td>
                 </tr>
             </table>

@@ -31,7 +31,7 @@ button.oe_edi_action_print img {
     font-size: 1.3em;
 }
 .oe_edi_nested_block {
-    margin-left: 25px;
+    margin: 0px 40px;
     padding: 0px;
     display: none; /* made visible by click on parent input/label */
 }
@@ -51,7 +51,10 @@ button.oe_edi_action_print img {
     background: #e8e8e8;
 }
 .oe_edi_import_button {
-    margin: 1em 2em;
+    margin: 2px 10px;
+}
+.oe_edi_small, .oe_edi_small input {
+    font-size: 90%;
 }
 
 /** Paperbox, from http://www.sitepoint.com/pure-css3-paper-curl/ **/
@@ -167,3 +170,28 @@ table.oe_edi_data, .oe_edi_doc_title {
 .oe_edi_summary_value {
     float: right;
 }
+
+
+/** Python code highlighting **/
+/*  GeSHi (C) 2004 - 2007 Nigel McNie, 2007 - 2008 Benny Baumann
+    (http://qbnz.com/highlighter/ and http://geshi.org/) */
+.python .de1, .python .de2 {font: normal normal 1em/1.2em monospace; margin:0; padding:0; background:none; vertical-align:top;}
+.python  {font-family:monospace;}
+.python .imp {font-weight: bold; color: red;}
+.python li, .python .li1 {background: #ffffff; list-style: none;}
+.python .ln {width:1px;text-align:right;margin:0;padding:0 2px;vertical-align:top;}
+.python .li2 {background: #f8f8f8;}
+.python .kw1 {color: #ff7700;font-weight:bold;}
+.python .kw2 {color: #008000;}
+.python .kw3 {color: #dc143c;}
+.python .kw4 {color: #0000cd;}
+.python .co1 {color: #808080; font-style: italic;}
+.python .coMULTI {color: #808080; font-style: italic;}
+.python .es0 {color: #000099; font-weight: bold;}
+.python .br0 {color: black;}
+.python .sy0 {color: #66cc66;}
+.python .st0 {color: #483d8b;}
+.python .nu0 {color: #ff4500;}
+.python .me1 {color: black;}
+.python span.xtra { display:block; }
+.python ol { padding: 0px; }
