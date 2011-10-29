@@ -728,6 +728,17 @@
     </tr>
     </table>
 </t>
+<t t-name="WidgetGroupFrame">
+    <t t-if="widget.string">
+	<fieldset>
+	    <legend><t t-esc="widget.string"/></legend>
+	    <t t-call="WidgetFrame"/>
+	</fieldset>
+    </t>
+    <t t-if="!widget.string">
+	<t t-call="WidgetFrame"/>
+    </t>
+</t>
 <t t-name="WidgetNotebook">
     <ul>
         <li t-foreach="widget.pages" t-as="page">
