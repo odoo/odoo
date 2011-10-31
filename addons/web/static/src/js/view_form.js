@@ -2428,10 +2428,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.searchview.stop();
         }
         this.searchview = new openerp.web.SearchView(this,
-                this.dataset, false, {
-                    "selectable": !this.options.disable_multiple_selection,
-                    "deletable": false
-                });
+                this.dataset, false, {});
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -2458,7 +2455,9 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             });
             self.view_list = new openerp.web.form.SelectCreateListView(self,
                     self.dataset, false,
-                    _.extend({'deletable': false}, self.options.list_view_options || {}));
+                    _.extend({'deletable': false,
+                        'selectable': !self.options.disable_multiple_selection
+                    }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($("#" + self.element_id + "_view_list")).pipe(function() {
                 self.view_list.do_show();
