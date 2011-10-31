@@ -2632,13 +2632,14 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
                     self.stop();
                 });
             });
-            if (self.options.readonly) {
-                $nbutton.hide();
-            }
             var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
             $cbutton.click(function() {
                 self.stop();
             });
+            if (self.options.readonly) {
+                $nbutton.hide();
+                $cbutton.text(_t("Close"));
+            }
             self.view_form.do_show();
         });
         this.dataset.on_write.add(this.on_write);
@@ -2998,7 +2999,15 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.exte
         self.update_dom();
         self.on_value_changed();
         var real_set_value = function(rval) {
-            self.$element.find('div').text(rval ? rval[1] : '');
+            self.value = rval;
+            var div = $(self.$element.find('div'));
+            div.html('<a href="javascript:void(0)"></a>');
+            var a = $(div.find("a"));
+            a.text(rval ? rval[1] : '');
+            a.click(function() {
+                var pop = new openerp.web.form.FormOpenPopup(self.view);
+                pop.show_element(self.field.relation, self.value[0],self.build_context(), {readonly:true});
+            });
         };
         if (value && !(value instanceof Array)) {
             var dataset = new openerp.web.DataSetStatic(
