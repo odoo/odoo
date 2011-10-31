@@ -1,12 +1,4 @@
 -
-  In order to test the duplicate order and check duplicate details.
--
-  I duplicate order.
--
-  !python {model: purchase.requisition}: |
-    context.update({'active_id':ref('order_purchase_requisition1')})
-    self.copy(cr, uid, ref('order_purchase_requisition1'), context)
--
   In order to test to delete process on purchase requisition order.
 -
   I delete draft purchase requisition order.
