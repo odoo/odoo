@@ -144,23 +144,30 @@ class account_invoice(osv.osv):
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         """ Function that is call when the partner of the invoice is changed
         it will retrieve and set the good bank partner bank"""
-        res = super(account_invoice, self).onchange_partner_id(
-                                                                cr,
-                                                                uid,
-                                                                ids,
-                                                                type,
-                                                                partner_id,
-                                                                date_invoice,
-                                                                payment_term
-                                                              )
+
+        res = super(account_invoice, self).onchange_partner_id(cr,
+                                                               uid,
+                                                               ids,
+                                                               type,
+                                                               partner_id,
+                                                               date_invoice,
+                                                               payment_term)
         bank_id = False
         if partner_id:
-            p = self.pool.get('res.partner').browse(cr, uid, partner_id)
-            if p.bank_ids:
-                bank_id = p.bank_ids[0].id
-
-        if type in ('in_invoice', 'in_refund'):
-            res['value']['partner_bank_id'] = bank_id
+            if type in ('in_invoice', 'in_refund'):
+                p = self.pool.get('res.partner').browse(cr, uid, partner_id)
+                if p.bank_ids:
+                    bank_id = p.bank_ids[0].id
+                res['value']['partner_bank_id'] = bank_id
+            else:
+                user = self.pool.get('res.users').browse(cr, uid, uid)
+                bank_ids = user.company_id.partner_id.bank_ids
+                if bank_ids:
+                    #How to order bank ?
+                    for bank in bank_ids:
+                        if bank.my_bank:
+                            bank_id = bank.id
+                res['value']['partner_bank_id'] = bank_id
 
         if partner_bank_id != bank_id:
             to_update = self.onchange_partner_bank(cr, uid, ids, bank_id)
