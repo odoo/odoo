@@ -342,14 +342,13 @@ class product_template(osv.osv):
     def write(self, cr, uid, ids, vals, context=None, update_check=True):
         if context is None:
             context={}
-        product = self.pool.get('product.product')
         uom_obj = self.pool.get('product.uom')
-        product_uom1  = product.browse(cr, uid, ids)[0]
-        category_1 = uom_obj.browse(cr, uid, product_uom1.uom_id.id).category_id
+        product_obj = self.browse(cr, uid, ids)[0]
+        old_category = product_obj.uom_id.category_id
         if 'uom_po_id' in vals.keys():
-            category_2 = uom_obj.browse(cr, uid, vals['uom_po_id']).category_id
-            if category_1.id != category_2.id:
-                raise osv.except_osv(_('UOM categories Mismatch !'),_("You can not change the UoM/Purchase UoM category from '%s' to '%s' ! \n Old UoM And New UoM should be belongs to same category ") % (category_1.name,category_2.name,))
+            new_category = uom_obj.browse(cr, uid, vals['uom_po_id']).category_id
+            if old_category.id != new_category.id:
+                raise osv.except_osv(_('UOM categories Mismatch !'),_("You can not change the UoM/Purchase UoM category from '%s' to '%s' ! \n Old UoM And New UoM should be belongs to same category ") % (old_category.name,new_category.name,))
         res = super(product_template, self).write(cr, uid, ids, vals, context=context)
         return res
 
