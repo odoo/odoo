@@ -9,34 +9,34 @@
     supply_method: 'buy'
     purchase_requisition: True
 -
-  I create the procurement order for the product.
+  I create the procurement order for the product and after run the procurement create purchase requisition.
 -
   !python {model: product.product}: |
     import time
-    procurement = self.pool.get('make.procurement')
-    product = self.browse(cr, uid,[ref('product.product_product_hdd3')])
-    context = {'active_model': 'product.product','active_ids': [product[0].id],'active_id': product[0].id}
-    default_data = procurement.default_get(cr, uid, ['uom_id', 'warehouse_id', 'date_planned', 'product_id', 'qty'], context)
-    vals = {'uom_id': product[0].uom_id.id,'warehouse_id': ref('stock.stock_warehouse_shop0'),'qty': default_data.get('qty'),'date_planned': default_data.get('date_planned')}
-    ids = procurement.create(cr, uid, vals, context)
-    req_id = procurement.make_procurement(cr, uid, [ids], context)
+    import netsvc
+    mk_proc = self.pool.get('make.procurement')
     proc_order = self.pool.get('procurement.order')
+    pur_req = self.pool.get('purchase.requisition')
+    context = {'active_model': 'product.product','active_ids': [ref('product.product_product_hdd3')],'active_id': ref('product.product_product_hdd3')}
+    default_data = mk_proc.default_get(cr, uid, ['uom_id', 'warehouse_id', 'date_planned', 'product_id', 'qty'], context)
+    vals = {'uom_id': ref('product.product_uom_unit'),'warehouse_id': ref('stock.stock_warehouse_shop0'),'qty': default_data.get('qty'),'date_planned': default_data.get('date_planned')}
+    ids = mk_proc.create(cr, uid, vals, context)
+    req_id = mk_proc.make_procurement(cr, uid, [ids], context)
     order = proc_order.browse(cr, uid, [req_id.get('res_id')])
     assert order[0].state == "confirmed", "Procurement Order should be in Confirmed state"
-    assert order[0].product_id == product[0],"Product is not correspond in procurement order"
+    assert order[0].product_id.id == ref('product.product_product_hdd3'),"Product is not correspond in procurement order"
     assert order[0].product_qty == default_data.get('qty'),"Product's quantity is not correspond in procurement order"
-    assert order[0].product_uom == product[0].uom_id,"Product's UOM is not correspond in procurement order"
-
-    
--
-  I create the procurement order from the selected purchase order.
--
-  !python {model: purchase.order}: |
-    req_id = self.pool.get('procurement.order').action_po_assign(cr, uid, [ref('purchase.order_purchase6')], context)
-    self.wkf_confirm_order(cr, uid, [req_id], context)
--
-  I create the purchase requisition for the selected product.
--
-  !python {model: purchase.requisition}: |   
-    self.browse(cr, uid, [context.get('requisition_id')], context)
-      
+    assert order[0].product_uom.id == ref('product.product_uom_unit'),"Product's UOM is not correspond in procurement order"
+    wf_service = netsvc.LocalService("workflow")
+    for proc in order:
+      wf_service.trg_validate(uid, 'procurement.order',proc.id,'button_check', cr)
+    proc_ids = proc_order.search(cr, uid, [('id','=',req_id.get('res_id')),('state','in',['running'])])
+    proc_id = proc_order.browse(cr, uid, proc_ids)
+    assert proc_id[0].state == 'running',"Product's UOM is not correspond in procurement order"
+    if proc_id[0].requisition_id:
+      pur_req_rec = pur_req.browse(cr, uid, [proc_id[0].requisition_id.id])
+      assert pur_req_rec[0].state == 'draft',"Product's UOM is not correspond in procurement order"
+      for record in pur_req_rec[0].line_ids:
+        assert record.product_id.id == ref('product.product_product_hdd3'),"Product's UOM is not correspond in procurement order"
+        assert record.product_qty == default_data.get('qty'),"Product's UOM is not correspond in procurement order"
+        assert record.product_uom_id.id == ref('product.product_uom_unit'),"Product's UOM is not correspond in procurement order"
