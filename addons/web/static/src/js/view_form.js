@@ -2223,8 +2223,6 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
-        if (self.o2m.is_readonly)
-            return;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
@@ -2233,7 +2231,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             read_function: function() {
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
-            form_view_options: {'not_interactible_on_create':true}
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.is_readonly()
         });
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
@@ -2578,6 +2577,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
      * - read_function
      * - parent_view
      * - form_view_options
+     * - readonly
      */
     show_element: function(model, row_id, context, options) {
         this.model = model;
@@ -2617,7 +2617,13 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
+        var once = $.Deferred().then(function() {
+            if (self.options.readonly) {
+                self.view_form.on_toggle_readonly();
+            }
+        });
         this.view_form.on_loaded.add_last(function() {
+            once.resolve();
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
@@ -2626,6 +2632,9 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
                     self.stop();
                 });
             });
+            if (self.options.readonly) {
+                $nbutton.hide();
+            }
             var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
             $cbutton.click(function() {
                 self.stop();
