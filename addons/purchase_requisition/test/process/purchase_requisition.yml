@@ -1,6 +1,6 @@
 -
-  In order to test the purchase requisition module, I have to add a boolean field in product, 
-  If I checked it then it's requisition create.
+  In order to test the purchase requisition module, I have to checked a boolean field 'purchase requisition' in product, 
+  If I checked it then it's requisition will be create.
 -
   I start by Checking the product, Product must have requisition field checked.
   and Product supply method is buy and the procure method is make to order.
@@ -9,7 +9,7 @@
     supply_method: 'buy'
     purchase_requisition: True
 -
-  I create the procurement order for the product and after run the procurement create purchase requisition.
+  I create the procurement order for the product and after run that procurement for create purchase requisition.
 -
   !python {model: product.product}: |
     import time
@@ -17,6 +17,7 @@
     mk_proc = self.pool.get('make.procurement')
     proc_order = self.pool.get('procurement.order')
     pur_req = self.pool.get('purchase.requisition')
+    pur_order = self.pool.get('purchase.order')
     context = {'active_model': 'product.product','active_ids': [ref('product.product_product_hdd3')],'active_id': ref('product.product_product_hdd3')}
     default_data = mk_proc.default_get(cr, uid, ['uom_id', 'warehouse_id', 'date_planned', 'product_id', 'qty'], context)
     vals = {'uom_id': ref('product.product_uom_unit'),'warehouse_id': ref('stock.stock_warehouse_shop0'),'qty': default_data.get('qty'),'date_planned': default_data.get('date_planned')}
@@ -32,11 +33,15 @@
       wf_service.trg_validate(uid, 'procurement.order',proc.id,'button_check', cr)
     proc_ids = proc_order.search(cr, uid, [('id','=',req_id.get('res_id')),('state','in',['running'])])
     proc_id = proc_order.browse(cr, uid, proc_ids)
-    assert proc_id[0].state == 'running',"Product's UOM is not correspond in procurement order"
+    assert proc_id[0].state == 'running',"Generated Procurement should be in Running state"
     if proc_id[0].requisition_id:
+      po_id = pur_order.search(cr, uid, [('requisition_id','=',proc_id[0].requisition_id.id)])
+      po_req = pur_order.browse(cr, uid, po_id)[0].requisition_id
       pur_req_rec = pur_req.browse(cr, uid, [proc_id[0].requisition_id.id])
-      assert pur_req_rec[0].state == 'draft',"Product's UOM is not correspond in procurement order"
+      assert po_req == proc_id[0].requisition_id,"Created Requisition is not properly linked in purchase order"
+      assert pur_req_rec[0].state == 'draft',"Created Requisition should be in draft state"
       for record in pur_req_rec[0].line_ids:
-        assert record.product_id.id == ref('product.product_product_hdd3'),"Product's UOM is not correspond in procurement order"
-        assert record.product_qty == default_data.get('qty'),"Product's UOM is not correspond in procurement order"
-        assert record.product_uom_id.id == ref('product.product_uom_unit'),"Product's UOM is not correspond in procurement order"
+        assert record.product_id.id == ref('product.product_product_hdd3'),"Requisition Product is not correspond"
+        assert record.product_qty == default_data.get('qty'),"Requisition Product's quantity is not correspond"
+        assert record.product_uom_id.id == ref('product.product_uom_unit'),"Requisition Product's UOM is not correspond"
+    

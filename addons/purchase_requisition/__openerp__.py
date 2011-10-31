@@ -43,8 +43,9 @@ This new object will regroup and will allow you to easily keep track and order a
                     "security/ir.model.access.csv","purchase_requisition_sequence.xml"
     ],
     "active": False,
-    "test":[#'test/purchase_requisition_report.yml',
+    "test":[
             'test/process/purchase_requisition.yml',
+            'test/ui/onchange_events.yml',
             ],
     "installable": True,
     "certificate" : "001023264099823179629",

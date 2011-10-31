@@ -1,0 +1,23 @@
+-
+  In order to test the onchange events of purchase requisition.
+-
+  I call onchange event to change the product of purchase requisition line.
+-
+  !python {model: purchase.requisition.line}: |
+    self.onchange_product_id(cr, uid, [ref('order_purchase_requisition1')],ref('product.product_product_hdd2'), ref('product.product_uom_unit'))
+-
+  I change state of requisition in "In progress".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_in_progress(cr, uid, ref('order_purchase_requisition1'))
+-
+  I change state of requisition as "done".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_done(cr, uid, ref('order_purchase_requisition1'))
+-
+  I reset the state of requisition as "New".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_reset(cr, uid, ref('order_purchase_requisition1'))
+      
