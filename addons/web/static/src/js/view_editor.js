@@ -56,6 +56,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.view_edit_dialog.open();
         action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
+
     },
     check_attr: function(xml, tag, level) {
         var obj = new Object();
@@ -307,7 +308,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var view_xml_id;
             while(1){
                 ls = ls.prev();
-                if(($(ls).find('a').text()).search("view_id") != -1 && parseInt(ls.attr('level')) < level){
+               if((self.edit_xml_dialog.$element.find(ls).find('a').text()).search("view_id") != -1
+                     && parseInt(ls.attr('level')) < level){
                     view_id = parseInt(($(ls).find('a').text()).replace(/[^0-9]+/g,''));
                     view_xml_id = (ls.attr('id')).split('-')[1];
                     break;
@@ -342,7 +344,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     }
                     if (last_tr.length != 0 
                             && parseInt(last_tr.attr('level')) == level
-                                && ($(last_tr).find('a').text()).search("view_id") == -1) {
+                                && 
+                    (self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") == -1) {
                         _.each(list_shift, function(rec) {
                              $(last_tr).before(rec);
                         });
@@ -369,7 +372,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     var last_tr_id = (last_tr.attr('id')).split('-')[1];
                     img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
                     if (img) {
-                        this.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").attr('src', '/web/static/src/img/expand.gif');
+                        self.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").attr('src', '/web/static/src/img/expand.gif');
                         while (1) {
                             var next_tr = last_tr.next();
                             if (next_tr.attr('level') <= level || next_tr.length == 0) break;
@@ -379,7 +382,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     }
                     
                     list_shift.reverse();
-                    if(($(side.next()).find('a').text()).search("view_id") == -1){
+                    if((self.edit_xml_dialog.$element.find(side.next()).find('a').text()).search("view_id") == -1){
                         _.each(list_shift, function(rec) {
                            $(last_tr).after(rec);
                         });
@@ -444,19 +447,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                 }
                 parent = parent[parent.length-1];
-                var convert_to_utf = "";
-                var xml_serilalizer = new XMLSerializer();
-                var stream = {
-                    write : function(string)
-                    {convert_to_utf = convert_to_utf + string + "";}
-                };
-                xml_serilalizer.serializeToStream(parent, stream, "UTF-8");
-                convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
-                convert_to_utf = '<?xml version="1.0" encoding="utf-8"?>' + convert_to_utf;
-                arch.arch = convert_to_utf;
-                dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-                    dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
-                });
+                var convert_to_utf = self.xml2Str(parent);
+                if(convert_to_utf){
+                    convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
+                    convert_to_utf = '<?xml version="1.0" encoding="utf-8"?>' + convert_to_utf;
+                    arch.arch = convert_to_utf;
+                    dataset = new openerp.web.DataSet(this, 'ir.ui.view');
+                        dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
+                    });
+                }
             }
             if(obj.level <= level){
                 _.each(list_obj_xml, function(child_node){
@@ -464,6 +463,20 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
         }
+    },
+    xml2Str: function(xmlNode) {
+       try {
+          return (new XMLSerializer()).serializeToString(xmlNode);
+      }
+      catch (e) {
+         try {
+            return xmlNode.xml;
+         }
+         catch (e) {
+            return false;
+         }
+       }
+      
     },
 
     on_expand: function(expand_img){
