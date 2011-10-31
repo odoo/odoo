@@ -625,7 +625,7 @@ class purchase_order_line(osv.osv):
     
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),

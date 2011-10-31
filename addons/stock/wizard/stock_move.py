@@ -29,7 +29,7 @@ class stock_move_consume(osv.osv_memory):
 
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
-        'product_qty': fields.float('Quantity', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True)
     }

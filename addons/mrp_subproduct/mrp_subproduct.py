@@ -21,13 +21,14 @@
 
 from osv import fields
 from osv import osv
+import decimal_precision as dp
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
     _description = 'Sub Product'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
-        'product_qty': fields.float('Product Qty', required=True),
+        'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product UoM'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True),
         'bom_id': fields.many2one('mrp.bom', 'BoM'),
