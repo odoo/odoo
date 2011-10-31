@@ -301,7 +301,7 @@ class purchase_order(osv.osv):
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
-
+    # Dead code:
     def wkf_warn_buyer(self, cr, uid, ids):
         self.write(cr, uid, ids, {'state' : 'wait', 'validator' : uid})
         request = pooler.get_pool(cr.dbname).get('res.request')
