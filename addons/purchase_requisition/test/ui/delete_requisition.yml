@@ -1,0 +1,27 @@
+-
+  In order to test the duplicate order and check duplicate details.
+-
+  I duplicate order.
+-
+  !python {model: purchase.requisition}: |
+    context.update({'active_id':ref('order_purchase_requisition1')})
+    self.copy(cr, uid, ref('order_purchase_requisition1'), context)
+-
+  In order to test to delete process on purchase requisition order.
+-
+  I delete draft purchase requisition order.
+-
+  !python {model: purchase.order}: |
+    self.unlink(cr, uid, [ref("order_purchase_requisition1")])
+-
+  Now I try to cancel purchase requisition order.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_cancel(cr, uid, [ref("order_purchase_requisition1")])
+-
+  I delete cancelled purchase requisition order.
+-
+  !python {model: purchase.order}: |
+    self.unlink(cr, uid, [ref("order_purchase_requisition1")])
+
+    

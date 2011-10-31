@@ -1,0 +1,8 @@
+-
+  In order to test the cancel purchase requisition order.
+-
+  I try to cancel purchase requisition order.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_cancel(cr, uid, [ref("order_purchase_requisition1")])
+
