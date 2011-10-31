@@ -239,7 +239,7 @@ def _import(self, cursor, user, data, context=None):
 class bvr_import_wizard(osv.osv_memory):
     _name = 'bvr.import.wizard'
     _columns = {
-        'file':fields.binary('BVR File', required=True)
+        'file':fields.binary('BVR File', readonly=True)
     }
 
     def import_bvr(self, cr, uid, ids, context=None):
