@@ -1829,7 +1829,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
-        if(!(typeof(value) instanceof Array)) {
+        if (value && !(value instanceof Array)) {
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_get([value], function(data) {
                 real_set_value(data[0]);
@@ -3000,7 +3000,7 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.exte
         var real_set_value = function(rval) {
             self.$element.find('div').text(rval ? rval[1] : '');
         };
-        if(!(typeof(value) instanceof Array)) {
+        if (value && !(value instanceof Array)) {
             var dataset = new openerp.web.DataSetStatic(
                     this, this.field.relation, self.build_context());
             dataset.name_get([value], function(data) {
