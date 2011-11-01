@@ -48,7 +48,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 self.get_data();
             },
             "Close": function(){
-                $(this).dialog('destroy');
+                this.view_edit_dialog.close();
             }
         },
         });
@@ -262,7 +262,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     //todo
                 },
                 "Close": function(){
-                    $(this).dialog('destroy');
+                    this.edit_xml_dialog.close();
                 }
             }
         });
