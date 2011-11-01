@@ -21,6 +21,33 @@ var _PROPERTIES = {
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
     'view' : [],
 };
+var icons = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
+'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
+'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
+'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
+'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
+'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
+'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
+'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
+'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
+'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
+'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
+'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
+'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
+'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
+'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
+'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
+'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
+'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
+'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
+'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
+'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
+'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
+'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
+'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
+'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
+'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph',
+];
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
@@ -152,7 +179,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var tag = root.tagName.toLowerCase();
         var obj ={'child_id':[],'id':this.xml_id++,'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
         var root_object = this.check_attr(root,tag,0);
-        obj.child_id = this.xml_node_create(arch, tag, [], this.xml_id-1, [root_object], [])
+        obj.child_id = this.xml_node_create(arch, tag, [], this.xml_id-1, [root_object], []);
         return [obj];
     },
     get_data: function() {
@@ -445,6 +472,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 200,
             buttons: {
                     "Update": function(){
+                        self.on_update_node();
                     },
                     "Cancel": function(){
                         $(this).dialog('destroy');
@@ -498,6 +526,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             });
         });
         return groups;
+    },
+    on_update_node: function(){
+        //todo
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
@@ -508,10 +539,6 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     },
     render: function () {
         return QWeb.render(this.template, {widget: this});
-    },
-    start: function() {
-        this._super();
-        var self = this;
     }
 });
 
@@ -519,10 +546,6 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "view_boolean";
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
     },
     set_value: function(id,value) {
         var view_val = _.detect(this.node[0]['att_list'],function(res) {
@@ -536,10 +559,6 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         this._super(view, node);
         this.template = "view_char";
     },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-    },
     set_value: function(id,value) {
         var view_val = _.detect(this.node[0]['att_list'],function(res) {
             return _.include(res,id);
@@ -550,149 +569,96 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.node = node;
         this.template = "view_selection";
     },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-    },
     set_value: function(id,value) {
-        //ToDo
+        var view_val = _.detect(this.node[0]['att_list'],function(res) {
+            return _.include(res,id);
+        });
+        var self = this;
+        _.each(value, function(item) {
+            var select_val = view_val?(view_val[1]==item[0]?true:false):false;
+            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
+                    value:(typeof(item)=='string')?item:item[0],
+                    text:(typeof(item)=='string')?item:item[1],
+                    selected:select_val
+            }));
+        });
     }
 });
-openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
         this.registry = openerp.web.form.widgets;
-        this.template = "view_selection";
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
     },
     set_value: function(id,value) {
-        var self = this;
         value = _.keys(this.registry.map);
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                value: item,
-                text: item
-            }));
-        });
+        value.push('');
+        value.sort();
+        this._super.apply(this,[id, value]);
     }
 });
-/*openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
     },
     set_value: function(id,value) {
-        var self = this;
-        value = ;
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                value: item,
-                text: item
-            }));
-        });
-    }
-});*/
-openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.Field.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.template = "view_selection";
-    },
-    set_value: function(id,value) {
-        var self = this;
-        self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                value: 'new',
-                text: 'New Window'
-        }));
+        value = icons;
+        this._super.apply(this,[id, value]);
     }
 });
-openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
     },
     set_value: function(id,value) {
-        var self = this;
-        value = [['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                    value:item[0],
-                    text:item[1]
-            }));
-        });
+        value = [['',''],['new','New Window']];
+        this._super.apply(this,[id, value]);
     }
 });
-openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
     },
     set_value: function(id,value) {
-        var self = this;
-        value = [['0.0','Left'], ['0.5','Center'], ['1.0','Right']];
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                    value:item[0],
-                    text:item[1]
-            }));
-        });
+        value = [['',''],['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
+        this._super.apply(this,[id, value]);
     }
 });
-openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
     },
     set_value: function(id,value) {
-        var self = this;
-        value = [['save','Save Button'], ['cancel','Cancel Button'], ['open','Open Button']];
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                    value:item[0],
-                    text:item[1]
-            }));
-        });
+        value = [['',''],['0.0','Left'], ['0.5','Center'], ['1.0','Right']];
+        this._super.apply(this,[id, value]);
     }
 });
-openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
     },
     set_value: function(id,value) {
-        var self = this;
-        value = [['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
-        _.each(value, function(item) {
-            self.$element.find("tr[id="+id+"] select").append($("<option/>", {
-                    value:item[0],
-                    text:item[1]
-            }));
-        });
+        value = [['',''],['save','Save Button'], ['cancel','Cancel Button'], ['open','Open Button']];
+        this._super.apply(this,[id, value]);
     }
 });
-openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.Field.extend({
+openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "view_selection";
     },
     set_value: function(id,value) {
-        var self = this;
-        var select = self.$element.find("tr[id="+id+"] select").attr('multiple', true);
-        _.each(value, function(item) {
-            select.append($("<option/>", {
-                    value:item[0],
-                    text:item[1]
-            }));
-        });
+        value = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
+        this._super.apply(this,[id, value]);
+    }
+});
+openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
+    init: function(view, node) {
+        this._super(view, node);
+    },
+    set_value: function(id,value) {
+        this.$element.find("tr[id="+id+"] select").attr('multiple', true);
+        this._super.apply(this,[id, value]);
     }
 });
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
@@ -703,7 +669,7 @@ openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'widget' : 'openerp.web.ViewEditor.WidgetProperty',
     'groups' : 'openerp.web.ViewEditor.GroupsProperty',
     'position': 'openerp.web.ViewEditor.PositionProperty',
-    'icon': 'openerp.web.ViewEditor.FieldSelect',
+    'icon': 'openerp.web.ViewEditor.IconProperty',
     'align': 'openerp.web.ViewEditor.AlignProperty',
     'special': 'openerp.web.ViewEditor.ButtonSpecialProperty',
     'type': 'openerp.web.ViewEditor.ButtonTypeProperty',
