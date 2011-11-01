@@ -111,7 +111,7 @@ class crossovered_budget_lines(osv.osv):
     def _prac_amt(self, cr, uid, ids, context=None):
         res = {}
         result = 0.0
-        if context is None: 
+        if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             acc_ids = [x.id for x in line.general_budget_id.account_ids]
@@ -141,7 +141,7 @@ class crossovered_budget_lines(osv.osv):
 
     def _theo_amt(self, cr, uid, ids, context=None):
         res = {}
-        if context is None: 
+        if context is None:
             context = {}
         for line in self.browse(cr, uid, ids, context=context):
             today = datetime.datetime.today()
@@ -201,6 +201,22 @@ class crossovered_budget_lines(osv.osv):
         'percentage':fields.function(_perc, string='Percentage', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
+
+    def _check_budget_lines(self, cr, uid, ids, context=None):
+        current_budget_line = self.browse(cr, uid, ids, context=context)[0]
+        obj_budget_ids = self.search(cr, uid, [('general_budget_id', '=', current_budget_line.general_budget_id.id)], context=context)
+        obj_budget_ids.remove(ids[0])
+        data_budget_yr = self.browse(cr, uid, obj_budget_ids, context=context)
+
+        for old_line in data_budget_yr:
+            if old_line.general_budget_id.id == current_budget_line['general_budget_id'].id:
+                if old_line.date_from <= current_budget_line['date_from'] <= old_line.date_to or \
+                    old_line.date_from <= current_budget_line['date_to'] <= old_line.date_to:
+                    return False
+        return True
+    _constraints = [
+        (_check_budget_lines, 'Error! You can not define overlapping budget lines for the same budgetary position.',['date_from', 'date_to'])
+    ]
 
 crossovered_budget_lines()
 
