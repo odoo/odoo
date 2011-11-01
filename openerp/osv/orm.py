@@ -3808,6 +3808,7 @@ class BaseModel(object):
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
 
+        unknown_fields = updend[:]
         for table in self._inherits:
             col = self._inherits[table]
             nids = []
@@ -3820,9 +3821,16 @@ class BaseModel(object):
             for val in updend:
                 if self._inherit_fields[val][0] == table:
                     v[val] = vals[val]
+                    unknown_fields.remove(val)
             if v:
                 self.pool.get(table).write(cr, user, nids, v, context)
 
+        if unknown_fields:
+            raise except_orm(
+                _('ValidateError'),
+                _('No such field in model %s: %s.') %  (unknown_fields[0],
+                                                        self._name)
+                )
         self._validate(cr, user, ids, context)
 
         # TODO: use _order to set dest at the right position and not first node of parent
@@ -3952,7 +3960,10 @@ class BaseModel(object):
                 del vals[v]
             else:
                 if (v not in self._inherit_fields) and (v not in self._columns):
-                    del vals[v]
+                    raise except_orm(
+                        _('ValidateError'),
+                        _('No such field in model %s: %s.') % (self._name, v)
+                        )
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
