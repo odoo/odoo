@@ -260,7 +260,7 @@
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                    <filter string="Ordered Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
 
                 </group>
@@ -296,14 +296,14 @@
                     <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                      <separator orientation="vertical"/>
-                    <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
+                    <filter string="Ordered Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     <filter string="Expected Date" icon="terp-go-month" domain="[]" context="{'group_by':'minimum_planned_date'}"/>
 
                 </group>
               </search>
             </field>
         </record>
-        
+
         <record id="purchase_order_tree" model="ir.ui.view">
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
@@ -311,7 +311,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="name" string="Reference"/>
-                    <field name="date_order" string="Order Date"/>
+                    <field name="date_order" string="Ordered Date"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="location_id"/>
