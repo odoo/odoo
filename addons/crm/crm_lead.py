@@ -584,7 +584,7 @@ class crm_lead(crm_case, osv.osv):
                     'name': lead.contact_name,
                     'phone': lead.phone,
                     'mobile': lead.mobile,
-                    'email': to_email(lead.email_from)[0],
+                    'email': lead.email_from and to_email(lead.email_from)[0],
                     'fax': lead.fax,
                     'title': lead.title and lead.title.id or False,
                     'function': lead.function,
@@ -606,7 +606,6 @@ class crm_lead(crm_case, osv.osv):
             context = {}
         partner_ids = {}
         for lead in self.browse(cr, uid, ids, context=context):
-            partner_id = lead.partner_id and lead.partner_id.id or False
             if action == 'create': 
                 if not partner_id:
                     partner_id = self._lead_create_partner(cr, uid, lead, context=context)
