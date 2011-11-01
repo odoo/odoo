@@ -28,7 +28,7 @@ from project.project import task as base_project_task
 
 class project_task(osv.osv):
     _name = "project.task"
-    _inherit = ["calendar.todo", "project.task"]
+    _inherit = ["project.task", "calendar.todo"]
     _columns = {
         # force inherit from project.project_task so that 
         # calendar.todo.active is masked oute
@@ -42,10 +42,10 @@ class project_task(osv.osv):
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
     }
+    
     _defaults = {
         'state': 'draft',
     }
-
 
     def open_task(self, cr, uid, ids, context=None):
         """
@@ -109,6 +109,8 @@ class project_task(osv.osv):
                 self.write(cr, uid, [exists], val)
                 ids.append(exists)
             else:
+                #set user_id with id, needed later
+                val.update({'user_id' : uid})
                 task_id = self.create(cr, uid, val)
                 ids.append(task_id)
         return ids

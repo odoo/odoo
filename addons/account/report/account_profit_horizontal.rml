@@ -151,15 +151,15 @@
       <tr>
       	<td><para style="terp_tblheader_General_Centre">Chart of Accounts</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
-        <td><para style="terp_tblheader_General_Centre">Filter By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
+        <td><para style="terp_tblheader_General_Centre">Filter By [[ data['form']['filter']!='filter_no' and get_filter(data) ]]</para></td>
 		<td><para style="terp_tblheader_General_Centre">Display Account</para></td>
         <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
 	<tr>
 	   <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
-        <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        <td><para style="terp_default_Centre_8">[[ data['form']['filter']=='filter_no' and get_filter(data) or removeParentNode('para') ]] </para>
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ data['form']['filter']=='filter_date' or removeParentNode('blockTable') ]]
 				<tr>
 	               <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
@@ -169,7 +169,7 @@
 	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
-        	<blockTable colWidths="70.0,70.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="70.0,70.0" style="Table3">[[ data['form']['filter']=='filter_period' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_General_Centre">Start Period</para></td>
 			        <td><para style="terp_tblheader_General_Centre">End Period</para></td>
@@ -221,7 +221,7 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[ formatLang(abs(a['balance'])) ]] [[ company.currency_id.symbol ]]</font></para>
+            <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[ formatLang(abs(a['balance']), currency_obj=company.currency_id) ]]</font></para>
           </td>
           <td>
             <para style="terp_default_9">
@@ -234,7 +234,7 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font>[[ a['level1']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[(a['code1'] and a['name1']) and  formatLang(abs(a['balance1'])) or removeParentNode('font') ]] [[ company.currency_id.symbol ]]</font></para>
+            <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font') ]]</font><font>[[(a['code1'] and a['name1']) and  formatLang(abs(a['balance1']), currency_obj=company.currency_id) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>
@@ -247,7 +247,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Profit' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and  formatLang(abs(final_result()['balance'])) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Profit' and  formatLang(abs(final_result()['balance']), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9"></para>
@@ -256,7 +256,7 @@
           <para style="terp_default_Bold_9">[[ final_result()['type'] == 'Net Loss' and final_result()['type'] or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(abs(final_result()['balance'])) ]] [[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ final_result()['balance'] and final_result()['type'] == 'Net Loss' and  formatLang(abs(final_result()['balance']), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -267,13 +267,13 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr())) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_dr()), currency_obj=company.currency_id) ]]</u></para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr())) ]] [[ company.currency_id.symbol ]]</u></para>
+          <para style="terp_default_Right_9_Bold"><u>[[ formatLang(abs(sum_cr()), currency_obj=company.currency_id) ]]</u></para>
         </td>
       </tr>
     </blockTable>

@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    "name": "Long Term Project Management",
+    "name": "Long Term Planning",
     "version": "1.1",
     "author": "OpenERP SA",
     "website": "http://www.openerp.com",
@@ -49,13 +49,11 @@ Features
           'test/test_schedule_phases_case2.yml',
           'test/project_schedule_consecutive_day.yml',
           'test/project_schedule_without_wroking_hour.yml',
-          'test/schedule_phase_tasks.yml',
           'test/phase_constraint.yml',
           'test/test_schedule_tasks_case1.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
-        "wizard/project_schedule_tasks_view.xml",
         "project_long_term_view.xml",
         "project_long_term_workflow.xml",
         "wizard/project_compute_phases_view.xml",

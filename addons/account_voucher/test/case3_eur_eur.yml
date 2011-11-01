@@ -9,26 +9,12 @@
     name: !eval "'%s-01-01' %(datetime.now().year)"
     rate: 1.000000
 -
-  I create currency EUR in OpenERP for February of 1.000000 Rate
+  I modify the debtor account in order to make sure there is no currency_id linked
 -
-  !record {model: res.currency.rate, id: feb_eur}:
-    currency_id: base.EUR
-    name: !eval "'%s-02-01' %(datetime.now().year)"
-    rate: 1.000000
--
-  I create currency EUR in OpenERP for March of 1.000000 Rate
--
-  !record {model: res.currency.rate, id: mar_eur}:
-    currency_id: base.EUR
-    name: !eval "'%s-03-01' %(datetime.now().year)"
-    rate: 1.000000
--
-  I create currency EUR in OpenERP for April of 1.000000 Rate
--
-  !record {model: res.currency.rate, id: apr_eur}:
-    currency_id: base.EUR
-    name: !eval "'%s-04-01' %(datetime.now().year)"
-    rate: 1.000000
+  !python {model: account.account}: |
+    from datetime import datetime
+    ids = self.search(cr, uid, [('name', 'ilike', 'debtor')])
+    self.write(cr, uid, ids, {'currency_id': False})
 -
   I create a bank journal with EUR as currency
 -
@@ -43,12 +29,6 @@
     currency: base.EUR
     company_id: base.main_company
     view_id: account.account_journal_bank_view
--
-  I set up some accounts for currency rate expense/income in my company
--
-  !record {model: res.company, id: base.main_company}:
-    property_expense_currency_exchange: account.o_expense
-    property_income_currency_exchange: account.o_income
 -
   I create a new partner Peter Lawson.
 -
@@ -138,7 +118,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 120.00,
@@ -172,13 +152,6 @@
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0.00"
--
-  I check that currency rate difference is 0.00
--
-  !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
-    voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.currency_rate_difference == 0.00), "Currency rate difference is not 0.00"
 -
   I confirm the voucher
 -
@@ -237,7 +210,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 120.00,
@@ -271,13 +244,6 @@
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0"
--
-  I check that currency rate difference is 0.00
--
-  !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_peter0'))])
-    voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.currency_rate_difference == 0.00), "Currency rate difference is not 0"
 -
   I confirm the voucher
 -

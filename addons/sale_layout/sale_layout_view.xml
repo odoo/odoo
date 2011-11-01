@@ -28,7 +28,7 @@
                                             context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'shop':parent.shop_id,'uom':product_uom}"
                                             name="product_uom_qty"
                                             attrs="{'readonly':[('layout_type','!=','article')]}"
-                                            on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
+                                            on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"
                                             select="1"/>
                                         <field name="product_uom"
                                                required="0"
@@ -38,13 +38,13 @@
                                             name="product_packaging"
                                             attrs="{'readonly':[('layout_type','!=','article')]}"
                                             context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'shop':parent.shop_id,'uom':product_uom}"
-                                            on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
+                                            on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
                                             domain="[('product_id','=',product_id)]"
                                             groups="base.group_extended"/>
                                         <separator colspan="4" string="Manual Description" />
                                         <field name="layout_type" on_change="onchange_sale_order_line_view(layout_type)"/>
                                         <field name="sequence" string="Seq."/>
-                                        <field colspan="4" name="name" select="2" attrs="{'readonly':[('layout_type','in',('line','break'))] }"/>
+                                        <field colspan="4" name="name" required="0" select="2" attrs="{'readonly':[('layout_type','in',('line','break'))], 'required':[('layout_type','not in',['line','break'])]}"/>
                                         <field name="price_unit" select="2" attrs="{'readonly':[('layout_type','!=','article')],'required':[('layout_type','not in',['title','text','subtotal','line','break'])]}"/>
                                         <field name="discount" attrs="{'readonly':[('layout_type','!=','article')]}"/>
                                         <field name="type" attrs="{'readonly':[('layout_type','!=','article')]}"/>

@@ -77,7 +77,7 @@ class hr_expense_expense(osv.osv):
         'department_id':fields.many2one('hr.department','Department'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'state': fields.selection([
-            ('draft', 'Draft'),
+            ('draft', 'New'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
             ('invoiced', 'Invoiced'),
@@ -92,14 +92,17 @@ class hr_expense_expense(osv.osv):
         'employee_id': _employee_get,
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        emp_obj = self.pool.get('hr.employee')
         department_id = False
+        company_id = False
         if employee_id:
-            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id or False
-        return {'value':{'department_id':department_id}}
+            employee = emp_obj.browse(cr, uid, employee_id, context=context)
+            department_id = employee.department_id.id
+            company_id = employee.company_id.id
+        return {'value': {'department_id': department_id, 'company_id': company_id}}
 
     def expense_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
@@ -128,16 +131,14 @@ class hr_expense_expense(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-        res_id = res and res[1] or False,
         inv_ids = []
         for id in ids:
             wf_service.trg_validate(uid, 'hr.expense.expense', id, 'invoice', cr)
             inv_ids.append(self.browse(cr, uid, id).invoice_id.id)
         return {
             'name': _('Supplier Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'view_id': [res_id],
+            'view_mode': 'form',
+            'view_id': [res[1] if res else False],
             'res_model': 'account.invoice',
             'context': "{'type':'out_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window',
@@ -154,6 +155,7 @@ class hr_expense_expense(osv.osv):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         account_journal = self.pool.get('account.journal')
         for exp in self.browse(cr, uid, ids):
+            company_id = exp.company_id.id
             lines = []
             for l in exp.line_ids:
                 tax_id = []
@@ -163,10 +165,9 @@ class hr_expense_expense(osv.osv):
                         acc = l.product_id.categ_id.property_account_expense_categ
                     tax_id = [x.id for x in l.product_id.supplier_taxes_id]
                 else:
-                    acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category')
+                    acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company_id})
                     if not acc:
                         raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
-
                 lines.append((0, False, {
                     'name': l.name,
                     'account_id': acc.id,
@@ -191,6 +192,7 @@ class hr_expense_expense(osv.osv):
                 'partner_id': exp.employee_id.address_home_id.partner_id.id,
                 'address_invoice_id': exp.employee_id.address_home_id.id,
                 'address_contact_id': exp.employee_id.address_home_id.id,
+                'company_id': company_id,
                 'origin': exp.name,
                 'invoice_line': lines,
                 'currency_id': exp.currency_id.id,
@@ -206,7 +208,7 @@ class hr_expense_expense(osv.osv):
                 inv['journal_id']=exp.journal_id.id
                 journal = exp.journal_id
             else:
-                journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice'})
+                journal_id = invoice_obj._get_journal(cr, uid, context={'type': 'in_invoice', 'company_id': company_id})
                 if journal_id:
                     inv['journal_id'] = journal_id
                     journal = account_journal.browse(cr, uid, journal_id)
@@ -259,7 +261,7 @@ class hr_expense_line(osv.osv):
         'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
         'unit_quantity': fields.float('Quantities' ),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
-        'uom_id': fields.many2one('product.uom', 'UoM' ),
+        'uom_id': fields.many2one('product.uom', 'UoM'),
         'description': fields.text('Description'),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account'),
         'ref': fields.char('Reference', size=32),

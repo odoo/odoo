@@ -170,12 +170,12 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Budget">
-                   <group col="20" colspan="4">
+                   <group>
                        <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Budgets"/>
                        <filter string="To Approve" icon="terp-camera_test" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                        <separator orientation="vertical"/>
-                       <field name="name" select="1"/>
-                       <field name="code" select="1" />
+                       <field name="name"/>
+                       <field name="code" />
                        <field name="state"/>
                        <field name="date_from"/>
                        <field name="date_to"/>
@@ -222,13 +222,13 @@
             <field name="arch" type="xml">
                 <form string="Budget Lines">
                     <field name="crossovered_budget_id"/>
-                    <field name="analytic_account_id" select="1" groups="analytic.group_analytic_accounting"/>
-                    <field name="general_budget_id" select="1"/>
+                    <field name="analytic_account_id"/>
+                    <field name="general_budget_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="paid_date" select="1"/>
-                    <field name="planned_amount" select="1"/>
-                    <field name="practical_amount" select="1"/>
+                    <field name="paid_date"/>
+                    <field name="planned_amount"/>
+                    <field name="practical_amount"/>
                     <field name="theoritical_amount"/>
                     <field name="percentage"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>

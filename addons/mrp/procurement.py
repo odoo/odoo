@@ -100,8 +100,9 @@ class procurement_order(osv.osv):
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
-            move_obj.write(cr, uid, [res_id],
-                    {'location_id': procurement.location_id.id})
+            if res_id:
+                move_obj.write(cr, uid, [res_id],
+                        {'location_id': procurement.location_id.id})
         return res
     
 procurement_order()

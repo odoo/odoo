@@ -33,7 +33,7 @@ from osv import fields, osv
 
 class HeaderHTML(osv.osv):
     """HTML Header allows you to define HTML CSS and Page format"""
-    
+
     _name = "ir.header_webkit"
     _columns = {
         'company_id' : fields.many2one('res.company', 'Company'),
@@ -86,7 +86,7 @@ class HeaderHTML(osv.osv):
                 required=True,
                 help="Select Proper Paper size"
         )
-    }    
+    }
 HeaderHTML()
 
 class HeaderImage(osv.osv):
@@ -97,5 +97,5 @@ class HeaderImage(osv.osv):
         'img' : fields.binary('Image'),
         'name' : fields.char('Name', size=128, required =True, help="Name of Image"),
         'type' : fields.char('Type', size=32, required =True, help="Image type(png,gif,jpeg)")
-    }    
+    }
 HeaderImage()

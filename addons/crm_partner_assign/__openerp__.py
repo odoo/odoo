@@ -23,7 +23,7 @@
 {
     'name': 'Partner Geo-Localization',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Hidden',
     'complexity': "normal",
     'description': """
 This is the module used by OpenERP SA to redirect customers to its partners, based on geolocalization.

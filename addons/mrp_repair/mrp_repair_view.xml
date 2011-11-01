@@ -15,6 +15,7 @@
                 <field name="address_id"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 <field name="guarantee_limit"/>
                 <field name="state"/>
             </tree>
@@ -58,7 +59,7 @@
                                         <field name="location_id"/>
                                         <field name="location_dest_id"/>
                                         <newline/>
-                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                        <field name="type"  on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                         <group colspan="2">
                                             <field name="to_invoice"/>
                                             <field name="invoiced"/>
@@ -76,7 +77,7 @@
                                  </notebook>
                             </form>
                             <tree string="Operations" editable="bottom">
-                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit)"/>
+                                <field name="type" on_change="onchange_operation_type(type,parent.guarantee_limit,parent.company_id,context)"/>
                                 <field name="product_id" on_change="product_id_change(parent.pricelist_id,product_id,product_uom,product_uom_qty, parent.partner_id)"/>
                                 <field name='name'/>
                                 <field name="prodlot_id" />
@@ -159,6 +160,7 @@
                         <field name="picking_id"/>
                         <field name="location_id"/>
                         <field name="location_dest_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
                     </page>
                     <page string="Notes">
                         <separator colspan="4" string="Internal Notes"/>
@@ -179,7 +181,7 @@
           <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
-                  <group col='4' colspan='4'>
+                  <group>
                        <filter icon="terp-document-new" string="Quotations" domain="[('state','=','draft')]"/>
                        <filter icon="terp-check" string="Confirmed" domain="[('state','=','confirmed')]" name="current" />
                        <filter icon="terp-emblem-important" string="Ready To Repair" domain="[('state','=','ready')]"/>
@@ -192,13 +194,15 @@
                        <field name="state" />
                   </group>
                   <newline/>
-                  <group expand="0" string="Group By..." colspan="10" col="8">
+                  <group expand="0" string="Group By...">
                       <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                       <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                       <separator orientation="vertical"/>
                       <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'guarantee_limit'}" help="Guarantee limit"/>
+                      <separator orientation="vertical" groups="base.group_multi_company"/>
+                      <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                   </group>
              </search>
           </field>

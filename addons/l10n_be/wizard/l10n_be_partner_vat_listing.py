@@ -117,7 +117,8 @@ class partner_vat_list_13(osv.osv_memory):
     """ Partner Vat Listing """
     _name = "partner.vat.list_13"
     _columns = {
-        'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', required=False, help='You can remove clients/partners which you do not want to show in xml file'),
+        # TODO the referenced model has been deleted at revno 4672.1.2.
+        #'partner_ids': fields.many2many('vat.listing.clients', 'vat_partner_rel', 'vat_id', 'partner_id', 'Clients', required=False, help='You can remove clients/partners which you do not want to show in xml file'),
         'name': fields.char('File Name', size=32),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save' : fields.binary('Save File', readonly=True),
@@ -127,7 +128,8 @@ class partner_vat_list_13(osv.osv_memory):
         return context.get('partner_ids', [])
 
     _defaults={
-        'partner_ids': _get_partners
+        # TODO the referenced model has been deleted at revno 4672.1.2.
+        # 'partner_ids': _get_partners
             }
 
     def create_xml(self, cursor, user, ids, context=None):

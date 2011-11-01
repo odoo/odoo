@@ -22,7 +22,7 @@
 {
     'name': 'Project Retro planning',
     'version': '0.1',
-    'category': 'Project Management',
+    'category': 'Hidden',
     'description': """
 Changes dates according to change in project End Date.
 ======================================================

@@ -187,7 +187,7 @@
       	 <td><para style="terp_tblheader_General_Centre">Chart of Accounts</para></td>
         <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
        	<td><para style="terp_tblheader_General_Centre">Journals</para></td>
-		<td><para style="terp_tblheader_General_Centre">Filter By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
+		<td><para style="terp_tblheader_General_Centre">Filter By [[ data['form']['filter']!='filter_no' and get_filter(data) ]]</para></td>
 		<td><para style="terp_tblheader_General_Centre">Partner's</para></td>
         <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
@@ -196,8 +196,8 @@
        <td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
 		<td> <para style="terp_default_Centre_8">[[', '.join([ lt or '' for lt in get_journal(data) ]) ]] </para></td>
 
-        <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        <td><para style="terp_default_Centre_8">[[ data['form']['filter']=='filter_no' and get_filter(data) or removeParentNode('para') ]] </para>
+        	<blockTable colWidths="60.0,60.0" style="Table3">[[ data['form']['filter']=='filter_date' or removeParentNode('blockTable') ]]
 				<tr>
 	               <td><para style="terp_tblheader_General_Centre">Start Date</para></td>
 	        		<td><para style="terp_tblheader_General_Centre">End Date</para></td>
@@ -207,7 +207,7 @@
 	        		<td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
 	        	</tr>
         	</blockTable>
-        	<blockTable colWidths="60.0,60.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<blockTable colWidths="60.0,60.0" style="Table3">[[ data['form']['filter']=='filter_period' or removeParentNode('blockTable') ]]
 				<tr>
 			        <td><para style="terp_tblheader_General_Centre">Start Period</para></td>
 			        <td><para style="terp_tblheader_General_Centre">End Period</para></td>
@@ -241,16 +241,16 @@
         <td><para style="P8"></para></td>
         <td><para style="P8"><u>[[ formatLang(sum_debit()) ]]</u></para></td>
         <td><para style="P8"><u>[[ formatLang(sum_credit()) ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang((sum_debit()-sum_credit())) ]] [[ company.currency_id.symbol ]]</u></para></td>
-        <td><para style="P8"><u>[[ formatLang(sum_litige()) ]] [[ company.currency_id.symbol ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang((sum_debit()-sum_credit()), currency_obj=company.currency_id) ]]</u></para></td>
+        <td><para style="P8"><u>[[ formatLang(sum_litige(), currency_obj=company.currency_id) ]]</u></para></td>
       </tr>
       <tr>
         <td><para style="P3">[[ repeatIn(lines(), 'a') ]]<font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font><font>[[ a['ref'] ]] [[ a['type']==3 and a['code'] ]]</font></para></td>
         <td><para style="P3"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ a['name'] ]]</para></td>
         <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['debit']) ]]</para></td>
         <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['credit']) ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['balance']) ]] [[ company.currency_id.symbol ]]</para></td>
-        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['enlitige'] or 0.0) ]] [[ company.currency_id.symbol ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['balance'], currency_obj=company.currency_id) ]]</para></td>
+        <td><para style="P4"><font>[[ (a['type']==3 and setTag('para','para',{'fontName':'Helvetica-Bold'})) or removeParentNode('font') ]]</font>[[ formatLang(a['enlitige'] or 0.0, currency_obj=company.currency_id) ]]</para></td>
       </tr>
     </blockTable>
   </story>

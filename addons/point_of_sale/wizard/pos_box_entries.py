@@ -37,14 +37,13 @@ def get_journal(self, cr, uid, context=None):
 
     journal_obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
-    cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users WHERE user_id = %s ORDER BY journal_id", (uid, ))
-    j_ids = map(lambda x1: x1[0], cr.fetchall())
-    ids = journal_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
-    obj_ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', 'in', ids)], context=context)
-    res_obj = journal_obj.read(cr, uid, ids, ['journal_id'], context=context)
-    res_obj = [(r1['id']) for r1 in res_obj]
+
+    j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
+    obj_ids = statement_obj.search(cr, uid, [('state', '=', 'open'), ('user_id', '=', uid), ('journal_id', 'in', j_ids)], context=context)
     res = statement_obj.read(cr, uid, obj_ids, ['journal_id'], context=context)
     res = [(r['journal_id']) for r in res]
+    if not len(res):
+        raise osv.except_osv(_('Error !'), _('You do not have any open cash register. You must create a payment method or open a cash register.'))
     res.insert(0, ('', ''))
     return res
 
@@ -69,12 +68,11 @@ class pos_box_entries(osv.osv_memory):
 
         return res
 
-
     _columns = {
-        'name': fields.char('Description', size=32, required=True),
+        'name': fields.char('Reason', size=32, required=True),
         'journal_id': fields.selection(get_journal, "Cash Register", required=True),
         'product_id': fields.selection(_get_income_product, "Operation", required=True),
-        'amount': fields.float('Amount', digits=(16, 2)),
+        'amount': fields.float('Amount', digits=(16, 2), required=True),
         'ref': fields.char('Ref', size=32),
     }
     _defaults = {
@@ -122,9 +120,6 @@ class pos_box_entries(osv.osv_memory):
             vals['amount'] = data['amount'] or 0.0
             vals['ref'] = "%s" % (data['ref'] or '')
             vals['name'] = "%s: %s " % (product_obj.browse(cr, uid, data['product_id'], context=context).name, data['name'].decode('utf8'))
-            address_u = res_obj.browse(cr, uid, uid, context=context).address_id
-            if address_u:
-                vals['partner_id'] = address_u.partner_id and address_u.partner_id.id or None
             bank_statement.create(cr, uid, vals, context=context)
         return {}
 

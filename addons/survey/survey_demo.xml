@@ -100,7 +100,7 @@
         </record>
         <record id="survey_question_company_size_Europ" model="survey.answer">
             <field name="in_visible_answer_type">1</field>
-            <field name="answer">Europ</field>
+            <field name="answer">Europe</field>
             <field name="question_id" ref="survey_question_located" />
             <field name="sequence" eval="1"/>
         </record>
@@ -1281,6 +1281,7 @@
             <field name="responsible_id" ref="base.user_demo"/>
             <field name="max_response_limit">20</field>
             <field name="type" ref="survey_type2"/>
+            <field name="state">open</field>
             <field name="response_user">5</field>
         </record>
     </data>
@@ -2140,7 +2141,7 @@
             <field name="title">Community Survey</field>
             <field name="note">Please take a few minutes to complete this survey on the quality of service we provide. We welcome your feedback and appreciate your honesty. With your help, we hope to strengthen the bond between our clients.</field>
             <field eval="6" name="response_user"/>
-            <field name="state">draft</field>
+            <field name="state">open</field>
             <field name="responsible_id" ref="base.user_root"/>
             <field eval="1" name="send_response"/>
             <field eval="[(6,0,[])]" name="users"/>

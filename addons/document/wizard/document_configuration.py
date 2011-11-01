@@ -22,26 +22,16 @@
 from osv import osv, fields
 
 class document_configuration(osv.osv_memory):
-
     _name='document.configuration'
-    _description = 'Auto Directory Configuration'
+    _description = 'Directory Configuration'
     _inherit = 'res.config'
 
-    _columns = {
-        'sale_order' : fields.boolean('Sale Orders', help="Create virtual folders for Sale Orders and Quotations. One virtual folder will appear for each, in which the latest printed PDF document can be downloaded at any time, and where you can manage (view, add, delete) other attachments."),
-        'product' : fields.boolean('Products', help="Create virtual folders for Products. One virtual folder will appear for each product, where you can manage (view, add, delete) the files attached to the product"),
-        'project': fields.boolean('Projects', help="Create virtual folders for Projects. One virtual folder will appear for each project, where you can manage (view, add, delete) the files attached to the project"),
-    }
-
-
     def execute(self, cr, uid, ids, context=None):
-        conf_id = ids and ids[0] or False
-        conf = self.browse(cr, uid, conf_id, context=context)
         dir_pool = self.pool.get('document.directory')
         data_pool = self.pool.get('ir.model.data')
         model_pool = self.pool.get('ir.model')
         content_pool = self.pool.get('document.directory.content')
-        if conf.sale_order and self.pool.get('sale.order'):
+        if self.pool.get('sale.order'):
             # Sale order
             dir_data_id = data_pool._get_id(cr, uid, 'document', 'dir_sale_order_all')
             if dir_data_id:
@@ -90,7 +80,7 @@ class document_configuration(osv.osv_memory):
                 })
 
 
-        if conf.product and self.pool.get('product.product'):
+        if self.pool.get('product.product'):
             # Product
             dir_data_id = data_pool._get_id(cr, uid, 'document', 'dir_product')
             if dir_data_id:
@@ -104,7 +94,7 @@ class document_configuration(osv.osv_memory):
                 'ressource_type_id': mid[0],
             })
 
-        if conf.project and self.pool.get('account.analytic.account'):
+        if self.pool.get('account.analytic.account'):
             # Project
             dir_data_id = data_pool._get_id(cr, uid, 'document', 'dir_project')
             if dir_data_id:
