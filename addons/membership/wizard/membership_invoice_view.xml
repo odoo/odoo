@@ -10,7 +10,7 @@
                 <form string="Membership Invoice">
                 	<group colspan="4" >
                      	<field name="product_id" colspan="4" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
-                        <field name="member_price" colspan="4" readonly="1"/>
+                        <field name="member_price" colspan="4" />
                     </group>
                     <group colspan="4" col="6">
                         <button  icon="gtk-close" special="cancel" string="Close"/>
