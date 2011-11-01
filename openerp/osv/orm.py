@@ -3828,8 +3828,8 @@ class BaseModel(object):
         if unknown_fields:
             raise except_orm(
                 _('ValidateError'),
-                _('No such field in model %s: %s.') %  (unknown_fields[0],
-                                                        self._name)
+                _('No such field in model %s: %s.') %  (self._name,
+                                                        unknown_fields[0])
                 )
         self._validate(cr, user, ids, context)
 
