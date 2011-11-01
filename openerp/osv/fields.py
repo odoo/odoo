@@ -1249,12 +1249,20 @@ class sparse(function):
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, value, args, context=None):
         if not type(ids) == list:
-            ids = [ids] 
+            ids = [ids]
         records = obj.browse(cr, uid, ids, context=context)
         for record in records:
             # grab serialized value as object - already deserialized
             serialized = record.__getattr__(self.serialization_field)
-            serialized[field_name] = self.convert_value(obj, cr, uid, record, value, serialized.get(field_name), context=context)
+            # we have to delete the key in the json when the value is null
+            if value is None:
+                if field_name in serialized:
+                    del serialized[field_name]
+                else:
+                    # nothing to do, we dont wan't to store the key with a null value
+                    continue
+            else: 
+                serialized[field_name] = self.convert_value(obj, cr, uid, record, value, serialized.get(field_name), context=context)
             obj.write(cr, uid, ids, {self.serialization_field: serialized}, context=context)
         return True
 
