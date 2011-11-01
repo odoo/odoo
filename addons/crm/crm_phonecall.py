@@ -238,6 +238,7 @@ class crm_phonecall(crm_base, osv.osv):
         address = self.pool.get('res.partner.address')
         opportunity = self.pool.get('crm.lead')
         opportunity_dict = {}
+        default_contact = False
         for call in self.browse(cr, uid, ids, context=context):
             if not partner_id:
                 partner_id = call.partner_id and call.partner_id.id or False
