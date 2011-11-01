@@ -386,7 +386,7 @@ property or property parameter."),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning!'), _('Can not Duplicate'))
+        raise osv.except_osv(_('Warning!'), _('You cannot duplicate a calendar attendee.'))
 
     def get_ics_file(self, cr, uid, event_obj, context=None):
         """
@@ -484,6 +484,7 @@ property or property parameter."),
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -510,14 +511,15 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    tools.email_send(
+                    mail_message.schedule_with_attach(cr, uid,
                         email_from,
                         mail_to,
                         sub,
                         body,
-                        attach=attach and [('invitation.ics', attach)] or None,
+                        attachments=attach and {'invitation.ics': attach} or None,
                         subtype='html',
-                        reply_to=email_from
+                        reply_to=email_from,
+                        context=context
                     )
             return True
 
@@ -812,6 +814,7 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
+        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
@@ -893,11 +896,12 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.user_email)
                     if mail_to:
-                        tools.email_send(
+                        mail_message.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
-                            body
+                            body,
+                            context=context
                         )
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
@@ -991,17 +995,26 @@ class calendar_event(osv.osv):
         """
         
         result = {}
+        if not isinstance(ids, list):
+            ids = [ids]
+            
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
+                raise osv.except_osv(_('Warning!'), _('Interval cannot be negative'))
             if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
-            result[event] = self.compute_rule_string(datas)
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative'))
+            if datas['recurrency']:
+                result[event] = self.compute_rule_string(datas)
+            else:
+                result[event] = ""
         return result
-
+    
+      
+    
+    
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}),
@@ -1038,7 +1051,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
-        'end_type' : fields.selection([('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
+        'end_type' : fields.selection([('count', 'Number of repetitions'), ('end_date','End date')], 'Recurrence termination'),
         'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
@@ -1068,6 +1081,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
         'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),
     }
+    
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
@@ -1173,7 +1187,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         @param self: the object pointer
         @param datas: dictionary of freq and interval value.
         """
-        
         def get_week_string(freq, datas):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
@@ -1199,16 +1212,96 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             
             return (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
                              ((datas.get('end_date_new') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date_new'))) or '')
-       
+
         freq=datas.get('rrule_type')
         if freq == 'none':
             return ''
-        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
-        return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
 
+        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
+
+        return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
+    
+    def _get_empty_rrule_data(self):
+        return  {
+            'byday' : False,
+            'recurrency' : False,
+            'end_date' : False, 
+            'rrule_type' : False, 
+            'select1' : False, 
+            'interval' : 0, 
+            'count' : False, 
+            'end_type' : False, 
+            'mo' : False, 
+            'tu' : False, 
+            'we' : False, 
+            'th' : False, 
+            'fr' : False, 
+            'sa' : False, 
+            'su' : False, 
+            'exrule' : False, 
+            'day' : False, 
+            'week_list' : False
+        }
+
+    def _write_rrule(self, cr, uid, ids, field_value, rule_date=False, context=None):
+        data = self._get_empty_rrule_data()
+        
+        if field_value:
+            data['recurrency'] = True
+            for event in self.browse(cr, uid, ids, context=context):
+                rdate = rule_date or event.date
+                update_data = self._parse_rrule(field_value, dict(data), rdate)
+                data.update(update_data)
+                #parse_rrule
+                self.write(cr, uid, event.id, data, context=context)
+        
+
+    def _parse_rrule(self, rule, data, date_start):
+        day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
+        r = rrule.rrulestr(rule, dtstart=datetime.strptime(date_start, "%Y-%m-%d %H:%M:%S"))
+        
+        if r._freq > 0 and r._freq < 4:
+            data['rrule_type'] = rrule_type[r._freq]
+            
+        data['count'] = r._count
+        data['interval'] = r._interval
+        data['end_date'] = r._until and r._until.strftime("%Y-%m-%d %H:%M:%S")
+        #repeat weekly
+        if r._byweekday:
+            for i in xrange(0,7):
+                if i in r._byweekday:
+                    data[day_list[i]] = True
+            data['rrule_type'] = 'weekly'
+        #repeat monthly bynweekday ((weekday, weeknumber), )
+        if r._bynweekday: 
+            data['week_list'] = day_list[r._bynweekday[0][0]].upper()
+            data['byday'] = r._bynweekday[0][1]
+            data['select1'] = 'day'
+            data['rrule_type'] = 'monthly' 
+           
+        if r._bymonthday:
+            data['day'] = r._bymonthday[0]
+            data['select1'] = 'date'
+            data['rrule_type'] = 'monthly'
+            
+        #yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
+        if r._bymonth:
+            data['interval'] = data['interval'] * 12
+            
+        #FIXEME handle forever case
+        #end of recurrence    
+        #in case of repeat for ever that we do not support right now
+        if not (data.get('count') or data.get('end_date')):
+            data['count'] = 100
+        if data.get('count'):
+            data['end_type'] = 'count'
+        else:
+            data['end_type'] = 'end_date'  
+        return data  
 
     def remove_virtual_id(self, ids):
-        if isinstance(ids, (str, int)):
+        if isinstance(ids, (str, int, long)):
             return base_calendar_id2real_id(ids)
             
         if isinstance(ids, (list, tuple)):
@@ -1216,9 +1309,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             for id in ids:
                 res.append(base_calendar_id2real_id(id))
             return res
-                
-    def search(self, cr, uid, args, offset=0, limit=0, order=None,
-            context=None, count=False):
+
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         args_without_date = []
         start_date = False
         until_date = False
@@ -1239,7 +1331,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     if until_date:
                         continue
                     until_date = arg[2]
-        
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  0, 0, order, context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit, context=context)
@@ -1249,7 +1340,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             return res[offset:offset+limit]
         else:
             return res
-
 
     def get_edit_all(self, cr, uid, id, vals=None):
         """
@@ -1277,7 +1367,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 return date_start == split_id[1]
             except Exception:
                 return True
-  
+
+
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context = {}
@@ -1285,11 +1376,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             select = [ids]
         else:
             select = ids
+            
+       
+            
         new_ids = []
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-            
             edit_all = self.get_edit_all(cr, uid, event_id, vals=vals)
             if edit_all:
                 if self.need_to_update(event_id, vals):
@@ -1336,6 +1429,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context=context)
         vals.update(updated_vals.get('value', {}))
         if new_ids:
+            if 'rrule' in vals.keys():
+                if 'date' in vals.keys():
+                    date_to_write = vals['date']
+                else:
+                    date_to_write = False
+                self._write_rrule(cr, uid, new_ids, vals['rrule'], date_to_write, context)
+                
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
         if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
@@ -1393,13 +1493,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if fields and 'duration' not in fields:
             fields.append('duration')
 
+        real_data = super(calendar_event, self).read(cr, uid,
+                    [real_id for base_calendar_id, real_id in select],
+                    fields=fields, context=context, load=load)
+        real_data = dict(zip([x['id'] for x in real_data], real_data))
 
         for base_calendar_id, real_id in select:                
-            #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
-            res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-           
-            if not res :
-                continue
+            res = real_data[real_id].copy()
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1462,6 +1562,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
+        
+        if 'date' in vals and 'rrule' in vals and vals['rrule']:
+            update_datas = self._parse_rrule(vals['rrule'], self._get_empty_rrule_data(), vals['date'])
+            update_datas['recurrency'] = True
+            vals.update(update_datas)
 
         updated_vals = self.onchange_dates(cr, uid, [],
             vals.get('date', False),

@@ -1,0 +1,166 @@
+-
+  In order to test the purchase requisition flow,I start by creating a new product 'MOB1'
+- 
+  !record {model: product.product, id: product_product_mob1}:
+    name: MOB1
+    categ_id: product.product_category_3
+    cost_method: standard
+    mes_type: fixed
+    price_margin: 2.0
+    procure_method: make_to_stock
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
+    standard_price: 2000.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+- 
+  I create purchase requisition for MOB1 for 1 quantity.
+- 
+  !record {model: purchase.requisition, id: purchase_requisition_te0}:
+    company_id: base.main_company
+    exclusive: multiple
+    line_ids:
+      - company_id: base.main_company
+        product_id: product_product_mob1
+        product_qty: 10.0
+        product_uom_id: product.product_uom_unit
+    name: TE00009
+- 
+  Initially purchase requisition is in draft state.
+-
+  !assert {model: purchase.requisition, id: purchase_requisition_te0}:
+    - state == 'draft'  
+- 
+  Copy purchase requisition which is in draft state than confirm and Done it.
+-
+  !python {model: purchase.requisition}: |
+    copy_id = self.copy(cr, uid, ref("purchase_requisition_te0"))   
+    self.tender_cancel(cr, uid, [copy_id], context=None)
+    self.tender_reset(cr, uid, [copy_id], context=None)
+    self.tender_in_progress(cr, uid, [copy_id], context=None)
+    self.tender_done(cr, uid, [copy_id], context=None)
+- 
+  I confirm the purchase requisition for MOB1.
+- 
+  !python {model: purchase.requisition}: |
+    self.tender_in_progress(cr, uid, [ref("purchase_requisition_te0")])
+-
+  I check that the purchase requisition which was initially in the draft state has transmit to In Progress after confirm it.
+-
+  !assert {model: purchase.requisition, id: purchase_requisition_te0}:
+    - state == 'in_progress'
+- 
+  In order to create a purchase order for 'Axelor', i click on the wizard 'Request a Quotation' and create record for wizard.
+- 
+  !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
+    partner_address_id: base.res_partner_address_3000
+    partner_id: base.res_partner_desertic_hispafuentes
+- 
+  I click on 'Create Quotation' for creating PO.
+- 
+  !python {model: purchase.requisition.partner}: |
+    self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"active_model": "purchase.requisition",
+      "active_ids": [ref("purchase_requisition_te0")],"active_id": ref("purchase_requisition_te0"), })
+-
+  I confirm the purchase order of Axelor.
+-
+  !python {model: purchase.order}: |
+    purchase_id= self.search(cr, uid, [('requisition_id','=',ref("purchase_requisition_te0"))])
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")   
+    if purchase_id:
+      wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_confirm', cr)
+      wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_approve', cr)
+-
+  I check that Quotation of Axelor is Approved.
+-        
+  !python {model: purchase.order}: |
+   purchase_id= self.search(cr, uid, [('requisition_id','=',ref("purchase_requisition_te0"))])[0]
+   state=self.browse(cr,uid,purchase_id).state
+   assert (state=='approved')
+- 
+  I click on Done button
+- 
+  !python {model: purchase.requisition}: |
+    self.tender_done(cr, uid, [ref("purchase_requisition_te0")],)
+-
+  I check that after click on Done button state is in done.
+-
+  !assert {model: purchase.requisition, id: purchase_requisition_te0}:
+    - state == 'done'
+-
+  In order to test the purchase requisition flow for Requisition Type is exclusive 
+- 
+  I create purchase requisition for Requisition Type is exclusive 
+- 
+  !record {model: purchase.requisition, id: purchase_requisition_ex1}:
+    company_id: base.main_company
+    exclusive: exclusive
+    line_ids:
+      - company_id: base.main_company
+        product_id: product_product_mob1
+        product_qty: 10.0
+        product_uom_id: product.product_uom_unit
+    name: TE000010
+- 
+   I Create a First Purchase Order for the supplier 'Distrib PC'.
+- 
+  !record {model: purchase.requisition.partner, id: purchase_requisition_partner_1}:
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+- 
+  I create Quotations For supplier 'Distrib PC'.
+- 
+  !python {model: purchase.requisition.partner}: |
+    self.create_order(cr, uid, [ref("purchase_requisition_partner_1")], {"active_model": "purchase.requisition",
+      "active_ids": [ref("purchase_requisition_ex1")],"active_id": ref("purchase_requisition_ex1"), })    
+- 
+   I Create a Second Purchase Order for the supplier ASUStek.
+- 
+  !record {model: purchase.requisition.partner, id: purchase_requisition_partner_2}:
+    partner_address_id: base.res_partner_address_tang
+    partner_id: base.res_partner_asus
+- 
+  I create Quotations For supplier 'ASUStek'.
+- 
+  !python {model: purchase.requisition.partner}: |
+    self.create_order(cr, uid, [ref("purchase_requisition_partner_2")], {"active_model": "purchase.requisition",
+      "active_ids": [ref("purchase_requisition_ex1")],"active_id": ref("purchase_requisition_ex1"), })
+- 
+  I check that Initially purchase requisition is draft state.
+-
+  !assert {model: purchase.requisition, id: purchase_requisition_ex1}:
+    - state == 'draft'  
+-
+  I confirm the Second purchase order of ASUStek, than check that Quotation is Approved.
+-
+  !python {model: purchase.order}: |
+    purchase_id= self.search(cr, uid, [('partner_id','=',ref("base.res_partner_asus")),('requisition_id','=',ref("purchase_requisition_ex1"))])
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")   
+    if purchase_id:
+      wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_confirm', cr)
+      wf_service.trg_validate(uid, 'purchase.order',purchase_id[0],'purchase_approve', cr)
+    state=self.browse(cr,uid,purchase_id[0]).state
+    assert (state=='approved')
+    
+-
+  I check that Quotation of Distrib PC is cancelled.
+-        
+  !python {model: purchase.order}: |
+   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
+   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','=',ref("purchase_requisition_ex1"))])[0]
+   state=self.browse(cr,uid,purchase_id).state
+   assert (state=='cancel')
+-
+  I check that Purchase Requisition is Done.
+-
+  !assert {model: purchase.requisition, id: purchase_requisition_ex1}:
+    - state == 'done'

@@ -119,24 +119,38 @@ class share_wizard(osv.osv_memory):
             values['name'] = action.name
         return super(share_wizard,self).create(cr, uid, values, context=context)
 
+    def share_url_template(self, cr, uid, _ids, context=None):
+        # NOTE: take _ids in parameter to allow usage through browse_record objects
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
+        if base_url:
+            base_url += '/?db=%(dbname)s&login=%(login)s'
+        return base_url
+
+    def _share_root_url(self, cr, uid, ids, _fieldname, _args, context=None):
+        result = dict.fromkeys(ids, '')
+        data = dict(dbname=cr.dbname, login='')
+        for this in self.browse(cr, uid, ids, context=context):
+            result[this.id] = this.share_url_template() % data
+        return result
+
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
                 help="The action that opens the screen containing the data you wish to share."),
         'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
-        'user_type': fields.selection(_user_type_selection,'Users to share with',
+        'user_type': fields.selection(lambda s, *a, **k: s._user_type_selection(*a, **k),'Users to share with', required=True,
                      help="Select the type of user(s) you would like to share data with."),
         'new_users': fields.text("Emails"),
         'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
                                         help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
-        'share_root_url': fields.char('Share Access URL', size=512, readonly=True, tooltip='Main access page for users that are granted shared access'),
+        'share_root_url': fields.function(_share_root_url, string='Share Access URL', type='char', size=512, readonly=True,
+                                help='Main access page for users that are granted shared access'),
         'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
         'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
     }
     _defaults = {
-        'user_type' : 'new',
+        'user_type' : 'emails',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
-        'share_root_url': lambda self, cr, uid, context, *a: context.get('share_root_url') or _('Please specify "share_root_url" in context'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
         'access_mode': 'readonly',
     }
@@ -211,7 +225,7 @@ class share_wizard(osv.osv_memory):
                 del new_context[key]
 
         dataobj = self.pool.get('ir.model.data')
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
+        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut')
         shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
         action_id = self.pool.get('ir.actions.act_window').create(cr, UID_ROOT, values, new_context)
         menu_data = {'name': values['name'],
@@ -537,12 +551,11 @@ class share_wizard(osv.osv_memory):
         try:
             domain = safe_eval(wizard_data.domain)
             if domain:
-                domain_expr = expression.expression(domain)
                 for rel_field, model in fields_relations:
                     related_domain = []
                     if not rel_field: continue
                     for element in domain:
-                        if domain_expr._is_leaf(element):
+                        if expression.is_leaf(element):
                             left, operator, right = element
                             left = '%s.%s'%(rel_field, left)
                             element = left, operator, right
@@ -554,19 +567,6 @@ class share_wizard(osv.osv_memory):
             self._logger.exception('Failed to create share access')
             raise osv.except_osv(_('Sharing access could not be created'),
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
-
-    def _finish_result_lines(self, cr, uid, wizard_data, share_group_id, context=None):
-        """Perform finalization of the share, and populate the summary"""
-        share_root_url = wizard_data.share_root_url
-        format_url = '%(dbname)s' in share_root_url
-        for result in wizard_data.result_line_ids:
-                # share_root_url may contain placeholders for dbname, login and password
-                share_url = (share_root_url % \
-                                        {'login': quote_plus(result.user_id.login),
-                                         'password': '', # kept empty for security reasons
-                                         'dbname': quote_plus(cr.dbname)}) \
-                                          if format_url else share_root_url
-                result.write({'share_url': share_url}, context=context)
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
@@ -662,15 +662,6 @@ class share_wizard(osv.osv_memory):
         # C.
         self._create_indirect_sharing_rules(cr, current_user, wizard_data, group_id, obj1, context=context)
 
-        # so far, so good -> check summary results and return them
-        self._finish_result_lines(cr, uid, wizard_data, group_id, context=context)
-
-        # update share URL to make it generic
-        generic_share_url = wizard_data.share_root_url % {'dbname': cr.dbname,
-                                                          'login': '',
-                                                          'password': ''}
-        wizard_data.write({'share_root_url': generic_share_url}, context=context)
-
         # refresh wizard_data
         wizard_data = self.browse(cr, uid, ids[0], context=context)
 
@@ -692,6 +683,7 @@ class share_wizard(osv.osv_memory):
 
     def send_emails(self, cr, uid, wizard_data, context=None):
         self._logger.info('Sending share notifications by email...')
+        mail_message = self.pool.get('mail.message')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.user_email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
@@ -726,7 +718,12 @@ class share_wizard(osv.osv_memory):
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
 
-            if tools.email_send(user.user_email, [email_to], subject, body):
+            if mail_message.schedule_with_attach(cr, uid,
+                                                 user.user_email,
+                                                 [email_to],
+                                                 subject,
+                                                 body,
+                                                 model='share.wizard'):
                 emails_sent += 1
             else:
                 self._logger.warning('Failed to send share notification from %s to %s, ignored', user.user_email, email_to)
@@ -736,11 +733,20 @@ share_wizard()
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'
     _rec_name = 'user_id'
+
+
+    def _share_url(self, cr, uid, ids, _fieldname, _args, context=None):
+        result = dict.fromkeys(ids, '')
+        for this in self.browse(cr, uid, ids, context=context):
+            data = dict(dbname=cr.dbname, login=this.login)
+            result[this.id] = this.share_wizard_id.share_url_template() % data
+        return result
+
     _columns = {
         'user_id': fields.many2one('res.users', required=True, readonly=True),
         'login': fields.related('user_id', 'login', string='Login', type='char', size=64, required=True, readonly=True),
         'password': fields.char('Password', size=64, readonly=True),
-        'share_url': fields.char('Share URL', size=512, required=True),
+        'share_url': fields.function(_share_url, string='Share URL', type='char', size=512),
         'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True),
         'newly_created': fields.boolean('Newly created', readonly=True),
     }

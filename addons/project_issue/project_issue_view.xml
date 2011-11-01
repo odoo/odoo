@@ -55,8 +55,7 @@
                         <field name="name"/>
                         <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                        <field name="user_id" invisible="1" />
-                        <field name="assigned_to"/>
+                        <field name="user_id"/>                        
                         <field name="version_id" colspan="2" widget="selection"/>
                         <group colspan="2" col="4">
                             <field name="type_id" string="Resolution" />
@@ -84,9 +83,9 @@
                             <field name="description" nolabel="1" colspan="4"/>
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
-                            <field name="state" />
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
+                            <button name="case_open" string="Solve" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
@@ -97,14 +96,14 @@
                             <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
-                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                            <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
-                                    <field name="history" invisible="1"/>
+                                    <field name="email_from" invisible="1"/>
                                     <button
-                                        string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                        name="%(crm.action_crm_send_mail)d"
-                                        context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
+                                        string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                        name="%(mail.action_email_compose_message_wizard)d"
+                                        context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
@@ -113,20 +112,18 @@
                                         <field name="date"/>
                                         <field name="email_to" widget="char" size="512"/>
                                         <field name="email_cc" widget="char" size="512"/>
-                                        <field name="name" colspan="4" widget="char" size="512"/>
-                                        <field name="history" invisible="1"/>
+                                        <field name="subject" colspan="4" widget="char" size="512"/>
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
-                                                <field name="description" colspan="4" nolabel="1" height="250"/>
-                                                <button colspan="4"
-                                                    string="Reply"
-                                                    name="%(crm.action_crm_send_mail)d"
-                                                    context="{'mail':'reply', 'model': 'project.issue', 'include_original' : True}"
-                                                    icon="terp-mail-replied" type="action" />
+                                            <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                                <field name="body_text" colspan="4" nolabel="1" height="250"/>
+                                                <button colspan="4" string="Reply"
+                                                    name="%(mail.action_email_compose_message_wizard)d"
+                                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                    icon="terp-mail-replied" type="action"/>
                                             </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
+                                            <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                                 <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
@@ -142,9 +139,8 @@
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
                             <button string="Send New Email"
-                               name="%(crm.action_crm_send_mail)d"
-                               context="{'mail':'new', 'model': 'project.issue'}"
-                               icon="terp-mail-message-new" type="action" />
+                                name="%(mail.action_email_compose_message_wizard)d"
+                                icon="terp-mail-message-new" type="action"/>
                         </page>
                            <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
@@ -191,8 +187,8 @@
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
-                    <field name="assigned_to"/>
-                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
+                    <field name="user_id"/>
+                    <field name="progress" widget="progressbar"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -212,15 +208,13 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft','pending'))]" help="New, pending and to do" icon="terp-check"/>
-                        <separator orientation="vertical"/>
-                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
+                        <filter string="New" icon="terp-document-new" name="draft" domain="[('state','=','draft')]" help="New Issues"/>
+                        <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
-                        <field name="assigned_to">
-                            <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
+                        <field name="user_id">
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
                         </field>
                         <field name="project_id"/>
                         <field name="id"/>
@@ -228,7 +222,7 @@
                     <newline/>
                     <group expand="0" string="Group By..."  groups="base.group_extended">
                         <filter string="Responsible" icon="terp-personal"
-                            domain="[]" context="{'group_by':'assigned_to'}" />
+                            domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
@@ -259,12 +253,93 @@
             <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Issues" date_start="date" color="assigned_to" date_delay="duration">
+                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
                     <field name="name"/>
                     <field name="partner_id"/>
                 </calendar>
             </field>
         </record>
+
+
+    <!-- Project Issue Karban View-->
+
+    <record model="ir.ui.view" id="project_issue_kanban_view">
+        <field name="name">Project Issue Kanban</field>
+        <field name="model">project.issue</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="type_id">
+                <field name="color"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="user_email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td class="oe_kanban_title1" align="left" valign="middle">
+                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
+                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                                <field name="name"/>
+                                            </td>
+                                            <td valign="top" width="22">
+                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td>
+                                                <div class="oe_kanban_right oe_kanban_small">
+                                                    <field name="user_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title2">
+                                                    <field name="partner_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="project_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="version_id"/></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
+                                        <a string="Escalate" name="case_escalate"  icon="gtk-go-up" type="object"/>
+                                        <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
+                                    </div>
+                                    <div class="oe_kanban_right">
+                                        <a name="case_open" string="Open" states="draft,pending" type="object" icon="lead-stage-won" />
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
+                                        <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="lead-stage-lost"/>
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+
+
+
 
         # ------------------------------------------------------
         # Feature Requests
@@ -284,7 +359,7 @@
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id"/>
-                    <field name="assigned_to"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -302,17 +377,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
-                    <filter icon="terp-go-today" string="Today" separator="1"
+                    <filter icon="terp-go-today" string="Today" 
                         domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's features"/>
                     <separator orientation="vertical"/>
                     <group>
-                        <field name="name" select='1' string="Feature description"/>
-                        <field name="assigned_to" select="1"/>
-                        <field name="state" select="1">
+                        <field name="name" string="Feature description"/>
+                        <field name="user_id"/>
+                        <field name="state">
                             <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
                         </field>
-                        <field name="project_id" select="1" string="Project"/>
+                        <field name="project_id" string="Project"/>
                     </group>
                 </search>
             </field>

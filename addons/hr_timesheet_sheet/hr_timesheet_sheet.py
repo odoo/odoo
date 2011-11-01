@@ -143,57 +143,38 @@ class hr_timesheet_sheet(osv.osv):
             res[record[0]]['total_difference'] = record[3]
         return res
 
-    def _state_attendance(self, cr, uid, ids, name, args, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        result = {}
-        link_emp = {}
-        emp_ids = []
-
-        for sheet in self.browse(cr, uid, ids, context=context):
-            result[sheet.id] = 'none'
-            emp_ids2 = emp_obj.search(cr, uid,
-                    [('user_id', '=', sheet.user_id.id)], context=context)
-            if emp_ids2:
-                link_emp[emp_ids2[0]] = sheet.id
-                emp_ids.append(emp_ids2[0])
-        for emp in emp_obj.browse(cr, uid, emp_ids, context=context):
-            if emp.id in link_emp:
-                sheet_id = link_emp[emp.id]
-                result[sheet_id] = emp.state
-        return result
-
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
         ids_signin = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_in')])
         ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
 
         if len(ids_signin) != len(ids_signout):
-            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!'))
+            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain an equal number of sign ins and sign outs!'))
         return True
 
     def copy(self, cr, uid, ids, *args, **argv):
-        raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet !'))
+        raise osv.except_osv(_('Error !'), _('You cannot duplicate a timesheet!'))
 
     def create(self, cr, uid, vals, *args, **argv):
         if 'employee_id' in vals:
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign it to a user!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal, like \'Timesheet\'!'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any user defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign it to a user!'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
-                raise osv.except_osv(_('Error !'), _('You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.'))
+                raise osv.except_osv(_('Error !'), _('You cannot have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any product defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must link the employee to a product!'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error !'), _('You cannot create a timesheet for an employee that does not have any analytic journal defined !'))
+                raise osv.except_osv(_('Error !'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal!'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -245,23 +226,31 @@ class hr_timesheet_sheet(osv.osv):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
         return True
 
-    def sign(self, cr, uid, ids, typ, context=None):
-        emp_obj = self.pool.get('hr.employee')
+    def check_sign(self, cr, uid, ids, typ, context=None):
         sheet = self.browse(cr, uid, ids, context=context)[0]
-        if context is None:
-            context = {}
         if not sheet.date_current == time.strftime('%Y-%m-%d'):
             raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from an other date than today'))
-        emp_id = sheet.employee_id.id
-        context['sheet_id']=ids[0]
-        emp_obj.attendance_action_change(cr, uid, [emp_id], type=typ, context=context,)
         return True
 
+    def sign(self, cr, uid, ids, typ, context=None):
+        self.check_sign(cr, uid, ids, typ, context=context)
+        sign_obj = self.pool.get('hr.sign.in.out')
+        sheet = self.browse(cr, uid, ids, context=context)[0]
+        context['emp_id'] = [sheet.employee_id.id]
+        sign_id = sign_obj.create(cr, uid, {}, context=context)
+        methods = {'sign_in': sign_obj.si_check,
+                   'sign_out': sign_obj.so_check}
+        wizard_result = methods[typ](cr, uid, [sign_id], context=context)
+        if wizard_result.get('type', False) == 'ir.actions.act_window_close':
+            return True  # ensure we do not close the main window !
+        wizard_result['nodestroy'] = True  # do not destroy the main window !
+        return wizard_result
+
     def sign_in(self, cr, uid, ids, context=None):
-        return self.sign(cr,uid,ids,'sign_in',context=None)
+        return self.sign(cr, uid, ids, 'sign_in', context=context)
 
     def sign_out(self, cr, uid, ids, context=None):
-        return self.sign(cr,uid,ids,'sign_out',context=None)
+        return self.sign(cr, uid, ids, 'sign_out', context=context)
 
     _columns = {
         'name': fields.char('Note', size=64, select=1,
@@ -286,7 +275,7 @@ class hr_timesheet_sheet(osv.osv):
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
-        'state_attendance' : fields.function(_state_attendance, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
+        'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status', readonly=True),
         'total_attendance_day': fields.function(_total_day, string='Total Attendance', multi="_total_day"),
         'total_timesheet_day': fields.function(_total_day, string='Total Timesheet', multi="_total_day"),
         'total_difference_day': fields.function(_total_day, string='Difference', multi="_total_day"),
@@ -321,10 +310,10 @@ class hr_timesheet_sheet(osv.osv):
             return time.strftime('%Y-12-31')
         return time.strftime('%Y-%m-%d')
 
-    def _default_employee(self,cr, uid, context=None):
+    def _default_employee(self, cr, uid, context=None):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         return emp_ids and emp_ids[0] or False
-
+    
     _defaults = {
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
@@ -355,7 +344,7 @@ class hr_timesheet_sheet(osv.osv):
 
 
     _constraints = [
-        (_sheet_date, 'You can not have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
+        (_sheet_date, 'You cannot have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
         (_date_current_check, 'You must select a Current date which is in the timesheet dates !', ['date_current']),
     ]
 
@@ -377,10 +366,16 @@ class hr_timesheet_sheet(osv.osv):
         sheets = self.read(cr, uid, ids, ['state','total_attendance'], context=context)
         for sheet in sheets:
             if sheet['state'] in ('confirm', 'done'):
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which are already confirmed !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete a timesheet which is already confirmed!'))
             elif sheet['total_attendance'] <> 0.00:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
+                raise osv.except_osv(_('Invalid action !'), _('You cannot delete a timesheet which have attendance entries!'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
+
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        department_id =  False
+        if employee_id:
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
+        return {'value': {'department_id': department_id}}
 
 hr_timesheet_sheet()
 
@@ -490,7 +485,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
+        (_check_sheet_state, 'You cannot modify an entry in a Confirmed/Done timesheet !.', ['state']),
     ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -612,7 +607,7 @@ class hr_attendance(osv.osv):
         if 'sheet_id' in context:
             ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, context['sheet_id'], context=context)
             if ts.state not in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet !'))
+                raise osv.except_osv(_('Error !'), _('You cannot modify an entry in a confirmed timesheet!'))
         res = super(hr_attendance,self).create(cr, uid, vals, context=context)
         if 'sheet_id' in context:
             if context['sheet_id'] != self.browse(cr, uid, res, context=context).sheet_id.id:
@@ -768,7 +763,8 @@ class res_company(osv.osv):
     _inherit = 'res.company'
     _columns = {
         'timesheet_range': fields.selection(
-            [('day','Day'),('week','Week'),('month','Month'),('year','Year')], 'Timesheet range'),
+            [('day','Day'),('week','Week'),('month','Month')], 'Timesheet range',
+            help="Periodicity on which you validate your timesheets."),
         'timesheet_max_difference': fields.float('Timesheet allowed difference(Hours)',
             help="Allowed difference in hours between the sign in/out and the timesheet " \
                  "computation for one sheet. Set this to 0 if you do not want any control."),

@@ -1,0 +1,25 @@
+- |
+  I start by creating a new opportunity from partner.
+-
+  !record {model: crm.partner2opportunity, id: crm_partner2opportunity_id_0}:
+    name: test
+    planned_revenue: 0.0
+    partner_id:  base.res_partner_9
+    probability: 0.0
+-
+  I click on "Create Opportunity" button of this wizard.
+-
+  !python {model: crm.partner2opportunity}: |
+    fields = {
+             'name': 'test',
+             'planned_revenue': '0.0',
+             'partner_id': ref('base.res_partner_9'),
+             'probability': '0.0' 
+             }
+    self.default_get(cr, uid, fields, {"active_ids": [ref("crm_partner2opportunity_id_0")]})
+- |
+  In order to check the opportunity is created or not, I check type.
+-
+  !python {model: crm.partner2opportunity}: |
+    opportunity = self.make_opportunity(cr, uid, [ref("crm_partner2opportunity_id_0")], {"active_ids": [ref("crm_partner2opportunity_id_0")]})
+    assert True

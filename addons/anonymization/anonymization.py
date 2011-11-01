@@ -52,7 +52,7 @@ class ir_model_fields_anonymization(osv.osv):
     }
 
     _sql_constraints = [
-        ('model_id_field_id_uniq', 'unique (model_name, field_name)', _("You cannot have two records having the same model and the same field")),
+        ('model_id_field_id_uniq', 'unique (model_name, field_name)', _("You cannot have two fields with the same name on the same object!")),
     ]
 
     def _get_global_state(self, cr, uid, context=None):
@@ -239,7 +239,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         return res
 
     _columns = {
-        'name': fields.char(size='64', string='File Name'),
+        'name': fields.char(size=64, string='File Name'),
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import'),

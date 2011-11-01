@@ -61,8 +61,8 @@
                         <field name="name" select="1"/>
                         <field name="project_id" select="1"/>
                         <field domain="[('project_id','=',project_id), ('state','in', ['draft','open'])]" name="sprint_id" select="1"/>
-     					<button name="%(action_postpone_wizard)d" string="Postpone" type="action"
-							help="Postpone backlog" colspan="2"
+                        <button name="%(action_postpone_wizard)d" string="Postpone" type="action"
+                            help="Postpone backlog" colspan="2"
                          icon="gtk-convert"  attrs="{'invisible':[('state','in',['done', 'cancel'])]}"/>
                         <field name="user_id" select="1"/>
                         <field name="sequence" groups="base.group_extended"/>
@@ -129,15 +129,14 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product Backlogs">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter
                             icon="terp-check"
-                            string="Current"
+                            string="Draft"
                             name="current"
-                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','in',['draft','open','pending'])]"
-                            help="Draft, Open and Pending Backlogs"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Backlogs"/>
+                            domain="['|','&amp;',('sprint_id.date_start','&lt;=',time.strftime('%%Y-%%m-%%d')), ('sprint_id.date_stop','&gt;=',time.strftime('%%Y-%%m-%%d')), ('state','=','draft')]"
+                            help="Draft Backlogs"/>
+                        <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Backlogs"/>
                         <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Backlogs"/>
                         <separator orientation="vertical"/>
                         <filter string="Edit" icon="gtk-execute" domain="[]" context="{'set_editable':'1'}"/>
@@ -163,7 +162,7 @@
                         </field>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
+                    <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
@@ -179,7 +178,7 @@
             <field name="name">Product Backlogs</field>
             <field name="res_model">project.scrum.product.backlog</field>
             <field name="view_type">form</field>
-            <field name="context">{'search_default_current': 1,'search_default_user_id':uid,'search_default_project_id':project_id}</field>
+            <field name="context">{'search_default_current':1, 'search_default_user_id':uid,'search_default_project_id':project_id}</field>
             <field name="search_view_id" ref="view_scrum_product_backlog_search"/>
             <field name="help">The scrum agile methodology is used in software development projects. The Product Backlog is the list of features to be implemented. A product backlog can be planified in a development sprint and may be split into several tasks. The product backlog is managed by the product owner of the project.</field>
         </record>
@@ -225,7 +224,7 @@
                     <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
                     <button type="object" string="Set to Draft" name="button_draft" states="cancel,done" icon="gtk-convert"/>
                     <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" states="open,draft,close,cancel"
-                                	string="Burndown Chart" type="action" icon="gtk-print"/>
+                                    string="Burndown Chart" type="action" icon="gtk-print"/>
                 </tree>
             </field>
         </record>
@@ -274,7 +273,7 @@
                                             <separator colspan="4" string="Are there anything blocking you?"/>
                                             <field colspan="4" name="question_blocks" nolabel="1"/>
                                             <separator colspan="4" string=""/>
-                							<button name="button_send_to_master" type="object" string="Send to Scrum Master" icon="gtk-ok"/>
+                                            <button name="button_send_to_master" type="object" string="Send to Scrum Master" icon="gtk-ok"/>
                                             <button name="button_send_product_owner" type="object" string="Send to Product Owner" icon="gtk-ok"/>
                                         </page>
                                         <page string="Optional Info">
@@ -302,8 +301,8 @@
                     </notebook>
                     <group col="8" colspan="4">
                         <field name="state" readonly="1"/>
-                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d" 
-                        			string="Burndown Chart" type="action" icon="gtk-print"/>
+                        <button name="%(project_scrum.report_scrum_sprint_burndown_chart)d"
+                                    string="Burndown Chart" type="action" icon="gtk-print"/>
                         <button type="object" string="Open" name="button_open" states="draft,pending" icon="terp-camera_test"/>
                         <button type="object" string="Pending" name="button_pending" states="open" icon="gtk-media-pause"/>
                         <button type="object" string="Close" name="button_close" states="open,pending" icon="terp-dialog-close"/>
@@ -319,10 +318,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Sprints">
-                    <group col="10" colspan="4">
-                        <filter name="terp-check" icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]" help="Draft and open Sprints"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Sprints"/>
+                    <group>
+                        <filter icon="terp-check" string="New" name="current" domain="[('state','=','draft')]" help="New Sprints"/>
+                        <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="In Progress Sprints"/>
                         <filter icon="gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Sprints"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
@@ -331,7 +329,7 @@
                         <field name="date_start"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Product owner" icon="terp-personal" domain="[]" context="{'group_by':'product_owner_id'}"/>
                         <filter string="Scrum Master" icon="terp-personal" domain="[]"  context="{'group_by':'scrum_master_id'}"/>
                         <separator orientation="vertical"/>
@@ -351,7 +349,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="view_scrum_sprint_tree"/>
-            <field name="context">{"search_default_filter_current": 1}</field>
+            <field name="context">{"search_default_current": 1}</field>
             <field name="search_view_id" ref="view_scrum_sprint_search"/>
             <field name="help">The scrum agile methodology is used in software development projects. In this methodology, a sprint is a short period of time (e.g. one month) during which the team implements a list of product backlogs. The sprint review is organized when the team presents its work to the customer and product owner.</field>
         </record>
@@ -396,7 +394,9 @@
                         <field name="date"/>
                         <field name="sprint_id" domain="[('state', '=', 'open')]"/>
                         <field name="user_id"/>
-                        <button name="%(action_project_scrum_email)d"  string="Send Email" type="action" icon="terp-mail-message-new" />
+                        <button name="%(mail.action_email_compose_message_wizard)d"
+                                string="Send Email" type="action" icon="terp-mail-message-new"
+                        />
                     </group>
                     <notebook colspan="4">
                         <page string="Scrum Meeting">
@@ -427,16 +427,16 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Scrum Sprint">
-                    <group col="10" colspan="4">
+                    <group>
                         <filter name="scrum_daily" icon="terp-go-today" string="Daily" domain="[('date','=',time.strftime('%%Y-%%m-%%d'))]" help="Daily Meetings"/>
                         <separator orientation="vertical"/>
                         <field name="sprint_id">
-                            <filter icon="terp-check" string="Current" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                            <filter icon="terp-check" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
                         </field>
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="20">
+                    <group expand="0" string="Group By...">
                         <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Meeting Date"/>
@@ -587,7 +587,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/search/group[@string='Group By...']/filter[@string='Project']" position="after">
-                	<separator orientation="vertical"/>
+                    <separator orientation="vertical"/>
                     <filter string="Sprint" icon="terp-gtk-jump-to-ltr" domain="[]" context="{'group_by':'sprint_id'}"/>
                     <filter string="Backlog" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'product_backlog_id'}"/>
                 </xpath>
@@ -595,7 +595,7 @@
         </record>
 
         <act_window
-        	context="{'search_default_sprint_id': [active_id], 'default_sprint_id': active_id}"
+            context="{'search_default_sprint_id': [active_id], 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_product_backlog"
             name="Backlogs"
             res_model="project.scrum.product.backlog"
@@ -604,7 +604,7 @@
             view_type="form"/>
 
         <act_window
-        	context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1, 'default_sprint_id': active_id}"
+            context="{'search_default_sprint_id': active_id, 'search_default_user_id': uid, 'search_default_current':1, 'default_sprint_id': active_id}"
             id="act_scrum_sprint_2_project_task"
             name="Tasks"
             res_model="project.task"

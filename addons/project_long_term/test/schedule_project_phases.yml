@@ -31,28 +31,6 @@
     name: Establishing Project Feasibility
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
-
--
- Resource1
--
-  !record {model: project.resource.allocation, id: res_phase1}:
-    resource_id: project_long_term.resource_project_manager
-    phase_id: project_phase_definingclientsbasicideaofproject0
-
--
- Resource2
--
-  !record {model: project.resource.allocation, id: res_phase2}:
-    resource_id: project_long_term.resource_analyst
-    phase_id: project_phase_definingclientsbasicideaofproject0
-
--
- Resource3
--
-  !record {model: project.resource.allocation, id: res_phase3}:
-    resource_id: project_long_term.resource_technical_leader
-    phase_id: project_phase_definingclientsbasicideaofproject0
-
 -
   Create the phase task 'Develop GUI for Server Configuration'
 -
@@ -83,20 +61,6 @@
     name: Preparation of Engineering Designs
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-
--
- Resource4
--
-  !record {model: project.resource.allocation, id: res_phase4}:
-    resource_id: project_long_term.resource_developer
-    phase_id: project_phase_preparationofengineeringdesigns0
-
--
- Resource5
--
-  !record {model: project.resource.allocation, id: res_phase5}:
-    resource_id: project_long_term.resource_designer
-    phase_id: project_phase_preparationofengineeringdesigns0
 
 -
   Create the phase task 'Develop GUI for Client Configuration'
@@ -210,7 +174,7 @@
   !python {model: project.project}: |
      prj=self.browse(cr, uid, [ref("project_project_worldbanksproject0")])[0]
      for phase in prj.phase_ids:
-        if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
-     	   raise AssertionError("Tasks not scheduled")
+        if (not phase.date_start) or (not phase.date_end):
+            raise AssertionError("Tasks not scheduled")
 
 

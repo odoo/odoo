@@ -21,9 +21,9 @@
 
 
 {
-    'name': 'Subscription and recurring operations',
+    'name': 'Recurring Documents',
     'version': '1.0',
-    'category': 'Tools',
+    'category': 'Hidden',
     'description': """
 Create recurring documents.
 ===========================

@@ -40,7 +40,15 @@ class crm_lead(crm_case, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "priority,date_action,id desc"
-    _inherit = ['mailgate.thread','res.partner.address']
+    _inherit = ['mail.thread','res.partner.address']
+
+    # overridden because res.partner.address has an inconvenient name_get,
+    # especially if base_contact is installed.
+    def name_get(self, cr, user, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        return [(r['id'], tools.ustr(r[self._rec_name]))
+                    for r in self.read(cr, user, ids, [self._rec_name], context)]
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -101,8 +109,8 @@ class crm_lead(crm_case, osv.osv):
 
     def _history_search(self, cr, uid, obj, name, args, context=None):
         res = []
-        msg_obj = self.pool.get('mailgate.message')
-        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('name', args[0][1], args[0][2])], context=context)
+        msg_obj = self.pool.get('mail.message')
+        message_ids = msg_obj.search(cr, uid, [('email_from','!=',False), ('subject', args[0][1], args[0][2])], context=context)
         lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
 
         if lead_ids:
@@ -115,8 +123,8 @@ class crm_lead(crm_case, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = ''
             for msg in obj.message_ids:
-                if msg.history:
-                    res[obj.id] = msg.name
+                if msg.email_from:
+                    res[obj.id] = msg.subject
                     break
         return res
 
@@ -125,7 +133,7 @@ class crm_lead(crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
             select=True, help="Optional linked partner, usually after conversion of the lead"),
 
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'name': fields.char('Name', size=64, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
@@ -163,7 +171,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
 
 
@@ -178,6 +186,12 @@ class crm_lead(crm_case, osv.osv):
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'color': fields.integer('Color Index'),
+        'partner_address_name': fields.related('partner_address_id', 'name', type='char', string='Partner Contact Name', readonly=True),
+        'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
+
     }
 
     _defaults = {
@@ -189,6 +203,7 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'color': 0,
         #'stage_id': _get_stage_id,
     }
 
@@ -304,6 +319,21 @@ class crm_lead(crm_case, osv.osv):
             self.log(cr, uid, l.id, message)
         return res
 
+    def set_priority(self, cr, uid, ids, priority):
+        """Set lead priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set lead priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set lead priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
+
     def convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
         """
@@ -335,16 +365,14 @@ class crm_lead(crm_case, osv.osv):
             }
         return value
 
-    def message_new(self, cr, uid, msg, context=None):
-        """ Automatically calls when new email message arrives
-        """
-        mailgate_pool = self.pool.get('email.server.tools')
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically calls when new email message arrives"""
+        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        subject = msg.get('subject')  or _("No Subject")
+        body = msg.get('body_text')
 
-        subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -352,45 +380,27 @@ class crm_lead(crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
+        self.write(cr, uid, [res_id], vals, context)
+        return res_id
 
-        res = mailgate_pool.get_partner(cr, uid, msg.get('from') or msg.get_unixfrom())
-        if res:
-            vals.update(res)
-
-        res = self.create(cr, uid, vals, context)
-        attachents = msg.get('attachments', [])
-        for attactment in attachents or []:
-            data_attach = {
-                'name': attactment,
-                'datas':binascii.b2a_base64(str(attachents.get(attactment))),
-                'datas_fname': attactment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach)
-
-        return res
-
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        """
-        @param ids: List of update mail’s IDs
-        """
+    def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
+        super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
+
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
-
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
         vls = {}
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -407,12 +417,6 @@ class crm_lead(crm_case, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-        """ Send The Message
-        @param ids: List of email’s IDs
-        """
-        return True
 
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """
@@ -459,6 +463,15 @@ class crm_lead(crm_case, osv.osv):
             }
         return value
 
+
+    def unlink(self, cr, uid, ids, context=None):
+        for lead in self.browse(cr, uid, ids, context):
+            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
+                raise osv.except_osv(_('Warning !'),
+                    _('You can not delete this lead. You should better cancel it.'))
+        return super(crm_lead, self).unlink(cr, uid, ids, context)
+
+
     def write(self, cr, uid, ids, vals, context=None):
         if not context:
             context = {}
@@ -468,7 +481,8 @@ class crm_lead(crm_case, osv.osv):
 
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.history(cr, uid, ids, _("Changed Stage to: %s") % stage_obj.name, details=_("Changed Stage to: %s") % stage_obj.name)
+            text = _("Changed Stage to: %s") % stage_obj.name
+            self.message_append(cr, uid, ids, text, body_text=text, context=context)
             message=''
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or  context.get('stage_type',False)=='lead':
@@ -477,14 +491,6 @@ class crm_lead(crm_case, osv.osv):
                     message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
                 self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
-
-    def unlink(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state <> 'draft'):
-                raise osv.except_osv(_('Warning !'),
-                    _('You can not delete this lead. You should better cancel it.'))
-        return super(crm_lead, self).unlink(cr, uid, ids, context)
-
 
 crm_lead()
 

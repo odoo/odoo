@@ -89,7 +89,8 @@
                     <field name="user_id"/>
                     <field name="survey" invisible="1"/>
                     <button name="action_print_survey" string="Interview" type="object" icon="gtk-print" attrs="{'readonly':[('survey','=',False)]}"/>
-                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant', 'cur_id' :active_id}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <button name="%(survey.action_view_survey_question_message)d" string="Answer" type="action" icon="gtk-execute" context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}" attrs="{'readonly':[('survey','=',False)]}" groups="base.group_extended"/>
+                    <field name="response" invisible="1"/>
                     <newline/>
                     <field name="date_action"/>
                     <field name="title_action"/>
@@ -132,7 +133,7 @@
                         </group>
                         <separator colspan="4" string="Status"/>
                         <group col="8" colspan="4">
-                            <field name="state"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                             <button name="case_cancel" string="Refuse" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_open" string="In Progress" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_pending" string="Pending" states="open" type="object" icon="gtk-media-pause"/>
@@ -144,14 +145,14 @@
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                        </group>
-                       <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                       <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                             <tree string="History">
                                 <field name="display_text" string="History Information"/>
-                                <field name="history" invisible="1"/>
+                                <field name="email_from" invisible="1"/>
                                 <button
-                                    string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
-                                    name="%(crm.action_crm_send_mail)d"
-                                    context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
+                                    string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
+                                    name="%(mail.action_email_compose_message_wizard)d"
+                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                     icon="terp-mail-replied" type="action" />
                             </tree>
                             <form string="History">
@@ -160,20 +161,18 @@
                                     <field name="date"/>
                                     <field name="email_to" widget="char" size="512"/>
                                     <field name="email_cc" widget="char" size="512"/>
-                                    <field name="name" colspan="4" widget="char" size="512"/>
-                                    <field name="history" invisible="1"/>
+                                    <field name="subject" colspan="4" widget="char" size="512"/>
                                 </group>
                                 <notebook colspan="4">
                                     <page string="Details">
-                                        <group attrs="{'invisible': [('history', '!=', True)]}">
-                                            <field name="description" colspan="4" nolabel="1" height="250"/>
-                                            <button colspan="4"
-                                                string="Reply"
-                                                name="%(crm.action_crm_send_mail)d"
-                                                context="{'mail':'reply', 'model': 'hr.applicant', 'include_original' : True}"
-                                                icon="terp-mail-replied" type="action" />
+                                        <group attrs="{'invisible': [('email_from', '=', False)]}">
+                                            <field name="body_text" colspan="4" nolabel="1" height="250"/>
+                                            <button colspan="4" string="Reply"
+                                                name="%(mail.action_email_compose_message_wizard)d"
+                                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
+                                                icon="terp-mail-replied" type="action"/>
                                         </group>
-                                        <group attrs="{'invisible': [('history', '=', True)]}">
+                                        <group attrs="{'invisible': [('email_from', '!=', False)]}">
                                             <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                         </group>
                                     </page>
@@ -183,14 +182,13 @@
                                 </notebook>
                             </form>
                         </field>
-                         <button string="Add Internal Note"
+                        <button string="Add Internal Note"
                                 name="%(crm.action_crm_add_note)d"
                                 context="{'model': 'crm.lead' }"
                                 icon="terp-document-new" type="action" />
                         <button string="Send New Email"
-                           name="%(crm.action_crm_send_mail)d"
-                           context="{'mail':'new', 'model': 'hr.applicant'}"
-                           icon="terp-mail-message-new" type="action" />
+                            name="%(mail.action_email_compose_message_wizard)d"
+                            icon="terp-mail-message-new" type="action"/>
                  </page>
                  <page string="Notes">
                      <field name="description" nolabel="1" colspan="4"/>
@@ -220,12 +218,6 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-check" string="Current"
-                   domain="[('state','in',('draft','open'))]"
-                   help="All new and in progress jobs"
-                   name="current"
-               />
-               <separator orientation="vertical"/>
                <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
@@ -247,10 +239,10 @@
                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
                </field>
                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="20">
+                <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     <separator orientation="vertical"/>
@@ -286,7 +278,78 @@
         </field>
     </record>
 
+	<!-- hr Applicant Kanban View -->
 
+	<record model="ir.ui.view" id="hr_kanban_view_applicant">
+        <field name="name">Hr Applicants kanban</field>
+        <field name="model">hr.applicant</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="stage_id">
+                <field name="color"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="survey"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
+                            <div class="oe_kanban_box oe_kanban_color_border">
+                                <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                    <div class="oe_kanban_title1">
+                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
+                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        <field name="partner_name"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                    <table class="oe_kanban_table">
+                                        <tr>
+                                            <td>
+                                                <div class="oe_kanban_right oe_kanban_small">
+                                                    <field name="user_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title2">
+                                                    <field name="job_id"/>
+                                                    <t t-if="record.priority.raw_value == 0"></t>
+                                                    <t t-if="record.priority.raw_value == 5">(Not Good)</t>
+                                                    <t t-if="record.priority.raw_value == 4">(On Average)</t>
+                                                    <t t-if="record.priority.raw_value == 3">(Good)</t>
+                                                    <t t-if="record.priority.raw_value == 2">(Very Good)</t>
+                                                    <t t-if="record.priority.raw_value == 1">(Excellent)</t>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <field name="type_id"/>
+                                                </div>
+                                                <div class="oe_kanban_title3">
+                                                    <i><field name="date_action"/><field name="title_action"/></i>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                    <div class="oe_kanban_left">
+                                        <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        <a string="Change Color" icon="color-picker" type="color" name="color"/>
+                                        <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
+                                        <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
+                                        <a name="action_makeMeeting" type="object" string="Schedule Meeting" icon="gtk-redo" />
+                                        <a t-if="record.survey.raw_value" name="action_print_survey" type="object" string="Print Interview" icon="gtk-print" />
+                                    </div>
+                                    <div class="oe_kanban_right">
+                                        <a name="case_open" string="Mark Won" states="pending,draft" type="object" icon="lead-stage-won" />
+                                        <a name="case_pending" string="Mark Lost" states="draft,open" type="object" icon="lead-stage-lost" />
+                                    </div>
+                                    <br class="oe_kanban_clear"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     # ------------------------------------------------------
     # HR Job
     # ------------------------------------------------------

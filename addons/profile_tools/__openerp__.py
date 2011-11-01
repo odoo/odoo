@@ -21,28 +21,27 @@
 
 
 {
-    "name" : "Miscellaneous Tools",
+    "name" : "Miscellaneous Hidden",
     "version" : "1.0",
     "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
-    "category" : "Tools",
+    "category" : "Hidden",
     'complexity': "easy",
     "description": """
-Installer for extra tools like lunch, survey, idea, share, etc.
+Installer for extra Hidden like lunch, survey, idea, share, etc.
 ===============================================================
 
-Makes the Extra Tools Configuration available from where you can install
+Makes the Extra Hidden Configuration available from where you can install
 modules like share, lunch, pad, idea, survey and subscription.
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
     'update_xml': [
-        'misc_tools_installer.xml',
     ],
     'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate' : '00557100228403879621',
-    'images': ['images/config_extra_tools.jpeg'],
+    'images': ['images/config_extra_Hidden.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

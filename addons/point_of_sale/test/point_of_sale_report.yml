@@ -35,23 +35,10 @@
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
 
 -
-  In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt With Reimbursement Report
+ Create a record for the root user in pos.payment.report.user (used by the next python block).
 -
-  !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.receipt.with.remboursment').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt with reimbursement report'+format), 'wb+').write(data)
-
--
-  In order to test the PDF reports defined on a point of sale, we will print a POS Receipt Without Reimbursement Report
--
-  !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.receipt.without.remboursment').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt without reimbursement report'+format), 'wb+').write(data)
-
+  !record {model: pos.payment.report.user, id: pos_payment_report_user_1}:
+    user_id: []
 -
  Print the POS Payment Report through the wizard
 -
@@ -134,15 +121,6 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-sales_user_report'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on a Point of Sale, we will print a POS Sales User Today Report
--
-  !python {model: pos.order}: |
-    import netsvc, tools, os, time
-    data_dict = {'model':'ir.ui.menu', 'form':{'user_id':[ref('base.user_root')] }}
-    (data, format) = netsvc.LocalService('report.pos.sales.user.today').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], data_dict, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-sales_user_today_report'+format), 'wb+').write(data)
--
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Payment Report
 -
   !python {model: pos.order}: |
@@ -159,11 +137,3 @@
     (data, format) = netsvc.LocalService('report.pos.payment.report.user').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_user_report'+format), 'wb+').write(data)
--
-  In order to test the PDF reports defined on a Point of Sale, we will print a POS Today's Sales of Current User Report
--
-  !python {model: pos.order}: |
-    import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.sales.user.today.current.user').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-sales_today_current_user_report'+format), 'wb+').write(data)
