@@ -78,6 +78,17 @@ openerp.web.list_editable = function (openerp) {
             // tree/@editable takes priority on everything else if present.
             this.options.editable = data.arch.attrs.editable || this.options.editable;
             return this._super(data, grouped);
+        },
+        /**
+         * Ensures the editable list is saved (saves any pending edition if
+         * needed, or tries to)
+         *
+         * Returns a deferred to the end of the saving.
+         *
+         * @returns {$.Deferred}
+         */
+        ensure_saved: function () {
+            return this.groups.ensure_saved();
         }
     });
 
@@ -86,6 +97,18 @@ openerp.web.list_editable = function (openerp) {
         new_record: function () {
             // TODO: handle multiple children
             this.children[null].new_record();
+        },
+        /**
+         * Ensures descendant editable List instances are all saved if they have
+         * pending editions.
+         *
+         * @returns {$.Deferred}
+         */
+        ensure_saved: function () {
+            return $.when.apply(null,
+                _.invoke(
+                    _.values(this.children),
+                    'ensure_saved'));
         }
     });
 
@@ -254,9 +277,11 @@ openerp.web.list_editable = function (openerp) {
          * sibling if asked.
          *
          * @param {Boolean} [edit_next=false] should the next row become editable
+         * @returns {$.Deferred}
          */
         save_row: function (edit_next) {
-            var self = this;
+            //noinspection JSPotentiallyInvalidConstructorUsage
+            var self = this, done = $.Deferred();
             this.edition_form.do_save(function (result) {
                 if (result.created && !self.edition_id) {
                     self.records.add({id: result.result},
@@ -267,28 +292,44 @@ openerp.web.list_editable = function (openerp) {
                     next_record = self.records.at(
                             self.records.indexOf(edited_record) + 1);
 
-                self.handle_onwrite(self.edition_id);
-                self.cancel_pending_edition().then(function () {
-                    $(self).trigger('saved', [self.dataset]);
-                    if (!edit_next) {
-                        return;
-                    }
-                    if (result.created) {
-                        self.new_record();
-                        return;
-                    }
-                    var next_record_id;
-                    if (next_record) {
-                        next_record_id = next_record.get('id');
-                        self.dataset.index = _(self.dataset.ids)
-                                .indexOf(next_record_id);
-                    } else {
-                        self.dataset.index = 0;
-                        next_record_id = self.records.at(0).get('id');
-                    }
-                    self.edit_record(next_record_id);
-                });
-            }, this.options.editable === 'top');
+                $.when(
+                    self.handle_onwrite(self.edition_id),
+                    self.cancel_pending_edition().then(function () {
+                        $(self).trigger('saved', [self.dataset]);
+                        if (!edit_next) {
+                            return;
+                        }
+                        if (result.created) {
+                            self.new_record();
+                            return;
+                        }
+                        var next_record_id;
+                        if (next_record) {
+                            next_record_id = next_record.get('id');
+                            self.dataset.index = _(self.dataset.ids)
+                                    .indexOf(next_record_id);
+                        } else {
+                            self.dataset.index = 0;
+                            next_record_id = self.records.at(0).get('id');
+                        }
+                        self.edit_record(next_record_id);
+                    })).then(function () {
+                        done.resolve();
+                    });
+            }, this.options.editable === 'top').fail(function () {
+                done.reject();
+            });
+            return done.promise();
+        },
+        /**
+         * If the current list is being edited, ensures it's saved
+         */
+        ensure_saved: function () {
+            if (this.edition) {
+                return this.save_row();
+            }
+            //noinspection JSPotentiallyInvalidConstructorUsage
+            return $.Deferred().resolve().promise();
         },
         /**
          * Cancels the edition of the row for the current dataset index

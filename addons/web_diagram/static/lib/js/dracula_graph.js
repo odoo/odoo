@@ -160,13 +160,11 @@ Graph.Renderer.Raphael = function(element, graph, width, height) {
      */
     this.isDrag = false;
     this.dragger = function (e) {
-        if(e.detail < 2) {
-            this.dx = e.clientX;
-            this.dy = e.clientY;
-            selfRef.isDrag = this;
-            this.set && this.set.animate({"fill-opacity": .1}, 200) && this.set.toFront();
-            e.preventDefault && e.preventDefault();
-        }
+        this.dx = e.clientX;
+        this.dy = e.clientY;
+        selfRef.isDrag = this;
+        this.set && this.set.animate({"fill-opacity": .1}, 200);
+        e.preventDefault && e.preventDefault();
     };
 
     var d = document.getElementById(element);
@@ -378,6 +376,8 @@ Graph.Layout.Spring.prototype = {
     },
 
     layoutRepulsive: function(node1, node2) {
+        if (typeof node1 == 'undefined' || typeof node2 == 'undefined')
+            return;
         var dx = node2.layoutPosX - node1.layoutPosX;
         var dy = node2.layoutPosY - node1.layoutPosY;
         var d2 = dx * dx + dy * dy;
