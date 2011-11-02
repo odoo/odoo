@@ -148,7 +148,7 @@ class crm_phonecall(crm_base, osv.osv):
             vals = {
                     'name' : call_summary,
                     'user_id' : user_id or False,
-                    'categ_id' : categ_id.id or False,
+                    'categ_id' : categ_id or False,
                     'description' : call.description or False,
                     'date' : schedule_time,
                     'section_id' : section_id or False,
