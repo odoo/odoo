@@ -24,14 +24,31 @@ button.oe_edi_action_print img {
     height: 32px;
 }
 
+.openerp input.invalid {
+    background-color: #F66 !important;
+    border: 1px solid #D00 !important;
+    color: #000;
+}
+/* following browse-specific hacks need to be separate rules, as browsers are
+   required to ignore rules with unknown selectors. At time of writing, there
+   is no standard way to style HTML5 placeholders */
+.openerp input.invalid:-moz-placeholder {
+    color: #FFF;
+}
+.openerp input.invalid::-webkit-input-placeholder {
+    color: #FFF;
+}
+
 /** EDI Sidebar **/
 .oe_edi_sidebar_title {
     border-bottom: 1px solid #D2CFCF;
     font-weight: bold;
     font-size: 1.3em;
+    min-width: 10em;
 }
 .oe_edi_nested_block, .oe_edi_nested_block_import, .oe_edi_nested_block_pay {
     margin: 0px 40px;
+    min-width: 10em;
     display: none; /* made visible by click on parent input/label */
 }
 .oe_edi_right_top .oe_edi_nested_block label {
@@ -51,6 +68,7 @@ button.oe_edi_action_print img {
 }
 .oe_edi_import_button {
     margin: 2px 10px;
+    white-space: nowrap;
 }
 .oe_edi_small, .oe_edi_small input {
     font-size: 90%;
@@ -71,7 +89,7 @@ body {
     width: 700px;
     padding: 30px;
     padding-bottom: 50px;
-    margin: 0 auto;
+    margin: 20px auto;
     background-color: #fff;
     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
