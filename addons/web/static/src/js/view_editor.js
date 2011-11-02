@@ -56,8 +56,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
     },
-    check_attr: function(xml, tag, level) {
+    check_attr: function(xml, level) {
         var obj = {'child_id':[],'id':this.xml_id++,'level':level+1,'att_list':[],'name':""};
+        var tag = xml.tagName.toLowerCase();
         var render_name = "<" + tag;
         obj.att_list.push(tag);
         $(xml).each(function() {
@@ -101,7 +102,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var children_list = $(xml).filter(root).children();
         var parents = $(children_list[0]).parents().get();
         _.each(children_list, function (child_node) {
-            child_obj_list.push(self.check_attr(child_node,child_node.tagName.toLowerCase(),parents.length));
+            child_obj_list.push(self.check_attr(child_node,parents.length));
         });
         if (children_list.length != 0) {
             if (parents.length <= parent_list.length) {
@@ -121,7 +122,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
         var obj ={'child_id':[],'id':this.xml_id++,'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
-        var root_object = this.check_attr(root,tag,0);
+        var root_object = this.check_attr(root,0);
         obj.child_id = this.xml_node_create(arch, tag, [], this.xml_id-1, [root_object], [])
         return [obj];
     },
@@ -326,11 +327,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         cur_tr = prev_tr;
                     }
                     if (img) {
+                    self.edit_xml_dialog.$element.find("img[id='parentimg-" + id_tr + "']").
+                                                        attr('src', '/web/static/src/img/expand.gif');
                         while (1) {
                             next_tr = side.next();
                             if ( parseInt(next_tr.attr('level')) <= level || next_tr.length == 0) {
                                 break;
                             } else {
+                                next_tr.hide();
                                 list_shift.push(next_tr);
                                 side = next_tr;
                             }
@@ -384,7 +388,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                        $(last_tr).after(rec);
                     });
                     self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level, "down");
-
                 }
                 break;
             }
@@ -399,7 +402,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         if(($(arch.arch).filter("data")).length != 0 && view_xml_id != 0){
             var check_list = _.flatten(obj[0].child_id[0].att_list);
             arch.arch = _.detect($(arch.arch).children(), function(xml_child){
-                var temp_obj = self.check_attr(xml_child, xml_child.tagName.toLowerCase());
+                var temp_obj = self.check_attr(xml_child);
                 var main_list = _.flatten(temp_obj.att_list);
                 check_list = _.uniq(check_list);
                 var insert = _.intersection(main_list,check_list);
@@ -473,7 +476,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             return false;
          }
        }
-      
     },
 
     on_expand: function(expand_img){
@@ -499,6 +501,5 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             tr.show();
         });
     }
-
 });
 };
