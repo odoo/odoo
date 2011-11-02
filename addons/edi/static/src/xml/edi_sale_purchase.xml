@@ -116,16 +116,38 @@
 </div>
 </t>
 <t t-name="Edi.sale.order.sidebar">
-    <t t-if="doc">
+    <t t-if="doc.company_address.paypal_account || doc.company_address.bank_ids">
         <p class="oe_edi_sidebar_title">Pay Online</p>
-
-        <input type="radio" id="oe_edi_pay_paypal" name="oe_edi_invoice_rd_pay" value="paypal"/>
-        <label for="oe_edi_pay_paypal">Paypal</label>
-        <a href="#"><img src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/></a>
-        <br/>
-
-        <input type="radio" id="oe_edi_pay_bank" name="oe_edi_invoice_rd_pay" value="bank"/>
-        <label for="oe_edi_pay_paypal">Bank wire Transfer</label>
+        <t t-if="doc.company_address.paypal_account">
+            <div class="oe_edi_option">
+                <input type="radio" id="oe_edi_paypal" name="oe_edi_pay" class="oe_edi_pay_choice"/>
+                <label for="oe_edi_paypal" id="oe_edi_paypal" class="oe_edi_pay_choice_label">Paypal</label>
+            </div>
+            <p class="oe_edi_nested_block_pay oe_edi_paypal_nested">
+                You may directly pay this order online via Paypal's secure payment gateway:<br/>
+                <a t-att-href="widget.get_paypal_url('Sale Order','name')" target="_new">
+                    <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+                </a>
+            </p>
+        </t>
+        <t t-if="doc.company_address.bank_ids">
+            <div class="oe_edi_option">
+                <input type="radio" id="oe_edi_pay_wire" name="oe_edi_pay" class="oe_edi_pay_choice"/>
+                <label for="oe_edi_pay_wire" id="oe_edi_pay_wire" class="oe_edi_pay_choice_label">Bank Wire Transfer</label>
+            </div>
+            <p class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
+                Please transfer <strong><t t-esc="_.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></strong> to
+                <strong><t t-esc="doc.company_id[1]"/></strong> (postal address on the order header)
+                 using one of the following bank accounts. Be sure to mention the document
+                 reference <strong><t t-esc="doc.name"/></strong> on the transfer:
+                 <br/><br/>
+            </p>
+            <ul class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
+            <t t-foreach="doc.company_address.bank_ids" t-as="bank_info">
+                <li><t t-esc="bank_info[1]"/></li>
+            </t>
+            </ul>
+        </t>
     </t>
 </t>
 <t t-name="Edi.purchase.order.content">
