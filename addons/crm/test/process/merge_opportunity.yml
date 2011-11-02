@@ -19,7 +19,15 @@
   !python {model: crm.lead}: |
     opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
     self.merge_opportunity(cr, uid, opportunity_ids, context=context)
-
+-
+  I check for merged opportunities for customer.
+-
+  !python {model: crm.lead}: |
+    merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
+    assert merge_id, 'Fail to create Merge opportunity'
+    merge_data = self.browse(cr, uid, merge_id)[0]
+    assert merge_data.type == 'opportunity', 'Merged opportunity type not change!'
+    assert merge_data.partner_id.id == ref("base.res_partner_9"), 'Partner missmatch!'
 -
   Now I schedule another phonecall to customer after merged.
 -
@@ -27,13 +35,11 @@
     context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_case_phone06")]})
     res_id = self.create(cr, uid, {'name': "vos chances sont fusionnés en un seul"}, context=context)
     self.action_schedule(cr, uid, [res_id], context=context)
-
 - 
   I schedule Meeting on this phonecall.
 -
    !python {model: crm.phonecall}: |
      self.action_make_meeting(cr, uid, [ref("crm.crm_case_phone06")])
-
 -
   I setting Phone call to Held (Done).
 -
