@@ -33,7 +33,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 radio:true
             },
         };
-        var action_manager = new openerp.web.ActionManager(this);
         this.view_edit_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'ViewEditor',
@@ -52,28 +51,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
         },
         });
-        this.view_edit_dialog.start();
-        this.view_edit_dialog.open();
+        this.view_edit_dialog.start().open();
+        var action_manager = new openerp.web.ActionManager(this);
         action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
-
     },
     check_attr: function(xml, tag, level) {
-        var obj = new Object();
-        obj.child_id = [];
-        obj.id = this.xml_id++;
-        obj.level = level+1;
+        var obj = {'child_id':[],'id':this.xml_id++,'level':level+1,'att_list':[],'name':""};
         var render_name = "<" + tag;
-        obj.att_list = [];
         obj.att_list.push(tag);
         $(xml).each(function() {
             _.each(this.attributes, function(attrs){
             if (tag != 'button') {
                 if (attrs.nodeName == "string" || attrs.nodeName == "name" || attrs.nodeName == "index") {
-                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ; }
+                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ;}
             } else {
                 if (attrs.nodeName == "name") {
-                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"'; }
+                render_name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';}
             }
             obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
             });
@@ -368,6 +362,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 else {
                     last_tr = cur_tr.next();
                 }
+                if((self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") != -1){
+                    return;
+                }
                 if (last_tr.length != 0 &&  parseInt(last_tr.attr('level')) == level) {
                     var last_tr_id = (last_tr.attr('id')).split('-')[1];
                     img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
@@ -383,12 +380,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     }
                     
                     list_shift.reverse();
-                    if((self.edit_xml_dialog.$element.find(side.next()).find('a').text()).search("view_id") == -1){
-                        _.each(list_shift, function(rec) {
-                           $(last_tr).after(rec);
-                        });
-                        self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level, "down");
-                    }
+                    _.each(list_shift, function(rec) {
+                       $(last_tr).after(rec);
+                    });
+                    self.save_move_arch(one_object, view_id, view_xml_id, id_tr, level, "down");
+
                 }
                 break;
             }
