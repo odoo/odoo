@@ -280,7 +280,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             'data': one_object['main_object'],
         }));
         this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
-            $("tr[id^='viewedit-']").removeClass('ui-selected');
+            self.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
             $(this).addClass('ui-selected');
         });
         this.edit_xml_dialog.$element.find("img[id^='parentimg-']").click(function() {
@@ -372,7 +372,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     var last_tr_id = (last_tr.attr('id')).split('-')[1];
                     img = last_tr.find("img[id='parentimg-" + last_tr_id + "']").attr('src');
                     if (img) {
-                        self.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").attr('src', '/web/static/src/img/expand.gif');
+                        self.edit_xml_dialog.$element.find("img[id='parentimg-" + last_tr_id + "']").
+                                                        attr('src', '/web/static/src/img/expand.gif');
                         while (1) {
                             var next_tr = last_tr.next();
                             if (next_tr.attr('level') <= level || next_tr.length == 0) break;
