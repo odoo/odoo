@@ -10,7 +10,7 @@
 
 		<record id="order_purchase_requisition1" model="purchase.requisition">
             <field name="user_id" model="res.users"/>
-            <field name="exclusive">multiple</field>
+            <field name="exclusive">exclusive</field>
             <field name="date_start" eval="time.strftime('%Y/%m/%d %H:%M:%S')"/>
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
 		</record>
@@ -23,6 +23,46 @@
             <field name="product_uom_id" model="product.uom" search="[]"/>
             <field name="product_qty">5</field>
         </record>
+
+        <!--Resource: purchase.order-->
+
+        <record id="requisition_order1" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="partner_address_id" ref="base.res_partner_address_7"/>
+            <field name="requisition_id" ref="order_purchase_requisition1"/>
+        </record>
+               
+        <record id="requisition_order2" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_vickingdirect0"/>
+            <field name="partner_address_id" ref="base.res_partner_address_brussels0"/>
+            <field name="requisition_id" ref="order_purchase_requisition1"/>
+        </record>
+
+        <!--Resource: purchase.order.line-->
+
+        <record id="line9_purchase" model="purchase.order.line">
+            <field name="order_id" ref="requisition_order1"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[CPU1] Processor AMD Athlon XP 1800+</field>
+            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">60</field>
+            <field name="product_qty">3</field>
+        </record>
+
+        <record id="line10_purchase" model="purchase.order.line">
+            <field name="order_id" ref="requisition_order2"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[CPU3] Processor AMD Athlon XP 2200+</field>
+            <field name="product_id" ref="product.product_product_cpu3"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">50</field>
+            <field name="product_qty">13</field>
+        </record>        
 
 
     </data>

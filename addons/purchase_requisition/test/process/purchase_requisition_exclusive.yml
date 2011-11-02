@@ -1,0 +1,38 @@
+-  
+  Create two PO on based of one tender,
+  than confirm any one PO the second PO automatically goes in to cancel state.
+  order_purchase_requisition1
+-
+  In order to test the exclusive type requisition, I have to create two differ purchase order in one requisition [Tender]
+-
+  I start by Checking the product, Product must have requisition field checked. 
+-
+  !record {model: product.product, id: product.product_product_cpu1}:
+    purchase_requisition: True
+-
+  Checking requisition field for another product. 
+-
+  !record {model: product.product, id: product.product_product_cpu3}:
+    purchase_requisition: True
+-
+  Now check that purchase order's product must have requisition field checked.
+-
+  !python {model: purchase.order}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    pur_order = self.pool.get('purchase.order')
+    ids = pur_order.search(cr, uid, [('requisition_id','=',ref('order_purchase_requisition1'))])
+    po_id = pur_order.browse(cr, uid, ids)
+    for po in po_id:
+      for line in po.order_line:
+        if line.product_id.purchase_requisition == False:
+          assert line.product_id.purchase_requisition == True, "Purchase Order's product must have requisition field checked"
+    po_confirm = po_id[0].id
+    wf_service.trg_validate(uid, 'purchase.order',po_confirm,'purchase_confirm', cr)
+    assert po_id[0].state == 'approved',"After confirm a purchase order it should be in confirm state"
+    assert po_id[1].state == 'cancel',"After confirmed a purchase order form the this requisition the second purchase order should be automatically goes in to cancelled state"
+
+
+
+
+  
