@@ -5,4 +5,63 @@
 -
   !python {model: purchase.requisition}: |
     self.tender_cancel(cr, uid, [ref("order_purchase_requisition1")])
-
+-
+  I check that purchase requisition order is cancelled.
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'cancel'
+-
+  I change state of requisition in "In progress".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_in_progress(cr, uid, ref('order_purchase_requisition1'))
+-
+  I check that purchase requisition order is "In progress".
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'in_progress'
+-
+  I try to cancel "In progress" purchase requisition order.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_cancel(cr, uid, [ref("order_purchase_requisition1")])
+-
+  I check that purchase requisition order is cancelled.
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'cancel'
+-
+  I reset the state of requisition as "New".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_reset(cr, uid, ref('order_purchase_requisition1'))
+-
+  I check that purchase requisition order is New.
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'draft'
+-
+  I change state of requisition as "done".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_done(cr, uid, ref('order_purchase_requisition1'))
+-
+  I check that purchase requisition order is Done.
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'done'
+-
+  I try to cancel 'Done' purchase requisition order.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_cancel(cr, uid, [ref("order_purchase_requisition1")])
+-
+  I check that purchase requisition order is cancelled.
+-
+  !assert {model: purchase.requisition, id: order_purchase_requisition1}:
+    - state == 'cancel'
+-
+  I reset the state of requisition as "New".
+-
+  !python {model: purchase.requisition}: |
+    self.tender_reset(cr, uid, ref('order_purchase_requisition1'))    
