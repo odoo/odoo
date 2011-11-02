@@ -1412,7 +1412,7 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, jsonp):
+    def detect_data(self, req, csvfile, csvsep=',', csvdel='"', csvcode='utf-8', jsonp='callback'):
         try:
             data = list(csv.reader(
                 csvfile, quotechar=str(csvdel), delimiter=str(csvsep)))

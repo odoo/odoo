@@ -29,11 +29,11 @@ openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Not
     warn: function(title, text) {
         this.$element.notify('create', 'oe_notification_alert', {
             title: title,
-            text: text,
+            text: text
         }, {
-            expires: false,
+            expires: false
         });
-    },
+    }
 
 });
 
@@ -195,10 +195,20 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.count = 0;
+        this.blocked_ui = false;
         this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
         this.session.on_rpc_response.add_last(this.on_rpc_event, -1);
     },
     on_rpc_event : function(increment) {
+        var self = this;
+        if (!this.count && increment === 1) {
+            // Block UI after 3s
+            this.long_running_timer = setTimeout(function () {
+                self.blocked_ui = true;
+                $.blockUI();
+            }, 3000);
+        }
+
         this.count += increment;
         if (this.count) {
             //this.$element.html(QWeb.render("Loading", {}));
@@ -206,6 +216,12 @@ openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading#
             this.$element.show();
             this.widget_parent.$element.addClass('loading');
         } else {
+            clearTimeout(this.long_running_timer);
+            // Don't unblock if blocked by somebody else
+            if (self.blocked_ui) {
+                this.blocked_ui = false;
+                $.unblockUI();
+            }
             this.$element.fadeOut();
             this.widget_parent.$element.removeClass('loading');
         }
@@ -343,7 +359,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 self.rpc("/web/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
                         $.unblockUI();
@@ -392,7 +408,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
             .html(QWeb.render("BackupDB", self))
             .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 self.session.get_file({
                     form: form,
                     error: function (body) {
@@ -413,7 +429,7 @@ openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database
 
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+                $.blockUI();
                 $(form).ajaxSubmit({
                     url: '/web/database/restore',
                     type: 'POST',

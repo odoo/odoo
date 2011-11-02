@@ -11,7 +11,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         // whether the column headers should be displayed
         'header': true,
         // display addition button, with that label
-        'addable': _t("New"),
+        'addable': _t("Create"),
         // whether the list view can be sorted, note that once a view has been
         // sorted it can not be reordered anymore
         'sortable': true,
@@ -201,8 +201,15 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.setup_columns(this.fields_view.fields, grouped);
 
         this.$element.html(QWeb.render("ListView", this));
-
         // Head hook
+        this.$element.find('.all-record-selector').click(function(){
+            self.$element.find('.oe-record-selector input').prop('checked',
+                self.$element.find('.all-record-selector').prop('checked')  || false);
+            var selection = self.groups.get_selection();
+            $(self.groups).trigger(
+                'selected', [selection.ids, selection.records]);
+        });
+
         this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
@@ -424,10 +431,13 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     },
     /**
      * re-renders the content of the list view
+     *
+     * @returns {$.Deferred} promise to content reloading
      */
     reload_content: function () {
         var self = this;
         this.records.reset();
+        var reloaded = $.Deferred();
         this.$element.find('.oe-listview-content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
@@ -438,7 +448,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
                     }
                 }
                 self.compute_aggregates();
+                reloaded.resolve();
             }));
+        return reloaded.promise();
     },
     /**
      * Handler for the result of eval_domain_and_context, actually perform the
@@ -512,6 +524,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
+
+        var c = new openerp.web.CompoundContext();
+        c.set_eval_context(_.extend({
+            active_id: id,
+            active_ids: [id],
+            active_model: this.dataset.model
+        }, this.records.get(id).toContext()));
+        if (action.context) {
+            c.add(action.context);
+        }
+        action.context = c;
         this.do_execute_action(action, this.dataset, id, callback);
     },
     /**
@@ -1201,6 +1224,10 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
         var options = { offset: page * limit, limit: limit };
         //TODO xmo: investigate why we need to put the setTimeout
         setTimeout(function() {dataset.read_slice(fields, options , function (records) {
+            // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
+            if (self.records.length) {
+                self.records.reset(null, {silent: true});
+            }
             if (!self.datagroup.openable) {
                 view.configure_pager(dataset);
             } else {
@@ -1430,6 +1457,25 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
         }
 
         return {data: form_data};
+    },
+    /**
+     * Converts the current record to a format expected by context evaluations
+     * (identical to record.attributes, except m2o fields are their integer
+     * value rather than a pair)
+     */
+    toContext: function () {
+        var output = {}, attrs = this.attributes;
+        for(var k in attrs) {
+            var val = attrs[k];
+            if (typeof val !== 'object') {
+                output[k] = val;
+            } else if (val instanceof Array) {
+                output[k] = val[0];
+            } else {
+                throw new Error("Can't convert value " + val + " to context");
+            }
+        }
+        return output;
     }
 });
 Record.include(Events);
@@ -1541,7 +1587,8 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * @param {Array} [records]
      * @returns this
      */
-    reset: function (records) {
+    reset: function (records, options) {
+        options = options || {};
         _(this._proxies).each(function (proxy) {
             proxy.reset();
         });
@@ -1552,7 +1599,9 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
         if (records) {
             this.add(records);
         }
-        this.trigger('reset', this);
+        if (!options.silent) {
+            this.trigger('reset', this);
+        }
         return this;
     },
     /**

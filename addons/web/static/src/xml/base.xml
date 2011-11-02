@@ -415,6 +415,9 @@
     <tr>
         <td class="view-manager-main-content">
             <div class="oe-view-manager-header">
+                <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
+                    <t t-esc="self.display_title()"/>
+                </h2>
                 <div class="oe_vm_switch">
                     <t t-if="views.length != 1" t-foreach="views" t-as="view">
                         <button type="button" t-att-data-view-type="view.view_type">
@@ -452,9 +455,6 @@
         <button t-if="self.session.debug" class="oe_get_xml_view">
             View#<span></span>
         </button>
-        <h2 class="oe_view_title" t-if="self.flags.display_title !== false">
-            <t t-if="self.flags.display_title !== false" t-esc="self.action.name"/>
-        </h2>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">
         <ul class="oe-view-manager-logs"></ul>
@@ -579,7 +579,8 @@
                     <t t-esc="column.string"/>
                 </th>
             </t>
-            <th t-if="options.selectable" width="1"/>
+            <th t-if="options.selectable" width="1"  >
+                <input type="checkbox" class="all-record-selector"/> </th>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
@@ -661,7 +662,7 @@
 </t>
 <t t-name="FormView">
     <div class="oe_form_header">
-        <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
+        <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
             <button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
                 <span class="oe_form_on_create">Create</span>
@@ -670,7 +671,7 @@
             <button type="button" class="oe_form_button_duplicate oe_form_on_update">Duplicate</button>
             <button type="button" class="oe_form_button_toggle">Readonly/Editable</button>
         </div>
-        <div class="oe_form_pager" t-if="view.options.pager !== false">
+        <div class="oe_form_pager" t-if="widget.options.pager !== false">
             <button type="button" data-pager-action="first">First</button>
             <button type="button" data-pager-action="previous">&lt;&lt;</button>
 
@@ -753,12 +754,6 @@
         <t t-call="WidgetFrame"/>
     </div>
 </t>
-<t t-name="WidgetNotebook.readonly">
-    <t t-foreach="widget.pages" t-as="page">
-        <h3><t t-esc="page.string"/></h3>
-        <t t-raw="page.render()"/>
-    </t>
-</t>
 <t t-name="WidgetSeparator">
     <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
         <t t-esc="widget.string"/>
@@ -766,7 +761,7 @@
 </t>
 <t t-name="WidgetLabel">
     <label t-att-for="widget.element_id"
-           t-att-class="'oe_label' + (widget.help ? '_help' : '')"
+           t-attf-class="oe_label#{widget.help ? '_help' : ''} oe_align_#{widget.align}"
            t-att-title="widget.help">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
@@ -774,10 +769,10 @@
     </label>
 </t>
 <t t-name="WidgetParagraph">
-    <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
+    <p t-attf-class="oe_form_paragraph oe_align_#{widget.align}"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
-    <input type="text" size="1"
+    <input t-att-type="widget.password ? 'password' : 'text'" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id"
         t-attf-class="field_#{widget.type}"
@@ -868,9 +863,9 @@
 </t>
 <t t-name="FieldMany2One.context_menu">
     <ul>
-        <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-        <li t-att-id="widget.cm_id + '_create'">Create...</li>
-        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_mandatory">Search...</li>
+        <li t-att-id="widget.cm_id + '_open'" style="color:grey" class="oe_m2o_menu_item_mandatory">Open...</li>
+        <li t-att-id="widget.cm_id + '_create'" class="oe_m2o_menu_item_noreadonly">Create...</li>
+        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_noreadonly">Search...</li>
         <t t-set="i" t-value="0"/>
         <t t-foreach="widget.related_entries" t-as="entry">
             <li t-att-id="widget.cm_id + '_related_' + i" style="color:grey" class="oe_m2o_menu_item_mandatory">
@@ -1285,17 +1280,17 @@
     </t>
 </t>
 <t t-name="view_editor">
-    <table align="left" width= "100%" >
+    <table class="oe_view_editor">
         <t t-call="view_editor.row"/>
     </table>
 </t>
-<tr t-name="view_editor.row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
-    <td class="view_editor"  width="85%">
-        <table>
+<tr t-name="view_editor.row"  class="oe_view_editor_row" t-att-id="'viewedit-' + rec.id"  t-att-level="rec.level" t-foreach="data" t-as="rec">
+    <td class="oe_view_editor_colum"  width="85%">
+        <table class="oe_view_editor_tree_grid">
             <tr>
                 <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                     <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                        src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
                 </td>
                 <td style="cursor: pointer;">
                     <a style="text-decoration:none" href="javascript:void(0);"> <t t-esc="rec.name"/> </a>
@@ -1303,8 +1298,8 @@
             </tr>
         </table>
     </td>
-    <td align="left" class="view_editor"  width="15%">
-        <table  cellspacing="0" cellpadding ="0" width="100%">
+    <td align="left" class="oe_view_editor_colum"  width="15%">
+        <table  width="100%">
             <tr>
                 <td width="20%">
                     <img t-if="rec.att_list.length"
@@ -1328,10 +1323,10 @@
             </tr>
         </table>
     </td>
-        <t t-if="rec.child_id.length">
-            <t t-set="data" t-value="rec.child_id"/>
-            <t t-call="view_editor.row"/>
-        </t>
+    <t t-if="rec.child_id.length">
+        <t t-set="data" t-value="rec.child_id"/>
+        <t t-call="view_editor.row"/>
+    </t>
 </tr>
 <t t-name="view_char">
     <input type="text" class="field_char" size="50"/>
@@ -1343,7 +1338,6 @@
 <t t-name="view_boolean">
     <input type="checkbox"/>
 </t>
-
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
@@ -1478,7 +1472,8 @@
     <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
 </t>
 <t t-name="ImportDataView">
-<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data">
+<form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data"
+        class="oe-import oe-import-no-result">
     <input type="hidden" name="session_id" t-att-value="session.session_id"/>
     <h2 class="separator horizontal">1. Import a .CSV file</h2>
     <p>Select a .CSV file to import. If you need a sample of file to import,
@@ -1488,11 +1483,11 @@
         <label for="csvfile">CSV File:</label>
         <input type="file" id="csvfile" size="50" name="csvfile"/>
     </p>
-    <h2 class="separator horizontal">2. Check your file format</h2>
-    <div id="result"></div>
-    <fieldset>
-        <legend style="cursor:pointer;">Import Options</legend>
-        <table style="display:none">
+    <h2 class="separator horizontal oe-import-result">2. Check your file format</h2>
+    <div id="result" class="oe-import-result"></div>
+    <fieldset class="oe-closed oe-import-result">
+        <legend>Import Options</legend>
+        <table>
             <tr>
                 <td colspan="4">
                     <label for="file_has_headers">Does your file have titles?</label>
@@ -1522,22 +1517,24 @@
     </fieldset>
 </form>
 </t>
-<table t-name="ImportView.result"
-        class="oe_import_grid" width="100%" style="margin: 5px 0;">
-    <tr t-if="headers" class="oe_import_grid-header">
-        <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
-            <t t-esc="header"/></td>
-    </tr>
-    <tr>
-        <td t-foreach="records[0]" t-as="column">
-            <input class="sel_fields"/>
-        </td>
-    </tr>
-    <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
-        <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
-            <t t-esc="cell"/></td>
-    </tr>
-</table>
+<t t-name="ImportView.result">
+    <table class="oe_import_grid" width="100%" style="margin: 5px 0;">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell">
+                <t t-esc="header"/></td>
+        </tr>
+        <tr>
+            <td t-foreach="records[0]" t-as="column">
+                <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
+                        <img src="/web/static/src/img/down-arrow.png" /></span>
+            </td>
+        </tr>
+        <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
+            <td t-foreach="record" t-as="cell" class="oe_import_grid-cell">
+                <t t-esc="cell"/></td>
+        </tr>
+    </table>
+</t>
 <t t-name="ImportView.error">
     <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
     <t t-if="error.preview">
