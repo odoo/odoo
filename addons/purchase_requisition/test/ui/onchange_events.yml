@@ -20,4 +20,9 @@
 -
   !python {model: purchase.requisition}: |
     self.tender_reset(cr, uid, ref('order_purchase_requisition1'))
-      
+- 
+  I call onchange event to change the partner of purchase requisition.
+- 
+  !python {model: purchase.requisition.partner}: |
+    self.onchange_partner_id(cr, uid, ref('order_purchase_requisition1'), ref('base.res_partner_desertic_hispafuentes'))
+

@@ -1,0 +1,23 @@
+- 
+  In order to create a Quotatoion, I click on the wizard 'Request a Quotation' and create record from wizard.
+- 
+  !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
+    partner_address_id: base.res_partner_address_3000
+    partner_id: base.res_partner_desertic_hispafuentes
+- 
+  I click on 'Create Quotation' for creating PO.
+- 
+  !python {model: purchase.requisition.partner}: |
+    self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"active_model": "purchase.requisition",
+      "active_ids": [ref("order_purchase_requisition1")],"active_id": ref("order_purchase_requisition1"), })
+-
+  I check that the purchase order is created.
+-
+  !python {model: purchase.order}: |
+    purchase_ids= self.search(cr, uid, [('requisition_id','=',ref("order_purchase_requisition1"))])
+    assert purchase_ids, "Purchase Order is not created from this wizard"
+    rfq = self.browse(cr, uid, purchase_ids[0])
+    assert rfq.state == 'draft',"Purchase Order should be in draft state"
+    assert rfq.partner_address_id.id == ref('base.res_partner_address_3000'),"Purchase Order Partner address is not correspond"
+    assert rfq.partner_id.id == ref('base.res_partner_desertic_hispafuentes'),"Purchase Order Partner is not correspond"
+    
