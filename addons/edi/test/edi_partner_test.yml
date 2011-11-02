@@ -26,7 +26,8 @@
       attachment = {
         'name': 'Test file',
         'file_name': 'test.png',
-        'content': 'iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAYAAACE2W/HAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oIDQ84BkjLWAYAAACNSURBVCjPjZKxDUJBDEOf/wbUbEHDhkxAzRjUDECBhMQYjIApuPBNpK+PpUinOPYll5Nt1iCJXifbSPpJZtHgXLUdu0FWpMEt87a/xtsmqjjNetPFyhuWYFuj7RcgQBNwXNGdw2CqY85yXWi5z7YBnmRyEHvg0YSXrLE9P30nwugOHHr+s5va4x+fofAGm1+JjnJICm0AAAAASUVORK5CYII=',
+        # base64 standard requires blocks of 57bytes=76chars, NL-separated
+        'content': 'iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAYAAACE2W/HAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A\n/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oIDQ84BkjLWAYAAACNSURBVCjP\njZKxDUJBDEOf/wbUbEHDhkxAzRjUDECBhMQYjIApuPBNpK+PpUinOPYll5Nt1iCJXifbSPpJZtHg\nXLUdu0FWpMEt87a/xtsmqjjNetPFyhuWYFuj7RcgQBNwXNGdw2CqY85yXWi5z7YBnmRyEHvg0YSX\nrLE9P30nwugOHHr+s5va4x+fofAGm1+JjnJICm0AAAAASUVORK5CYII=\n',
       }
       edi_doc['__attachments'] = [attachment]
       doc = json.dumps([edi_doc])
