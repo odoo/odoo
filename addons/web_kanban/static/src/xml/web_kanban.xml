@@ -1,33 +1,37 @@
 <template>
 <t t-name="KanbanView">
-    <table style="width:100%;" class="oe_kanban_view">
-    <tr>
-        <td>
-            <div class="oe_form_header">
-                <button type="button" class="oe_kanban_button_new">New</button>
-            </div>
-        </td>
+    <div class="oe_kanban_header">
+        <button type="button" class="oe_kanban_button_new">New</button>
+    </div>
+    <table style="width:100%;" class="oe_kanban_groups">
+    <tr class="oe_kanban_groups_headers">
     </tr>
-    <tr>
-        <td t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value">
-            <img t-att-id="columns.value" class="fold-columns-icon"  src="/web_kanban/static/src/img/minus-icon.png"/>
-            <div class="oe_fold_column" t-att-id="'column_' + columns.value">
-                <div class="oe_column_heading" t-if="columns.value and columns.header">
-                    <t t-esc="columns.header"/>
-                </div>
-                <div t-foreach="columns.aggregates or {}" t-as="aggregate">
-                    <i><u><t t-esc="aggregate"/>:</u> <t t-esc="aggregate_value"/></i>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr>
-        <td t-foreach="data" t-as="columns" class="oe_column oe_table_column" t-att-id="'column_' + columns.value" t-attf-style="width: #{Math.round(99 / data.length)}%">
-            <p t-if="columns.header" class="oe_vertical_text" t-att-id="'column_' + columns.value"><t t-esc="columns.header"/></p>
-            <div t-foreach="columns.records" t-as="record" class="oe_fold_column oe_kanban_record" t-att-id="'main_' + record.id"/>
-        </td>
+    <tr class="oe_kanban_groups_records">
     </tr>
     </table>
+</t>
+<t t-name="KanbanView.group_header">
+    <td class="oe_table_column" t-att-id="'column_' + widget.value">
+        <img t-if="widget.foldable" t-att-id="widget.value" class="fold-columns-icon"  src="/web_kanban/static/src/img/minus-icon.png"/>
+        <div class="oe_fold_column" t-att-id="'column_' + widget.value">
+            <div class="oe_column_heading" t-if="widget.title">
+                <t t-esc="widget.title"/>
+            </div>
+            <div t-foreach="widget.aggregates" t-as="aggregate">
+                <i><u><t t-esc="aggregate"/>:</u> <t t-esc="aggregate_value"/></i>
+            </div>
+        </div>
+    </td>
+</t>
+<t t-name="KanbanView.group_records_container">
+    <td class="oe_column oe_table_column" t-att-id="'column_' + widget.value" t-attf-style="width: #{Math.round(99 / widget.view.groups.length)}%">
+        <p t-if="widget.title" class="oe_vertical_text" t-att-id="'column_' + widget.value"><t t-esc="widget.title"/></p>
+    </td>
+</t>
+<t t-name="KanbanView.record">
+    <div class="oe_fold_column oe_kanban_record" t-att-id="'main_' + widget.record.id">
+        <t t-raw="content"/>
+    </div>
 </t>
 <t t-name="KanbanColorPicker">
     <table cellspacing="0" cellpadding="0" border="0" class="oe_kanban_color_picker">
