@@ -129,7 +129,7 @@
             <p class="oe_edi_sidebar_title">Pay Online</p>
             <t t-if="doc.company_address.paypal_account">
                 <div class="oe_edi_option">
-                    <input type="radio" id="oe_edi_paypal" name="oe_edi_pay"/>
+                    <input type="radio" id="oe_edi_paypal" name="oe_edi_pay" class="oe_edi_pay_choice"/>
                     <label for="oe_edi_paypal" id="oe_edi_paypal" class="oe_edi_pay_choice_label">Paypal</label>
                 </div>
                 <p class="oe_edi_nested_block_pay oe_edi_paypal_nested">
@@ -141,11 +141,11 @@
             </t>
             <t t-if="doc.company_address.bank_ids">
                 <div class="oe_edi_option">
-                    <input type="radio" id="oe_edi_pay_wire" name="oe_edi_pay"/>
+                    <input type="radio" id="oe_edi_pay_wire" name="oe_edi_pay" class="oe_edi_pay_choice"/>
                     <label for="oe_edi_pay_wire" id="oe_edi_pay_wire" class="oe_edi_pay_choice_label">Bank Wire Transfer</label>
                 </div>
                 <p class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
-                    Please transfer <strong><t t-esc="doc.amount_total"/> <t t-esc="doc.currency_code"/></strong> to
+                    Please transfer <strong><t t-esc="_.sprintf('%.2f',doc.amount_total)"/> <t t-esc="doc.currency.code"/></strong> to
                     <strong><t t-esc="doc.company_id[1]"/></strong> (postal address on the invoice header)
                      using one of the following bank accounts. Be sure to mention the invoice
                      reference <strong><t t-esc="doc.internal_number"/></strong> on the transfer:

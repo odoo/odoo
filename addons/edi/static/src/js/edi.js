@@ -53,12 +53,12 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         return url_prefix +'/edi/download?db=' + this.db + '&token=' + this.token;
     },
     get_paypal_url: function(document_type, ref_field) {
-        comp_name = encodeURIComponent(this.doc.company_id[1]);
-        doc_ref = encodeURIComponent(this.doc[ref_field]);
-        paypal_account = encodeURIComponent(this.doc.company_address.paypal_account);
-        amount = encodeURIComponent(this.doc.amount_total);
-        cur_code = encodeURIComponent(this.doc.currency.code);
-        paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick" +
+        var comp_name = encodeURIComponent(this.doc.company_id[1]);
+        var doc_ref = encodeURIComponent(this.doc[ref_field]);
+        var paypal_account = encodeURIComponent(this.doc.company_address.paypal_account);
+        var amount = encodeURIComponent(this.doc.amount_total);
+        var cur_code = encodeURIComponent(this.doc.currency.code);
+        var paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick" +
                      "&business=" + paypal_account +
                      "&item_name=" + document_type + "%20" + comp_name + "%20" + doc_ref +
                      "&invoice=" + doc_ref + 
@@ -80,8 +80,18 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     },
     do_import_existing: function(e) {
         var url_download = this.get_download_url();
-        var server_url = this.$element.find('#oe_edi_txt_server_url').val()
-        window.location = 'http://' + server_url + '/edi/import_url?url=' + encodeURIComponent(url_download);
+        var $edi_text_server_input = this.$element.find('#oe_edi_txt_server_url');
+        var server_url = $edi_text_server_input.val();
+        $edi_text_server_input.removeClass('invalid');
+        if (!server_url) {
+            $edi_text_server_input.addClass('invalid');
+            return false;
+        }
+        var protocol = "http://";
+        if (server_url.toLowerCase().lastIndexOf('http', 0) == 0 ) {
+            protocol = '';
+        }
+        window.location = protocol + server_url + '/edi/import_url?url=' + encodeURIComponent(url_download);
     },
     do_import_create: function(e){
         var url_download = this.get_download_url();
