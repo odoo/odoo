@@ -265,13 +265,9 @@ class mrp_bom(osv.osv):
         @param product_id: Changed product_id
         @return:  Dictionary of changed values
         """
-        if context is None:
-            context = {}
-            
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            v = {'name': prod.name, 'product_uom': prod.uom_id.id}
-            return {'value': v}
+            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
         return {}
 
     def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
@@ -356,8 +352,6 @@ class mrp_bom(osv.osv):
     def copy_data(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        if context is None:
-            context = {}
         bom_data = self.read(cr, uid, id, [], context=context)
         default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
