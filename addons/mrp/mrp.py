@@ -270,7 +270,6 @@ class mrp_bom(osv.osv):
         """
         if context is None:
             context = {}
-            context['lang'] = self.pool.get('res.users').browse(cr,uid,uid).context_lang
             
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)

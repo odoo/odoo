@@ -317,7 +317,7 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material">
                     <group colspan="4" col="6">
-                        <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" select="1"/>
                         <field name="name" select="1"/>
                         <field name="code" select="1" string="Reference" groups="base.group_extended"/>
                         <newline/>
