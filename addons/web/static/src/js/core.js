@@ -364,7 +364,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         // TODO: session should have an optional name indicating that they'll
         //       be saved to (and revived from) cookies
         this.name = 'session';
+        this.do_load_qweb(['/web/webclient/qweb']);
     },
+
     start: function() {
         this.session_restore();
     },
@@ -487,6 +489,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
+            self.on_session_valid();
             return true;
         }).then(success_callback);
     },
@@ -578,6 +581,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
                     self.do_load_js(file_list.concat(files));
                 });
+                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
                 openerp._modules_loaded = true;
             });
         });
@@ -610,6 +614,19 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         } else {
             this.on_modules_loaded();
         }
+    },
+    do_load_qweb: function(files) {
+        var self = this;
+        _.each(files, function(file) {
+            $.ajax({
+                url: file,
+                type: 'get',
+                async: false,
+                dataType: 'text',
+            }).then(function(xml) {
+                openerp.web.qweb.add_template(_(xml).trim());
+            });
+        });
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {

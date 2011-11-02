@@ -7,5 +7,8 @@
         'static/src/js/dashboard.js'
     ],
     "css": ['static/src/css/dashboard.css'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'active': True
 }

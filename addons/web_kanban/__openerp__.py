@@ -9,5 +9,8 @@
     "css": [
         "static/src/css/kanban.css"
     ],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'active': True
 }

@@ -16,7 +16,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.all_display_data = false;
         this.groups = [];
         this.qweb = new QWeb2.Engine();
-        this.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+        this.qweb.debug = openerp.connector.debug;
         this.aggregates = {};
         this.NO_OF_COLUMNS = 3;
         this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();

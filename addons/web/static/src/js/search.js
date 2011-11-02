@@ -433,6 +433,7 @@ openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.se
      * @param view the ancestor view of this widget
      */
     init: function (view) {
+        this._super(view);
         this.view = view;
     },
     /**
@@ -473,10 +474,8 @@ openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.se
         this._super();
     },
     render: function (defaults) {
-        return QWeb.render(
-            this.template, _.extend(this, {
-                defaults: defaults
-        }));
+        // FIXME
+        return this._super(_.extend(this, {defaults: defaults}));
     }
 });
 openerp.web.search.add_expand_listener = function($root) {

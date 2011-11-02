@@ -11,5 +11,8 @@
     "css": ['static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css',
             'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css'
             ],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'active': True
 }

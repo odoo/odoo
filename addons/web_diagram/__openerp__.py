@@ -13,5 +13,8 @@
     'css' : [
         "static/src/css/base_diagram.css",
     ],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'active': True,
 }

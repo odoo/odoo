@@ -943,14 +943,13 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super(null, element_id);
         openerp.webclient = this;
 
-        QWeb.add_template("/web/static/src/xml/base.xml");
         var params = {};
         if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
         }
         this.$element.html(QWeb.render("Interface", params));
 
-        this.notification = new openerp.web.Notification();
+        this.notification = new openerp.web.Notification(this);
         this.loading = new openerp.web.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.web.CrashManager();
 
