@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    
+
         <record id="BASIC" model="hr.salary.rule.category">
             <field name="name">Basic</field>
             <field name="code">BASIC</field>
         </record>
-    
+
         <record id="ALW" model="hr.salary.rule.category">
             <field name="name">Allowance</field>
             <field name="code">ALW</field>
         </record>
-        
-        <record id="DED" model="hr.salary.rule.category">
-            <field name="name">Deduction</field>
-            <field name="code">DED</field>
-        </record>
-        
+
         <record id="GROSS" model="hr.salary.rule.category">
             <field name="name">Gross</field>
             <field name="code">GROSS</field>
         </record>
-        
+
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+
         <record id="NET" model="hr.salary.rule.category">
             <field name="name">Net</field>
             <field name="code">NET</field>
         </record>
-        
+
         <record id="COMP" model="hr.salary.rule.category">
             <field name="name">Company Contribution</field>
             <field name="code">COMP</field>
         </record>
-        
+
         <record id="hr_rule_basic" model="hr.salary.rule">
             <field name="name">Basic</field>
             <field name="sequence" eval="1"/>
@@ -71,13 +71,13 @@
             <field eval="[(6, 0, [ref('hr_rule_basic'), ref('hr_rule_taxable'),ref('hr_rule_net')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-        
+
         <!-- Decimal Precision -->
-        
+
         <record forcecreate="True" id="decimal_payroll" model="decimal.precision">
             <field name="name">Payroll</field>
             <field name="digits">2</field>
         </record>
-        
+
     </data>
 </openerp>

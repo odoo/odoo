@@ -33,24 +33,28 @@ from osv import fields, osv
 
 class ResCompany(osv.osv):
     """Override company to add Header object link a company can have many header and logos"""
-    
+
     _inherit = "res.company"
     _columns = {
                 'header_image' : fields.many2many(
-                                                    'ir.header_img', 
-                                                    'company_img_rel', 
-                                                    'company_id', 
-                                                    'img_id', 
+                                                    'ir.header_img',
+                                                    'company_img_rel',
+                                                    'company_id',
+                                                    'img_id',
                                                     'Available Images',
                                                 ),
                 'header_webkit' : fields.many2many(
-                                                    'ir.header_webkit', 
-                                                    'company_html_rel', 
-                                                    'company_id', 
-                                                    'html_id', 
+                                                    'ir.header_webkit',
+                                                    'company_html_rel',
+                                                    'company_id',
+                                                    'html_id',
                                                     'Available html',
                                                 ),
-                'lib_path' : fields.char('Webkit Executable Path', size=264, help="Complete (Absolute) path to the wkhtmltopdf executable."),
+                'lib_path' : fields.char('Webkit Executable Path', size=264,
+                                         help="Full path to the wkhtmltopdf executable file. "
+                                              "Version 0.9.9 is required. Install a static version "
+                                              "of the library if you experience missing header/footers "
+                                              "on Linux."),
 
-    }   
+    }
 ResCompany()

@@ -38,7 +38,7 @@
       - res_users_user0
       - res_users_user1
     phase_ids:
-      - date_start: '2011-01-06'
+      - date_start: '2011-01-06 08:00:00'
         duration: 2.0
         name: Phase A
         product_uom: product.uom_day
@@ -184,16 +184,11 @@
   Now I create one phase for the project.
 - 
   !record {model: project.phase, id: project_phase_phasea0}:
-    date_start: '2011-01-06'
+    date_start: '2011-01-06 08:00:00'
     duration: 2.0
     name: Phase A
     product_uom: product.uom_day
     project_id: project_project_projecta0
-    resource_ids:
-      - project_id: project_project_projecta0
-        resource_id: resource_resource_user0
-      - project_id: project_project_projecta0
-        resource_id: resource_resource_user1
     state: draft
     task_ids:
       - delay_hours: 0.0

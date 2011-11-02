@@ -55,7 +55,7 @@ class pos_payment_report_date(osv.osv_memory):
     _columns = {
         'date_start': fields.date('Start Date', required=True),
         'date_end': fields.date('End Date', required=True),
-        'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
+        'user_id': fields.many2many('res.users', 'res_user_sale_date', 'user_id', 'sale_id', 'Salesman')
     }
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-%m-%d'),
