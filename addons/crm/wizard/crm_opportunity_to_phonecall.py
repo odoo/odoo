@@ -41,7 +41,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
             categ_id = data_obj.browse(cr, uid, res_id, context=context).res_id
 
         record_ids = context and context.get('active_ids', []) or []
-        res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
+        res = {}
         res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
