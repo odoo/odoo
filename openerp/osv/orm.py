@@ -3826,11 +3826,9 @@ class BaseModel(object):
                 self.pool.get(table).write(cr, user, nids, v, context)
 
         if unknown_fields:
-            raise except_orm(
-                _('ValidateError'),
-                _('No such field in model %s: %s.') %  (self._name,
-                                                        unknown_fields[0])
-                )
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
         self._validate(cr, user, ids, context)
 
         # TODO: use _order to set dest at the right position and not first node of parent
@@ -3953,6 +3951,7 @@ class BaseModel(object):
                 tocreate[v] = {'id': vals[self._inherits[v]]}
         (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
+        unknown_fields = []
         for v in vals.keys():
             if v in self._inherit_fields:
                 (table, col, col_detail, original_parent) = self._inherit_fields[v]
@@ -3960,10 +3959,12 @@ class BaseModel(object):
                 del vals[v]
             else:
                 if (v not in self._inherit_fields) and (v not in self._columns):
-                    raise except_orm(
-                        _('ValidateError'),
-                        _('No such field in model %s: %s.') % (self._name, v)
-                        )
+                    del vals[v]
+                    unknown_fields.append(v)
+        if unknown_fields:
+            self.__logger.warn(
+                'No such field(s) in model %s: %s.',
+                self._name, ', '.join(unknown_fields))
 
         # Try-except added to filter the creation of those records whose filds are readonly.
         # Example : any dashboard which has all the fields readonly.(due to Views(database views))
