@@ -130,13 +130,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     get_data: function() {
         var self = this;
         var view_arch_list = [];
-        var view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
+        self.main_view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-        ve_dataset.read_ids([parseInt(view_id)], ['arch'], function (arch) {
-            one_object = self.parse_xml(arch[0].arch,view_id);
-            view_arch_list.push({"view_id" : view_id, "arch" : arch[0].arch});
+        ve_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function (arch) {
+            one_object = self.parse_xml(arch[0].arch,self.main_view_id);
+            self.main_view_type = arch[0].type
+            view_arch_list.push({"view_id" : self.main_view_id, "arch" : arch[0].arch});
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
-            dataset.read_slice([], {domain : [['inherit_id','=', parseInt(view_id)]]}, function (result) {
+            dataset.read_slice([], {domain : [['inherit_id','=', parseInt(self.main_view_id)]]}, function (result) {
                 _.each(result, function(res) {
                     view_arch_list.push({"view_id":res.id,"arch":res.arch});
                     self.inherit_view(one_object, res);
@@ -263,7 +264,22 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     //todo
                 },
                 "Preview": function(){
-                    //todo
+                    var action = {
+                        context:self.session.user_context,
+                        res_model : self.model,
+                        views : [[self.main_view_id, self.main_view_type]],
+                        type: 'ir.actions.act_window',
+                        target: "new",
+                        flags: {
+                            sidebar: false,
+                            views_switcher: false,
+                            action_buttons:false,
+                            search_view:false,
+                            pager:false,
+                        },
+                    };
+                    var action_manager = new openerp.web.ActionManager(self);
+                    action_manager.do_action(action);
                 },
                 "Close": function(){
                     self.edit_xml_dialog.close();
