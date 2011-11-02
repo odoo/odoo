@@ -78,7 +78,7 @@
                 "street": "Chaussee de Namur 40",
                 "street2": "mailbox 34",
                 "bank_ids": [
-                    ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_bank-ZrTWzeDJzGbp","Sample bank: 123465789-156113"]
+                    ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_bank-XiwqnxKWzGbp","Guys bank: 123477777-156113"]
                 ],
         }, 
         "order_line": [{
@@ -117,7 +117,7 @@
     # check bank info on partner
     assert len(order_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
     bank_info = order_new.partner_id.bank_ids[0]
-    assert bank_info.acc_number == "Sample bank: 123465789-156113", 'Expected "Sample bank: 123465789-156113", got %s' % bank_info.acc_number
+    assert bank_info.acc_number == "Guys bank: 123477777-156113", 'Expected "Guys bank: 123477777-156113", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Default Purchase Pricelist' , "Default Purchase Pricelist was not automatically assigned"
     assert order_new.amount_total == 350, "Amount total is not same"
