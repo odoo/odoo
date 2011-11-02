@@ -58,6 +58,7 @@ SALE_ORDER_EDI_STRUCT = {
     'amount_tax': True,
     'payment_term': True,
     'order_policy': True,
+    'user_id': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
@@ -88,7 +89,6 @@ class sale_order(osv.osv, EDIMixin):
                                                                          context=context)[0],
                     'partner_ref': order.client_order_ref or False,
                     'notes': order.note or False,
-                    #TODO: company_logo
             })
             edi_doc_list.append(edi_doc)
         return edi_doc_list

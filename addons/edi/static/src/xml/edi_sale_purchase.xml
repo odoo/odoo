@@ -45,7 +45,7 @@
         <tr class="oe_edi_data_row">
             <td align="left"><t t-if="doc.partner_ref" t-esc="doc.partner_ref"/></td>
             <td align="left"><t t-esc="doc.date_order"/></td>
-            <td align="left">TODO</td>
+            <td align="left"><t t-if="doc.user_id" t-esc="doc.user_id[1]"/></td>
             <td align="left">
                 <t t-if="doc.payment_term" t-esc="doc.payment_term[1]"/>
             </td>

@@ -178,6 +178,8 @@ class purchase_order(osv.osv, EDIMixin):
         edi_document.pop('amount_tax', None)
         edi_document.pop('amount_untaxed', None)
         edi_document.pop('payment_term', None)
+        edi_document.pop('order_policy', None)
+        edi_document.pop('user_id', None)
 
         for order_line in edi_document['order_line']:
             self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
