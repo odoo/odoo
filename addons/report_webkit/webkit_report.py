@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com) 
+# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com)
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
@@ -35,8 +35,11 @@ import os
 import report
 import tempfile
 import time
+import logging
+
 from mako.template import Template
 from mako import exceptions
+
 import netsvc
 import pooler
 from report_helper import WebKitHelper
@@ -46,6 +49,7 @@ import tools
 from tools.translate import _
 from osv.osv import except_osv
 
+logger = logging.getLogger('report_webkit')
 
 def mako_template(text):
     """Build a Mako template.
@@ -60,12 +64,12 @@ class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
        Code partially taken from report openoffice. Thanks guys :)
     """
-    
-    def __init__(self, name, table, rml=False, parser=False, 
+
+    def __init__(self, name, table, rml=False, parser=False,
         header=True, store=False):
         self.parser_instance = False
         self.localcontext={}
-        report_sxw.__init__(self, name, table, rml, parser, 
+        report_sxw.__init__(self, name, table, rml, parser,
             header, store)
 
     def get_lib(self, cursor, uid, company) :
@@ -81,7 +85,7 @@ class WebKitParser(report_sxw):
                              ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
                              ' path to the executable on the Company form.'+
                              'Minimal version is 0.9.9')
-                            ) 
+                            )
         if os.path.isabs(path) :
             if (os.path.exists(path) and os.access(path, os.X_OK)\
                 and os.path.basename(path).startswith('wkhtmltopdf')):
@@ -118,7 +122,7 @@ class WebKitParser(report_sxw):
             head_file = file( os.path.join(
                                   tmp_dir,
                                   str(time.time()) + '.head.html'
-                                 ), 
+                                 ),
                                 'w'
                             )
             head_file.write(header)
@@ -129,14 +133,14 @@ class WebKitParser(report_sxw):
             foot_file = file(  os.path.join(
                                   tmp_dir,
                                   str(time.time()) + '.foot.html'
-                                 ), 
+                                 ),
                                 'w'
                             )
             foot_file.write(footer)
             foot_file.close()
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
-            
+
         if webkit_header.margin_top :
             command.extend(['--margin-top', str(webkit_header.margin_top).replace(',', '.')])
         if webkit_header.margin_bottom :
@@ -163,7 +167,7 @@ class WebKitParser(report_sxw):
             status = subprocess.call(command, stderr=subprocess.PIPE) # ignore stderr
             if status :
                 raise except_osv(
-                                _('Webkit raise an error' ), 
+                                _('Webkit raise an error' ),
                                 status
                             )
         except Exception:
@@ -176,68 +180,30 @@ class WebKitParser(report_sxw):
 
         os.unlink(out)
         return pdf
-    
-    
-    def setLang(self, lang):
-        if not lang:
-            lang = 'en_US'
-        self.localcontext['lang'] = lang
 
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool.get('ir.translation')
-        res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid, self.name, 'report', self.localcontext.get('lang', 'en_US'), src)
+        res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
+                                         self.name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
-        return res 
- 
-    def formatLang(self, value, digits=None, date=False, date_time=False, grouping=True, monetary=False):
-        """format using the know cursor, language from localcontext"""
-        if digits is None:
-            digits = self.parser_instance.get_digits(value)
-        if isinstance(value, (str, unicode)) and not value:
-            return ''
-        pool_lang = self.pool.get('res.lang')
-        lang = self.localcontext['lang']
-        
-        lang_ids = pool_lang.search(self.parser_instance.cr, self.parser_instance.uid, [('code','=',lang)])[0]
-        lang_obj = pool_lang.browse(self.parser_instance.cr, self.parser_instance.uid, lang_ids)
+        return res
 
-        if date or date_time:
-            if not str(value):
-                return ''
-
-            date_format = lang_obj.date_format
-            parse_format = '%Y-%m-%d'
-            if date_time:
-                value=value.split('.')[0]
-                date_format = date_format + " " + lang_obj.time_format
-                parse_format = '%Y-%m-%d %H:%M:%S'
-            if not isinstance(value, time.struct_time):
-                return time.strftime(date_format, time.strptime(value, parse_format))
-
-            else:
-                date = datetime(*value.timetuple()[:6])
-            return date.strftime(date_format)
-
-        return lang_obj.format('%.' + str(digits) + 'f', value, grouping=grouping, monetary=monetary)
-
-    # override needed to keep the attachments' storing procedure
+    # override needed to keep the attachments storing procedure
     def create_single_pdf(self, cursor, uid, ids, data, report_xml, context=None):
         """generate the PDF"""
-        
+
         if context is None:
             context={}
-
+        htmls = []
         if report_xml.report_type != 'webkit':
             return super(WebKitParser,self).create_single_pdf(cursor, uid, ids, data, report_xml, context=context)
 
-        self.parser_instance = self.parser(
-                                            cursor,
-                                            uid,
-                                            self.name2,
-                                            context=context
-                                        )
+        self.parser_instance = self.parser(cursor,
+                                           uid,
+                                           self.name2,
+                                           context=context)
 
         self.pool = pooler.get_pool(cursor.dbname)
         objs = self.getObjects(cursor, uid, ids, context)
@@ -256,66 +222,55 @@ class WebKitParser(report_sxw):
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
-          raise except_osv(
-                _('No header defined for this Webkit report!'),
-                _('Please set a header in company settings')
-            )
+            raise except_osv(
+                  _('No header defined for this Webkit report!'),
+                  _('Please set a header in company settings')
+              )
         if not report_xml.header :
-            #I know it could be cleaner ...
-            header = u"""
-<html>
-    <head>
-        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-        <style type="text/css"> 
-            ${css}
-        </style>
-        <script>
-        function subst() {
-           var vars={};
-           var x=document.location.search.substring(1).split('&');
-           for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
-           var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
-           for(var i in x) {
-             var y = document.getElementsByClassName(x[i]);
-             for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
-           }
-         }
-        </script>
-    </head>
-<body style="border:0; margin: 0;" onload="subst()">
-</body>
-</html>"""
+            header = ''
+            default_head = addons.get_module_resource('report_webkit', 'default_header.html')
+            with open(default_head,'r') as f:
+                header = f.read()
         css = report_xml.webkit_header.css
         if not css :
             css = ''
         user = self.pool.get('res.users').browse(cursor, uid, uid)
         company= user.company_id
-        
+
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
-        try :
-            html = body_mako_tpl.render(     helper=helper,
-                                             css=css,
-                                             _=self.translate_call,
-                                             **self.parser_instance.localcontext
-                                        )
-        except Exception, e:
-            msg = exceptions.text_error_template().render()
-            netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
-            raise except_osv(_('Webkit render'), msg)
+        if report_xml.precise_mode:
+            for obj in objs:
+                self.parser_instance.localcontext['objects'] = [obj]
+                try :
+                    html = body_mako_tpl.render(helper=helper,
+                                                css=css,
+                                                _=self.translate_call,
+                                                **self.parser_instance.localcontext)
+                    htmls.append(html)
+                except Exception, e:
+                    msg = exceptions.text_error_template().render()
+                    logger.error(msg)
+                    raise except_osv(_('Webkit render'), msg)
+        else:
+            try :
+                html = body_mako_tpl.render(helper=helper,
+                                            css=css,
+                                            _=self.translate_call,
+                                            **self.parser_instance.localcontext)
+                htmls.append(html)
+            except Exception, e:
+                msg = exceptions.text_error_template().render()
+                logger.error(msg)
+                raise except_osv(_('Webkit render'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(
-                                        company=company,
-                                        time=time,
-                                        helper=helper,
+            head = head_mako_tpl.render(helper=helper,
                                         css=css,
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
                                         _=self.translate_call,
-                                        _debug=False
-                                    )
+                                        _debug=False,
+                                        **self.parser_instance.localcontext)
         except Exception, e:
             raise except_osv(_('Webkit render'),
                 exceptions.text_error_template().render())
@@ -323,38 +278,28 @@ class WebKitParser(report_sxw):
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(
-                                            company=company,
-                                            time=time,
-                                            helper=helper,
+                foot = foot_mako_tpl.render(helper=helper,
                                             css=css,
-                                            formatLang=self.formatLang,
-                                            setLang=self.setLang,
                                             _=self.translate_call,
-                                            )
+                                            **self.parser_instance.localcontext)
             except:
                 msg = exceptions.text_error_template().render()
-                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(
-                                            company=company,
-                                            time=time,
-                                            helper=helper,
-                                            css=css,
-                                            _debug=tools.ustr(html),
-                                            formatLang=self.formatLang,
-                                            setLang=self.setLang,
-                                            _=self.translate_call,
-                                            )
+                deb = head_mako_tpl.render(helper=helper,
+                                           css=css,
+                                           _debug=tools.ustr("\n".join(htmls)),
+                                           _=self.translate_call,
+                                           **self.parser_instance.localcontext)
             except Exception, e:
                 msg = exceptions.text_error_template().render()
-                netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
+                logger.error(msg)
                 raise except_osv(_('Webkit render'), msg)
             return (deb, 'html')
         bin = self.get_lib(cursor, uid, company.id)
-        pdf = self.generate_pdf(bin, report_xml, head, foot, [html])
+        pdf = self.generate_pdf(bin, report_xml, head, foot, htmls)
         return (pdf, 'pdf')
 
 
@@ -366,13 +311,11 @@ class WebKitParser(report_sxw):
         report_xml_ids = ir_obj.search(cursor, uid,
                 [('report_name', '=', self.name[7:])], context=context)
         if report_xml_ids:
-            
-            report_xml = ir_obj.browse(
-                                        cursor, 
-                                        uid, 
-                                        report_xml_ids[0], 
-                                        context=context
-                                    )
+
+            report_xml = ir_obj.browse(cursor,
+                                       uid,
+                                       report_xml_ids[0],
+                                       context=context)
             report_xml.report_rml = None
             report_xml.report_rml_content = None
             report_xml.report_sxw_content_data = None
