@@ -61,11 +61,12 @@ class crm_phonecall2partner(osv.osv_memory):
         if context is None:
             context = {}
         phonecall = self.pool.get('crm.phonecall')
+
+        data = self.browse(cr, uid, ids, context=context)[0]
         call_ids = context and context.get('active_ids') or []
-        for data in self.browse(cr, uid, ids, context=context):
-            partner_id = data.partner_id and data.partner_id.id or False
-            partner_ids += phonecall.convert_partner(cr, uid, call_ids, data.action, partner_id, context=context)
-        return partner_ids
+        partner_id = data.partner_id and data.partner_id.id or False
+        partner_ids = phonecall.convert_partner(cr, uid, call_ids, data.action, partner_id, context=context)
+        return partner_ids[call_ids[0]]
 
 crm_phonecall2partner()
 
