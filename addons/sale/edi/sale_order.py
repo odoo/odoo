@@ -57,6 +57,7 @@ SALE_ORDER_EDI_STRUCT = {
     'amount_untaxed': True,
     'amount_tax': True,
     'payment_term': True,
+    'order_policy': True,
 }
 
 class sale_order(osv.osv, EDIMixin):

@@ -56,7 +56,7 @@
             <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
 
-    % if object.company_id.paypal_account:
+    % if object.order_policy == 'prepaid' and object.company_id.paypal_account:
     <%
     comp_name = quote(object.company_id.name)
     order_name = quote(object.name)
@@ -131,7 +131,7 @@ Your order for ${object.partner_id.name} has just been validated:
 You can view the order confirmation, download it and even pay online using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
 
-% if object.company_id.paypal_account:
+% if object.order_policy == 'prepaid' and object.company_id.paypal_account:
 <% 
 comp_name = quote(object.company_id.name)
 order_name = quote(object.name)
