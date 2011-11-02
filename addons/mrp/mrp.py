@@ -61,8 +61,6 @@ class mrp_workcenter(osv.osv):
      }
 
     def on_change_product_cost(self, cr, uid, ids, product_id, context=None):
-        if context is None:
-            context = {}
         value = {}
 
         if product_id:
@@ -252,8 +250,7 @@ class mrp_bom(osv.osv):
                 all_prod.append(bom.product_id.id)
                 lines = bom.bom_lines
                 if lines:
-                    newboms = [a for a in lines if a not in boms]
-                    res = res and check_bom(newboms)
+                    res = res and check_bom([bom_id for bom_id in lines if bom_id not in boms])
             return res
         return check_bom(boms)
 
@@ -492,8 +489,7 @@ class mrp_production(osv.osv):
     _order = 'priority desc, date_planned asc';
 
     def _check_qty(self, cr, uid, ids, context=None):
-        orders = self.browse(cr, uid, ids, context=context)
-        for order in orders:
+        for order in self.browse(cr, uid, ids, context=context):
             if order.product_qty <= 0:
                 return False
         return True
@@ -503,13 +499,12 @@ class mrp_production(osv.osv):
     ]
 
     def unlink(self, cr, uid, ids, context=None):
-        productions = self.read(cr, uid, ids, ['state'])
         unlink_ids = []
-        for s in productions:
-            if s['state'] in ['draft','cancel']:
-                unlink_ids.append(s['id'])
+        for production in self.read(cr, uid, ids, ['state'], context=context):
+            if production['state'] in ['draft','cancel']:
+                unlink_ids.append(production['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in the state \'%s\'!') % s['state'])
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a manufacturing order in the state \'%s\'!') % production['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -572,8 +567,7 @@ class mrp_production(osv.osv):
             return {'value': {
                 'routing_id': False
             }}
-        bom_pool = self.pool.get('mrp.bom')
-        bom_point = bom_pool.browse(cr, uid, bom_id, context=context)
+        bom_point = self.pool.get('mrp.bom').browse(cr, uid, bom_id, context=context)
         routing_id = bom_point.routing_id.id or False
         result = {
             'routing_id': routing_id
