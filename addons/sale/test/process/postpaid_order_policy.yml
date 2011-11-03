@@ -1,274 +1,60 @@
 -
-  In order to test the Sale module in OpenERP,
-  I create a Sale Order for Slider Mobile for qty 500 having Shipping Policy is 'Invoice on order after Delivery'
+  In order to test the Sale order flow, I compute the total of the listed products.
+  "New server config + material" product price is 123.20 and ordered 1 'PCE'
+  "Basic PC" product price is 450.50 and ordered 3 'PCE'
+  "Medium PC" product price is 900 and ordered 5 'PCE'
+  "Mainboard ASUStek A7N8X" product price is 88 and ordered 5 'PCE'
+  So, Total should be [(123.20*1)+(450.50*3)+(900*5)+(88*5)] = 6414.70
 -
-  !record {model: sale.order, id: sale_order_so8}:
-    date_order: !eval time.strftime('%Y-%m-%d')
-    invoice_quantity: order
-    name: Test_SO008
-    order_line:
-      - name: Slider Mobile
-        price_unit: 200.0
-        product_uom: product.product_uom_unit
-        product_uom_qty: 500.0
-        state: draft
-        delay: 7.0
-        product_id: sale.product_product_slidermobile0
-        product_uos_qty: 500.0
-        type: make_to_order
-    order_policy: postpaid
-    partner_id: sale.res_partner_cleartrail0
-    partner_invoice_id: sale.res_partner_address_2
-    partner_order_id: sale.res_partner_address_1
-    partner_shipping_id: sale.res_partner_address_3
-    picking_policy: direct
-    pricelist_id: product.list0
-    shop_id: sale.shop
+  I check the total untaxed amount of the Quotation is correctly computed
 -
-  I confirm the Sale Order.
+  !assert {model: sale.order, id: order, string: The amount of the Quotation is not correctly computed}:
+    - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so8}
+  I confirm the Quotation.
 -
-  I verify that the picking has been generated for the sale order
+  !workflow {model: sale.order, action: order_confirm, ref: order}
+-
+  I check the "In Progress" status  after confirmed Quotation.
+-
+  !assert {model: sale.order, id: order}:
+    - state == 'progress'
+-
+  I check that Packing details after confirmed Quotation.
 -
   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so8"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so8"
--
-  Then I done the picking
--
-  !python {model: stock.picking }: |
-   import time
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-   if picking_id:
-      pick=self.browse(cr,uid,picking_id[0])
-      pick.force_assign(cr, uid)
-      stock_partial_picking = self.pool.get('stock.partial.picking')
-      partial_id = stock_partial_picking.create(cr, uid, {},
-              context={'active_model': 'stock.picking',
-                       'active_ids': [pick.id]})
-      stock_partial_picking.do_partial(cr, uid, [partial_id])
--
-  I verify that picking order is in done state.
--
-  !python {model: stock.picking }: |
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
-   if picking_id:
-     pick = self.browse(cr,uid,picking_id[0])
-     assert (pick.state == 'done'), "Picking for SO is not in done state."
--
-  I verify that delivery order has been generated for sale order
--
-  !python {model: stock.picking }: |
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name)])
-   assert (picking_id),"Delivery order has not been generated"
--
-  I process the delivery order
--
-  !python {model: stock.picking }: |
-   import time
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name)])
-   if picking_id:
-      pick=self.browse(cr,uid,picking_id[0])
-      pick.force_assign(cr, uid)
-      stock_partial_picking = self.pool.get('stock.partial.picking')
-      partial_id = stock_partial_picking.create(cr, uid, {},
-              context={'active_model': 'stock.picking',
-                       'active_ids': [pick.id]})
-      stock_partial_picking.do_partial(cr, uid, [partial_id])
--
-  I verify that delivery order is marked done
--
-  !python {model: stock.picking }: |
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name)])
-   if picking_id:
-     pick = self.browse(cr,uid,picking_id[0])
-     assert (pick.state) =='done', "Picking for SO is not in done state."
--
-  I verify that a procurement has been generated for so
--
-  !python {model: procurement.order}: |
-    from tools.translate import _
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
-    assert proc_ids, _('No Procurements!')
--
-  Then I click on the "Run Procurement" button
--
-  !python {model: procurement.order}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
-    for proc in proc_ids:
-      wf_service.trg_validate(uid, 'procurement.order',proc,'button_check', cr)
--
-  I verify that a procurement state is "running"
--
-  !python {model: procurement.order}: |
-    from tools.translate import _
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        sale_order_obj = self.pool.get('sale.order')
-        so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-        proc_ids = self.search(cr, uid, [('origin','=',so.name),('state','=','running')])
-        assert proc_ids, _('Procurement is not in the running state!')
--
-  I verify that a purchase order has been generated
--
-  !python {model: sale.order}: |
-    from tools.translate import _
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        so = self.browse(cr, uid, ref("sale_order_so8"))
-        pur_obj=self.pool.get('purchase.order')
-        pur_id=pur_obj.search(cr, uid, [('origin','=',so.name)])
-        assert pur_id, _('Purchase order has not been generated')
--
-  I click on the "Confirm" button to confirm the purchase order
--
-  !python {model: sale.order}: |
-    from tools.translate import _
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        pur_obj=self.pool.get('purchase.order')
-        so = self.browse(cr, uid, ref("sale_order_so8"))
-        import netsvc
-        wf_service = netsvc.LocalService("workflow")
-        pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
-        for pur in pur_ids:
-          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_confirm', cr)
--
-  I click on the "Approved by supplier" button to approve the purchase order
--
-  !python {model: sale.order}: |
-    from tools.translate import _
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        pur_obj = self.pool.get('purchase.order')
-        so = self.browse(cr, uid, ref("sale_order_so8"))
-        import netsvc
-        wf_service = netsvc.LocalService("workflow")
-        pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
-        for pur in pur_ids:
-          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
--
-  I verify that a picking related to purchase order has been generated and I process it
--
-  !python {model: sale.order}: |
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        pur_obj = self.pool.get('purchase.order')
-        so = self.browse(cr, uid, ref("sale_order_so8"))
-        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
-        po = pur_obj.browse(cr, uid, pur_id)[0]
-        assert(po.picking_ids),"Picking for purchase order has not been generated"
-        picking, = po.picking_ids
-        stock_partial_picking = self.pool.get('stock.partial.picking')
-        partial_id = stock_partial_picking.create(cr, uid, {},
-                context={'active_model': 'stock.picking',
-                         'active_ids': [picking.id]})
-        stock_partial_picking.do_partial(cr, uid, [partial_id])
--
-  I verify that picking for purchase order has been marked done.
--
-  !python {model: sale.order}: |
-    from tools.translate import _
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        pur_obj = self.pool.get('purchase.order')
-        so = self.browse(cr, uid, ref("sale_order_so8"))
-        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
-        po = pur_obj.browse(cr, uid, pur_id)[0]
-        picking_obj = self.pool.get('stock.picking')
-        ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
-        assert ids, _('Picking is not in the done state!')
--
-  I verify that the sale order is marked as delivered
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so8"))
-    assert (so.shipped == True), "Picking is not done."
--
-  I verify that an invoice has been generated for SO
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so8"))
-    assert so.invoice_ids, "Invoice has not been generated"
--
-  I open the Invoice for the SO.
--
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    invoice_ids = so.invoice_ids
-    for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
--
-  Assign analytic journal into bank journal
--
-  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
-    analytic_journal_id: account.cose_journal_sale
--
-  I pay the invoice
--
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name),('state','=','open')])
-    self.pay_and_reconcile(cr, uid, invoice_id,
-        100000.0, ref('account.cash'), ref('account.period_8'),
-        ref('sale.account_journal_bankjournal0'), ref('account.cash'),
-        ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
-        name='test')
--
-  I verify the invoice are in paid state or not.
--
-  !python {model: account.invoice}: |
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        sale_order_obj = self.pool.get('sale.order')
-        so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
-        invoice_ids = so.invoice_ids
-        for invoice in invoice_ids:
-            assert (invoice.state) =='paid', "Invoice for SO is not in done state."
--
-  I verify that Paid has been set to true.
--
-  !python {model: sale.order}: |
-    sale_id=self.browse(cr, uid, ref("sale_order_so8"))
-    assert(sale_id.invoiced == True), "Paid has not been set to true"
--
-  I verify that sale order is in done state
--
-   !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so8"))
-    assert (so.state == 'done'), "Sale order is not in the done state."
+    from datetime import datetime, timedelta
+    from dateutil.relativedelta import relativedelta
+    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    sale_order = self.browse(cr, uid, ref("order"))
+    assert len(sale_order.picking_ids) >= 1, "Packing should be one"
+
+    for picking in sale_order.picking_ids:
+      assert picking.state == "auto" or "confirmed", "Packing state should be in waitting state"
+      assert picking.origin == sale_order.name,"Packing Name is not correspond with sale order"
+      assert picking.type == 'out',"Packing type should be sending Goods"
+      assert picking.move_type == sale_order.picking_policy,"Packing move type should be Partial Delivery"
+      assert picking.sale_id.id == sale_order.id,"Sale order is not correspond"
+      assert picking.address_id.id == sale_order.partner_shipping_id.id,"Address is not correspond with sale order"
+      assert picking.note == sale_order.note,"Notes is not correspond with sale order"
+      assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice state is not correspond with sale order"
+      assert picking.company_id.id == sale_order.company_id.id,"Company is not correspond with sale order"
+      for index in range(0,len(picking.move_lines)):
+        location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
+        output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
+        date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=sale_order.order_line[index].delay or 0.0)
+        date_planned = (date_planned - timedelta(days=sale_order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        assert picking.move_lines[index].name == sale_order.order_line[index].name[:64],"Name is not correspond"
+        assert picking.move_lines[index].product_id.id == sale_order.order_line[index].product_id.id,"Product is not correspond"
+        assert picking.move_lines[index].date == date_planned,"Plane date is not correspond"
+        assert picking.move_lines[index].date_expected == date_planned,"Expected date is not correspond"
+        assert picking.move_lines[index].product_qty == sale_order.order_line[index].product_uom_qty,"Product Quantity is not correspond"
+        assert picking.move_lines[index].product_uom.id == sale_order.order_line[index].product_uom.id,"Product UOM is not correspond"
+        assert picking.move_lines[index].product_uos_qty == sale_order.order_line[index].product_uos_qty,"Product UOS Quantity is not correspond"
+        assert picking.move_lines[index].product_uos == (sale_order.order_line[index].product_uos and sale_order.order_line[index].product_uos.id) or sale_order.order_line[index].product_uom.id,"Product UOS is not correspond"
+        assert picking.move_lines[index].product_packaging.id == sale_order.order_line[index].product_packaging.id,"Product packaging is not correspond"
+        assert picking.move_lines[index].address_id.id == sale_order.order_line[index].address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
+        assert picking.move_lines[index].location_id.id == location_id,"Source Location is not correspond"
+        assert picking.move_lines[index].note == sale_order.order_line[index].notes,"Notes is not correspond"
+        assert picking.move_lines[index].company_id.id == sale_order.company_id.id,"Company is not correspond"
+        assert picking.move_lines[index].price_unit == sale_order.order_line[index].product_id.standard_price or 0.0,"Price Unit is not correspond"

@@ -12,6 +12,7 @@
             <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
             <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
             <field ref="base.res_partner_address_8" name="partner_order_id"/>
+            <field name="order_policy">postpaid</field>
         </record>
 
         <!--Resource: sale.order.line-->
@@ -21,7 +22,7 @@
             <field name="name">New server config + material</field>
             <field model="product.product" name="product_id" search="[]"/>
             <field model="product.uom" name="product_uom" search="[]"/>
-            <field name="price_unit">123</field>
+            <field name="price_unit">123.20</field>
             <field name="type">make_to_stock</field>
         </record>
 
@@ -30,20 +31,20 @@
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450</field>
+            <field name="price_unit">450.50</field>
             <field name="product_uom_qty">3</field>
             <field name="product_uos_qty">3</field>
             <field name="type">make_to_stock</field>
         </record>
         <record id="line13" model="sale.order.line">
-            <field name="order_id" ref="order"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="order_id" ref="order4"/>
+            <field name="name">[PC3] Medium PC</field>
+            <field name="product_id" ref="product.product_product_pc3"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
-            <field name="price_unit">450</field>
-            <field name="product_uom_qty">3</field>
-            <field name="product_uos_qty">3</field>
+            <field name="price_unit">900</field>
+            <field name="product_uom_qty">5</field>
             <field name="type">make_to_stock</field>
+            <field name="delay">1</field>
         </record>
         <record id="line12" model="sale.order.line">
             <field name="order_id" ref="order"/>
