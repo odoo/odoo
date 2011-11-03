@@ -33,9 +33,13 @@ class pos_details(report_sxw.rml_parse):
         else:
             return  ''
 
+    def _get_all_users(self):
+        user_obj = self.pool.get('res.users')
+        return user_obj.search(self.cr, self.uid, [])
+
     def _pos_sales_details(self,form):
         data = {}
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute ("select po.name as pos_name,po.date_order,pt.name, pp.default_code as code,pol.qty,pu.name as uom,pol.price_unit,pol.discount,po.invoice_id,sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,product_uom as pu,res_users as ru,res_company as rc " \
                          "where  pt.id=pp.product_tmpl_id and pu.id=pt.uom_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
@@ -54,7 +58,7 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_qty_total_2(self, form):
         qty=[]
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute("select sum(pol.qty) as qty " \
                         "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt,res_users as ru,res_company as rc " \
                         "where  pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('done','paid','invoiced') " \
@@ -75,7 +79,7 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_sum_invoice_2(self,form):
         res2=[]
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))" \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc,account_invoice as ai " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and ai.id=po.invoice_id " \
@@ -88,7 +92,7 @@ class pos_details(report_sxw.rml_parse):
 
     def _paid_total_2(self,form):
         res3=[]
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute ("select sum(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))" \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('paid','invoiced','done')  " \
@@ -101,7 +105,7 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_sum_dis_2(self,form):
         res4=[]
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute ("select sum(pol.qty)" \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc " \
                          "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('paid')  " \
@@ -126,7 +130,7 @@ class pos_details(report_sxw.rml_parse):
     def _get_payments(self, form):
         statement_line_obj = self.pool.get("account.bank.statement.line")
         pos_order_obj = self.pool.get("pos.order")
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         pos_ids=pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
         data={}
         if pos_ids:
@@ -175,7 +179,7 @@ class pos_details(report_sxw.rml_parse):
         temp={}
         list_ids = []
         temp2 = 0.0
-        user_ids = form['user_ids'] or [self.uid]
+        user_ids = form['user_ids'] or self._get_all_users()
         pos_order_obj = self.pool.get("pos.order")
         pos_ids = pos_order_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('state','in',['paid','invoiced','done']),('user_id','in',user_ids)])
         temp.update({'name':''})
@@ -195,6 +199,10 @@ class pos_details(report_sxw.rml_parse):
 
     def _get_period2(self,form):
         return form['date_end']
+
+    def _get_user_names(self, user_ids):
+        user_obj = self.pool.get('res.users')
+        return ', '.join(map(lambda x: x.name, user_obj.browse(self.cr, self.uid, user_ids)))
 
     def __init__(self, cr, uid, name, context):
         super(pos_details, self).__init__(cr, uid, name, context=context)
@@ -218,6 +226,7 @@ class pos_details(report_sxw.rml_parse):
             'getsuminvoice2':self._get_sum_invoice_2,
             'getpaidtotal2': self._paid_total_2,
             'getinvoice':self._get_invoice,
+            'get_user_names': self._get_user_names,
         })
 
 report_sxw.report_sxw('report.pos.details', 'pos.order', 'addons/point_of_sale_singer/report/pos_details.rml', parser=pos_details, header='internal')

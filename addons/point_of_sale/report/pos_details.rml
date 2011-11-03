@@ -26,6 +26,10 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table2">
       <blockAlignment value="LEFT"/>
@@ -43,6 +47,10 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -164,10 +172,13 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="208.0,133.0,85.0,86.0" style="Table1">
+    <blockTable colWidths="104.0,104.0,133.0,85.0,86.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Company</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Users</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Print Date</para>
@@ -180,10 +191,13 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="208.0,133.0,85.0,85.0" style="Table2">
+    <blockTable colWidths="104.0,104.0,133.0,85.0,85.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ company.name ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ get_user_names(data['form']['user_ids']) or 'All' ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d'),date=True) ]]</para>
