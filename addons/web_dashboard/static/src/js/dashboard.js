@@ -468,7 +468,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
             [['name', '=', module_name], ['state', '=', 'uninstalled']]);
         var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
 
-        $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+        $.blockUI();
         Modules.read_slice(['id'], {}, function (records) {
             if (!(records.length === 1)) { $.unblockUI(); return; }
             Modules.call('state_update',

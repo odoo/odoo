@@ -33,7 +33,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 radio:true
             },
         };
-        this.view_edit_dialog = new openerp.web.Dialog(this,{
+        this.view_edit_dialog = new openerp.web.Dialog(this, {
             modal: true,
             title: 'ViewEditor',
             width: 750,
@@ -50,8 +50,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 $(this).dialog('destroy');
             }
         },
-        });
-        this.view_edit_dialog.start().open();
+        }).start().open();
         var action_manager = new openerp.web.ActionManager(this);
         action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
@@ -118,16 +117,15 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     },
     get_arch: function() {
         var self = this;
-        var view_id =
-            ((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent())
-                    .attr('data-id');
         var view_arch_list = [];
+        self.main_view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-        ve_dataset.read_ids([parseInt(view_id)], ['arch'], function (arch) {
-            arch_object = self.parse_xml(arch[0].arch, view_id);
-            view_arch_list.push({"view_id" : view_id, "arch" : arch[0].arch});
+        ve_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function (arch) {
+            var arch_object = self.parse_xml(arch[0].arch,self.main_view_id);
+            self.main_view_type = arch[0].type
+            view_arch_list.push({"view_id" : self.main_view_id, "arch" : arch[0].arch});
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
-            dataset.read_slice([], {domain : [['inherit_id','=', parseInt(view_id)]]}, function (result) {
+            dataset.read_slice([], {domain : [['inherit_id','=', parseInt(self.main_view_id)]]}, function (result) {
                 _.each(result, function(res) {
                     view_arch_list.push({"view_id":res.id,"arch":res.arch});
                     self.inherit_view(arch_object, res);
@@ -235,7 +233,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.edit_xml_dialog = new openerp.web.Dialog(this,{
             modal: true,
-            title: 'Edit Xml',
+            title: 'View Editor',
             width: 750,
             height: 500,
             buttons: {
@@ -243,10 +241,25 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     //todo
                 },
                 "Preview": function(){
-                    //todo
+                    var action = {
+                        context:self.session.user_context,
+                        res_model : self.model,
+                        views : [[self.main_view_id, self.main_view_type]],
+                        type: 'ir.actions.act_window',
+                        target: "new",
+                        flags: {
+                            sidebar: false,
+                            views_switcher: false,
+                            action_buttons:false,
+                            search_view:false,
+                            pager:false,
+                        },
+                    };
+                    var action_manager = new openerp.web.ActionManager(self);
+                    action_manager.do_action(action);
                 },
                 "Close": function(){
-                    $(this).dialog('destroy');
+                    self.edit_xml_dialog.close();
                 }
             }
         });
@@ -320,9 +333,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         }
                     }
-                    if (last_tr.length != 0 
-                            && parseInt(last_tr.attr('level')) == clicked_tr_level
-                                && 
+                    if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == clicked_tr_level && 
                     (self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") == -1) {
                         _.each(tr_to_move, function(rec) {
                              $(last_tr).before(rec);
@@ -403,34 +414,33 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         return result;
     },
-
     save_arch: function(arch1, obj, id, child_list, level, view_id, arch, move_direct){
         var self = this;
         var children_list =  $(arch1).children();
         var list_obj_xml = _.zip(children_list,obj.child_id);
-        if(id){
-            if(obj.id == id){
+        if (id) {
+            if (obj.id == id) {
                 var id;
                 var parent = $(arch1).parents();
-                var index = _.indexOf(child_list,obj)
-                var re_insert_obj = child_list.splice(index,1);
-                if(move_direct == "down"){
+                var index = _.indexOf(child_list, obj)
+                var re_insert_obj = child_list.splice(index, 1);
+                if (move_direct == "down") {
                     var next = $(arch1).next();
                     $(next).after(arch1);
                     child_list.splice(index+1, 0, re_insert_obj[0]);
-                }else{
+                } else {
                     var prev = $(arch1).prev();
                     $(prev).before(arch1);
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                 }
                 parent = parent[parent.length-1];
                 var convert_to_utf = self.xml2Str(parent);
-                if(convert_to_utf){
+                if (convert_to_utf) {
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
-                    convert_to_utf = '<?xml version="1.0" encoding="utf-8"?>' + convert_to_utf;
+                    convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                     arch.arch = convert_to_utf;
                     dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-                        dataset.write(parseInt(view_id),{"arch":convert_to_utf},function(r){
+                        dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
                     });
                 }
             }
@@ -454,7 +464,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
          }
        }
     },
-
     on_expand: function(expand_img){
         var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");

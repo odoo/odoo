@@ -2,7 +2,7 @@
 import os
 import re
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 
 execfile('addons/web/common/release.py')
 
@@ -57,14 +57,7 @@ setup(
     ],
     test_suite = 'unittest2.collector',
     zip_safe=False,
-    packages=[
-        'addons',
-        'addons.base',
-        'addons.base.controllers',
-        'addons.base_calendar',
-        'addons.base_hello',
-        'openerpweb',
-    ],
+    packages=find_packages(),
     classifiers=[
         'Development Status :: 6 - Production/Stable',
         'Operating System :: OS Independent',
@@ -72,7 +65,7 @@ setup(
         'Environment :: Web Environment',
         'Topic :: Office/Business :: Financial',
         ],
-    scripts=['scripts/openerp-web'],
+    scripts=['openerp-web'],
     data_files=(find_data_files('addons')
               + opts.pop('data_files', [])
     ),

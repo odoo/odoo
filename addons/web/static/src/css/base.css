@@ -846,7 +846,7 @@ label.error {
 .openerp .oe_frame.oe_forms {
     clear: both;
 }
-.openerp table.oe_frame td {
+.openerp table.oe_frame {
     color: #4c4c4c;
 }
 .openerp td.oe_form_frame_cell {
@@ -874,7 +874,6 @@ label.error {
 }
 
 .openerp .oe_forms label.oe_label, .openerp .oe_forms label.oe_label_help {
-    text-align: right;
     margin: 3px 0 0 10px;
 }
 .openerp label.oe_label_help span {
@@ -884,6 +883,18 @@ label.error {
     position: relative;
     top: -4px;
     padding: 0 2px;
+}
+.openerp .oe_align_left {
+    text-align: left;
+}
+.openerp .oe_align_right {
+    text-align: right;
+}
+.openerp .oe_align_center {
+    text-align: center;
+}
+.openerp .oe_forms .oe_form_paragraph {
+    margin: 3px 0 0 0;
 }
 
 /* Inputs */
