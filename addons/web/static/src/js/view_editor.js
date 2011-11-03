@@ -66,28 +66,34 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             });
         });
     },
-
     convert_tag_to_obj: function(xml, level) {
-        var obj = {'child_id':[],'id':this.xml_element_id++,'level':level+1,'att_list':[],'name':""};
+        var obj = {
+            'child_id': [],
+            'id': this.xml_element_id++,
+            'level': level + 1,
+            'att_list': [],
+            'name': ''
+        };
         var tag = xml.tagName.toLowerCase();
         obj.att_list.push(tag);
-        obj.name = "<"+ tag
+        obj.name = "<" + tag;
         $(xml).each(function() {
-            _.each(this.attributes, function(attrs){
-            if (tag != 'button' && tag != 'field') {
-                if (attrs.nodeName == "string" ) {
-                obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ;}
-            } else {
-                if (attrs.nodeName == "name") {
-                obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';}
-            }
-            obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
+            _.each(this.attributes, function(attrs) {
+                if (tag != 'button' && tag != 'field') {
+                    if (attrs.nodeName == "string" ) {
+                        obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+                    }
+                } else {
+                    if (attrs.nodeName == "name") {
+                        obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
+                    }
+                }
+                obj.att_list.push([attrs.nodeName, attrs.nodeValue]);
             });
-        obj.name+= ">";
+            obj.name += ">";
         });
         return obj;
     },
-
     append_child_object: function(val, parent_list, child_obj_list) {
         var self = this;
         if (val.child_id.length != 0) {
@@ -97,60 +103,63 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             });
         } else { val.child_id = child_obj_list; }
     },
-
     convert_arch_to_obj: function(xml, parent_list, parent_id, main_object){
         var self = this;
         var child_obj_list = [];
         var children_list = $(xml).children();
         var parents = $(children_list[0]).parents().get();
-        _.each(children_list, function (child_node) {
+        _.each(children_list, function(child_node) {
             child_obj_list.push(self.convert_tag_to_obj(child_node,parents.length));
         });
         if (children_list.length != 0) {
-            if(parents.length <= parent_list.length) {parent_list.splice(parents.length - 1);}
+            if(parents.length <= parent_list.length) { parent_list.splice(parents.length - 1);}
             parent_list.push(parent_id);
             self.append_child_object(main_object[0], parent_list.slice(1), child_obj_list);
         }
-        for (var i=0; i<children_list.length; i++) {
-            self.convert_arch_to_obj
-            (children_list[i], parent_list, child_obj_list[i].id, main_object);
+        for (var i = 0; i < children_list.length; i++) {
+            self.convert_arch_to_obj(children_list[i], parent_list, child_obj_list[i].id, main_object);
         }
         return main_object;
     },
     parse_xml: function(arch, view_id) {
         var root = $(arch).filter(":first")[0];
         var tag = root.tagName.toLowerCase();
-        var view_obj ={'child_id':[],'id':this.xml_element_id++,
-            'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
-        var root_object = this.convert_tag_to_obj(root,0);
+        var view_obj = {
+            'child_id': [],
+            'id': this.xml_element_id++,
+            'level': 0,
+            'att_list': [],
+            'name': _.sprintf("<view view_id='%d'>", view_id),
+        };
+        var root_object = this.convert_tag_to_obj(root, 0);
         view_obj.child_id = this.convert_arch_to_obj(arch, [], this.xml_element_id, [root_object], []);
         return [view_obj];
     },
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-        ve_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function (arch) {
-            var arch_object = self.parse_xml(arch[0].arch,self.main_view_id);
+        var view_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
+        view_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
+            var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
             self.main_view_type = arch[0].type
-            view_arch_list.push({"view_id" : self.main_view_id, "arch" : arch[0].arch});
+            view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
             dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
-            dataset.read_slice([], {domain : [['inherit_id','=', parseInt(self.main_view_id)]]}, function (result) {
+            dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
                 _.each(result, function(res) {
-                    view_arch_list.push({"view_id":res.id,"arch":res.arch});
+                    view_arch_list.push({"view_id": res.id, "arch": res.arch});
                     self.inherit_view(arch_object, res);
                 });
                 return self.edit_view({"main_object": arch_object,
-                         "parent_child_id": self.parent_child_list(arch_object, []),
-                         "arch": view_arch_list});
+                    "parent_child_id": self.parent_child_list(arch_object, []),
+                    "arch": view_arch_list});
             });
         });
     },
     parent_child_list : function(one_object, parent_list) {
         var self = this;
-        _.each(one_object , function(element){
-            if(element.child_id.length != 0){
-                parent_list.push({"key":element.id,"value":_.pluck(element.child_id, 'id')});
+        _.each(one_object , function(element) {
+            if (element.child_id.length != 0) {
+                parent_list.push({"key": element.id, "value": _.pluck(element.child_id, 'id')});
                 self.parent_child_list(element.child_id, parent_list);
             }
         });
@@ -160,21 +169,22 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var root = $(result.arch).filter('*');
         var xml_list = [];
-        (root[0].tagName.toLowerCase() == "data")?xml_list = $(root[0]).children() : xml_list.push(root[0]);
-        _.each(xml_list , function(xml){
+        root[0].tagName.toLowerCase() == "data"? xml_list = $(root[0]).children() : xml_list.push(root[0]);
+        _.each(xml_list, function(xml) {
             var expr_to_list = [];
             var xpath_arch_object = self.parse_xml(xml,result.id);
             if (xml.tagName.toLowerCase() == "xpath" ) {
-                var part_expr = _.without($(xml).attr('expr').split("/"),"");
-                _.each(part_expr,function(part){
-                    expr_to_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"),""));
+                var part_expr = _.without($(xml).attr('expr').split("/"), "");
+                _.each(part_expr, function(part) {
+                    expr_to_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"), ""));
                 });
             } else {
-                var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list)
-                    { return _.include(list, "position")});
-                    expr_to_list = [_.flatten(temp)];
+                var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
+                    return _.include(list, "position")
+                });
+                expr_to_list = [_.flatten(temp)];
             }
-            self.inherit_apply(expr_to_list ,arch_object ,xpath_arch_object);
+            self.inherit_apply(expr_to_list, arch_object ,xpath_arch_object);
         });
     },
     inherit_apply: function(expr_list ,arch_object ,xpath_arch_object) {
