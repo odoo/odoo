@@ -167,16 +167,12 @@ class product_uom(osv.osv):
             return {'value': {'factor': 1, 'factor_inv': 1}}
         return {}
     
-    def write(self, cr, uid, ids, vals, context=None, update_check=True):
-        if context is None:
-            context={}
-        category_browse = self.browse(cr, uid,ids)[0]
-        old_category = category_browse.category_id
-        if 'category_id' in vals.keys():
-            if vals['category_id'] <> old_category.id:
-                raise osv.except_osv(_('Warning'),_("User can not change the existing UOM category '%s' !! ") % (old_category.name,))
-        res = super(product_uom, self).write(cr, uid, ids, vals, context=context)
-        return res
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'category_id' in vals:
+            for uom in self.browse(cr, uid, ids, context=context):
+                if uom.category_id != vals['category_id']:
+                    raise osv.except_osv(_('Warning'),_("Cannot change the category of existing UoM '%s'.") % (uom.name,))
+        return super(product_uom, self).write(cr, uid, ids, vals, context=context)
 
 product_uom()
 
