@@ -2,7 +2,9 @@
  * OpenERP web_gantt
  *---------------------------------------------------------*/
 openerp.web_gantt = function (openerp) {
+var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
+
 QWeb.add_template('/web_gantt/static/src/xml/web_gantt.xml');
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
@@ -13,68 +15,167 @@ init: function(parent, dataset, view_id) {
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-        this.fields_views = {};
-        this.widgets = {};
-        this.widgets_counter = 0;
-        this.fields = this.dataset.fields ? this.dataset.fields: {};
-        this.ids = this.dataset.ids;
-        this.name = "";
-        this.date_start = "";
-        this.date_delay = "";
-        this.date_stop = "";
-        this.color_field = "";
-        this.colors = [];
-        this.color_values = [];
-        this.calendar_fields = {};
-        this.info_fields = [];
-        this.domain = this.dataset._domain ? this.dataset._domain: [];
+        this.domain = this.dataset.domain || [];
+        this.groupby = [];
         this.context = this.dataset.context || {};
+        this.has_been_loaded = $.Deferred();
+//        this.ganttChartControl = new GanttChart();
+        this.COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
+                 '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
+                 '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
+                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900'];
     },
 
     start: function() {
         this._super();
-        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
     },
 
     on_loaded: function(data) {
-
-        var self = this;
-        this.fields_view = data;
-
-        this.name =  this.fields_view.arch.attrs.string;
-        this.view_id = this.fields_view.view_id;
-    	
-        this.date_start = this.fields_view.arch.attrs.date_start;
-        this.date_delay = this.fields_view.arch.attrs.date_delay;
-        this.date_stop = this.fields_view.arch.attrs.date_stop;
-
-        this.color_field = this.fields_view.arch.attrs.color;
+        this.fields_view = data,
+        this.name =  this.fields_view.arch.attrs.string,
+        this.view_id = this.fields_view.view_id,
+        this.fields = this.fields_view.fields;
+        
+        this.date_start = this.fields_view.arch.attrs.date_start,
+        this.date_delay = this.fields_view.arch.attrs.date_delay,
+        this.date_stop = this.fields_view.arch.attrs.date_stop,
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
+
+        this.color_field = this.fields_view.arch.attrs.color,
         this.colors = this.fields_view.arch.attrs.colors;
-        var arch_children = this.fields_view.arch.children[0];
-        this.text = arch_children.children[0] ? arch_children.children[0].attrs.name : arch_children.attrs.name;
-        this.parent = this.fields_view.arch.children[0].attrs.link;
-
-        this.format = "yyyy-MM-dd";
-        this.grp = [];
-
-        self.create_gantt();
-        self.get_events();
-
-        this.$element.html(QWeb.render("GanttView", {"view": this, "fields_view": this.fields_view}));
-
+        
+        var level = this.fields_view.arch.children[0];
+        this.parent = level.attrs.link,
+        this.text = level.children.length ? level.children[0].attrs.name : level.attrs.name;
+        
+        this.$element.html(QWeb.render("GanttView", {'height': $('.oe-application-container').height(), 'width': $('.oe-application-container').width()}));
+        this.has_been_loaded.resolve();
+    },
+    
+    on_project_loaded: function(projects) {
+        
+        if(!projects.length) return;
+        var self = this,
+            unstarted_project = _.detect(projects, function(res) {
+            return !res[self.date_start];
+        });
+        
+        if(unstarted_project) return self.do_warn(_t("Start date is not defined "), unstarted_project.id);
+        
+        $.when(this.project_starting_date(projects), this.project_duration(projects), this.calculate_difference())
+            .done(function() {
+                var Project = new GanttProjectInfo(0, self.name, self.project_start_date),
+                    Task = new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, "");
+                $.when(self.add_tasks(projects, Task))
+                    .done(function() {
+                        self.init_gantt_view(Project, Task);
+                    })
+            });
+    },
+    
+    project_duration: function(projects) {
+        
+        var self = this;
+        this.project_duration = [];
+        
+        _.each(projects, function(project, index) {
+            if (this.date_stop && project[this.date_stop]) {
+                //ToDO
+                console.log('TODO for date_stop');
+                self.project_duration.push(0);
+            } else if(self.date_delay && project[self.date_delay]) {
+                self.project_duration.push(project[self.date_delay]);
+            } else {
+                self.project_duration.push(0);
+            }
+        });
+        
+        this.max_project_duration = _.max(this.project_duration);
+        
+        return $.Deferred().resolve().promise();
+    },
+    
+    calculate_difference: function() {
+        
+        
+        var extend_end_date_day = Math.floor(this.max_project_duration / this.day_length),
+            extend_end_date_hours = this.max_project_duration % this.day_length;
+        
+        this.project_end_date = this.project_end_date.add({days: extend_end_date_day, hours: extend_end_date_hours})
+        
+        var DAY = 1000 * 60 * 60 * 24,
+            difference = Math.abs(this.project_start_date.getTime() - this.project_end_date.getTime()),
+            day = Math.ceil(difference / DAY),
+            hour = (difference % DAY)/(1000 * 60 * 60),
+            DiffHour = (day * this.day_length) + hour;
+            
+        this.total_duration = parseFloat(DiffHour.toFixed(2));
+        return $.Deferred().resolve().promise();
+    },
+    
+    add_tasks: function(tasks, parentTask) {
+        var self = this;
+        
+        _.each(tasks, function(task, index) {
+            parentTask.addChildTask(new GanttTaskInfo(task.id, task.name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""));
+        });
+        
+        return $.Deferred().resolve().promise();
+    },
+    
+    project_starting_date : function(projects) {
+        var self = this;
+        var min_date = _.min(projects, function(prj) {
+            return new Date(prj[self.date_start]);
+        });
+        
+        var max_date = _.max(projects, function(prj) {
+            return self.format_date(prj[self.date_start])
+        });
+        this.project_end_date =  this.format_date(max_date[self.date_start]);
+        if (min_date) this.project_start_date = this.format_date(min_date[self.date_start]);
+        else 
+            this.project_start_date = Date.today();
+        
+        return $.Deferred().resolve().promise();
     },
 
-    create_gantt: function() {
+    init_gantt_view: function(Project, Task) {
+        Project.addTask(Task);
+        ganttChartControl = new GanttChart();
 
-        ganttChartControl = new GanttChart(this.day_length);
+        // Setup paths and behavior
         ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
         ganttChartControl.showContextMenu(false);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
-
+        // Load data structure      
+        ganttChartControl.addProject(Project);
+        ganttChartControl.create('GanttView');
+        // Create Gantt control
+        
+    },
+    
+    add_project_info: function(smalldate, project, index) {
+        
+    },
+    
+    format_date : function(date) {
+        var datetime_regex = /^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)(?:\.\d+)?$/,
+            date_regex = /^\d\d\d\d-\d\d-\d\d$/,
+            time_regex = /^(\d\d:\d\d:\d\d)(?:\.\d+)?$/,
+            def = $.Deferred();
+        if(date_regex.exec(date)) {
+            this.date_format = "yyyy-MM-dd";
+        } else if(time_regex.exec(date)) {
+            this.date_format = "HH:mm:ss";
+        } else {
+            this.date_format = "yyyy-MM-dd HH:mm:ss";
+        }
+        return openerp.web.auto_str_to_date(date);
     },
 
     get_events: function() {
@@ -502,8 +603,19 @@ init: function(parent, dataset, view_id) {
 
     do_search: function (domains, contexts, groupbys) {
         var self = this;
-        this.grp = groupbys;
-        self.reload_gantt();
+        this.group_by = groupbys;
+        $.when(this.has_been_loaded).then(function() {
+            self.dataset
+                .read_slice(_.keys(self.fields), {
+                    domain: domains,
+                    context: contexts,
+                    group_by: groupbys
+                })
+                .done(function(projects) {
+                    self.on_project_loaded(projects);
+                });
+        })
+        
     }
 
 });
