@@ -73,4 +73,37 @@
             assert move.note == order.notes,"Notes is not correspond"
             assert move.company_id.id == sale_order.company_id.id,"Company is not correspond"
             assert move.price_unit == order.product_id.standard_price or 0.0,"Price Unit is not correspond"
-
+-
+  I check that Invoice details after confirmed Quotation3.
+-
+  !python {model: sale.order}: |
+    from datetime import datetime, timedelta
+    from dateutil.relativedelta import relativedelta
+    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    order = self.browse(cr, uid, ref("order3"))
+    ac = order.partner_id.property_account_receivable.id
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)], limit=1)
+    
+    for invoice in order.invoice_ids:
+      assert invoice.origin == order.name,"Name is not correspond"
+      assert invoice.type == 'out_invoice',"Type should be Out Invoice"
+      assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond"
+      assert invoice.partner_id.id == order.partner_id.id,"Partner is not correspond"
+      assert invoice.address_invoice_id.id == order.partner_invoice_id.id,"Invoice Address is not correspond"
+      assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond"
+      assert invoice.comment == order.note,"Notes is not correspond"
+      assert invoice.fiscal_position.id ==  order.fiscal_position.id or order.partner_id.property_account_position.id,"Fiscal position not correspond"
+      assert invoice.company_id.id == order.company_id.id,"Company is not correspond"
+      assert invoice.user_id.id == order.user_id.id or False, "User is not correspond"   
+      assert invoice.account_id.id == ac,"There is no receivable account"
+      assert invoice.journal_id.id == journal_ids[0],"There is no sales journal defined for this company"
+      for inv in invoice.invoice_line:
+        for so in order.order_line:
+          if inv.name == so.name:
+            ac = so.product_id.product_tmpl_id.property_account_income.id or so.product_id.categ_id.property_account_income_categ.id
+            assert inv.name == so.name,"Name is not correspond"
+            assert inv.origin == so.order_id.name,"Origin is not correspond"
+            assert inv.discount == so.discount,"Discount is not correspond"
+            assert inv.product_id.id == so.product_id.id or False,"Product is not correspond"
+            assert inv.note == so.notes,"Notes is not correspond"
+            assert inv.account_id.id == ac,"There is no income account defined for this product"
