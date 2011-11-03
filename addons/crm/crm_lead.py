@@ -688,17 +688,8 @@ class crm_lead(crm_case, osv.osv):
         models_data = self.pool.get('ir.model.data')
 
         # Get Opportunity views
-        opportunity_view_form = models_data._get_id(
-            cr, uid, 'crm', 'crm_case_form_view_oppor')
-        opportunity_view_tree = models_data._get_id(
-            cr, uid, 'crm', 'crm_case_tree_view_oppor')
-        if opportunity_view_form:
-            opportunity_view_form = models_data.browse(
-                cr, uid, opportunity_view_form, context=context).res_id
-        if opportunity_view_tree:
-            opportunity_view_tree = models_data.browse(
-                cr, uid, opportunity_view_tree, context=context).res_id
-
+        form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
+        tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_oppor')
         return {
                 'name': _('Opportunity'),
                 'view_type': 'form',
@@ -707,8 +698,8 @@ class crm_lead(crm_case, osv.osv):
                 'domain': [('type', '=', 'opportunity')],
                 'res_id': int(opportunity_id),
                 'view_id': False,
-                'views': [(opportunity_view_form, 'form'),
-                          (opportunity_view_tree, 'tree'),
+                'views': [(form_view and form_view[1] or False, 'form'),
+                          (tree_view and tree_view[1] or False, 'tree'),
                           (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
         }

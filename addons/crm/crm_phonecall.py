@@ -209,25 +209,18 @@ class crm_phonecall(crm_base, osv.osv):
     def redirect_phonecall_view(self, cr, uid, phonecall_id, context=None):
         model_data = self.pool.get('ir.model.data')
         # Select the view
-        id2 = model_data._get_id(cr, uid, 'crm', 'crm_case_phone_tree_view')
-        id3 = model_data._get_id(cr, uid, 'crm', 'crm_case_phone_form_view')
-        if id2:
-            id2 = model_data.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = model_data.browse(cr, uid, id3, context=context).res_id
-
-        result = model_data._get_id(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
-        res = model_data.read(cr, uid, result, ['res_id'])
-
+        tree_view = model_data.get_object_reference(cr, uid, 'crm', 'crm_case_phone_tree_view')
+        form_view = model_data.get_object_reference(cr, uid, 'crm', 'crm_case_phone_form_view')
+        search_view = model_data.get_object_reference(cr, uid, 'crm', 'view_crm_case_phonecalls_filter')
         value = {
                 'name': _('Phone Call'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'crm.phonecall',
                 'res_id' : int(phonecall_id),
-                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
+                'views': [(form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
+                'search_view_id': search_view and search_view[1] or False,
         }
         return value
 

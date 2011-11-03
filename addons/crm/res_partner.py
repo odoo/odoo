@@ -35,10 +35,7 @@ class res_partner(osv.osv):
     }
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
-        model_data = self.pool.get('ir.model.data')
-        result = model_data._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = model_data.read(cr, uid, result, ['res_id'])
-
+        search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
         value = {
             'domain': "[]",
             'view_type': 'form',
@@ -48,7 +45,7 @@ class res_partner(osv.osv):
             'view_id': False,
             'context': context,
             'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
+            'search_view_id': search_view and search_view[1] or False
         }
         return value
 
