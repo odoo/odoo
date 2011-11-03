@@ -78,7 +78,7 @@ class sale_order(osv.osv, EDIMixin):
             edi_doc = super(sale_order,self).edi_export(cr, uid, [order], edi_struct, context)[0]
             edi_doc.update({
                     # force trans-typing to purchase.order upon import
-                    '__import_model': 'purchase',
+                    '__import_model': 'purchase.order',
                     '__import_module': 'purchase',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
