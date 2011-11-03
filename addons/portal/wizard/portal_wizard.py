@@ -23,7 +23,7 @@ import logging
 import random
 
 from osv import osv, fields
-from tools.misc import email_re, email_send
+from tools.misc import email_re
 from tools.translate import _
 
 from base.res.res_users import _lang_get
@@ -163,6 +163,7 @@ class wizard(osv.osv_memory):
                 'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
+            mail_message_obj = self.pool.get('mail.message')
             dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
             dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
             for dest_user in dest_users:
@@ -175,7 +176,7 @@ class wizard(osv.osv_memory):
                 email_to = dest_user.user_email
                 subject = _(WELCOME_EMAIL_SUBJECT) % data
                 body = _(WELCOME_EMAIL_BODY) % data
-                res = email_send(email_from, [email_to], subject, body)
+                res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, model=context.get('active_model'), res_id=u.partner_id.id, context=context)
                 if not res:
                     logging.getLogger('res.portal.wizard').warning(
                         'Failed to send email from %s to %s', email_from, email_to)
