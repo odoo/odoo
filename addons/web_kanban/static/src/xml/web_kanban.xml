@@ -11,9 +11,9 @@
     </table>
 </t>
 <t t-name="KanbanView.group_header">
-    <td class="oe_table_column" t-att-id="'column_' + widget.value">
-        <img t-if="widget.foldable" t-att-id="widget.value" class="fold-columns-icon"  src="/web_kanban/static/src/img/minus-icon.png"/>
-        <div class="oe_fold_column" t-att-id="'column_' + widget.value">
+    <td class="oe_table_column">
+        <img t-if="widget.foldable" class="fold-columns-icon" src="/web_kanban/static/src/img/minus-icon.png"/>
+        <div class="oe_fold_column">
             <div class="oe_column_heading" t-if="widget.title">
                 <t t-esc="widget.title"/>
             </div>
@@ -24,12 +24,12 @@
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
-    <td class="oe_column oe_table_column" t-att-id="'column_' + widget.value" t-attf-style="width: #{Math.round(99 / widget.view.groups.length)}%">
-        <p t-if="widget.title" class="oe_vertical_text" t-att-id="'column_' + widget.value"><t t-esc="widget.title"/></p>
+    <td class="oe_column oe_table_column" t-attf-style="width: #{Math.round(99 / widget.view.groups.length)}%">
+        <p t-if="widget.title" class="oe_vertical_text"><t t-esc="widget.title"/></p>
     </td>
 </t>
 <t t-name="KanbanView.record">
-    <div class="oe_fold_column oe_kanban_record" t-att-id="'main_' + widget.record.id">
+    <div class="oe_fold_column oe_kanban_record">
         <t t-raw="content"/>
     </div>
 </t>
