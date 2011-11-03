@@ -1,7 +1,6 @@
 openerp.web_kanban = function (openerp) {
 
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_kanban/static/src/xml/web_kanban.xml');
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     init: function (parent, dataset, view_id, options) {
