@@ -290,6 +290,8 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
                 method = 'do_action_' + type;
             if (typeof self[method] === 'function') {
                 self[method]($action);
+            } else {
+                self.do_warn("Kanban: no action for type : " + type);
             }
             return false;
         });
@@ -313,7 +315,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             if (self.view.dataset.select_id(this.id)) {
                 this.view.do_switch_view('form');
             } else {
-                this.warn("Could not find id#" + id);
+                this.do_warn("Kanban: could not find id#" + id);
             }
         }
     },
@@ -339,9 +341,9 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             return false;
         });
     },
-    do_action_button: function ($action) {
+    do_action_object: function ($action) {
         var button_attrs = $action.data();
-        this.on_execute_button_click(this.dataset, button_attrs, record_id);
+        this.view.do_execute_action(button_attrs, this.view.dataset, this.id, this.do_reload);
     },
     do_reload: function() {
         var self = this;
@@ -451,19 +453,6 @@ openerp.web_kanban.KanbanView_old = openerp.web.View.extend({
                 records.splice(0,record_per_group);
             }
         }
-    },
-    on_record_saved: function(r) {
-        var id = this.form_dialog.form.datarecord.id;
-        this.on_reload_record(id);
-    },
-    on_execute_button_click: function (dataset, button_attrs, record_id) {
-        var self = this;
-        this.do_execute_action(
-            button_attrs, dataset,
-            record_id, function () {
-                self.on_reload_record(record_id);
-            }
-        );
     },
     on_receive_record: function (event, ui) {
         var self = this;
