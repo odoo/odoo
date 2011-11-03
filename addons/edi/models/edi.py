@@ -155,6 +155,8 @@ class edi_document(osv.osv):
             model = edi_document.get('__import_model') or edi_document.get('__model')
             assert model, 'a `__model` or `__import_model` attribute is required in each EDI document'
             model_obj = self.pool.get(model)
+            assert model_obj, 'model `%s` cannot be found, despite module `%s` being available - '\
+                              'this EDI document seems invalid or unsupported' % (model,module)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             res.append((model, record_id))
         return res
@@ -454,7 +456,8 @@ class EDIMixin(object):
                 for edi_record in self.browse(local_cr, uid, ids, context=context):
                     edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
                     edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
-                    self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id, context=edi_context)
+                    self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
+                                                              force_send=True, context=edi_context)
             except Exception:
                 _logger.warning('Ignoring EDI mail notification, failed to generate it.', exc_info=True)
             finally:
