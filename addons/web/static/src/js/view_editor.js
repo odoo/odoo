@@ -15,22 +15,22 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init_view_editor: function() {
         var self = this;
         var action = {
-            name:'ViewEditor',
-            context:this.session.user_context,
+            name: _.sprintf("Manage Views (%s)", this.model),
+            context: this.session.user_context,
             domain: [["model", "=", this.dataset.model]],
-            res_model : 'ir.ui.view',
-            views : [[false, 'list']],
+            res_model: 'ir.ui.view',
+            views: [[false, 'list']],
             type: 'ir.actions.act_window',
             target: "current",
-            limit : 80,
-            auto_search : true,
+            limit: this.dataset.limit || 80,
+            auto_search: true,
             flags: {
                 sidebar: false,
                 deletable: false,
                 views_switcher: false,
-                action_buttons:false,
-                search_view:false,
-                pager:false,
+                action_buttons: false,
+                search_view: false,
+                pager: false,
                 radio: true
             },
         };
@@ -44,11 +44,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 //to do
             },
             "Edit": function(){
-                self.xml_element_id=0;
+                self.xml_element_id = 0;
                 self.get_arch();
             },
             "Close": function(){
-                $(this).dialog('destroy');
+                self.view_edit_dialog.close();
             }
         },
         }).start().open();
@@ -334,7 +334,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                             }
                         }
                     }
-                    if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == clicked_tr_level && 
+                    if (last_tr.length != 0 && parseInt(last_tr.attr('level')) == clicked_tr_level &&
                     (self.edit_xml_dialog.$element.find(last_tr).find('a').text()).search("view_id") == -1) {
                         _.each(tr_to_move, function(rec) {
                              $(last_tr).before(rec);
