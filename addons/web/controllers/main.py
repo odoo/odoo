@@ -202,7 +202,7 @@ class Database(openerpweb.Controller):
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Create Database'}
-        return {'error': 'Could not create database !', 'title': 'Create Database'}
+        return {'error': 'Could not create database !<br/>' + e.faultCode, 'title': 'Create Database'}
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
