@@ -38,7 +38,9 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('name', 'like', 'l10n_')], context=context)
+        # Looking for the module with the 'Account Charts' category
+        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
+        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
