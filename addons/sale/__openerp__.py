@@ -86,11 +86,11 @@ Dashboard for Sales Manager that includes:
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
+        'test/process/postpaid_order_policy.yml',
         'test/data_test.yml',
         'test/manual_order_policy.yml',
         'test/prepaid_order_policy.yml',
         'test/picking_order_policy.yml',
-        'test/postpaid_order_policy.yml',
         'test/advance_invoice.yml',
         'test/so_make_line_invoice.yml',
         'test/sale_procurement.yml',
