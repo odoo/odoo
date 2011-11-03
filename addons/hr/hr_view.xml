@@ -380,7 +380,7 @@
                         </page>
                     </notebook>
                     <group col="6" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="open,recruit,old" statusbar_colors='{"open":"blue","old":"grey"}'/>
                         <button name="job_recruitement" string="In Recruitement" states="open" type="object" icon="gtk-go-forward"/>
                         <button name="job_open" string="In Position" states="old,recruit" type="object" icon="terp-camera_test"/>
                         <button name="job_old" string="Mark as Old" states="open,recruit" type="object" icon="gtk-cancel"/>
