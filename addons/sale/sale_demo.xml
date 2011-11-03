@@ -37,7 +37,7 @@
             <field name="type">make_to_stock</field>
         </record>
         <record id="line13" model="sale.order.line">
-            <field name="order_id" ref="order4"/>
+            <field name="order_id" ref="order"/>
             <field name="name">[PC3] Medium PC</field>
             <field name="product_id" ref="product.product_product_pc3"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -67,6 +67,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_9"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_9"/>
             <field name="partner_order_id" ref="base.res_partner_address_9"/>
+            <field name="order_policy">picking</field>
         </record>
 
         <!--Resource: sale.order.line-->
@@ -100,6 +101,7 @@
             <field name="partner_invoice_id" ref="base.res_partner_address_8"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_8"/>
             <field name="partner_order_id" ref="base.res_partner_address_8"/>
+            <field name="order_policy">prepaid</field>
         </record>
         <record id="line5" model="sale.order.line">
             <field name="order_id" ref="order3"/>
