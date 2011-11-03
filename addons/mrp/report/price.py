@@ -27,7 +27,6 @@ from report import report_sxw
 from datetime import datetime
 from tools.translate import _
 
-#FIXME: we should use toxml
 class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context=None):
         number = (datas.get('form', False) and datas['form']['number']) or 1
