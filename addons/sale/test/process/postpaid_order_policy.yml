@@ -127,5 +127,5 @@
     pick_ids = self.search(cr, uid, [('sale_id','=',ref('order2'))])
     data = self.force_assign(cr, uid, [pick_ids[0]])
     if data == True:
-      a = self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
+      self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
     assert order.invoice_ids, "Invoice not created after picking for sale order1"
