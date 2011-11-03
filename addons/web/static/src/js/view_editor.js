@@ -10,9 +10,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.xml_element_id = 0;
     },
     start: function() {
-        this.View_editor();
+        this.init_view_editor();
     },
-    View_editor : function() {
+    init_view_editor: function() {
         var self = this;
         var action = {
             name:'ViewEditor',
@@ -26,11 +26,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             auto_search : true,
             flags: {
                 sidebar: false,
+                deletable: false,
                 views_switcher: false,
                 action_buttons:false,
                 search_view:false,
                 pager:false,
-                radio:true
+                radio: true
             },
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
