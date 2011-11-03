@@ -7,3 +7,10 @@
     self.process_start(cr, uid, [ref("crm_segmentation0")],context)
     #Todo: Need to check after segmentation started
 
+-
+  I create rule Segmentation line record for partner .
+-
+  !python {model: crm.segmentation.line}: |
+    id = self.create(cr, uid, {'name': "OpenERP partners",'expr_value': 25})
+    self.test(cr, uid, [id],partner_id=0)
+    #Todo: Need to test segmantation line record
