@@ -1,37 +1,68 @@
-.openerp .oe_kanban_view .oe_column {
-    width: 100%;
-}
-
-.openerp .oe_vertical_text {
-    writing-mode:tb-rl;
-    -webkit-transform:rotate(90deg);
-    -moz-transform:rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-    display:block;
-    width:30px;
-    height:20px;
-    align:center;
-    font-size:24px;
-    white-space: nowrap;
-}
-
 .openerp .oe_kanban_view .ui-sortable-placeholder {
     border: 1px dotted black;
     visibility: visible !important;
     height: 60px !important;
 }
+.openerp .oe_kanban_group_header {
+    position: relative;
+}
+.openerp .oe_kanban_group_folded {
+    padding: 0 5px 0 5px;
+}
+.openerp .oe_kanban_group_folded .oe_kanban_group_title,
+.openerp .oe_kanban_group_folded .oe_kanban_aggregates {
+    display: none;
+}
+.openerp .oe_kanban_group_folded .oe_kanban_group_title_vertical {
+    display: block;
+}
 
-.openerp .oe_kanban_view .oe_column_heading {
+.openerp .oe_kanban_group_title {
     color: #000000;
     font-size: 130%;
     font-weight: bold;
 }
-.openerp .oe_kanban_view .fold-columns-icon {
+.openerp .oe_kanban_group_title_vertical {
+    writing-mode: tb-rl;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 30px;
+    height: 20px;
+    align: center;
+    font-size: 24px;
+    white-space: nowrap;
+    display: none;
+    position: absolute;
+    top: 10px;
+}
+
+.openerp .oe_kanban_fold_icon {
+    cursor: pointer;
     float: left;
     padding: 2px 2px 0 0;
+    width: 16px;
+    height: 16px;
+    background: url(/web_kanban/static/src/img/minus-icon.png) no-repeat;
 }
+.openerp .oe_kanban_group_folded .oe_kanban_fold_icon {
+    background: url(/web_kanban/static/src/img/plus-icon.png) no-repeat;
+}
+
+.openerp ul.oe_kanban_aggregates {
+    padding: 0;
+    margin: 0 0 0 22px;
+}
+.openerp ul.oe_kanban_aggregates li {
+    list-style: circle;
+    font-style: italic;
+}
+.openerp ul.oe_kanban_aggregates span {
+    text-decoration: underline;
+}
+
 .openerp .oe_kanban_action_button {
     height: 22px;
     margin: 0;

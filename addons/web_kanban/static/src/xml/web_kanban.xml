@@ -3,29 +3,33 @@
     <div class="oe_kanban_header">
         <button type="button" class="oe_kanban_button_new">New</button>
     </div>
-    <table style="width:100%;" class="oe_kanban_groups">
-    <tr class="oe_kanban_groups_headers">
-    </tr>
-    <tr class="oe_kanban_groups_records">
-    </tr>
-    </table>
+    <div class="oe_kanban_view">
+        <table style="width:100%;" class="oe_kanban_groups">
+        <tr class="oe_kanban_groups_headers">
+        </tr>
+        <tr class="oe_kanban_groups_records">
+        </tr>
+        </table>
+    </div>
 </t>
 <t t-name="KanbanView.group_header">
-    <td class="oe_table_column">
-        <img t-if="widget.foldable" class="fold-columns-icon" src="/web_kanban/static/src/img/minus-icon.png"/>
+    <td class="oe_kanban_group_header">
+        <div t-if="widget.foldable" class="oe_kanban_fold_icon"></div>
         <div class="oe_fold_column">
-            <div class="oe_column_heading" t-if="widget.title">
+            <div class="oe_kanban_group_title" t-if="widget.title">
                 <t t-esc="widget.title"/>
             </div>
-            <div t-foreach="widget.aggregates" t-as="aggregate">
-                <i><u><t t-esc="aggregate"/>:</u> <t t-esc="aggregate_value"/></i>
-            </div>
+            <ul class="oe_kanban_aggregates">
+                <li t-foreach="widget.aggregates" t-as="aggregate">
+                    <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
+                </li>
+            </ul>
         </div>
+        <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
-    <td class="oe_column oe_table_column" t-attf-style="width: #{Math.round(99 / widget.view.groups.length)}%">
-        <p t-if="widget.title" class="oe_vertical_text"><t t-esc="widget.title"/></p>
+    <td class="oe_column">
     </td>
 </t>
 <t t-name="KanbanView.record">
