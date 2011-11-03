@@ -286,10 +286,12 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     do_action_delete: function($action) {
         var self = this;
-        return $.when(this.view.dataset.unlink([this.id])).then(function() {
-            self.group.remove_record(self.id)
-            self.stop();
-        });
+        if (confirm(_t("Qre you sure you want to delete this record ?"))) {
+            return $.when(this.view.dataset.unlink([this.id])).then(function() {
+                self.group.remove_record(self.id)
+                self.stop();
+            });
+        }
     },
     do_action_edit: function($action) {
         var self = this;
