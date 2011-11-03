@@ -22,7 +22,6 @@
 import time
 import pooler
 from report.interface import report_rml
-#from report.interface import toxml
 from tools import to_xml
 from report import report_sxw
 from datetime import datetime
@@ -57,7 +56,7 @@ class report_custom(report_rml):
             sellers, sellers_price = '',''
 
             if prod.seller_id:
-                main_sp_name = "<b>%s</b>\r\n" %to_xml(prod.seller_id.name)
+                main_sp_name = '- <b>'+ to_xml(prod.seller_id.name) +'</b>\r\n'
                 pricelist =  prod.seller_id.property_product_pricelist_purchase
                 price = pricelist_pool.price_get(cr,uid,[pricelist.id],
                      prod.id, number*prod_qtty or 1.0, prod.seller_id.id, {
@@ -78,9 +77,9 @@ class report_custom(report_rml):
                         'date': time.strftime('%Y-%m-%d'),
                         })[pricelist.id]
                 sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ company_currency.symbol +"""</i>\r\n"""
-            xml += """<col para='yes'> """+ to_xml(prod_name) +""" </col>
-                    <col para='yes'> """+ to_xml(main_sp_name) + to_xml(sellers) + """ </col>
-                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ to_xml(uom_id) +"""</col>
+            xml += """<col para='yes'> """+ prod_name +""" </col>
+                    <col para='yes'> """+ main_sp_name + sellers + """ </col>
+                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ uom_id +"""</col>
                     <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price)) +' '+ company_currency.symbol +"""</col>
                     <col f='yes'>""" + main_sp_price + sellers_price + """</col>'"""
 
@@ -89,12 +88,11 @@ class report_custom(report_rml):
 
         def process_workcenter(wrk):
             workcenter = workcenter_pool.browse(cr, uid, wrk['workcenter_id'])
-            workcenter_name = to_xml(workcenter.name)
             cost_cycle = wrk['cycle']*workcenter.costs_cycle
             cost_hour = wrk['hour']*workcenter.costs_hour
             total = cost_cycle + cost_hour
             xml = '<row>'
-            xml += "<col para='yes'>" + to_xml(workcenter_name) + '</col>'
+            xml += "<col para='yes'>" + to_xml(workcenter.name) + '</col>'
             xml += "<col/>"
             xml += """<col f='yes'>"""+rml_obj.formatLang(cost_cycle)+' '+ company_currency.symbol + """</col>"""
             xml += """<col f='yes'>"""+rml_obj.formatLang(cost_hour)+' '+ company_currency.symbol + """</col>"""
@@ -143,11 +141,10 @@ class report_custom(report_rml):
         purchase_price_digits = rml_obj.get_digits(dp='Purchase Price')
 
         for product in product_pool.browse(cr, uid, ids, context=context):
-            product_name = to_xml(product.name)
             uom_id = to_xml(product.uom_id.name)
             bom_id = bom_pool._bom_find(cr, uid, product.id, product.uom_id.id)
             title = "<title>%s</title>" %(_("Cost Structure"))
-            title += "<title>%s</title>" % (to_xml(product_name))
+            title += "<title>%s</title>" % (to_xml(product.name))
             xml += "<lines style='header'>" + title + prod_header + "</lines>"
             if not bom_id:
                 total_strd = number * product.standard_price
@@ -160,7 +157,7 @@ class report_custom(report_rml):
                     <col para='yes'>-</col>
                     </row></lines>"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of %s %s') % (str(number), to_xml(uom_id)) + """: </col>
+                    <col> """ + _('Total Cost of %s %s') % (str(number), uom_id) + """: </col>
                     <col/>
                     <col f='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -187,7 +184,7 @@ class report_custom(report_rml):
 
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                 xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Components Cost of %s %s') % (str(number), to_xml(uom_id)) + """: </col>
+                    <col> """ + _('Components Cost of %s %s') % (str(number), uom_id) + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -204,14 +201,14 @@ class report_custom(report_rml):
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                     xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Work Cost of %s %s') % (str(number), to_xml(uom_id)) +""": </col>
+                    <col> """ + _('Work Cost of %s %s') % (str(number), uom_id) +""": </col>
                     <col/>
                     <col/>
                     <col/>
                     <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
                     </row></lines>'"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of %s %s') % (str(number), to_xml(uom_id)) + """: </col>
+                    <col> """ + _('Total Cost of %s %s') % (str(number), uom_id) + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
