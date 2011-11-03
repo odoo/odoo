@@ -15,7 +15,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.fields_view = {};
         this.fields_keys = [];
         this.group_by = null;
-        this.state = {};
+        this.records_states = {};
+        this.groups_states = {};
         this.groups = [];
         this.nr_columns = 3;
         this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
@@ -235,6 +236,12 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         this.view = parent.view;
         this.id = null;
         this.set_record(record);
+        if (!this.view.records_states[this.id]) {
+            this.view.records_states[this.id] = {
+                folded: false
+            };
+        }
+        this.state = this.view.records_states[this.id];
     },
     set_record: function(record) {
         this.id = record.id;
@@ -270,9 +277,12 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
         });
     },
     bind_events: function() {
-        var self = this;
+        var self = this,
+            $show_on_click = self.$element.find('.oe_kanban_box_show_onclick');
+        $show_on_click.toggle(self.state.folded);
         this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
-            self.$element.find('.oe_kanban_box_show_onclick').toggle();
+            $show_on_click.toggle();
+            self.state.folded = !self.state.folded;
         });
         this.$element.find('.oe_kanban_action').click(function() {
             var $action = $(this),
@@ -300,7 +310,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
                 self.view.form_dialog.open();
             });
         } else {
-            if (self.view.dataset.select_id(id)) {
+            if (self.view.dataset.select_id(this.id)) {
                 this.view.do_switch_view('form');
             } else {
                 this.warn("Could not find id#" + id);
