@@ -34,9 +34,14 @@ class procurement_order(osv.osv):
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
+        uom_obj = self.pool.get('product.uom')
+        default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
         for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.product_uom.id != default_uom:
+                planned_hours = uom_obj._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, default_uom)
+            else:
+                planned_hours = procurement.product_qty
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-            planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
