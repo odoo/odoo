@@ -40,21 +40,31 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             width: 750,
             height: 500,
             buttons: {
-            "Create": function(){
-                //to do
+                "Create": function(){
+                    //to do
+                },
+                "Edit": function(){
+                    self.xml_element_id = 0;
+                    self.get_arch();
+                },
+                "Close": function(){
+                    self.view_edit_dialog.close();
+                }
             },
-            "Edit": function(){
-                self.xml_element_id = 0;
-                self.get_arch();
-            },
-            "Close": function(){
-                self.view_edit_dialog.close();
-            }
-        },
         }).start().open();
         var action_manager = new openerp.web.ActionManager(this);
         action_manager.appendTo(this.view_edit_dialog);
-        action_manager.do_action(action);
+        $.when(action_manager.do_action(action)).then(function() {
+            var viewmanager = action_manager.inner_viewmanager,
+                controller = viewmanager.views[viewmanager.active_view].controller;
+            controller.on_loaded.add_last(function(){
+                $(controller.groups).bind({
+                    'selected': function(e, ids, records) {
+                        self.main_view_id = ids[0];
+                    }
+                })
+            });
+        });
     },
 
     convert_tag_to_obj: function(xml, level) {
@@ -119,7 +129,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        self.main_view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
         ve_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function (arch) {
             var arch_object = self.parse_xml(arch[0].arch,self.main_view_id);
