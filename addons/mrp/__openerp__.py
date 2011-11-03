@@ -93,6 +93,7 @@ Dashboard provided by this module:
     ],
     'test': [
          'test/mrp_production_order.yml',
+         'test/production_order_consume.yml', 
          'test/mrp_packs.yml',
          'test/mrp_production_cancel.yml',
          'test/mrp_report.yml',
