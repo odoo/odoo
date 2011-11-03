@@ -1,5 +1,5 @@
 -
-  I create production order of 5 KIT Shelf of 100cm to test partial consumption and production.
+  I create production order of 5.0 KIT Shelf of 100cm to test partial consumption and production.
 -
   !record {model: mrp.production, id: mrp_production_mo3}:
     company_id: base.main_company
@@ -11,7 +11,7 @@
     product_uom: product.product_uom_unit
     product_uos_qty: 5.0
 -
-  I confirm the manufacturing order.
+  I confirm the production order.
 -
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo3}
 -
@@ -20,11 +20,11 @@
  !python {model: mrp.production}:
   self.force_production(cr, uid, [ref("mrp_production_mo3")])
 -
-  I mark KIT Shelf is in production.
+  I mark KIT Shelf as in production.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo3}
 -
-  I Consume 4 Side Panels first and scrap one damaged Side Panel.
+  I Consume 4.0 Side Panels first and scrap one damaged Side Panel.
 -
   !python {model: mrp.production}: |
     production = self.browse(cr, uid, ref("mrp_production_mo3"))
@@ -58,7 +58,7 @@
     wiz_id = self.create(cr, uid, {'mode': 'consume'}, context=context)
     self.do_produce(cr, uid, [wiz_id], context=context)
 -
-  I check there is nothing remaining in Products to Consume.
+  I check now there is nothing remaining in Products to Consume.
 -
   !python {model: mrp.production}: |
     production = self.browse(cr, uid, ref("mrp_production_mo3"))
