@@ -8,7 +8,6 @@
     request_file = open(addons.get_module_resource('crm_claim','test', 'customer_claim.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'crm.claim', request_message)
-
 -
   After getting the mail, I check details of new claim of that customer.
 -
@@ -18,7 +17,6 @@
     assert claim_ids and len(claim_ids), "Claim is not created after getting request"
     claim = self.browse(cr, uid, claim_ids[0], context=context)
     assert claim.name == tools.ustr("demande derèglement de votre produit."), "Subject does not match"
-
 -
   I open customer claim.
 -

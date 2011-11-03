@@ -8,7 +8,6 @@
     request_file = open(addons.get_module_resource('crm_fundraising','test', 'customer_fundraising.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'crm.fundraising', request_message)
-
 -
   After getting the mail, I check details of new fundraising of that customer.
 -
@@ -18,5 +17,3 @@
     assert fund_ids and len(fund_ids), "Fund is not created after getting request"
     fund = self.browse(cr, uid, fund_ids[0], context=context)
     assert fund.name == tools.ustr("Demande de controbute dans votre fonds."), "Subject does not match"
-
-

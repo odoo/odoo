@@ -8,7 +8,6 @@
     request_file = open(addons.get_module_resource('crm_helpdesk','test', 'customer_question.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'crm.helpdesk', request_message)
-
 -
   After getting the mail, I check details of new question of that customer.
 -

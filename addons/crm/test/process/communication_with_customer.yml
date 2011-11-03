@@ -8,7 +8,6 @@
     request_file = open(addons.get_module_resource('crm','test', 'customer_request.eml'),'rb')
     request_message = request_file.read()
     self.message_process(cr, uid, 'crm.lead', request_message)
-
 -
   After getting the mail, I check details of new lead of that customer.
 -
@@ -55,5 +54,3 @@
     data = self.browse(cr, uid, partner_id, context=context)[0]
     assert data.user_id.id == ref("base.user_root"), "User not assign properly"
     assert data.name == "Bad time", "User not assign properly"
-
-
