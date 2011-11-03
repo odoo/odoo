@@ -138,10 +138,21 @@
         <t t-if="records.length>0">
             <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
                 <li data-theme="c" t-foreach="records" t-as="record">
-                    <a id="list-id" t-att-data-id="record[0]" href="#">
-                        <t t-esc="record[1]"/>
-                    </a>
-                    <t t-foreach="data" t-as="data1" >
+                    <t t-foreach="record[1].split(',')" t-as="data1">
+                        <t t-if="record[1].split(',')[0]==data1">
+                            <a id="list-id" t-att-data-id="record[0]" href="#">
+                                <t t-esc="data1" />
+                            </a>
+                        </t>
+                    </t>
+                    <p>
+                        <t t-foreach="record[1].split(',')" t-as="data1">
+                            <t t-if="record[1].split(',')[0]!=data1">
+                                <t t-esc="data1" />
+                            </t>
+                        </t>
+                    </p>
+                    <t t-foreach="data" t-as="data1">
                         <t t-esc="data1[0]" />
                     </t>
                 </li>
