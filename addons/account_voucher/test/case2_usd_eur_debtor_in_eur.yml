@@ -67,18 +67,6 @@
     company_id: base.main_company
     view_id: account.account_journal_bank_view
 -
-  I create a new partner Michael Geller
--
-  !record {model: res.partner, id: res_partner_michael0}:
-    address:
-      - city: paris
-        country_id: base.fr
-        name: Michael
-        street: 1 rue Rockfeller
-        type: invoice
-        zip: '75016'
-    name: Mr.Michael Geller
--
   I create the first invoice on 1st January for 200 USD
 -
   !record {model: account.invoice, id: account_first_invoice_jan}:
@@ -97,7 +85,7 @@
         product_id: product.product_product_pc1
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: res_partner_michael0
+    partner_id: base.res_partner_seagate
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -132,7 +120,7 @@
         product_id: product.product_product_pc1
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: res_partner_michael0
+    partner_id: base.res_partner_seagate
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -155,21 +143,21 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_michael0"), ref('bank_journal_EUR'), 240.0, False, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_EUR'), 240.0, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 200.0,
         'company_id': ref('base.main_company'),
         'currency_id': False,
         'journal_id': ref('bank_journal_EUR'),
-        'partner_id': ref('res_partner_michael0'),
+        'partner_id': ref('base.res_partner_seagate'),
         'period_id': ref('account.period_3'),
         'type': 'receipt',
         'date': time.strftime("%Y-03-01"),
         'payment_option': 'with_writeoff',
         'writeoff_acc_id': ref('account.a_expense'),
         'comment': 'Write Off',
-        'name': 'First payment',
+        'name': 'First payment: Case 2 USD/EUR DR EUR',
     }
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
@@ -187,14 +175,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that the move of my voucher is valid
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -206,7 +194,7 @@
   I check that the debtor account has 2 new lines with 0 in amount_currency columns and their credit columns are 130 and 70
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 2 USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -220,7 +208,6 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    print move_line.amount_residual, move_line.amount_residual_currency
     assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice"
 -
   I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
@@ -238,14 +225,14 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_michael0"), ref('bank_journal_USD'), 80.0, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_USD'), 80.0, 2, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 80.0,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.USD'),
         'journal_id': ref('bank_journal_USD'),
-        'partner_id': ref('res_partner_michael0'),
+        'partner_id': ref('base.res_partner_seagate'),
         'period_id': ref('account.period_3'),
         'type': 'receipt',
         'date': time.strftime("%Y-%m-%d"),
@@ -253,7 +240,7 @@
         'writeoff_acc_id': ref('account.a_expense'),
         'exchange_acc_id': ref('account.o_expense'),
         'comment': 'Write Off',
-        'name': 'Second payment',
+        'name': 'Second payment: Case 2 SUPPL USD/EUR DR EUR',
     }
     vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-04-01'), ref('base.USD'), 80.0)['value'])
     if not res['value']['line_cr_ids']:
@@ -271,7 +258,7 @@
   I check that writeoff amount computed is 2.22
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (round(voucher_id.writeoff_amount, 2) == 2.22), "Writeoff amount is not 2.22$"
 -
@@ -279,14 +266,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that my voucher state is posted
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert voucher_id.state == 'posted', "Voucher state is not posted"
 -
@@ -299,7 +286,7 @@
   I check that my writeoff is correct. 2.11 in credit and 2.22 in amount_currency
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 2 SUPPL USD/EUR DR EUR'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])

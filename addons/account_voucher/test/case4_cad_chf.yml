@@ -44,18 +44,6 @@
     company_id: base.main_company
     view_id: account.account_journal_bank_view
 -
-  I create a new partner John Armani.
--
-  !record {model: res.partner, id: res_partner_john0}:
-    address:
-      - city: paris
-        country_id: base.fr
-        name: John
-        street: 1 rue Rockfeller
-        type: invoice
-        zip: '75016'
-    name: Mr.John Armani
--
   I create the first invoice on 1st January for 200 CAD
 -
   !record {model: account.invoice, id: account_first_invoice_jan_cad}:
@@ -74,7 +62,7 @@
         product_id: product.product_product_pc1
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: res_partner_john0
+    partner_id: base.res_partner_seagate
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -97,14 +85,14 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_john0"), ref('bank_journal_CHF'), 200.00, ref('base.CHF'), ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), ref('bank_journal_CHF'), 200.00, ref('base.CHF'), ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 200.00,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.CHF'),
         'journal_id': ref('bank_journal_CHF'),
-        'partner_id': ref('res_partner_john0'),
+        'partner_id': ref('base.res_partner_seagate'),
         'period_id': ref('account.period_3'),
         'type': 'receipt',
         'date': time.strftime("%Y-%m-%d"),
@@ -112,7 +100,7 @@
         'writeoff_acc_id': ref('account.a_expense'),
         'exchange_acc_id': ref('account.o_expense'),
         'comment': 'Write Off',
-        'name': 'First payment',
+        'name': 'First payment: Case 4',
     }
     vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-03-01'), ref('base.CHF'), 200.0)['value'])
     if not res['value']['line_cr_ids']:
@@ -128,7 +116,7 @@
   I check that writeoff amount computed is 13.26
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_john0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (round(voucher_id.writeoff_amount,2) == 13.26), "Writeoff amount is not 13.26 CHF"
 -
@@ -136,14 +124,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_john0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that the move of my voucher is valid
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_john0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -160,7 +148,7 @@
   I check that my writeoff is correct. 11.05 credit and 13.26 amount_currency
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_john0'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_seagate'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
