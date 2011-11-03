@@ -24,19 +24,25 @@ openerpweb = web.common.http
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-def concat_files(file_list):
+def concat_files(file_list, reader=None):
     """ Concatenate file content
     return (concat,timestamp)
-    concat: concatenation of file content
+    concat: concatenation of file content, read by `reader`
     timestamp: max(os.path.getmtime of file_list)
     """
+    if reader is None:
+        def reader(f):
+            with open(f) as fp:
+                return fp.read()
+
     files_content = []
     files_timestamp = 0
     for fname in file_list:
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
-        files_content.append(open(fname).read())
+
+        files_content.append(reader(fname))
     files_concat = "".join(files_content)
     return files_concat,files_timestamp
 
@@ -100,8 +106,36 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.httprequest
     def css(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'css')]
-        content,timestamp = concat_files(files)
+
+        files = list(self.manifest_glob(req, mods, 'css'))
+        file_map = dict(files)
+
+        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
+        rx_url = re.compile(r"""url\s*\(('|"|)(?!'|"|/|https?://)""", re.U)
+
+
+        def reader(f):
+            """read the a css file and absolutify all relative uris"""
+            with open(f) as fp:
+                data = fp.read()
+
+            web_path = file_map[f]
+            web_dir = os.path.dirname(web_path)
+
+            data = re.sub(
+                rx_import,
+                r"""@import \1%s/""" % (web_dir,),
+                data,
+            )
+
+            data = re.sub(
+                rx_url,
+                r"""url(\1%s/""" % (web_dir,),
+                data,
+            )
+            return data
+
+        content,timestamp = concat_files((f[0] for f in files), reader)
         # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
@@ -451,7 +485,7 @@ def clean_action(req, action, do_not_eval=False):
         # values come from the server, we can just eval them
         if isinstance(action.get('context'), basestring):
             action['context'] = eval( action['context'], eval_ctx ) or {}
-    
+
         if isinstance(action.get('domain'), basestring):
             action['domain'] = eval( action['domain'], eval_ctx ) or []
     else:
