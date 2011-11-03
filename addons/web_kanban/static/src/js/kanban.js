@@ -197,6 +197,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         _.each(this.groups, function(group) {
             group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
         });
+        this.on_groups_started();
+    },
+    on_groups_started: function() {
         this.compute_groups_width();
     },
     do_show: function () {
@@ -247,8 +250,8 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
         });
     },
     start: function() {
-        var self = this;
-        this._super();
+        var self = this,
+            def = this._super();
         this.$records = $(QWeb.render('KanbanView.group_records_container', { widget : this}));
         this.$records.appendTo(this.view.$element.find('.oe_kanban_groups_records'));
         _.each(this.records, function(record) {
@@ -256,11 +259,13 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
         });
         this.$element.find(".oe_kanban_fold_icon").click(function() {
             self.do_toggle_fold();
+            self.view.compute_groups_width();
             return false;
         });
         if (this.state.folded) {
             this.do_toggle_fold();
         }
+        return def;
     },
     stop: function() {
         this._super();
@@ -279,11 +284,10 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
             }
         }
     },
-    do_toggle_fold: function() {
+    do_toggle_fold: function(compute_width) {
         this.$element.toggleClass('oe_kanban_group_folded');
         this.$records.find('.oe_kanban_record').toggle();
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
-        this.view.compute_groups_width();
     }
 });
 
