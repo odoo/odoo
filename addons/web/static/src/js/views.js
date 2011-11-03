@@ -271,6 +271,10 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
                 }
             }
         }
+        $.when(view_promise).then(function () {
+            self.$element.find('.oe_view_title:first').text(
+                    self.display_title());
+        });
         return view_promise;
     },
     /**
@@ -331,7 +335,15 @@ session.web.ViewManager =  session.web.Widget.extend(/** @lends session.web.View
     /**
      * Called by children view after executing an action
      */
-    on_action_executed: function () {}
+    on_action_executed: function () {},
+    display_title: function () {
+        var view = this.views[this.active_view];
+        if (view) {
+            // ick
+            return view.controller.fields_view.arch.attrs.string;
+        }
+        return '';
+    }
 });
 
 session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
@@ -444,6 +456,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                 if (!self.action.name && fvg) {
                     self.$element.find('.oe_view_title').text(fvg.arch.attrs.string || fvg.name);
                 }
+
+                var $title = self.$element.find('.oe_view_title'),
+                    $search_prefix = $title.find('span');
+                if (controller.searchable !== false) {
+                    if (!$search_prefix.length) {
+                        $title.prepend('<span>' + _t("Search:") + '</span>');
+                    }
+                } else {
+                    $search_prefix.remove();
+                }
         });
     },
     shortcut_check : function(view) {
@@ -512,6 +534,9 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     return false;
                 });
         });
+    },
+    display_title: function () {
+        return this.action.name;
     }
 });
 
@@ -544,7 +569,7 @@ session.web.Sidebar = session.web.Widget.extend({
             {
                 label: _t("Manage Views"),
                 callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
+                title: _t("Manage views of the current object")
             }, {
                 label: _t("Edit Workflow"),
                 callback: this.call_default_on_sidebar,
@@ -553,7 +578,7 @@ session.web.Sidebar = session.web.Widget.extend({
             }, {
                 label: _t("Customize Object"),
                 callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
+                title: _t("Manage views of the current object")
             }
         ]);
 
@@ -561,10 +586,10 @@ session.web.Sidebar = session.web.Widget.extend({
         this.add_items('other', [ 
             {
                 label: _t("Import"),
-                callback: this.call_default_on_sidebar,
+                callback: this.call_default_on_sidebar
             }, {
                 label: _t("Export"),
-                callback: this.call_default_on_sidebar,
+                callback: this.call_default_on_sidebar
             }, {
                 label: _t("Translate"),
                 callback: this.call_default_on_sidebar,
@@ -604,7 +629,7 @@ session.web.Sidebar = session.web.Widget.extend({
             var $section = $(session.web.qweb.render("Sidebar.section", {
                 section_id: section_id,
                 name: name,
-                classname: 'oe_sidebar_' + code,
+                classname: 'oe_sidebar_' + code
             }));
             $section.appendTo(this.$element.find('div.sidebar-actions'));
             this.sections[code] = $section;
@@ -917,7 +942,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
-            $('<xmp>' + session.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            var view_editor = new session.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
+            view_editor.start();
         } else {
             this.do_warn("Manage Views", "Could not find current view declaration");
         }
@@ -943,19 +969,19 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     }
 });
 
-session.web.json_node_to_xml = function(node, single_quote, indent) {
+session.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
+    indent = indent || 0;
+    var sindent = (human_readable ? (new Array(indent + 1).join('\t')) : ''),
+        r = sindent + '<' + node.tag,
+        cr = human_readable ? '\n' : '';
 
     if (typeof(node) === 'string') {
-        return node;
-    }
-    else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+        return sindent + node;
+    } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw("Node a json node");
     }
-    indent = indent || 0;
-    var sindent = new Array(indent + 1).join('\t'),
-        r = sindent + '<' + node.tag;
     for (var attr in node.attrs) {
         var vattr = node.attrs[attr];
         if (typeof(vattr) !== 'string') {
@@ -963,19 +989,19 @@ session.web.json_node_to_xml = function(node, single_quote, indent) {
             vattr = JSON.stringify(vattr);
         }
         vattr = vattr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        if (single_quote) {
+        if (human_readable) {
             vattr = vattr.replace(/&quot;/g, "'");
         }
         r += ' ' + attr + '="' + vattr + '"';
     }
     if (node.children && node.children.length) {
-        r += '>\n';
+        r += '>' + cr;
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {
-            childs.push(session.web.json_node_to_xml(node.children[i], single_quote, indent + 1));
+            childs.push(session.web.json_node_to_xml(node.children[i], human_readable, indent + 1));
         }
-        r += childs.join('\n');
-        r += '\n' + sindent + '</' + node.tag + '>';
+        r += childs.join(cr);
+        r += cr + sindent + '</' + node.tag + '>';
         return r;
     } else {
         return r + '/>';

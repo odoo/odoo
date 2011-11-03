@@ -29,6 +29,14 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         this.columns = [];
         this.group_field = null;
         this.is_loaded = $.Deferred();
+
+        this.renderer = null;
+    },
+    stop: function () {
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this._super();
     },
     do_show: function () {
         this.$element.show();
@@ -256,90 +264,113 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             x_axis = abscissa_description;
             y_axis = ordinate_description;
         }
-        
-        var bar_chart = new dhtmlXChart({
-            view: view_chart,
-            container: this.element_id+"-barchart",
-            value:"#"+group_list[0].group+"#",
-            gradient: "3d",
-            border: false,
-            width: 1024,
-            tooltip:{
-                template: _.sprintf("#%s#, %s=#%s#",
-                    this.abscissa, group_list[0].text, group_list[0].group)
-            },
-            radius: 0,
-            color:group_list[0].color,
-            origin:0,
-            xAxis: x_axis,
-            yAxis: y_axis,
-            padding: {
-                left: 75
-            },
-            legend: {
-                values: group_list,
-                align:"left",
-                valign:"top",
-                layout: "x",
-                marker: {
-                    type:"round",
-                    width:12
-                }
+
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
             }
-        });
-        for (var m = 1; m<group_list.length;m++){
-            var column = group_list[m];
-            if (column.group === this.group_field) { continue; }
-            bar_chart.addSeries({
-                value: "#"+column.group+"#",
+            self.renderer = null;
+            var bar_chart = new dhtmlXChart({
+                view: view_chart,
+                container: self.element_id+"-barchart",
+                value:"#"+group_list[0].group+"#",
+                gradient: "3d",
+                border: false,
+                width: 1024,
                 tooltip:{
                     template: _.sprintf("#%s#, %s=#%s#",
-                        this.abscissa, column.text, column.group)
+                        self.abscissa, group_list[0].text, group_list[0].group)
                 },
-                color: column.color
+                radius: 0,
+                color:group_list[0].color,
+                origin:0,
+                xAxis: x_axis,
+                yAxis: y_axis,
+                padding: {
+                    left: 75
+                },
+                legend: {
+                    values: group_list,
+                    align:"left",
+                    valign:"top",
+                    layout: "x",
+                    marker: {
+                        type:"round",
+                        width:12
+                    }
+                }
             });
+            for (var m = 1; m<group_list.length;m++){
+                var column = group_list[m];
+                if (column.group === self.group_field) { continue; }
+                bar_chart.addSeries({
+                    value: "#"+column.group+"#",
+                    tooltip:{
+                        template: _.sprintf("#%s#, %s=#%s#",
+                            self.abscissa, column.text, column.group)
+                    },
+                    color: column.color
+                });
+            }
+            bar_chart.parse(results, "json");
+            self.$element.find("#"+self.element_id+"-barchart").height(
+                self.$element.find("#"+self.element_id+"-barchart").height()+50);
+            bar_chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(bar_chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
         }
-        bar_chart.parse(results, "json");
-        jQuery("#"+this.element_id+"-barchart").height(jQuery("#"+this.element_id+"-barchart").height()+50);
-        bar_chart.attachEvent("onItemClick", function(id) {
-            self.open_list_view(bar_chart.get(id));
-        });
+        this.renderer = setTimeout(renderer, 0);
     },
     schedule_pie: function(result) {
         var self = this;
-        var chart =  new dhtmlXChart({
-            view:"pie3D",
-            container:self.element_id+"-piechart",
-            value:"#"+self.ordinate+"#",
-            pieInnerText:function(obj) {
-                var sum = chart.sum("#"+self.ordinate+"#");
-                var val = obj[self.ordinate] / sum * 100 ;
-                return val.toFixed(1) + "%";
-            },
-            tooltip:{
-                template:"#"+self.abscissa+"#"+"="+"#"+self.ordinate+"#"
-            },
-            gradient:"3d",
-            height: 20,
-            radius: 200,
-            legend: {
-                width: 300,
-                align:"left",
-                valign:"top",
-                layout: "x",
-                marker:{
-                    type:"round",
-                    width:12
-                },
-                template:function(obj){
-                    return obj[self.abscissa] || 'Undefined';
-                }
+        var renderer = function () {
+            if (self.$element.is(':hidden')) {
+                self.renderer = setTimeout(renderer, 100);
+                return;
             }
-        });
-        chart.parse(result,"json");
-        chart.attachEvent("onItemClick", function(id) {
-            self.open_list_view(chart.get(id));
-        });
+            self.renderer = null;
+            var chart =  new dhtmlXChart({
+                view:"pie3D",
+                container:self.element_id+"-piechart",
+                value:"#"+self.ordinate+"#",
+                pieInnerText:function(obj) {
+                    var sum = chart.sum("#"+self.ordinate+"#");
+                    var val = obj[self.ordinate] / sum * 100 ;
+                    return val.toFixed(1) + "%";
+                },
+                tooltip:{
+                    template:"#"+self.abscissa+"#"+"="+"#"+self.ordinate+"#"
+                },
+                gradient:"3d",
+                height: 20,
+                radius: 200,
+                legend: {
+                    width: 300,
+                    align:"left",
+                    valign:"top",
+                    layout: "x",
+                    marker:{
+                        type:"round",
+                        width:12
+                    },
+                    template:function(obj){
+                        return obj[self.abscissa] || 'Undefined';
+                    }
+                }
+            });
+            chart.parse(result,"json");
+            chart.attachEvent("onItemClick", function(id) {
+                self.open_list_view(chart.get(id));
+            });
+        };
+        if (this.renderer) {
+            clearTimeout(this.renderer);
+        }
+        this.renderer = setTimeout(renderer, 0);
     },
     open_list_view : function (id){
         var self = this;

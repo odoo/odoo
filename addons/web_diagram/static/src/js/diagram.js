@@ -54,11 +54,6 @@ openerp.web.DiagramView = openerp.web.View.extend({
 
         // New Node,Edge
         this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node);});
-        this.$element.find('#new_edge.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.connector);});
-
-        this.$element.find('#toggle_grid').click(function() {
-            self.$element.find('.diagram').toggleClass('show_grid');
-        });
 
         if(this.id) {
             self.get_diagram_info();
@@ -113,8 +108,25 @@ openerp.web.DiagramView = openerp.web.View.extend({
             this.get_diagram_info();
         }
     },
-
+    select_node: function (node, element) {
+        if (!this.selected_node) {
+            this.selected_node = node;
+            element.attr('stroke', 'red');
+            return;
+        }
+        // Re-click selected node, deselect it
+        if (node.id === this.selected_node.id) {
+            this.selected_node = null;
+            element.attr('stroke', 'black');
+            return;
+        }
+        this.add_edit_node(null, this.connector, {
+            act_from: this.selected_node.id,
+            act_to: node.id
+        });
+    },
     draw_diagram: function(result) {
+        this.selected_node = null;
         var diagram = new Graph();
 
         this.active_model = result['id_model'];
@@ -125,34 +137,33 @@ openerp.web.DiagramView = openerp.web.View.extend({
         //Custom logic
         var self = this;
         var renderer = function(r, n) {
-            var node;
-            var set;
-            var shape = n.node.shape;
-            if(shape == 'rectangle')
-                shape = 'rect';
-            node = r[shape](n.node.x, n.node.y).attr({
-                "fill": n.node.color
-            }).dblclick(function() {
-                self.add_edit_node(n.node.id, self.node);
-            });
-            set = r.set()
-                    .push(node)
-                    .push(
-                        r.text(n.node.x, n.node.y, (n.label || n.id))
-                        .attr({"cursor":"pointer"})
-                        .dblclick(function() {
-                            self.add_edit_node(n.node.id, self.node);
-                        })
-                    );
-            node.attr({cursor: "pointer"});
+            var shape = (n.node.shape === 'rectangle') ? 'rect' : 'ellipse';
 
-            if(shape == "ellipse")
-                node.attr({rx: "40", ry: "20"});
-            else if(shape == 'rect') {
+            var node = r[shape](n.node.x, n.node.y).attr({
+                "fill": n.node.color
+            });
+
+            var nodes = r.set(node, r.text(n.node.x, n.node.y, (n.label || n.id)))
+                .attr("cursor", "pointer")
+                .dblclick(function() {
+                    self.add_edit_node(n.node.id, self.node);
+                })
+                .mousedown(function () { node.moved = false; })
+                .mousemove(function () { node.moved = true; })
+                .click(function () {
+                    // Ignore click from move event
+                    if (node.moved) { return; }
+                    self.select_node(n.node, node);
+                });
+
+            if (shape === 'rect') {
                 node.attr({width: "60", height: "44"});
                 node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
+            } else {
+                node.attr({rx: "40", ry: "20"});
             }
-            return set;
+
+            return nodes;
         };
 
         _.each(res_nodes, function(res_node) {
@@ -167,10 +178,7 @@ openerp.web.DiagramView = openerp.web.View.extend({
             diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
         });
 
-
-        if ($('div#dia-canvas').children().length > 0) {
-            $('div#dia-canvas').children().remove();
-        }
+        self.$element.find('.diagram').empty();
 
         var layouter = new Graph.Layout.Ordered(diagram);
         var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
@@ -184,7 +192,8 @@ openerp.web.DiagramView = openerp.web.View.extend({
         });
     },
 
-    add_edit_node: function(id, model) {
+    add_edit_node: function(id, model, defaults) {
+        defaults = defaults || {};
         var self = this;
 
         if(!model)
@@ -250,6 +259,15 @@ openerp.web.DiagramView = openerp.web.View.extend({
                 form_controller.on_record_loaded.add_last(function() {
                     form_controller.fields[fld].set_value([self.id,self.active_model]);
                     form_controller.fields[fld].dirty = true;
+                });
+            });
+        }
+        if (!_.isEmpty(defaults)) {
+            form_controller.on_record_loaded.add_last(function () {
+                _(form_fields).each(function (field) {
+                    if (!defaults[field]) { return; }
+                    form_controller.fields[field].set_value(defaults[field]);
+                    form_controller.fields[field].dirty = true;
                 });
             });
         }

@@ -27,14 +27,8 @@ openerp.web.format_value = function (value, descriptor, value_if_empty) {
             return _.sprintf('%d', value);
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            var int_part = Math.floor(value);
-            var dec_part = _.sprintf(
-                    '%.' + precision + 'f',
-                    Math.abs(value) % 1).substring(2);
-            return _.sprintf('%d%s%s',
-                    int_part,
-                    openerp.web._t.database.parameters.decimal_point,
-                    dec_part);
+            return _.sprintf('%.' + precision + 'f', value)
+                .replace('.', openerp.web._t.database.parameters.decimal_point);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
