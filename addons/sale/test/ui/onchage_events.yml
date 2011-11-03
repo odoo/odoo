@@ -1,0 +1,10 @@
+-
+  In order to test the onchange events of sale order.
+-
+  I call onchange event to change the partner of order.
+-
+  !python {model: sale.order}: |
+    self.onchange_partner_id(cr, uid, [ref('order')], ref('base.res_partner_3'))
+
+
+
