@@ -43,6 +43,7 @@
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
+        "static/src/js/view_editor.js"
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",

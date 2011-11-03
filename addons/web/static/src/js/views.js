@@ -942,7 +942,8 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
     },
     on_sidebar_manage_views: function() {
         if (this.fields_view && this.fields_view.arch) {
-            $('<xmp>' + session.web.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            var view_editor = new session.web.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch);
+            view_editor.start();
         } else {
             this.do_warn("Manage Views", "Could not find current view declaration");
         }
