@@ -30,7 +30,11 @@
     pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
     assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
 -
-  I remembered that we have to produce 6.0 PC1 instead of 5.0, so I create record for wizard 'Change Qty' changing production quantity to 6.0
+  I remembered that we have to produce 6.0 PC1 instead of 5.0, so I create record for wizard 'Change Qty'.
+-
+  !record {model: change.production.qty, id: mrp_production_qty, context: "{'active_id': ref('mrp_production_mo1')}"}:
+-
+  I change value to 6.0 
 -
   !record {model: change.production.qty, id: mrp_production_qty}:
     product_qty: 6.0
