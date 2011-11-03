@@ -65,8 +65,12 @@ init: function(parent, dataset, view_id) {
             return res[self.date_start];
         });
         
-        $.when(this.project_starting_date(started_projects), this.project_duration(started_projects), this.calculate_difference())
+        $.when(this.project_starting_date(started_projects), this.get_project_duration(started_projects), this.calculate_difference())
             .done(function() {
+                if(self.ganttChartControl) {
+                    self.ganttChartControl.clearAll();
+                    self.$element.find('#GanttView').empty();
+                }
                 var Project = new GanttProjectInfo(0, self.name, self.project_start_date),
                     Task = new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, "");
                 $.when(self.add_tasks(started_projects, Task))
@@ -76,13 +80,13 @@ init: function(parent, dataset, view_id) {
             });
     },
     
-    project_duration: function(projects) {
+    get_project_duration: function(projects) {
         
         var self = this;
         this.project_duration = [];
         
         _.each(projects, function(project, index) {
-            if (this.date_stop && project[this.date_stop]) {
+            if (self.date_stop && project[self.date_stop]) {
                 //ToDO
                 console.log('TODO for date_stop');
                 self.project_duration.push(0);
@@ -94,13 +98,10 @@ init: function(parent, dataset, view_id) {
         });
         
         this.max_project_duration = _.max(this.project_duration);
-        
         return $.Deferred().resolve().promise();
     },
     
     calculate_difference: function() {
-        
-        
         var extend_end_date_day = Math.floor(this.max_project_duration / this.day_length),
             extend_end_date_hours = this.max_project_duration % this.day_length;
         
@@ -139,15 +140,15 @@ init: function(parent, dataset, view_id) {
         if (min_date) this.project_start_date = this.format_date(min_date[self.date_start]);
         else 
             this.project_start_date = Date.today();
-        
         return $.Deferred().resolve().promise();
     },
 
     init_gantt_view: function(Project, Task) {
         
         Project.addTask(Task);
-        var self = this,
-            ganttChartControl = new GanttChart();
+        var self = this;
+        
+        var ganttChartControl = this.ganttChartControl = new GanttChart();
 
         // Setup paths and behavior
         ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
@@ -275,6 +276,7 @@ init: function(parent, dataset, view_id) {
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.group_by = groupbys;
+        
         $.when(this.has_been_loaded).then(function() {
             self.dataset
                 .read_slice([], {
