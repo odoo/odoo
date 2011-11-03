@@ -176,7 +176,7 @@ class wizard(osv.osv_memory):
                 email_to = dest_user.user_email
                 subject = _(WELCOME_EMAIL_SUBJECT) % data
                 body = _(WELCOME_EMAIL_BODY) % data
-                res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, model=context.get('active_model'), res_id=u.partner_id.id, context=context)
+                res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
                 if not res:
                     logging.getLogger('res.portal.wizard').warning(
                         'Failed to send email from %s to %s', email_from, email_to)
