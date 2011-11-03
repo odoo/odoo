@@ -768,17 +768,10 @@ class crm_lead(crm_case, osv.osv):
             data_obj = self.pool.get('ir.model.data')
 
             # Get meeting views
-            result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-            res = data_obj.read(cr, uid, result, ['res_id'])
-            id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-            id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-            id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-            if id1:
-                id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            if id3:
-                id3 = data_obj.browse(cr, uid, id3, context=context).res_id
+            tree_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_meet')
+            form_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_meet')
+            calander_view = data_obj.get_object_reference(cr, uid, 'crm', 'crm_case_calendar_view_meet')
+            search_view = data_obj.get_object_reference(cr, uid, 'crm', 'view_crm_case_meetings_filter')
 
             context = {
                 'default_opportunity_id': opp.id,
@@ -796,9 +789,9 @@ class crm_lead(crm_case, osv.osv):
                 'view_mode': 'calendar,form,tree',
                 'res_model': 'crm.meeting',
                 'view_id': False,
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
+                'views': [(calander_view and calander_view[1] or False, 'calendar'), (form_view and form_view[1] or False, 'form'), (tree_view and tree_view[1] or False, 'tree')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id'],
+                'search_view_id': search_view and search_view[1] or False,
                 'nodestroy': True
             }
         return value
