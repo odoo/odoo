@@ -51,6 +51,7 @@ You can also use the geolocalization without using the GPS coordinates.
     ],
     'test': [
         'test/process/partner_assign.yml',
+        'test/ui/onchange_events.yml'
     ],
     'installable': True,
     'active': False,

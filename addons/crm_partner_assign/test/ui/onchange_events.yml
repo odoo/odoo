@@ -1,0 +1,7 @@
+-
+  I call onchange event to change partner address and Email.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    action = self.on_change_partner(cr, uid, ref("crm.crm_case_qrecorp0"), ref("base.res_partner_9"))
+    assert action['value']['email_to'] == 'info@balmerinc.be', "Email is wrong"
+    self.on_change_email(cr, uid, [ref('crm.crm_case_qrecorp0')], ref('base.user_root'))

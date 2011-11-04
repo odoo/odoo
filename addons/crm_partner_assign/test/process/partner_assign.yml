@@ -33,6 +33,6 @@
     context.update({'active_model': 'crm.lead', 'active_id': ref('crm.crm_case_abcfuelcounits0'), 'active_ids': [ref('crm.crm_case_abcfuelcounits0')]})
     forward_id = self.create(cr, uid, {'send_to': 'partner'}, context=context)
     try:
-      self.action_forward(cr, uid, ref("crm_lead_forward_to_partner_rec"), context=context)
+      self.action_forward(cr, uid, [forward_id], context=context)
     except:
       pass
