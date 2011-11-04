@@ -1131,22 +1131,20 @@ openerp.point_of_sale = function(db) {
         return ShopView;
     })();
     App = (function() {
-        __extends(App, Backbone.Router);
-        function App() {
-            App.__super__.constructor.apply(this, arguments);
+        function App($element) {
+            this.initialize($element);
         }
 
-        App.prototype.routes = {
-            '': 'category',
-            'category/:id': 'category'
-        };
         App.prototype.initialize = function($element) {
             this.shop = new Shop;
             this.shopView = new ShopView({
                 shop: this.shop,
                 el: $element
             });
-            return this.categoryView = new CategoryView;
+            this.categoryView = new CategoryView;
+            this.categoryView.bind("changeCategory", this.category, this);
+            this.category();
+            return this.categoryView;
         };
         App.prototype.category = function(id) {
             var c, products;
@@ -1188,11 +1186,10 @@ openerp.point_of_sale = function(db) {
     db.point_of_sale.PointOfSale = db.web.Widget.extend({
         template: "PointOfSale",
         start: function() {
-            // FIXME: absolutely horrible hack to avoid conflict
-            //        between backbone's history and al's action
-            //        thingie
-            window.location.hash = '';
             var self = this;
+            this.$element.find("#loggedas button").click(function() {
+                self.stop();
+            });
 
             if (pos)
                 throw "It is not possible to instantiate multiple instances"+
@@ -1203,7 +1200,6 @@ openerp.point_of_sale = function(db) {
 
             return pos.ready.then( function() {
                 pos.app = new App(self.$element);
-                return Backbone.history.start();
             });
         },
         stop: function() {
