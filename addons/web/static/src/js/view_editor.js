@@ -503,27 +503,29 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var list_obj_xml = _.zip(children_list,obj.child_id);
         if (id) {
             if (obj.id == id) {
-                var parent = $(arch1).parents();
                 var index = _.indexOf(child_list, obj)
-                var re_insert_obj = child_list.splice(index, 1);
                 if (move_direct == "down") {
                     var next = $(arch1).next();
                     $(next).after(arch1);
+                    var re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index+1, 0, re_insert_obj[0]);
                 }else if(move_direct == "up"){
                     var prev = $(arch1).prev();
                     $(prev).before(arch1);
+                    var re_insert_obj = child_list.splice(index, 1);
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                 }else if(move_direct == "update_node"){
                     _.each(update_values, function(val){
+                        if(val[1]){
                         $(arch1).attr(val[0],val[1]);
+                        }
                     });
                     var new_obj = self.check_attr(arch1,arch1.tagName.toLowerCase(),obj.level);
                     new_obj.id = obj.id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
-                    child_list.splice(_.indexOf(child_list, obj), 0, new_obj);
+                    child_list.splice(index, 1, new_obj);
                 }
-
+                var parent = $(arch1).parents();
                 parent = parent[parent.length-1];
                 var convert_to_utf = self.xml2Str(parent);
                 if (convert_to_utf) {
