@@ -609,22 +609,19 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         self.edit_node_dialog.$element.append('<table id="rec_table" class="oe_forms"></table>');
         self.edit_widget = [];
         _.each(properties,function(record){
-            var id = record;
+            var id = record,
+            type_widget;
             self.ready  = $.when(self.on_groups(id)).then(function () {
                 if (_.include(widget,id)){
-                    var type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, arch_val, id);
+                    type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, arch_val, id);
                     self.edit_widget.push(type_widget);
-                    self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr id="'+id+'"><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
-                    (id=='groups')?type_widget.set_value(self.groups):type_widget.set_value();
-                    type_widget.start();
                 }else{
-                    var type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog,arch_val, id);
+                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog,arch_val, id);
                     self.edit_widget.push(type_widget);
-                    self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr id="'+id+'"><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
-                    type_widget.set_value();
-                    type_widget.start();
                 }
-
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr id="'+id+'"><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
+                (id=='groups')?type_widget.set_value(self.groups):type_widget.set_value();
+                type_widget.start();
             });
         });
     },
