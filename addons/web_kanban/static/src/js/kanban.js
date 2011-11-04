@@ -4,6 +4,7 @@ var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_kanban/static/src/xml/web_kanban.xml');
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
+
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
     init: function (parent, dataset, view_id, options) {
@@ -30,6 +31,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
+        this.currently_dragging = null;
     },
     start: function() {
         this._super();
@@ -134,15 +136,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             self.datagroup.list(self.fields_keys, self.do_process_groups, self.do_process_dataset);
         });
     },
-    do_reload: function() {
-        this.do_search(this.search_domain, this.search_context, this.search_group_by);
-    },
-    do_clear_groups: function() {
-        _.each(this.groups, function(group) {
-            group.stop();
-        });
-        this.groups = [];
-    },
     do_process_groups: function(groups) {
         this.do_clear_groups();
         this.dataset.ids = [];
@@ -191,6 +184,16 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             self.do_add_groups(groups);
         });
     },
+    do_reload: function() {
+        this.do_search(this.search_domain, this.search_context, this.search_group_by);
+    },
+    do_clear_groups: function() {
+        _.each(this.groups, function(group) {
+            group.stop();
+        });
+        this.groups = [];
+        //this.$element.find('.oe_kanban_groups_headers, .oe_kanban_groups_records').empty();
+    },
     do_add_groups: function(groups) {
         var self = this;
         this.groups = groups;
@@ -200,7 +203,48 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.on_groups_started();
     },
     on_groups_started: function() {
+        var self = this;
         this.compute_groups_width();
+        if (this.group_by) {
+            this.$element.find('.oe_kanban_column').sortable({
+                connectWith: '.oe_kanban_column',
+                handle : '.oe_kanban_draghandle',
+                start: function(event, ui) {
+                    self.currently_dragging = {
+                        index : ui.item.index(),
+                        group : ui.item.parents('.oe_kanban_column:first').data('widget')
+                    }
+                },
+                stop: function(event, ui) {
+                    var record = ui.item.data('widget'),
+                        old_index = self.currently_dragging.index,
+                        new_index = ui.item.index(),
+                        old_group = self.currently_dragging.group,
+                        new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
+                        self.on_record_moved(record, old_group, old_index, new_group, new_index);
+                    }
+                },
+                scroll: false
+            });
+        } else {
+            this.$element.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
+        }
+    },
+    on_record_moved : function(record, old_group, old_index, new_group, new_index) {
+        if (old_group === new_group) {
+            new_group.records.splice(old_index, 1);
+            new_group.records.splice(new_index, 0, record);
+            new_group.do_save_sequences();
+        } else {
+            old_group.records.splice(old_index, 1);
+            new_group.records.splice(new_index, 0, record);
+            record.group = new_group;
+            var data = {};
+            data[this.group_by] = new_group.value;
+            this.dataset.write(record.id, data, {}, record.do_reload);
+            new_group.do_save_sequences();
+        }
     },
     do_show: function () {
         this.$element.show();
@@ -265,6 +309,8 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
         if (this.state.folded) {
             this.do_toggle_fold();
         }
+        this.$element.data('widget', this);
+        this.$records.data('widget', this);
         return def;
     },
     stop: function() {
@@ -274,13 +320,13 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
     remove_record: function(id, remove_from_dataset) {
         for (var i = 0, ii = this.records.length; i < ii; i++) {
             if (this.records[i]['id'] === id) {
-                delete(this.records[i]);
+                this.records.splice(i, 1);
             }
         }
         if (remove_from_dataset) {
             var idx = _.indexOf(this.view.dataset.ids, id);
             if (idx > -1) {
-                delete(this.view.dataset.ids[idx]);
+                this.view.dataset.ids.splice(idx, 1);
             }
         }
     },
@@ -288,6 +334,14 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
         this.$element.toggleClass('oe_kanban_group_folded');
         this.$records.find('.oe_kanban_record').toggle();
         this.state.folded = this.$element.is('.oe_kanban_group_folded');
+    },
+    do_save_sequences: function() {
+        var self = this;
+        if (_.indexOf(this.view.fields_keys, 'sequence') > -1) {
+            _.each(this.records, function(record, index) {
+                self.view.dataset.write(record.id, { sequence : index });
+            });
+        }
     }
 });
 
@@ -312,6 +366,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     start: function() {
         this._super();
+        this.$element.data('widget', this);
         this.bind_events();
     },
     transform_record: function(record) {
@@ -456,145 +511,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
             return '';
         }
         return s.substr(0, size) + '...';
-    },
-});
-
-openerp.web_kanban.KanbanView_old = openerp.web.View.extend({
-    on_show_data: function() {
-        var self = this;
-        if (!this.group_by.length) {
-            this.do_record_group();
-        }
-        var drag_handel = false;
-        if (this.$element.find(".oe_kanban_draghandle").length > 0) {
-            drag_handel = ".oe_kanban_draghandle";
-        }
-        if (!this.group_by.length) {
-            drag_handel = true;
-        }
-        this.$element.find(".oe_column").sortable({
-            connectWith: ".oe_column",
-            handle : drag_handel,
-            start: function(event, ui) {
-                self.source_index['index'] = ui.item.index();
-                self.source_index['column'] = ui.item.parent().attr('id');
-            },
-            stop: self.on_receive_record,
-            scroll: false
-        });
-    },
-    do_fold_unfold_columns: function(event, element_id) {
-      var column_id = "column_" + element_id;
-      var column_element = this.$element.find("#" + column_id + " .oe_fold_column");
-      if (column_element.is(":hidden")) {
-          this.$element.find("#" + column_id).find("img.fold-columns-icon").attr('src', '/web_kanban/static/src/img/minus-icon.png');
-          column_element.show();
-          this.$element.find("#" + column_id + ".oe_table_column").css("width",Math.round(99 / this.all_display_data.length) + "%");
-          this.$element.find("#" + column_id + ".oe_vertical_text").hide();
-      }
-      else{
-          this.$element.find("#" + column_id).find("img.fold-columns-icon").attr('src', '/web_kanban/static/src/img/plus-icon.png');
-          column_element.hide();
-          this.$element.find("#" + column_id + ".oe_table_column").css("width","0.5%");
-          this.$element.find("#" + column_id + ".oe_vertical_text").show();
-      }
-
-    },
-    do_record_group: function() {
-        if (this.NO_OF_COLUMNS && this.all_display_data.length > 0) {
-            var records = this.all_display_data[0].records;
-            var record_per_group = Math.round((records).length / this.NO_OF_COLUMNS);
-            this.all_display_data = [];
-            for (var i=0, ii=this.NO_OF_COLUMNS; i < ii; i++) {
-                this.all_display_data.push({'records': records.slice(0,record_per_group), 'value':i, 'header' : false, 'ids':[]});
-                records.splice(0,record_per_group);
-            }
-        }
-    },
-    on_receive_record: function (event, ui) {
-        var self = this;
-        var from = ui.item.index();
-        var search_action = false;
-        var to = ui.item.prev().index() || 0;
-        if (!ui.item.attr("id")) {
-            return false;
-        }
-        if (self.fields_view.fields.sequence != undefined && ((self.source_index.index >= 0 && self.source_index.index != from) ||
-                (self.source_index.column && self.source_index.column != ui.item.parent().attr('id')))) {
-            var child_record = ui.item.parent().children();
-            var data, sequence = 1, index = to;
-            child_record.splice(0, to);
-            var flag = false;
-            if (to >= 0 && child_record) {
-                var record_id = parseInt($(child_record).attr("id").split("_")[1]);
-                if (record_id) {
-                    _.each(self.all_display_data, function(data, index) {
-                        _.each(data.records, function(record, index_row) {
-                            if(record_id == record.id && record.sequence) {
-                                sequence = record.sequence;
-                                flag = true;
-                                return false;
-                            }
-                        });
-                        if(flag) {return false;}
-                    });
-                }
-            }
-            _.each(child_record, function (child) {
-                var child_id = parseInt($(child).attr("id").split("_")[1]);
-                if (child_id) {
-                    flag = false;
-                    _.each(self.all_display_data, function(data, index) {
-                        _.each(data.records, function(record, index_row) {
-                            if(parseInt(record.id) == child_id) {
-                                self.all_display_data[index]['records'][index_row]['sequence'] = sequence;
-                                flag = true;
-                                return false;
-                            }
-                        });
-                        if (flag) {return false;}
-                    });
-                    self.dataset.write(child_id, {sequence: sequence});
-                    sequence++;
-                    search_action = true;
-                }
-            });
-        }
-        if (self.group_by.length > 0 && self.source_index.column && self.source_index.column != ui.item.parent().attr('id')) {
-            var value = ui.item.closest("td").attr("id");
-            if (value) {
-                var data_val = {};
-                var wirte_id = parseInt(ui.item.attr("id").split("_")[1]);
-                value = value.split("_")[1];
-                if (value == 'false') {
-                    value = false;
-                }
-                var update_record = false;
-                _.each(self.all_display_data, function(data, index) {
-                    _.each(data.records, function(record, index_row) {
-                        if(parseInt(record.id) == wirte_id) {
-                            self.all_display_data[index]['records'][index_row][self.group_by[0]] = value;
-                            update_record = self.all_display_data[index]['records'].splice(index_row,1)
-                            return false;
-                        }
-                    });
-                    if (update_record) {return false;}
-                });
-                _.each(self.all_display_data, function(data, index) {
-                    if (data.value == value || (data.value == 'false' && value == false)) {
-                        self.all_display_data[index]['records'].push(update_record[0]);
-                    }
-                });
-                data_val[self.group_by[0]] = value;
-                self.dataset.write(wirte_id, data_val);
-                search_action = true;
-            }
-        }
-        if (search_action) {
-            self.on_reload_kanban();
-        }
-        this.source_index = {};
-    },
+    }
 });
 };
 
