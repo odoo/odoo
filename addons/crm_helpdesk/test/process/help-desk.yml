@@ -17,5 +17,14 @@
     assert question_ids and len(question_ids), "Question is not created after getting request"
     question = self.browse(cr, uid, question_ids[0], context=context)
     assert question.name == tools.ustr("Where is download link of user manual of your product ? "), "Subject does not match"
+-
+  Now I Update message according to provide services.
+-
+  !python {model: crm.helpdesk}: |
+    question_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    try:
+      self.message_update(cr, uid, question_ids, {'subject': 'Link of product', 'body_text': 'www.openerp.com'})
+    except:
+      pass
 
 
