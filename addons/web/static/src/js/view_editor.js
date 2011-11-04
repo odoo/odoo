@@ -9,7 +9,7 @@ var _PROPERTIES = {
     'image' : ['filename', 'width', 'height', 'groups'],
     'separator' : ['string', 'colspan', 'groups'],
     'label': ['string', 'align', 'colspan', 'groups'],
-    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'groups'],
+    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'groups','colspan'],
     'newline' : [],
     'hpaned': ['position', 'groups'],
     'vpaned': ['position', 'groups'],
@@ -587,12 +587,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 200,
             buttons: {
                     "Update": function(){
-                        //self.on_update_node();
                         var update_values = [];
                         _.each(self.edit_widget,function(widget){
                             update_values.push(widget.get_value());
                         });
-                        update_values = _.without(update_values,undefined);
                         self.save_move_arch(obj, view_id, view_xml_id, id_tr, level, "update_node", update_values);
                     },
                     "Cancel": function(){
@@ -654,15 +652,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             })
         return def.promise();
-    },
-    /*on_update_node: function(){
-        var self = this;
-        var values = [];
-        _.each(self.edit_widget,function(widget){
-            values.push(widget.get_value());
-        });
-        values = _.without(values,undefined);
-    }*/
+    }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     init: function(view, node, id) {
@@ -686,12 +676,16 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         var view_val = _.detect(this.node[0]['att_list'],function(res) {
             return _.include(res,self.name);
         });
-        view_val ? this.$element.find("tr[id="+ self.name+"] input").attr('checked', view_val[1]): this.$element.find("tr[id="+self.name+"] input").attr('checked', false);
+        if(view_val){
+            this.$element.find("tr[id="+ self.name+"] input").attr('checked', view_val[1]);
+        }
     },
     get_value: function(){
-        var val = this.$element.find("tr[id="+this.name+"] input").attr('checked');
+        var val = this.$element.find("tr[id="+this.name+"] input").is(':checked');
         if (val){
             return [this.name,val];
+        }else{
+            return [this.name,null];
         }
     }
 });
@@ -708,9 +702,12 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         view_val ? this.$element.find("tr[id="+self.name +"] input").val(view_val[1]): this.$element.find("tr[id="+self.name+"] input").val();
     },
     get_value: function(){
+        var self = this;
         var val= this.$element.find("tr[id="+this.name+"] input").val();
         if (val){
             return [this.name,val];
+        }else{
+            return [this.name,""];
         }
     }
 });
@@ -725,7 +722,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
             return _.include(res,self.name);
         });
         _.each(value, function(item) {
-            var select_val = view_val?(view_val[1]==item[0]?true:false):false;
+            var select_val = view_val?(view_val[1]==((typeof(item)=='string')?item:item[0])?true:false):false;
             self.$element.find("tr[id="+self.name+"] select").append($("<option/>", {
                     value:(typeof(item)=='string')?item:item[0],
                     text:(typeof(item)=='string')?item:item[1],
@@ -734,9 +731,12 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         });
     },
     get_value: function(){
+        var self = this;
         var val = this.$element.find("tr[id="+this.name+"] select").find("option:selected").val();
         if (val){
             return [this.name,val];
+        }else{
+            return [this.name,""];
         }
     }
 });
