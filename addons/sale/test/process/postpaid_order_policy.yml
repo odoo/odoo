@@ -27,6 +27,16 @@
 -
   !workflow {model: sale.order, action: order_confirm, ref: order4}
 -
+  After confirmed Quotation4, I create the Invoice for it because it's manual policy.
+-
+  !workflow {model: sale.order, action: manual_invoice, ref: order4}
+-
+  I check that Invoice created.
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("order4"))
+    assert so.invoice_ids, "Invoices has not been generated for this sale order"
+-
   After confirmed Quotation, I check the Packing as well as Invoice created in related sale orders .
 -
   !python {model: sale.order}: |

@@ -16,11 +16,33 @@
   !python {model: sale.order}: |
     self.onchange_pricelist_id(cr, uid, [ref('order')], ref('product.list0'), [ref('line'),ref('line1'),ref('line12'),ref('line13')], context={})
 -
+  I call onchange event to change the policy of order.
+-
+  !python {model: sale.order}: |
+    policy = 'picking'
+    self.shipping_policy_change(cr, uid, [ref('order')], policy, context=None)
+
+-
+  I call onchange event to change the UOS of ordered product.
+-
+  !python {model: sale.order.line}: |
+    self.uos_change(cr, uid, [ref('line'),ref('line1'),ref('line12'),ref('line13')], ref('product.product_uom_unit'), product_uos_qty=0, product_id=None)
+
+-
+  I call onchange event to change the packaging of ordered product.
+-
+  !python {model: sale.order.line}: |
+    self.product_packaging_change(cr, uid, [ref('line1')], ref('product.list0'), ref('product.product_product_pc1'), qty=0, uom=False,partner_id=False, packaging=False, flag=False, context=None)
+    
+-
+  I call onchange event to change the UOM of ordered product.
+-
+  !python {model: sale.order.line}: |
+    self.product_uom_change(cr, uid, [ref('line1')], ref('product.list0'), ref('product.product_product_pc1'), 0, ref('product.product_uom_unit'), 0, False, '', ref('base.res_partner_agrolait'), False, True, False, None)
+-
   I call onchange event to change the partner of order.
 -
   !python {model: sale.config.picking_policy}: |
     sale = True
     deli = False
     self.onchange_order(cr, uid, [ref('order')], sale, deli, context=None)
-
-

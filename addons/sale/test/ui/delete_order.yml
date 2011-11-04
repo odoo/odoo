@@ -1,0 +1,23 @@
+-
+  In order to test to delete process on sale order.
+-
+  I try to delete In progress order and check Error Message.
+-
+  !python {model: sale.order}: |
+    try:
+        self.unlink(cr, uid, [ref("order7")])
+    except Exception,e:
+        print e
+-
+  I delete draft order.
+-
+  !python {model: sale.order}: |
+    context.update({'active_id':ref('order')})
+    id = self.copy(cr, uid, ref('order'), context)
+    self.unlink(cr, uid, [id])
+-
+  I delete cancelled order.
+-
+  !python {model: sale.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order5")])
+    self.unlink(cr, uid, [ref("order5")])

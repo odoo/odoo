@@ -88,7 +88,6 @@ Dashboard for Sales Manager that includes:
     'test': [
         'test/process/postpaid_order_policy.yml',
         'test/ui/onchage_events.yml',
-        #'test/manual_order_policy.yml',
         #'test/prepaid_order_policy.yml',
         #'test/picking_order_policy.yml',
         #'test/advance_invoice.yml',
@@ -96,6 +95,7 @@ Dashboard for Sales Manager that includes:
         #'test/sale_procurement.yml',
         #'test/invoice_on_ordered_qty.yml',
         #'test/invoice_on_shipped_qty.yml',
+        'test/ui/delete_order.yml',
         'test/ui/sale_report.yml',
     ],
     'installable': True,
