@@ -335,10 +335,10 @@ class product_template(osv.osv):
             return {'value': {'uom_po_id': uom_id}}
         return False
 
-    def write(self, cr, uid, ids, vals, context=None, update_check=True):
+    def write(self, cr, uid, ids, vals, context=None):
         if 'uom_po_id' in vals:
+            new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
             for product in self.browse(cr, uid, ids, context=context):
-                new_uom = self.pool.get('product.uom').browse(cr, uid, vals['uom_po_id'], context=context)
                 old_uom = product.uom_po_id
                 if old_uom.category_id.id != new_uom.category_id.id:
                     raise osv.except_osv(_('UoM categories Mismatch!'), _("New UoM '%s' must belongs to same UoM category '%s' as of old UoM '%s'.") % (new_uom.name, old_uom.category_id.name, old_uom.name,))
