@@ -73,8 +73,9 @@ class account_invoice(osv.osv):
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
-        'amount_to_pay': fields.function(_amount_to_pay, method=True,
-            type='float', string='Amount to be paid',
+        'amount_to_pay': fields.function(_amount_to_pay,
+            type='float', 
+            string='Amount to be paid',
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),
     }
@@ -144,23 +145,26 @@ class account_invoice(osv.osv):
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         """ Function that is call when the partner of the invoice is changed
         it will retrieve and set the good bank partner bank"""
-
+        #context not define in signature of function in account module
+        context = {}
         res = super(account_invoice, self).onchange_partner_id(cr,
                                                                uid,
                                                                ids,
                                                                type,
                                                                partner_id,
                                                                date_invoice,
-                                                               payment_term)
+                                                               payment_term,
+                                                               partner_bank_id,
+                                                               company_id)
         bank_id = False
         if partner_id:
             if type in ('in_invoice', 'in_refund'):
-                p = self.pool.get('res.partner').browse(cr, uid, partner_id)
+                p = self.pool.get('res.partner').browse(cr, uid, partner_id, context)
                 if p.bank_ids:
                     bank_id = p.bank_ids[0].id
                 res['value']['partner_bank_id'] = bank_id
             else:
-                user = self.pool.get('res.users').browse(cr, uid, uid)
+                user = self.pool.get('res.users').browse(cr, uid, uid, context)
                 bank_ids = user.company_id.partner_id.bank_ids
                 if bank_ids:
                     #How to order bank ?

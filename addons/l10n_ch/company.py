@@ -53,10 +53,10 @@ class res_company(osv.osv):
     }
 
     _defaults = {
-        'bvr_scan_line_vert': lambda *a: 232,
-        'bvr_scan_line_horz': lambda *a: 72,
-        'bvr_scan_line_font_size': lambda *a: 12,
-        'bvr_scan_line_letter_spacing': lambda *a: 0,
+        'bvr_scan_line_vert': 232,
+        'bvr_scan_line_horz': 72,
+        'bvr_scan_line_font_size': 12,
+        'bvr_scan_line_letter_spacing': 0,
     }
 
 res_company()

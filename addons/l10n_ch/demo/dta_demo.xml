@@ -17,7 +17,7 @@
         <!-- <field name="iban">CH9100767000S00023455</field> -->
     </record>
 
-    <record model="res.partner.bank" id="main_bank">
+    <record model="res.partner.bank" id="main_partner_bank">
         <field name="name">My bank</field>
         <!-- <field name="acc_number">123456</field> -->
         <!-- <field name="iban">123456</field> -->
@@ -53,7 +53,7 @@
   <!-- Define a payment mode -->
   <record model="payment.mode" id="payment_mode_dta">
     <field name="name">DTA</field>
-    <field name="bank_id" ref="main_bank"/>
+    <field name="bank_id" ref="main_partner_bank"/>
     <field name="journal" model="account.journal" search="[('type','=','cash')]"/>
   </record>
 

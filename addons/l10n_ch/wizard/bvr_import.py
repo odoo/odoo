@@ -168,7 +168,7 @@ def _import(self, cursor, user, data, context=None):
 #                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
-        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), voucher_currency_id= statement.currency.id, ttype='receipt', date=statement.date ,context=context)
+        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='receipt', date=statement.date ,context=context)
         voucher_res = { 'type': 'receipt' ,
 
              'name': values['name'],

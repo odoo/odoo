@@ -95,7 +95,7 @@
     context['active_id'] = pay_order_id
     result = wiz.create_dta(context=context)
     assert result, "No result returned"
-    
+
     data = wiz.read(['dta_file'])
     dta_file = base64.decodestring(data[0]['dta_file'] or '')
     assert dta_file, "File is empty"
