@@ -1,0 +1,60 @@
+-
+  In order to test the cancel sale order.
+-
+  I try to cancel sale order.
+-
+  !python {model: sale.order}: |
+    try:
+      self.action_cancel(cr, uid, [ref("order")])
+    except Exception,e:
+      print e
+-
+  First I cancel  picking related to this order.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("order"))
+    self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
+-
+  I check order status in "Shipping Exception" and related picking is in cancel state.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("order"))
+    assert order.picking_ids[0].state == "cancel","order's related picking should be cancelled"
+    #assert order.state == "shipping_except", "order should be in Ship Exception state after cancel shipment"    
+-
+  Now I am able to cancel sale order.
+-
+  !python {model: sale.order}: |
+    self.action_cancel(cr, uid, [ref("order")])
+-
+  I check that sale order is cancelled.
+-
+  !assert {model: sale.order, id: order}:
+    - state == 'cancel'
+-
+  Now try to cancel the order which Invoice Policy is 'Pay before delivery'.
+-
+  !python {model: sale.order}: |
+    self.action_cancel(cr, uid, [ref("order3")])
+    assert self.browse(cr, uid, ref("order3")).invoice_ids[0].state == "cancel","order's related invoice should be cancelled"
+    #assert order.state == "invoice_except", "order should be in Invoice Exception state after cancel Invoice"
+-
+  Now again set cancelled order to draft.
+-
+  !python {model: sale.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order")])
+-
+  Now I again cancel draft order.
+-
+  !python {model: sale.order}: |
+    self.action_cancel(cr, uid, [ref("order")])
+-
+  I check that order is cancelled.
+-
+  !assert {model: sale.order, id: order}:
+    - state == 'cancel'
+-
+  Again set cancelled order to draft.
+-
+  !python {model: sale.order}: |
+    self.action_cancel_draft(cr, uid, [ref("order")]) 

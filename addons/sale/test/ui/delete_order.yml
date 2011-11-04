@@ -19,5 +19,9 @@
   I delete cancelled order.
 -
   !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order5")])
-    self.unlink(cr, uid, [ref("order5")])
+    id = self.copy(cr, uid, ref('order5'), context)
+    self.action_cancel(cr, uid, [id])
+    try:
+      self.unlink(cr, uid, [id])
+    except Exception,e:
+        print e    
