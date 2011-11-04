@@ -11,4 +11,12 @@
 -
   !python {model: crm.claim}: |
     self.onchange_partner_address_id(cr, uid, ref('crm_case_claim04'), ref("base.res_partner_address_notsotinysarl0"), email=False)
-    
+-
+  I Update the message for claim.
+-
+  !python {model: crm.claim}: |
+    try:
+      self.message_update(cr, uid,[ref('crm_case_claim04')], {'subject': 'Claim Update record','body_text': 'first training session completed',})
+    except:
+      pass
+  
