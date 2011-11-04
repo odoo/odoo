@@ -143,13 +143,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             remaining = groups.length - 1,
             groups_array = [];
         _.each(groups, function (group, index) {
-            var group_name, group_value, group_aggregates = {};
+            var group_name = group_value = group.value,
+                group_aggregates = {};
             if (group.value instanceof Array) {
                 group_name = group.value[1];
                 group_value = group.value[0];
-            } else {
-                group_name = '' + group.value;
-                group_value = group.value;
             }
             _.each(self.aggregates, function(value, key) {
                 group_aggregates[value] = group.aggregates[key];
@@ -274,12 +272,13 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
         this.view = parent;
         this.value = value;
         this.title = title;
+        if (title === false) {
+            this.title = _t('Undefined');
+            this.undefined_title = true;
+        }
         this.aggregates = aggregates || {};
-        if (!title && !value) {
-            this.state = {};
-            this.foldable = this.draggable = false;
-        } else {
-            this.foldable = this.draggable = true;
+        this.state = {};
+        if (title || value) {
             var key = '' + this.view.group_by + '' + value;
             if (!this.view.groups_states[key]) {
                 this.view.groups_states[key] = {

@@ -13,10 +13,10 @@
     </div>
 </t>
 <t t-name="KanbanView.group_header">
-    <td class="oe_kanban_group_header">
-        <div t-if="widget.foldable" class="oe_kanban_fold_icon"></div>
+    <td class="oe_kanban_group_header" t-if="widget.view.group_by">
+        <div class="oe_kanban_fold_icon"></div>
         <div class="oe_fold_column">
-            <div class="oe_kanban_group_title" t-if="widget.title">
+            <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
                 <t t-esc="widget.title"/>
             </div>
             <ul class="oe_kanban_aggregates">
