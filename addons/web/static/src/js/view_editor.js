@@ -520,8 +520,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         $(arch1).attr(val[0],val[1]);
                         }
                     });
-                    var new_obj = self.check_attr(arch1,arch1.tagName.toLowerCase(),obj.level);
+                    var new_obj = self.check_attr(arch1,arch1.tagName.toLowerCase(),obj.level - 1);
                     new_obj.id = obj.id;
+                    new_obj.child_id = obj.child_id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
                 }
