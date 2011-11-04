@@ -1,0 +1,78 @@
+-
+  test_sale.advance.payment.inv
+-
+  In order to test the 'Make Invoices' wizard of sale module in the Open-ERP,
+  I take a Sale order and create invoice.
+-
+  I confirm the Sale Order.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order3}
+-
+  I confirm another Sale Order.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: order5}
+-
+  Then I click on the "Make Invoices" button
+-
+  !record {model: sale.make.invoice, id: sale_make_invoice_1}:
+    grouped: 1
+    invoice_date: !eval time.strftime('%Y-%m-%d')
+-
+  Then I click on the "Create Invoices" button of wizard
+-
+  !python {model: sale.make.invoice}: |
+    context = {"lang": 'en_US', "search_default_user_id":1, "tz": False, "active_model": 'sale.order', "active_ids": [ref("order3"),ref("order5")], "active_id":ref("order3")}
+    self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], context)
+-
+  I verify that an invoice has been created
+-
+  !python {model: sale.order}: |
+    inv = self.browse(cr, uid, ref('order3')).invoice_ids
+    inv1 = self.browse(cr, uid, ref('order5')).invoice_ids
+    assert inv, "Invoices has not been generated"
+    assert inv1, "Invoices has not been generated"
+-
+  I verify that an account invoice line with origin 'SO003' is created
+-
+  !python {model: sale.order}: |
+    acc_inv_line = self.pool.get('account.invoice.line')
+    inv = self.browse(cr, uid, ref('order3')).invoice_ids
+    inv1 = self.browse(cr, uid, ref('order5')).invoice_ids
+    for line in inv:
+      assert line.invoice_line, "Account invoice line has not been created for order3"
+    for line in inv1:
+      assert line.invoice_line, "Account invoice line has not been created for order5"
+-
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    inv = self.search(cr, uid, [('origin','=','SO003|SO005|')])
+    print"..........account.cose_journal_sale................",inv,ref('account.cose_journal_sale')
+    for id in inv:
+        wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
+-
+  I assign an analytic journal to the bank journal
+-
+  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
+    analytic_journal_id: account.cose_journal_sale
+    code: SAL
+    name: sales Journal
+    view_id: account.account_journal_view
+    type: 'general'
+-
+  I pay the invoice.
+-
+  !python {model: account.invoice}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("order3"))
+    invoice_id = self.search(cr, uid, [('origin','=',so.name)])
+    print invoice_id, ref('account.cash'), ref('account.period_5'),ref('sale.account_journal_bankjournal0'), ref('account.cash'),ref('account.period_8'), ref('sale.account_journal_bankjournal0')
+    self.pay_and_reconcile(cr, uid, so.invoice_ids[0].id,40000.0, ref('account.cash'), ref('account.period_5'),ref('sale.account_journal_bankjournal0'), ref('account.cash'),ref('account.period_8'), ref('sale.account_journal_bankjournal0'),name='tst')
+-
+  I verify the invoice is in Paid state
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.search(cr, uid, [('origin','=','SO003|SO005|'),('state','=','paid')])
+    assert invoice_id, "Invoice for SO is not in done state."

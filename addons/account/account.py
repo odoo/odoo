@@ -743,6 +743,7 @@ class account_journal(osv.osv):
         """
         # in account.journal code is actually the prefix of the sequence
         # whereas ir.sequence code is a key to lookup global sequences.
+        print"--------->>>>>>>>>>>>>>>>------------",vals
         prefix = vals['code'].upper()
 
         seq = {

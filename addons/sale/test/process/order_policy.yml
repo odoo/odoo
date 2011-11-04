@@ -118,7 +118,7 @@
             assert move.company_id.id == sale_order.company_id.id,"Company is not correspond"
             assert move.price_unit == order.product_id.standard_price or 0.0,"Price Unit is not correspond"
 -
-  Now, create invoice on based of picking for order1 where Invoice Policy is "Invoice on order after delivery".
+  Now, create draft invoice on based of picking for order1 where Invoice Policy is "Invoice on order after delivery".
 -
   !python {model: stock.partial.picking}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("order"))
@@ -128,9 +128,10 @@
     if data == True:
       partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
       self.do_partial(cr, uid, [partial_id])
+    assert order.shipped == True, "Sale order is not marked as delivered"
     assert order.invoice_ids, "Invoice not created after picking for sale order1"
 -
-  Now I create an invoice for order2 where Invoice Policy is "Invoice based on deliveries".
+  Now I create draft invoice for order2 where Invoice Policy is "Invoice based on deliveries".
 -
   !python {model: stock.picking}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("order2"))
@@ -138,4 +139,4 @@
     data = self.force_assign(cr, uid, [pick_ids[0]])
     if data == True:
       self.action_invoice_create(cr, uid, pick_ids, ref('account.expenses_journal'))
-    assert order.invoice_ids, "Invoice not created after picking for sale order1"
+    assert order.invoice_ids, "Invoice not created after picking for sale order2"

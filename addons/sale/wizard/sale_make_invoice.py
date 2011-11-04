@@ -43,6 +43,7 @@ class sale_make_invoice(osv.osv_memory):
         return False
 
     def make_invoices(self, cr, uid, ids, context=None):
+        print"yes in..............",ids
         order_obj = self.pool.get('sale.order')
         mod_obj = self.pool.get('ir.model.data')
         newinv = []
