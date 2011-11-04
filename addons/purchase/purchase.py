@@ -436,6 +436,7 @@ class purchase_order(osv.osv):
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
                 'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
+                'date': order.date_order,
                 'type': 'in',
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
@@ -622,7 +623,7 @@ class purchase_order_line(osv.osv):
             return result[1]
         except Exception, ex:
             return False
-    
+
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
