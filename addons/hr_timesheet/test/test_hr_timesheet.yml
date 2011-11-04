@@ -79,7 +79,7 @@
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_fracline1'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour-2,datetime.now().minute,datetime.now().second)
+    name: !eval (datetime.now()-timedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')
 
 -
   I create attendance and perform "Sign Out" action.
@@ -87,7 +87,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_fracline1'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour-1,datetime.now().minute,datetime.now().second)
+    name: !eval (datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')
 
 -
   On "Sign In/Sign Out by Project" wizard i click on "Sign In/Sign Out" button of this wizard.
