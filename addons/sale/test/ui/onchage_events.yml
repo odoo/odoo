@@ -5,6 +5,22 @@
 -
   !python {model: sale.order}: |
     self.onchange_partner_id(cr, uid, [ref('order')], ref('base.res_partner_3'))
-
+-
+  I call onchange event to change the shop of order.
+-
+  !python {model: sale.order}: |
+    self.onchange_shop_id(cr, uid, [ref('order')], ref('shop'))
+-
+  I call onchange event to change the pricelist of order.
+-
+  !python {model: sale.order}: |
+    self.onchange_pricelist_id(cr, uid, [ref('order')], ref('product.list0'), [ref('line'),ref('line1'),ref('line12'),ref('line13')], context={})
+-
+  I call onchange event to change the partner of order.
+-
+  !python {model: sale.config.picking_policy}: |
+    sale = True
+    deli = False
+    self.onchange_order(cr, uid, [ref('order')], sale, deli, context=None)
 
 
