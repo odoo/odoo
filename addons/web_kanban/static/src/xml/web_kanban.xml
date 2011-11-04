@@ -13,19 +13,21 @@
     </div>
 </t>
 <t t-name="KanbanView.group_header">
-    <td class="oe_kanban_group_header" t-if="widget.view.group_by">
-        <div class="oe_kanban_fold_icon"></div>
-        <div class="oe_fold_column">
-            <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
-                <t t-esc="widget.title"/>
+    <td class="oe_kanban_group_header">
+        <t t-if="widget.view.group_by">
+            <div class="oe_kanban_fold_icon"></div>
+            <div class="oe_fold_column">
+                <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
+                    <t t-esc="widget.title"/>
+                </div>
+                <ul class="oe_kanban_aggregates">
+                    <li t-foreach="widget.aggregates" t-as="aggregate">
+                        <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
+                    </li>
+                </ul>
             </div>
-            <ul class="oe_kanban_aggregates">
-                <li t-foreach="widget.aggregates" t-as="aggregate">
-                    <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
-                </li>
-            </ul>
-        </div>
-        <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
+            <p t-if="widget.title" class="oe_kanban_group_title_vertical"><t t-esc="widget.title"/></p>
+        </t>
     </td>
 </t>
 <t t-name="KanbanView.group_records_container">
