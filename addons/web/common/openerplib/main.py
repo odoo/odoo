@@ -129,6 +129,18 @@ class XmlRPCConnector(Connector):
         # TODO should try except and wrap exception into LibException
         return getattr(service, method)(*args)
 
+class XmlRPCSConnector(XmlRPCConnector):
+    """
+    A type of connector that uses the secured XMLRPC protocol.
+    """
+    PROTOCOL = 'xmlrpcs'
+
+    __logger = _getChildLogger(_logger, 'connector.xmlrpcs')
+
+    def __init__(self, hostname, port=8071):
+        super(XmlRPCSConnector, self).__init__(hostname, port)
+        self.url = 'https://%s:%d/xmlrpc' % (self.hostname, self.port)
+
 class NetRPC_Exception(Exception):
     """
     Exception for NetRPC errors.
@@ -438,6 +450,8 @@ class Model(object):
         :return: A list of dictionaries containing all the specified fields.
         """
         record_ids = self.search(domain or [], offset, limit or False, order or False, context or {})
+        if not record_ids: return []
+        if field == ['id']: return [{'id': record_id} for record_id in record_ids]
         records = self.read(record_ids, fields or [], context or {})
         return records
 
@@ -450,15 +464,17 @@ def get_connector(hostname=None, protocol="xmlrpc", port="auto"):
     :param port: The number of the port. Defaults to auto.
     """
     if port == 'auto':
-        port = 8069 if protocol=="xmlrpc" else 8070
+        port = 8069 if protocol=="xmlrpc" else (8070 if protocol == "netrpc" else 8071)
     if protocol == "xmlrpc":
         return XmlRPCConnector(hostname, port)
+    elif protocol == "xmlrpcs":
+        return XmlRPCSConnector(hostname, port)
     elif protocol == "netrpc":
         return NetRPCConnector(hostname, port)
     elif protocol == "local":
         return LocalConnector()
     else:
-        raise ValueError("You must choose xmlrpc or netrpc or local")
+        raise ValueError("You must choose xmlrpc(s), netrpc or local")
 
 def get_connection(hostname=None, protocol="xmlrpc", port='auto', database=None,
                  login=None, password=None, user_id=None):
