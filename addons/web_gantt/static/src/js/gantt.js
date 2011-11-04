@@ -18,10 +18,6 @@ init: function(parent, dataset, view_id) {
         this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
         this.has_been_loaded = $.Deferred();
-        this.COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
-                 '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
-                 '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900'];
     },
 
     start: function() {
@@ -63,39 +59,70 @@ init: function(parent, dataset, view_id) {
             return res[self.date_start];
         });
         
+        this.database_projects = started_projects;
+        
         if(!self.name) {
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
         }
         
-        $.when(this.project_starting_date(started_projects), this.get_project_duration(started_projects), this.calculate_difference())
+        $.when(this.project_starting_date(), this.get_project_duration(), this.calculate_difference())
             .then(function() {
                 if(self.ganttChartControl) {
                     self.ganttChartControl.clearAll();
                     self.$element.find('#GanttView').empty();
                 }
-            }).then(this.group_projects(started_projects))
-            .done(function() {
-                
-                var Project = new GanttProjectInfo(0, self.name, self.project_start_date),
-                    Task = new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, "");
-                $.when(self.add_tasks(started_projects, Task))
-                    .done(function() {
-                        self.init_gantt_view(Project, Task);
-                    });
             })
+            .then(this.group_projects())
+            .then(this.generate_projects())
+            .then(this.add_tasks())
+            .done(this.init_gantt_view());
     },
     
-    group_projects: function(projects) {
-        var def = $.Deferred(),
+    generate_projects : function() {
+        var projects = this.database_projects,
             self = this;
+        
+        this.GanttProjects = [],
+        this.GanttTasks = [];
+        if(this.GroupProject) {
+            _.each(this.GroupProject, function(grp, index) {
+                self.GanttProjects.push(new GanttProjectInfo(index, grp, self.project_start_date));
+                self.GanttTasks.push(new GanttTaskInfo(index, grp, self.project_start_date, self.total_duration, 100, ""));
+            });
+        } else {
+            this.GanttProjects.push(new GanttProjectInfo(0, self.name, self.project_start_date));
+            this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
+        }
+        
+        return $.Deferred().resolve().promise();
+    },
+    
+    group_projects: function() {
+        var def = $.Deferred(),
+            self = this,
+            projects = this.database_projects;
+            
         if (!this.group_by.length) return def.resolve().promise();
+        
+        var groups = _.pluck(projects, this.group_by[0]);
+        this.GroupProject = [];
+        _.each(groups, function(grp) {
+            if(grp instanceof Array) {
+                grp = grp[grp.length - 1];
+            }
+            if(!_.include(self.GroupProject,grp))
+                self.GroupProject.push(grp);
+        });
+        
         return def.resolve().promise();
     },
     
-    get_project_duration: function(projects) {
+    get_project_duration: function() {
         
-        var self = this;
+        var self = this,
+            projects = this.database_projects;
+            
         this.project_duration = [];
         
         _.each(projects, function(project, index) {
@@ -130,15 +157,16 @@ init: function(parent, dataset, view_id) {
         return $.Deferred().resolve().promise();
     },
     
-    add_tasks: function(tasks, parentTask) {
-        var self = this;
+    add_tasks: function() {
+        var self = this,
+            tasks = this.database_projects;
         
         _.each(tasks, function(task, index) {
             var name = task[self.text];
             if(task[self.text] instanceof Array) {
                 name = task[self.text][1];
             }
-            parentTask.addChildTask(
+            self.GanttTasks[0].addChildTask(
                 new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, "")
             );
         });
@@ -146,15 +174,16 @@ init: function(parent, dataset, view_id) {
         return $.Deferred().resolve().promise();
     },
     
-    project_starting_date : function(projects) {
-        var self = this;
-        var min_date = _.min(projects, function(prj) {
-            return new Date(prj[self.date_start]);
-        });
-        
-        var max_date = _.max(projects, function(prj) {
-            return self.format_date(prj[self.date_start])
-        });
+    project_starting_date : function() {
+        var self = this,
+            projects = this.database_projects,
+            min_date = _.min(projects, function(prj) {
+                return new Date(prj[self.date_start]);
+            }),
+            max_date = _.max(projects, function(prj) {
+                return self.format_date(prj[self.date_start]);
+            });
+            
         this.project_end_date =  this.format_date(max_date[self.date_start]);
         if (min_date) this.project_start_date = this.format_date(min_date[self.date_start]);
         else 
@@ -162,9 +191,10 @@ init: function(parent, dataset, view_id) {
         return $.Deferred().resolve().promise();
     },
 
-    init_gantt_view: function(Project, Task) {
+    init_gantt_view: function() {
         
-        Project.addTask(Task);
+        
+        this.GanttProjects[0].addTask(this.GanttTasks[0]);
         var self = this;
         
         var ganttChartControl = this.ganttChartControl = new GanttChart();
@@ -176,11 +206,11 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.showContextMenu(false);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
-        // Load data structure      
-        ganttChartControl.addProject(Project);
-        ganttChartControl.create('GanttView');
-        // Create Gantt control
         
+        // Load data structure      
+        ganttChartControl.addProject(this.GanttProjects[0]);
+        // Create Gantt control
+        ganttChartControl.create('GanttView');
         
         // Setup Events
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {
@@ -191,9 +221,7 @@ init: function(parent, dataset, view_id) {
         });
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.ResizeTask(task);});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.ResizeTask(task);});
-        
         ganttChartControl.attachEvent("onTaskDblClick", function(task) { return self.editTask(task);});
-        
     },
     
     format_date : function(date) {
@@ -303,7 +331,6 @@ init: function(parent, dataset, view_id) {
                     group_by: groupbys
                 })
                 .done(function(projects) {
-                    self.database_projects = projects; 
                     self.on_project_loaded(projects);
                 });
         })
