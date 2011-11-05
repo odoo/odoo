@@ -237,6 +237,33 @@ class account_invoice(osv.osv, EDIMixin):
 
         return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
 
+
+    def _edi_record_display_action(self, cr, uid, id, context=None):
+        """Returns an appropriate action definition dict for displaying
+           the record with ID ``rec_id``.
+
+           :param int id: database ID of record to display
+           :return: action definition dict
+        """
+        action = super(account_invoice,self)._edi_record_display_action(cr, uid, id, context=context)
+        try:
+            invoice = self.browse(cr, uid, id, context=context)
+            if 'out_' in invoice.type:
+                view_ext_id = 'invoice_form'
+                journal_type = 'sale'
+            else:
+                view_ext_id = 'invoice_supplier_form'
+                journal_type = 'purchase'
+            ctx = "{'type': '%s', 'journal_type': '%s'}" % (invoice.type, journal_type)
+            action.update(context=ctx)
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', view_ext_id)[1]
+            action.update(views=[(view_id,'form'), (False, 'tree')])
+        except ValueError:
+            # ignore if views are missing
+            pass
+        return action
+
+
 class account_invoice_line(osv.osv, EDIMixin):
     _inherit='account.invoice.line'
 
