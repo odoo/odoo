@@ -86,13 +86,11 @@ class res_partner_address(osv.osv, EDIMixin):
     def edi_import(self, cr, uid, edi_document, context=None):
         # handle bank info, if any
         edi_bank_ids = edi_document.pop('bank_ids', None)
-        result = super(res_partner_address,self).edi_import(cr, uid, edi_document, context=context)
+        address_id = super(res_partner_address,self).edi_import(cr, uid, edi_document, context=context)
         if edi_bank_ids:
-            partner = self._edi_get_object_by_external_id(cr, uid, edi_document['partner_id'][0],
-                                                          'res.partner', context=context)
-            assert partner is not None
+            address = self.browse(cr, uid, address_id, context=context)
             import_ctx = dict(context,
-                              default_partner_id=partner.id,
+                              default_partner_id=address.partner_id.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
                 try:
@@ -103,4 +101,4 @@ class res_partner_address(osv.osv, EDIMixin):
                     logging.getLogger('edi.res_partner').warning('Failed to import bank account using'
                                                                  'bank type: %s, ignoring', import_ctx['default_state'],
                                                                  exc_info=True)
-        return result
+        return address_id
