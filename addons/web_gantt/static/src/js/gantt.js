@@ -83,18 +83,19 @@ init: function(parent, dataset, view_id) {
         var projects = this.database_projects,
             self = this;
         
-        this.GanttProjects = [],
         this.GanttTasks = [];
-        if(this.GroupProject) {
+        if(this.group_by.length) {
             _.each(this.GroupProject, function(grp, index) {
-                self.GanttProjects.push(new GanttProjectInfo(index, grp, self.project_start_date));
-                self.GanttTasks.push(new GanttTaskInfo(index, grp, self.project_start_date, self.total_duration, 100, ""));
+                self.GanttTasks.push([]);
+                _.each(grp, function(g, g_index) {
+                    self.GanttTasks[index].push(new GanttTaskInfo(index + '_'+ g_index, g, self.project_start_date, self.total_duration, 100, ""));
+                });
+//                self.GanttTasks.push(new GanttTaskInfo(index, grp, self.project_start_date, self.total_duration, 100, ""));
             });
         } else {
-            this.GanttProjects.push(new GanttProjectInfo(0, self.name, self.project_start_date));
             this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
         }
-        
+        this.GanttProjects = new GanttProjectInfo(0, self.name, self.project_start_date);
         return $.Deferred().resolve().promise();
     },
     
@@ -105,16 +106,16 @@ init: function(parent, dataset, view_id) {
             
         if (!this.group_by.length) return def.resolve().promise();
         
-        var groups = _.pluck(projects, this.group_by[0]);
         this.GroupProject = [];
-        _.each(groups, function(grp) {
-            if(grp instanceof Array) {
-                grp = grp[grp.length - 1];
-            }
-            if(!_.include(self.GroupProject,grp))
-                self.GroupProject.push(grp);
-        });
         
+        _.each(this.group_by, function(group) {
+            self.GroupProject.push(
+                _.uniq(
+                    _.map(_.pluck(projects, group), function(prj) {
+                        return prj instanceof Array ? prj[1] : prj;
+                    })
+                ));
+        });
         return def.resolve().promise();
     },
     
@@ -160,17 +161,17 @@ init: function(parent, dataset, view_id) {
     add_tasks: function() {
         var self = this,
             tasks = this.database_projects;
-        
-        _.each(tasks, function(task, index) {
-            var name = task[self.text];
-            if(task[self.text] instanceof Array) {
-                name = task[self.text][1];
-            }
-            self.GanttTasks[0].addChildTask(
-                new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, "")
-            );
-        });
-        
+        if (this.group_by.length) {
+        }
+        else {
+            _.each(tasks, function(task, index){
+                var name = task[self.text];
+                if (task[self.text] instanceof Array) {
+                    name = task[self.text][1];
+                }
+                self.GanttTasks[0].addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""));
+            });
+        }
         return $.Deferred().resolve().promise();
     },
     
@@ -192,10 +193,20 @@ init: function(parent, dataset, view_id) {
     },
 
     init_gantt_view: function() {
-        
-        
-        this.GanttProjects[0].addTask(this.GanttTasks[0]);
         var self = this;
+        
+        if (this.group_by.length) {
+            _.each(this.GanttTasks, function(tasks) {
+                _.each(tasks, function(task, index) {
+                    self.GanttProjects.addTask(task);
+                })
+            });
+        }
+        else {
+            _.each(this.GanttTasks, function(tsk, index){
+                self.GanttProjects.addTask(tsk);
+            });
+        }
         
         var ganttChartControl = this.ganttChartControl = new GanttChart();
 
@@ -208,7 +219,8 @@ init: function(parent, dataset, view_id) {
         ganttChartControl.showDescProject(true,'n,d');
         
         // Load data structure      
-        ganttChartControl.addProject(this.GanttProjects[0]);
+        ganttChartControl.addProject(this.GanttProjects);
+        
         // Create Gantt control
         ganttChartControl.create('GanttView');
         
