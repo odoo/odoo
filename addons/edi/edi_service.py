@@ -41,7 +41,7 @@ class edi(netsvc.ExportService):
             cr.commit()
         except Exception:
             _logger.exception('Failed to execute EDI method %s with args %r', method_name, method_args)
-            cr.rollback()
+            raise
         finally:
             cr.close()
         return res

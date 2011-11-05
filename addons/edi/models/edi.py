@@ -34,11 +34,13 @@ import netsvc
 import pooler
 from osv import osv,fields,orm
 from tools.translate import _
-from tools.parse_version import parse_version
 from tools.safe_eval import safe_eval as eval
 
 EXTERNAL_ID_PATTERN = re.compile(r'^([^.:]+)(?::([^.]+))?\.(\S+)$')
 EDI_VIEW_WEB_URL = '%s/edi/view?debug=1&db=%s&token=%s'
+EDI_PROTOCOL_VERSION = 1 # arbitrary ever-increasing version number
+EDI_GENERATOR = 'OpenERP ' + release.major_version
+EDI_GENERATOR_VERSION = release.version_info
 
 def split_external_id(ext_id):
     match = EXTERNAL_ID_PATTERN.match(ext_id)
@@ -60,9 +62,6 @@ def safe_unique_id(database_id, model, record_id):
     # b64-encode the 9-bytes folded digest to a reasonable 12 chars ASCII ID
     digest = base64.urlsafe_b64encode(digest)
     return '%s-%s' % (model.replace('.','_'), digest)
-
-def version_tuple():
-    return parse_version(release.version)
 
 def last_update_for(record):
     """Returns the last update timestamp for the given record,
@@ -140,8 +139,9 @@ class edi_document(osv.osv):
 
         :param edi_documents: list of Python dicts containing the deserialized
                               version of EDI documents
-        :return: list of (model, id) pairs containing the model and database ID
-                 of all records that were imported in the system
+        :return: list of (model, id, action) tuple containing the model and database ID
+                 of all records that were imported in the system, plus a suggested
+                 action definition dict for displaying each document.
         """
         ir_module = self.pool.get('ir.module.module')
         res = []
@@ -158,7 +158,8 @@ class edi_document(osv.osv):
             assert model_obj, 'model `%s` cannot be found, despite module `%s` being available - '\
                               'this EDI document seems invalid or unsupported' % (model,module)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
-            res.append((model, record_id))
+            record_action = model_obj._edi_record_display_action(cr, uid, record_id, context=context)
+            res.append((model, record_id, record_action))
         return res
 
     def deserialize(self, edi_documents_string):
@@ -282,6 +283,19 @@ class EDIMixin(object):
 
         return '%s.%s' % (module, ext_id)
 
+    def _edi_record_display_action(self, cr, uid, id, context=None):
+        """Returns an appropriate action definition dict for displaying
+           the record with ID ``rec_id``.
+
+           :param int id: database ID of record to display
+           :return: action definition dict
+        """
+        return {'type': 'ir.actions.act_window',
+                'view_mode': 'form,tree',
+                'view_type': 'form',
+                'res_model': self._name,
+                'res_id': id}
+
     def edi_metadata(self, cr, uid, records, context=None):
         """Return a list containing the boilerplate EDI structures for
            exporting ``records`` as EDI, including
@@ -294,7 +308,9 @@ class EDIMixin(object):
                '__module': 'module',                   # require module
                '__id': 'module:db-uuid:model.id',      # unique global external ID for the record
                '__last_update': '2011-01-01 10:00:00', # last update date in UTC!
-               '__version' : [6,1,0],                  # server version, to check compatibility.
+               '__version': 1,                         # EDI spec version
+               '__generator' : 'OpenERP',              # EDI generator
+               '__generator_version' : [6,1,0],        # server version, to check compatibility.
                '__attachments_':
            }
 
@@ -305,25 +321,27 @@ class EDIMixin(object):
         data_ids = []
         ir_attachment = self.pool.get('ir.attachment')
         results = []
-        version = version_tuple()
         for record in records:
-            attachment_ids = ir_attachment.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
-            attachments = []
-            for attachment in ir_attachment.browse(cr, uid, attachment_ids, context=context):
-                attachments.append({
-                        'name' : attachment.name,
-                        'content': attachment.datas, # already base64 encoded!
-                        'file_name': attachment.datas_fname,
-                })
             ext_id = self._edi_external_id(cr, uid, record, context=context)
             edi_dict = {
                 '__id': ext_id,
                 '__last_update': last_update_for(record),
                 '__model' : record._name,
                 '__module' : record._original_module,
-                '__version': version,
-                '__attachments': attachments,
+                '__version': EDI_PROTOCOL_VERSION,
+                '__generator': EDI_GENERATOR,
+                '__generator_version': EDI_GENERATOR_VERSION,
             }
+            attachment_ids = ir_attachment.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
+            if attachment_ids:
+                attachments = []
+                for attachment in ir_attachment.browse(cr, uid, attachment_ids, context=context):
+                    attachments.append({
+                            'name' : attachment.name,
+                            'content': attachment.datas, # already base64 encoded!
+                            'file_name': attachment.datas_fname,
+                    })
+                edi_dict.update(__attachments=attachments)
             results.append(edi_dict)
         return results
 
@@ -441,7 +459,7 @@ class EDIMixin(object):
             db = pooler.get_db(cr.dbname)
             local_cr = None
             try:
-                time.sleep(1) # FIXME: workaround to wait for commit of parent transaction
+                time.sleep(3) # lame workaround to wait for commit of parent transaction
                 # grab a fresh browse_record on local cursor
                 local_cr = db.cursor()
                 web_root_url = self.pool.get('ir.config_parameter').get_param(local_cr, uid, 'web.base.url')
@@ -458,6 +476,7 @@ class EDIMixin(object):
                     edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
                     self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
                                                               force_send=True, context=edi_context)
+                    _logger.info('EDI export successful for %s #%s, email notification sent.', self._name, edi_record.id)
             except Exception:
                 _logger.warning('Ignoring EDI mail notification, failed to generate it.', exc_info=True)
             finally:
@@ -594,33 +613,10 @@ class EDIMixin(object):
         return target.id
 
     def edi_import(self, cr, uid, edi_document, context=None):
-        """Imports a dict representing an edi.document into the system,
-           applying the following rules.
+        """Imports a dict representing an edi.document into the system.
 
-           All relationship fields are exported in a special way, and provide their own
-           unique identifier, so that we can avoid duplication of records when importing.
-
-           #. Many2One
-               See :meth:`~.edi_import_relation`
-
-           #. One2Many
-               O2M fields are always exported as a list of dicts, where each dict corresponds
-               to a full EDI record. The import should not update existing records
-               if they already exist, it should only link them to the parent object, in this
-               fashion:
-                   * First import the parent object, using the usual procedire
-                   * Look for a record that matches the db_id provided in the __id field. If
-                     found, keep the corresponding database id, and connect it to the parent.
-                   * If not found via db_id, create a new entry using the same method that
-                     imports a full EDI record, grab the resulting db id, and use it to
-                     connect to the parent.
-
-           #: Many2Many
-               M2M fields are always exported as a list of pairs similar to M2O.
-               For each pair in the M2M:
-                   * Perform the same steps as for a Many2One (See :meth:`~.edi_import_relation`)
-                   * After finding the database ID of the final record in the database,
-                     connect it to the parent record.
+           :param dict edi_document: EDI document to import
+           :return: the database ID of the imported record
         """
         assert self._name == edi_document.get('__import_model') or \
                 ('__import_model' not in edi_document and self._name == edi_document.get('__model')), \
@@ -629,10 +625,10 @@ class EDIMixin(object):
 
         # First check the record is now already known in the database, in which case it is ignored
         ext_id_members = split_external_id(edi_document['__id'])
-        existing_id = self._edi_get_object_by_external_id(cr, uid, ext_id_members['full'], self._name, context=context)
-        if existing_id:
+        existing = self._edi_get_object_by_external_id(cr, uid, ext_id_members['full'], self._name, context=context)
+        if existing:
             _logger.info("'%s' EDI Document with ID '%s' is already known, skipping import!", self._name, ext_id_members['full'])
-            return existing_id.id
+            return existing.id
 
         record_values = {}
         o2m_todo = {} # o2m values are processed after their parent already exists
