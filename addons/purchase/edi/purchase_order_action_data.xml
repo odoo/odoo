@@ -10,6 +10,19 @@
             <field name="condition">True</field>
             <field name="name">Auto-email confirmed purchase orders</field>
         </record>
+
+        <!-- EDI related Email Templates menu -->
+        <record model="ir.actions.act_window" id="action_email_templates">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template.email_template_tree" />
+            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="context" eval="{'search_default_model_id': ref('purchase.model_purchase_order')}"/>
+        </record>
+        <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_purchase_config_purchase" sequence="30"/>
+        <menuitem id="menu_email_templates" parent="menu_configuration_misc" action="action_email_templates" sequence="30"/>
     </data>
 
     <!-- Mail template and workflow bindings are done in a NOUPDATE block

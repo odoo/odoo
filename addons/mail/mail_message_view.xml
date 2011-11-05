@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <menuitem name="Configuration" parent="base.menu_tools" id="base.menu_lunch_survey_root" sequence="20"/>
-
         <record model="ir.ui.view" id="view_email_message_form">
             <field name="name">mail.message.form</field>
             <field name="model">mail.message</field>
@@ -142,14 +139,10 @@
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-        <menuitem name="Emails" id="menu_email_message_tools" parent="base.menu_tools" />
-
         <menuitem name="Messages"
             id="menu_email_message"
-            parent="menu_email_message_tools"
+            parent="base.menu_email"
             action="action_view_mail_message" />
-
-        <menuitem name="Emails" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
     </data>
 </openerp>

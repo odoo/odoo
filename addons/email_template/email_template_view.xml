@@ -155,9 +155,8 @@
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
 
-        <menuitem name="Templates" id="menu_email_template_all_tools"
-            parent="mail.menu_email_message_tools" action="action_email_template_tree_all" />
-
+        <menuitem id="menu_email_templates" parent="base.menu_email" action="action_email_template_tree_all"
+                  sequence="20"/>
 
     </data>
 </openerp>
