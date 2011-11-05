@@ -475,7 +475,7 @@ class EDIMixin(object):
                     edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
                     edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
                     self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
-                                                              force_send=True, context=edi_context)
+                                                              force_send=False, context=edi_context)
                     _logger.info('EDI export successful for %s #%s, email notification sent.', self._name, edi_record.id)
             except Exception:
                 _logger.warning('Ignoring EDI mail notification, failed to generate it.', exc_info=True)
