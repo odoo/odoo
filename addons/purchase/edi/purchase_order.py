@@ -79,13 +79,13 @@ class purchase_order(osv.osv, EDIMixin):
                     '__import_module': 'sale',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'company_paypal_account': order.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_address_id], context=context)[0],
-
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
                                                                          context=context)[0],
-                    #'company_logo': #TODO
             })
+            if edi_doc.get('order_line'):
+                for line in edi_doc['order_line']:
+                    line['__import_model'] = 'sale.order.line'
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 

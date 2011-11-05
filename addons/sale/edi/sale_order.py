@@ -82,7 +82,6 @@ class sale_order(osv.osv, EDIMixin):
                     '__import_module': 'purchase',
 
                     'company_address': res_company.edi_export_address(cr, uid, order.company_id, context=context),
-                    'company_paypal_account': order.company_id.paypal_account,
                     'partner_address': res_partner_address.edi_export(cr, uid, [order.partner_order_id], context=context)[0],
 
                     'currency': self.pool.get('res.currency').edi_export(cr, uid, [order.pricelist_id.currency_id],
@@ -206,6 +205,7 @@ class sale_order_line(osv.osv, EDIMixin):
         edi_doc_list = []
         for line in records:
             edi_doc = super(sale_order_line,self).edi_export(cr, uid, [line], edi_struct, context)[0]
+            edi_doc['__import_model'] = 'purchase.order.line'
             edi_doc['product_qty'] = line.product_uom_qty
             if line.product_uos:
                 edi_doc.update(product_uom=line.product_uos,
