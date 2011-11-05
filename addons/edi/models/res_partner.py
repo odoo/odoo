@@ -89,7 +89,7 @@ class res_partner_address(osv.osv, EDIMixin):
         address_id = super(res_partner_address,self).edi_import(cr, uid, edi_document, context=context)
         if edi_bank_ids:
             address = self.browse(cr, uid, address_id, context=context)
-            import_ctx = dict(context,
+            import_ctx = dict((context or {}),
                               default_partner_id=address.partner_id.id,
                               default_state=self._get_bank_type(cr, uid, context))
             for ext_bank_id, bank_name in edi_bank_ids:
