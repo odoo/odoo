@@ -77,6 +77,8 @@ class EDI(openerpweb.Controller):
     @openerpweb.jsonrequest
     def import_edi_url(self, req, url):
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
-        return result
+        if len(result) == 1:
+            return {"action": web.controllers.main.clean_action(req, result[0][2])}
+        return True
 
 #

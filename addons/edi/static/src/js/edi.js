@@ -1,4 +1,5 @@
 openerp.edi = function(openerp) {
+openerp.web.qweb.add_template("/web/static/src/xml/base.xml");
 openerp.web.qweb.add_template("/edi/static/src/xml/edi.xml");
 openerp.web.qweb.add_template("/edi/static/src/xml/edi_account.xml");
 openerp.web.qweb.add_template("/edi/static/src/xml/edi_sale_purchase.xml");
@@ -17,23 +18,19 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     start: function() {
         this._super();
         var param = {"db": this.db, "token": this.token};
-        console.log("load",param);
-        this.rpc('/edi/get_edi_document', param, this.on_document_loaded);
+        this.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed);
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
-        console.log("docs",this.doc);
         var template_content = "Edi." + this.doc.__model + ".content";
         var template_sidebar = "Edi." + this.doc.__model + ".sidebar";
         var param = {"widget":this, "doc":this.doc};
         if (openerp.web.qweb.templates[template_sidebar]) {
             this.sidebar = openerp.web.qweb.render(template_sidebar, param);
         }
-        console.log("sidebar",this.sidebar);
         if (openerp.web.qweb.templates[template_content]) {
             this.content = openerp.web.qweb.render(template_content, param);
         }
-        console.log("sidebar",this.sidebar);
         this.$element.html(openerp.web.qweb.render("EdiView", param));
         this.$element.find('button.oe_edi_action_print').bind('click', this.do_print);
         this.$element.find('button#oe_edi_import_existing').bind('click', this.do_import_existing);
@@ -43,9 +40,20 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this.$element.find('.oe_edi_pay_choice, .oe_edi_pay_choice_label').bind('click', this.toggle_choice('pay'));
         this.$element.find('#oe_edi_download_show_code').bind('click', this.show_code);
     },
+    on_document_failed: function(response) {
+        var self = this;
+        var params = {
+                error: response,
+                //TODO: should this be _t() wrapped?
+                message: "Sorry, this document cannot be located. Perhaps the link you are using has expired?"
+        }
+        $(openerp.web.qweb.render("DialogWarning", params)).dialog({
+            title: "Document not found",
+            modal: true,
+        });
+    },
     show_code: function($event) {
-        $('#oe_edi_download_code').show();
-        return false;
+        $('#oe_edi_download_code').toggle();
     },
     get_download_url: function() {
         var l = window.location;
@@ -106,27 +114,55 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     init: function(parent,url) {
         this._super();
         this.url = url;
+        var params = {};
+
+        this.template = "EdiImport";
         this.session = new openerp.web.Session();
-        this.template = "EdiEmpty";
+        this.login = new openerp.web.Login(this);
+        this.header = new openerp.web.Header(this);
+        this.header.on_logout.add(this.login.on_logout);
     },
     start: function() {
+        this.session.on_session_invalid.add_last(this.do_ask_login)
         this.session.on_session_valid.add_last(this.do_import);
-        // TODO if session invalid ask for login
+        this.header.appendTo($("#oe_header"));
         this.session.start();
+        this.login.appendTo($('#oe_login'));
+    },
+    do_ask_login: function() {
+        this.login.do_ask_login(this.do_import);
     },
     do_import: function() {
-        this.rpc('/edi/import_edi_url', {"url": this.url}, this.on_imported, this.on_imported_error);
+        this.rpc('/edi/import_edi_url', {url: this.url}, this.on_imported, this.on_imported_error);
     },
     on_imported: function(response) {
-        console.log("responde from import",response);
-        // response is null when exception
-        // model: response[0][0],
-        // id: parseInt(response[0][1], 10),
-        window.location = "/web/webclient/home?debug=1#model=MODEL&id=ID";
+        if ('action' in response) {
+            this.rpc("/web/session/save_session_action", {the_action: response.action}, function(key) {
+                window.location = "/web/webclient/home?debug=1&s_action="+encodeURIComponent(key);
+            });
+        }
+        else {
+            $('<div>').dialog({
+                modal: true,
+                title: _t('Import Successful!'),
+                buttons: {
+                    Ok: function() {
+                        $(this).dialog("close");
+                        window.location = "/web/webclient/home";
+                    }
+                }
+            }).html(_t('The document has been successfully imported!'));
+        }
     },
     on_imported_error: function(response){
         var self = this;
-        $(openerp.web.qweb.render("DialogWarning", "Sorry, Import is not successful.")).dialog({
+        var msg = _t("Sorry, the document could not be imported.");
+        if (response.data.fault_code) {
+            msg += "\n " + _t('Reason:') + response.data.fault_code;
+        }
+        var params = {error: response, message: msg};
+        $(openerp.web.qweb.render("DialogWarning", params)).dialog({
+            title: "Document Import Notification",
             modal: true,
             buttons: {
                 Ok: function() { $(this).dialog("close"); }
