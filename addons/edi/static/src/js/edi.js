@@ -144,21 +144,21 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
         else {
             $('<div>').dialog({
                 modal: true,
-                title: _t('Import Successful!'),
+                title: 'Import Successful!',
                 buttons: {
                     Ok: function() {
                         $(this).dialog("close");
                         window.location = "/web/webclient/home";
                     }
                 }
-            }).html(_t('The document has been successfully imported!'));
+            }).html('The document has been successfully imported!');
         }
     },
     on_imported_error: function(response){
         var self = this;
-        var msg = _t("Sorry, the document could not be imported.");
+        var msg = "Sorry, the document could not be imported.";
         if (response.data.fault_code) {
-            msg += "\n " + _t('Reason:') + response.data.fault_code;
+            msg += "\n Reason:" + response.data.fault_code;
         }
         var params = {error: response, message: msg};
         $(openerp.web.qweb.render("DialogWarning", params)).dialog({
