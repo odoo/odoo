@@ -59,6 +59,7 @@ class base_setup_config_choice(osv.osv_memory):
         'installed_users':fields.text('Installed Users', readonly=True),
         'config_logo' : fields.binary('Image', readonly=True),
         }
+    _rec_name = 'installed_users'
 
     _defaults = {
         'installed_users':get_users,
