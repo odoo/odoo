@@ -161,7 +161,7 @@ class ir_model(osv.osv):
             #pooler.restart_pool(cr.dbname)
         return res
 
-    def instanciate(self, cr, user, model, context={}):
+    def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
             pass
         x_custom_model._name = model

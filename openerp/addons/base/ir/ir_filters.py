@@ -53,7 +53,7 @@ class ir_filters(osv.osv):
             return False
         return self.create(cr, uid, vals, context)
 
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(ir_filters, self)._auto_init(cr, context)
         # Use unique index to implement unique constraint on the lowercase name (not possible using a constraint)
         cr.execute("SELECT indexname FROM pg_indexes WHERE indexname = 'ir_filters_name_model_uid_unique_index'")

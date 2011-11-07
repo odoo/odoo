@@ -148,7 +148,7 @@ class res_company(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
-    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context={}):
+    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context=None):
         val = []
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
@@ -201,7 +201,7 @@ class res_company(osv.osv):
         ids =  self.search(cr, uid, [('parent_id','child_of',[company])])
         return ids
 
-    def _get_partner_hierarchy(self, cr, uid, company_id, context={}):
+    def _get_partner_hierarchy(self, cr, uid, company_id, context=None):
         if company_id:
             parent_id = self.browse(cr, uid, company_id)['parent_id']
             if parent_id:
@@ -210,7 +210,7 @@ class res_company(osv.osv):
                 return self._get_partner_descendance(cr, uid, company_id, [], context)
         return []
 
-    def _get_partner_descendance(self, cr, uid, company_id, descendance, context={}):
+    def _get_partner_descendance(self, cr, uid, company_id, descendance, context=None):
         descendance.append(self.browse(cr, uid, company_id).partner_id.id)
         for child_id in self._get_company_children(cr, uid, company_id):
             if child_id != company_id:
@@ -239,7 +239,7 @@ class res_company(osv.osv):
         self.cache_restart(cr)
         return super(res_company, self).write(cr, *args, **argv)
 
-    def _get_euro(self, cr, uid, context={}):
+    def _get_euro(self, cr, uid, context=None):
         try:
             return self.pool.get('res.currency').search(cr, uid, [])[0]
         except:

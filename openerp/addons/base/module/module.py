@@ -402,7 +402,7 @@ class module(osv.osv):
         }
 
     # update the list of available packages
-    def update_list(self, cr, uid, context={}):
+    def update_list(self, cr, uid, context=None):
         res = [0, 0] # [update, add]
 
         known_mods = self.browse(cr, uid, self.search(cr, uid, []))

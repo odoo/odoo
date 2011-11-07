@@ -45,7 +45,7 @@ class workflow(osv.osv):
         wf_service.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
-    def get_active_workitems(self, cr, uid, res, res_id, context={}):
+    def get_active_workitems(self, cr, uid, res, res_id, context=None):
         
         cr.execute('select * from wkf where osv=%s limit 1',(res,))
         wkfinfo = cr.dictfetchone()
@@ -212,7 +212,7 @@ class wkf_triggers(osv.osv):
         'instance_id': fields.many2one('workflow.instance', 'Destination Instance', ondelete="cascade"),
         'workitem_id': fields.many2one('workflow.workitem', 'Workitem', required=True, ondelete="cascade"),
     }
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(wkf_triggers, self)._auto_init(cr, context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_triggers_res_id_model_index\'')
         if not cr.fetchone():

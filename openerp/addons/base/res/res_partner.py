@@ -98,7 +98,7 @@ class res_partner_title(osv.osv):
     _order = 'name'
 res_partner_title()
 
-def _lang_get(self, cr, uid, context={}):
+def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
     ids = obj.search(cr, uid, [], context=context)
     res = obj.read(cr, uid, ids, ['code', 'name'], context)
@@ -142,7 +142,9 @@ class res_partner(osv.osv):
         'color': fields.integer('Color Index'),
     }
 
-    def _default_category(self, cr, uid, context={}):
+    def _default_category(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]
         return []
@@ -156,7 +158,9 @@ class res_partner(osv.osv):
         'color': 0,
     }
 
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
@@ -182,10 +186,12 @@ class res_partner(osv.osv):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
-        if context and context.get('show_ref'):
+        if context.get('show_ref', False):
             rec_name = 'ref'
         else:
             rec_name = 'name'
@@ -224,7 +230,9 @@ class res_partner(osv.osv):
             ids = ids[16:]
         return True
 
-    def address_get(self, cr, uid, ids, adr_pref=['default']):
+    def address_get(self, cr, uid, ids, adr_pref=None):
+        if adr_pref is None:
+            adr_pref = ['default']
         address_obj = self.pool.get('res.partner.address')
         address_ids = address_obj.search(cr, uid, [('partner_id', 'in', ids)])
         address_rec = address_obj.read(cr, uid, address_ids, ['type'])
@@ -308,7 +316,7 @@ class res_partner_address(osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner.address', context=c),
     }
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
         if context is None:
             context = {}
         if not len(ids):

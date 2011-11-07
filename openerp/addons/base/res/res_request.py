@@ -22,7 +22,7 @@
 from osv import osv, fields
 import time
 
-def _links_get(self, cr, uid, context={}):
+def _links_get(self, cr, uid, context=None):
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)

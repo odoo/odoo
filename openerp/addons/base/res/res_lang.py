@@ -125,10 +125,10 @@ class lang(osv.osv):
                     return False
         return True
 
-    def _get_default_date_format(self,cursor,user,context={}):
+    def _get_default_date_format(self, cursor, user, context=None):
         return '%m/%d/%Y'
 
-    def _get_default_time_format(self,cursor,user,context={}):
+    def _get_default_time_format(self, cursor, user, context=None):
         return '%H:%M:%S'
 
     _columns = {
