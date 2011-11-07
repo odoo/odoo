@@ -375,7 +375,7 @@ class _rml_draw_style(object):
         return ';'.join(['%s:%s' % (x[0],x[1]) for x in self.style[tag].items()])
 
 class _rml_template(object):
-    def __init__(self, localcontext, out, node, doc, images={}, path='.', title=None):
+    def __init__(self, localcontext, out, node, doc, images=None, path='.', title=None):
         self.localcontext = localcontext
         self.frame_pos = -1
         self.frames = []
@@ -465,7 +465,7 @@ class _rml_template(object):
         return result
 
 class _rml_doc(object):
-    def __init__(self, node, localcontext, images={}, path='.', title=None):
+    def __init__(self, node, localcontext, images=None, path='.', title=None):
         self.localcontext = localcontext
         self.etree = node
         self.filename = self.etree.get('filename')
@@ -495,14 +495,18 @@ class _rml_doc(object):
         self.result += '\n'
         out.write( self.result)
 
-def parseNode(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+def parseNode(rml, localcontext = {},fout=None, images=None, path='.',title=None):
+    if images is None:
+        images = {}
     node = etree.XML(rml)
     r = _rml_doc(node, localcontext, images, path, title=title)
     fp = StringIO.StringIO()
     r.render(fp)
     return fp.getvalue()
 
-def parseString(rml, localcontext = {},fout=None, images={}, path='.',title=None):
+def parseString(rml, localcontext = {},fout=None, images=None, path='.',title=None):
+    if images is None:
+        images = {}
     node = etree.XML(rml)
     r = _rml_doc(node, localcontext, images, path, title=title)
     if fout:
