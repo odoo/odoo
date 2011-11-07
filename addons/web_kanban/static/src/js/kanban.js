@@ -196,7 +196,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
     },
     do_add_groups: function(groups) {
         var self = this;
-        this.groups = groups;
+        _.each(groups, function(group) {
+            self.groups[group.undefined_title ? 'unshift' : 'push'](group);
+        });
         _.each(this.groups, function(group) {
             group.appendTo(self.$element.find('.oe_kanban_groups_headers'));
         });
@@ -240,8 +242,10 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             record.group = new_group;
             var data = {};
             data[this.group_by] = new_group.value;
-            new_group.do_save_sequences();
-            this.dataset.write(record.id, data, {}, record.do_reload);
+            this.dataset.write(record.id, data, {}, function() {
+                record.do_reload();
+                new_group.do_save_sequences();
+            });
         }
     },
     do_show: function () {
