@@ -63,7 +63,9 @@ def wait(id):
         time.sleep(3)
     return True
 
-def wizard_run(wizname, fieldvalues={}, endstate='end'):
+def wizard_run(wizname, fieldvalues=None, endstate='end'):
+    if fieldvalues is None:
+        fieldvalues = {}
     wiz_id = sock4.create(dbname, uid, 'admin', wizname)
     state = 'init'
     datas = {'form':{}}
