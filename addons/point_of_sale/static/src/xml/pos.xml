@@ -143,15 +143,15 @@
     <t t-name="pos-category-template">
         <header>
             <ol class="breadcrumb">
-                <li>
-                    <a href="#">
+                <li class="oe-pos-categories-list">
+                    <a href="javascript:void(0)">
                         <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
                     </a>
                 </li>
                 <t t-foreach="breadcrumb" t-as="category">
-                    <li>
+                    <li class="oe-pos-categories-list">
                         <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
-                        <a t-att-href="'#category/' + category.id">
+                        <a href="javascript:void(0)" t-att-data-category-id="category.id">
                             <t t-esc="category.name"/>
                         </a>
                     </li>
@@ -166,8 +166,8 @@
             <h4>Categories:</h4>
             <ol>
                 <t t-foreach="categories" t-as="category">
-                    <li>
-                        <a t-att-href="'#category/' + category.id" class="button">
+                    <li class="oe-pos-categories-list">
+                        <a href="javascript:void(0)" t-att-data-category-id="category.id" class="button">
                             <t t-esc="category.name"/>
                         </a>
                     </li>

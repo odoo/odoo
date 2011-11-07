@@ -751,6 +751,10 @@ openerp.point_of_sale = function(db) {
         function CategoryView() {
             CategoryView.__super__.constructor.apply(this, arguments);
         }
+        
+        CategoryView.prototype.events = {
+            'click .oe-pos-categories-list a': 'changeCategory'
+        };
 
         CategoryView.prototype.template = qweb_template('pos-category-template');
         CategoryView.prototype.render = function(ancestors, children) {
@@ -775,6 +779,10 @@ openerp.point_of_sale = function(db) {
                     return _results;
                 })()
             }));
+        };
+        CategoryView.prototype.changeCategory = function(a) {
+            var id = $(a.target).data("category-id");
+            this.trigger("changeCategory", id);
         };
         return CategoryView;
     })();
@@ -1153,6 +1161,7 @@ openerp.point_of_sale = function(db) {
             }
             c = pos.categories[id];
             $('#products-screen').html(this.categoryView.render(c.ancestors, c.children));
+            this.categoryView.delegateEvents();
             products = pos.store.get('product.product').filter( function(p) {
                 var _ref;
                 return _ref = p.pos_categ_id[0], __indexOf.call(c.subtree, _ref) >= 0;
