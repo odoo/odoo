@@ -240,8 +240,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             record.group = new_group;
             var data = {};
             data[this.group_by] = new_group.value;
-            this.dataset.write(record.id, data, {}, record.do_reload);
             new_group.do_save_sequences();
+            this.dataset.write(record.id, data, {}, record.do_reload);
         }
     },
     do_show: function () {
