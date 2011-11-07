@@ -212,7 +212,13 @@ except ImportError:
             node_or_string = node_or_string.body
         return _convert(node_or_string)
 
-def _import(name, globals={}, locals={}, fromlist=[], level=-1):
+def _import(name, globals=None, locals=None, fromlist=None, level=-1):
+    if globals is None:
+        globals = {}
+    if locals is None:
+        locals = {}
+    if fromlist is None:
+        fromlist = []
     if name in _ALLOWED_MODULES:
         return __import__(name, globals, locals, level)
     raise ImportError(name)
