@@ -1,40 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data noupdate="True">
-        <record id="account_type_view" model="account.account.type">
-            <field name="name">Autre : Vue</field>
+       <record id="account_type_view" model="account.account.type">
+           <field name="name">Autre : Vue</field>
+           <field name="code">view</field>
+           <field name="close_method">none</field>
+           <field name="report_type">none</field>
+        </record>
+        <record id="account_type_view_assets" model="account.account.type">
+            <field name="name">Autre: Vue Actifs</field>
             <field name="code">view</field>
             <field name="close_method">none</field>
+            <field name="report_type">asset</field>
+        </record>
+        <record id="account_type_view_liability" model="account.account.type">
+            <field name="name">Autre: Vue Passifs</field>
+            <field name="code">view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">liability</field>
+        </record>
+        <record id="account_type_view_expense" model="account.account.type">
+            <field name="name">Autre: Vue Charges</field>
+            <field name="code">view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">expense</field>
+        </record>
+        <record id="account_type_view_income" model="account.account.type">
+            <field name="name">Autre: Vue Produits</field>
+            <field name="code">view</field>
+            <field name="close_method">none</field>
+            <field name="report_type">income</field>
         </record>
         <record id="account_type_cash" model="account.account.type">
             <field name="name">Bilan : Liquidites et titres</field>
             <field name="code">cash</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_adjusting_asset">
             <field name="name">Bilan : Actif de regularisation</field>
             <field name="code">adjusting_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_equity">
             <field name="name">Bilan : Capitaux propres</field>
             <field name="code">equity</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_income">
             <field name="name">PP : Chiffre d'affaires</field>
             <field name="code">income</field>
             <field name="close_method">none</field>
-            <field name="report_type">income</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_adj_liability">
             <field name="name">Bilan : Passifs de regularisation</field>
             <field name="code">adj_liability</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_closing">
             <field name="name">Autre : Cloture</field>
@@ -45,123 +70,123 @@
             <field name="name">PP : Amortissement</field>
             <field name="code">depreciation</field>
             <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_financial_result">
             <field name="name">PP : Resultat financier</field>
             <field name="code">financial_result</field>
             <field name="close_method">none</field>
-            <field name="report_type">income</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_financial_asset">
             <field name="name">Bilan : Immobilisations financieres</field>
             <field name="code">financial_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_building_asset">
             <field name="name">Bilan : Immo corporelles immobilieres</field>
             <field name="code">building_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_asset">
             <field name="name">Bilan : Actifs hors exploitation</field>
             <field name="code">non_ope_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_other_ope_exp">
             <field name="name">PP : Autres charges d'exploitation</field>
             <field name="code">other_ope_expense</field>
             <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_debts">
             <field name="name">Bilan : Dettes hors exploitation</field>
             <field name="code">non_ope_debts</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_fixed_asset">
             <field name="name">Bilan : Immo corporelles mobilieres</field>
             <field name="code">fixed_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_intangible_asset">
             <field name="name">Bilan : Immo incorporelles</field>
             <field name="code">intangible_asset</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_inventory">
             <field name="name">Bilan : Stocks</field>
             <field name="code">inventory</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_lt_liability">
             <field name="name">Bilan : Dettes à LT</field>
             <field name="code">lt_liability</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_result">
             <field name="name">PP : Resultat activites annexes</field>
             <field name="code">non_oper_result</field>
             <field name="close_method">none</field>
-            <field name="report_type">income</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_other_payable">
             <field name="name">Bilan : Autres creanciers à CT</field>
             <field name="code">other_payable</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_other_receivable">
             <field name="name">Bilan : Autres créances</field>
             <field name="code">other_receivable</field>
             <field name="close_method">balance</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_personnal_exp">
             <field name="name">PP : Charge de personnel</field>
             <field name="code">personnal_exp</field>
             <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_prov_reserve">
             <field name="name">Bilan : Provisions et reserves</field>
             <field name="code">provision_reserve</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_purchase">
             <field name="name">PP : Achat de marchandise</field>
             <field name="code">purchase</field>
             <field name="close_method">none</field>
-            <field name="report_type">expense</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_report_result">
             <field name="name">Bilan : Resultat reporte</field>
             <field name="code">report_result</field>
             <field name="close_method">balance</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_receivable">
             <field name="name">Bilan : Debiteurs</field>
             <field name="code">receivable</field>
             <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
-            <field name="report_type">asset</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_payable">
             <field name="name">Bilan : Fournisseurs</field>
             <field name="code">payable</field>
             <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
-            <field name="report_type">liability</field>
+            <field name="report_type">none</field>
         </record>
         <record model="account.account.type" id="account_type_consolidation">
             <field name="name">Autre : Consolidation</field>
@@ -184,7 +209,7 @@
             <field name="type">view</field>
             <field name="name">Bilan</field>
             <field name="code">1_2</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_minimal_0" name="parent_id"/>
         </record>
@@ -192,7 +217,7 @@
             <field name="type">view</field>
             <field name="name">Actif</field>
             <field name="code">1</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_1_2" name="parent_id"/>
         </record>
@@ -200,7 +225,7 @@
             <field name="type">view</field>
             <field name="name">Actifs circulants</field>
             <field name="code">10</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_1" name="parent_id"/>
         </record>
@@ -208,7 +233,7 @@
             <field name="type">view</field>
             <field name="name">Liquidités et titres</field>
             <field name="code">100</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_10" name="parent_id"/>
         </record>
@@ -216,7 +241,7 @@
             <field name="type">view</field>
             <field name="name">Caisse</field>
             <field name="code">100.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -272,7 +297,7 @@
             <field name="type">view</field>
             <field name="name">Poste (CCP)</field>
             <field name="code">101.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -296,7 +321,7 @@
             <field name="type">view</field>
             <field name="name">Banques</field>
             <field name="code">102.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -360,7 +385,7 @@
             <field name="type">view</field>
             <field name="name">Chèques, effets à recevoir</field>
             <field name="code">104.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -392,7 +417,7 @@
             <field name="type">view</field>
             <field name="name">Avoirs à court terme</field>
             <field name="code">105.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -432,7 +457,7 @@
             <field name="type">view</field>
             <field name="name">Titres réalisables à court terme</field>
             <field name="code">106.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -480,7 +505,7 @@
             <field name="type">view</field>
             <field name="name">Autres placements à court terme</field>
             <field name="code">107.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -520,7 +545,7 @@
             <field name="type">view</field>
             <field name="name">Compte d'attente en monnaie</field>
             <field name="code">109.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_100" name="parent_id"/>
         </record>
@@ -536,16 +561,15 @@
             <field name="type">view</field>
             <field name="name">Créances</field>
             <field name="code">110</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_10" name="parent_id"/>
         </record>
         <record id="ch_110_0" model="account.account.template">
             <field name="type">view</field>
-            <field name="name">Créances résultant de vente et de prestations de services
-                (débiteurs-clients)</field>
+            <field name="name">Créances résultant de vente et de prestations de services (débiteurs-clients)</field>
             <field name="code">110.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_110" name="parent_id"/>
         </record>
@@ -553,7 +577,7 @@
             <field name="type">view</field>
             <field name="name">Créances résultant prestations envers des tiers</field>
             <field name="code">110.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_110_0" name="parent_id"/>
         </record>
@@ -587,7 +611,7 @@
             <field name="type">view</field>
             <field name="name">Créances résultant prestations envers des sociétés du groupe</field>
             <field name="code">111.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_110_0" name="parent_id"/>
         </record>
@@ -621,7 +645,7 @@
             <field name="type">view</field>
             <field name="name">Créances résultant prestations envers actionnaires</field>
             <field name="code">112.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_110_0" name="parent_id"/>
         </record>
@@ -655,7 +679,7 @@
             <field name="type">view</field>
             <field name="name">Autres créances à court terme</field>
             <field name="code">114.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_110" name="parent_id"/>
         </record>
@@ -663,7 +687,7 @@
             <field name="type">view</field>
             <field name="name">Autres créances à court terme envers des tiers</field>
             <field name="code">114.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -703,7 +727,7 @@
             <field name="type">view</field>
             <field name="name">Autres créances à court terme envers des sociétés du groupe</field>
             <field name="code">115.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -735,7 +759,7 @@
             <field name="type">view</field>
             <field name="name">Autres créances à court terme envers actionnaires</field>
             <field name="code">116.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -767,7 +791,7 @@
             <field name="type">view</field>
             <field name="name">Créances envers des institutions publiques</field>
             <field name="code">117.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -815,7 +839,7 @@
             <field name="type">view</field>
             <field name="name">Capital-actions non libéré</field>
             <field name="code">118.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -831,7 +855,7 @@
             <field name="type">view</field>
             <field name="name">Autres créances à court terme</field>
             <field name="code">119.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_114_0" name="parent_id"/>
         </record>
@@ -887,7 +911,7 @@
             <field name="type">view</field>
             <field name="name">Stocks et travaux en cours</field>
             <field name="code">120</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_10" name="parent_id"/>
         </record>
@@ -895,7 +919,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de marchandises</field>
             <field name="code">120.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -935,7 +959,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de matières premières</field>
             <field name="code">121.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -975,7 +999,7 @@
             <field name="type">view</field>
             <field name="name">Stocks d'autres approvisionnements</field>
             <field name="code">122.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1015,7 +1039,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de matières auxiliaires et de fournitures</field>
             <field name="code">123.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1063,7 +1087,7 @@
             <field name="type">view</field>
             <field name="name">Stocks obligatoires</field>
             <field name="code">124.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1095,7 +1119,7 @@
             <field name="type">view</field>
             <field name="name">Marchandises en consignation</field>
             <field name="code">125.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1111,7 +1135,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de produits finis</field>
             <field name="code">126.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1135,7 +1159,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de produits semi-ouvrés</field>
             <field name="code">127.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1159,7 +1183,7 @@
             <field name="type">view</field>
             <field name="name">Stocks de produits en cours</field>
             <field name="code">128.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_120" name="parent_id"/>
         </record>
@@ -1183,7 +1207,7 @@
             <field name="type">view</field>
             <field name="name">Actifs de régularisation</field>
             <field name="code">130</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_10" name="parent_id"/>
         </record>
@@ -1191,7 +1215,7 @@
             <field name="type">view</field>
             <field name="name">Actifs de régularisation (Actifs transitoires)</field>
             <field name="code">130.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_130" name="parent_id"/>
         </record>
@@ -1215,7 +1239,7 @@
             <field name="type">view</field>
             <field name="name">Actifs immobilisés</field>
             <field name="code">14</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_1" name="parent_id"/>
         </record>
@@ -1223,7 +1247,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations financières</field>
             <field name="code">140</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_14" name="parent_id"/>
         </record>
@@ -1231,7 +1255,7 @@
             <field name="type">view</field>
             <field name="name">Titres à long terme</field>
             <field name="code">140.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1287,7 +1311,7 @@
             <field name="type">view</field>
             <field name="name">Autres placements à long terme</field>
             <field name="code">141.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1319,7 +1343,7 @@
             <field name="type">view</field>
             <field name="name">Participations</field>
             <field name="code">142.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1359,7 +1383,7 @@
             <field name="type">view</field>
             <field name="name">Créances à long terme envers des tiers</field>
             <field name="code">144.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1391,7 +1415,7 @@
             <field name="type">view</field>
             <field name="name">Créances à long terme envers des sociétés du groupe</field>
             <field name="code">145.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1423,7 +1447,7 @@
             <field name="type">view</field>
             <field name="name">Créances à long terme envers des actionnaires</field>
             <field name="code">146.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1455,7 +1479,7 @@
             <field name="type">view</field>
             <field name="name">Actions propres</field>
             <field name="code">149.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_140" name="parent_id"/>
         </record>
@@ -1479,7 +1503,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisation corporelles meubles</field>
             <field name="code">150</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_14" name="parent_id"/>
         </record>
@@ -1487,7 +1511,7 @@
             <field name="type">view</field>
             <field name="name">Machines et appareils destinés à la production</field>
             <field name="code">150.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1527,7 +1551,7 @@
             <field name="type">view</field>
             <field name="name">Mobilier et installations</field>
             <field name="code">151.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1583,7 +1607,7 @@
             <field name="type">view</field>
             <field name="name">Machines de bureau, informatiques, communication</field>
             <field name="code">152.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1663,7 +1687,7 @@
             <field name="type">view</field>
             <field name="name">Véhicules</field>
             <field name="code">153.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1719,7 +1743,7 @@
             <field name="type">view</field>
             <field name="name">Instruments et outillage</field>
             <field name="code">154.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1751,7 +1775,7 @@
             <field name="type">view</field>
             <field name="name">Installations de stockage</field>
             <field name="code">155.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1791,7 +1815,7 @@
             <field name="type">view</field>
             <field name="name">Equipements et installations</field>
             <field name="code">157.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1863,7 +1887,7 @@
             <field name="type">view</field>
             <field name="name">Autres immobilisations corporelles meubles</field>
             <field name="code">159.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_150" name="parent_id"/>
         </record>
@@ -1903,7 +1927,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisation corporelles immeubles</field>
             <field name="code">160</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_14" name="parent_id"/>
         </record>
@@ -1911,7 +1935,7 @@
             <field name="type">view</field>
             <field name="name">Bâtiments d'exploitation</field>
             <field name="code">160.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -1951,7 +1975,7 @@
             <field name="type">view</field>
             <field name="name">Usines</field>
             <field name="code">161.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -1991,7 +2015,7 @@
             <field name="type">view</field>
             <field name="name">Ateliers</field>
             <field name="code">162.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -2031,7 +2055,7 @@
             <field name="type">view</field>
             <field name="name">Entrepôts</field>
             <field name="code">163.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -2071,7 +2095,7 @@
             <field name="type">view</field>
             <field name="name">Bâtiments d'exposition et de vente</field>
             <field name="code">164.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -2119,7 +2143,7 @@
             <field name="type">view</field>
             <field name="name">Bâtiments administratifs</field>
             <field name="code">165.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -2167,7 +2191,7 @@
             <field name="type">view</field>
             <field name="name">Immeubles d'habitation</field>
             <field name="code">166.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_160" name="parent_id"/>
         </record>
@@ -2215,7 +2239,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations incorporelles</field>
             <field name="code">170</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_14" name="parent_id"/>
         </record>
@@ -2223,7 +2247,7 @@
             <field name="type">view</field>
             <field name="name">Brevets, know-how, recettes de fabrication</field>
             <field name="code">170.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2263,7 +2287,7 @@
             <field name="type">view</field>
             <field name="name">Marques commerciales, échantillons, modèles, plans</field>
             <field name="code">171.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2311,7 +2335,7 @@
             <field name="type">view</field>
             <field name="name">Droits de licences, concessions, etc.</field>
             <field name="code">172.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2359,7 +2383,7 @@
             <field name="type">view</field>
             <field name="name">Droits de propriétés, d'édition, conventionnels</field>
             <field name="code">173.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2399,7 +2423,7 @@
             <field name="type">view</field>
             <field name="name">Goodwill</field>
             <field name="code">177.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2423,7 +2447,7 @@
             <field name="type">view</field>
             <field name="name">Autres immobilisations incorporelles</field>
             <field name="code">179.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_170" name="parent_id"/>
         </record>
@@ -2463,7 +2487,7 @@
             <field name="type">view</field>
             <field name="name">Charges activées et comptes d'actif de corrections de valeur</field>
             <field name="code">18</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_1" name="parent_id"/>
         </record>
@@ -2471,7 +2495,7 @@
             <field name="type">view</field>
             <field name="name">Charges activées et comptes d'actif de corrections de valeur</field>
             <field name="code">180</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_18" name="parent_id"/>
         </record>
@@ -2479,7 +2503,7 @@
             <field name="type">view</field>
             <field name="name">Charges activées</field>
             <field name="code">180.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180" name="parent_id"/>
         </record>
@@ -2487,7 +2511,7 @@
             <field name="type">view</field>
             <field name="name">Frais de fondation, augmentation de capital</field>
             <field name="code">180.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180_0" name="parent_id"/>
         </record>
@@ -2527,7 +2551,7 @@
             <field name="type">view</field>
             <field name="name">Disagio s/emprunts et s/emprunts par obligations</field>
             <field name="code">181.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180_0" name="parent_id"/>
         </record>
@@ -2551,7 +2575,7 @@
             <field name="type">view</field>
             <field name="name">Frais de recherche et de développement</field>
             <field name="code">182.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180_0" name="parent_id"/>
         </record>
@@ -2583,7 +2607,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges activées</field>
             <field name="code">184.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180_0" name="parent_id"/>
         </record>
@@ -2607,7 +2631,7 @@
             <field name="type">view</field>
             <field name="name">Comptes d'actif de corrections de valeur</field>
             <field name="code">185.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_180" name="parent_id"/>
         </record>
@@ -2615,7 +2639,7 @@
             <field name="type">view</field>
             <field name="name">Capital-actions non libéré</field>
             <field name="code">185.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_185_0" name="parent_id"/>
         </record>
@@ -2639,7 +2663,7 @@
             <field name="type">view</field>
             <field name="name">Actifs hors exploitation</field>
             <field name="code">19</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_1" name="parent_id"/>
         </record>
@@ -2647,7 +2671,7 @@
             <field name="type">view</field>
             <field name="name">Actifs hors exploitation</field>
             <field name="code">190</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_19" name="parent_id"/>
         </record>
@@ -2655,7 +2679,7 @@
             <field name="type">view</field>
             <field name="name">Liquidités et titres</field>
             <field name="code">190.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2695,7 +2719,7 @@
             <field name="type">view</field>
             <field name="name">Créances à court terme</field>
             <field name="code">191.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2719,7 +2743,7 @@
             <field name="type">view</field>
             <field name="name">Stocks et travaux en cours</field>
             <field name="code">192.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2759,7 +2783,7 @@
             <field name="type">view</field>
             <field name="name">Actifs de régularisation</field>
             <field name="code">193.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2775,7 +2799,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations financières</field>
             <field name="code">194.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2807,7 +2831,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations corporelles meubles</field>
             <field name="code">195.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2847,7 +2871,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations corporelles immeubles</field>
             <field name="code">196.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2895,7 +2919,7 @@
             <field name="type">view</field>
             <field name="name">Immobilisations incorporelles</field>
             <field name="code">197.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2943,7 +2967,7 @@
             <field name="type">view</field>
             <field name="name">Charges activées</field>
             <field name="code">198.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_190" name="parent_id"/>
         </record>
@@ -2967,7 +2991,7 @@
             <field name="type">view</field>
             <field name="name">Passif</field>
             <field name="code">2</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_1_2" name="parent_id"/>
         </record>
@@ -2975,7 +2999,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à court terme</field>
             <field name="code">20</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_2" name="parent_id"/>
         </record>
@@ -2983,16 +3007,15 @@
             <field name="type">view</field>
             <field name="name">Dettes à court terme résultant d'achats et prestations services</field>
             <field name="code">200</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_20" name="parent_id"/>
         </record>
         <record id="ch_200_0" model="account.account.template">
             <field name="type">view</field>
-            <field name="name">Dettes à court terme résultant d'achats et prestations services
-                envers des tiers (fournisseurs)</field>
+            <field name="name">Dettes à court terme résultant d'achats et prestations services envers des tiers (fournisseurs)</field>
             <field name="code">200.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_200" name="parent_id"/>
         </record>
@@ -3054,7 +3077,7 @@
             <field name="type">view</field>
             <field name="name">Acomptes de clients</field>
             <field name="code">203.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_200" name="parent_id"/>
         </record>
@@ -3071,7 +3094,7 @@
             <field name="type">view</field>
             <field name="name">Dettes c/achats, prestations services stés groupe</field>
             <field name="code">205.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_200" name="parent_id"/>
         </record>
@@ -3097,7 +3120,7 @@
             <field name="type">view</field>
             <field name="name">Dettes c/achats, prestations services actionnaires</field>
             <field name="code">206.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_200" name="parent_id"/>
         </record>
@@ -3123,7 +3146,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à court terme</field>
             <field name="code">210</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_20" name="parent_id"/>
         </record>
@@ -3131,7 +3154,7 @@
             <field name="type">view</field>
             <field name="name">Dettes bancaires à court terme</field>
             <field name="code">210.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3147,7 +3170,7 @@
             <field name="type">view</field>
             <field name="name">Dettes c/chèques postaux, sociétés de virement</field>
             <field name="code">211.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3171,7 +3194,7 @@
             <field name="type">view</field>
             <field name="name">Effets à payer</field>
             <field name="code">212.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3195,7 +3218,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes financières à court terme à tiers</field>
             <field name="code">214.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3211,7 +3234,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à court terme stés du groupe</field>
             <field name="code">215.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3235,7 +3258,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à court terme actionnaires</field>
             <field name="code">216.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3259,7 +3282,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à court terme fonds prévoyance</field>
             <field name="code">217.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3275,7 +3298,7 @@
             <field name="type">view</field>
             <field name="name">Part à rembourser dettes financières à long terme</field>
             <field name="code">218.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_210" name="parent_id"/>
         </record>
@@ -3299,7 +3322,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme</field>
             <field name="code">220</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_20" name="parent_id"/>
         </record>
@@ -3307,7 +3330,7 @@
             <field name="type">view</field>
             <field name="name">Dettes envers des institutions publiques</field>
             <field name="code">220.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3348,7 +3371,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme envers des tiers</field>
             <field name="code">221.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3372,7 +3395,7 @@
             <field name="type">view</field>
             <field name="name">Dividendes et coupons d'obligations non encaissés</field>
             <field name="code">223.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3404,7 +3427,7 @@
             <field name="type">view</field>
             <field name="name">Obligations à rembourser</field>
             <field name="code">224.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3420,7 +3443,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme c/stés du groupe</field>
             <field name="code">225.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3444,7 +3467,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme envers actionnaires</field>
             <field name="code">226.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3468,7 +3491,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme c/fonds prévoyance</field>
             <field name="code">227.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3484,7 +3507,7 @@
             <field name="type">view</field>
             <field name="name">Résultat à verser</field>
             <field name="code">229.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_220" name="parent_id"/>
         </record>
@@ -3500,7 +3523,7 @@
             <field name="type">view</field>
             <field name="name">Passifs de régularisation, provisions court terme</field>
             <field name="code">230</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_20" name="parent_id"/>
         </record>
@@ -3508,7 +3531,7 @@
             <field name="type">view</field>
             <field name="name">Passifs de régularisation</field>
             <field name="code">230.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_230" name="parent_id"/>
         </record>
@@ -3532,7 +3555,7 @@
             <field name="type">view</field>
             <field name="name">Provisions à court terme c/ventes, services</field>
             <field name="code">233.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_230" name="parent_id"/>
         </record>
@@ -3556,7 +3579,7 @@
             <field name="type">view</field>
             <field name="name">Provisions à court terme pour impôts</field>
             <field name="code">234.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_230" name="parent_id"/>
         </record>
@@ -3580,7 +3603,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à long terme</field>
             <field name="code">24</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_2" name="parent_id"/>
         </record>
@@ -3588,7 +3611,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financière à long terme</field>
             <field name="code">240</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_24" name="parent_id"/>
         </record>
@@ -3596,7 +3619,7 @@
             <field name="type">view</field>
             <field name="name">Dettes bancaires à long terme</field>
             <field name="code">240.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_240" name="parent_id"/>
         </record>
@@ -3612,7 +3635,7 @@
             <field name="type">view</field>
             <field name="name">Dettes résultant d'opérations de crédit-bail</field>
             <field name="code">242.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_240" name="parent_id"/>
         </record>
@@ -3628,7 +3651,7 @@
             <field name="type">view</field>
             <field name="name">Dettes hypothécaires</field>
             <field name="code">244.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_240" name="parent_id"/>
         </record>
@@ -3700,7 +3723,7 @@
             <field name="type">view</field>
             <field name="name">Emprunts par obligations</field>
             <field name="code">246.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_240" name="parent_id"/>
         </record>
@@ -3716,7 +3739,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à long terme</field>
             <field name="code">250</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_24" name="parent_id"/>
         </record>
@@ -3724,7 +3747,7 @@
             <field name="type">view</field>
             <field name="name">Emprunts à long terme à des tiers</field>
             <field name="code">250.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_250" name="parent_id"/>
         </record>
@@ -3740,7 +3763,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à long terme envers des sociétés du groupe</field>
             <field name="code">255.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_250" name="parent_id"/>
         </record>
@@ -3764,7 +3787,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à long terme envers des actionnaires</field>
             <field name="code">256.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_250" name="parent_id"/>
         </record>
@@ -3788,7 +3811,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à long terme envers des institutions LPP</field>
             <field name="code">257.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_250" name="parent_id"/>
         </record>
@@ -3812,7 +3835,7 @@
             <field name="type">view</field>
             <field name="name">Provisions à long terme</field>
             <field name="code">260</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_24" name="parent_id"/>
         </record>
@@ -3820,7 +3843,7 @@
             <field name="type">view</field>
             <field name="name">Provisions réparation, assainissements, rénovation</field>
             <field name="code">260.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3852,7 +3875,7 @@
             <field name="type">view</field>
             <field name="name">Provisions pour recherche et développement</field>
             <field name="code">261.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3876,7 +3899,7 @@
             <field name="type">view</field>
             <field name="name">Provisions pour restructuration de l'entreprise</field>
             <field name="code">262.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3892,7 +3915,7 @@
             <field name="type">view</field>
             <field name="name">Provisions résultant de ventes/prestations service</field>
             <field name="code">263.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3908,7 +3931,7 @@
             <field name="type">view</field>
             <field name="name">Provisions pour impôts (long terme)</field>
             <field name="code">264.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3924,7 +3947,7 @@
             <field name="type">view</field>
             <field name="name">Provisions pour la protection de l'environnement</field>
             <field name="code">265.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3940,7 +3963,7 @@
             <field name="type">view</field>
             <field name="name">Provisions pour prestations en cas de vieillesse</field>
             <field name="code">267.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3956,7 +3979,7 @@
             <field name="type">view</field>
             <field name="name">Autres provisions</field>
             <field name="code">269.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_260" name="parent_id"/>
         </record>
@@ -3972,7 +3995,7 @@
             <field name="type">view</field>
             <field name="name">Dettes hors exploitation</field>
             <field name="code">27</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_2" name="parent_id"/>
         </record>
@@ -3980,7 +4003,7 @@
             <field name="type">view</field>
             <field name="name">Dettes hors exploitation</field>
             <field name="code">270</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_27" name="parent_id"/>
         </record>
@@ -3988,7 +4011,7 @@
             <field name="type">view</field>
             <field name="name">Dettes à court terme résultant prestations service</field>
             <field name="code">270.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4004,7 +4027,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à court terme</field>
             <field name="code">271.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4036,7 +4059,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à court terme</field>
             <field name="code">272.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4052,7 +4075,7 @@
             <field name="type">view</field>
             <field name="name">Passifs de régularisation, provisions court terme</field>
             <field name="code">273.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4076,7 +4099,7 @@
             <field name="type">view</field>
             <field name="name">Dettes financières à long terme</field>
             <field name="code">274.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4100,7 +4123,7 @@
             <field name="type">view</field>
             <field name="name">Autres dettes à long terme</field>
             <field name="code">275.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4132,7 +4155,7 @@
             <field name="type">view</field>
             <field name="name">Provisions</field>
             <field name="code">276.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_270" name="parent_id"/>
         </record>
@@ -4148,7 +4171,7 @@
             <field name="type">view</field>
             <field name="name">Capitaux propres</field>
             <field name="code">28</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_2" name="parent_id"/>
         </record>
@@ -4156,7 +4179,7 @@
             <field name="type">view</field>
             <field name="name">Capital/Privé</field>
             <field name="code">280</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_28" name="parent_id"/>
         </record>
@@ -4164,7 +4187,7 @@
             <field name="type">view</field>
             <field name="name">Capital</field>
             <field name="code">280.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_280" name="parent_id"/>
         </record>
@@ -4172,7 +4195,7 @@
             <field name="type">view</field>
             <field name="name">Capital propre des entreprises raison individuelle</field>
             <field name="code">280.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_280_0" name="parent_id"/>
         </record>
@@ -4196,7 +4219,7 @@
             <field name="type">view</field>
             <field name="name">Capital propre des sociétés de personnes</field>
             <field name="code">281.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_280_0" name="parent_id"/>
         </record>
@@ -4228,7 +4251,7 @@
             <field name="type">view</field>
             <field name="name">Capital social de la S.à.r.l</field>
             <field name="code">282.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_280_0" name="parent_id"/>
         </record>
@@ -4244,7 +4267,7 @@
             <field name="type">view</field>
             <field name="name">Capital de la société coopérative</field>
             <field name="code">283.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_280_0" name="parent_id"/>
         </record>
@@ -4260,7 +4283,7 @@
             <field name="type">view</field>
             <field name="name">Capital-actions et participation</field>
             <field name="code">284.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_280_0" name="parent_id"/>
         </record>
@@ -4284,7 +4307,7 @@
             <field name="type">view</field>
             <field name="name">Privé</field>
             <field name="code">285.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_280" name="parent_id"/>
         </record>
@@ -4292,7 +4315,7 @@
             <field name="type">view</field>
             <field name="name">Compte privé</field>
             <field name="code">285.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_285_0" name="parent_id"/>
         </record>
@@ -4356,7 +4379,7 @@
             <field name="type">view</field>
             <field name="name">Comptes pour immeubles et biens-fonds privés</field>
             <field name="code">288.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_285_0" name="parent_id"/>
         </record>
@@ -4380,7 +4403,7 @@
             <field name="type">view</field>
             <field name="name">Réserves, Bénéfice/Perte résultant du bilan</field>
             <field name="code">290</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_28" name="parent_id"/>
         </record>
@@ -4388,7 +4411,7 @@
             <field name="type">view</field>
             <field name="name">Réserves</field>
             <field name="code">290.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_290" name="parent_id"/>
         </record>
@@ -4396,7 +4419,7 @@
             <field name="type">view</field>
             <field name="name">Réserves légales</field>
             <field name="code">290.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_290_0" name="parent_id"/>
         </record>
@@ -4436,7 +4459,7 @@
             <field name="type">view</field>
             <field name="name">Autres réserves</field>
             <field name="code">291.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_290_0" name="parent_id"/>
         </record>
@@ -4492,7 +4515,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfice/Perte résultant du bilan</field>
             <field name="code">299.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_290" name="parent_id"/>
         </record>
@@ -4500,7 +4523,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfice/Perte résultant du bilan</field>
             <field name="code">299.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_liability"/>
             <field name="note"/>
             <field ref="ch_299_0" name="parent_id"/>
         </record>
@@ -4524,7 +4547,7 @@
             <field name="type">view</field>
             <field name="name">Compte de résultat</field>
             <field name="code">3_9</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_minimal_0" name="parent_id"/>
         </record>
@@ -4532,7 +4555,7 @@
             <field name="type">view</field>
             <field name="name">Chiffre d'affaires ventes, prestations services</field>
             <field name="code">3</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -4540,7 +4563,7 @@
             <field name="type">view</field>
             <field name="name">Chiffre d'affaires brut de la production vendue</field>
             <field name="code">30</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -4548,7 +4571,7 @@
             <field name="type">view</field>
             <field name="name">Caf brut de la production vendue secteur A</field>
             <field name="code">300</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4596,7 +4619,7 @@
             <field name="type">view</field>
             <field name="name">Caf brut de la production vendue secteur B</field>
             <field name="code">301</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4628,7 +4651,7 @@
             <field name="type">view</field>
             <field name="name">Caf brut de la production vendue secteur C</field>
             <field name="code">302</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4676,7 +4699,7 @@
             <field name="type">view</field>
             <field name="name">Caf brut de la production livrée à des stés groupe</field>
             <field name="code">305</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4692,7 +4715,7 @@
             <field name="type">view</field>
             <field name="name">Variations des stocks de produits en cours/finis</field>
             <field name="code">308</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4708,7 +4731,7 @@
             <field name="type">view</field>
             <field name="name">Déductions sur le caf de la production vendue</field>
             <field name="code">309</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_30" name="parent_id"/>
         </record>
@@ -4780,7 +4803,7 @@
             <field name="type">view</field>
             <field name="name">Ventes de marchandises</field>
             <field name="code">32</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -4788,7 +4811,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de marchandises secteur A</field>
             <field name="code">320</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_32" name="parent_id"/>
         </record>
@@ -4820,7 +4843,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de marchandises secteur B</field>
             <field name="code">321</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_32" name="parent_id"/>
         </record>
@@ -4852,7 +4875,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de marchandises secteur C</field>
             <field name="code">322</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_32" name="parent_id"/>
         </record>
@@ -4900,7 +4923,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de marchandises stés groupe</field>
             <field name="code">325</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_32" name="parent_id"/>
         </record>
@@ -4916,7 +4939,7 @@
             <field name="type">view</field>
             <field name="name">Déductions sur les ventes de marchandises</field>
             <field name="code">329</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_32" name="parent_id"/>
         </record>
@@ -4988,7 +5011,7 @@
             <field name="type">view</field>
             <field name="name">Ventes de prestations de services</field>
             <field name="code">34</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -4996,7 +5019,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de prestations de service secteur A</field>
             <field name="code">340</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_34" name="parent_id"/>
         </record>
@@ -5036,7 +5059,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes de prestations de services secteur B</field>
             <field name="code">341</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_34" name="parent_id"/>
         </record>
@@ -5060,7 +5083,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes prestations de services du secteur C</field>
             <field name="code">342</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_34" name="parent_id"/>
         </record>
@@ -5108,7 +5131,7 @@
             <field name="type">view</field>
             <field name="name">Ventes brutes prestations services à stés groupe</field>
             <field name="code">345</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_34" name="parent_id"/>
         </record>
@@ -5124,7 +5147,7 @@
             <field name="type">view</field>
             <field name="name">Déductions s/ventes prestations de services</field>
             <field name="code">349</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_34" name="parent_id"/>
         </record>
@@ -5196,7 +5219,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits</field>
             <field name="code">36</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -5204,7 +5227,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits c/ventes et prestations services</field>
             <field name="code">360</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5260,7 +5283,7 @@
             <field name="type">view</field>
             <field name="name">Produits des licences, des brevets, etc.</field>
             <field name="code">361</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5300,7 +5323,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits prestations services stés groupe</field>
             <field name="code">365</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5316,7 +5339,7 @@
             <field name="type">view</field>
             <field name="name">Produits c/mise à disposition du personnel</field>
             <field name="code">367</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5332,7 +5355,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits c/ventes et prestations services</field>
             <field name="code">368</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5356,7 +5379,7 @@
             <field name="type">view</field>
             <field name="name">Déductions s/les autres produits</field>
             <field name="code">369</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_36" name="parent_id"/>
         </record>
@@ -5380,7 +5403,7 @@
             <field name="type">view</field>
             <field name="name">Prestations propres et consommations propres</field>
             <field name="code">37</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -5388,7 +5411,7 @@
             <field name="type">view</field>
             <field name="name">Prestations propres</field>
             <field name="code">370</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_37" name="parent_id"/>
         </record>
@@ -5428,7 +5451,7 @@
             <field name="type">view</field>
             <field name="name">Consommations propres pour propre production</field>
             <field name="code">371</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_37" name="parent_id"/>
         </record>
@@ -5452,7 +5475,7 @@
             <field name="type">view</field>
             <field name="name">Consommations propres de marchandises</field>
             <field name="code">372</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_37" name="parent_id"/>
         </record>
@@ -5476,7 +5499,7 @@
             <field name="type">view</field>
             <field name="name">Consommations propres de services</field>
             <field name="code">374</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_37" name="parent_id"/>
         </record>
@@ -5500,7 +5523,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks de produits et services</field>
             <field name="code">38</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -5508,7 +5531,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks de produits et services</field>
             <field name="code">380</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_38" name="parent_id"/>
         </record>
@@ -5532,7 +5555,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks de services</field>
             <field name="code">384</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_38" name="parent_id"/>
         </record>
@@ -5556,7 +5579,7 @@
             <field name="type">view</field>
             <field name="name">Déductions s/produits des ventes</field>
             <field name="code">39</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3" name="parent_id"/>
         </record>
@@ -5564,7 +5587,7 @@
             <field name="type">view</field>
             <field name="name">Déductions s/produits</field>
             <field name="code">390</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_39" name="parent_id"/>
         </record>
@@ -5604,7 +5627,7 @@
             <field name="type">view</field>
             <field name="name">Charges de matières, marchandises et services</field>
             <field name="code">4</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -5612,7 +5635,7 @@
             <field name="type">view</field>
             <field name="name">Charges de matières</field>
             <field name="code">40</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -5620,7 +5643,7 @@
             <field name="type">view</field>
             <field name="name">Charges de matières du secteur A</field>
             <field name="code">400</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5660,7 +5683,7 @@
             <field name="type">view</field>
             <field name="name">Charges de matières du secteur B</field>
             <field name="code">401</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5716,7 +5739,7 @@
             <field name="type">view</field>
             <field name="name">Charges de matières du secteur C</field>
             <field name="code">402</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5772,7 +5795,7 @@
             <field name="type">view</field>
             <field name="name">Travaux de tiers</field>
             <field name="code">406</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5804,7 +5827,7 @@
             <field name="type">view</field>
             <field name="name">Charges directes d'achat</field>
             <field name="code">407</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5836,7 +5859,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks, pertes de matières</field>
             <field name="code">408</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5892,7 +5915,7 @@
             <field name="type">view</field>
             <field name="name">Déductions obtenues s/achats de matières</field>
             <field name="code">409</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_40" name="parent_id"/>
         </record>
@@ -5940,7 +5963,7 @@
             <field name="type">view</field>
             <field name="name">Charges de marchandises</field>
             <field name="code">42</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -5948,7 +5971,7 @@
             <field name="type">view</field>
             <field name="name">Charges de marchandises du secteur A</field>
             <field name="code">420</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_42" name="parent_id"/>
         </record>
@@ -5988,7 +6011,7 @@
             <field name="type">view</field>
             <field name="name">Charges de marchandises du secteur B</field>
             <field name="code">421</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_42" name="parent_id"/>
         </record>
@@ -6036,7 +6059,7 @@
             <field name="type">view</field>
             <field name="name">Charges directes d'achat s/marchandises</field>
             <field name="code">427</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_42" name="parent_id"/>
         </record>
@@ -6068,7 +6091,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks de marchandises, pertes</field>
             <field name="code">428</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_42" name="parent_id"/>
         </record>
@@ -6124,7 +6147,7 @@
             <field name="type">view</field>
             <field name="name">Déductions obtenues s/achats liés aux marchandises</field>
             <field name="code">429</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_42" name="parent_id"/>
         </record>
@@ -6172,7 +6195,7 @@
             <field name="type">view</field>
             <field name="name">Charges pour prestations de tiers (services)</field>
             <field name="code">44</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6180,7 +6203,7 @@
             <field name="type">view</field>
             <field name="name">Charges pour prestations de services de tiers A</field>
             <field name="code">440</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_44" name="parent_id"/>
         </record>
@@ -6220,7 +6243,7 @@
             <field name="type">view</field>
             <field name="name">Charges directes d'achat s/prestations de services</field>
             <field name="code">447</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_44" name="parent_id"/>
         </record>
@@ -6252,7 +6275,7 @@
             <field name="type">view</field>
             <field name="name">Déductions obtenues s/achats de prestations tiers</field>
             <field name="code">449</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_44" name="parent_id"/>
         </record>
@@ -6292,7 +6315,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'énergie</field>
             <field name="code">45</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6300,7 +6323,7 @@
             <field name="type">view</field>
             <field name="name">Electricité</field>
             <field name="code">450</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_45" name="parent_id"/>
         </record>
@@ -6324,7 +6347,7 @@
             <field name="type">view</field>
             <field name="name">Gaz</field>
             <field name="code">451</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_45" name="parent_id"/>
         </record>
@@ -6348,7 +6371,7 @@
             <field name="type">view</field>
             <field name="name">Combustibles</field>
             <field name="code">452</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_45" name="parent_id"/>
         </record>
@@ -6372,7 +6395,7 @@
             <field name="type">view</field>
             <field name="name">Carburants</field>
             <field name="code">453</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_45" name="parent_id"/>
         </record>
@@ -6404,7 +6427,7 @@
             <field name="type">view</field>
             <field name="name">Eau</field>
             <field name="code">454</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_45" name="parent_id"/>
         </record>
@@ -6420,7 +6443,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges</field>
             <field name="code">46</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6428,7 +6451,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de matières pour la production</field>
             <field name="code">460</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_46" name="parent_id"/>
         </record>
@@ -6444,7 +6467,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de marchandises</field>
             <field name="code">462</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_46" name="parent_id"/>
         </record>
@@ -6460,7 +6483,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges pour prestations de tiers</field>
             <field name="code">464</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_46" name="parent_id"/>
         </record>
@@ -6476,7 +6499,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'emballage</field>
             <field name="code">465</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_46" name="parent_id"/>
         </record>
@@ -6492,7 +6515,7 @@
             <field name="type">view</field>
             <field name="name">Charges directes d'achat</field>
             <field name="code">47</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6500,7 +6523,7 @@
             <field name="type">view</field>
             <field name="name">Charges directes d'achat</field>
             <field name="code">470</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_47" name="parent_id"/>
         </record>
@@ -6532,7 +6555,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks, pertes de matières et march.</field>
             <field name="code">48</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6540,7 +6563,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks des matières de production</field>
             <field name="code">480</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_48" name="parent_id"/>
         </record>
@@ -6556,7 +6579,7 @@
             <field name="type">view</field>
             <field name="name">Variations de stocks de marchandises</field>
             <field name="code">482</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_48" name="parent_id"/>
         </record>
@@ -6572,7 +6595,7 @@
             <field name="type">view</field>
             <field name="name">Pertes de matières et de marchandises</field>
             <field name="code">488</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_48" name="parent_id"/>
         </record>
@@ -6596,7 +6619,7 @@
             <field name="type">view</field>
             <field name="name">Déductions obtenues s/charges</field>
             <field name="code">49</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_4" name="parent_id"/>
         </record>
@@ -6604,7 +6627,7 @@
             <field name="type">view</field>
             <field name="name">Déductions s/charges</field>
             <field name="code">490</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_49" name="parent_id"/>
         </record>
@@ -6652,7 +6675,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel</field>
             <field name="code">5</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -6660,7 +6683,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel de production</field>
             <field name="code">50</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -6668,7 +6691,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel de production du secteur A</field>
             <field name="code">500</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_50" name="parent_id"/>
         </record>
@@ -6748,7 +6771,7 @@
             <field name="type">view</field>
             <field name="name">Charges sociales de production</field>
             <field name="code">507</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_50" name="parent_id"/>
         </record>
@@ -6804,7 +6827,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel de production</field>
             <field name="code">508</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_50" name="parent_id"/>
         </record>
@@ -6852,7 +6875,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de travail de tiers dans la production</field>
             <field name="code">509</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_50" name="parent_id"/>
         </record>
@@ -6876,7 +6899,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel pour le commerce des march.</field>
             <field name="code">52</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -6884,7 +6907,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel pour le commerce A</field>
             <field name="code">520</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_52" name="parent_id"/>
         </record>
@@ -6964,7 +6987,7 @@
             <field name="type">view</field>
             <field name="name">Charges sociales pour le commerce des marchandises</field>
             <field name="code">527</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_52" name="parent_id"/>
         </record>
@@ -7020,7 +7043,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel pour le commerce march</field>
             <field name="code">528</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_52" name="parent_id"/>
         </record>
@@ -7068,7 +7091,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de travail de tiers dans le commerce</field>
             <field name="code">529</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_52" name="parent_id"/>
         </record>
@@ -7084,7 +7107,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel pour la fourniture</field>
             <field name="code">54</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -7092,7 +7115,7 @@
             <field name="type">view</field>
             <field name="name">Salaires pour la fourniture des prestations serv.</field>
             <field name="code">540</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_54" name="parent_id"/>
         </record>
@@ -7172,7 +7195,7 @@
             <field name="type">view</field>
             <field name="name">Charges sociales pour les prestations de services</field>
             <field name="code">547</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_54" name="parent_id"/>
         </record>
@@ -7228,7 +7251,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel pour les prestations</field>
             <field name="code">548</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_54" name="parent_id"/>
         </record>
@@ -7276,7 +7299,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de tiers pour les prestations service</field>
             <field name="code">549</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_54" name="parent_id"/>
         </record>
@@ -7292,7 +7315,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel dans l'administration</field>
             <field name="code">56</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -7300,7 +7323,7 @@
             <field name="type">view</field>
             <field name="name">Salaires pour l'administration</field>
             <field name="code">560</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_56" name="parent_id"/>
         </record>
@@ -7388,7 +7411,7 @@
             <field name="type">view</field>
             <field name="name">Charges sociales pour l'administration</field>
             <field name="code">567</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_56" name="parent_id"/>
         </record>
@@ -7444,7 +7467,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel pour l'administration</field>
             <field name="code">568</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_56" name="parent_id"/>
         </record>
@@ -7492,7 +7515,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de travail de tiers c/l'administration</field>
             <field name="code">569</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_56" name="parent_id"/>
         </record>
@@ -7508,7 +7531,7 @@
             <field name="type">view</field>
             <field name="name">Charges sociales</field>
             <field name="code">57</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -7516,7 +7539,7 @@
             <field name="type">view</field>
             <field name="name">AVS, AI, APG, assurance-chômage</field>
             <field name="code">570</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7532,7 +7555,7 @@
             <field name="type">view</field>
             <field name="name">Caisse de compensation familiale</field>
             <field name="code">571</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7548,7 +7571,7 @@
             <field name="type">view</field>
             <field name="name">Prévoyance professionnelle</field>
             <field name="code">572</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7564,7 +7587,7 @@
             <field name="type">view</field>
             <field name="name">Assurance-accidents</field>
             <field name="code">573</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7580,7 +7603,7 @@
             <field name="type">view</field>
             <field name="name">Assurance indemnités journalières en cas maladie</field>
             <field name="code">574</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7596,7 +7619,7 @@
             <field name="type">view</field>
             <field name="name">Impôts à la source</field>
             <field name="code">579</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_57" name="parent_id"/>
         </record>
@@ -7612,7 +7635,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel</field>
             <field name="code">58</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -7620,7 +7643,7 @@
             <field name="type">view</field>
             <field name="name">Recherche de personnel</field>
             <field name="code">580</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7644,7 +7667,7 @@
             <field name="type">view</field>
             <field name="name">Formation et formation continue</field>
             <field name="code">581</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7668,7 +7691,7 @@
             <field name="type">view</field>
             <field name="name">Indemnités effectives</field>
             <field name="code">582</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7700,7 +7723,7 @@
             <field name="type">view</field>
             <field name="name">Indemnités forfaitaires</field>
             <field name="code">583</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7732,7 +7755,7 @@
             <field name="type">view</field>
             <field name="name">Restaurant du personnel</field>
             <field name="code">584</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7772,7 +7795,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges de personnel</field>
             <field name="code">588</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7796,7 +7819,7 @@
             <field name="type">view</field>
             <field name="name">Charges de personnel comme prélèvements privés</field>
             <field name="code">589</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_58" name="parent_id"/>
         </record>
@@ -7812,7 +7835,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de travail de tiers</field>
             <field name="code">59</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_5" name="parent_id"/>
         </record>
@@ -7820,7 +7843,7 @@
             <field name="type">view</field>
             <field name="name">Prestations de travail de tiers</field>
             <field name="code">590</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_59" name="parent_id"/>
         </record>
@@ -7844,7 +7867,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges d'exploitation</field>
             <field name="code">6</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -7852,7 +7875,7 @@
             <field name="type">view</field>
             <field name="name">Charges de locaux</field>
             <field name="code">60</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -7860,7 +7883,7 @@
             <field name="type">view</field>
             <field name="name">Loyers pour locaux de tiers</field>
             <field name="code">600</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -7924,7 +7947,7 @@
             <field name="type">view</field>
             <field name="name">Loyers pour locaux propres</field>
             <field name="code">601</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -7988,7 +8011,7 @@
             <field name="type">view</field>
             <field name="name">Charges accessoires</field>
             <field name="code">603</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -8076,7 +8099,7 @@
             <field name="type">view</field>
             <field name="name">Charges de nettoyage</field>
             <field name="code">604</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -8156,7 +8179,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'entretien des locaux</field>
             <field name="code">605</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -8244,7 +8267,7 @@
             <field name="type">view</field>
             <field name="name">Charges pour immobilisations en crédit-bail</field>
             <field name="code">606</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -8308,7 +8331,7 @@
             <field name="type">view</field>
             <field name="name">Charges de locaux comme prélèvements privés</field>
             <field name="code">609</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_60" name="parent_id"/>
         </record>
@@ -8324,7 +8347,7 @@
             <field name="type">view</field>
             <field name="name">Entretien, réparations, remplacements (ERR)</field>
             <field name="code">61</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -8332,7 +8355,7 @@
             <field name="type">view</field>
             <field name="name">Entretien, réparations, remplacements (ERR)</field>
             <field name="code">610</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_61" name="parent_id"/>
         </record>
@@ -8340,7 +8363,7 @@
             <field name="type">view</field>
             <field name="name">ERR d'installations de production</field>
             <field name="code">610.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_610" name="parent_id"/>
         </record>
@@ -8372,7 +8395,7 @@
             <field name="type">view</field>
             <field name="name">ERR d'installations pour le commerce des march.</field>
             <field name="code">611.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_610" name="parent_id"/>
         </record>
@@ -8396,7 +8419,7 @@
             <field name="type">view</field>
             <field name="name">ERR d'installations d'entreposage</field>
             <field name="code">612.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_610" name="parent_id"/>
         </record>
@@ -8420,7 +8443,7 @@
             <field name="type">view</field>
             <field name="name">ERR d'installations de bureau</field>
             <field name="code">613.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_610" name="parent_id"/>
         </record>
@@ -8444,7 +8467,7 @@
             <field name="type">view</field>
             <field name="name">ERR d'installations pour le personnel</field>
             <field name="code">614.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_610" name="parent_id"/>
         </record>
@@ -8468,7 +8491,7 @@
             <field name="type">view</field>
             <field name="name">Charges c/immobi. corporelles meubles crédit-bail</field>
             <field name="code">616</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_61" name="parent_id"/>
         </record>
@@ -8476,7 +8499,7 @@
             <field name="type">view</field>
             <field name="name">Charges c/immobi. corporelles meubles crédit-bail</field>
             <field name="code">616.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_616" name="parent_id"/>
         </record>
@@ -8524,7 +8547,7 @@
             <field name="type">view</field>
             <field name="name">Charges de véhicules et de transport</field>
             <field name="code">62</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -8532,7 +8555,7 @@
             <field name="type">view</field>
             <field name="name">Charges de véhicules</field>
             <field name="code">620</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_62" name="parent_id"/>
         </record>
@@ -8540,7 +8563,7 @@
             <field name="type">view</field>
             <field name="name">Réparation, service et nettoyage des véhicules</field>
             <field name="code">620.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8604,7 +8627,7 @@
             <field name="type">view</field>
             <field name="name">Carburants</field>
             <field name="code">621.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8668,7 +8691,7 @@
             <field name="type">view</field>
             <field name="name">Assurances</field>
             <field name="code">622.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8732,7 +8755,7 @@
             <field name="type">view</field>
             <field name="name">Droits de circulation, cotisations, taxes</field>
             <field name="code">623.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8788,7 +8811,7 @@
             <field name="type">view</field>
             <field name="name">Charges de location pour véhicules en crédit-bail</field>
             <field name="code">626.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8836,7 +8859,7 @@
             <field name="type">view</field>
             <field name="name">Charges de véhicules comme prélèvements privés</field>
             <field name="code">627.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_620" name="parent_id"/>
         </record>
@@ -8852,7 +8875,7 @@
             <field name="type">view</field>
             <field name="name">Charges de transport</field>
             <field name="code">628</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_62" name="parent_id"/>
         </record>
@@ -8860,7 +8883,7 @@
             <field name="type">view</field>
             <field name="name">Frets, frais de transport, cargo domicile</field>
             <field name="code">628.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_628" name="parent_id"/>
         </record>
@@ -8908,7 +8931,7 @@
             <field name="type">view</field>
             <field name="name">Assurances-choses, droits, taxes, autorisations</field>
             <field name="code">63</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -8916,7 +8939,7 @@
             <field name="type">view</field>
             <field name="name">Assurances-choses</field>
             <field name="code">630</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_63" name="parent_id"/>
         </record>
@@ -8924,7 +8947,7 @@
             <field name="type">view</field>
             <field name="name">Primes d'assurance c/dommages, bris de glace, vols</field>
             <field name="code">630.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_630" name="parent_id"/>
         </record>
@@ -8956,7 +8979,7 @@
             <field name="type">view</field>
             <field name="name">Primes d'assurance responsabilité civile /garantie</field>
             <field name="code">631.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_630" name="parent_id"/>
         </record>
@@ -8988,7 +9011,7 @@
             <field name="type">view</field>
             <field name="name">Primes d'assurance pour arrêts d'exploitation</field>
             <field name="code">632.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_630" name="parent_id"/>
         </record>
@@ -9004,7 +9027,7 @@
             <field name="type">view</field>
             <field name="name">Primes pour assurances liées aux crédits</field>
             <field name="code">633.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_630" name="parent_id"/>
         </record>
@@ -9028,7 +9051,7 @@
             <field name="type">view</field>
             <field name="name">Droits, taxes, autorisations, patentes</field>
             <field name="code">636</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_63" name="parent_id"/>
         </record>
@@ -9036,7 +9059,7 @@
             <field name="type">view</field>
             <field name="name">Droits et taxes</field>
             <field name="code">636.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_636" name="parent_id"/>
         </record>
@@ -9060,7 +9083,7 @@
             <field name="type">view</field>
             <field name="name">Autorisations et patentes</field>
             <field name="code">637.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_636" name="parent_id"/>
         </record>
@@ -9084,7 +9107,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'énergie et évacuation des déchets</field>
             <field name="code">64</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -9092,7 +9115,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'énergie</field>
             <field name="code">640</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_64" name="parent_id"/>
         </record>
@@ -9100,7 +9123,7 @@
             <field name="type">view</field>
             <field name="name">Electricité</field>
             <field name="code">640.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_640" name="parent_id"/>
         </record>
@@ -9132,7 +9155,7 @@
             <field name="type">view</field>
             <field name="name">Gaz</field>
             <field name="code">641.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_640" name="parent_id"/>
         </record>
@@ -9156,7 +9179,7 @@
             <field name="type">view</field>
             <field name="name">Combustibles et matériaux de chauffage</field>
             <field name="code">642.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_640" name="parent_id"/>
         </record>
@@ -9180,7 +9203,7 @@
             <field name="type">view</field>
             <field name="name">Eau</field>
             <field name="code">643.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_640" name="parent_id"/>
         </record>
@@ -9196,7 +9219,7 @@
             <field name="type">view</field>
             <field name="name">Evacuation de déchets</field>
             <field name="code">646</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_64" name="parent_id"/>
         </record>
@@ -9204,7 +9227,7 @@
             <field name="type">view</field>
             <field name="name">Evacuation de déchets</field>
             <field name="code">646.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_646" name="parent_id"/>
         </record>
@@ -9236,7 +9259,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'administration et d'informatique</field>
             <field name="code">65</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -9244,7 +9267,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'administration</field>
             <field name="code">650</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_65" name="parent_id"/>
         </record>
@@ -9252,7 +9275,7 @@
             <field name="type">view</field>
             <field name="name">Matériel de bureau, imprimés, photocopies</field>
             <field name="code">650.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9292,7 +9315,7 @@
             <field name="type">view</field>
             <field name="name">Téléphone, téléfax, Internet, frais de port</field>
             <field name="code">651.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9332,7 +9355,7 @@
             <field name="type">view</field>
             <field name="name">Cotisations, dons, cadeaux et pourboires</field>
             <field name="code">652.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9364,7 +9387,7 @@
             <field name="type">view</field>
             <field name="name">Honoraires pour fiduciaire et conseil</field>
             <field name="code">653.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9396,7 +9419,7 @@
             <field name="type">view</field>
             <field name="name">Conseil d'administration, AG, OR</field>
             <field name="code">654.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9428,7 +9451,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'administration comme prélèvements privés</field>
             <field name="code">655.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_650" name="parent_id"/>
         </record>
@@ -9444,7 +9467,7 @@
             <field name="type">view</field>
             <field name="name">Informatique</field>
             <field name="code">656</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_65" name="parent_id"/>
         </record>
@@ -9452,7 +9475,7 @@
             <field name="type">view</field>
             <field name="name">Locations en crédit-bail et locations de hard/soft</field>
             <field name="code">656.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_656" name="parent_id"/>
         </record>
@@ -9484,7 +9507,7 @@
             <field name="type">view</field>
             <field name="name">Licences et entretien</field>
             <field name="code">657.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_656" name="parent_id"/>
         </record>
@@ -9540,7 +9563,7 @@
             <field name="type">view</field>
             <field name="name">Conseils et développements</field>
             <field name="code">658.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_656" name="parent_id"/>
         </record>
@@ -9588,7 +9611,7 @@
             <field name="type">view</field>
             <field name="name">Publicité</field>
             <field name="code">66</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -9596,7 +9619,7 @@
             <field name="type">view</field>
             <field name="name">Publicité, médias électroniques</field>
             <field name="code">660</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9684,7 +9707,7 @@
             <field name="type">view</field>
             <field name="name">Imprimés, matériel, articles de publicité</field>
             <field name="code">661</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9708,7 +9731,7 @@
             <field name="type">view</field>
             <field name="name">Vitrines, décoration, foires, expositions</field>
             <field name="code">662</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9732,7 +9755,7 @@
             <field name="type">view</field>
             <field name="name">Frais de voyage, conseils à la clientèle</field>
             <field name="code">664</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9764,7 +9787,7 @@
             <field name="type">view</field>
             <field name="name">Publicité, sponsoring</field>
             <field name="code">666</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9788,7 +9811,7 @@
             <field name="type">view</field>
             <field name="name">Relations publiques</field>
             <field name="code">667</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9820,7 +9843,7 @@
             <field name="type">view</field>
             <field name="name">Conseils en publicité, études de marché</field>
             <field name="code">668</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_66" name="parent_id"/>
         </record>
@@ -9844,7 +9867,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges d'exploitation</field>
             <field name="code">67</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -9852,7 +9875,7 @@
             <field name="type">view</field>
             <field name="name">Informations économiques, poursuites</field>
             <field name="code">670</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_67" name="parent_id"/>
         </record>
@@ -9876,7 +9899,7 @@
             <field name="type">view</field>
             <field name="name">Sécurité et surveillance</field>
             <field name="code">671</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_67" name="parent_id"/>
         </record>
@@ -9900,7 +9923,7 @@
             <field name="type">view</field>
             <field name="name">Recherche et développement</field>
             <field name="code">672</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_67" name="parent_id"/>
         </record>
@@ -9924,7 +9947,7 @@
             <field name="type">view</field>
             <field name="name">Résultat financier</field>
             <field name="code">68</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -9932,7 +9955,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières</field>
             <field name="code">680</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_68" name="parent_id"/>
         </record>
@@ -9940,7 +9963,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières pour financement par des tiers</field>
             <field name="code">680.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_680" name="parent_id"/>
         </record>
@@ -9988,7 +10011,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières pour financement par des stés</field>
             <field name="code">681.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_680" name="parent_id"/>
         </record>
@@ -10012,7 +10035,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières pour financement actionnaires</field>
             <field name="code">682.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_680" name="parent_id"/>
         </record>
@@ -10036,7 +10059,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières pour financement LPP</field>
             <field name="code">683.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_680" name="parent_id"/>
         </record>
@@ -10052,7 +10075,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges financières</field>
             <field name="code">684.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_680" name="parent_id"/>
         </record>
@@ -10108,7 +10131,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers</field>
             <field name="code">685</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_68" name="parent_id"/>
         </record>
@@ -10116,7 +10139,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers des liquidités et des titres</field>
             <field name="code">685.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_685" name="parent_id"/>
         </record>
@@ -10164,7 +10187,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers c/immobilisations financières</field>
             <field name="code">686.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_685" name="parent_id"/>
         </record>
@@ -10212,7 +10235,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers de placement auprès des stés</field>
             <field name="code">687.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_685" name="parent_id"/>
         </record>
@@ -10236,7 +10259,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers placement auprès actionnaires</field>
             <field name="code">688.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_685" name="parent_id"/>
         </record>
@@ -10260,7 +10283,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits financiers</field>
             <field name="code">689.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_685" name="parent_id"/>
         </record>
@@ -10316,7 +10339,7 @@
             <field name="type">view</field>
             <field name="name">Amortissement</field>
             <field name="code">69</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_6" name="parent_id"/>
         </record>
@@ -10324,7 +10347,7 @@
             <field name="type">view</field>
             <field name="name">Dépréciations s/immobilisations financières</field>
             <field name="code">690</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10348,7 +10371,7 @@
             <field name="type">view</field>
             <field name="name">Dépréciations s/participations à des stés groupe</field>
             <field name="code">691</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10372,7 +10395,7 @@
             <field name="type">view</field>
             <field name="name">Amortissements s/immobilisations corporelles</field>
             <field name="code">692</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10412,7 +10435,7 @@
             <field name="type">view</field>
             <field name="name">Amortissements s/immobilisations corporelles imm.</field>
             <field name="code">693</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10436,7 +10459,7 @@
             <field name="type">view</field>
             <field name="name">Amortissements s/immobilisations incorporelles</field>
             <field name="code">694</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10468,7 +10491,7 @@
             <field name="type">view</field>
             <field name="name">Amortissements s/charges activées</field>
             <field name="code">695</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_69" name="parent_id"/>
         </record>
@@ -10492,7 +10515,7 @@
             <field name="type">view</field>
             <field name="name">Résultat des activités annexes d'exploitation</field>
             <field name="code">7</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -10500,7 +10523,7 @@
             <field name="type">view</field>
             <field name="name">Résultat des activités annexes</field>
             <field name="code">70</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_7" name="parent_id"/>
         </record>
@@ -10508,7 +10531,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'activité annexe 1</field>
             <field name="code">700</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_70" name="parent_id"/>
         </record>
@@ -10516,7 +10539,7 @@
             <field name="type">view</field>
             <field name="name">Produits de l'activité annexe 1</field>
             <field name="code">700.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_700" name="parent_id"/>
         </record>
@@ -10540,7 +10563,7 @@
             <field name="type">view</field>
             <field name="name">Charges de l'activité annexe 1</field>
             <field name="code">701.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_700" name="parent_id"/>
         </record>
@@ -10628,7 +10651,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'activité annexe 2</field>
             <field name="code">700</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_70" name="parent_id"/>
         </record>
@@ -10636,7 +10659,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'activité annexe 2</field>
             <field name="code">702.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_700" name="parent_id"/>
         </record>
@@ -10660,7 +10683,7 @@
             <field name="type">view</field>
             <field name="name">Charges de l'activité annexe 2</field>
             <field name="code">703.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_700" name="parent_id"/>
         </record>
@@ -10748,7 +10771,7 @@
             <field name="type">view</field>
             <field name="name">Résultat des placements financiers</field>
             <field name="code">74</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_7" name="parent_id"/>
         </record>
@@ -10756,7 +10779,7 @@
             <field name="type">view</field>
             <field name="name">Produits de placements financiers</field>
             <field name="code">740.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_74" name="parent_id"/>
         </record>
@@ -10796,7 +10819,7 @@
             <field name="type">view</field>
             <field name="name">Charges s/placements financiers</field>
             <field name="code">741.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_74" name="parent_id"/>
         </record>
@@ -10836,7 +10859,7 @@
             <field name="type">view</field>
             <field name="name">Résultat d'immeuble</field>
             <field name="code">75</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_7" name="parent_id"/>
         </record>
@@ -10844,7 +10867,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'immeuble d'exploitation 1</field>
             <field name="code">750</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_75" name="parent_id"/>
         </record>
@@ -10852,7 +10875,7 @@
             <field name="type">view</field>
             <field name="name">Produits de l'immeuble d'exploitation 1</field>
             <field name="code">750.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_750" name="parent_id"/>
         </record>
@@ -10900,7 +10923,7 @@
             <field name="type">view</field>
             <field name="name">Charges de l'immeuble d'exploitation 1</field>
             <field name="code">751.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_750" name="parent_id"/>
         </record>
@@ -10964,7 +10987,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfices provenant de l'aliénation d'actifs immob</field>
             <field name="code">79</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_7" name="parent_id"/>
         </record>
@@ -10972,7 +10995,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfices s/immobilisations financières</field>
             <field name="code">790</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_79" name="parent_id"/>
         </record>
@@ -11004,7 +11027,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfices s/immobilisations corporelles meubles</field>
             <field name="code">791</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_79" name="parent_id"/>
         </record>
@@ -11020,7 +11043,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfice s/immobilisations corporelles immeubles</field>
             <field name="code">792</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_79" name="parent_id"/>
         </record>
@@ -11036,7 +11059,7 @@
             <field name="type">view</field>
             <field name="name">Bénéfices s/immobilisations incorporelles</field>
             <field name="code">793</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_79" name="parent_id"/>
         </record>
@@ -11052,7 +11075,7 @@
             <field name="type">view</field>
             <field name="name">Résultats exceptionnel et hors exploitation impôts</field>
             <field name="code">8</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -11060,7 +11083,7 @@
             <field name="type">view</field>
             <field name="name">Résultat exceptionnel</field>
             <field name="code">80</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_8" name="parent_id"/>
         </record>
@@ -11068,7 +11091,7 @@
             <field name="type">view</field>
             <field name="name">Produits exceptionnels</field>
             <field name="code">800</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_80" name="parent_id"/>
         </record>
@@ -11132,7 +11155,7 @@
             <field name="type">view</field>
             <field name="name">Charges exceptionnelles</field>
             <field name="code">801</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_80" name="parent_id"/>
         </record>
@@ -11212,7 +11235,7 @@
             <field name="type">view</field>
             <field name="name">Résultat hors exploitation</field>
             <field name="code">82</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_8" name="parent_id"/>
         </record>
@@ -11220,7 +11243,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'activité hors exploitation</field>
             <field name="code">820</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_82" name="parent_id"/>
         </record>
@@ -11228,7 +11251,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'activité hors exploitation 1</field>
             <field name="code">820.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_820" name="parent_id"/>
         </record>
@@ -11236,7 +11259,7 @@
             <field name="type">view</field>
             <field name="name">Produits de l'activité hors exploitation 1</field>
             <field name="code">820.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_820_0" name="parent_id"/>
         </record>
@@ -11260,7 +11283,7 @@
             <field name="type">view</field>
             <field name="name">Charges de l'activité hors exploitation 1</field>
             <field name="code">821.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_820_0" name="parent_id"/>
         </record>
@@ -11348,7 +11371,7 @@
             <field name="type">view</field>
             <field name="name">Résultat des placements financiers hors exploitation</field>
             <field name="code">840</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_82" name="parent_id"/>
         </record>
@@ -11356,7 +11379,7 @@
             <field name="type">view</field>
             <field name="name">Produits financiers s/placements financiers hors exploitation</field>
             <field name="code">840.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_840" name="parent_id"/>
         </record>
@@ -11380,7 +11403,7 @@
             <field name="type">view</field>
             <field name="name">Charges financières s/placements financiers hors exploitation</field>
             <field name="code">841.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_840" name="parent_id"/>
         </record>
@@ -11420,7 +11443,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'immeuble hors exploitation</field>
             <field name="code">850</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_82" name="parent_id"/>
         </record>
@@ -11428,7 +11451,7 @@
             <field name="type">view</field>
             <field name="name">Résultat de l'immeuble hors exploitation 1</field>
             <field name="code">850.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_850" name="parent_id"/>
         </record>
@@ -11436,7 +11459,7 @@
             <field name="type">view</field>
             <field name="name">Produits de l'immeuble hors exploitation 1</field>
             <field name="code">850.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_850_0" name="parent_id"/>
         </record>
@@ -11476,7 +11499,7 @@
             <field name="type">view</field>
             <field name="name">Charges de l'immeuble hors exploitation 1</field>
             <field name="code">851.00</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_850_0" name="parent_id"/>
         </record>
@@ -11540,7 +11563,7 @@
             <field name="type">view</field>
             <field name="name">Autres résultats hors exploitation</field>
             <field name="code">870</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_82" name="parent_id"/>
         </record>
@@ -11548,7 +11571,7 @@
             <field name="type">view</field>
             <field name="name">Autres produits hors exploitation</field>
             <field name="code">870.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_870" name="parent_id"/>
         </record>
@@ -11572,7 +11595,7 @@
             <field name="type">view</field>
             <field name="name">Autres charges hors exploitation</field>
             <field name="code">871.0</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_870" name="parent_id"/>
         </record>
@@ -11588,7 +11611,7 @@
             <field name="type">view</field>
             <field name="name">Charges d'impôt</field>
             <field name="code">89</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_8" name="parent_id"/>
         </record>
@@ -11596,7 +11619,7 @@
             <field name="type">view</field>
             <field name="name">Impôts directs de l'entreprise</field>
             <field name="code">890</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_expense"/>
             <field name="note"/>
             <field ref="ch_89" name="parent_id"/>
         </record>
@@ -11628,7 +11651,7 @@
             <field name="type">view</field>
             <field name="name">Clôture</field>
             <field name="code">9</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_3_9" name="parent_id"/>
         </record>
@@ -11636,7 +11659,7 @@
             <field name="type">view</field>
             <field name="name">Compte de résultat</field>
             <field name="code">90</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_9" name="parent_id"/>
         </record>
@@ -11644,7 +11667,7 @@
             <field name="type">view</field>
             <field name="name">Compte de résultat</field>
             <field name="code">900</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_90" name="parent_id"/>
         </record>
@@ -11660,7 +11683,7 @@
             <field name="type">view</field>
             <field name="name">Bilan</field>
             <field name="code">91</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_9" name="parent_id"/>
         </record>
@@ -11668,7 +11691,7 @@
             <field name="type">view</field>
             <field name="name">Bilan</field>
             <field name="code">910</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_assets"/>
             <field name="note"/>
             <field ref="ch_91" name="parent_id"/>
         </record>
@@ -11692,7 +11715,7 @@
             <field name="type">view</field>
             <field name="name">Utilisation du bénéfice</field>
             <field name="code">92</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_9" name="parent_id"/>
         </record>
@@ -11700,7 +11723,7 @@
             <field name="type">view</field>
             <field name="name">Utilisation du bénéfice</field>
             <field name="code">920</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_92" name="parent_id"/>
         </record>
@@ -11724,7 +11747,7 @@
             <field name="type">view</field>
             <field name="name">Ecriture de regroupements et de corrections</field>
             <field name="code">99</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_9" name="parent_id"/>
         </record>
@@ -11732,7 +11755,7 @@
             <field name="type">view</field>
             <field name="name">Ecritures de regroupements</field>
             <field name="code">990</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_99" name="parent_id"/>
         </record>
@@ -11756,7 +11779,7 @@
             <field name="type">view</field>
             <field name="name">Ecritures de corrections</field>
             <field name="code">991</field>
-            <field name="user_type" ref="account_type_view"/>
+            <field name="user_type" ref="account_type_view_income"/>
             <field name="note"/>
             <field ref="ch_99" name="parent_id"/>
         </record>
@@ -11773,10 +11796,10 @@
             <field name="parent_id" eval="False"/>
         </record>
         <record id="l10nch_chart_template" model="account.chart.template">
-            <field name="name">Swiss PCG</field>
+            <field name="name">Plan comptable STERCHI</field>
             <field name="account_root_id" ref="ch_minimal_0"/>
             <field name="tax_code_root_id" ref="vat_code_chart_root"/>
-            <field name="bank_account_view_id" ref="ch_3400"/>
+            <field name="bank_account_view_id" ref="ch_102_0"/>
             <field name="property_account_receivable" ref="ch_1100"/>
             <field name="property_account_payable" ref="ch_2000"/>
             <field name="property_account_expense_categ" ref="ch_4200"/>

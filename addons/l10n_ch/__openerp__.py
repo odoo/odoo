@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    Author: Nicolas Bessi. Copyright Camptocamp SA
-#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+#    Donors: Hasa SA, Open Net SA and Prisme Solutions Informatique SA
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,10 +21,8 @@
 
 {
     "name" : "Switzerland - localization with 2011 taxes",
-    "description" : """
-Swiss localisation.
-===================
-
+    "description" :  """
+Swiss localisation :
  - DTA generation for a lot of payment types
  - BVR management (number generation, report, etc..)
  - Import account move from the bank file (like v11 etc..)
@@ -33,9 +31,11 @@ Swiss localisation.
 You can also add ZIP and bank completion with:
  - l10n_ch_zip
  - l10n_ch_bank
+ 
+ Author: Camptocamp SA
+ Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
-Author: Camptocamp SA
-Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+------------------------------------------------------------------------
 
 Module incluant la localisation Suisse de TinyERP revu et corrigé par Camptocamp. Cette nouvelle version
 comprend la gestion et l'émissionde BVR, le paiement électronique via DTA (pour les banques, le système postal est en développement)
@@ -47,10 +47,11 @@ Par ailleurs, conjointement à ce module, nous proposons la complétion NPA:
 Vous pouvez ajouter la completion des banques et des NPA avec with:
  - l10n_ch_zip
  - l10n_ch_bank
-
+ 
  Auteur: Camptocamp SA
  Donateurs: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 
+--------------------------------------------------------------------------
 TODO :
 - Implement bvr import partial reconciliation
 - Replace wizard by osv_memory when possible
@@ -60,9 +61,9 @@ TODO :
 
 
 """,
-    "version" : "6.0",
-    "author" : "Camptocamp SA",
-    "category" : "Localization/Account Charts",
+    "version" : "6.1",
+    "author" : "Camptocamp",
+    "category" : "Finance",
     "website": "http://www.camptocamp.com",
 
     "depends" : [
@@ -83,10 +84,10 @@ TODO :
     ],
     "demo_xml" : [
         "demo/demo.xml",
+        "demo/dta_demo.xml",
     ],
     "update_xml" : [
         "wizard.xml",
-        "dta_view.xml",
         "wizard/bvr_import_view.xml",
         "wizard/create_dta_view.xml",
         "company_view.xml",
@@ -97,6 +98,9 @@ TODO :
     ],
     'test' : [
         'test/l10n_ch_report.yml',
+        'test/l10n_ch_dta.yml',
+        'test/l10n_ch_v11.yml',
+        'test/l10n_ch_v11_part.yml',
     ],
     "active": False,
     "installable": True,

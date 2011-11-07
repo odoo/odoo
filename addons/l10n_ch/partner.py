@@ -30,35 +30,4 @@ class res_partner(osv.osv):
     }
 
 res_partner()
-
-class res_partner_bank(osv.osv):
-    _inherit = "res.partner.bank"
-    _columns = {
-        'name': fields.char('Description', size=128, required=True),
-        'post_number': fields.char('Post number', size=64),
-        'bvr_adherent_num': fields.char('BVR adherent number', size=11),
-        'dta_code': fields.char('DTA code', size=5),
-    }
-
-    def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
-            return []
-        bank_type_obj = self.pool.get('res.partner.bank.type')
-
-        type_ids = bank_type_obj.search(cr, uid, [])
-        bank_type_names = {}
-        for bank_type in bank_type_obj.browse(cr, uid, type_ids,
-                context=context):
-            bank_type_names[bank_type.code] = bank_type.name
-        res = []
-        for r in self.read(cr, uid, ids, ['name','state'], context):
-            res.append((r['id'], r['name']+' : '+bank_type_names[r['state']]))
-        return res
-
-    _sql_constraints = [
-        ('bvr_adherent_uniq', 'unique (bvr_adherent_num)', 'The BVR adherent number must be unique !')
-    ]
-
-res_partner_bank()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

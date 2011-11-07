@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
 
     <!-- Memo :
@@ -30,112 +30,24 @@
     <field name="code">dta_company</field>
   </record>
 
-  <record model="res.partner.bank.type" id="dta_iban">
-    <field name="name">DTA-IBAN</field>
-    <field name="code">dta_iban</field>
-  </record>
-
   <record model="res.partner.bank.type" id="bvrbank">
-    <field name="name">DTA-BVRBANK</field>
+    <field name="name">BVR Bank</field>
     <field name="code">bvrbank</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvrpost">
-    <field name="name">DTA-BVRPOST</field>
+    <field name="name">BVR Post</field>
     <field name="code">bvrpost</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvpost">
-    <field name="name">DTA-BVPOST</field>
+    <field name="name">BV Post</field>
     <field name="code">bvpost</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvbank">
-    <field name="name">DTA-BVBANK</field>
+    <field name="name">BV Bank</field>
     <field name="code">bvbank</field>
-  </record>
-
-
-
-  <!-- Adjust the fields attributes for dta_company-->
-  <record model="res.partner.bank.type.field" id="iban_field">
-    <field name="name">iban</field>
-    <field name="bank_type_id" ref="bank_dta"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-
-
-  <!-- Adjust the fields attributes for dta_iban-->
-  <record model="res.partner.bank.type.field" id="iban_field_iban">
-    <field name="name">iban</field>
-    <field name="bank_type_id" ref="dta_iban"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-  <record model="res.partner.bank.type.field" id="bank_field_iban">
-    <field name="name">bank</field>
-    <field name="bank_type_id" ref="dta_iban"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-
-
-  <!-- Adjust the fields attributes for bvrbank-->
-  <record model="res.partner.bank.type.field" id="bank_field_bvrbank">
-    <field name="name">bank</field>
-    <field name="bank_type_id" ref="bvrbank"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-  <record model="res.partner.bank.type.field" id="bvr_num_field_bvrbank">
-    <field name="name">post_number</field>
-    <field name="bank_type_id" ref="bvrbank"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-
-  <!-- Adjust the fields attributes for bvrpost-->
-  <record model="res.partner.bank.type.field" id="bank_field_bvrpost">
-    <field name="name">bank</field>
-    <field name="bank_type_id" ref="bvrpost"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-  <record model="res.partner.bank.type.field" id="bvr_num_field_bvrpost">
-    <field name="name">post_number</field>
-    <field name="bank_type_id" ref="bvrpost"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-
-  <!-- Adjust the fields attributes for bvpost -->
-  <record model="res.partner.bank.type.field" id="bank_field_bvpost">
-    <field name="name">bank</field>
-    <field name="bank_type_id" ref="bvpost"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-  <record model="res.partner.bank.type.field" id="post_field_bvpost">
-    <field name="name">post_number</field>
-    <field name="bank_type_id" ref="bvpost"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-
-  <!-- Adjust the fields attributes for bvbank -->
-  <record model="res.partner.bank.type.field" id="bank_field_bvbank">
-    <field name="name">bank</field>
-    <field name="bank_type_id" ref="bvbank"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
-  </record>
-  
-  <record model="res.partner.bank.type.field" id="acc_num_field_bvbank">
-    <field name="name">acc_number</field>
-    <field name="bank_type_id" ref="bvbank"/>
-    <field name="required" eval="True"/>
-    <field name="readonly" eval="False"/>
   </record>
 
 </data>

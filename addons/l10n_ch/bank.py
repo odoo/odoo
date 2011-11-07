@@ -19,12 +19,15 @@
 #
 ##############################################################################
 
+from tools.translate import _
 from osv import fields, osv
 
 class Bank(osv.osv):
     """Inherit res.bank class in order to add swiss specific field"""
     _inherit = 'res.bank'
     _columns = {
+        ### Internal reference
+        'code': fields.char('Code', size=64),
         ###Swiss unik bank identifier also use in IBAN number
         'clearing': fields.char('Clearing number', size=64),
         ### city of the bank
@@ -33,15 +36,44 @@ class Bank(osv.osv):
 
 Bank()
 
-class bvr_checkbox(osv.osv):
-    """ Add function to generate function """
+
+class ResPartnerBank(osv.osv):
     _inherit = "res.partner.bank"
 
     _columns = {
-        'print_bank' : fields.boolean('Print Bank on BVR'),
-        'print_account' : fields.boolean('Print Account Number on BVR'),
-        }
+        'name': fields.char('Description', size=128, required=True),
+        'post_number': fields.char('Post number', size=64),
+        'bvr_adherent_num': fields.char('BVR adherent number', size=11),
+        'dta_code': fields.char('DTA code', size=5),
+        'print_bank': fields.boolean('Print Bank on BVR'),
+        'print_account': fields.boolean('Print Account Number on BVR'),
+        'acc_number': fields.char('Account/IBAN Number', size=64),
+        'my_bank': fields.boolean('Use my account to print BVR ?', help="Check to print BVR invoices"),
+    }
 
-bvr_checkbox()
+    def name_get(self, cursor, uid, ids, context=None):
+        if not len(ids):
+            return []
+        bank_type_obj = self.pool.get('res.partner.bank.type')
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        type_ids = bank_type_obj.search(cursor, uid, [])
+        bank_type_names = {}
+        for bank_type in bank_type_obj.browse(cursor, uid, type_ids,
+                context=context):
+            bank_type_names[bank_type.code] = bank_type.name
+        res = []
+        for r in self.read(cursor, uid, ids, ['name','state'], context):
+            res.append((r['id'], r['name']+' : '+bank_type_names.get(r['state'], '')))
+        return res
+
+    def _prepare_name(self, bank):
+        "Hook to get bank number of bank account"
+        res = super(ResPartnerBank, self)._prepare_name(bank)
+        if bank.post_number:
+            res =  u"%s - %s" % (res, bank.post_number)
+        return res
+
+    _sql_constraints = [('bvr_adherent_uniq', 'unique (bvr_adherent_num)',
+        'The BVR adherent number must be unique !')]
+
+ResPartnerBank()

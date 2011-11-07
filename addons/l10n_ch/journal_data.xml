@@ -1,5 +1,5 @@
 <openerp>
-    <data>
+    <data noupdate="1">
         
         <record id="expenses_journal" model="account.journal">
             <field name="name">Journal de frais</field>
@@ -14,7 +14,7 @@
         <record id="bank_journal" model="account.journal">
             <field name="name">Banque CHF</field>
             <field name="code">BCHF</field>
-            <field name="type">cash</field>
+            <field name="type">bank</field>
             <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
@@ -24,7 +24,7 @@
         <record id="bank_euro_journal" model="account.journal">
             <field name="name">Banque EUR</field>
             <field name="code">BEUR</field>
-            <field name="type">cash</field>
+            <field name="type">bank</field>
             <field name="view_id" ref="account.account_journal_bank_view"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />

@@ -9,10 +9,11 @@
             <field name="arch" type="xml">
                 <form string="DTA file creation - Results">
                     <group width="300" colspan="4">
-                        <separator string="Create DTA" colspan="4"/>
+                        <separator string="Create DTA - (DTA file will appear after you click on create)" colspan="4"/>
+                        <field name="dta_file"/>
                         <group colspan="4">
                             <button special="cancel" string="Cancel" icon="gtk-cancel"  colspan="2"/>
-                            <button name="create_dta" string="Create DTA" type="object" icon="gtk-ok"  colspan="2"/>
+                            <button name="create_dta" string="Create DTA" type="object" icon="gtk-execute" colspan="2"/>
                         </group>
                     </group>
                 </form>
@@ -38,21 +39,5 @@
             <field name="key">action</field>
             <field name="model">payment.order</field>
         </record>
-        
-        <!-- Save DTA -->
-        <record id="dta_save_view" model="ir.ui.view">
-            <field name="name">Save DTA</field>
-            <field name="model">create.dta.wizard</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="DTA file creation - Results">
-                    <group width="500" colspan="4">
-                        <separator colspan="4" string="Click on 'Save as' to save the DTA file :" />
-                        <field name="dta_file"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        
     </data>
 </openerp>
