@@ -124,7 +124,7 @@
     </div>
 </t>
 <t t-name="Edi.account.invoice.sidebar">
-    <t t-if="!doc.reconciled">
+    <t t-if="!doc.reconciled &amp;&amp; (doc.type == 'out_invoice' or doc.type == 'in_refund')">
         <t t-if="doc.company_address.paypal_account || doc.company_address.bank_ids">
             <p class="oe_edi_sidebar_title">Pay Online</p>
             <t t-if="doc.company_address.paypal_account">
