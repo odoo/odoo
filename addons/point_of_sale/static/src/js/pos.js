@@ -421,11 +421,11 @@ openerp.point_of_sale = function(db) {
             Shop.__super__.constructor.apply(this, arguments);
         }
 
-        Shop.prototype.defaults = {
-            orders: new OrderCollection,
-            products: new ProductCollection
-        };
         Shop.prototype.initialize = function() {
+            this.set({
+                orders: new OrderCollection(),
+                products: new ProductCollection()
+            });
             this.set({
                 cashRegisters: new CashRegisterCollection(pos.store.get('account.bank.statement')),
             });
@@ -1201,7 +1201,7 @@ openerp.point_of_sale = function(db) {
             });
 
             if (pos)
-                throw "It is not possible to instantiate multiple instances"+
+                throw "It is not possible to instantiate multiple instances "+
                     "of the point of sale at the same time.";
             pos = new Pos(this.session);
 
