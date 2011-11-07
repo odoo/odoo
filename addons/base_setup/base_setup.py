@@ -39,13 +39,12 @@ DEFAULT_MODULES = {
     'Accounting & Finance' : ['account'],
     'Purchase Management' : ['purchase'],
     'Human Resources' : ['hr',],
-    'Point of Sales' : ['point_of_sale',],
+    'Point of Sale' : ['point_of_sale',],
     'Marketing' : ['marketing',],
 }
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
-
     _inherit = 'res.config.installer'
 
     _columns = {
