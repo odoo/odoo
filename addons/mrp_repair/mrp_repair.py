@@ -68,12 +68,15 @@ class mrp_repair(osv.osv):
             val = 0.0
             cur = repair.pricelist_id.currency_id
             for line in repair.operations:
+                #manage prices with tax included use compute_all instead of compute
                 if line.to_invoice:
-                    for c in tax_obj.compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    for c in tax_calculate['taxes']:
                         val += c['amount']
             for line in repair.fees_lines:
                 if line.to_invoice:
-                    for c in tax_obj.compute(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id):
+                    tax_calculate = tax_obj.compute_all(cr, uid, line.tax_id, line.price_unit, line.product_uom_qty, repair.partner_invoice_id.id, line.product_id, repair.partner_id)
+                    for c in tax_calculate['taxes']:
                         val += c['amount']
             res[repair.id] = cur_obj.round(cr, uid, cur, val)
         return res
@@ -105,8 +108,6 @@ class mrp_repair(osv.osv):
         return res
 
     def _get_lines(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         result = {}
         for line in self.pool.get('mrp.repair.line').browse(cr, uid, ids, context=context):
             result[line.repair_id.id] = True
@@ -121,7 +122,7 @@ class mrp_repair(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot Number', select=True, domain="[('product_id','=',product_id)]"),
         'state': fields.selection([
             ('draft','Quotation'),
-            ('confirmed','Confirmed, to repair'),
+            ('confirmed','Confirmed'),
             ('ready','Ready to Repair'),
             ('under_repair','Under Repair'),
             ('2binvoiced','To be Invoiced'),
@@ -153,6 +154,7 @@ class mrp_repair(osv.osv):
         'fees_lines': fields.one2many('mrp.repair.fee', 'repair_id', 'Fees Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'internal_notes': fields.text('Internal Notes'),
         'quotation_notes': fields.text('Quotation Notes'),
+        'company_id': fields.many2one('res.company', 'Company'),
         'deliver_bool': fields.boolean('Deliver', help="Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a picking with selected product. Note that you can select the locations in the Info tab, if you have the extended view."),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'repaired': fields.boolean('Repaired', readonly=True),
@@ -178,6 +180,7 @@ class mrp_repair(osv.osv):
         'deliver_bool': lambda *a: True,
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'mrp.repair'),
         'invoice_method': lambda *a: 'none',
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.repair', context=context),
         'pricelist_id': lambda self, cr, uid,context : self.pool.get('product.pricelist').search(cr, uid, [('type','=','sale')])[0]
     }
 
@@ -462,13 +465,6 @@ class mrp_repair(osv.osv):
             self.write(cr, uid, [repair.id], {'state': 'ready'})
         return True
 
-    def action_invoice_cancel(self, cr, uid, ids, context=None):
-        """ Writes repair order state to 'Exception in invoice'
-        @return: True
-        """
-        self.write(cr, uid, ids, {'state': 'invoice_except'})
-        return True
-
     def action_repair_start(self, cr, uid, ids, context=None):
         """ Writes repair order state to 'Under Repair'
         @return: True
@@ -478,22 +474,6 @@ class mrp_repair(osv.osv):
             repair_line.write(cr, uid, [l.id for
                     l in repair.operations], {'state': 'confirmed'}, context=context)
             repair.write({'state': 'under_repair'})
-        return True
-
-    def action_invoice_end(self, cr, uid, ids, context=None):
-        """ Writes repair order state to 'Ready' if invoice method is Before repair.
-        @return: True
-        """
-        repair_line = self.pool.get('mrp.repair.line')
-        for order in self.browse(cr, uid, ids, context=context):
-            val = {}
-            if (order.invoice_method == 'b4repair'):
-                val['state'] = 'ready'
-                repair_line.write(cr, uid, [l.id for
-                        l in order.operations], {'state': 'confirmed'}, context=context)
-            else:
-                pass
-            self.write(cr, uid, [order.id], val, context=context)
         return True
 
     def action_repair_end(self, cr, uid, ids, context=None):
@@ -685,7 +665,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
      'product_uom_qty': lambda *a: 1,
     }
 
-    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit):
+    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit, company_id=False, context=None):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
         @param product: Changed operation type.
@@ -696,27 +676,32 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
-                }
-            }
+                }}
+        warehouse_obj = self.pool.get('stock.warehouse')
+        location_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)
+        location_id = location_id and location_id[0] or False
 
-        product_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Production')])[0]
-        if type != 'add':
+        if type == 'add':
+            # TOCHECK: Find stock location for user's company warehouse or 
+            # repair order's company's warehouse (company_id field is added in fix of lp:831583)
+            args = company_id and [('company_id', '=', company_id)] or []
+            warehouse_ids = warehouse_obj.search(cr, uid, args, context=context)
+            stock_id = False
+            if warehouse_ids:
+                stock_id = warehouse_obj.browse(cr, uid, warehouse_ids[0], context=context).lot_stock_id.id
+            to_invoice = (guarantee_limit and datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
+
             return {'value': {
-                'to_invoice': False,
-                'location_id': product_id,
-                'location_dest_id': False
-                }
-            }
+                'to_invoice': to_invoice,
+                'location_id': stock_id,
+                'location_dest_id': location_id
+                }}
 
-        stock_id = self.pool.get('stock.location').search(cr, uid, [('name','=','Stock')])[0]
-        to_invoice = (guarantee_limit and
-                      datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
         return {'value': {
-            'to_invoice': to_invoice,
-            'location_id': stock_id,
-            'location_dest_id': product_id
-            }
-        }
+                'to_invoice': False,
+                'location_id': location_id,
+                'location_dest_id': False
+                }}
 
 mrp_repair_line()
 

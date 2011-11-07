@@ -1,87 +1,35 @@
 <openerp>
   <data>
 
-    <record id="view_base_setup_installer" model="ir.ui.view">
-      <field name="name">base.setup.installer.view</field>
-      <field name="model">base.setup.installer</field>
-      <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
-      <field name="arch" type="xml">
-        <data>
-          <form position="attributes">
-            <attribute name="string">Install Applications</attribute>
-          </form>
-          <xpath expr="//label[@string='description']" position="attributes">
-                <attribute name="string">Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later.</attribute>
-          </xpath>
-          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                    <attribute name="string"/>
-                    <attribute name="rowspan">15</attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-                    <attribute name="string">Install</attribute>
-          </xpath>
-          <separator string="title" position="attributes">
-            <attribute name="string">Install Applications</attribute>
-          </separator>
-          <group colspan="8">
-            <field name="crm" />
-            <field name="sale" />
-            <field name="project" />
-            <field name="knowledge" />
-            <field name="stock" />
-            <field name="mrp" />
-            <field name="account_voucher" />
-            <field name="account_accountant" />
-            <field name="purchase" />
-            <field name="hr" />
-            <field name="profile_tools" />
-            <field name="marketing" groups="base.group_extended" />
-            <field name="point_of_sale"/>
-            <field name="report_designer" groups="base.group_extended" />
-            <separator string="Install Specific Industry Applications" colspan="4"/>
-            <field name="association" />
-            <field name="auction" />
-            <field name="product_expiry" />
-            <group name="crm"/>
-            <group name="sale"/>
-            <group name="project"/>
-            <group name="knowledge"/>
-            <group name="mrp"/>
-            <group name="account_accountant"/>
-            <group name="purchase"/>
-            <group name="hr"/>
-            <group name="profile_tools"/>
-            <group name="marketing"/>
-            <group name="report_designer"/>
-            <group name="association"/>
-          </group>
-        </data>
-      </field>
-    </record>
-    <record id="action_base_setup_installer" model="ir.actions.act_window">
-      <field name="name">Install Applications</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">base.setup.installer</field>
-      <field name="view_id" ref="view_base_setup_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-    <record id="base_setup_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_base_setup_installer"/>
-        <field name="category_id" ref="base.category_administration_config"/>
-        <field name="sequence">2</field>
-    </record>
+      <record model="ir.actions.act_window" id="action_base_setup_installer_beta">
+          <field name="name">Install Applications</field>
+          <field name="res_model">base.setup.installer</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+      </record>
 
-    <record id="action_start_configurator" model="ir.actions.server">
-      <field name="name">Start Configuration</field>
-      <field name="model_id" ref="base.model_ir_actions_todo"/>
-      <field name="state">code</field>
-      <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
-    </record>
 
-    <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
+      <record id="base_setup_installer_todo" model="ir.actions.todo">
+          <field name="action_id" ref="action_base_setup_installer_beta" />
+          <field name="category_id" ref="base.category_administration_config"/>
+          <field name="sequence">2</field>
+      </record>
+
+      <record id="action_start_configurator" model="ir.actions.server">
+          <field name="name">Start Configuration</field>
+          <field name="model_id" ref="base.model_ir_actions_todo"/>
+          <field name="state">code</field>
+          <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
+      </record>
+
+      <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
+      <record id="ir_ui_view_sc_configuration" model="ir.ui.view_sc">
+          <field name="name">Add More Features</field>
+          <field name="resource">ir.ui.menu</field>
+          <field name="user_id" ref="base.user_root"/>
+          <field name="res_id" ref="menu_view_base_module_configuration" />
+      </record>
 
      <!-- Import or create customers configartion view  -->
      <record id="action_import_create_installer" model="ir.actions.act_window">
@@ -113,7 +61,7 @@
                   <attribute name="string">Define Users's Preferences</attribute>
             </xpath>
             <xpath expr="//label[@string='description']" position="attributes">
-              <attribute name="string">This will set the default preferences for all users. After this, each user will be able to update his own preferences.</attribute>
+              <attribute name="string">This will set the default preferences for new users and update all existing ones. Afterwards, users are free to change those values on their own user preference form.</attribute>
             </xpath>
             <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
                   <attribute name="string"/>

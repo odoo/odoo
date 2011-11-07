@@ -10,7 +10,7 @@
             <field name="arch" type="xml">
                 <search string="Product">
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
-                   <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
+                   <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]" />
@@ -202,39 +202,33 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="type">
+                    <field name="color"/>
+                    <field name="type"/>
+                    <field name="product_image"/>
+                    <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="color" t-value="kanban_color(record.color.raw_value || record.type.raw_value)"/>
                             <div t-att-class="color + (record.color.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_kanban_box oe_kanban_color_border">
-                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <t t-if="record.default_code.raw_value">[<field name="default_code"/>]</t>
-                                                <field name="name"/>
-                                            </td>
-                                            <td align="right" valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.product_manager.raw_value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title1">
+                                        <field name="name"/>
+                                    </div>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <table class="oe_kanban_table">
                                             <tr>
-                                                <td valign="top" width="22">
-                                                    <t t-if="record.product_image.raw_value">
-                                                        <img t-att-src="'data:image/png;base64,'+record.product_image.raw_value" width='48' height='48'/>
-                                                    </t>
-                                                    <t t-if="!record.product_image.raw_value">
-                                                        <img src="/web/static/src/img/product_default.png"/>
-                                                    </t> 
+                                                <td valign="top" width="48">
+                                                    <img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" width="48"/>
                                                 </td>
                                                 <td>
                                                     <div class="oe_kanban_title2">
                                                         <t t-if="record.type.raw_value=='service'">No Stock</t>
                                                         <t t-if="record.type.raw_value!='service'">
                                                             <div><field name="qty_available"/> On Hand , <field name="virtual_available"/> Available</div>
-                                                            <div><t t-if="record.list_price.raw_value!=0">Public Price : <field name="lst_price"/> ,</t> Cost : <field name="standard_price"/></div>
+                                                            <div>
+                                                                <t t-if="record.list_price.raw_value!=0">Public Price : <field name="lst_price"/> ,</t>
+                                                                Cost : <field name="standard_price"/>
+                                                            </div>
                                                         </t>
                                                     </div>
                                                 </td>
@@ -255,7 +249,7 @@
                 </kanban>
             </field>
         </record>
-        
+
         <record id="product_normal_action" model="ir.actions.act_window">
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
@@ -357,7 +351,7 @@
             parent="base.menu_product"
             sequence="0"/>
         <record id="product_category_action_form" model="ir.actions.act_window">
-            <field name="name">Products Categories</field>
+            <field name="name">Product Categories</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.category</field>
             <field name="view_type">form</field>

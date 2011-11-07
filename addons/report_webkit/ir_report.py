@@ -123,13 +123,16 @@ class ReportXML(osv.osv):
                                             'ir.header_webkit',
                                             type='many2one',
                                             relation='ir.header_webkit',
-                                            string='WebKit Header',
+                                            string='Webkit Header',
                                             help="The header linked to the report",
                                             view_load=True,
                                             required=True
                                         ),
         'webkit_debug' : fields.boolean('Webkit debug', help="Enable the webkit engine debugger"),
         'report_webkit_data': fields.text('Webkit Template', help="This template will be used if the main report file is not found"),
+        'precise_mode':fields.boolean('Precise Mode', help='This mode allow more precise element \
+                                                            position as each object is printed on a separate HTML.\
+                                                            but memory and disk usage is wider')
     }
 
 ReportXML()

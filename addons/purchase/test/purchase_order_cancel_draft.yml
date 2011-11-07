@@ -1,0 +1,114 @@
+-
+  In order to test to Cancel purchase order from Approved State,I start by creating a new product 'Pen Drive1'
+-
+ !record {model: product.product, id: product_product_pendrive1}:
+    categ_id: 'product.product_category_3'
+    cost_method: standard
+    mes_type: fixed
+    name: Pen Drive
+    price_margin: 1.0
+    procure_method: make_to_order
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
+    standard_price: 500.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
+  I create first purchase order for Pen Drive1 where "invoice_method" is From Order.
+-
+  !record {model: purchase.order, id: purchase_order_pendrive1}:
+    company_id: base.main_company
+    date_order: !eval time.strftime('%Y-%m-%d')
+    invoice_method: order
+    location_id: stock.stock_location_stock
+    order_line:
+      - date_planned: !eval time.strftime('%Y-%m-%d')
+        name: Pen Drive
+        price_unit: 500.0
+        product_id: 'product_product_pendrive1'
+        product_qty: 10.0
+        product_uom: product.product_uom_unit
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    pricelist_id: purchase.list0
+-
+  Initially  purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_pendrive1}:
+    - state == 'draft'
+-
+  I confirm the purchase order for Pen Drive1.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_pendrive1}
+-
+  I check that the order which was initially in the draft state has transmit to confirm state.
+-
+  !assert {model: purchase.order, id: purchase_order_pendrive1}:
+    - state == 'approved'
+-
+  I have to first cancel Picking of Approved Purchase order .
+-
+  !python {model: stock.picking}: |
+    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("purchase_order_pendrive1"))])
+    self.action_cancel(cr, uid, search_ids)
+-
+  Now I have to cancel confirm  purchase order for Pen Drive1.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel(cr, uid, [ref("purchase_order_pendrive1")])
+-
+  I check that the order which was in approved state has transmit to cancel state.
+-
+  !assert {model: purchase.order, id: purchase_order_pendrive1}:
+    - state == 'cancel'
+-
+  Now again set purchase order for Pen Drive1 to draft state.
+-
+  !python {model: purchase.order}: |
+    self.action_cancel_draft(cr, uid, [ref("purchase_order_pendrive1")])   
+-
+  I check that the First purchase order is in draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_pendrive1}:
+    - state == 'draft'
+-
+  I test for Copy and Delete Perchase order in Draft state.
+-
+  !python {model: purchase.order}: |
+    copy_id = self.copy(cr, uid, ref("purchase_order_pendrive1"))   
+    self.unlink(cr, uid, [copy_id])   
+-
+  I create Second purchase order for Pen Drive1 where "invoice_method" is From Order.
+-
+  !record {model: purchase.order, id: purchase_order_pendrive2}:
+    company_id: base.main_company
+    date_order: !eval time.strftime('%Y-%m-%d')
+    invoice_method: order
+    location_id: stock.stock_location_stock
+    order_line:
+      - date_planned: !eval time.strftime('%Y-%m-%d')
+        name: Pen Drive
+        price_unit: 500.0
+        product_id: 'product_product_pendrive1'
+        product_qty: 10.0
+        product_uom: product.product_uom_unit
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    pricelist_id: purchase.list0
+-
+  Initially  Second purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_pendrive2}:
+    - state == 'draft'
+-
+  I have merged first and second purchase order which are in draft state, belong to the same supplier,have same stock location, same pricelist.
+-
+  !python {model: purchase.order.group}: |
+    ids = [ref("purchase_order_pendrive1"),ref("purchase_order_pendrive2")]
+    self.fields_view_get(cr, uid, context={'active_ids': ids})	
+    self.merge_orders(cr, uid, [1], context={'active_ids': ids})
+
+ 

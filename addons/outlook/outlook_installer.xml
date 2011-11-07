@@ -19,7 +19,7 @@
                     <xpath expr="//button[@string='Install Modules']" position="replace">
                         <button colspan="1" icon="gtk-close" special="cancel" string="_Close"/>
                     </xpath>
-                    <xpath expr="//button[@string='Skip']" position="replace">
+                    <xpath expr="//button[@string='Cancel']" position="replace">
                     </xpath>
                     <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
                         <attribute name="string"/>
@@ -72,10 +72,7 @@
         </record>
 
         <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>
-
         <menuitem id="menu_base_config_plugins_outlook" action="action_outlook_wizard" parent="base.menu_base_config_plugins" sequence="10"/>
 
-        <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1" />
-        <menuitem id="menu_base_config_plugins_outlook_sales" action="action_outlook_wizard" parent="base.menu_sales" />
     </data>
 </openerp>

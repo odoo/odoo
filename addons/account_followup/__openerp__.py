@@ -20,9 +20,9 @@
 ##############################################################################
 
 {
-    'name': 'Reminders',
+    'name': 'Followup Management',
     'version': '1.0',
-    'category': 'Finance',
+    'category': 'Accounting & Finance',
     'complexity': "normal",
     'description': """
 Modules to automate letters for unpaid invoices, with multi-level recalls.

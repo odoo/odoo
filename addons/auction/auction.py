@@ -415,7 +415,7 @@ class auction_lots(osv.osv):
         result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name', 'obj_num'])]
         return result
 
-    def name_search(self, cr, user, name, args=None, operator='ilike', context=None):
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args = []
         ids = []

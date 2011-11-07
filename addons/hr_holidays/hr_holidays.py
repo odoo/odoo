@@ -216,7 +216,7 @@ class hr_holidays(osv.osv):
                 }
         return {'warning': warning, 'value': {'double_validation': double_validation}}
 
-    def set_to_draft(self, cr, uid, ids, *args):
+    def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
@@ -228,15 +228,15 @@ class hr_holidays(osv.osv):
             wf_service.trg_create(uid, 'hr.holidays', id, cr)
         return True
 
-    def holidays_validate(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_validate(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
-    def holidays_validate2(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_validate2(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
@@ -286,23 +286,22 @@ class hr_holidays(osv.osv):
             self.write(cr, uid, holiday_ids, {'manager_id2': manager})
         return True
 
-    def holidays_confirm(self, cr, uid, ids, *args):
-        self.check_holidays(cr, uid, ids)
+    def holidays_confirm(self, cr, uid, ids, context=None):
+        self.check_holidays(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
-    def holidays_refuse(self, cr, uid, ids, approval, *args):
+    def holidays_refuse(self, cr, uid, ids, approval, context=None):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         if approval == 'first_approval':
-            self.write(cr, uid, ids, {'manager_id': manager})
+            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
         else:
-            self.write(cr, uid, ids, {'manager_id2': manager})
-        self.write(cr, uid, ids, {'state': 'refuse'})
-        self.holidays_cancel(cr, uid, ids)
+            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
+        self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
-    def holidays_cancel(self, cr, uid, ids, *args):
+    def holidays_cancel(self, cr, uid, ids, context=None):
         obj_crm_meeting = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
@@ -316,7 +315,7 @@ class hr_holidays(osv.osv):
 
         return True
 
-    def check_holidays(self, cr, uid, ids):
+    def check_holidays(self, cr, uid, ids, context=None):
         holi_status_obj = self.pool.get('hr.holidays.status')
         for record in self.browse(cr, uid, ids):
             if record.holiday_type == 'employee' and record.type == 'remove':

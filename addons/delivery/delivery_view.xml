@@ -342,7 +342,8 @@
             <field name="model">delivery.define.delivery.steps.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Setup Your Delivery Steps">
+                <form string="Setup Your Picking Policy">
+                    <separator string="Choose Your Default Picking Policy" colspan="4"/>
                     <field name="picking_policy" />
                     <separator string="" colspan="4"/>
                     <group colspan="4">
@@ -354,7 +355,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_define_delivery_steps">
-            <field name="name">Setup Your Delivery Steps</field>
+            <field name="name">Setup Your Picking Policy</field>
             <field name="res_model">delivery.define.delivery.steps.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -363,6 +364,7 @@
 
         <record model="ir.actions.todo" id="todo_define_delivery_steps">
             <field name="action_id" ref="action_define_delivery_steps" />
+            <field name="category_id" ref="base.category_sales_management_config"/>
             <field name="type">once</field>
         </record>
     </data>

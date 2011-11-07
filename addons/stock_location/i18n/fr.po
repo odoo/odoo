@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:40+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:37+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -87,8 +87,8 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
-"Gestion des besoins en flux tiré provenant de l'emplacement d'origine %s, "
-"règle de flux tiré %s, via le besoin %s (#%d)"
+"Approvisionnement en flux tiré provenant de l'emplacement d'origine %s, "
+"règle de flux tiré %s, via l'approvisionnement original %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
@@ -201,12 +201,12 @@ msgstr "Produire"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr "Sur commande"
+msgstr "Production à la demande"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Sur stock"
+msgstr "Production sur stock"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -435,7 +435,7 @@ msgstr "Produit"
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr "Méthode de gestion des besoins"
+msgstr "Méthode d'approvisionnement"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -450,10 +450,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Sur stock': Quand c'est possible prendre du stock ou attendre le "
-"réapprovisionnement.\n"
-"'Sur commande': Quand c'est possible, acheter ou produire pour la demande de "
-"réappro."
+"'Production sur stock' : quand il y a une demande, on prend du stock ou on "
+"attend jusqu'au prochain réapprovisionnement. 'Production à la demande' : "
+"quand il y a une demande, on achète ou on fabrique selon cette demande."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -470,7 +469,8 @@ msgstr "Produits"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr "Tiré depuis un autre emplacement pour satisfaire le besoin %d"
+msgstr ""
+"Tiré depuis un autre emplacement pour satisfaire l'approvisionnement %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -495,9 +495,9 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
-"Opération de manutention pour un besoin tiré, en provenance de l'emplacement "
-"d'origine %s, règle de flux tiré %s, pour satisfaire le besoin original %s "
-"(#%d)"
+"Opération de manutention pour un approvisionnement tiré, en provenance de "
+"l'emplacement d'origine %s, règle de flux tiré %s, pour satisfaire "
+"l'approvisionnement original %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -511,8 +511,9 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-"Mouvement pour un besoin tiré, en provenance de l'emplacement d'origine %s, "
-"règle de flux tiré %s, pour satisfaire le besoin original %s (#%d)"
+"Mouvement pour un approvisionnement tiré, en provenance de l'emplacement "
+"d'origine %s, règle de flux tiré %s, pour satisfaire l'approvisionnement "
+"original %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0

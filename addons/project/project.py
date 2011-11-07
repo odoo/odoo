@@ -45,6 +45,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1
     }
+    _order = 'sequence'
 project_task_type()
 
 class project(osv.osv):
@@ -469,8 +470,9 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
@@ -484,7 +486,7 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence,priority, date_start, name, id"
+    _order = "priority, sequence, date_start, name, id"
 
     def set_priority(self, cr, uid, ids, priority):
         """Set task priority

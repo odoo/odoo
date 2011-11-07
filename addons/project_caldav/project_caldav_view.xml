@@ -65,9 +65,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="progress" position="after">
-                    <field name="recurrency"/>      
-                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
-                                on_change="onchange_edit_all(rrule_type,edit_all)"/>                    
+                    <!--     Recurrency of task not well implemented for now, remove the option-->     
+                     <field name="recurrency" invisible="1"/>
+                     <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"/>                    
                 </field>
             </field>
         </record>
@@ -79,46 +79,57 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <notebook colspan="4" position="inside">
-                    <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
-                        <group colspan="2" col="4" >
-                             <field name="rrule_type" string="Recurrency" colspan="1" attrs="{'readonly':[('recurrent_uid','!=',False)]}"/>
-                        </group>
-                        <newline/>
-                        <group col="4" colspan="6" name="rrule">
-                            <separator string="Recurrency Rule" colspan="8"/>
-                            <group col="6" colspan="4">
-                                <field name="interval" string="Repeat Times" attrs="{'readonly': [('end_date','!=',False)]}"/>
-                                <field name="count" attrs="{'readonly': [('end_date','!=',False)]}"/>
-                                <field name="end_date" attrs="{'invisible': [('readonly','!=',False)]}"/>
+                    <page string="Recurrency Option" attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
+                        <group col="4" colspan="4" name="rrule">
+                            <group col="4" colspan="4">
+                                <field name="rrule_type" string="Recurrency period" />
+                                <field name="interval" />                               
+                                                       
+                                
+                                <separator string="End of recurrency" colspan="4"/>
+                                <field name="end_type" />
+                                <label string=" " colspan="2" />
+                                <newline />
+                                <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }"/>
+                                <label string=" " colspan="2" />
+                                <newline />
+                                <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}"/>
+                                <newline />
+                           
+                      
                             </group>
-                            <group col="14" colspan="4" name="Select weekdays" 
-                                    attrs="{'invisible' :[('rrule_type','not in', ['weekly','daily_working'])]}">
+                            <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                <separator string="Choose day where repeat the meeting" colspan="8"/>
                                 <field name="mo" colspan="1" />
                                 <field name="tu" colspan="1" />
                                 <field name="we" colspan="1" />
                                 <field name="th" colspan="1" />
                                 <newline/>
                                 <field name="fr" colspan="1" />
-                                <field name="sa" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
-                                <field name="su" colspan="1"  attrs="{'invisible': [('rrule_type','=','daily_working')]}"/>
+                                <field name="sa" colspan="1"  />
+                                <field name="su" colspan="1"  />
                                 <newline />
                             </group>
-                            <group col="10" colspan="4" attrs="{'invisible': [('rrule_type','!=','monthly'), ('rrule_type','!=','yearly')]}">
+                            <group col="10" colspan="4"
+                                attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
+                                <separator string="Choose day in the month where repeat the meeting" colspan="12"/>
                                 <group col="2" colspan="1">
-                                <field name="select1" />
+                                    <field name="select1" />
                                 </group>
-                                <group col="2" colspan="1" attrs="{'invisible' : [('select1','=','day')]}">
-                                <field name="day" attrs="{'required' : [('select1','=','date')]}" />
+                                <group col="2" colspan="1">
+                                    <field name="day"
+                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
+                                            'invisible' : [('select1','=','day')]}" />
                                 </group>
-                                <group col="3" colspan="1" attrs="{'invisible' : [('select1','=','date')]}">
-                                <field name="byday" string="The" attrs="{'required' : [('select1','=','day')]}" />
-                                <field name="week_list" nolabel="1" attrs="{'required' : [('select1','=','day')]}" />
-                                </group>
-                                <group col="1" colspan="1" attrs="{'invisible' : [('rrule_type','!=','yearly')]}">
-                                <field name="month_list" string="of" colspan="1" attrs="{'required' : [('rrule_type','=','yearly')]}" />
+                                <group col="3" colspan="1">
+                                    <field name="byday" string="The"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
+                                    <field name="week_list" nolabel="1"
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
                                 </group>
                             </group>
                         </group>
+
                     </page>
                  </notebook>
             </field>

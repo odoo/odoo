@@ -249,8 +249,10 @@ class define_delivery_steps(osv.osv_memory):
     _name = 'delivery.define.delivery.steps.wizard'
 
     _columns = {
-        'picking_policy' : fields.selection([('direct', 'Partial Delivery'), ('one', 'Complete Delivery'),],
-                                            'Picking Policy', required=True),
+        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
+    }
+    _defaults = {
+        'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
     }
 
     def apply_cb(self, cr, uid, ids, context=None):
@@ -260,7 +262,6 @@ class define_delivery_steps(osv.osv_memory):
         return {'type' : 'ir.actions.act_window_close'}
 
 define_delivery_steps()
-
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

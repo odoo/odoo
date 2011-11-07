@@ -1,0 +1,83 @@
+# Spanish (Chile) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-10-24 19:35+0000\n"
+"Last-Translator: Francisco Reyes Acuña <Unknown>\n"
+"Language-Team: Spanish (Chile) <es_CL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:33+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
+
+#. module: stock_no_autopicking
+#: model:ir.model,name:stock_no_autopicking.model_product_product
+msgid "Product"
+msgstr "Producto"
+
+#. module: stock_no_autopicking
+#: model:ir.module.module,description:stock_no_autopicking.module_meta_information
+msgid ""
+"\n"
+"    This module allows an intermediate picking process to provide raw "
+"materials\n"
+"    to production orders.\n"
+"\n"
+"    One example of usage of this module is to manage production made by "
+"your\n"
+"    suppliers (sub-contracting). To achieve this, set the assembled product\n"
+"    which is sub-contracted to \"No Auto-Picking\" and put the location of "
+"the\n"
+"    supplier in the routing of the assembly operation.\n"
+"    "
+msgstr ""
+"\n"
+"    Este módulo permite un proceso de recogida intermedio para proveer "
+"materias\n"
+"    primas a las órdenes de fabricación.\n"
+"\n"
+"    Un ejemplo de uso de este módulo es gestionar la producción realizada "
+"por sus\n"
+"    proveedores (subcontratación). Para conseguir esto, establezca los "
+"productos ensamblados\n"
+"    que serán subcontratados a \"No Auto-Recogida\" y establezca la "
+"ubicación del nuevo\n"
+"    proveedor en el proceso de la operación de ensamblado.\n"
+"    "
+
+#. module: stock_no_autopicking
+#: model:ir.model,name:stock_no_autopicking.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Orden de fabricación"
+
+#. module: stock_no_autopicking
+#: field:product.product,auto_pick:0
+msgid "Auto Picking"
+msgstr "Auto empaquetado"
+
+#. module: stock_no_autopicking
+#: help:product.product,auto_pick:0
+msgid "Auto picking for raw materials of production orders."
+msgstr "Auto empaquetado para materiales a granel en órdenes de producción."
+
+#. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Código EAN no válido"
+
+#. module: stock_no_autopicking
+#: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
+msgid "Stock No Auto-Picking"
+msgstr "Stock no auto empaquetado"
+
+#. module: stock_no_autopicking
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero !"
+msgstr "¡La cantidad ordenada no puede ser negativa o cero!"

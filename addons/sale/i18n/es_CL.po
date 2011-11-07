@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-14 04:38+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-10-06 16:03+0000\n"
+"Last-Translator: Francisco Reyes Acuña <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:22+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:17+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -34,8 +33,8 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
-"Si no dispone de suficientes existencias para enviarlo todo de una vez, "
-"¿acepta envíos parciales o no?"
+"Si no dispone de suficiente stock disponible para enviarlo todo a la vez, "
+"¿acepta envíos parciales?"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
@@ -140,6 +139,14 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Los pedidos de ventas le ayudan a gestionar presupuestos y pedidos de sus "
+"clientes. OpenERP sugiere que comience por crear un presupuesto. Una vez "
+"esté confirmado, el presupuesto se convertirá en un pedido de venta. OpenERP "
+"puede gestionar varios tipos de productos de forma que un pedido de venta "
+"puede generar tareas, órdenes de entrega, órdenes de fabricación, compras, "
+"etc. Según la configuración del pedido de venta, se generará una factura en "
+"borrador de manera que sólo hay que confirmarla cuando se quiera facturar a "
+"su cliente."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -791,6 +798,28 @@ msgid ""
 "    * Graph of cases of the month\n"
 "    "
 msgstr ""
+"\n"
+"    El módulo base para gestionar presupuestos y pedidos de venta.\n"
+"\n"
+"    * Flujo de trabajo con etapas de validación:\n"
+"        - Presupuesto -> Pedido de venta -> Factura\n"
+"    * Métodos de facturación:\n"
+"        - Factura del pedido (antes o después del envío)\n"
+"        - Factura del albarán\n"
+"        - Factura de la hoja de servicios\n"
+"        - Avanzar factura\n"
+"    * Preferencias de los clientes (envío, facturación, incoterm, ...)\n"
+"    * Existencias de los productos y precios\n"
+"    * Formas de envío:\n"
+"        - Todo a la vez, En varios paquetes\n"
+"        - Gastos de envío\n"
+"    * El tablero para el comercial incluye:\n"
+"    * Sus presupuestos abiertos\n"
+"    * Las 10 mejores ventas del mes\n"
+"    * Estadísticas de casos\n"
+"    * Gráfico de las ventas por producto\n"
+"    * Gráfico de los casos por mes\n"
+"    "
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
@@ -953,7 +982,7 @@ msgstr "Basado en las cantidades enviadas o ordenadas."
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr "Albarán relacionado"
+msgstr "Guía de despacho relacionada"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1055,7 +1084,7 @@ msgstr "título"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Pick List"
-msgstr "Albarán"
+msgstr "Guía de despacho"
 
 #. module: sale
 #: view:sale.order:0
@@ -1102,7 +1131,7 @@ msgstr "Fecha en que se crea el pedido de venta."
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
 msgid "Stock Move"
-msgstr "Movimiento stock"
+msgstr "Movimiento de stock"
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1138,7 +1167,7 @@ msgstr "Factura basada en pedidos de venta"
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "Albarán"
+msgstr "LIsta de guías de despacho"
 
 #. module: sale
 #: code:addons/sale/sale.py:387
@@ -1324,7 +1353,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
-msgstr "Albarán y Orden de entrega"
+msgstr "Guía de despacho y Orden de entrega"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -2037,6 +2066,11 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
+"Si tiene más de una tienda donde vende los productos de su compañía, puede "
+"crearlas y gestionarlas desde aquí. Cada vez que codifique un nuevo "
+"presupuesto o pedido de venta, debe estar vinculado a una tienda. La tienda "
+"también define desde que almacén serán entregados los productos para cada "
+"venta."
 
 #. module: sale
 #: help:sale.order,invoiced:0

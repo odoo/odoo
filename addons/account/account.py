@@ -144,7 +144,7 @@ class account_account_type(osv.osv):
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
             ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Assets Accounts)'),
+            ('asset','Balance Sheet (Asset Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
@@ -243,7 +243,8 @@ class account_account(osv.osv):
             'balance': "COALESCE(SUM(l.debit),0) " \
                        "- COALESCE(SUM(l.credit), 0) as balance",
             'debit': "COALESCE(SUM(l.debit), 0) as debit",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit"
+            'credit': "COALESCE(SUM(l.credit), 0) as credit",
+            'foreign_balance': "COALESCE(SUM(l.amount_currency), 0) as foreign_balance",
         }
         #get all the necessary accounts
         children_and_consolidated = self._get_children_and_consol(cr, uid, ids, context=context)
@@ -270,7 +271,7 @@ class account_account(osv.osv):
             # ON l.account_id = tmp.id
             # or make _get_children_and_consol return a query and join on that
             request = ("SELECT l.account_id as id, " +\
-                       ', '.join(map(mapping.__getitem__, field_names)) +
+                       ', '.join(map(mapping.__getitem__, mapping.keys())) +
                        " FROM account_move_line l" \
                        " WHERE l.account_id IN %s " \
                             + filters +
@@ -289,7 +290,7 @@ class account_account(osv.osv):
             sums = {}
             currency_obj = self.pool.get('res.currency')
             while brs:
-                current = brs[0]
+                current = brs.pop(0)
 #                can_compute = True
 #                for child in current.child_id:
 #                    if child.id not in sums:
@@ -299,7 +300,6 @@ class account_account(osv.osv):
 #                        except ValueError:
 #                            brs.insert(0, child)
 #                if can_compute:
-                brs.pop(0)
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
@@ -307,6 +307,16 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+
+                # as we have to relay on values computed before this is calculated separately than previous fields
+                if current.currency_id and current.exchange_rate and \
+                            ('adjusted_balance' in field_names or 'unrealized_gain_loss' in field_names):
+                    # Computing Adjusted Balance and Unrealized Gains and losses
+                    # Adjusted Balance = Foreign Balance / Exchange Rate
+                    # Unrealized Gains and losses = Adjusted Balance - Balance
+                    adj_bal = sums[current.id].get('foreign_balance', 0.0) / current.exchange_rate
+                    sums[current.id].update({'adjusted_balance': adj_bal, 'unrealized_gain_loss': adj_bal - sums[current.id].get('balance', 0.0)})
+
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
@@ -340,9 +350,10 @@ class account_account(osv.osv):
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
-            if account.parent_id:
-                obj = self.browse(cr, uid, account.parent_id.id)
-                level = obj.level + 1
+            parent = account.parent_id
+            while parent:
+                level += 1
+                parent = parent.parent_id
             res[account.id] = level
         return res
 
@@ -367,8 +378,8 @@ class account_account(osv.osv):
 
         move_obj = self.pool.get('account.move.line')
         move_id = move_obj.search(cr, uid, [
-            ('journal_id','=',jids[0]), 
-            ('period_id','=',pids[0]), 
+            ('journal_id','=',jids[0]),
+            ('period_id','=',pids[0]),
             ('account_id','=', account_id),
             (name,'>', 0.0),
             ('name','=', _('Opening Balance'))
@@ -418,7 +429,14 @@ class account_account(osv.osv):
         'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
         'credit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
         'debit': fields.function(__compute, fnct_inv=_set_credit_debit, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
+        'foreign_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Foreign Balance', multi='balance',
+                                           help="Total amount (in Secondary currency) for transactions held in secondary currency for this account."),
+        'adjusted_balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Adjusted Balance', multi='balance', 
+                                            help="Total amount (in Company currency) for transactions held in secondary currency for this account."),
+        'unrealized_gain_loss': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Unrealized Gain or Loss', multi='balance', 
+                                                help="Value of Loss or Gain due to changes in exchange rate when doing multi-currency transactions."),
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this box if this account allows reconciliation of journal items."),
+        'exchange_rate': fields.related('currency_id', 'rate', type='float', string='Exchange Rate', digits=(12,6)),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
@@ -436,7 +454,10 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
+        'level': fields.function(_get_level, string='Level', method=True, type='integer',
+             store={
+                    'account.account': (_get_children_and_consol, ['level', 'parent_id'], 10),
+                   }),
     }
 
     _defaults = {
@@ -884,9 +905,16 @@ class account_fiscalyear(osv.osv):
         return True
 
     def find(self, cr, uid, dt=None, exception=True, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
-        ids = self.search(cr, uid, [('date_start', '<=', dt), ('date_stop', '>=', dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             if exception:
                 raise osv.except_osv(_('Error !'), _('No fiscal year defined for this date !\nPlease create one.'))
@@ -930,7 +958,7 @@ class account_period(osv.osv):
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
-    
+
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
@@ -966,10 +994,17 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
         return ids
@@ -1213,22 +1248,10 @@ class account_move(osv.osv):
                     return False
         return True
 
-    def _check_period_journal(self, cursor, user, ids, context=None):
-        for move in self.browse(cursor, user, ids, context=context):
-            for line in move.line_id:
-                if line.period_id.id != move.period_id.id:
-                    return False
-                if line.journal_id.id != move.journal_id.id:
-                    return False
-        return True
-
     _constraints = [
         (_check_centralisation,
             'You can not create more than one move per period on centralized journal',
             ['journal_id']),
-        (_check_period_journal,
-            'You can not create journal items on different periods/journals in the same journal entry',
-            ['line_id']),
     ]
 
     def post(self, cr, uid, ids, context=None):
@@ -1511,8 +1534,6 @@ class account_move(osv.osv):
                 # Update the move lines (set them as valid)
 
                 obj_move_line.write(cr, uid, line_draft_ids, {
-                    'journal_id': move.journal_id.id,
-                    'period_id': move.period_id.id,
                     'state': 'valid'
                 }, context, check=False)
 
@@ -1553,8 +1574,6 @@ class account_move(osv.osv):
                 # We can't validate it (it's unbalanced)
                 # Setting the lines as draft
                 obj_move_line.write(cr, uid, line_ids, {
-                    'journal_id': move.journal_id.id,
-                    'period_id': move.period_id.id,
                     'state': 'draft'
                 }, context, check=False)
         # Create analytic lines for the valid moves
@@ -1579,11 +1598,15 @@ class account_move_reconcile(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,ctx={}: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile') or '/',
     }
+
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
         for rec in self.browse(cr, uid, ids, context=context):
             for line in rec.line_partial_ids:
-                total += (line.debit or 0.0) - (line.credit or 0.0)
+                if line.account_id.currency_id:
+                    total += line.amount_currency
+                else:
+                    total += (line.debit or 0.0) - (line.credit or 0.0)
         if not total:
             self.pool.get('account.move.line').write(cr, uid,
                 map(lambda x: x.id, rec.line_partial_ids),
@@ -2172,12 +2195,13 @@ class account_model(osv.osv):
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
 
+        move_date = context.get('date', time.strftime('%Y-%m-%d'))
+        move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
             try:
-                entry['name'] = model.name%{'year':time.strftime('%Y'), 'month':time.strftime('%m'), 'date':time.strftime('%Y-%m')}
+                entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
                 raise osv.except_osv(_('Wrong model !'), _('You have a wrong expression "%(...)s" in your model !'))
-                
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
@@ -2198,7 +2222,7 @@ class account_model(osv.osv):
                     'analytic_account_id': analytic_account_id
                 }
 
-                date_maturity = time.strftime('%Y-%m-%d')
+                date_maturity = context.get('date',time.strftime('%Y-%m-%d'))
                 if line.date_maturity == 'partner':
                     if not line.partner_id:
                         raise osv.except_osv(_('Error !'), _("Maturity date of entry line generated by model line '%s' of model '%s' is based on partner payment term!" \
@@ -2634,7 +2658,8 @@ class account_fiscal_position_template(osv.osv):
         'name': fields.char('Fiscal Position Template', size=64, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
-        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
+        'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping'),
+        'note': fields.text('Notes', translate=True),
     }
 
 account_fiscal_position_template()
@@ -2718,7 +2743,7 @@ class account_financial_report(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Report Name', size=128, required=True),
+        'name': fields.char('Report Name', size=128, required=True, translate=True),
         'parent_id': fields.many2one('account.financial.report', 'Parent'),
         'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),

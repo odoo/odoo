@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-17 05:00+0000\n"
-"X-Generator: Launchpad (build 13955)\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:13+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -136,7 +136,7 @@ msgstr "Bokföringstransaktioner-"
 #: code:addons/account/account.py:1291
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "You can not delete posted movement: \"%s\"!"
+msgstr "Du kan inte radera sparade affärshändelser: \"%s\"!"
 
 #. module: account
 #: report:account.invoice:0
@@ -799,7 +799,7 @@ msgstr "Beräkna förfallodatum"
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "J.C./Move name"
-msgstr "J.C./Move name"
+msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -933,7 +933,7 @@ msgstr "Kontoutdrag"
 #. module: account
 #: field:account.analytic.line,move_id:0
 msgid "Move Line"
-msgstr "Move Line"
+msgstr "Affärshändelse"
 
 #. module: account
 #: help:account.move.line,tax_amount:0
@@ -1135,7 +1135,7 @@ msgstr "Utgående valutakurs"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "The move of this entry line."
+msgstr ""
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1752,7 +1752,7 @@ msgstr "Momsdeklaration: Kreditfakturor"
 #: code:addons/account/account.py:499
 #, python-format
 msgid "You cannot deactivate an account that contains account moves."
-msgstr "You cannot deactivate an account that contains account moves."
+msgstr "Du kan inte avaktivera ett konto där det finns affärshändelser."
 
 #. module: account
 #: field:account.move.line.reconcile,credit:0
@@ -2380,7 +2380,7 @@ msgstr "Kontoutdrag"
 #. module: account
 #: report:account.analytic.account.journal:0
 msgid "Move Name"
-msgstr "Move Name"
+msgstr "Affärshändelse"
 
 #. module: account
 #: help:res.partner,property_account_position:0
@@ -2950,6 +2950,7 @@ msgstr "Tax Declaration"
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
 msgstr ""
+"Tvingar alla affärshändelser för detta konto att anta denna sekundära valuta."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
@@ -3209,7 +3210,7 @@ msgstr "Dina bank och kontantkonton"
 #. module: account
 #: view:account.move:0
 msgid "Search Move"
-msgstr ""
+msgstr "Sök affärshändelse"
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -3511,6 +3512,8 @@ msgstr "Account Payable"
 msgid ""
 "You cannot create entries on different periods/journals in the same move"
 msgstr ""
+"Du kan inte skapa rader med skiftande perioder/journaler i samma "
+"affärshändelse"
 
 #. module: account
 #: model:process.node,name:account.process_node_supplierpaymentorder0
@@ -4003,6 +4006,8 @@ msgid ""
 "When new move line is created the state will be 'Draft'.\n"
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
+"Nya affärshändelserader skapas i statusen 'Förslag'.\n"
+"* När alla betalningar är gjorda så övergår statusen till 'Valid'."
 
 #. module: account
 #: field:account.journal,view_id:0
@@ -4443,7 +4448,7 @@ msgstr "Journalrader"
 
 #. module: account
 #: selection:account.account.type,report_type:0
-msgid "Balance Sheet (Assets Accounts)"
+msgid "Balance Sheet (Asset Accounts)"
 msgstr "Balansräkning (Tillgångskonton)"
 
 #. module: account
@@ -4528,7 +4533,7 @@ msgstr "Stäng"
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
 msgid "Moves"
-msgstr "Moves"
+msgstr "Affärshändelse"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -4619,7 +4624,7 @@ msgstr "Analytic Balance -"
 #: report:pl.account:0
 #: report:pl.account.horizontal:0
 msgid "Target Moves"
-msgstr "Target Moves"
+msgstr "Vald affärshändelse"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -5099,8 +5104,7 @@ msgid ""
 "Specified Journal does not have any account move entries in draft state for "
 "this period"
 msgstr ""
-"Specified Journal does not have any account move entries in draft state for "
-"this period"
+"Urvalet av journaler i perioden saknar icke bekräftade affärshändelserader"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
@@ -5125,7 +5129,7 @@ msgstr "Antal"
 #. module: account
 #: view:account.move.line:0
 msgid "Number (Move)"
-msgstr ""
+msgstr "Nummer (Affärshändelse)"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5218,7 +5222,7 @@ msgstr "Journalpost"
 #. module: account
 #: model:ir.model,name:account.model_account_move_journal
 msgid "Move journal"
-msgstr "Flytta journal"
+msgstr "Journal med affärshändelser"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -6138,7 +6142,7 @@ msgstr ""
 #: code:addons/account/account.py:1393
 #, python-format
 msgid "Couldn't create move between different companies"
-msgstr "Couldn't create move between different companies"
+msgstr "Kunde inte skapa affärshändelse som berör flera företag"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -6334,6 +6338,7 @@ msgstr ""
 msgid ""
 "Selected Entry Lines does not have any account move enties in draft state"
 msgstr ""
+"Valda verifikatrader saknar motsvarande icke verifierade affärshändelserader."
 
 #. module: account
 #: selection:account.aged.trial.balance,target_move:0
@@ -7287,13 +7292,13 @@ msgstr "Warning !"
 #. module: account
 #: field:account.entries.report,move_line_state:0
 msgid "State of Move Line"
-msgstr ""
+msgstr "Status för rad i affärshändelse"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile"
-msgstr ""
+msgstr "Avstäm affärshändelserader"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7372,7 +7377,7 @@ msgstr "Status"
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr ""
+msgstr "Välj bokföringsår för vilket du önskar justera årsavslutjournalen"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -7714,7 +7719,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr ""
+msgstr "Avstäm bankärenden"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -7726,7 +7731,7 @@ msgstr "Kontotyper"
 #: code:addons/account/invoice.py:897
 #, python-format
 msgid "Cannot create invoice move on centralised journal"
-msgstr "Cannot create invoice move on centralised journal"
+msgstr "Kan inte skapa affärshändelse för fakturan i huvudboken"
 
 #. module: account
 #: field:account.account.type,report_type:0
@@ -7862,7 +7867,7 @@ msgstr "Leverantörer"
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on centralized journal"
-msgstr ""
+msgstr "Du kan inte skapa mer än en affärshändelse per period i huvudboken"
 
 #. module: account
 #: view:account.journal:0
@@ -7999,7 +8004,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
-msgstr "The account move (%s) for centralisation has been confirmed!"
+msgstr "Affärshändelsen (%s) för huvudboken har bekräftats!"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -8586,13 +8591,14 @@ msgstr "Manuell registrering"
 #: field:account.move.line,move_id:0
 #: field:analytic.entries.report,move_id:0
 msgid "Move"
-msgstr "Flytta"
+msgstr "Affärshändelse"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
 #, python-format
 msgid "You can not change the tax, you should remove and recreate lines !"
-msgstr "You can not change the tax, you should remove and recreate lines !"
+msgstr ""
+"Du kan inte ändra momsen i efterhand, korrigera genom att återskapa raderna!"
 
 #. module: account
 #: report:account.central.journal:0
@@ -8888,7 +8894,7 @@ msgstr "Valuta"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr ""
+msgstr "Verifiera affärshändelseraderna"
 
 #. module: account
 #: field:account.account,credit:0
@@ -9096,7 +9102,7 @@ msgstr "Account period"
 #. module: account
 #: view:account.subscription:0
 msgid "Remove Lines"
-msgstr "Remove Lines"
+msgstr "Tag bort rader"
 
 #. module: account
 #: view:account.report.general.ledger:0
@@ -9401,7 +9407,7 @@ msgstr ""
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr "Write-Off Move"
+msgstr "Avskrivning"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -9528,7 +9534,7 @@ msgstr ""
 #: report:pl.account:0
 #: report:pl.account.horizontal:0
 msgid "With movements"
-msgstr "With movements"
+msgstr "Med affärshändelser"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -9725,7 +9731,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
 msgid "Validate Account Move Lines"
-msgstr ""
+msgstr "Verifiera kontots affärshändelserader"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost_ledger_journal
@@ -9877,7 +9883,7 @@ msgstr "You must enter a period length that cannot be 0 or below !"
 #: code:addons/account/account.py:501
 #, python-format
 msgid "You cannot remove an account which has account entries!. "
-msgstr "You cannot remove an account which has account entries!. "
+msgstr "Du kan inte radera ett konto med affärshändelser! "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form

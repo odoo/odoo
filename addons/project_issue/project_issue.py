@@ -92,8 +92,8 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+            res[issue.id] = {}
             for field in fields:
-                res[issue.id] = {}
                 duration = 0
                 ans = False
                 hours = 0
@@ -180,7 +180,7 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     _columns = {
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
         'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
@@ -226,7 +226,8 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'inactivity_days': fields.function(_compute_day, string='Days since last action', \
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
-         'color': fields.integer('Color Index'),
+        'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),

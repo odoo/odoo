@@ -20,123 +20,300 @@
 ##############################################################################
 import pytz
 
+import simplejson
+import cgi
 import pooler
 import tools
 from osv import fields, osv
 from tools.translate import _
+from lxml import etree
 
 #Application and feature chooser, this could be done by introspecting ir.modules
+DEFAULT_MODULES = {
+    'Customer Relationship Management' : ['crm',],
+    'Sales Management' : ['sale',],
+    'Project Management' : ['project',],
+    'Knowledge Management' : ['document',],
+    'Warehouse Management' : ['stock',],
+    'Manufacturing' : ['mrp'],
+    'Accounting & Finance' : ['account'],
+    'Purchase Management' : ['purchase'],
+    'Human Resources' : ['hr',],
+    'Point of Sale' : ['point_of_sale',],
+    'Marketing' : ['marketing',],
+}
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
     _inherit = 'res.config.installer'
 
-    _install_if = {
-        ('sale','crm'): ['sale_crm'],
-        ('sale','project'): ['project_mrp'],
-    }
     _columns = {
-        # Generic modules
-        'crm':fields.boolean('Customer Relationship Management',
-            help="Helps you track and manage relations with customers such as"
-                 " leads, requests or issues. Can automatically send "
-                 "reminders, escalate requests or trigger business-specific "
-                 "actions based on standard events."),
-        'sale':fields.boolean('Sales Management',
-            help="Helps you handle your quotations, sale orders and invoicing"
-                 "."),
-        'project':fields.boolean('Project Management',
-            help="Helps you manage your projects and tasks by tracking them, "
-                 "generating plannings, etc..."),
-        'knowledge':fields.boolean('Knowledge Management',
-            help="Lets you install addons geared towards sharing knowledge "
-                 "with and between your employees."),
-        'stock':fields.boolean('Warehouse Management',
-            help="Helps you manage your inventory and main stock operations: delivery orders, receptions, etc."),
-        'mrp':fields.boolean('Manufacturing',
-            help="Helps you manage your manufacturing processes and generate "
-                 "reports on those processes."),
-        'account_voucher':fields.boolean('Invoicing & Payments',
-            help="Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."),
-        'account_accountant':fields.boolean('Accounting & Finance',
-            help="Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing "),
-        'purchase':fields.boolean('Purchase Management',
-            help="Helps you manage your purchase-related processes such as "
-                 "requests for quotations, supplier invoices, etc..."),
-        'hr':fields.boolean('Human Resources',
-            help="Helps you manage your human resources by encoding your employees structure, generating work sheets, tracking attendance and more."),
-        'point_of_sale':fields.boolean('Point of Sales',
-            help="Helps you get the most out of your points of sales with "
-                 "fast sale encoding, simplified payment mode encoding, "
-                 "automatic picking lists generation and more."),
-        'marketing':fields.boolean('Marketing',
-            help="Helps you manage your marketing campaigns step by step."),
-        'profile_tools':fields.boolean('Extra Tools',
-            help="Lets you install various interesting but non-essential tools "
-                "like Survey, Lunch and Ideas box."),
-        'report_designer':fields.boolean('Advanced Reporting',
-            help="Lets you install various tools to simplify and enhance "
-                 "OpenERP's report creation."),
-        # Vertical modules
-        'product_expiry':fields.boolean('Food Industry',
-            help="Installs a preselected set of OpenERP applications "
-                "which will help you manage your industry."),
-        'association':fields.boolean('Associations',
-            help="Installs a preselected set of OpenERP "
-                 "applications which will help you manage your association "
-                 "more efficiently."),
-        'auction':fields.boolean('Auction Houses',
-            help="Installs a preselected set of OpenERP "
-                 "applications selected to help you manage your auctions "
-                 "as well as the business processes around them."),
+        'selection' : fields.text('Selection'),
+    }
+
+    def fields_get(self, cr, uid, fields=None, context=None):
+        if context is None:
+            context = {}
+        if fields is None:
+            fields = {}
+
+        fields = {}
+        category_proxy = self.pool.get('ir.module.category')
+        domain = [('parent_id', '=', False),
+                  ('name', '!=', 'Uncategorized'),
+                  ('visible', '=', True)]
+        category_ids = category_proxy.search(cr, uid, domain, context=context)
+        for category in category_proxy.browse(cr, uid, category_ids, context=context):
+            category_name = 'category_%d' % (category.id,)
+            fields[category_name] = {
+                'type' : 'boolean',
+                'string' : category.name,
+                'name' : category_name,
+                'help' : category.description,
+            }
+
+        module_proxy = self.pool.get('ir.module.module')
+        module_ids = module_proxy.search(cr, uid, [], context=context)
+        for module in module_proxy.browse(cr, uid, module_ids, context=context):
+            module_name = 'module_%d' % (module.id,)
+            module_is_installed = module.state == 'installed'
+
+            fields[module_name] = {
+                'type' : 'boolean',
+                'string' : module.shortdesc,
+                'name' : module_name,
+                'help' : module.description,
+            }
+
+        return fields
+
+    def default_get(self, cr, uid, fields=None, context=None):
+        if context is None:
+            context = {}
+        if fields is None:
+            fields = {}
+
+        result = {}
+
+        if 'dont_compute_virtual_attributes' not in context:
+            module_proxy = self.pool.get('ir.module.module')
+            module_ids = module_proxy.search(cr, uid, [], context=context)
+            for module in module_proxy.browse(cr, uid, module_ids, context=context):
+                result['module_%d' % (module.id,)] = module.state == 'installed'
+
+            cat_proxy = self.pool.get('ir.module.category')
+            cat_ids = cat_proxy.search(cr, uid, [], context=context)
+            for cat in cat_proxy.browse(cr, uid, cat_ids, context=context):
+                m = DEFAULT_MODULES.get(cat.name,[])
+                r = module_proxy.search(cr, uid, [('state','=','installed'),('name','in',m)])
+
+                result['category_%d' % (cat.id,)] = bool(r) and (len(r) == len(m))
+
+        return result
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='from', context=None, toolbar=False, submenu=False):
+        def in_extended_view_group(cr, uid, context=None):
+            try:
+                model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_extended')
+            except ValueError:
+                return False
+            return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+
+        result = super(base_setup_installer, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+
+        module_category_proxy = self.pool.get('ir.module.category')
+        domain = [('parent_id', '=', False),
+                  ('name', '!=', 'Uncategorized'),
+                  ('visible', '=', True)]
+        module_category_ids = module_category_proxy.search(cr, uid, domain, context=context, order='sequence asc')
+
+        arch = ['<form string="%s">' % _('Automatic Base Setup')]
+        arch.append('<separator string="%s" colspan="4" />' % _('Install Applications'))
+        module_proxy = self.pool.get('ir.module.module')
+
+        extended_view = in_extended_view_group(cr, uid, context=context)
+
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            domain = [('category_id', '=', module_category.id)]
+            if not extended_view:
+                domain.append(('complexity', '!=', 'expert'))
+
+            modules = module_proxy.browse(cr, uid, module_proxy.search(cr, uid, domain, context=context), context=context)
+            if not modules:
+                continue
+
+            m = DEFAULT_MODULES.get(module_category.name, [])
+            r = module_proxy.search(cr, uid, [('state', '=', 'installed'),('name', 'in', m)], context=context)
+            readonly = bool(r)
+
+            attributes = {
+                'name' : 'category_%d' % (module_category.id,),
+                'on_change' : 'on_change_%s_%d(category_%d)' % ('category', module_category.id, module_category.id,),
+            }
+            if readonly:
+                attributes['modifiers'] = simplejson.dumps({'readonly' : True})
+
+            arch.append("""<field %s />""" % (" ".join(["%s='%s'" % (key, value,)
+                                                        for key, value in attributes.iteritems()]),))
+
+        # Compute the modules to show
+        for module_category in module_category_proxy.browse(cr, uid, module_category_ids, context=context):
+            domain = [('category_id', '=', module_category.id)]
+
+            if not extended_view:
+                domain.append(('complexity', '!=', 'expert'))
+
+            default_modules = DEFAULT_MODULES.get(module_category.name, False)
+            if default_modules:
+                domain.append(('name', 'not in', default_modules))
+
+            modules = module_proxy.browse(cr, uid, module_proxy.search(cr, uid, domain, context=context), context=context)
+
+            if not modules:
+                continue
+
+            modifiers = {
+                'invisible' : [('category_%d' % (module_category.id), '=', False)],
+            }
+            module_modifiers = dict(modifiers)
+
+            arch.append("""<separator string="%s Features" colspan="4" modifiers='%s'/>""" % (
+                cgi.escape(module_category.name),
+                simplejson.dumps(modifiers))
+            )
+
+            for module in modules:
+                #module_modifiers['readonly'] = module.state == 'installed'
+
+                arch.append("""<field name="module_%d" modifiers='%s' />""" % (
+                    module.id,
+                    simplejson.dumps(module_modifiers))
+                )
+
+        arch.append(
+            '<separator colspan="4" />'
+            '<group colspan="4" col="2">'
+            '<button special="cancel" string="Cancel" icon="gtk-cancel" />'
+            '<button string="Install Modules" type="object" name="apply_cb" icon="gtk-apply" />'
+            '</group>'
+        )
+
+        arch.append('</form>')
+
+        result['arch'] = ''.join(arch)
+        return result
+
+    def __getattr__(self, name):
+        if name.startswith('on_change_category_'):
+            def proxy(cr, uid, ids, value, context=None):
+                item = 'category_%s' % name[len('on_change_category_'):]
+                return self._on_change_selection(cr, uid, ids, item, value, context=context)
+            return proxy
+        return getattr(super(base_setup_installer, self), name)
+
+    def _on_change_selection(self, cr, uid, ids, item, value, context=None):
+        if not isinstance(item, basestring) or not value:
+            return {}
+
+        if item.startswith('category_') or item.startswith('module_'):
+            object_name, identifier = item.split('_')
+        else:
+            return {}
+
+        values = {
         }
 
-    def _if_knowledge(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').browse(cr, uid, uid, context=context)\
-               .view == 'simple':
-            return ['document_ftp']
-        return None
+        #if object_name == 'category':
+        #    module_ids = self.pool.get('ir.module.module').search(cr, uid, [('category_id', '=', int(identifier))], context=context)
+        #    for module_id in module_ids:
+        #        values['module_%d' % module_id] = 1
 
-    def _if_misc_tools(self, cr, uid, ids, context=None):
-        return ['profile_tools']
+        return {'value': values}
 
-    def onchange_moduleselection(self, cr, uid, ids, *args, **kargs):
-        value = {}
-        # Calculate progress
-        closed, total = self.get_current_progress(cr, uid)
-        progress = round(100. * closed / (total + len(filter(None, args))))
-        value.update({'progress':progress})
-        if progress < 10.:
-            progress = 10.
-        
-        return {'value':value}
+    def create(self, cr, uid, values, context=None):
+        to_install = {'categories' : [], 'modules' : []}
+
+        for key, value in values.iteritems():
+            if value == 1 and (key.startswith('module_') or key.startswith('category_')):
+                kind, identifier = key.split('_')
+                if kind == 'category':
+                    to_install['categories'].append(long(identifier))
+                if kind == 'module':
+                    to_install['modules'].append(long(identifier))
+
+        values = {
+            'selection' : simplejson.dumps(to_install),
+        }
+        context.update(dont_compute_virtual_attributes=True)
+        return super(base_setup_installer, self).create(cr, uid, values, context=context)
+
+    def apply_cb(self, cr, uid, ids, context=None):
+        category_proxy = self.pool.get('ir.module.category')
+        for installer in self.browse(cr, uid, ids, context=context):
+            to_install = simplejson.loads(installer.selection)
+
+            proxy = self.pool.get('ir.module.module')
+
+            module_ids = proxy.search(cr, uid, [('id', 'in', to_install['modules'])], context=context)
+            modules = set(record['name']
+                          for record in proxy.read(cr, uid, module_ids, ['name'], context=context))
+
+            category_ids = category_proxy.search(cr, uid, [('id', 'in', to_install['categories'])], context=context)
+            selected_categories = set(record['name']
+                                      for record in category_proxy.read(cr, uid, category_ids, ['name'], context=context))
+
+            # FIXME: Use a workaround, but can do better
+            for category_name, default_modules in DEFAULT_MODULES.iteritems():
+                if category_name in selected_categories:
+                    modules.update(default_modules)
+
+            # Special Cases:
+            # * project_mrp: the dependencies are sale, project, procurement, mrp_jit
+            if 'sale' in modules and 'project' in modules:
+                modules.add('project_mrp')
+
+            need_update = False
+            module_ids = proxy.search(cr, uid, [('name', 'in', list(modules))], context=context)
+            if module_ids:
+                proxy.state_update(cr, uid, module_ids, 'to install', ['uninstalled'], context=context)
+                need_update = True
+
+            category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_hidden_link')
+            while True and category_id:
+                cr.execute("select id, name from ir_module_module m where category_id = %s \
+                           and (select count(d.id) from ir_module_module_dependency d \
+                           where d.module_id = m.id) = (select count(d.id) from \
+                           ir_module_module_dependency d inner join ir_module_module m2 on d.name = m2.name \
+                           where d.module_id=m.id and m2.state in %s ) and state = %s",
+                          (category_id[1], ('installed', 'to install', 'to upgrade', ), 'uninstalled',))
+                inner_modules = [name for _, name in cr.fetchall()]
+
+                module_ids = proxy.search(cr, uid, [('name', 'in', inner_modules)], context=context)
+                if not module_ids:
+                    break
+
+                modules.update(inner_modules)
+
+                proxy.state_update(cr, uid, module_ids, 'to install', ['uninstalled'], context=context)
+                need_update = True
 
 
-    def execute(self, cr, uid, ids, context=None):
-        module_pool = self.pool.get('ir.module.module')
-        modules_selected = []
-        datas = self.read(cr, uid, ids, context=context)[0]
-        for mod in datas.keys():
-            if mod in ('id', 'progress'):
-                continue
-            if datas[mod] == 1:
-                modules_selected.append(mod)
-
-        module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
-        need_install = False
-        for module in module_pool.browse(cr, uid, module_ids, context=context):
-            if module.state == 'uninstalled':
-                module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
-                need_install = True
-                cr.commit()
-            elif module.state == 'installed':
+            domain = [('name', 'in', list(modules)),
+                      ('state', '=', 'installed')]
+            for module in proxy.browse(cr, uid, proxy.search(cr, uid, domain, context=context), context):
                 cr.execute("update ir_actions_todo set state='open' \
-                                    from ir_model_data as data where data.res_id = ir_actions_todo.id \
-                                    and ir_actions_todo.type='special'\
-                                    and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
-        if need_install:
-            self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
-        return
+                           from ir_model_data as data where data.res_id = ir_actions_todo.id \
+                           and ir_actions_todo.type='special'\
+                           and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
+
+            if need_update:
+                cr.commit()
+                self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
+
+        if 'html' in context:
+            return {'type' : 'ir.actions.reload'}
+        else:
+            return {'type' : 'ir.actions.act_window_close'}
 
 #Migrate data from another application Conf wiz
 
@@ -158,11 +335,10 @@ class product_installer(osv.osv_memory):
     _name = 'product.installer'
     _inherit = 'res.config'
     _columns = {
-                'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
-
+        'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
     }
     _defaults = {
-                 'customers': 'create',
+        'customers': 'create',
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -212,14 +388,14 @@ class user_preferences_config(osv.osv_memory):
                                   ('extended','Extended')],
                                  'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
         'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
-                                 
+
     }
     _defaults={
                'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
                'context_lang' : 'en_US',
                'menu_tips' : True
     }
-    
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
