@@ -473,8 +473,6 @@
         <h2><t t-esc="name"/></h2>
     </div>
 </t>
-
-
 <t t-name="Sidebar.section.items">
             <li t-foreach="items" t-as="item" t-att-class="item.classname">
                 <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
@@ -551,6 +549,7 @@
         </span>
     </td>
 </tr>
+
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead class="ui-widget-header">
@@ -660,16 +659,18 @@
 <t t-name="ListView.row.form">
     <t t-raw="frame.render()"/>
 </t>
+
 <t t-name="FormView">
     <div class="oe_form_header">
         <div class="oe_form_buttons" t-if="widget.options.action_buttons !== false">
-            <button type="button" class="oe_form_button_save">
-                <span class="oe_form_on_update">Save</span>
-                <span class="oe_form_on_create">Create</span>
+            <button type="button" class="oe_form_button_save oe_form_on_editable">Save</button>
+            <button type="button" class="oe_form_button_toggle">
+                <span class="oe_form_on_editable">Cancel</span>
+                <span class="oe_form_on_readonly">Edit</span>
             </button>
-            <button type="button" class="oe_form_button_new">New</button>
-            <button type="button" class="oe_form_button_duplicate oe_form_on_update">Duplicate</button>
-            <button type="button" class="oe_form_button_toggle">Readonly/Editable</button>
+            <button type="button" class="oe_form_button_new oe_form_on_readonly">Create</button>
+            <button type="button" class="oe_form_button_duplicate oe_form_on_readonly">Duplicate</button>
+            <button type="button" class="oe_form_button_delete oe_form_on_readonly">Delete</button>
         </div>
         <div class="oe_form_pager" t-if="widget.options.pager !== false">
             <button type="button" data-pager-action="first">First</button>
@@ -1010,6 +1011,7 @@
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
+
 <t t-name="SearchView">
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>

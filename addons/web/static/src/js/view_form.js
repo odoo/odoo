@@ -10,6 +10,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * view should be displayed (if there is one active).
      */
     searchable: false,
+    readonly : false,
     form_template: "FormView",
     identifier_prefix: 'formview-',
     /**
@@ -37,7 +38,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.dirty_for_user = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
-        this.registry = openerp.web.form.widgets;
+        this.registry = this.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
         this.translatable_fields = [];
@@ -101,10 +102,11 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             self.on_pager_action(action);
         });
 
-        this.$form_header.find('button.oe_form_button_save').click(this.do_save);
+        this.$form_header.find('button.oe_form_button_save').click(this.do_save_then_readonly);
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
+        this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
         this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
         if (this.options.sidebar && this.options.sidebar_id) {
@@ -123,11 +125,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         self.widgets = {};
         self.fields = {};
         self.$form_header.find('button').unbind('click');
-        self.registry = self.registry === openerp.web.form.widgets
-                ? openerp.web.form.readonly
-                : openerp.web.form.widgets;
+        self.readonly = !self.readonly;
+        self.registry = self.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
         self.on_loaded(self.fields_view);
-        self.reload();
+        return self.reload();
+    },
+    do_set_readonly: function() {
+        return this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
+    },
+    do_set_editable: function() {
+        return !this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
     },
     do_show: function () {
         var promise;
@@ -164,6 +171,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.$form_header.find('.oe_form_on_update').show();
             this.$form_header.find('button.oe_form_button_new').show();
         }
+        this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
+        this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
         this.dirty_for_user = false;
         this.datarecord = record;
         for (var f in this.fields) {
@@ -344,14 +353,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
                 var keys = _.keys(self.fields_view.fields);
-                if (keys.length) {
-                    self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                $.when(self.do_set_editable()).then(function() {
+                    if (keys.length) {
+                        self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                            def.resolve();
+                        });
+                    } else {
+                        self.on_record_loaded({});
                         def.resolve();
-                    });
-                } else {
-                    self.on_record_loaded({});
-                    def.resolve();
-                }
+                    }
+                });
             }
         });
         return def.promise();
@@ -363,7 +374,20 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.can_be_discarded()) {
                 self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                     return self.on_created({ result : new_id });
-                }).then(function() {
+                }).then(self.do_set_editable).then(function() {
+                    def.resolve();
+                });
+            }
+        });
+        return def.promise();
+    },
+    on_button_delete: function() {
+        var self = this;
+        var def = $.Deferred();
+        $.when(this.has_been_loaded).then(function() {
+            if (self.can_be_discarded() && self.datarecord.id) {
+                self.dataset.unlink([self.datarecord.id]).then(function() {
+                    self.on_pager_action('next');
                     def.resolve();
                 });
             }
@@ -381,6 +405,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * @param {Function} success callback on save success
      * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
      */
+    do_save_then_readonly: function(success, prepend_on_create) {
+        return this.do_save(success, prepend_on_create).then(this.do_set_readonly);
+    },
     do_save: function(success, prepend_on_create) {
         var self = this;
         var action = function() {
@@ -427,10 +454,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         };
         this.mutating_lock = this.mutating_lock.pipe(action, action);
         return this.mutating_lock;
-    },
-    switch_readonly: function() {
-    },
-    switch_editable: function() {
     },
     on_invalid: function() {
         var msg = "<ul>";
