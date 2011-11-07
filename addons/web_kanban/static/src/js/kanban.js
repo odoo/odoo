@@ -7,11 +7,11 @@ openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
     template: "KanbanView",
+    default_nr_columns: 3,
     init: function (parent, dataset, view_id, options) {
         this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
-        this.model = this.dataset.model;
         this.view_id = view_id;
         this.fields_view = {};
         this.fields_keys = [];
@@ -21,7 +21,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             records : {}
         };
         this.groups = [];
-        this.nr_columns = 3;
         this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
@@ -33,7 +32,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
         this.has_been_loaded = $.Deferred();
         this.search_domain = this.search_context = this.search_group_by = null;
-        this.currently_dragging = null;
+        this.currently_dragging = {};
     },
     start: function() {
         this._super();
@@ -41,7 +40,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.$groups = this.$element.find('.oe_kanban_groups tr');
         var context = new openerp.web.CompoundContext(this.dataset.get_context());
         return this.rpc('/web/view/load', {
-                'model': this.model,
+                'model': this.dataset.model,
                 'view_id': this.view_id,
                 'view_type': 'kanban',
                 context: context
@@ -134,7 +133,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.search_group_by = group_by;
         $.when(this.has_been_loaded).then(function() {
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
-            self.datagroup = new openerp.web.DataGroup(self, self.model, domain, context, self.group_by ? [self.group_by] : []);
+            self.datagroup = new openerp.web.DataGroup(self, self.dataset.model, domain, context, self.group_by ? [self.group_by] : []);
             self.datagroup.list(self.fields_keys, self.do_process_groups, self.do_process_dataset);
         });
     },
@@ -172,7 +171,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.dataset.read_slice(this.fields_keys, {}, function(records) {
             var groups = [];
             while (records.length) {
-                for (var i = 0; i < self.nr_columns; i++) {
+                for (var i = 0; i < self.default_nr_columns; i++) {
                     if (!groups[i]) {
                         groups[i] = [];
                     }
@@ -211,10 +210,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 connectWith: '.oe_kanban_column',
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
-                    self.currently_dragging = {
-                        index : ui.item.index(),
-                        group : ui.item.parents('.oe_kanban_column:first').data('widget')
-                    }
+                    self.currently_dragging.index = ui.item.index();
+                    self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
                 },
                 stop: function(event, ui) {
                     var record = ui.item.data('widget'),
@@ -324,12 +321,6 @@ openerp.web_kanban.KanbanGroup = openerp.web.Widget.extend({
                 this.records.splice(i, 1);
             }
         }
-        if (remove_from_dataset) {
-            var idx = _.indexOf(this.view.dataset.ids, id);
-            if (idx > -1) {
-                this.view.dataset.ids.splice(idx, 1);
-            }
-        }
     },
     do_toggle_fold: function(compute_width) {
         this.$element.toggleClass('oe_kanban_group_folded');
@@ -417,7 +408,7 @@ openerp.web_kanban.KanbanRecord = openerp.web.Widget.extend({
     },
     do_action_delete: function($action) {
         var self = this;
-        if (confirm(_t("Qre you sure you want to delete this record ?"))) {
+        if (confirm(_t("Are you sure you want to delete this record ?"))) {
             return $.when(this.view.dataset.unlink([this.id])).then(function() {
                 self.group.remove_record(self.id)
                 self.stop();
