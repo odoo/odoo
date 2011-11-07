@@ -103,7 +103,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         });
 
         this.$form_header.find('button.oe_form_button_save').click(this.do_save_then_readonly);
-        this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
         this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
@@ -511,9 +510,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_action: function (action) {
         console.debug('Executing action', action);
-    },
-    do_cancel: function () {
-        console.debug("Cancelling form");
     },
     reload: function() {
         var self = this;
