@@ -45,6 +45,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1
     }
+    _order = 'sequence'
 project_task_type()
 
 class project(osv.osv):

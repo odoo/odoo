@@ -327,6 +327,7 @@
                     <field name="user_id"/>
                     <field name="user_email"/>
                     <field name="description"/>
+                    <field name="sequence"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
