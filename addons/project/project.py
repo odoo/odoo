@@ -431,9 +431,10 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
+        'kanban_state': fields.selection([('blocked', 'Blocked'),('normal', 'Normal'),('done', 'Done')], 'Kanban State', readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
@@ -477,6 +478,7 @@ class task(osv.osv):
 
     _defaults = {
         'state': 'draft',
+        'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
         'sequence': 10,
@@ -748,6 +750,31 @@ class task(osv.osv):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
         return True
+
+    def set_remaining_hours_1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_2(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 2 * 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_5(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 5 * 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_10(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 10 * 8.0}, context=context)
+        return True
+
+    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+
+    def set_kanban_state_normal(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+
+    def set_kanban_state_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
     def _change_type(self, cr, uid, ids, next, *args):
         """

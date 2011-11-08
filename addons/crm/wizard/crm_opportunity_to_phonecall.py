@@ -35,13 +35,16 @@ class crm_opportunity2phonecall(osv.osv_memory):
     _columns = {
         'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users', "Assign To"),
+        'contact_name':fields.char('Contact', size=64),
+        'phone':fields.char('Phone', size=64),
         'partner_id' : fields.many2one('res.partner', "Partner"),
         'date': fields.datetime('Date'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_id': fields.many2one('crm.case.categ', 'Category',  \
                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),
-        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True), 
+        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
+        'note':fields.text('Note'), 
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -64,7 +67,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
-        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        res.update({'action': 'log', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
                 res.update({'name': opp.name})
@@ -76,6 +79,12 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'categ_id': categ_id})
             if 'partner_id' in fields:
                 res.update({'partner_id': opp.partner_id and opp.partner_id.id or False})
+            if 'note' in fields:
+                res.update({'note': opp.description})
+            if 'contact_name' in fields:
+                res.update({'contact_name': opp.partner_address_id and opp.partner_address_id.name or False})
+            if 'phone' in fields:
+                res.update({'phone': opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False)})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -142,6 +151,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                
                 if this.action == 'log':
                     phonecall_obj.case_close(cr, uid, [new_case])
+                    return {'type': 'ir.actions.act_window_close'}
 
             value = {
                 'name': _('Phone Call'),

@@ -1315,6 +1315,7 @@ class sale_config_picking_policy(osv.osv_memory):
 
         if wizard.task_work:
             module_name.append('project_timesheet')
+            module_name.append('project_mrp')
             module_name.append('account_analytic_analysis')
 
         if wizard.timesheet:

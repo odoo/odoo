@@ -20,7 +20,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="/form/notebook/page/field[@name='order_line']/form/notebook/page/field[@name='price_unit']" position="after">
+            <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
                 <field name="purchase_price"/>
             </xpath>
         </field>
@@ -32,7 +32,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-           <xpath expr="/form/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
+           <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="after">
                 <field name="purchase_price"/>
             </xpath>
         </field>

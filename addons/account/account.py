@@ -144,7 +144,7 @@ class account_account_type(osv.osv):
             ('none','/'),
             ('income','Profit & Loss (Income Accounts)'),
             ('expense','Profit & Loss (Expense Accounts)'),
-            ('asset','Balance Sheet (Assets Accounts)'),
+            ('asset','Balance Sheet (Asset Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
         ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
