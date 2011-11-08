@@ -163,7 +163,7 @@ openerp.point_of_sale = function(db) {
     var pos;
 
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
-    NumpadState, NumpadView, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
+    NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
     OrderlineCollection, OrderlineView, PaymentButtonView, PaymentView, Paymentline,
     PaymentlineCollection, PaymentlineView, PaypadView, Product, ProductCollection,
     ProductListView, ProductView, ReceiptLineView, ReceiptView, Shop, ShopView, StepsView;
@@ -530,41 +530,36 @@ openerp.point_of_sale = function(db) {
      Views
      ---
      */
-    NumpadView = (function() {
-        __extends(NumpadView, Backbone.View);
-        function NumpadView() {
-            NumpadView.__super__.constructor.apply(this, arguments);
-        }
-
-        NumpadView.prototype.initialize = function(options) {
-            return this.state = options.state;
-        };
-        NumpadView.prototype.events = {
-            'click button#numpad-backspace': 'clickDeleteLastChar',
-            'click button#numpad-minus': 'clickSwitchSign',
-            'click button.number-char': 'clickAppendNewChar',
-            'click button.mode-button': 'clickChangeMode'
-        };
-        NumpadView.prototype.clickDeleteLastChar = function() {
+    NumpadWidget = db.web.Widget.extend({
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
+            this.state = options.state;
+        },
+        start: function() {
+            this.$element.find('button#numpad-backspace').click(__bind(this.clickDeleteLastChar, this));
+            this.$element.find('button#numpad-minus').click(__bind(this.clickSwitchSign, this));
+            this.$element.find('button.number-char').click(__bind(this.clickAppendNewChar, this));
+            this.$element.find('button.mode-button').click(__bind(this.clickChangeMode, this));
+        },
+        clickDeleteLastChar: function() {
             return this.state.deleteLastChar();
-        };
-        NumpadView.prototype.clickSwitchSign = function() {
+        },
+        clickSwitchSign: function() {
             return this.state.switchSign();
-        };
-        NumpadView.prototype.clickAppendNewChar = function(event) {
+        },
+        clickAppendNewChar: function(event) {
             var newChar;
             newChar = event.currentTarget.innerText;
             return this.state.appendNewChar(newChar);
-        };
-        NumpadView.prototype.clickChangeMode = function(event) {
+        },
+        clickChangeMode: function(event) {
             var newMode;
             $('.selected-mode').removeClass('selected-mode');
             $(event.currentTarget).addClass('selected-mode');
             newMode = event.currentTarget.attributes['data-mode'].nodeValue;
             return this.state.changeMode(newMode);
-        };
-        return NumpadView;
-    })();
+        }
+    });
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
@@ -1108,10 +1103,10 @@ openerp.point_of_sale = function(db) {
                 shop: this.shop,
                 el: $('#receipt-screen')
             });
-            this.numpadView = new NumpadView({
-                state: this.numpadState,
-                el: $('#numpad')
+            this.numpadView = new NumpadWidget(null, 'numpad', {
+                state: this.numpadState
             });
+            this.numpadView.start();
             return this.stepsView = new StepsView({
                 el: $('#steps')
             });
