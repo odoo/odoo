@@ -253,7 +253,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         this.edit_xml_dialog = new openerp.web.Dialog(this, {
             modal: true,
-            title: 'View Editor',
+            title: _.sprintf("View Editor %d - %s", self.main_view_id, self.model),
             width: 750,
             height: 500,
             buttons: {
