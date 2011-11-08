@@ -237,8 +237,8 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * registry was created.
      *
      * An object path is simply a dotted name from the openerp root to the
-     * object pointed to (e.g. ``"openerp.web.Session"`` for an OpenERP
-     * session object).
+     * object pointed to (e.g. ``"openerp.web.Connection"`` for an OpenERP
+     * connection object).
      *
      * @constructs openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
@@ -338,9 +338,9 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.Ca
     }
 });
 
-openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Session# */{
+openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Connection# */{
     /**
-     * @constructs openerp.web.Session
+     * @constructs openerp.web.Connection
      * @extends openerp.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
@@ -716,36 +716,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     }
 });
 
-openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.SessionAware# */{
-    /**
-     * Utility class that any class is allowed to extend to easy common manipulations.
-     *
-     * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
-     * logging facility.
-     *
-     * @constructs openerp.web.SessionAware
-     * @extends openerp.web.CallbackEnabled
-     *
-     * @param {openerp.web.Session} session
-     */
-    init: function(session) {
-        this._super();
-        this.session = session;
-    },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
-    }
-});
-
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -755,8 +725,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
  * - Life-cycle management and parenting (when a parent is destroyed, all its children are
  *     destroyed too).
  * - Insertion in DOM.
- *
- * Widget also extends SessionAware for ease of use.
  *
  * Guide to create implementations of the Widget class:
  * ==============================================
@@ -798,7 +766,7 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widget# */{
+openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -817,7 +785,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * Construct the widget and set its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
-     * @extends openerp.web.SessionAware
+     * @extends openerp.web.CallbackEnabled
      *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling stop(), the current instance will be
@@ -828,7 +796,8 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
      * for new components this argument should not be provided any more.
      */
     init: function(parent, /** @deprecated */ element_id) {
-        this._super((parent || {}).session);
+        this._super();
+        this.session = openerp.connection;
         // if given an element_id, try to get the associated DOM element and save
         // a reference in this.$element. Else just generate a unique identifier.
         this.element_id = element_id;
@@ -967,7 +936,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widg
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        this._super(url, data). then(function() {
+        openerp.connection.rpc(url, data). then(function() {
             if (!self.widget_is_stopped)
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -1047,6 +1016,11 @@ if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
 }
+
+/** Setup default connection */
+openerp.connection = new openerp.web.Connection();
+
+/** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
