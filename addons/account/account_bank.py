@@ -37,6 +37,10 @@ class bank(osv.osv):
         self.post_write(cr, uid, ids, context=context)
         return result
 
+    def _prepare_name(self, bank):
+        "Return the name to use when creating a bank journal"
+        return (bank.bank_name or '') + ' ' + bank.acc_number
+
     def post_write(self, cr, uid, ids, context={}):
         obj_acc = self.pool.get('account.account')
         obj_data = self.pool.get('ir.model.data')
@@ -45,7 +49,7 @@ class bank(osv.osv):
                 # Find the code and parent of the bank account to create
                 dig = 6
                 current_num = 1
-                ids = obj_acc.search(cr, uid, [('type','=','liquidity')], context=context) 
+                ids = obj_acc.search(cr, uid, [('type','=','liquidity')], context=context)
                 # No liquidity account exists, no template available
                 if not ids: continue
 
@@ -57,9 +61,9 @@ class bank(osv.osv):
                     if not ids:
                         break
                     current_num += 1
-
+                name = self._prepare_name(bank)
                 acc = {
-                    'name': (bank.bank_name or '')+' '+bank.acc_number,
+                    'name': name,
                     'currency_id': bank.company_id.currency_id.id,
                     'code': new_code,
                     'type': 'liquidity',
@@ -74,7 +78,7 @@ class bank(osv.osv):
                 data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
                 data = obj_data.browse(cr, uid, data_id[0], context=context)
                 view_id_cash = data.res_id
-                
+
                 jour_obj = self.pool.get('account.journal')
                 new_code = 1
                 while True:
@@ -86,7 +90,7 @@ class bank(osv.osv):
 
                 #create the bank journal
                 vals_journal = {
-                    'name':  (bank.bank_name or '')+' '+bank.acc_number,
+                    'name': name,
                     'code': code,
                     'type': 'bank',
                     'company_id': bank.company_id.id,
@@ -100,4 +104,3 @@ class bank(osv.osv):
 
                 self.write(cr, uid, [bank.id], {'journal_id': journal_id}, context=context)
         return True
-
