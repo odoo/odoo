@@ -815,7 +815,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     init: function(parent, /** @deprecated */ element_id) {
         this._super();
-        this.session = openerp.connector;
+        this.session = openerp.connection;
         // if given an element_id, try to get the associated DOM element and save
         // a reference in this.$element. Else just generate a unique identifier.
         this.element_id = element_id;
@@ -954,7 +954,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        openerp.connector.rpc(url, data). then(function() {
+        openerp.connection.rpc(url, data). then(function() {
             if (!self.widget_is_stopped)
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -1034,6 +1034,11 @@ if ($.blockUI) {
     $.blockUI.defaults.baseZ = 1100;
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
 }
+
+/** Setup default connection */
+openerp.connection = new openerp.web.Connection();
+
+/** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);

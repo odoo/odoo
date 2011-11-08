@@ -791,7 +791,7 @@ openerp.web.Model = openerp.web.CallbackEnabled.extend({
         this.model_name = model_name;
     },
     rpc: function() {
-        var c = openerp.connector;
+        var c = openerp.connection;
         return c.rpc.apply(c, arguments);
     },
     get_func: function(method_name) {

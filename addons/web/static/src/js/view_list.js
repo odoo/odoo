@@ -524,6 +524,17 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return field.name === name;
         });
         if (!action) { return; }
+
+        var c = new openerp.web.CompoundContext();
+        c.set_eval_context(_.extend({
+            active_id: id,
+            active_ids: [id],
+            active_model: this.dataset.model
+        }, this.records.get(id).toContext()));
+        if (action.context) {
+            c.add(action.context);
+        }
+        action.context = c;
         this.do_execute_action(action, this.dataset, id, callback);
     },
     /**
@@ -1446,6 +1457,25 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
         }
 
         return {data: form_data};
+    },
+    /**
+     * Converts the current record to a format expected by context evaluations
+     * (identical to record.attributes, except m2o fields are their integer
+     * value rather than a pair)
+     */
+    toContext: function () {
+        var output = {}, attrs = this.attributes;
+        for(var k in attrs) {
+            var val = attrs[k];
+            if (typeof val !== 'object') {
+                output[k] = val;
+            } else if (val instanceof Array) {
+                output[k] = val[0];
+            } else {
+                throw new Error("Can't convert value " + val + " to context");
+            }
+        }
+        return output;
     }
 });
 Record.include(Events);

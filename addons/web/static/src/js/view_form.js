@@ -10,6 +10,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * view should be displayed (if there is one active).
      */
     searchable: false,
+    readonly : false,
     form_template: "FormView",
     identifier_prefix: 'formview-',
     /**
@@ -37,7 +38,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         this.dirty_for_user = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
-        this.registry = openerp.web.form.widgets;
+        this.registry = this.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
         this.translatable_fields = [];
@@ -101,10 +102,10 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             self.on_pager_action(action);
         });
 
-        this.$form_header.find('button.oe_form_button_save').click(this.do_save);
-        this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
+        this.$form_header.find('button.oe_form_button_save').click(this.do_save_then_readonly);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
+        this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
         this.$form_header.find('button.oe_form_button_toggle').click(this.on_toggle_readonly);
 
         if (this.options.sidebar && this.options.sidebar_id) {
@@ -123,11 +124,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         self.widgets = {};
         self.fields = {};
         self.$form_header.find('button').unbind('click');
-        self.registry = self.registry === openerp.web.form.widgets
-                ? openerp.web.form.readonly
-                : openerp.web.form.widgets;
+        self.readonly = !self.readonly;
+        self.registry = self.readonly ? openerp.web.form.readonly : openerp.web.form.widgets;
         self.on_loaded(self.fields_view);
-        self.reload();
+        return self.reload();
+    },
+    do_set_readonly: function() {
+        return this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
+    },
+    do_set_editable: function() {
+        return !this.readonly ? $.Deferred().resolve() : this.on_toggle_readonly();
     },
     do_show: function () {
         var promise;
@@ -164,6 +170,8 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.$form_header.find('.oe_form_on_update').show();
             this.$form_header.find('button.oe_form_button_new').show();
         }
+        this.$form_header.find('.oe_form_on_readonly').toggle(this.readonly);
+        this.$form_header.find('.oe_form_on_editable').toggle(!this.readonly);
         this.dirty_for_user = false;
         this.datarecord = record;
         for (var f in this.fields) {
@@ -344,14 +352,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded()) {
                 var keys = _.keys(self.fields_view.fields);
-                if (keys.length) {
-                    self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                $.when(self.do_set_editable()).then(function() {
+                    if (keys.length) {
+                        self.dataset.default_get(keys).then(self.on_record_loaded).then(function() {
+                            def.resolve();
+                        });
+                    } else {
+                        self.on_record_loaded({});
                         def.resolve();
-                    });
-                } else {
-                    self.on_record_loaded({});
-                    def.resolve();
-                }
+                    }
+                });
             }
         });
         return def.promise();
@@ -363,7 +373,20 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (self.can_be_discarded()) {
                 self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
                     return self.on_created({ result : new_id });
-                }).then(function() {
+                }).then(self.do_set_editable).then(function() {
+                    def.resolve();
+                });
+            }
+        });
+        return def.promise();
+    },
+    on_button_delete: function() {
+        var self = this;
+        var def = $.Deferred();
+        $.when(this.has_been_loaded).then(function() {
+            if (self.can_be_discarded() && self.datarecord.id) {
+                self.dataset.unlink([self.datarecord.id]).then(function() {
+                    self.on_pager_action('next');
                     def.resolve();
                 });
             }
@@ -381,6 +404,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * @param {Function} success callback on save success
      * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
      */
+    do_save_then_readonly: function(success, prepend_on_create) {
+        return this.do_save(success, prepend_on_create).then(this.do_set_readonly);
+    },
     do_save: function(success, prepend_on_create) {
         var self = this;
         var action = function() {
@@ -427,10 +453,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         };
         this.mutating_lock = this.mutating_lock.pipe(action, action);
         return this.mutating_lock;
-    },
-    switch_readonly: function() {
-    },
-    switch_editable: function() {
     },
     on_invalid: function() {
         var msg = "<ul>";
@@ -488,9 +510,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_action: function (action) {
         console.debug('Executing action', action);
-    },
-    do_cancel: function () {
-        console.debug("Cancelling form");
     },
     reload: function() {
         var self = this;
@@ -1829,7 +1848,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
-        if(typeof(value) === "number") {
+        if (value && !(value instanceof Array)) {
             var dataset = new openerp.web.DataSetStatic(this, this.field.relation, self.build_context());
             dataset.name_get([value], function(data) {
                 real_set_value(data[0]);
@@ -1955,6 +1974,9 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             self.load_views();
         });
     },
+    is_readonly: function() {
+        return this.readonly || this.force_readonly;
+    },
     load_views: function() {
         var self = this;
         
@@ -1972,7 +1994,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options.selectable = self.multi_selection;
-                if (self.readonly) {
+                if (self.is_readonly()) {
                     view.options.addable = null;
                     view.options.deletable = null;
                 }
@@ -1997,10 +2019,10 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 controller.o2m = self;
-                if (self.readonly)
+                if (self.is_readonly())
                     controller.set_editable(false);
             } else if (view_type == "form") {
-                if (self.readonly) {
+                if (self.is_readonly()) {
                     controller.on_toggle_readonly();
                     $(controller.$element.find(".oe_form_buttons")[0]).children().remove();
                 }
@@ -2220,8 +2242,6 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
-        if (self.o2m.readonly)
-            return;
         var pop = new openerp.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
@@ -2230,7 +2250,8 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             read_function: function() {
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
-            form_view_options: {'not_interactible_on_create':true}
+            form_view_options: {'not_interactible_on_create':true},
+            readonly: self.o2m.is_readonly()
         });
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, {}, function(r) {
@@ -2282,11 +2303,14 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
     validate: function() {
         this.invalid = false;
     },
+    is_readonly: function() {
+        return this.readonly || this.force_readonly;
+    },
     load_view: function() {
         var self = this;
         this.list_view = new openerp.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': self.readonly ? null : 'Add',
-                    'deletable': self.readonly ? false : true,
+                    'addable': self.is_readonly() ? null : 'Add',
+                    'deletable': self.is_readonly() ? false : true,
                     'selectable': self.multi_selection
             });
         this.list_view.m2m_field = this;
@@ -2423,10 +2447,7 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             this.searchview.stop();
         }
         this.searchview = new openerp.web.SearchView(this,
-                this.dataset, false, {
-                    "selectable": !this.options.disable_multiple_selection,
-                    "deletable": false
-                });
+                this.dataset, false, {});
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
@@ -2453,7 +2474,9 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
             });
             self.view_list = new openerp.web.form.SelectCreateListView(self,
                     self.dataset, false,
-                    _.extend({'deletable': false}, self.options.list_view_options || {}));
+                    _.extend({'deletable': false,
+                        'selectable': !self.options.disable_multiple_selection
+                    }, self.options.list_view_options || {}));
             self.view_list.popup = self;
             self.view_list.appendTo($("#" + self.element_id + "_view_list")).pipe(function() {
                 self.view_list.do_show();
@@ -2572,6 +2595,7 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
      * - read_function
      * - parent_view
      * - form_view_options
+     * - readonly
      */
     show_element: function(model, row_id, context, options) {
         this.model = model;
@@ -2611,7 +2635,13 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$element.find("#" + this.element_id + "_view_form"));
+        var once = $.Deferred().then(function() {
+            if (self.options.readonly) {
+                self.view_form.on_toggle_readonly();
+            }
+        });
         this.view_form.on_loaded.add_last(function() {
+            once.resolve();
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
             $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
             var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
@@ -2624,6 +2654,10 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
             $cbutton.click(function() {
                 self.stop();
             });
+            if (self.options.readonly) {
+                $nbutton.hide();
+                $cbutton.text(_t("Close"));
+            }
             self.view_form.do_show();
         });
         this.dataset.on_write.add(this.on_write);
@@ -2983,9 +3017,17 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.exte
         self.update_dom();
         self.on_value_changed();
         var real_set_value = function(rval) {
-            self.$element.find('div').text(rval ? rval[1] : '');
+            self.value = rval;
+            var div = $(self.$element.find('div'));
+            div.html('<a href="javascript:void(0)"></a>');
+            var a = $(div.find("a"));
+            a.text(rval ? rval[1] : '');
+            a.click(function() {
+                var pop = new openerp.web.form.FormOpenPopup(self.view);
+                pop.show_element(self.field.relation, self.value[0],self.build_context(), {readonly:true});
+            });
         };
-        if(typeof(value) === "number") {
+        if (value && !(value instanceof Array)) {
             var dataset = new openerp.web.DataSetStatic(
                     this, this.field.relation, self.build_context());
             dataset.name_get([value], function(data) {
@@ -3030,6 +3072,13 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'binary': 'openerp.web.form.FieldBinaryFile',
     'statusbar': 'openerp.web.form.FieldStatus'
 });
+
+openerp.web.form.FieldMany2ManyReadonly = openerp.web.form.FieldMany2Many.extend({
+    force_readonly: true
+});
+openerp.web.form.FieldOne2ManyReadonly = openerp.web.form.FieldOne2Many.extend({
+    force_readonly: true
+});
 openerp.web.form.readonly = openerp.web.form.widgets.clone({
     'char': 'openerp.web.form.FieldCharReadonly',
     'email': 'openerp.web.form.FieldEmailReadonly',
@@ -3040,6 +3089,9 @@ openerp.web.form.readonly = openerp.web.form.widgets.clone({
     'datetime': 'openerp.web.form.FieldCharReadonly',
     'selection' : 'openerp.web.form.FieldSelectionReadonly',
     'many2one': 'openerp.web.form.FieldMany2OneReadonly',
+    'many2many' : 'openerp.web.form.FieldMany2ManyReadonly',
+    'one2many' : 'openerp.web.form.FieldOne2ManyReadonly',
+    'one2many_list' : 'openerp.web.form.FieldOne2ManyReadonly',
     'boolean': 'openerp.web.form.FieldBooleanReadonly',
     'float': 'openerp.web.form.FieldCharReadonly',
     'integer': 'openerp.web.form.FieldCharReadonly',
