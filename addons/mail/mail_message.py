@@ -74,7 +74,7 @@ class mail_message_common(osv.osv_memory):
         'model': fields.char('Related Document model', size=128, select=1, readonly=1),
         'res_id': fields.integer('Related Document ID', select=1, readonly=1),
         'date': fields.datetime('Date'),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences'),
+        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences. If empty, this is not a mail but a message.'),
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
