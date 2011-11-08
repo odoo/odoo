@@ -39,6 +39,8 @@ $(document).ready(function () {
               '1.000000');
         equal(openerp.web.format_value(1, {type: 'float'}),
               '1.00');
+        equal(openerp.web.format_value(-11.25, {type: 'float'}),
+              "-11.25");
     });
     test("parse_datetime", function () {
         var val = openerp.web.str_to_datetime("2009-05-04 12:34:23");

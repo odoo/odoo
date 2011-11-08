@@ -71,7 +71,7 @@ Raphael.fn.connection = function (obj1, obj2, style) {
                 x3 = [0, 0, 0, 0, x4, x4, x4 - dx, x4 + dx][res[1]].toFixed(3),
                 y3 = [0, 0, 0, 0, y1 + dy, y1 - dy, y4, y4][res[1]].toFixed(3);
             /* assemble path and arrow */
-            var path = ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)].join(",");
+            var path = ["M", x1.toFixed(3), y1.toFixed(3), "C", x2, y2, x3, y3, x4.toFixed(3), y4.toFixed(3)];
             /* arrow */
             if(style && style.directed) {
                 /* magnitude, length of the last path vector */
@@ -83,15 +83,16 @@ Raphael.fn.connection = function (obj1, obj2, style) {
                     {x:(norm(x4-x3)+norm(y4-y3)+x4).toFixed(3), y:(norm(y4-y3)+norm(x4-x3)+y4).toFixed(3)},
                     {x:(norm(x4-x3)-norm(y4-y3)+x4).toFixed(3), y:(norm(y4-y3)-norm(x4-x3)+y4).toFixed(3)}
                 ];
-                path = path + ",M"+arr[0].x+","+arr[0].y+",L"+x4+","+y4+",L"+arr[1].x+","+arr[1].y; 
+                path.push("M", arr[0].x, arr[0].y, "L", x4, y4, "L", arr[1].x, arr[1].y, "L", arr[0].x, arr[0].y);
             }
+            var svgpath = path.join(' ');
             /* function to be used for moving existent path(s), e.g. animate() or attr() */
             var move = "attr";
             /* applying path(s) */
-            edge.fg && edge.fg[move]({path:path}) 
-                || (edge.fg = selfRef.path(path).attr({stroke: style && style.stroke || "#000", fill: "none"}).toBack());
-            edge.bg && edge.bg[move]({path:path})
-                || style && style.fill && (edge.bg = style.fill.split && selfRef.path(path).attr({stroke: style.fill.split("|")[0], fill: "none", "stroke-width": style.fill.split("|")[1] || 3}).toBack());
+            edge.fg && edge.fg[move]({path:svgpath})
+                || (edge.fg = selfRef.path(svgpath).attr({stroke: style && style.stroke || "#000", fill: "none"}).toBack());
+            edge.bg && edge.bg[move]({path:svgpath})
+                || style && style.fill && (edge.bg = style.fill.split && selfRef.path(svgpath).attr({stroke: style.fill.split("|")[0], fill: "none", "stroke-width": style.fill.split("|")[1] || 3}).toBack());
             /* setting label */
             style && style.label 
                 && (edge.label && edge.label.attr({x:(x1+x4)/2, y:(y1+y4)/2}) 

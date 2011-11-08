@@ -1,34 +1,29 @@
 #!/usr/bin/env python
+import json
+import logging
+import logging.config
 import optparse
 import os
 import sys
-import json
 import tempfile
-import logging
-import logging.config
 
 import werkzeug.serving
 import werkzeug.contrib.fixers
 
-path_root = os.path.dirname(os.path.abspath(__file__))
-path_addons = os.path.join(path_root, 'addons')
-if path_addons not in sys.path:
-    sys.path.insert(0, path_addons)
-
 optparser = optparse.OptionParser()
 optparser.add_option("-s", "--session-path", dest="session_storage",
                      default=os.path.join(tempfile.gettempdir(), "oe-sessions"),
-                     help="directory used for session storage", metavar="DIR")
+                     help="Directory used for session storage", metavar="DIR")
 optparser.add_option("--server-host", dest="server_host",
                      default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
 optparser.add_option("--server-port", dest="server_port", default=8069,
                      help="OpenERP server port", type="int", metavar="NUMBER")
 optparser.add_option("--db-filter", dest="dbfilter", default='.*',
-                     help="Filter listed database", metavar="REGEXP")
-optparser.add_option('--addons-path', dest='addons_path', default=[path_addons], action='append',
-                    help="Path do addons directory", metavar="PATH")
+                     help="Filter listed databases", metavar="REGEXP")
+optparser.add_option('--addons-path', dest='addons_path', default=[], action='append',
+                    help="Path to addons directory", metavar="PATH")
 optparser.add_option('--load', dest='server_wide_modules', default=['web'], action='append',
-                    help="Load a additional module before login (by default only 'web' is loaded)", metavar="MODULE")
+                    help="Load an additional module before login (by default only 'web' is loaded)", metavar="MODULE")
 
 server_options = optparse.OptionGroup(optparser, "Server configuration")
 server_options.add_option("-p", "--port", dest="socket_port", default=8002,
@@ -55,19 +50,39 @@ logging_opts.add_option("--log-config", dest="log_config", default=os.path.join(
                         help="Logging configuration file", metavar="FILE")
 optparser.add_option_group(logging_opts)
 
-import web.common.http
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
-    options.backend =  'xmlrpc'
 
+    if not options.addons_path:
+        path_root = os.path.dirname(os.path.abspath(__file__))
+        path_addons = os.path.join(path_root, 'addons')
+        if os.path.exists(path_addons):
+            options.addons_path.append(path_addons)
+
+    options.addons_path = [
+        path[:-1] if path[-1] in r'\/' else path
+        for path in options.addons_path
+        if os.path.exists(path)
+    ]
+
+    for path_addons in options.addons_path:
+        if path_addons not in sys.path:
+            sys.path.insert(0, path_addons)
+
+    try:
+        import web.common.http
+    except ImportError:
+        optparser.error('Error Importing base web module. Check correctness of --addons-path.')
+
+    options.backend =  'xmlrpc'
     os.environ["TZ"] = "UTC"
 
-    if sys.version_info >= (2, 7):
+    if sys.version_info >= (2, 7) and os.path.exists(options.log_config):
         with open(options.log_config) as file:
             dct = json.load(file)
         logging.config.dictConfig(dct)
-        logging.getLogger("").setLevel(getattr(logging, options.log_level.upper()))
+        logging.getLogger().setLevel(getattr(logging, options.log_level.upper()))
     else:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
 

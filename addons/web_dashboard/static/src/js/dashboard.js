@@ -1,6 +1,5 @@
 openerp.web_dashboard = function(openerp) {
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_dashboard/static/src/xml/web_dashboard.xml');
 
 if (!openerp.web_dashboard) {
     /** @namespace */
@@ -468,7 +467,7 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
             [['name', '=', module_name], ['state', '=', 'uninstalled']]);
         var Upgrade = new openerp.web.DataSet(this, 'base.module.upgrade');
 
-        $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
+        $.blockUI();
         Modules.read_slice(['id'], {}, function (records) {
             if (!(records.length === 1)) { $.unblockUI(); return; }
             Modules.call('state_update',

@@ -93,7 +93,6 @@ class DiagramView(View):
             n.update(
                 id=act['id'],
                 color='white',
-                shape='ellipse',
                 options={}
             )
             for color, expr in bgcolors.items():
@@ -107,12 +106,5 @@ class DiagramView(View):
             for i, fld in enumerate(visible_node_fields):
                 n['options'][node_fields_string[i]] = act[fld]
 
-        #to relate m2o field of transition to corresponding o2m in activity
-        in_transition_field_id = fields.search([('relation', '=', connector), ('relation_field', '=', des_node), ('model', '=', node)], 0, 0, 0, req.session.context)
-        in_transition_field = fields.read(in_transition_field_id[0], ['name'], req.session.context)['name']
-
-        out_transition_field_id = fields.search([('relation', '=', connector), ('relation_field', '=', src_node), ('model', '=', node)], 0, 0, 0, req.session.context)
-        out_transition_field = fields.read(out_transition_field_id[0], ['name'], req.session.context)['name']
-
         id_model = req.session.model(model).read([id],['name'], req.session.context)[0]['name']
-        return dict(nodes=nodes, conn=connectors, id_model = id_model)
+        return dict(nodes=nodes, conn=connectors, id_model=id_model)

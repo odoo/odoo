@@ -11,6 +11,7 @@
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
         "static/lib/jquery/jquery-1.6.2.js",
+        "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
@@ -43,6 +44,7 @@
         "static/src/js/view_list.js",
         "static/src/js/view_list_editable.js",
         "static/src/js/view_tree.js",
+        "static/src/js/view_editor.js"
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",
@@ -51,5 +53,8 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
+    ],
+    'qweb' : [
+        "static/src/xml/*.xml",
     ],
 }
