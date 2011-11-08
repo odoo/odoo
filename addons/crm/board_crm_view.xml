@@ -155,14 +155,5 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_crm_form"/>
         </record>
-        <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
-        <menuitem
-            name="Sales Dashboard" parent="board.menu_dasboard"
-            action="open_board_crm"
-            sequence="1"
-            id="menu_board_crm" icon="terp-graph"
-            groups="base.group_sale_salesman"/>
-
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" action="open_board_crm"/>
     </data>
 </openerp>
