@@ -3,7 +3,7 @@
     <data>
         <!-- EDI Export + Send email Action  -->
         <record id="ir_actions_server_edi_invoice" model="ir.actions.server">
-            <field name="code"><![CDATA[if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)]]></field>
+            <field name="code">if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='account.email_template_edi_invoice', context=context)</field>
             <field eval="6" name="sequence"/>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>

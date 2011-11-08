@@ -3,7 +3,7 @@
     <data>
         <!--Export edi document  -->
         <record id="ir_actions_server_edi_purchase" model="ir.actions.server">
-            <field name="code"><![CDATA[if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)]]></field>
+            <field name="code">if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)</field>
             <field name="state">code</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>

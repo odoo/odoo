@@ -45,8 +45,6 @@ technical OpenERP documentation at http://doc.openerp.com
     ],
     'js': [
         'static/src/js/edi.js',
-        #'static/src/js/edi_invoice.js',
-        #'static/src/js/edi_sale_purchase_order.js',
     ],
     "css": [
         "static/src/css/edi.css"
