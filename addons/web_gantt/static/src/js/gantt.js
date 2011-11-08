@@ -60,7 +60,9 @@ init: function(parent, dataset, view_id) {
         });
         
         this.database_projects = started_projects;
-        
+        if(!started_projects.length)
+            return self.do_warn(_t("date_start is not defined"));
+            
         if(!self.name && started_projects.length) {
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
@@ -157,9 +159,7 @@ init: function(parent, dataset, view_id) {
         
         _.each(projects, function(project, index) {
             if (self.date_stop && project[self.date_stop]) {
-                //ToDO
-                console.log('TODO for date_stop');
-                self.project_duration.push(0);
+                self.project_duration.push(self.duration_difference(project[self.date_start], project[self.date_stop]));
             } else if(self.date_delay && project[self.date_delay]) {
                 self.project_duration.push(project[self.date_delay]);
             } else {
@@ -169,6 +169,20 @@ init: function(parent, dataset, view_id) {
         
         this.max_project_duration = _.max(this.project_duration);
         return $.Deferred().resolve().promise();
+    },
+    
+    duration_difference: function(start_date, end_date) {
+        
+        var DAY = 1000 * 60 * 60 * 24,
+            date1_ms = openerp.web.auto_str_to_date(start_date).getTime(),
+            date2_ms = openerp.web.auto_str_to_date(end_date).getTime(),
+            difference_ms = Math.abs(date1_ms - date2_ms);
+
+        var d = Math.floor(difference_ms / DAY),
+            h = (difference_ms % DAY)/(1000 * 60 * 60),
+            num = (d * this.day_length) + h;
+        return parseFloat(num.toFixed(2));
+        
     },
     
     calculate_difference: function() {
@@ -196,7 +210,6 @@ init: function(parent, dataset, view_id) {
             max_date = _.max(projects, function(prj) {
                 return self.format_date(prj[self.date_start]);
             });
-            
         this.project_end_date =  this.format_date(max_date[self.date_start]);
         if (min_date) this.project_start_date = this.format_date(min_date[self.date_start]);
         else 
@@ -212,7 +225,7 @@ init: function(parent, dataset, view_id) {
                 _.each(tasks, function(task, tindex) {
                     self.GanttProjects.addTask(task);
                 });
-            })
+            });
         }
         else {
             _.each(this.GanttTasks, function(tsk, index){
@@ -351,8 +364,7 @@ init: function(parent, dataset, view_id) {
             self.dataset
                 .read_slice([], {
                     domain: domains,
-                    context: contexts,
-                    group_by: groupbys
+                    context: contexts
                 })
                 .done(function(projects) {
                     self.on_project_loaded(projects);
