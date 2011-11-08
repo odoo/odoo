@@ -251,14 +251,21 @@ init: function(parent, dataset, view_id) {
         
         // Setup Events
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {
-            var task_date = task.getEST();
-            if(task_date.getHours()) {
-                task_date.set({hour: task_date.getHours(), minute : task_date.getMinutes(), second:0});
+            if (task.parentTask) {
+                var task_date = task.getEST();
+                if (task_date.getHours()) {
+                    task_date.set({
+                        hour: task_date.getHours(),
+                        minute: task_date.getMinutes(),
+                        second: 0
+                    });
+                }
             }
         });
+        
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {return self.ResizeTask(task);});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {return self.ResizeTask(task);});
-        ganttChartControl.attachEvent("onTaskDblClick", function(task) { return self.editTask(task);});
+        ganttChartControl.attachEvent("onTaskClick", function(task) { return self.editTask(task);});
     },
     
     format_date : function(date) {
@@ -278,10 +285,10 @@ init: function(parent, dataset, view_id) {
     
     ResizeTask: function(task) {
         
-        var event_id = task.getId();
+        var self = this,
+            event_id = task.getId();
         
-        
-        if(!event_id)
+        if(!event_id || !task.parentTask)
             return this.do_warn(_t("Project can not be resized"));
             
         var data = {};
@@ -302,11 +309,11 @@ init: function(parent, dataset, view_id) {
     },
     
     editTask: function(task) {
+        
         var self = this;
         var event_id = task.getId();
-        if(!event_id)
+        if(!event_id || !task.parentTask)
             return false;
-            
         if(event_id) event_id = parseInt(event_id, 10);
         
         var action_manager = new openerp.web.ActionManager(this);
