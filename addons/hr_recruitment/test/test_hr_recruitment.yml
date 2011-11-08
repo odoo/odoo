@@ -111,8 +111,11 @@
   I assign the position to the applicant and its relevant department.
 -
   !python {model: hr.applicant}: |
-     self.onchange_job(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.job_jr_developers'), None)
-     self.onchange_department_id(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.dep_it'), None)
+     res = self.onchange_job(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.job_jr_developers'), None)
+     values = dict([('job_id', ref('hr.job_jr_developers'))] + res['value'].items())
+     res1 = self.onchange_department_id(cr, uid, [ref('hr_applicant_fresher0')], ref('hr.dep_it'), None)
+     values.update(dict([('department_id', ref('hr.dep_it'))] + res1['value'].items()))
+     self.write(cr, uid, [ref('hr_applicant_fresher0')], values, None)
 -
   On a successful meeting with the applicant, I hired employee by click on "Hired" button.
 -

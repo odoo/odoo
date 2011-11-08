@@ -110,8 +110,11 @@
              'journal_id': ref('analytic_journal')
      }
      line_id = self.create(cr, uid, vals, None)
-     self.on_change_date(cr, uid, [line_id], current_date)
-     self.on_change_user_id(cr, uid, [line_id], ref('base.user_root'))
+     res = self.on_change_date(cr, uid, [line_id], current_date)
+     values = dict([('date', current_date)] + res['value'].items())
+     res1 = self.on_change_user_id(cr, uid, [line_id], ref('base.user_root'))
+     values.update(dict([('user_id', ref('base.user_root'))] + res1['value'].items()))
+     self.write(cr, uid, [line_id], values, None)
 -
   To stop work I click on "Sign In/Sign Out" button of "Sign In/Sign Out by Project" wizard.
   Which check state in hr attendace form for user.

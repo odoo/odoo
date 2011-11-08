@@ -74,7 +74,9 @@
   I change the employee on expense form.
 -
   !python {model: hr.expense.expense}: |
-    self.onchange_employee_id(cr, uid, [ref('hr_expense_expense_september0')], ref('hr.employee1'), None)
+    res = self.onchange_employee_id(cr, uid, [ref('hr_expense_expense_september0')], ref('hr.employee1'), None)
+    values = dict([('employee_id', ref('hr.employee1'))] + res['value'].items())
+    self.write(cr, uid, [ref('hr_expense_expense_september0')], values, None)
 -
   Now I change the related product on expense line.
 -
@@ -82,7 +84,9 @@
     exp_line_obj = self.pool.get('hr.expense.line')
     exp_obj = self.browse(cr, uid, ref('hr_expense_expense_september0'), None)
     line_ids = [line.id for line in exp_obj.line_ids]
-    exp_line_obj.onchange_product_id(cr, uid, line_ids, ref('product_product_expense_air'), False, ref('hr.employee1'), None)
+    res = exp_line_obj.onchange_product_id(cr, uid, line_ids, ref('product_product_expense_air'), False, ref('hr.employee1'), None)
+    values = dict([('product_id', ref('product_product_expense_air'))] + res['value'].items())
+    exp_line_obj.write(cr, uid, line_ids, values, None)
 -
   I confirm this expenses by click on "Confirm" button.
 -

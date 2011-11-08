@@ -101,6 +101,8 @@
 -
   !python {model: hr.employee}: |
     res = self.onchange_evaluation_plan_id(cr, uid, [ref('hr_employee_employee0')], ref('hr_evaluation_plan_managersplan0'), False, None)
+    values = dict([('evaluation_plan_id', ref('hr_evaluation_plan_managersplan0'))] + res['value'].items())
+    self.write(cr, uid, [ref('hr_employee_employee0')], values, None)
 -
   I create an Evaluation for employee under "Manager Evaluation Plan".
 -
@@ -114,7 +116,9 @@
   I change the employee on Evaluation.
 -
   !python {model: hr_evaluation.evaluation}: |
-    self.onchange_employee_id(cr, uid, [ref('hr_evaluation_evaluation_0')], ref('hr_employee_employee0'), None)
+    res = self.onchange_employee_id(cr, uid, [ref('hr_evaluation_evaluation_0')], ref('hr_employee_employee0'), None)
+    values = dict([('employee_id', ref('hr_employee_employee0'))] + res['value'].items())
+    self.write(cr, uid, [ref('hr_evaluation_evaluation_0')], values, None)
 -
   I start the evaluation process by click on "Start Evaluation" button.
 -

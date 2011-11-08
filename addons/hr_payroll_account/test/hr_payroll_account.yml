@@ -50,21 +50,14 @@
     employee_id: hr_employee_john
     struct_id: hr_payroll_structure_softwaredeveloper
     working_hours: resource.timesheet_group1
+    journal_id: account.expenses_journal
 -
   I create a Payslip.
 -
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_employee_john
     journal_id: account.expenses_journal
--
-  I assign contract in the payslip.
--
-  !python {model: hr.payslip}: |
-    import time
-    from datetime import datetime
-    date_from = '%s-%s-%s' %(datetime.now().year+1,datetime.now().month,datetime.now().day)
-    date_to = time.strftime('%Y-%m-%d')
-    self.onchange_contract_id(cr, uid, [ref('hr_payslip_0')], date_from, date_to, ref('hr_employee_john'), ref('hr_contract_john'), None)
+
 -
   The selection of an employee fills the contract, structure, worked days and input data fields.
 -
@@ -80,9 +73,11 @@
       'struct_id': res['value']['struct_id'],
       'contract_id': res['value']['contract_id'],
       'name': res['value']['name'],
-      }
+    }
     vals['worked_days_line_ids'] = [(0,0,i) for i in res['value']['worked_days_line_ids']]
     vals['input_line_ids'] = [(0,0,i) for i in res['value']['input_line_ids']]
+    res_contract = self.onchange_contract_id(cr, uid, [ref('hr_payslip_0')], date_from, date_to, ref('hr_employee_john'), ref('hr_contract_john'), None)
+    vals.update({'contract_id': ref('hr_contract_john')})
     self.write(cr, uid, ref("hr_payslip_0"), vals)
 -
   I assign the amount to Input data.
