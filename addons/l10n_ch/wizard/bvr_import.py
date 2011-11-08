@@ -36,7 +36,9 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
     user_current=user_obj.browse(cursor, user, user)
 
     ##
-    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = %s" ,(user_current.company_id.id,))
+    cursor.execute("SELECT inv.id,inv.number from account_invoice "
+                   "AS inv where inv.company_id = %s and type='out_invoice'",
+                   (user_current.company_id.id,))
     result_invoice = cursor.fetchall()
     REF = re.compile('[^0-9]')
     for inv_id,inv_name in result_invoice:
@@ -60,7 +62,6 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
 def _import(self, cursor, user, data, context=None):
 
     statement_line_obj = self.pool.get('account.bank.statement.line')
-#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
     voucher_obj = self.pool.get('account.voucher')
     voucher_line_obj = self.pool.get('account.voucher.line')
     move_line_obj = self.pool.get('account.move.line')
@@ -191,8 +192,8 @@ def _import(self, cursor, user, data, context=None):
                      voucher_line_dict = line_dict
         if voucher_line_dict:
              voucher_line_dict.update({'voucher_id':voucher_id})
-             voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
-             
+             voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)
+
         if not account_id:
             if record['amount'] >= 0:
                 account_id = account_receivable
@@ -204,10 +205,10 @@ def _import(self, cursor, user, data, context=None):
             if record['amount'] < 0:
                 name = "property_account_payable"
             prop = property_obj.search(
-                        cursor, 
+                        cursor,
                         user,
                         [
-                            ('name','=','property_account_receivable'),
+                            ('name','=',name),
                             ('company_id','=',statement.company_id.id),
                             ('res_id', '=', False)
                         ]
@@ -226,9 +227,9 @@ def _import(self, cursor, user, data, context=None):
         values['partner_id'] = partner_id
         statement_line_obj.create(cursor, user, values, context=context)
     attachment_obj.create(cursor, user, {
-        'name': 'BVR',
+        'name': 'BVR %s'%time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()),
         'datas': file,
-        'datas_fname': 'BVR.txt',
+        'datas_fname': 'BVR %s.txt'%time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime()),
         'res_model': 'account.bank.statement',
         'res_id': statement_id,
         }, context=context)
@@ -238,7 +239,7 @@ def _import(self, cursor, user, data, context=None):
 class bvr_import_wizard(osv.osv_memory):
     _name = 'bvr.import.wizard'
     _columns = {
-        'file':fields.binary('BVR File', required=True)
+        'file':fields.binary('BVR File', readonly=True)
     }
 
     def import_bvr(self, cr, uid, ids, context=None):

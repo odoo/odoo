@@ -311,7 +311,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="name" string="Reference"/>
-                    <field name="date_order" string="Order Date"/>
+                    <field name="date_order" />
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="location_id"/>
@@ -406,9 +406,6 @@
                     <field name="product_uom"/>
                     <field name="price_subtotal"/>
                     <field name="date_planned"  widget="date" width="135"/>
-
-
-
                     <field name="state" invisible="1"/>
                     <field name="invoiced" invisible="1"/>
                 </tree>
