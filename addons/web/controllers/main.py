@@ -111,7 +111,7 @@ class WebClient(openerpweb.Controller):
         file_map = dict(files)
 
         rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
-        rx_url = re.compile(r"""url\s*\(('|"|)(?!'|"|/|https?://)""", re.U)
+        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://)""", re.U)
 
 
         def reader(f):
