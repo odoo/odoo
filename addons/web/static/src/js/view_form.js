@@ -1169,7 +1169,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-       /* if (this.field.translate) {
+        if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
         }
         if (!this.disable_utility_classes) {
@@ -1178,7 +1178,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
             if (this.view.show_invalid) {
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
-        }*/
+        }
     },
     on_ui_change: function() {
         this.dirty = this.view.dirty_for_user = true;
@@ -1979,7 +1979,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
     },
     load_views: function() {
         var self = this;
-        
+
         var modes = this.node.attrs.mode;
         modes = !!modes ? modes.split(",") : ["tree"];
         var views = [];
@@ -2004,7 +2004,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             views.push(view);
         });
         this.views = views;
-        
+
         this.viewmanager = new openerp.web.ViewManager(this, this.dataset, views);
         this.viewmanager.registry = openerp.web.views.clone({
             list: 'openerp.web.form.One2ManyListView',
@@ -2281,7 +2281,7 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
         this.dataset.on_unlink.add_last(function(ids) {
             self.on_ui_change();
         });
-        
+
         this.is_setted.then(function() {
             self.load_view();
         });
