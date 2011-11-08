@@ -583,7 +583,7 @@ session.web.Sidebar = session.web.Widget.extend({
         ]);
 
         this.add_section(_t('Other Options'), 'other');
-        this.add_items('other', [
+        this.add_items('other', [ 
             {
                 label: _t("Import"),
                 callback: this.call_default_on_sidebar
@@ -619,7 +619,7 @@ session.web.Sidebar = session.web.Widget.extend({
             }
         });
     },
-
+    
     add_section: function(name, code) {
         if(!code) code = _.underscored(name);
         var $section = this.sections[code];
@@ -693,7 +693,7 @@ session.web.Sidebar = session.web.Widget.extend({
                 }
                 return false;
             });
-
+        
             var $ul = $section.find('ul');
             if(!$ul.length) {
                 $ul = $('<ul/>').appendTo($section);
@@ -883,7 +883,7 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
             }
         };
         var context = new session.web.CompoundContext(dataset.get_context(), action_data.context || {});
-
+        
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
