@@ -32,13 +32,13 @@ class WizardMultiChartsAccounts(osv.osv_memory):
         'sale_tax': False,
         'purchase_tax':False
     }
- 
+
     def execute(self, cr, uid, ids, context=None):
         """Override of code in order to be able to link journal with account in XML"""
         res = super(WizardMultiChartsAccounts, self).execute(cr, uid, ids, context)
         path = addons.get_module_resource(os.path.join('l10n_ch','sterchi_chart','account_journal_rel.xml'))
         tools.convert_xml_import(cr, 'l10n_ch', path, idref=None, mode='init', noupdate=True, report=None)
         return res
-        
-WizardMultiChartsAccounts()   
+
+WizardMultiChartsAccounts()
 
