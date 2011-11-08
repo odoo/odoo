@@ -1330,7 +1330,16 @@
         <t t-call="view_editor.row"/>
     </t>
 </tr>
-
+<t t-name="view_char">
+    <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
+</t>
+<t t-name="view_selection">
+    <select style="width:366px" t-att-id="widget.name">
+    </select>
+</t>
+<t t-name="view_boolean">
+    <input type="checkbox" t-att-id="widget.name"/>
+</t>
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
