@@ -21,9 +21,9 @@
 
 
 {
-    'name'      : 'Analytic Account View',
+    'name'      : 'Sales Contract Management',
     'version'   : '1.1',
-    'category'  : 'Hidden',
+    'category'  : 'Sales Management',
     'complexity': "normal",
     'description': """
 This module is for modifying account analytic view to show important data to project manager of services companies.
