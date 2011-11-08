@@ -244,7 +244,7 @@
                             </group>
                             <group col="3" colspan="2">
                                 <field name="remaining_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}" colspan="2"/>
-                                <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,ready,pending" icon="gtk-edit"/>
+                                <button name="%(action_project_task_reevaluate)d" string="Reevaluate" type="action" colspan="1" target="new" states="open,pending" icon="gtk-edit"/>
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
@@ -259,13 +259,13 @@
                             <newline/>
                             <group col="11" colspan="4">
                                 <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}' select="1"/>
-                                <button name="do_cancel" states="draft,open,ready,pending" string="Cancel" type="object" icon="gtk-cancel"/>
-                                <button name="do_draft" states="open,ready" string="Draft" type="object" icon="gtk-indent"/>
+                                <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel"/>
+                                <button name="do_draft" states="open" string="Draft" type="object" icon="gtk-indent"/>
                                 <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-media-play"/>
                                 <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
-                                <button name="do_pending" states="open,ready" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,ready,draft" string="Delegate" type="action" icon="gtk-sort-descending"/>
-                                <button name="action_close" states="pending,open,ready" string="Done" type="object" icon="terp-dialog-close"/>
+                                <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
+                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending"/>
+                                <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
                             </group>
                         </page>
                         <page groups="base.group_extended" string="Delegations History">
@@ -334,7 +334,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
-                            <div t-att-class="kanban_color(record.color.raw_value) + (record.state.raw_value === 'pending' ? ' oe_kanban_color_alert' : '') + (record.state.raw_value === 'ready' ? ' oe_kanban_color_green' : '')">
+                            <div t-att-class="kanban_color(record.color.raw_value) + (record.state.raw_value === 'pending' ? ' oe_kanban_color_alert' : '')">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <tr>
@@ -371,9 +371,8 @@
                                         </div>
                                         <div class="oe_kanban_right">
                                             <a name="do_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                                            <a name="do_open" string="Start Task" states="pending,ready" type="object" icon="gtk-media-play"/>
-                                            <a name="do_ready" string="Ready" states="draft,open" type="object" icon="gtk-go-forward"/>
-                                            <a name="action_close" string="Done" states="draft,open,ready" type="object" icon="gtk-apply"/>
+                                            <a name="do_open" string="Start Task" states="pending" type="object" icon="gtk-media-play"/>
+                                            <a name="action_close" string="Done" states="draft,open" type="object" icon="gtk-apply"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>
