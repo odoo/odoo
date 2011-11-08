@@ -2,7 +2,6 @@ openerp.web_kanban = function (openerp) {
 
 var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_kanban/static/src/xml/web_kanban.xml');
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
@@ -25,7 +24,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
         this.qweb = new QWeb2.Engine();
-        this.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+        this.qweb.debug = openerp.connection.debug;
         this.qweb.default_dict = {
             '_' : _,
             '_t' : _t

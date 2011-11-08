@@ -364,7 +364,9 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         // TODO: session should have an optional name indicating that they'll
         //       be saved to (and revived from) cookies
         this.name = 'session';
+        this.do_load_qweb(['/web/webclient/qweb']);
     },
+
     start: function() {
         this.session_restore();
     },
@@ -487,9 +489,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             self.user_context = result.context;
             self.db = result.db;
             self.session_save();
+            self.on_session_valid();
             return true;
         }).then(success_callback);
     },
+    login: function() { this.session_login.apply(this, arguments); },
     /**
      * Reloads uid and session_id from local storage, if they exist
      */
@@ -577,6 +581,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
                     self.do_load_js(file_list.concat(files));
                 });
+                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
                 openerp._modules_loaded = true;
             });
         });
@@ -609,6 +614,12 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         } else {
             this.on_modules_loaded();
         }
+    },
+    do_load_qweb: function(files) {
+        var self = this;
+        _.each(files, function(file) {
+            openerp.web.qweb.add_template(file);
+        });
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
@@ -1017,9 +1028,6 @@ if ($.blockUI) {
     $.blockUI.defaults.message = '<img src="/web/static/src/img/throbber2.gif">';
 }
 
-/** Setup default connection */
-openerp.connection = new openerp.web.Connection();
-
 /** Configure default qweb */
 openerp.web._t = new openerp.web.TranslationDataBase().build_translation_function();
 openerp.web.qweb = new QWeb2.Engine();
@@ -1040,6 +1048,9 @@ openerp.web.qweb.format_text_node = function(s) {
     var tr = openerp.web._t(ts);
     return tr === ts ? s : tr;
 }
+
+/** Setup default connection */
+openerp.connection = new openerp.web.Connection();
 
 };
 
