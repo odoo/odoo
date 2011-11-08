@@ -10,7 +10,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this._super();
         this.db = db;
         this.token = token;
-        this.session = new openerp.web.Session();
+        this.session = new openerp.web.Connection();
         this.template = "EdiEmpty";
         this.content = "";
         this.sidebar = "";
@@ -117,7 +117,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
         var params = {};
 
         this.template = "EdiImport";
-        this.session = new openerp.web.Session();
+        this.session = new openerp.web.Connection();
         this.login = new openerp.web.Login(this);
         this.header = new openerp.web.Header(this);
         this.header.on_logout.add(this.login.on_logout);
