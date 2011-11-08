@@ -329,12 +329,14 @@
                     <field name="description"/>
                     <field name="sequence"/>
                     <field name="state"/>
+                    <field name="kanban_state"/>
                     <field name="project_id"/>
-                    <field name="remaining_hours" sum="Remaining Time"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="pad_url">http://pad.openerp.com/<t t-raw="_.underscored(_.trim(record.name.raw_value))"/></t>
-                            <div t-att-class="kanban_color(record.color.raw_value) + (record.state.raw_value === 'pending' ? ' oe_kanban_color_alert' : '')">
+                            <t t-if="record.kanban_state.raw_value === 'blocked'" t-set="border">oe_kanban_color_red</t>
+                            <t t-if="record.kanban_state.raw_value === 'done'" t-set="border">oe_kanban_color_green</t>
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <tr>
@@ -354,7 +356,7 @@
                                         </div>
                                         <div>
                                             <i t-if="record.date_deadline.raw_value"><field name="date_deadline"/> ,</i>
-                                            <field name="remaining_hours"/>
+                                            <field name="remaining_hours" sum="Remaining Time"/>
                                             <b>
                                                 <a name="set_remaining_hours_1" string="Set 1 day" type="object"> [1d]</a>
                                                 <a name="set_remaining_hours_2" string="Set 2 day" type="object"> [2d]</a>
@@ -370,9 +372,9 @@
                                             <a string="Change Color" icon="color-picker" type="color" name="color"/>
                                         </div>
                                         <div class="oe_kanban_right">
-                                            <a name="do_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                                            <a name="do_open" string="Start Task" states="pending" type="object" icon="gtk-media-play"/>
-                                            <a name="action_close" string="Done" states="draft,open" type="object" icon="gtk-apply"/>
+                                            <a name="set_kanban_state_blocked" string="Block" kanban_states="normal,done" type="object" icon="gtk-media-pause"/>
+                                            <a name="set_kanban_state_normal" string="Normal" kanban_states="blocked,done" type="object" icon="gtk-media-play"/>
+                                            <a name="set_kanban_state_done" string="Done" kanban_states="blocked,normal" type="object" icon="gtk-apply"/>
                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>
