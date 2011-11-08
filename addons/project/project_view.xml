@@ -356,12 +356,12 @@
                                         <div>
                                             <i t-if="record.date_deadline.raw_value"><field name="date_deadline"/> ,</i>
                                             <field name="remaining_hours" sum="Remaining Time"/>
-                                            <b>
-                                                <a name="set_remaining_hours_1" string="Set 1 day" type="object"> [1d]</a>
-                                                <a name="set_remaining_hours_2" string="Set 2 day" type="object"> [2d]</a>
-                                                <a name="set_remaining_hours_5" string="Set 5 day" type="object"> [5d]</a>
-                                                <a name="set_remaining_hours_10" string="Set 10 day" type="object"> [10d]</a>
-                                            </b>
+                                            <t t-set="style_bold">font-weight: bold</t>
+                                            <t t-set="hours" t-value="record.remaining_hours.raw_value"/>
+                                            <a name="set_remaining_time_1" type="object" t-att-style="(hours gte 1 and hours lt 2) ? style_bold : undefined"> [1]</a>
+                                            <a name="set_remaining_time_2" type="object" t-att-style="(hours gte 2 and hours lt 5) ? style_bold : undefined"> [2]</a>
+                                            <a name="set_remaining_time_5" type="object" t-att-style="(hours gte 5 and hours lt 10) ? style_bold : undefined"> [5]</a>
+                                            <a name="set_remaining_time_10" type="object" t-att-style="hours gte 10 ? style_bold : undefined"> [10]</a>
                                         </div>
                                         <br class="oe_kanban_clear"/>
                                     </div>

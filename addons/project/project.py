@@ -751,20 +751,20 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def set_remaining_hours_1(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 8.0}, context=context)
+    def set_remaining_time_1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 1.0}, context=context)
         return True
 
-    def set_remaining_hours_2(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 2 * 8.0}, context=context)
+    def set_remaining_time_2(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 2.0}, context=context)
         return True
 
-    def set_remaining_hours_5(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 5 * 8.0}, context=context)
+    def set_remaining_time_5(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 5.0}, context=context)
         return True
 
-    def set_remaining_hours_10(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'remaining_hours': 10 * 8.0}, context=context)
+    def set_remaining_time_10(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 10.0}, context=context)
         return True
 
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
