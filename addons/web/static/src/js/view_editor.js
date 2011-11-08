@@ -44,7 +44,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 //to do
             },
             "Edit": function(){
-                self.xml_element_id=0;
+                self.xml_element_id = 0;
                 self.get_arch();
             },
             "Close": function(){
@@ -56,6 +56,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         action_manager.appendTo(this.view_edit_dialog);
         action_manager.do_action(action);
     },
+
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
             return (node.getAttribute('name'))?
@@ -72,98 +73,70 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
     },
 
-    convert_tag_to_obj: function(xml, level) {
-        var obj = {'child_id':[],'id':this.xml_element_id++,'level':level+1,'att_list':[],'name':""};
-        var tag = xml.tagName.toLowerCase();
-        obj.att_list.push(tag);
-        obj.name = "<"+ tag
-        $(xml).each(function() {
-            _.each(this.attributes, function(attrs){
-            if (tag != 'button' && tag != 'field') {
-                if (attrs.nodeName == "string" ) {
-                obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"' ;}
-            } else {
-                if (attrs.nodeName == "name") {
-                obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';}
-            }
-            obj.att_list.push( [attrs.nodeName,attrs.nodeValue] );
-            });
-        obj.name+= ">";
-        });
-        return obj;
-    },
-
-    append_child_object: function(val, parent_list, child_obj_list) {
+    create_View_Node: function(node){
         var self = this;
-        if (val.child_id.length != 0) {
-            _.each(val.child_id, function(val) {
-                (val.id == parent_list[0])?
-                    self.append_child_object( val, parent_list.slice(1), child_obj_list) : false;
-            });
-        } else { val.child_id = child_obj_list; }
+        ViewNode = {
+            'level': ($(node).parents()).length + 1,
+            'id': self.xml_element_id += 1,
+            'att_list': [],
+            'name': self.add_node_name(node),
+            'child_id': []
+        }
+        ViewNode.att_list.push(node.tagName.toLowerCase());
+        _.each(node.attributes ,function(att){
+           ViewNode.att_list.push([att.nodeName,att.nodeValue]);
+       });
+        return ViewNode;
     },
 
-    convert_arch_to_obj: function(xml, parent_list, parent_id, main_object){
+    append_child_object: function(main_object, parent_id, child_obj_list) {
+        var self = this;
+        if(parent_id){
+            if(main_object.id == parent_id){
+                main_object.child_id = child_obj_list;
+                return main_object;
+            }else{
+                _.each(main_object.child_id ,function(child_object){
+                    self.append_child_object(child_object, parent_id, child_obj_list);
+                });
+            }
+        }
+       
+    },
+
+    convert_arch_to_obj: function(xml_Node, main_object, parent_id){
         var self = this;
         var child_obj_list = [];
-        var children_list = $(xml).children();
-        var parents = $(children_list[0]).parents().get();
-        _.each(children_list, function (child_node) {
-            child_obj_list.push(self.convert_tag_to_obj(child_node,parents.length));
+        _.each(xml_Node,function(element){
+           child_obj_list.push(self.create_View_Node(element)) ;
         });
-        if (children_list.length) {
-            if(parents.length <= parent_list.length) {parent_list.splice(parents.length - 1);}
-            parent_list.push(parent_id);
-            self.append_child_object(main_object[0], parent_list.slice(1), child_obj_list);
-        }
-        for (var i=0; i<children_list.length; i++) {
-            self.convert_arch_to_obj
-            (children_list[i], parent_list, child_obj_list[i].id, main_object);
-        }
+        this.append_child_object(main_object, parent_id, child_obj_list);
+        var obj_xml_list = _.zip(xml_Node,child_obj_list);
+        _.each(obj_xml_list, function(node){
+            if(node[0].children.length != 0){
+            self.convert_arch_to_obj(node[0].children, main_object, node[1].id);}
+        });
         return main_object;
     },
-/*  show_view_from_arch: function(arch) {
-        var xml_arch = QWeb.load_xml(arch);
-        rootNode = xml_arch.childNodes,
-        this.recursion_xml(rootNode);
-    },*/
-    recursion_xml : function(child){
-        var self = this;
-        _.each(child, function(node){
-            ViewNode = {
-                'level': ($(node).parents()).length + 1,
-                'id': this.xml_element_id++,
-                'attr_list': [],
-                'name': self.add_node_name(node),
-                'child_id': []
-            },
-            //console.log("nanananaa",QWeb.tools.xml_node_to_string(node));
-            ViewNode.attr_list.push(node.tagName.toLowerCase());
-            _.each(node.attributes ,function(att){
-               ViewNode.attr_list.push([att.nodeName,att.nodeValue]);
-           });
-            self.recursion_xml(node.children);
-        });
-    },
+
     parse_xml: function(arch, view_id) {
-        //========================
+        main_object = {
+            'level': 0,
+            'id': this.xml_element_id +=1,
+            'att_list': [],
+            'name': _.sprintf("<view view_id = %s>", view_id),
+            'child_id': []
+        };
         var xml_arch = QWeb.load_xml(arch);
-        rootNode = xml_arch.childNodes,
-        this.recursion_xml(rootNode);
-        //console.log(xml_arch);
-        // Parsing Other way
-        var root = $(arch).filter(":first")[0];
-        var tag = root.tagName.toLowerCase();
-        var view_obj ={'child_id':[],'id':this.xml_element_id++,
-            'level':0,'att_list':[],'name':"<view view_id='"+view_id+"'>"};
-        var root_object = this.convert_tag_to_obj(root,0);
-        view_obj.child_id = this.convert_arch_to_obj(arch, [], this.xml_element_id, [root_object], []);
-        return [view_obj];
+        return [this.convert_arch_to_obj(xml_arch.childNodes, main_object, this.xml_element_id)];
     },
+
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        self.main_view_id =((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
+        self.main_view_id =
+        ((this.view_edit_dialog.$element.find("input[name='radiogroup']:checked").parent()).parent()).attr('data-id');
+        console.log("i like that",this.view_editor.dataset);
         var ve_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
         ve_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function (arch) {
             var arch_object = self.parse_xml(arch[0].arch,self.main_view_id);
@@ -173,7 +146,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             dataset.read_slice([], {domain : [['inherit_id','=', parseInt(self.main_view_id)]]}, function (result) {
                 _.each(result, function(res) {
                     view_arch_list.push({"view_id":res.id,"arch":res.arch});
-                    self.inherit_view(arch_object, res);
+                    //self.inherit_view(arch_object, res);
                 });
                 return self.edit_view({"main_object": arch_object,
                          "parent_child_id": self.parent_child_list(arch_object, []),
@@ -191,7 +164,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return parent_list;
     },
-
 
     inherit_view : function(arch_object, result) {
         var self = this;
@@ -310,6 +282,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             }
         });
+        console.log("finallly",one_object['main_object']);
         this.edit_xml_dialog.start().open();
         this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {
             'data': one_object['main_object'],
