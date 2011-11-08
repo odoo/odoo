@@ -21,16 +21,7 @@
          *
          * @param {Array} modules list of modules to initialize
          */
-        init: function(modules, connection, callback) {
-    
-            if (/^(function|undefined)$/.test(typeof connection)) {
-                callback = connection;
-                connection = {
-                    host: document.location.protocol + '//' + document.location.host,
-                };
-            }
-
-
+        init: function(modules) {
             var new_instance = {
                 // links to the global openerp
                 _openerp: openerp,
@@ -48,20 +39,6 @@
             for(var i=0; i < modules.length; i++) {
                 openerp[modules[i]](new_instance);
             }
-
-            new_instance.connector = new new_instance.web.Connection(connection.host);
-            if (connection.login) {
-                new_instance.connector.login(connection.database, connection.login, connection.password, function() {
-                    if (callback) {
-                        callback(new_instance);
-                    }
-                });
-            } else {
-                if (callback) {
-                    callback(new_instance);
-                }
-            }
-
             return new_instance;
         }
     };
