@@ -4,11 +4,10 @@ from osv import fields, osv
 class company_pad(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'pad_index': fields.char('Pad root URL', size=64, required=True,
-                                 help="The root URL of the company's pad "
-                                      "instance"),
+        'pad_url_template': fields.char('Pad URL Template', size=128, required=True,
+                                 help="Template used to generate pad URL."),
     }
     _defaults = {
-        'pad_index': 'http://ietherpad.com/'
+        'pad_url_template': 'http://ietherpad.com/%(db)s-%(model)s-%(id)d-%(salt)s-%(name)s'
     }
 

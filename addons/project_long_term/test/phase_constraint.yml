@@ -5,6 +5,8 @@
     name: "Develop Yaml Project Module"
     date_start: !eval time.strftime('%Y-%m-%d')
     resource_calendar_id: resource.timesheet_group1
+    members:
+      - base.user_admin
 - 
   And I create three human ressources to work on this project, an analyst.
 - 
@@ -43,7 +45,6 @@
     name: "Analysis"
     product_uom: product.uom_day
     project_id: project_project_developyamlproject0
-    responsible_id: project.res_users_analyst
     state: draft
 
 - 

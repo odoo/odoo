@@ -45,6 +45,7 @@ class project_task_type(osv.osv):
     _defaults = {
         'sequence': 1
     }
+    _order = 'sequence'
 project_task_type()
 
 class project(osv.osv):
@@ -430,7 +431,7 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('ready', 'Ready'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
@@ -471,6 +472,7 @@ class task(osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
@@ -484,7 +486,7 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence,priority, date_start, name, id"
+    _order = "priority, sequence, date_start, name, id"
 
     def set_priority(self, cr, uid, ids, priority):
         """Set task priority
@@ -704,6 +706,10 @@ class task(osv.osv):
             self.log(cr, uid, t.id, message)
         return True
 
+    def do_ready(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'ready'}, context=context)
+        return True
+
     def do_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
@@ -745,6 +751,22 @@ class task(osv.osv):
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
+        return True
+
+    def set_remaining_hours_1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_2(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 2 * 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_5(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 5 * 8.0}, context=context)
+        return True
+
+    def set_remaining_hours_10(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 10 * 8.0}, context=context)
         return True
 
     def _change_type(self, cr, uid, ids, next, *args):

@@ -40,7 +40,7 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
                             <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" groups="account.group_account_manager"/>
                         </child1>
                         <child2>

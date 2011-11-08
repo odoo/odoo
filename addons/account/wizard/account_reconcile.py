@@ -158,7 +158,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         journal_id = data['journal_id'][0]
         context['comment'] = data['comment']
         if data['analytic_id']:
-            context['analytic_id'] = data['analytic_id']
+            context['analytic_id'] = data['analytic_id'][0]
         if context['date_p']:
             date = context['date_p']
 

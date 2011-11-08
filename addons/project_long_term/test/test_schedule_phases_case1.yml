@@ -63,10 +63,14 @@
     import datetime
     from dateutil.relativedelta import *
     start = (datetime.date.today()).strftime('%Y-%m-%d')
-    end = (datetime.date.today() + relativedelta(days=2)).strftime('%Y-%m-%d')
+    end = (datetime.date.today() + relativedelta(days=1)).strftime('%Y-%m-%d 17:00:00')
     first_phase = self.browse(cr, uid, ref('project_phase_firstphase0_case1'))
-    assert (first_phase.date_start == start and first_phase.date_end == end),'Dates are wrong!'
+    assert (first_phase.date_start[:10] >= start),'Start dates are wrong: %s < %s !' % (first_phase.date_start[:10], start)
+    assert (first_phase.date_end >= end),'End dates are wrong: %s <%s!' % (first_phase.date_end, end)
+
     second_phase = self.browse(cr, uid, ref('project_phase_secondphase0_case2'))
     start = first_phase.date_end
-    end = (datetime.date.today() + relativedelta(days=5)).strftime('%Y-%m-%d')
-    assert (second_phase.date_start == start and second_phase.date_end == end),'Dates are wrong!'
+    end = (datetime.date.today() + relativedelta(days=4)).strftime('%Y-%m-%d')
+    assert second_phase.date_start >= start, 'Dates are wrong on second phase: %s < %s!' % (second_phase.date_start, start)
+    assert second_phase.date_end >= end, 'Dates are wrong on second phase %s < %s!' % (second_phase.date_end, end)
+

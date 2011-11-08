@@ -118,7 +118,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 120.00,
@@ -210,7 +210,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 120.00,

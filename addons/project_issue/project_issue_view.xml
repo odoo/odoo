@@ -188,7 +188,7 @@
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
-                    <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
+                    <field name="progress" widget="progressbar"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -261,15 +261,19 @@
         </record>
 
 
-	<!-- Project Issue Karban View-->
+    <!-- Project Issue Karban View-->
 
-	<record model="ir.ui.view" id="project_issue_kanban_view">
+    <record model="ir.ui.view" id="project_issue_kanban_view">
         <field name="name">Project Issue Kanban</field>
         <field name="model">project.issue</field>
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="type_id">
-		<templates>
+                <field name="color"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="user_email"/>
+                <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
@@ -283,7 +287,7 @@
                                                 <field name="name"/>
                                             </td>
                                             <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
+                                                <img t-att-src="kanban_gravatar(record.user_email.value, 22)" class="oe_kanban_gravatar"/>
                                             </td>
                                         </tr>
                                     </table>
@@ -315,11 +319,11 @@
                                         <a string="Send New Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action"/>
                                         <a string="Add Internal Note" name="%(crm.action_crm_add_note)d" context="{'model': 'crm.lead' }" icon="terp-document-new" type="action"/>
                                         <a string="Escalate" name="case_escalate"  icon="gtk-go-up" type="object"/>
-					<a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/> 
+                                        <a string="Convert To Task" name="convert_issue_task" icon="gtk-index" type="object"/>
                                     </div>
                                     <div class="oe_kanban_right">
                                         <a name="case_open" string="Open" states="draft,pending" type="object" icon="lead-stage-won" />
-                                       	<a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
+                                        <a name="case_pending" string="Pending" states="draft,open" type="object" icon="lead-stage-pending"/>
                                         <a name="case_close" string="Close" states="open,draft,pending" type="object" icon="lead-stage-lost"/>
                                     </div>
                                     <br class="oe_kanban_clear"/>
