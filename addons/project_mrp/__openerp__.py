@@ -23,7 +23,7 @@
 {
     'name': 'Automatic task creation from procurement lines',
     'version': '1.0',
-    'category': 'Project Management',
+    'category': 'Hidden/Link',
     'complexity': "easy",
     'description': """
 Automatically creates project tasks from procurement lines

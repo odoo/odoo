@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_module_quality" model="ir.ui.view">
+            <field name="name">view_base_module_quality_form</field>
+            <field name="model">quality.check</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Quality Check">
+                    <group colspan="4">
+                        <separator string = "This wizard will check module(s) quality" colspan="4"/>
+                        <newline/>
+                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
+                        <button name="open_quality_check" icon="terp-camera_test" string="Check" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+            name="Quality Check"
+            id="act_base_module_quality"
+            res_model="quality.check"
+            src_model="ir.module.module"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            />
+    </data>
+</openerp>

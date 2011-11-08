@@ -137,7 +137,7 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly',True)]}),
         'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm': [('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, 
+        'balance_end': fields.function(_end_balance,
             store = {
                 'account.bank.statement': (lambda self, cr, uid, ids, c={}: ids, ['line_ids','move_line_ids'], 10),
                 'account.bank.statement.line': (_get_statement, ['amount'], 10),
@@ -219,6 +219,7 @@ class account_bank_statement(osv.osv):
             'period_id': st.period_id.id,
             'date': st_line.date,
             'name': st_line_number,
+            'ref': st_line.ref,
         }, context=context)
         account_bank_statement_line_obj.write(cr, uid, [st_line.id], {
             'move_ids': [(4, move_id, False)]
@@ -340,9 +341,9 @@ class account_bank_statement(osv.osv):
             else:
                 if st.journal_id.sequence_id:
                     c = {'fiscalyear_id': st.period_id.fiscalyear_id.id}
-                    st_number = obj_seq.get_id(cr, uid, st.journal_id.sequence_id.id, context=c)
+                    st_number = obj_seq.next_by_id(cr, uid, st.journal_id.sequence_id.id, context=c)
                 else:
-                    st_number = obj_seq.get(cr, uid, 'account.bank.statement')
+                    st_number = obj_seq.next_by_code(cr, uid, 'account.bank.statement')
 
             for line in st.move_line_ids:
                 if line.state <> 'valid':

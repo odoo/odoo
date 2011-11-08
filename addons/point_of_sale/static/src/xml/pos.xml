@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+    <t t-name="PointOfSale">
+    <div class="point-of-sale">
+        <div id="topheader">
+            <div id="branding">
+                <img src="/point_of_sale/static/src/img/logo.png" />
+            </div>
+            <div id="steps">
+                <input type="radio" id="products-step-button" class="step-button" data-step='products' name="radio" checked="checked" />
+                <label for="products-step-button">Products</label>
+                <img src="/point_of_sale/static/src/img/steps-arrow.png" />
+                <input type="radio" id="payment-step-button" class="step-button" data-step='payment' name="radio" />
+                <label for="payment-step-button">Payment</label>
+                <img src="/point_of_sale/static/src/img/steps-arrow.png" />
+                <input type="radio" id="receipt-step-button" class="step-button" data-step='receipt' name="radio" />
+                <label for="receipt-step-button">Receipt</label>
+            </div>
+            <div id="rightheader">
+                <div id="order-selector">
+                    <button id="neworder-button">+</button>
+                    <ol id="orders"></ol>
+                </div>
+            </div>
+        </div>
+        <div id="content">
+
+            <div id="leftpane">
+                <div id="current-order">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Product</td>
+                                <td>Price</td>
+                                <td>Disc (%)</td>
+                                <td>Qty</td>
+                                <td>Total</td>
+                            </tr>
+                        </thead>
+                        <tbody id="current-order-content"></tbody>
+                    </table>
+                </div>
+                <footer>
+                    <ul id="amounts">
+                        <li>
+                            Subtotal:
+                            <span id="subtotal">0</span> €
+                        </li>
+                        <li>
+                            Tax:
+                            <span id="tax">0</span> €
+                        </li>
+                        <li>
+                            Total:
+                            <span id="total">0</span> €
+                        </li>
+                    </ul>
+                    <div id="paypad"></div>
+                    <div id="numpad">
+                        <button class="input-button number-char">1</button>
+                        <button class="input-button number-char">2</button>
+                        <button class="input-button number-char">3</button>
+                        <button class="mode-button selected-mode" data-mode='quantity'>Qty</button>
+                        <br />
+                        <button class="input-button number-char">4</button>
+                        <button class="input-button number-char">5</button>
+                        <button class="input-button number-char">6</button>
+                        <button class="mode-button" data-mode='discount'>Disc</button>
+                        <br />
+                        <button class="input-button number-char">7</button>
+                        <button class="input-button number-char">8</button>
+                        <button class="input-button number-char">9</button>
+                        <button class="mode-button" data-mode='list_price'>Price</button>
+                        <br />
+                        <button class="input-button" id="numpad-minus" >+/-</button>
+                        <button class="input-button number-char">0</button>
+                        <button class="input-button number-char">.</button>
+                        <button class="input-button" id="numpad-backspace">
+                            <img src="/point_of_sale/static/src/img/backspace.png" width="24" height="21" />
+                        </button>
+                        <br />
+                    </div>
+                </footer>
+            </div>
+            <div id="rightpane">
+                <div id="products-screen" class="step-screen selected-step"></div>
+                <div id="payment-screen" class="step-screen" style="display:none">
+                    <header><h2>Payment</h2></header>
+                    <div class="pos-step-container">
+                        <div class="pos-payment-container">
+                            <span id="payment-due-total" class="payment-due pos-rigth-align"></span>
+                            <table id="paymentlines">
+                            </table>
+                            <table>
+                                <tr>
+                                    <td class="paymentline-type">Paid:</td>
+                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-paid-total"></span> €</td>
+                                </tr>
+                                <tr>
+                                    <td class="paymentline-type">Change:</td>
+                                    <td class="paymentline-amount pos-rigth-align"><span id="payment-remaining"></span> €</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="pos-payment-buttons">
+                            <button id="validate-order">
+                                <img src="/web/static/src/img/icons/gtk-apply.png"></img>
+                                Validate</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="receipt-screen" class="step-screen" style="display:none">
+                    <header><h2>Receipt</h2></header>
+                    <div class="pos-step-container">
+                        <div class="pos-receipt-container">
+                            <div class="pos-sale-ticket">
+                                OpenERP Point of Sale<br />
+                                <br />
+                                <div class="pos-rigth-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
+                                    Date.CultureInfo.formatPatterns.longTime)"/></div>
+                                <br />
+                                <table id="receiptlines"></table>
+                                <br />
+                                <table>
+                                    <tr><td>Total:</td><td class="pos-rigth-align"><span id="receipt-summary-total"></span> €</td></tr>
+                                    <tr><td>Tax:</td><td class="pos-rigth-align"><span id="receipt-summary-tax"></span> €</td></tr>
+                                    <tr><td>Change:</td><td class="pos-rigth-align"><span id="receipt-summary-change"></span> €</td></tr>
+                                </table>
+                            </div>
+                        </div>
+                        <button id="pos-finish-order">Next Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </t>
+    <t t-name="pos-category-template">
+        <header>
+            <ol class="breadcrumb">
+                <li>
+                    <a href="#">
+                        <img src="/point_of_sale/static/src/img/home.png" class="homeimg" />
+                    </a>
+                </li>
+                <t t-foreach="breadcrumb" t-as="category">
+                    <li>
+                        <img src="/point_of_sale/static/src/img/bc-arrow.png" class="bc-arrow" />
+                        <a t-att-href="'#category/' + category.id">
+                            <t t-esc="category.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ol>
+            <div class="searchbox">
+                <input placeholder="Search Products" />
+                <img class="search-clear" src="/point_of_sale/static/src/img/search_reset.gif" />
+            </div>
+        </header>
+        <div id="categories">
+            <h4>Categories:</h4>
+            <ol>
+                <t t-foreach="categories" t-as="category">
+                    <li>
+                        <a t-att-href="'#category/' + category.id" class="button">
+                            <t t-esc="category.name"/>
+                        </a>
+                    </li>
+                </t>
+            </ol>
+        </div>
+    </t>
+    <t t-name="pos-product-template">
+        <a href="#">
+            <div class="product-img">
+                <img t-att-src="'data:image/gif;base64,'+ img" />
+                <span class="price-tag">
+                    <t t-esc="list_price"/>
+                    €
+                </span>
+            </div>
+            <div class="product-name">
+                <t t-esc="name"/>
+            </div>
+        </a>
+    </t>
+    <t t-name="pos-orderline-template">
+        <td>
+            <t t-esc="name"/>
+        </td>
+        <td>
+            <t t-esc="list_price.toFixed(2)"/>
+            €
+        </td>
+        <td>
+            <t t-esc="discount.toFixed(2)"/>
+        </td>
+        <td>
+            <t t-esc="quantity.toFixed(0)"/>
+        </td>
+        <td>
+            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/>
+            €
+        </td>
+    </t>
+    <t t-name="pos-paymentline-template">
+        <td class="paymentline-type">
+            <t t-esc="name"/>
+        </td>
+        <td class="paymentline-amount pos-rigth-align">
+            <input type="text" t-att-value="amount.toFixed(2)" />
+        </td>
+    </t>
+    <t t-name="pos-receiptline-template">
+        <td class="receiptline-quantity pos-rigth-align">
+            <t t-esc="quantity.toFixed(0)"/>
+        </td>
+        <td class="receiptline-name">
+            <t t-esc="name"/>
+        </td>
+        <td class="receiptline-amount">
+            <t t-esc="(list_price * (1 - discount/100) * quantity).toFixed(2)"/> €
+        </td>
+    </t>
+    <t t-name="pos-payment-button-template">
+        <button class="payment-button" t-att-cash-register-id="id">
+            <t t-esc="name"/>
+        </button>
+        <br />
+    </t>
+    <t t-name="pos-order-selector-button-template">
+        <button class="select-order">Order</button>
+        <button class="close-order">X</button>
+    </t>
+</templates>

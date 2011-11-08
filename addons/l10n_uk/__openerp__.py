@@ -22,7 +22,7 @@
 {
     'name': 'UK Chart of Accounts - latest (Smartode/CT600)',
     'version': '1.0',
-    'category': 'Localisation/Account Charts',
+    'category': 'Localization/Account Charts',
     'description': """This is the latest UK OpenERP localisation necesary to run OpenERP accounting for UK SME's with:
     - a CT600-ready chart of accounts
     - VAT100-ready tax structure

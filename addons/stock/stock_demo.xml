@@ -260,9 +260,9 @@
             <field name="lot_input_id" ref="stock_location_shop1"/>
         </record>
 
-        <record forcecreate="True" id="property_stock_variation" model="ir.property">
-            <field name="name">property_stock_variation</field>
-            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_variation')]"/>
+        <record forcecreate="True" id="property_stock_valuation_account_id" model="ir.property">
+            <field name="name">property_stock_valuation_account_id</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
             <field eval="'account.account,'+str(ref('account.a_recv'))" model="account.account" name="value"/>
              <field name="company_id" ref="base.main_company"/>
         </record>

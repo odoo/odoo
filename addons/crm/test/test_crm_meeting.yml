@@ -42,7 +42,7 @@
   and I set the fields so that the meeting will occur weekly on Monday and Friday 10 times.
 -
   !python {model: crm.meeting}: |
-     self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'rrule_type': 'weekly'})
+     self.write(cr, uid, [ref("crm_meeting_regardingpresentation0")], {'fr': 1, 'mo': 1, 'th': 1, 'tu': 1, 'we':1,   'count':10, 'interval': 1, 'rrule_type': 'weekly', 'recurrency' : True})
 
 - |
   I can see from the calendar view that the meeting is scheduled on Monday and Friday

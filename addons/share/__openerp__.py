@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,11 +22,11 @@
 
 
 {
-    "name" : "Sharing Tools",
-    "version" : "1.5",
+    "name" : "Web Share",
+    "version" : "2.0",
     "depends" : ["base", "mail"],
     "author" : "OpenERP SA",
-    "category": 'Tools',
+    "category": 'Hidden',
     'complexity': "easy",
     "description": """
 This module adds generic sharing tools to your current OpenERP database.
@@ -53,6 +54,8 @@ synchronization with other companies, etc.
     'installable': True,
     'web': True,
     'certificate' : '001301246528927038493',
+    'js': ['static/src/js/share.js'],
+    'css': ['static/src/css/share.css'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 

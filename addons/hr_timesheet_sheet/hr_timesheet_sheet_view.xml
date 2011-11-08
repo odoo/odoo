@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
+
        <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
          <field name="name">hr.timesheet.sheet.graph</field>
          <field name="model">hr_timesheet_sheet.sheet</field>
@@ -90,10 +90,10 @@
                                 </tree>
                             </field>
                             <group col="4" colspan="1">
-				    <field name="state_attendance"/>
-				<button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr" attrs="{'invisible':[('state_attendance','&lt;&gt;','absent')]}"/>
-				<button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl" attrs="{'invisible':[('state_attendance','&lt;&gt;','present')]}"/>
-				    <field name="total_attendance_day" widget="float_time" colspan="4"/>
+                                <field name="state_attendance"/>
+                                <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
+                                <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
+                                <field name="total_attendance_day" widget="float_time" colspan="4"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
@@ -311,9 +311,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="department_id"/>
-                    <field name="total_attendance"/>
-                    <field name="total_timesheet"/>
-                    <field name="total_difference"/>
+                    <field name="total_attendance" widget="float_time"/>
+                    <field name="total_timesheet" widget="float_time"/>
+                    <field name="total_difference" widget="float_time"/>
                     <field name="state"/>
                 </tree>
             </field>

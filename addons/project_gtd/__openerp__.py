@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Getting Things Done - Time Management Module',
+    'name': 'Methodology: Getting Things Done',
     'version': '1.0',
     'category': 'Project Management',
     'complexity': "easy",

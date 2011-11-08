@@ -22,7 +22,7 @@
     "name" : "Accounting and Financial Management",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category": 'Finance',
+    "category": 'Accounting & Finance',
     'complexity': "normal",
     "description": """
 Accounting and Financial Management.
@@ -103,8 +103,7 @@ module named account_voucher.
         'account_end_fy.xml',
         'account_invoice_view.xml',
         'partner_view.xml',
-        'data/account_invoice.xml',
-        'data/account_data2.xml',
+        'data/account_data.xml',
         'account_invoice_workflow.xml',
         'project/project_view.xml',
         'project/project_report.xml',
@@ -119,7 +118,7 @@ module named account_voucher.
         'process/statement_process.xml',
         'process/customer_invoice_process.xml',
         'process/supplier_invoice_process.xml',
-        'sequence_view.xml',
+        'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",

@@ -23,7 +23,7 @@
 {
     'name': 'Purchase Management',
     'version': '1.1',
-    'category': 'Purchases',
+    'category': 'Purchase Management',
     'complexity': "easy",
     'description': """
 Purchase module is for generating a purchase order for purchase of goods from a supplier.
@@ -66,7 +66,8 @@ Dashboard for purchase management that includes:
              'purchase_unit_test.xml',
              'test/procurement_buy.yml',
              'test/purchase_report.yml',
-    ],
+             'test/purchase_order_cancel_draft.yml'
+                 ],
     'demo': ['purchase_demo.xml'],
     'installable': True,
     'active': False,

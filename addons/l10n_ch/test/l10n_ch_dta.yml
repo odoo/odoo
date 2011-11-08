@@ -1,0 +1,221 @@
+-
+  In order to test DTA generation I make an invoice and create the DTA from it.
+-
+  I create an invoice on 1st January for 7000 EUR 
+  ###########################
+ #   Creating 1 invoice    # 
+###########################
+-
+  !record {model: account.invoice, id: dta_account_invoice}:
+    company_id: base.main_company
+    journal_id: account.bank_journal
+    currency_id: base.EUR
+    account_id: account.a_pay
+    type : in_invoice
+    partner_id: base.res_partner_agrolait
+    address_contact_id: base.res_partner_address_8
+    address_invoice_id: base.res_partner_address_8
+    reference_type: bvr
+    reference: 111111111111111111111111111111 
+    date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
+    period_id: account.period_1
+    #invoice_line: 
+    partner_bank_id: main_partner_bank
+    check_total : 7000
+-
+  I add an invoice line
+-
+  !record {model: account.invoice.line, id: dta_invoice_line}:
+    account_id: account.a_expense
+    name: '[PC1] Basic PC'
+    price_unit: 700.0
+    quantity: 10.0
+    product_id: product.product_product_pc1
+    uos_id: product.product_uom_unit
+    invoice_id: dta_account_invoice
+
+
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: dta_account_invoice}
+
+-
+  I create my payment order to pay my invoice
+  ###########################
+ #   Doing payment order   # 
+###########################
+-
+  !record {model: payment.order, id: dta_payment_order}:
+    #date_created
+    #date_done
+    date_prefered: due
+    #date_scheduled
+    #line_ids:
+    mode: l10n_ch.payment_mode_dta
+    #reference
+    state: draft
+    total: 7000
+    #user_id
+-
+  I add a payment line to my payment order
+-
+  !record {model: payment.line, id: dta_pay_line}:
+    amount: 7000
+    amount_currency: 7000
+    bank_id: l10n_ch.agro_bank
+    #bank_statement_line_id
+    communication: "111111111111111111111111111111"
+    #communication2
+    company_currency: base.EUR
+    #create_date
+    currency: base.EUR
+    #date
+    #info_owner
+    #info_partner
+    #ml_date_created
+    #ml_inv_ref
+    #ml_maturity_date
+    move_line_id: !ref {model: account.move.line, search: "[('ref','=','111111111111111111111111111111')]"}
+    #name  (reference)
+    order_id: dta_payment_order
+    partner_id: base.res_partner_agrolait
+    state: normal
+    
+-
+  I generate a DTA file by using the wizard "Create DTA" for my payment order
+-
+  !python {model: create.dta.wizard}: |
+    import base64
+    wiz_id = self.create(cr,uid,[])
+    wiz = self.browse(cr, uid, wiz_id)
+    pay_order_id =  ref("dta_payment_order")
+    #set the payment order as the active id
+    context['active_ids'] = [pay_order_id]
+    context['active_id'] = pay_order_id
+    result = wiz.create_dta(context=context)
+    assert result, "No result returned"
+
+    data = wiz.read(['dta_file'])
+    dta_file = base64.decodestring(data[0]['dta_file'] or '')
+    assert dta_file, "File is empty"
+    
+    #check that file starts with 1st segment characters "01"
+    assert dta_file[:2] == "01", "File is not a DTA file"
+    
+    payment_obj = self.pool.get('payment.order')
+    payment_obj.set_done(cr, uid, [ref('dta_payment_order')], context)
+    #force state in open state (confirmed)
+    payment_obj.write(cr, uid, [ref('dta_payment_order')], {'state': 'open'})
+
+-
+  I check the execution date is today
+-
+  !assert {model: payment.order, id: dta_payment_order}:
+   - date_done == datetime.now().date().strftime('%Y-%m-%d')
+
+-
+  I check my payment order state is Confirmed
+-
+  !assert {model: payment.order, id: dta_payment_order, string: state is done}:
+    - state == 'open'
+
+-
+  I create a Bank Statment in order to confirm the payment line
+-
+  !record {model: account.bank.statement, id: dta_bank_statement}:
+    #account_id:
+    #balance_end:
+    #balance_end_cash:
+    #balance_end_real:
+    #balance_start:
+    #closing_date:
+    #company_id:
+    #currency:
+    date: !eval "'%s-01-01' %(datetime.now().year)"
+    #ending_details_ids:
+    journal_id: account.bank_journal
+    #line_ids:
+    #move_line_ids
+    name: "/"
+    period_id: account.period_1
+    #starting_details_ids
+    state: draft
+    #total_entry_encoding
+    #user_id
+    
+#-
+#  I import the payment line
+#-
+#  !python {model: account.payment.populate.statement}: |
+#    wiz_id = self.create(cr,uid,[])
+#    wiz = self.browse(cr, uid, wiz_id)
+#    
+#    line_obj = self.pool.get('payment.line')
+#    pay_line_ids = line_obj.search(cr, uid, [('communication','=','111111111111111111111111111111'),('amount','=','7000')])
+#    
+#    data = { 'lines': [(6, 0, [pay_line_ids[0]])],}
+#    wiz.write(data)
+#    
+#    context['active_id'] = ref('dta_bank_statement')
+#    context['active_ids'] = [ref('dta_bank_statement')]
+#    
+#    self.populate_statement(cr, uid, [wiz_id], context=context)
+#
+#
+#-
+#  I check the statement line is created
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: statement_line_ids is not empty}:
+#    - line_ids
+#
+#-
+#  I check the voucher line is created
+#-
+#  !python {model: account.bank.statement}: |
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#    
+#    assert statement.line_ids[0].voucher_id.line_ids, "Voucher line is missing"
+#    assert len(statement.line_ids[0].voucher_id.line_ids) == 1, "There are too many voucher lines"
+#
+#-
+#  In order to confirm my bank statement, I enter the closing balance and press on compute button
+#-
+#  !python {model: account.bank.statement}: |
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#    statement.write({'balance_end_real': -7000.0})
+#    self.button_dummy(cr, uid, [ref('dta_bank_statement')], context=context)
+#    statement = self.browse(cr, uid, ref('dta_bank_statement'))
+#
+#-
+#  I confirm my bank statement
+#-
+#  !python {model: account.bank.statement}: |
+#    self.button_confirm_bank(cr, uid, [ref('dta_bank_statement')], context=context)
+#
+#
+#-
+#  I check the move lines have been defined
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: move_line_ids is not empty}:
+#    - move_line_ids
+#
+#    
+#-
+#  I check bank statement is Closed and balance is -7000
+#-
+#  !assert {model: account.bank.statement, id: dta_bank_statement, string: state is Closed and balance is -7000}:
+#    - state == 'confirm'
+#    - balance_end == -7000.0
+#    
+#-
+#  I check the residual amount of invoice, should be 0 in residual currency and 0 in amount_residual and paid
+#-
+#  !python {model: account.invoice}: |
+#    invoice_id = self.browse(cr, uid, ref("dta_account_invoice"))
+#    move_line_obj = self.pool.get('account.move.line')
+#    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+#    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+#    assert move_line.amount_residual_currency == 0.0, "Residual amount currency is not correct : %.2f" % move_line.amount_residual_currency
+#    assert move_line.amount_residual == 0.0 , "Residual amount of invoice is not correct : %.2f" % move_line.amount_residual
+#    assert invoice_id.state == 'paid', "Invoice state is not Paid"

@@ -2,13 +2,6 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0"/>
-        <menuitem
-            action="hr.open_board_hr"
-            icon="terp-graph"
-            id="base.menu_hr_project"
-            parent="base.menu_hr_dasboard"
-            sequence="4"/>
         <record id="action_my_expense" model="ir.actions.act_window">
             <field name="name">My Expenses</field>
             <field name="res_model">hr.expense.expense</field>

@@ -21,7 +21,6 @@
 
 import project
 import company
-import installer
 import report
 import wizard
 import res_partner

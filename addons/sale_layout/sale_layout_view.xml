@@ -38,7 +38,7 @@
                                             name="product_packaging"
                                             attrs="{'readonly':[('layout_type','!=','article')]}"
                                             context="{'partner_id':parent.partner_id,'quantity':product_uom_qty,'pricelist':parent.pricelist_id,'shop':parent.shop_id,'uom':product_uom}"
-                                            on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
+                                            on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
                                             domain="[('product_id','=',product_id)]"
                                             groups="base.group_extended"/>
                                         <separator colspan="4" string="Manual Description" />

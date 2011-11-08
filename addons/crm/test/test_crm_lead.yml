@@ -1,21 +1,9 @@
-﻿-  |
-   In order to test the CRM in OpenERP,
-   I will do a customer qualification process that
-   starts with a fist contact with a customer (a lead), which will be converted to a
-   business opportunity and a partner.
+﻿-
+   In order to test the CRM in OpenERP, I will do a customer qualification
+   process that starts with a fist contact with a customer (a lead), which will
+   be converted to a business opportunity and a partner.
 -
-  I check installer report.
--
-  !record {model: base.setup.installer , id: base_action_rule_0_1}:
-    name: Test_action
--
-  I create the view at the time of setup.
--
-   !python {model: base.setup.installer}: |
-      self.fields_view_get(cr, uid,view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
--  |
-   In order to test the flow, I create a two new users "user_crm" and
-   I assign the group "salesman".
+   I create a two new users "user_crm" and I assign the group "salesman".
 -
    !record {model: res.users, id: res_users_usercrm0}:
      company_id: base.main_company

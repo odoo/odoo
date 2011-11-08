@@ -38,9 +38,12 @@ class account_chart(osv.osv_memory):
                                         ], 'Target Moves', required=True),
     }
 
+    def _get_fiscalyear(self, cr, uid, context=None):
+        """Return default Fiscalyear value"""
+        return self.pool.get('account.fiscalyear').find(cr, uid, context=context)
+
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear_id=False, context=None):
         res = {}
-        res['value'] = {}
         if fiscalyear_id:
             start_period = end_period = False
             cr.execute('''
@@ -50,7 +53,7 @@ class account_chart(osv.osv_memory):
                                WHERE f.id = %s
                                ORDER BY p.date_start ASC
                                LIMIT 1) AS period_start
-                UNION
+                UNION ALL
                 SELECT * FROM (SELECT p.id
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
@@ -63,6 +66,8 @@ class account_chart(osv.osv_memory):
                 start_period = periods[0]
                 end_period = periods[1]
             res['value'] = {'period_from': start_period, 'period_to': end_period}
+        else:
+            res['value'] = {'period_from': False, 'period_to': False}
         return res
 
     def account_chart_open_window(self, cr, uid, ids, context=None):
@@ -96,7 +101,8 @@ class account_chart(osv.osv_memory):
         return result
 
     _defaults = {
-        'target_move': 'posted'
+        'target_move': 'posted',
+        'fiscalyear': _get_fiscalyear,
     }
 
 account_chart()

@@ -164,7 +164,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.purchase_requisition:
                 requisition_id=self.pool.get('purchase.requisition').create(cr, uid, {
                     'name': sequence_obj.get(cr, uid, 'purchase.order.requisition'),
-                    'origin': procurement.name,
+                    'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id':procurement.purchase_id and procurement.purchase_id.warehouse_id.id,
                     'company_id':procurement.company_id.id,

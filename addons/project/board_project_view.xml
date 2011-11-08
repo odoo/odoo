@@ -48,7 +48,7 @@
         </record>
 
 
-        <record id="action_view_task_tree" model="ir.actions.act_window">
+        <record id="my_open_tasks_action" model="ir.actions.act_window">
             <field name="name">My Open Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
@@ -83,7 +83,7 @@
                 <form string="My Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4"  height="100" name="%(action_view_task_tree)d" string="My Open Tasks" width="510"/>
+                            <action colspan="4"  height="100" name="%(my_open_tasks_action)d" string="My Open Tasks" width="510"/>
                             <action colspan="4"  height="100" name="%(action_view_delegate_task_tree)d" string="My Delegated Tasks" width="510"/>
                         </child1>
                         <child2>

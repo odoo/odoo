@@ -262,7 +262,7 @@
                 <form string="Products">
                      <group col="6">
                           <field name="name" select="1"/>
-                          <field name="category_id" widget="selection"/>
+                          <field name="category_id"/>
                           <field name="price" />
                      </group>
                      <notebook colspan="4">
@@ -300,7 +300,7 @@
             <field name="arch" type="xml">
                 <search string="Products">
                     <field name="name" />
-                    <field name="category_id" widget="selection"/>
+                    <field name="category_id"/>
                     <field name="price"/>
                 </search>
             </field>

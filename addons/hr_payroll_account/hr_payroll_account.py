@@ -59,9 +59,10 @@ class hr_payslip(osv.osv):
         move_ids = []
         move_to_cancel = []
         for slip in self.browse(cr, uid, ids, context=context):
-            move_ids.append(slip.move_id.id)
-            if slip.move_id.state == 'posted':
-                move_to_cancel.append(slip.move_id.id)
+            if slip.move_id:
+                move_ids.append(slip.move_id.id)
+                if slip.move_id.state == 'posted':
+                    move_to_cancel.append(slip.move_id.id)
         move_pool.button_cancel(cr, uid, move_to_cancel, context=context)
         move_pool.unlink(cr, uid, move_ids, context=context)
         return super(hr_payslip, self).cancel_sheet(cr, uid, ids, context=context)

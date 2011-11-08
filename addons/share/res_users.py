@@ -24,7 +24,7 @@ class res_groups(osv.osv):
     _name = "res.groups"
     _inherit = 'res.groups'
     _columns = {
-        'share': fields.boolean('Share Group', groups='share.group_share', readonly=True, 
+        'share': fields.boolean('Share Group', readonly=True,
                     help="Group created to set access rights for sharing data with some users.")
      }
 res_groups()
@@ -33,7 +33,7 @@ class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
     _columns = {
-        'share': fields.boolean('Share User', groups='share.group_share', readonly=True, 
+        'share': fields.boolean('Share User', readonly=True,
                     help="External user with limited access, created only for the purpose of sharing data.")
      }
 res_users()
