@@ -61,7 +61,7 @@ init: function(parent, dataset, view_id) {
         
         this.database_projects = started_projects;
         
-        if(!self.name) {
+        if(!self.name && started_projects.length) {
             var name = started_projects[0][self.parent];
             self.name = name instanceof Array? name[name.length - 1] : name;
         }
@@ -79,26 +79,6 @@ init: function(parent, dataset, view_id) {
             .done(this.init_gantt_view());
     },
     
-    generate_projects : function() {
-        var projects = this.database_projects,
-            self = this;
-        
-        this.GanttTasks = [];
-        if(this.group_by.length) {
-            _.each(this.GroupProject, function(grp, index) {
-                self.GanttTasks.push([]);
-                _.each(grp, function(g, g_index) {
-                    self.GanttTasks[index].push(new GanttTaskInfo(index + '_'+ g_index, g, self.project_start_date, self.total_duration, 100, ""));
-                });
-//                self.GanttTasks.push(new GanttTaskInfo(index, grp, self.project_start_date, self.total_duration, 100, ""));
-            });
-        } else {
-            this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
-        }
-        this.GanttProjects = new GanttProjectInfo(0, self.name, self.project_start_date);
-        return $.Deferred().resolve().promise();
-    },
-    
     group_projects: function() {
         var def = $.Deferred(),
             self = this,
@@ -106,17 +86,66 @@ init: function(parent, dataset, view_id) {
             
         if (!this.group_by.length) return def.resolve().promise();
         
-        this.GroupProject = [];
-        
-        _.each(this.group_by, function(group) {
-            self.GroupProject.push(
-                _.uniq(
-                    _.map(_.pluck(projects, group), function(prj) {
-                        return prj instanceof Array ? prj[1] : prj;
-                    })
-                ));
-        });
+        this.GroupProject = _.map(this.group_by, function(grp) {
+                return _.groupBy(projects, function(prj) {
+                    return prj[grp];
+                })
+            });
         return def.resolve().promise();
+    },
+    
+    generate_projects : function() {
+        var projects = this.database_projects,
+            self = this;
+        
+        this.GanttTasks = [];
+        if(this.group_by.length) {
+            _.each(this.GroupProject, function(GrpProject, index) {
+                self.GanttTasks.push([]);
+                var counter = 0;
+                _.each(GrpProject, function(grp, grpindex) {
+                    var name = grpindex.split(',');
+                    self.GanttTasks[index]
+                        .push(new GanttTaskInfo(index + '_' + counter , name[name.length - 1], self.project_start_date, self.total_duration, 100, ""));
+                    counter += 1;
+                });
+            })
+        } else {
+            this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
+        }
+        this.GanttProjects = new GanttProjectInfo(0, self.name, self.project_start_date);
+        return $.Deferred().resolve().promise();
+    },
+    
+    add_tasks: function() {
+        var self = this,
+            tasks = this.database_projects;
+        if (this.group_by.length) {
+            _.each(this.GroupProject, function(grpproject, index) {
+                var counter = 0;
+                _.each(grpproject, function(prj, gindex) {
+                    _.each(prj, function(task, tindex) {
+                        var name = task[self.text];
+                        if (task[self.text] instanceof Array) {
+                            name = task[self.text][1];
+                        }
+                        self.GanttTasks[index][counter]
+                            .addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""))
+                    });
+                    counter += 1;
+                })
+            });
+        }
+        else {
+            _.each(tasks, function(task, index){
+                var name = task[self.text];
+                if (task[self.text] instanceof Array) {
+                    name = task[self.text][1];
+                }
+                self.GanttTasks[0].addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""));
+            });
+        }
+        return $.Deferred().resolve().promise();
     },
     
     get_project_duration: function() {
@@ -158,23 +187,6 @@ init: function(parent, dataset, view_id) {
         return $.Deferred().resolve().promise();
     },
     
-    add_tasks: function() {
-        var self = this,
-            tasks = this.database_projects;
-        if (this.group_by.length) {
-        }
-        else {
-            _.each(tasks, function(task, index){
-                var name = task[self.text];
-                if (task[self.text] instanceof Array) {
-                    name = task[self.text][1];
-                }
-                self.GanttTasks[0].addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""));
-            });
-        }
-        return $.Deferred().resolve().promise();
-    },
-    
     project_starting_date : function() {
         var self = this,
             projects = this.database_projects,
@@ -196,11 +208,11 @@ init: function(parent, dataset, view_id) {
         var self = this;
         
         if (this.group_by.length) {
-            _.each(this.GanttTasks, function(tasks) {
-                _.each(tasks, function(task, index) {
+            _.each(self.GanttTasks, function(tasks, index) {
+                _.each(tasks, function(task, tindex) {
                     self.GanttProjects.addTask(task);
-                })
-            });
+                });
+            })
         }
         else {
             _.each(this.GanttTasks, function(tsk, index){
