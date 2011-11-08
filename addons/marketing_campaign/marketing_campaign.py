@@ -707,7 +707,7 @@ class marketing_campaign_workitem(osv.osv):
 
             if result:
                 # process _chain
-                workitem = workitem.browse(context)[0] # reload
+                workitem = workitem.browse(context=context)[0] # reload
                 date = datetime.strptime(workitem.date, DT_FMT)
 
                 for transition in activity.to_ids:
