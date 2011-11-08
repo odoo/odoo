@@ -32,15 +32,14 @@
     name: John
     category_id:
       - res_partner_category_customers0
-    answers_ids:
-      - crm_profiling_answer_openerppartner0
 
 -
   Define the answers and category to partner.
 -
   !python {model: res.partner}: |
     data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
-    self._questionnaire_compute(cr, uid, data, context)
+    context['active_id'] = ref('res_partner_john0')
+    self._questionnaire_compute(cr, uid, [ref('crm_profiling_answer_openerppartner0')], context)
 - |
   I start by creating new Questionnaire.
 -
@@ -51,13 +50,6 @@
       - crm_profiling.activity_sector
       - crm_profiling.nb_employees
       - crm_profiling.partner_level
-- |
-  I create the form for the "Base questionnaire".
--
-  !python {model: crm_profiling.questionnaire}: |
-    context.update({'active_id':ref('res_partner_john0')})
-    data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
-    self.build_form(cr, uid, data, context)
 -
   I create a segmentation record.
 -
