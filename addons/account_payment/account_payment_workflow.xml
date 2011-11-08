@@ -31,7 +31,7 @@ write({'state':'open'})</field>
         <record id="act_cancel" model="workflow.activity">
             <field name="name">cancel</field>
             <field name="wkf_id" ref="wkf_payment_order"/>
-            <field name="action">write({'state':'cancel'})</field>
+            <field name="action">action_cancel()</field>
             <field name="kind">function</field>
             <field name="flow_stop">True</field>
         </record>
