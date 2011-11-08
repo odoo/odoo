@@ -382,18 +382,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 case "side-remove":
                     break;
                 case "side-edit":
-                    var tag, fld_name;
                     var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
-                    var tag_fld = tr.split(" ");
-                    if (tag_fld.length > 3){
-                        tag = tag_fld[1].replace(/[^a-zA-Z 0-9]+/g,'');
-                        fld_name = tag_fld[2].split("=")[1].replace(/[^a-zA-Z _ 0-9]+/g,'');
-                    }else{
-                        tag = tag_fld[1].replace(/[^a-zA-Z 0-9]+/g,'');
-                        fld_name= tag;
-                    }
+                    var tag = _.detect(_.keys(_PROPERTIES),function(res){
+                        return _.includes(tr, res);
+                    });
                     var properties = _PROPERTIES[tag];
-                    self.on_edit_node(properties, fld_name, tr_id, one_object, view_id, view_xml_id, level);
+                    self.on_edit_node(properties, tr_id, one_object, view_id, view_xml_id, level);
                     break;
                 case "side-up":
                     while (1) {
@@ -579,7 +573,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             tr.show();
         });
     },
-    on_edit_node:function(properties, fld_name, tr_id, obj, view_id, view_xml_id, level){
+    on_edit_node:function(properties, tr_id, obj, view_id, view_xml_id, level){
         var self = this;
         this.edit_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
@@ -606,8 +600,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.edit_node_dialog.start().open();
         var widget = ['readonly','required','nolabel','completion','widget','groups','position','icon','align','special','type','target'];
         var arch_val = self.get_view_object(tr_id,one_object,[]);
-        self.edit_node_dialog.$element.append('<table id="rec_table" class="oe_forms"></table>');
-        self.edit_widget = [];
+        this.edit_node_dialog.$element.append('<table id="rec_table" class="oe_forms"></table>');
+        this.edit_widget = [];
         _.each(properties,function(record){
             var id = record,
             type_widget;
