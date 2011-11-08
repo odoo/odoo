@@ -254,13 +254,13 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font><font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Bold_9'}) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_9"><font face="Times-Roman">[[ repeatIn(get_lines_another('liability'), 'a') ]]</font>[[ a['code'] ]]<font>[[ (a['level']&lt;4 or a['code'] == 'Net Profit') and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font') ]] </font></para>
         </td>
         <td>
-          <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font><font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Bold_9'}) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_9"><font color="white">[[  '. '*(a['level']-1) ]]</font><font>[[ (a['level']&lt;4 or a['name'] == 'Net Profit') and ( setTag('para','para',{'style':'terp_default_Bold_9'})) or removeParentNode('font')  ]][[ a['name'] ]]</font></para>
         </td>
         <td>
-          <para style="terp_default_Right_9"><font>[[ a['level']&lt;4 and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(abs(a['balance'])) ]] [[ company.currency_id.symbol ]]</font><font>[[ a['name']=='Net Profit' and setTag('para','para',{'style':'terp_default_Right_9_Bold'}) or removeParentNode('font') ]]</font></para>
+          <para style="terp_default_Right_9"><font>[[ (a['level']&lt;4 or a['name'] == 'Net Profit') and ( setTag('para','para',{'style':'terp_default_Right_9_Bold'})) or removeParentNode('font')  ]]</font><font>[[ formatLang(abs(a['balance'])) ]] [[ company.currency_id.symbol ]]</font></para>
         </td>
       </tr>
     </blockTable>
