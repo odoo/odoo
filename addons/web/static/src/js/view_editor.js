@@ -1,53 +1,4 @@
 openerp.web.view_editor = function(openerp) {
-var _PROPERTIES = {
-    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
-               'colspan', 'widget', 'eval', 'ref', 'on_change', 'groups', 'attrs'],
-    'form' : ['string', 'col', 'link'],
-    'notebook' : ['colspan', 'position', 'groups'],
-    'page' : ['string', 'states', 'attrs', 'groups'],
-    'group' : ['string', 'col', 'colspan', 'states', 'attrs', 'groups'],
-    'image' : ['filename', 'width', 'height', 'groups'],
-    'separator' : ['string', 'colspan', 'groups'],
-    'label': ['string', 'align', 'colspan', 'groups'],
-    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'groups','colspan'],
-    'newline' : [],
-    'hpaned': ['position', 'groups'],
-    'vpaned': ['position', 'groups'],
-    'child1' : ['groups'],
-    'child2' : ['groups'],
-    'action' : ['name', 'string', 'colspan', 'groups'],
-    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows'],
-    'graph' : ['string', 'type'],
-    'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
-    'view' : [],
-};
-var icons = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
-            'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
-            'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
-            'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
-            'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
-            'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
-            'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
-            'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
-            'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
-            'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
-            'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
-            'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
-            'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
-            'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
-            'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
-            'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
-            'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
-            'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
-            'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
-            'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
-            'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
-            'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
-            'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
-            'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
-            'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
-            'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
-];
 var QWeb = openerp.web.qweb;
 openerp.web.ViewEditor =   openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
@@ -578,7 +529,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             buttons: {
                     "Update": function(){
                         var update_values = [];
-                        _.each(self.edit_widget,function(widget){
+                        _.each(self.edit_widget, function(widget) {
                             var value = widget.get_value();
                             if (value) {
                                 update_values.push(value);
@@ -594,26 +545,25 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         this.edit_node_dialog.start().open();
         var widget = _.keys(self.property.map);
-        var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'],[]);
+        var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'], []);
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
-        _.each(properties,function(record){
+        _.each(properties, function(record) {
             var id = record,
             type_widget;
             self.ready  = $.when(self.on_groups(id)).then(function () {
                 if (_.include(widget,id)){
                     type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, arch_val, id);
-                    self.edit_widget.push(type_widget);
                 } else {
                     type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog,arch_val, id);
-                    self.edit_widget.push(type_widget);
                 }
+                self.edit_widget.push(type_widget);
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
                 var view_val = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, id);
                 });
                 var value = null;
-                (id=='groups')?type_widget.set_value(self.groups,view_val):type_widget.set_value(value,view_val);
+                id == 'groups'? type_widget.set_value(self.groups, view_val): type_widget.set_value(value, view_val);
                 type_widget.start();
             });
         });
@@ -622,7 +572,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     on_groups: function(id){
         var self = this,
         def = $.Deferred();
-        if (id !='groups') {
+        if (id != 'groups') {
             self.groups = false;
             return false;
         }
@@ -632,7 +582,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var res_groups = new openerp.web.DataSetSearch(this,'res.groups', null, null),
             model_data = new openerp.web.DataSetSearch(self,'ir.model.data', null, null);
             res_groups
-            .read_slice([],{})
+            .read_slice([], {})
             .done(function(res_grp) {
                 _.each(res_grp,function(res){
                     var key = res.id;
@@ -675,17 +625,17 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         });
     },
     set_value: function(value,view_val) {
-        var self = this;
+        console.log("self.edit_widget.push(type_widget);:::::::",view_val, view);
         if (view_val) {
-            this.$element.find("input[id="+ self.name+"]").attr('checked', view_val[1]);
+            this.$element.find("input[id=" + self.name+ "]").attr('checked', view_val[1]);
         }
     },
     get_value: function() {
         if (!this.dirty) {
             return false;
         }
-        var val = this.$element.find("input[id="+this.name+"]").is(':checked');
-        return val ? [this.name,val] : [this.name,null];
+        var value = this.$element.find("input[id=" + this.name + "]").is(':checked');
+        return value ? [this.name, value] : [this.name, null];
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
@@ -697,33 +647,31 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         });
     },
     set_value: function(value,view_val) {
-        var self = this;
-        view_val ? this.$element.find("input[id="+self.name+"]").val(view_val[1]): this.$element.find("tr[id="+self.name+"] input").val();
+        view_val ? this.$element.find("input[id=" + this.name + "]").val(view_val[1]): this.$element.find("tr[id=" + this.name + "] input").val();
     },
     get_value: function() {
         if (!this.dirty) {
             return false;
         }
-        var self = this;
-        var val= this.$element.find("input[id="+this.name+"]").val();
-        return val ? [this.name,val] : [this.name,""];
+        var value= this.$element.find("input[id=" + this.name + "]").val();
+        return value ? [this.name, value] : [this.name, ""];
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     template : "vieweditor_selection",
     start: function () {
         var self = this;
-        this.$element.find("select[id="+ this.name +"]").css('width','100%').change(function() {
+        this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
         });
     },
     set_value: function(value, view_val) {
         var self = this;
         _.each(value, function(item) {
-            var select_val = view_val?(view_val[1]==((typeof(item)=='string')?item:item[0])?true:false):false;
-            self.$element.find("select[id="+self.name+"]").append($("<option/>", {
-                    value:(typeof(item)=='string')?item:item[0],
-                    text:(typeof(item)=='string')?item:item[1],
+            var select_val = view_val? (view_val[1] == ((typeof(item) == 'string')? item:item[0])?true: false): false;
+            self.$element.find("select[id=" + self.name + "]").append($("<option/>", {
+                    value: (typeof(item) == 'string') ? item: item[0],
+                    text: (typeof(item) == 'string')? item: item[1],
                     selected:select_val
             }));
         });
@@ -732,9 +680,8 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         if (!this.dirty) {
             return false;
         }
-        var self = this;
-        var val = this.$element.find("select[id="+this.name+"]").find("option:selected").val();
-        return  val ? [this.name,val] : [this.name,""];
+        var value = this.$element.find("select[id=" + this.name + "]").find("option:selected").val();
+        return  value ? [this.name, value] : [this.name, ""];
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
@@ -742,63 +689,103 @@ openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.exten
         this._super(view, node, id);
         this.registry = openerp.web.form.widgets;
     },
-    set_value: function(value,view_val) {
-        var self= this;
+    set_value: function(value, view_val) {
         value = _.keys(this.registry.map);
         value.push('');
         value.sort();
-        this._super.apply(this,[value,view_val]);
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
-        value = icons;
-        this._super.apply(this,[value,view_val]);
+    set_value: function(value, view_val) {
+        this._super.apply(this,[icons, view_val]);
     }
 });
 openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
-        value = [['',''],['new','New Window']];
-        this._super.apply(this,[value,view_val]);
+    set_value: function(value, view_val) {
+        value = [['', ''], ['new', 'New Window']];
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
-        value = [['',''],['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
-        this._super.apply(this,[value,view_val]);
+    set_value: function(value, view_val) {
+        value = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
-        value = [['',''],['0.0','Left'], ['0.5','Center'], ['1.0','Right']];
-        this._super.apply(this,[value,view_val]);
+    set_value: function(value, view_val) {
+        value = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
-        value = [['',''],['save','Save Button'], ['cancel','Cancel Button'], ['open','Open Button']];
-        this._super.apply(this,[value,view_val]);
+    set_value: function(value, view_val) {
+        value = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
+    set_value: function(value, view_val) {
         value = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
-        this._super.apply(this,[value,view_val]);
+        this._super.apply(this,[value, view_val]);
     }
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value,view_val) {
-        var self = this;
+    set_value: function(value, view_val) {
         this.$element.find("select[id="+ this.name +"]").attr('multiple', true).css('height','100px');
         this._super.apply(this,[value, view_val]);
     }
 });
+var _PROPERTIES = {
+    'field' : ['name', 'string', 'required', 'readonly', 'domain', 'context', 'nolabel', 'completion',
+               'colspan', 'widget', 'eval', 'ref', 'on_change', 'groups', 'attrs'],
+    'form' : ['string', 'col', 'link'],
+    'notebook' : ['colspan', 'position', 'groups'],
+    'page' : ['string', 'states', 'attrs', 'groups'],
+    'group' : ['string', 'col', 'colspan', 'states', 'attrs', 'groups'],
+    'image' : ['filename', 'width', 'height', 'groups'],
+    'separator' : ['string', 'colspan', 'groups'],
+    'label': ['string', 'align', 'colspan', 'groups'],
+    'button': ['name', 'string', 'icon', 'type', 'states', 'readonly', 'special', 'target', 'confirm', 'context', 'attrs', 'groups','colspan'],
+    'newline' : [],
+    'hpaned': ['position', 'groups'],
+    'vpaned': ['position', 'groups'],
+    'child1' : ['groups'],
+    'child2' : ['groups'],
+    'action' : ['name', 'string', 'colspan', 'groups'],
+    'tree' : ['string', 'colors', 'editable', 'link', 'limit', 'min_rows'],
+    'graph' : ['string', 'type'],
+    'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
+    'view' : [],
+};
+var icons = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
+            'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
+            'STOCK_CONNECT', 'STOCK_CONVERT', 'STOCK_COPY', 'STOCK_CUT', 'STOCK_DELETE',
+            'STOCK_DIALOG_AUTHENTICATION', 'STOCK_DIALOG_ERROR', 'STOCK_DIALOG_INFO',
+            'STOCK_DIALOG_QUESTION', 'STOCK_DIALOG_WARNING', 'STOCK_DIRECTORY', 'STOCK_DISCONNECT',
+            'STOCK_DND', 'STOCK_DND_MULTIPLE', 'STOCK_EDIT', 'STOCK_EXECUTE', 'STOCK_FILE',
+            'STOCK_FIND', 'STOCK_FIND_AND_REPLACE', 'STOCK_FLOPPY', 'STOCK_GOTO_BOTTOM',
+            'STOCK_GOTO_FIRST', 'STOCK_GOTO_LAST', 'STOCK_GOTO_TOP', 'STOCK_GO_BACK',
+            'STOCK_GO_DOWN', 'STOCK_GO_FORWARD', 'STOCK_GO_UP', 'STOCK_HARDDISK',
+            'STOCK_HELP', 'STOCK_HOME', 'STOCK_INDENT', 'STOCK_INDEX', 'STOCK_ITALIC',
+            'STOCK_JUMP_TO', 'STOCK_JUSTIFY_CENTER', 'STOCK_JUSTIFY_FILL',
+            'STOCK_JUSTIFY_LEFT', 'STOCK_JUSTIFY_RIGHT', 'STOCK_MEDIA_FORWARD',
+            'STOCK_MEDIA_NEXT', 'STOCK_MEDIA_PAUSE', 'STOCK_MEDIA_PLAY',
+            'STOCK_MEDIA_PREVIOUS', 'STOCK_MEDIA_RECORD', 'STOCK_MEDIA_REWIND',
+            'STOCK_MEDIA_STOP', 'STOCK_MISSING_IMAGE', 'STOCK_NETWORK', 'STOCK_NEW',
+            'STOCK_NO', 'STOCK_OK', 'STOCK_OPEN', 'STOCK_PASTE', 'STOCK_PREFERENCES',
+            'STOCK_PRINT', 'STOCK_PRINT_PREVIEW', 'STOCK_PROPERTIES', 'STOCK_QUIT',
+            'STOCK_REDO', 'STOCK_REFRESH', 'STOCK_REMOVE', 'STOCK_REVERT_TO_SAVED',
+            'STOCK_SAVE', 'STOCK_SAVE_AS', 'STOCK_SELECT_COLOR', 'STOCK_SELECT_FONT',
+            'STOCK_SORT_ASCENDING', 'STOCK_SORT_DESCENDING', 'STOCK_SPELL_CHECK',
+            'STOCK_STOP', 'STOCK_STRIKETHROUGH', 'STOCK_UNDELETE', 'STOCK_UNDERLINE',
+            'STOCK_UNDO', 'STOCK_UNINDENT', 'STOCK_YES', 'STOCK_ZOOM_100',
+            'STOCK_ZOOM_FIT', 'STOCK_ZOOM_IN', 'STOCK_ZOOM_OUT',
+            'terp-account', 'terp-crm', 'terp-mrp', 'terp-product', 'terp-purchase',
+            'terp-sale', 'terp-tools', 'terp-administration', 'terp-hr', 'terp-partner',
+            'terp-project', 'terp-report', 'terp-stock', 'terp-calendar', 'terp-graph'
+];
 openerp.web.ViewEditor.property_widget = new openerp.web.Registry({
     'required' : 'openerp.web.ViewEditor.FieldBoolean',
     'readonly' : 'openerp.web.ViewEditor.FieldBoolean',
