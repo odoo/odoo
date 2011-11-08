@@ -95,6 +95,8 @@ Dashboard for Sales Manager that includes:
         #'test/sale_procurement.yml',
         #'test/invoice_on_ordered_qty.yml',
         'test/ui/make_invoice_advance.yml',
+        'test/ui/make_invoice_advance1.yml',
+        'test/ui/make_invoice_advance2.yml',
         'test/ui/delete_order.yml',
         'test/ui/sale_report.yml',
     ],

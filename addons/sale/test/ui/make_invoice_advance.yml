@@ -40,36 +40,3 @@
       assert line.invoice_line, "Account invoice line has not been created for order3"
     for line in inv1:
       assert line.invoice_line, "Account invoice line has not been created for order5"
--
-  I open the Invoice for the SO.
--
-  !python {model: account.invoice}: |
-    import netsvc
-    wf_service = netsvc.LocalService("workflow")
-    inv = self.search(cr, uid, [('origin','=','SO003|SO005|')])
-    for id in inv:
-        wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
--
-  I assign an analytic journal to the bank journal
--
-  !record {model: account.journal, id: sale.account_journal_bankjournal0}:
-    analytic_journal_id: account.cose_journal_sale
-    code: SAL
-    name: sales Journal
-    view_id: account.account_journal_view
-    type: 'general'
--
-  I pay the invoice.
--
-  !python {model: account.invoice}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("order3"))
-    invoice_id = self.search(cr, uid, [('origin','=',so.name)])
-    print invoice_id, ref('account.cash'), ref('account.period_5'),ref('sale.account_journal_bankjournal0'), ref('account.cash'),ref('account.period_8'), ref('sale.account_journal_bankjournal0')
-    self.pay_and_reconcile(cr, uid, so.invoice_ids[0].id,40000.0, ref('account.cash'), ref('account.period_5'),ref('sale.account_journal_bankjournal0'), ref('account.cash'),ref('account.period_8'), ref('sale.account_journal_bankjournal0'),name='tst')
--
-  I verify the invoice is in Paid state
--
-  !python {model: account.invoice}: |
-    invoice_id = self.search(cr, uid, [('origin','=','SO003|SO005|'),('state','=','paid')])
-    assert invoice_id, "Invoice for SO is not in done state."
