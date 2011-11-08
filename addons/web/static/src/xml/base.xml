@@ -1330,14 +1330,13 @@
         <t t-call="view_editor.row"/>
     </t>
 </tr>
-<t t-name="view_char">
+<t t-name="vieweditor_char">
     <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
 </t>
-<t t-name="view_selection">
-    <select style="width:366px" t-att-id="widget.name">
-    </select>
+<t t-name="vieweditor_selection">
+    <select t-att-id="widget.name"/>
 </t>
-<t t-name="view_boolean">
+<t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>
 </t>
 <t t-name="ExportView">

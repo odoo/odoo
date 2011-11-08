@@ -573,7 +573,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.edit_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Properties',
-            width: 650,
+            width: 500,
             height: 400,
             buttons: {
                     "Update": function(){
@@ -595,7 +595,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.edit_node_dialog.start().open();
         var widget = _.keys(self.property.map);
         var arch_val = self.get_object_by_id(clicked_tr_id,obj['main_object'],[]);
-        this.edit_node_dialog.$element.append('<table id="rec_table" class="oe_forms"></table>');
+        this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
         _.each(properties,function(record){
             var id = record,
@@ -667,10 +667,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
     },
 });
 openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
-        this.template = "view_boolean";
-    },
+    template : "vieweditor_boolean",
     start: function() {
         var self = this;
         this.$element.find("input[id="+ self.name+"]").change(function() {
@@ -692,13 +689,10 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
     }
 });
 openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
-        this.template = "view_char";
-    },
+    template : "vieweditor_char",
     start: function () {
         var self = this;
-        this.$element.find("input[id="+ this.name+"]").change(function() {
+        this.$element.find("input[id="+ this.name+"]").css('width','100%').change(function() {
             self.on_ui_change();
         });
     },
@@ -716,13 +710,10 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
     }
 });
 openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
-        this.template = "view_selection";
-    },
+    template : "vieweditor_selection",
     start: function () {
         var self = this;
-        this.$element.find("select[id="+this.name+"]").change(function() {
+        this.$element.find("select[id="+ this.name +"]").css('width','100%').change(function() {
             self.on_ui_change();
         });
     },
