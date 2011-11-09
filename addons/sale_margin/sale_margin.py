@@ -25,12 +25,14 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+        if not pricelist:
+            return res
         frm_cur = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
-        to_cur = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist.currency_id.id
+        to_cur = self.pool.get('product.pricelist').browse(cr, uid, [pricelist])[0].currency_id.id
         if product:
             purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
             price = self.pool.get('res.currency').compute(cr, uid, frm_cur, to_cur, purchase_price, round=False)
@@ -49,7 +51,8 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, string='Margin', store=True),
+        'margin': fields.function(_product_margin, string='Margin',
+              store = True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
@@ -66,8 +69,14 @@ class sale_order(osv.osv):
                 result[sale.id] += line.margin or 0.0
         return result
 
+    def _get_order(self, cr, uid, ids, context=None):
+        return super(self,sale_order)._get_order(cr, uid, ids, context=context)
+
     _columns = {
-        'margin': fields.function(_product_margin, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
+        'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and Cost Price.", store={
+                'sale.order.line': (_get_order, ['margin'], 20),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
+                }),
     }
 
 sale_order()

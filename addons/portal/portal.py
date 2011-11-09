@@ -37,10 +37,6 @@ class portal(osv.osv):
         'group_id': fields.many2one('res.groups', required=True, ondelete='cascade',
             string='Group',
             help='The group extended by this portal'),
-        'other_group_ids': fields.many2many('res.groups',
-            'portal_group_rel', 'portal_id', 'group_id',
-            string='Other User Groups',
-            help="Those groups are assigned to the portal's users"),
         'url': fields.char('URL', size=64,
             help="The url where portal users can connect to the server"),
         'menu_action_id': fields.many2one('ir.actions.act_window', readonly=True,
@@ -70,8 +66,8 @@ class portal(osv.osv):
         portal_id = super(portal, self).create(cr, uid, values, context)
         
         # assign menu action and widgets to users
-        if values.get('users') or values.get('other_group_ids') or values.get('menu_action_id'):
-            self._assign_menu_and_groups(cr, uid, [portal_id], context)
+        if values.get('users') or values.get('menu_action_id'):
+            self._assign_menu(cr, uid, [portal_id], context)
         if values.get('users') or values.get('widget_ids'):
             self._assign_widgets(cr, uid, [portal_id], context)
         
@@ -83,8 +79,8 @@ class portal(osv.osv):
         super(portal, self).write(cr, uid, ids, values, context)
         
         # assign menu action and widgets to users
-        if values.get('users') or values.get('other_group_ids') or values.get('menu_action_id'):
-            self._assign_menu_and_groups(cr, uid, ids, context)
+        if values.get('users') or values.get('menu_action_id'):
+            self._assign_menu(cr, uid, ids, context)
         if values.get('users') or values.get('widget_ids'):
             self._assign_widgets(cr, uid, ids, context)
         
@@ -117,18 +113,15 @@ class portal(osv.osv):
         
         return True
 
-    def _assign_menu_and_groups(self, cr, uid, ids, context=None):
-        """ assign portal menu and other groups to users of portals (ids) """
+    def _assign_menu(self, cr, uid, ids, context=None):
+        """ assign portal menu to users of portals (ids) """
         user_obj = self.pool.get('res.users')
         for p in self.browse(cr, uid, ids, context):
-            # user groups = portal group + other groups
-            group_ids = [p.group_id.id] + [g.id for g in p.other_group_ids]
-            user_values = {'groups_id': [(6, 0, group_ids)]}
             # user menu action = portal menu action if set in portal
             if p.menu_action_id:
-                user_values['menu_id'] = p.menu_action_id.id
-            user_ids = [u.id for u in p.users if u.id != 1]
-            user_obj.write(cr, uid, user_ids, user_values, context)
+                user_ids = [u.id for u in p.users if u.id != 1]
+                user_values = {'menu_id': p.menu_action_id.id}
+                user_obj.write(cr, uid, user_ids, user_values, context)
 
     def _assign_widgets(self, cr, uid, ids, context=None):
         """ assign portal widgets to users of portals (ids) """

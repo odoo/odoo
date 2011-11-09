@@ -74,7 +74,7 @@
             <field name="context">{'contact_display': 'partner_address', 'search_default_to_invoice': 1, 'search_default_done': 1}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
         </record>
-        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="sale.menu_invoiced" sequence="20"/>
+        <menuitem action="outgoing_picking_list_to_invoice" id="menu_action_picking_list_to_invoice" parent="sale.menu_invoiced" groups="base.group_no_one" sequence="20"/>
 
     </data>
 </openerp>

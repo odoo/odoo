@@ -11,23 +11,5 @@
             web_icon="images/marketing.png"
             web_icon_hover="images/marketing-hover.png"/>
 
-
-        <record id="view_marketing_installer" model="ir.ui.view">
-            <field name="name">marketing.installer.view</field>
-            <field name="model">base.setup.installer</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//group[@name='marketing']" position="replace">
-                        <newline/>
-                        <separator  string="Marketing Features" colspan="4" />
-                        <field name="marketing_campaign" />
-                        <field name="email_template" />
-                        <field name="crm_profiling" />
-                    </xpath>                   
-                </data>
-            </field>
-        </record>
     </data>
 </openerp>

@@ -40,7 +40,8 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True,date_order=False,packaging=False,fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False,
+            fiscal_position=False, flag=False, context=None):
 
         def get_real_price(res_dict, product_id, qty, uom, pricelist):
             item_obj = self.pool.get('product.pricelist.item')
@@ -59,7 +60,7 @@ class sale_order_line(osv.osv):
             product_tmpl_id = product.product_tmpl_id.id
 
             product_read = template_obj.read(cr, uid, product_tmpl_id, [field_name], context)
-            
+
             factor = 1.0
             if uom and uom != product.uom_id.id:
                 product_uom_obj = self.pool.get('product.uom')
@@ -70,7 +71,7 @@ class sale_order_line(osv.osv):
 
         res=super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
-            lang, update_tax,date_order,fiscal_position=fiscal_position,flag=flag)
+            lang, update_tax, date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         context = {'lang': lang, 'partner_id': partner_id}
         result=res['value']

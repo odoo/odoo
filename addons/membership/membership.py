@@ -379,7 +379,7 @@ class Partner(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
+        (_check_recursion, 'Error ! You cannot create recursive associated members.', ['associate_member'])
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):

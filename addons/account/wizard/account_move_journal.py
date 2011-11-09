@@ -78,7 +78,7 @@ class account_move_journal(osv.osv_memory):
         @return: Returns a dict that contains definition for fields, views, and toolbars
         """
 
-        res = super(account_move_journal, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        res = super(account_move_journal, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
 
         if not view_id:
             return res

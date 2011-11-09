@@ -66,7 +66,7 @@
         <record id="hr_salary_rule_ca_paolino" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="600.0" name="amount_fix"/>
-            <field name="code">CA</field>
+            <field name="code">CAQP</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Conveyance Allowance For Paolino</field>
             <field name="sequence" eval="15"/>
@@ -89,7 +89,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Get 1% of sales</field>
             <field name="sequence" eval="17"/>
-            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * contract.wage * 0.01</field>
+            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * 0.01</field>
          </record>
 
         <!-- Rule Inputs -->
@@ -144,7 +144,7 @@
             <field name="date_end" eval="time.strftime('%Y')+'-12-31'"/>
             <field name="struct_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_bonamy0"/>
-            <field name="notes">This is a First Contract</field>
+            <field name="notes">Default contract for marketing executives</field>
             <field eval="4000.0" name="wage"/>
             <field eval="5" name="working_days_per_week"/>
         </record>

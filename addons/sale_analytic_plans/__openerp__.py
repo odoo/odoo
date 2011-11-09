@@ -22,7 +22,7 @@
 {
     'name': 'Sales Analytic Distribution Management',
     'version': '1.0',
-    'category': 'Sales',
+    'category': 'Hidden',
     'description': """
 The base module to manage analytic distribution and sales orders.
 =================================================================

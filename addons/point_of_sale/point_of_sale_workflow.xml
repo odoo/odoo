@@ -69,7 +69,7 @@
     </record>
 
     <record model="workflow.transition" id="trans_paid_cancel">
-      <field name="act_from" ref="act_paid"/>
+      <field name="act_from" ref="act_draft"/>
       <field name="act_to" ref="act_cancel"/>
       <field name="signal">cancel</field>
     </record>

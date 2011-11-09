@@ -32,14 +32,15 @@ class res_company(osv.osv):
             string="Reserve and Profit/Loss Account",
             view_load=True,
             domain="[('type', '=', 'other')]",
-            help="This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profit & Loss Report"),
+            help="This account is used for transferring Profit/Loss (If It is Profit: Amount will be added, Loss : Amount will be deducted.), as calculated in Profit & Loss Report"),
     }
 
     _defaults = {
-        'overdue_msg': 'Please note that the following payments are now due. If your payment \
-                        has been sent, kindly forward your payment details. If payment will be \
-                        delayed further, please contact us to discuss. \
-                        \nWould your payment have been carried out after this mail was sent, please consider the present one as void.'
+        'overdue_msg': '''Our records indicate that the following payments are still due. If the amount
+has already been paid, please disregard this notice. However, if you have any
+queries regarding your account, please contact us.
+Thank you in advance.
+'''
     }
 
 res_company()

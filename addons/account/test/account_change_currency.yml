@@ -33,11 +33,11 @@
 -
   !python {model: account.change.currency}: |
     self.view_init(cr, uid, [ref("account_change_currency_0")], {"lang": 'en_US',
-      "active_model": "account.invoice", "tz": False, "record_id": 4, "active_ids":
+      "active_model": "account.invoice", "tz": False, "active_ids":
       [ref("account_invoice_currency")], "type": "out_invoice", "active_id": ref("account_invoice_currency"),
     })
     self.change_currency(cr, uid, [ref("account_change_currency_0")], {"lang": 'en_US',
-      "active_model": "account.invoice", "tz": False, "record_id": 4, "active_ids":
+      "active_model": "account.invoice", "tz": False, "active_ids":
       [ref("account_invoice_currency")], "type": "out_invoice", "active_id": ref("account_invoice_currency"),
     })
 -
@@ -71,7 +71,7 @@
 -
   !python {model: account.change.currency}: |
     self.change_currency(cr, uid, [ref("account_change_currency_0")], {"lang": 'en_US',
-      "active_model": "account.invoice", "tz": False, "record_id": 4, "active_ids":
+      "active_model": "account.invoice", "tz": False, "active_ids":
       [ref("account_invoice_currency")], "type": "out_invoice", "active_id": ref("account_invoice_currency"),
       })
 -

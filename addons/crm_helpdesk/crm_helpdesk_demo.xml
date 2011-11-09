@@ -2,7 +2,6 @@
 <openerp>
     <data noupdate="1">
         <record id="crm_helpdesk_wheretodownloadopenerp0" model="crm.helpdesk">
-            <field model="res.partner.canal" name="canal_id" search="[('name', '=', u'E-mail')]"/>
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
@@ -15,7 +14,6 @@
         </record>
 
         <record id="crm_helpdesk_cannotabletoconnecttoserver0" model="crm.helpdesk">
-            <field model="res.partner.canal" name="canal_id" search="[('name', '=', u'website')]"/>
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="company_id" ref="base.main_company"/>
@@ -28,7 +26,6 @@
         </record>
 
         <record id="crm_helpdesk_documentationforcrm0" model="crm.helpdesk">
-            <field model="res.partner.canal" name="canal_id" search="[('name', '=', u'phone')]"/>
             <field eval="1" name="active"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="base.main_company"/>
@@ -41,7 +38,6 @@
         </record>
 
         <record id="crm_helpdesk_howtocreateanewmodule0" model="crm.helpdesk">
-            <field model="res.partner.canal" name="canal_id" search="[('name', '=', u'E-mail')]"/>
             <field name="partner_address_id" ref="base.res_partner_address_9"/>
             <field eval="1" name="active"/>
             <field name="partner_id" ref="base.res_partner_2"/>

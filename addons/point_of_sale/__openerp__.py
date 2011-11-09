@@ -22,8 +22,8 @@
 
 {
     'name': 'Point Of Sale',
-    'version': '1.0',
-    'category': 'Sales',
+    'version': '1.0.1',
+    'category': 'Point Of Sale',
     'description': """
 This module provides a quick and easy sale process.
 ===================================================
@@ -39,17 +39,15 @@ Main features :
     """,
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale', 'delivery'],
+    'depends': ['sale'],
     'init_xml': [],
 
     'update_xml': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_details.xml',
-        'wizard/pos_add_product.xml',
         'wizard/pos_confirm.xml',
         'wizard/pos_discount.xml',
-        'wizard/pos_get_sale.xml',
         'wizard/pos_open_statement.xml',
         'wizard/pos_close_statement.xml',
         'wizard/pos_box_entries.xml',
@@ -57,15 +55,10 @@ Main features :
         'wizard/pos_payment_report_date_view.xml',
         'wizard/pos_box_out.xml',
         'wizard/pos_sales_user.xml',
-        'wizard/all_closed_cashbox_of_the_day.xml',
-        'wizard/pos_sales_user_current_user.xml',
-        'wizard/pos_sale_user_today.xml',
         'wizard/pos_receipt_view.xml',
         'wizard/pos_payment_report_user.xml',
         'wizard/pos_payment_report.xml',
         'wizard/pos_payment.xml',
-        'wizard/pos_scan_product_view.xml',
-        'wizard/pos_return_view.xml',
         'point_of_sale_report.xml',
         'point_of_sale_view.xml',
         'report/pos_order_report_view.xml',
@@ -75,11 +68,20 @@ Main features :
         'account_statement_view.xml',
         'account_statement_report.xml',
     ],
-    'demo_xml': ['point_of_sale_demo.xml','account_statement_demo.xml'],
-    'test': ['test/point_of_sale_test.yml',
-            'test/point_of_sale_report.yml',
+    'demo_xml': [
+        'point_of_sale_demo.xml',
+        'account_statement_demo.xml',
+        'test/00_register_open.yml'
+    ],
+    'test': [
+        'test/01_order_to_payment.yml',
+        'test/02_order_to_invoice.yml',
+        'test/point_of_sale_report.yml'
     ],
     'installable': True,
     'certificate' : '001156338024966477869',
+    # Web client
+    'js': ['static/lib/backbone/backbone-0.5.3.js', 'static/src/js/pos.js'],
+    'css': ['static/src/css/pos.css']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

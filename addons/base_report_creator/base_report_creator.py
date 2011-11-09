@@ -529,7 +529,7 @@ class report_creator(osv.osv):
 
 
     _constraints = [
-        (_function_field, 'You can not display field which are not stored in Database.', ['field_ids']),
+        (_function_field, 'You can not display field which are not stored in database.', ['field_ids']),
         (_aggregation_error, 'You can apply aggregate function to the non calculated field.', ['field_ids']),
         (_calander_view_error, "You must have to give calendar view's color,start date and delay.", ['field_ids']),
     ]

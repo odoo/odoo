@@ -24,7 +24,7 @@
     "name" : "Products & Pricelists",
     "version" : "1.1",
     "author" : "OpenERP SA",
-    "category" : "Warehouse",
+    "category" : "Hidden",
     "depends" : ["base", "process", "decimal_precision"],
     "init_xml" : [],
     "demo_xml" : ["product_demo.xml"],
@@ -61,7 +61,7 @@ Print product labels with barcode.
         'partner_view.xml',
         'process/product_process.xml'
     ],
-    'test':['test/product_report.yml'],
+    'test':['test/product_report.yml','test/product_test.yml'],
     'installable': True,
     'active': False,
     'certificate': '0068861431437',

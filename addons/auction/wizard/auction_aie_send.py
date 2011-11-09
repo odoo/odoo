@@ -141,9 +141,8 @@ class auction_lots_send_aie(osv.osv_memory):
     
     
     def _photos_send(cr, uid, uname, passwd, did, ids):
-        service = netsvc.LocalService("object_proxy")
         for (ref,id) in ids:
-            datas = service.execute(cr.db_name, uid, 'auction.lots', 'read', [id], ['name','image'])
+            datas = self.pool.get('auction.lots').read(cr, uid, [id], ['name','image'])
             if len(datas):
                 bin = base64.decodestring(datas[0]['image'])
                 fname = datas[0]['name']
@@ -186,8 +185,7 @@ class auction_lots_send_aie(osv.osv_memory):
         if context is None: 
             context = {}
     
-        service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context.get('active_ids',[]),  ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
+        lots = self.pool.get('auction.lots').read(cr, uid, context.get('active_ids',[]), ['obj_num','lot_num','obj_desc','bord_vnd_id','lot_est1','lot_est2','artist_id','lot_type','aie_categ'])
         lots_ids = []
         datas = self.read(cr, uid, ids[0],['uname','login','lang','numerotation','dates'])
         for l in lots:

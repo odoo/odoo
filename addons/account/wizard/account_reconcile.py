@@ -110,7 +110,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
     It opens the write off wizard form, in that user can define the journal, account, analytic account for reconcile
     """
     _name = 'account.move.line.reconcile.writeoff'
-    _description = 'Account move line reconcile'
+    _description = 'Account move line reconcile (writeoff)'
     _columns = {
         'journal_id': fields.many2one('account.journal','Write-Off Journal', required=True),
         'writeoff_acc_id': fields.many2one('account.account','Write-Off account', required=True),
@@ -158,7 +158,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         journal_id = data['journal_id'][0]
         context['comment'] = data['comment']
         if data['analytic_id']:
-            context['analytic_id'] = data['analytic_id']
+            context['analytic_id'] = data['analytic_id'][0]
         if context['date_p']:
             date = context['date_p']
 

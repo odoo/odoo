@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Adapt Customer Invoices to support bba structured communication -->   
+    <record id="customer_invoice_bbacomm_form" model="ir.ui.view">
+      <field name="name">account.invoice.form.inherit</field>
+      <field name="model">account.invoice</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="account.invoice_form"/>
+      <field name="arch" type="xml">
+        <field name="payment_term" position="after">
+          <group col="4" colspan="2">
+              <field name="reference_type" nolabel="1" select="2" size="0" attrs="{'readonly':[('state','!=','draft')]}"
+                 on_change="generate_bbacomm(type,reference_type,algorithm,partner_id,reference)" colspan="1"/>
+              <field name="reference" nolabel="1" select="1" colspan="3" attrs="{'readonly':[('state','!=','draft')]}"/>
+          </group>
+        </field>
+      </field>
+    </record>
+    
+  </data>
+</openerp>

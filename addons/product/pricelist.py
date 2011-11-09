@@ -160,30 +160,22 @@ class product_pricelist(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         supplierinfo_obj = self.pool.get('product.supplierinfo')
         price_type_obj = self.pool.get('product.price.type')
-        product_pricelist_version_obj = self.pool.get('product.pricelist.version')
 
         # product.pricelist.version:
-        if pricelist_ids:
-            pricelist_version_ids = pricelist_ids
-        else:
-            # all pricelists:
-            pricelist_version_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
+        if not pricelist_ids:
+            pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
 
-        pricelist_version_ids = list(set(pricelist_version_ids))
-        plversions_search_args = [
-            ('pricelist_id', 'in', pricelist_version_ids),
-            '|',
-            ('date_start', '=', False),
-            ('date_start', '<=', date),
-            '|',
-            ('date_end', '=', False),
-            ('date_end', '>=', date),
-        ]
-
-        plversion_ids = product_pricelist_version_obj.search(cr, uid, plversions_search_args)
-        if len(pricelist_version_ids) != len(plversion_ids):
-            msg = "At least one pricelist has no active version !\nPlease create or activate one."
-            raise osv.except_osv(_('Warning !'), _(msg))
+        pricelist_version_ids = self.pool.get('product.pricelist.version').search(cr, uid, [
+                                                        ('pricelist_id', 'in', pricelist_ids),
+                                                        '|',
+                                                        ('date_start', '=', False),
+                                                        ('date_start', '<=', date),
+                                                        '|',
+                                                        ('date_end', '=', False),
+                                                        ('date_end', '>=', date),
+                                                    ])
+        if len(pricelist_ids) != len(pricelist_version_ids):
+            raise osv.except_osv(_('Warning !'), _("At least one pricelist has no active version !\nPlease create or activate one."))
 
         # product.product:
         product_ids = [i[0] for i in products_by_qty_by_partner]
@@ -198,7 +190,7 @@ class product_pricelist(osv.osv):
 
         results = {}
         for product_id, qty, partner in products_by_qty_by_partner:
-            for pricelist_id in pricelist_version_ids:
+            for pricelist_id in pricelist_ids:
                 price = False
 
                 tmpl_id = products_dict[product_id].product_tmpl_id and products_dict[product_id].product_tmpl_id.id or False
@@ -221,7 +213,7 @@ class product_pricelist(osv.osv):
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
                         'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                     'ORDER BY sequence',
-                    (tmpl_id, product_id, plversion_ids[0], qty))
+                    (tmpl_id, product_id, pricelist_version_ids[0], qty))
                 res1 = cr.dictfetchall()
                 uom_price_already_computed = False
                 for res in res1:
@@ -289,7 +281,7 @@ class product_pricelist(osv.osv):
                     if 'uom' in context and not uom_price_already_computed:
                         product = products_dict[product_id]
                         uom = product.uos_id or product.uom_id
-                        price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, price, context['uom'])
+                        price = product_uom_obj._compute_price(cr, uid, uom.id, price, context['uom'])
 
                 if results.get(product_id):
                     results[product_id][pricelist_id] = price

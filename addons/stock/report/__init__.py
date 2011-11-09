@@ -20,7 +20,6 @@
 ##############################################################################
 
 import product_stock
-import ups
 import picking
 import lot_overview_all
 import report_stock

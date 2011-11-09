@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-        <record id="note_account_type" model="board.note.type">
-            <field name="name">Accountants</field>
-        </record>
-
         <record id="action_aged_receivable" model="ir.actions.act_window">
             <field name="name">Receivable Accounts</field>
             <field name="res_model">report.account.receivable</field>
@@ -45,7 +40,7 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','in',('draft','proforma2')), ('type','=','out_invoice')]"/>
                             <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" groups="account.group_account_manager"/>
                         </child1>
                         <child2>

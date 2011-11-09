@@ -19,11 +19,12 @@
 ##############################################################################
 
 {
-    "name" : "Sale Order Layout",
+    "name" : "Sales Orders Print Layout",
     "version" : "1.0",
     "images" : ["images/sale_layout.jpeg"],
     "depends" : ["sale", "account_invoice_layout"],
     "author" : "OpenERP SA",
+    'complexity': "easy",
     "description": """
 This module provides features to improve the layout of the Sales Order.
 =======================================================================
@@ -35,7 +36,7 @@ It gives you the possibility to
 
     """,
     "website" : "http://www.openerp.com",
-    "category" : "Sales",
+    "category" : "Sales Management",
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : [

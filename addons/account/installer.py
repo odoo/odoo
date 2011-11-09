@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import logging
 import time
 import datetime
 from dateutil.relativedelta import relativedelta
@@ -33,10 +34,13 @@ import tools
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
+    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('name', 'like', 'l10n_')], context=context)
+        # Looking for the module with the 'Account Charts' category
+        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
+        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
@@ -57,26 +61,16 @@ class account_installer(osv.osv_memory):
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
     }
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
 
-    def _get_default_charts(self, cr, uid, context=None):
-        module_name = False
-        company_id = self._default_company(cr, uid, context=context)
-        company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
-        address_id = self.pool.get('res.partner').address_get(cr, uid, [company.partner_id.id])
-        if address_id['default']:
-            address = self.pool.get('res.partner.address').browse(cr, uid, address_id['default'], context=context)
-            code = address.country_id.code
-            module_name = (code and 'l10n_' + code.lower()) or False
-        if module_name:
-            module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', module_name)], context=context)
-            if module_id:
-                return module_name
-        return 'configurable'
+    def _default_has_default_company(self, cr, uid, context=None):
+        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+        return bool(count == 1)
 
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
@@ -85,7 +79,8 @@ class account_installer(osv.osv_memory):
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
         'company_id': _default_company,
-        'charts': _get_default_charts
+        'has_default_company': _default_has_default_company,
+        'charts': 'configurable'
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -98,7 +93,7 @@ class account_installer(osv.osv_memory):
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = unconfigured_cmp
+                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
@@ -162,7 +157,7 @@ class account_installer(osv.osv_memory):
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     sales_tax_temp = obj_tax_temp.create(cr, uid, {
-                                            'name': _('TAX %s%%') % (s_tax*100),
+                                            'name': _('Sale TAX %s%%') % (s_tax*100),
                                             'amount': s_tax,
                                             'base_code_id': new_tax_code_temp,
                                             'tax_code_id': new_paid_tax_code_temp,
@@ -191,8 +186,7 @@ class account_installer(osv.osv_memory):
                     }
                     new_paid_tax_code_temp = obj_tax_code_temp.create(cr, uid, vals_paid_tax_code_temp, context=context)
                     purchase_tax_temp = obj_tax_temp.create(cr, uid, {
-                                             'name': _('TAX %s%%') % (p_tax*100),
-                                             'description': _('TAX %s%%') % (p_tax*100),
+                                             'name': _('Purchase TAX %s%%') % (p_tax*100),
                                              'amount': p_tax,
                                              'base_code_id': new_tax_code_temp,
                                              'tax_code_id': new_paid_tax_code_temp,
@@ -232,33 +226,9 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_DEBUG,
-            'Installing chart of accounts %s'%chart)
+        self.__logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()
-
-class account_installer_modules(osv.osv_memory):
-    _inherit = 'base.setup.installer'
-    _columns = {
-        'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
-            help="Allows invoice lines to impact multiple analytic accounts "
-                 "simultaneously."),
-        'account_payment': fields.boolean('Suppliers Payment Management',
-            help="Streamlines invoice payment and creates hooks to plug "
-                 "automated payment systems in."),
-        'account_followup': fields.boolean('Followups Management',
-            help="Helps you generate reminder letters for unpaid invoices, "
-                 "including multiple levels of reminding and customized "
-                 "per-partner policies."),
-        'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
-            help="This module will support the Anglo-Saxons accounting methodology by "
-                "changing the accounting logic with stock transactions."),
-        'account_asset': fields.boolean('Assets Management',
-            help="Helps you to manage your assets and their depreciation entries."),
-    }
-
-account_installer_modules()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

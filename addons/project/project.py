@@ -26,10 +26,10 @@ from datetime import datetime, date
 from tools.translate import _
 from osv import fields, osv
 
-class project_project(osv.osv):
-    _name = 'project.project'
-    
-project_project()    
+# I think we can remove this in v6.1 since VMT's improvements in the framework ?
+#class project_project(osv.osv):
+#    _name = 'project.project'
+#project_project()
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -39,13 +39,13 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
+        'project_default': fields.boolean('Common to All Projects', help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
     }
-
     _defaults = {
         'sequence': 1
     }
-
+    _order = 'sequence'
 project_task_type()
 
 class project(osv.osv):
@@ -56,7 +56,7 @@ class project(osv.osv):
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        if context and context.has_key('user_prefence') and context['user_prefence']:
+        if context and context.get('user_preference'):
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
                            LEFT JOIN project_user_rel rel ON rel.project_id = project.analytic_account_id
@@ -119,7 +119,7 @@ class project(osv.osv):
     def unlink(self, cr, uid, ids, *args, **kwargs):
         for proj in self.browse(cr, uid, ids):
             if proj.tasks:
-                raise osv.except_osv(_('Operation Not Permitted !'), _('You can not delete a project with tasks. I suggest you to deactivate it.'))
+                raise osv.except_osv(_('Operation Not Permitted !'), _('You cannot delete a project containing tasks. I suggest you to desactivate it.'))
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
@@ -150,11 +150,16 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
      }
+    def _get_type_common(self, cr, uid, context):
+        ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
+        return ids
+
     _order = "sequence"
     _defaults = {
         'active': True,
         'priority': 1,
         'sequence': 10,
+        'type_ids': _get_type_common
     }
 
     # TODO: Why not using a SQL contraints ?
@@ -426,9 +431,10 @@ class task(osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of tasks."),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
+        'state': fields.selection([('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
+        'kanban_state': fields.selection([('blocked', 'Blocked'),('normal', 'Normal'),('done', 'Done')], 'Kanban State', readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
@@ -465,11 +471,14 @@ class task(osv.osv):
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'id': fields.integer('ID'),
+        'id': fields.integer('ID', readonly=True),
+        'color': fields.integer('Color Index'),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
         'state': 'draft',
+        'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
         'sequence': 10,
@@ -479,7 +488,22 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence,priority, date_start, name, id"
+    _order = "priority, sequence, date_start, name, id"
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set task priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set task priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
 
     def _check_recursion(self, cr, uid, ids, context=None):
         for id in ids:
@@ -586,11 +610,12 @@ class task(osv.osv):
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
-                'res_model': 'project.task.close',
+                'res_model': 'mail.compose.message',
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy': True,
-                'context': {'active_id': task.id}
+                'context': {'active_id': task.id,
+                            'active_model': 'project.task'}
            }
         return res
 
@@ -725,6 +750,31 @@ class task(osv.osv):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
         return True
+
+    def set_remaining_time_1(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 1.0}, context=context)
+        return True
+
+    def set_remaining_time_2(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 2.0}, context=context)
+        return True
+
+    def set_remaining_time_5(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 5.0}, context=context)
+        return True
+
+    def set_remaining_time_10(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'remaining_hours': 10.0}, context=context)
+        return True
+
+    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+
+    def set_kanban_state_normal(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+
+    def set_kanban_state_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
 
     def _change_type(self, cr, uid, ids, next, *args):
         """

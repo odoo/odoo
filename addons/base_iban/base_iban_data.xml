@@ -8,15 +8,10 @@
         <record id="bank_iban" model="res.partner.bank.type">
             <field name="name">IBAN Account</field>
             <field name="code">iban</field>
-        </record>
-        <record id="bank_iban_field" model="res.partner.bank.type.field">
-            <field name="name">iban</field>
-            <field name="bank_type_id" ref="bank_iban"/>
-            <field eval="True" name="required"/>
-            <field eval="False" name="readonly"/>
+            <field name="format_layout">%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s</field>
         </record>
         <record id="bank_swift_field" model="res.partner.bank.type.field">
-            <field name="name">bic</field>
+            <field name="name">bank_bic</field>
             <field name="bank_type_id" ref="bank_iban"/>
             <field eval="True" name="required"/>
             <field eval="False" name="readonly"/>
@@ -32,12 +27,6 @@
             <field name="bank_type_id" ref="bank_iban"/>
             <field eval="False" name="required"/>
             <field eval="False" name="readonly"/>
-        </record>
-        <record id="bank_acc_number_field" model="res.partner.bank.type.field">
-            <field name="name">acc_number</field>
-            <field name="bank_type_id" ref="bank_iban"/>
-            <field eval="False" name="required"/>
-            <field eval="True" name="readonly"/>
         </record>
     </data>
 </openerp>

@@ -36,13 +36,13 @@ def get_plain_ftp(timeout=10.0):
 
 def get_ftp_login(cr, uid, ormobj):
     ftp = get_plain_ftp()
-    user = ormobj.pool.get('res.users').read(cr, uid, uid)
-    passwd = user.get('password','')
+    user = ormobj.pool.get('res.users').browse(cr, uid, uid)
+    passwd = user.password or ''
     if passwd.startswith("$1$"):
-        # md5 by base crypt. We cannot decode, wild guess 
+        # md5 by base crypt. We cannot decode, wild guess
         # that passwd = login
-        passwd = user.get('login', '')
-    ftp.login(user.get('login',''), passwd)
+        passwd = user.login
+    ftp.login(user.login, passwd)
     ftp.cwd("/" + cr.dbname)
     return ftp
 

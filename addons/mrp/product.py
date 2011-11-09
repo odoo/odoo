@@ -53,42 +53,8 @@ class product_product(osv.osv):
     _columns = {
         "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials'),
     }
-
-    def do_change_standard_price(self, cr, uid, ids, datas, context=None):
-        """ Changes the Standard Price of Product and parent products and creates an account move accordingly.
-        @param datas: dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
-        @param context: A standard dictionary
-        @return:
-        """
-        if context is None:
-            context = {}
-        res = super(product_product, self).do_change_standard_price(cr, uid, ids, datas, context=context)
-        bom_obj = self.pool.get('mrp.bom')
-        change = context.get('change_parent_price', False)
-        def _compute_price(bom):
-            price = 0.0
-            if bom.bom_id and change:
-                if bom.bom_id.bom_lines:
-                    for bom_line in bom.bom_id.bom_lines:
-                        prod_price = self.read(cr, uid, bom_line.product_id.id, ['standard_price'])['standard_price']
-                        price += bom_line.product_qty * prod_price
-
-                    accounts = self.get_product_accounts(cr, uid, bom.bom_id.product_id.id, context)
-
-                    datas = {
-                        'new_price': price,
-                        'stock_output_account': accounts['stock_account_output'],
-                        'stock_input_account': accounts['stock_account_input'],
-                        'stock_journal': accounts['stock_journal']
-                    }
-                    super(product_product, self).do_change_standard_price(cr, uid, [bom.bom_id.product_id.id], datas, context)
-                _compute_price(bom.bom_id)
-            return price
-
-        bom_ids = bom_obj.search(cr, uid, [('product_id', 'in', ids)])
-
-        for bom in bom_obj.browse(cr, uid, bom_ids, context=context):
-            _compute_price(bom)
+    
+#    Removed do_change_standard_price for the fix of lp:747056
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:

@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'Idea Manager',
+    'name': 'Ideas Box',
     'version': '0.1',
-    'category': 'Tools',
+    'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 This module allows your user to easily and efficiently participate in enterprise innovation.
 ============================================================================================

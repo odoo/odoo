@@ -46,7 +46,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="6">
+                  <group>
                         <filter icon="terp-go-year" string="Year"
                                 domain="[('year','=',time.strftime('%%Y'))]"
                                 help="Work orders made during current year"/>
@@ -56,13 +56,12 @@
                                 help="Work orders made during current month"/>
                         <filter icon="terp-go-week"
                                 string="Month -1"
-                                separator="1"
                                 domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
                                 help="Work orders during last month"/>
                       <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','not in',('draft','cancel','done'))]"/>
                         <filter icon="terp-check" string="Started" domain="[('state','=','startworking')]"/>
-                        <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="terp-camera_test" string="Done" domain="[('state','=','done')]"/>
                       <separator orientation="vertical"/>
                         <field name="product_id" />
                         <field name="workcenter_id"/>

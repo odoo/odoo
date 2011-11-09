@@ -84,12 +84,12 @@ class process_process(osv.osv):
         process = pool.get('process.process').browse(cr, uid, id, context=context)
 
         name = process.name
-        resource = None
+        resource = False
         state = 'N/A'
 
         expr_context = {}
         states = {}
-        perm = None
+        perm = False
 
         if res_model:
             states = dict(pool.get(res_model).fields_get(cr, uid, context=context).get('state', {}).get('selection', {}))
@@ -242,7 +242,9 @@ class process_process(osv.osv):
         for k, v in nodes.items():
             y = v['y']
             v['y'] = min(y - miny + 10, y)
-
+        
+        nodes = dict([str(n_key), n_val] for n_key, n_val in nodes.iteritems())
+        transitions = dict([str(t_key), t_val] for t_key, t_val in transitions.iteritems())
         return dict(name=name, resource=resource, state=state, perm=perm, notes=notes, nodes=nodes, transitions=transitions)
 
     def copy(self, cr, uid, id, default=None, context=None):

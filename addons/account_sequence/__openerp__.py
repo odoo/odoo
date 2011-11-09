@@ -22,7 +22,8 @@
 {
     'name': 'Entries Sequence Numbering',
     'version': '1.1',
-    'category': 'Finance',
+    'category': 'Hidden',
+    'complexity': "easy",
     'description': """
 This module maintains internal sequence number for accounting entries.
 ======================================================================

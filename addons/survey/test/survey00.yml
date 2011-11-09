@@ -144,8 +144,8 @@
     Give answer of the survey, Run "Answer a Survey" wizard and select the survey and press on start button then run the selected survey.
 -
     !python {model: survey.name.wiz}: |
-      ids = self.create(cr, uid, {'survey_id': ref("survey_partner_0")}) 
-      self.action_next(cr, uid, [ids], context)
+      id = self.create(cr, uid, {'survey_id': ref("survey_partner_0")}) 
+      self.action_next(cr, uid, [id], context)
 -
     Give answer of the first and second page in "Partner Feedback" suvey.
 -

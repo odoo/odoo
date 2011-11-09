@@ -63,7 +63,20 @@ class followup_line(osv.osv):
     }
     _defaults = {
         'start': 'days',
+
     }
+    def _check_description(self, cr, uid, ids, context=None):
+        for line in self.browse(cr, uid, ids, context=context):
+            if line.description:
+                try:
+                    line.description % {'partner_name': '', 'date':'', 'user_signature': '', 'company_name': ''}
+                except:
+                    return False
+        return True
+
+    _constraints = [
+        (_check_description, 'Your description is invalid, use the right legend or %% if you want to use the percent character.', ['description']),
+    ]
 
 followup_line()
 

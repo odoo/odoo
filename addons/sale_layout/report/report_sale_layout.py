@@ -67,7 +67,7 @@ class sale_order_1(report_sxw.rml_parse):
                 sub_total[i] = entry.price_subtotal and entry.price_subtotal
                 i = i + 1
                 res['note'] = entry.notes or ''
-                res['currency'] = sale_order.pricelist_id.currency_id.name
+                res['currency'] = sale_order.pricelist_id.currency_id.symbol
                 res['layout_type'] = entry.layout_type
             else:
                 res['product_uom_qty'] = ''

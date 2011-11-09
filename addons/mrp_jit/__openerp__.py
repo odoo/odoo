@@ -21,9 +21,10 @@
 
 
 {
-    'name': 'MRP JIT',
+    'name': 'Just In Time Scheduling',
     'version': '1.0',
     'category': 'Manufacturing',
+    'complexity': "easy",
     'description': """
 This module allows Just In Time computation of procurement orders.
 ==================================================================

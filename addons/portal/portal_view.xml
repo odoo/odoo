@@ -43,9 +43,18 @@ the portal's users.
             <field name="arch" type="xml">
                 <page string="Users" position="before">
                     <page string="Portal">
-                        <group colspan="2" col="2">
+                        <group colspan="4" col="2">
                             <separator string="Website" colspan="2"/>
                             <field name="url" widget="url"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Widgets assigned to Users" colspan="2"/>
+                            <field name="widget_ids" nolabel="1" colspan="2">
+                                <tree string="Widgets" editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="widget_id"/>
+                                </tree>
+                            </field>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Portal Menu" colspan="2"/>
@@ -56,18 +65,6 @@ the portal's users.
                             <button name="do_create_menu" type="object"
                                 string="Create Parent Menu"/>
                         </group>
-                        <separator string="Other Groups assigned to Users" colspan="2"/>
-                        <separator string="Widgets assigned to Users" colspan="2"/>
-                        <!-- load group_id in order to exclude it from other_group_ids -->
-                        <field name="group_id" invisible="1"/>
-                        <field name="other_group_ids" nolabel="1" colspan="2"
-                            domain="[('id', '!=', group_id)]"/>
-                        <field name="widget_ids" nolabel="1" colspan="2">
-                            <tree string="Widgets" editable="bottom">
-                                <field name="sequence"/>
-                                <field name="widget_id"/>
-                            </tree>
-                        </field>
                     </page>
                 </page>
             </field>

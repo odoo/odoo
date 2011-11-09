@@ -67,7 +67,7 @@ class report_custom(report_rml):
         if user_id:
             # Computing the attendence by analytical account
             cr.execute(
-                "select line.date, (unit_amount * unit.factor) as amount, account_id, account.name "\
+                "select line.date, (unit_amount / unit.factor) as amount, account_id, account.name "\
                 "from account_analytic_line as line, hr_analytic_timesheet as hr, "\
                 "account_analytic_account as account, product_uom as unit "\
                 "where hr.line_id=line.id and line.account_id=account.id "\

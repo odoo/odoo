@@ -23,7 +23,7 @@
     "name": "CalDAV for Task Management",
     "version": "1.1",
     "author": "OpenERP SA",
-    "category": "Project Management",
+    "category": "Hidden",
     "description": """
 Synchronization between Project Task and Caldav Vtodo.
 ======================================================

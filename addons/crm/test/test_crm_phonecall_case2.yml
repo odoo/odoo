@@ -1,0 +1,26 @@
+- |
+  I start by creating a new phonecall.
+-
+  !record {model: crm.phonecall, id: crm_phonecall_dummycall}:
+    date: !eval time.strftime('%Y-%m-%d 08:00:00')
+    name: Dummy call
+    duration: 0.0
+    section_id: crm.section_sales_department
+    partner_id: base.res_partner_agrolait
+    state: open
+-
+  I change Contact Detail of the Partner.
+-
+  !python {model: crm.phonecall}: |
+    self.onchange_partner_address_id(cr, uid,[ref("crm_phonecall_dummycall")], ref("base.res_partner_address_8invoice"))
+
+-
+  I setting Phone call to Held (Done).
+-
+  !python {model: crm.phonecall}: |
+    self.case_close(cr, uid, [ref("crm_phonecall_dummycall")])
+-
+  I check that the hone call is in 'Held' state.
+-
+  !assert {model: crm.phonecall, id: crm_phonecall_dummycall, string: Phone call Helded}:
+    - state == "done"

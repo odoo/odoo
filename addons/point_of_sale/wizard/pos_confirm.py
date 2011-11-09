@@ -25,36 +25,21 @@ from osv import osv
 
 class pos_confirm(osv.osv_memory):
     _name = 'pos.confirm'
-    _description = 'Point of Sale Confirm'
+    _description = 'Post POS Journal Entries'
 
     def action_confirm(self, cr, uid, ids, context=None):
-        """
-             Confirm the order and close the sales.
-             @param self: The object pointer.
-             @param cr: A database cursor
-             @param uid: ID of the user currently logged in
-             @param context: A standard dictionary
-             @return :Blank dictionary
-        """
-        if context is None:
-            context = {}
-        record_id = context and context.get('active_id', False)
-        if record_id:
-            if isinstance(record_id, (int, long)):
-                record_id = [record_id]
-            if record_id:
-                order_obj = self.pool.get('pos.order')
-
-                for order_id in order_obj.browse(cr, uid, record_id, context=context):
-                    if  order_id.state == 'paid':
-                        order_obj.write(cr, uid, [order_id.id], {'journal_entry': True}, context=context)
-                        order_obj.create_account_move(cr, uid, [order_id.id], context=context)
-
-                wf_service = netsvc.LocalService("workflow")
-                for i in record_id:
-                    wf_service.trg_validate(uid, 'pos.order', i, 'done', cr)
+        wf_service = netsvc.LocalService("workflow")
+        order_obj = self.pool.get('pos.order')
+        ids = order_obj.search(cr, uid, [('state','=','paid')], context=context)
+        for order in order_obj.browse(cr, uid, ids, context=context):
+            todo = True
+            for line in order.statement_ids:
+                if line.statement_id.state <> 'confirm':
+                    todo = False
+                    break
+            if todo:
+                wf_service.trg_validate(uid, 'pos.order', order.id, 'done', cr)
         return {}
-
 pos_confirm()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

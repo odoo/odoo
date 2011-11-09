@@ -2,23 +2,23 @@
 <openerp>
     <data noupdate="1">
 
-        <record id="property_rule_expense" model="ir.rule">
-            <field name="name">Employee Expense</field>
-            <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
-            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
-        </record>
         <record id="property_rule_expense_manager" model="ir.rule">
             <field name="name">Manager Expense</field>
             <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
             <field name="domain_force">[(1,'=',1)]</field>
-            <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager')), (4,ref('base.group_hr_user'))]"/>
         </record>
         <record id="property_rule_expense_employee" model="ir.rule">
             <field name="name">Employee Expense</field>
             <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
             <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
             <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+        <record id="hr_expense_comp_rule" model="ir.rule">
+            <field name="name">Expense multi company rule</field>
+            <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
     </data>
