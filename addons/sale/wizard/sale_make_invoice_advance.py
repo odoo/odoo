@@ -27,8 +27,8 @@ class sale_advance_payment_inv(osv.osv_memory):
     _columns = {
         'product_id': fields.many2one('product.product', 'Advance Product', required=True,
             help="Select a product of type service which is called 'Advance Product'. You may have to create it and set it as a default value on this field."),
-        'amount': fields.float('Advance Amount', size=(16, 2), required=True, help="The amount to be invoiced in advance."),
-        'qtty': fields.float('Quantity', size=(16, 2), required=True),
+        'amount': fields.float('Advance Amount', digits=(16, 2), required=True, help="The amount to be invoiced in advance."),
+        'qtty': fields.float('Quantity', digits=(16, 2), required=True),
     }
     _defaults = {
         'qtty': 1.0
@@ -65,15 +65,22 @@ class sale_advance_payment_inv(osv.osv_memory):
                              that is defined as 'Automatic Invoice after delivery'."))
                 val = obj_lines.product_id_change(cr, uid, [], sale_adv_obj.product_id.id,
                         uom = False, partner_id = sale.partner_id.id, fposition_id = sale.fiscal_position.id)
+                res = val['value']
+                if not res.get('account_id'):
+                    raise osv.except_osv(_('Configuration Error !'),
+                                _('There is no income account defined ' \
+                                        'for this product: "%s" (id:%d)') % \
+                                        (sale_adv_obj.product_id.name, sale_adv_obj.product_id.id,))
+                
                 line_id = obj_lines.create(cr, uid, {
-                    'name': val['value']['name'],
-                    'account_id': val['value']['account_id'],
+                    'name': res.get('name'),
+                    'account_id': res['account_id'],
                     'price_unit': sale_adv_obj.amount,
                     'quantity': sale_adv_obj.qtty,
                     'discount': False,
-                    'uos_id': val['value']['uos_id'],
+                    'uos_id': res.get('uos_id'),
                     'product_id': sale_adv_obj.product_id.id,
-                    'invoice_line_tax_id': [(6, 0, val['value']['invoice_line_tax_id'])],
+                    'invoice_line_tax_id': [(6, 0, res.get('invoice_line_tax_id'))],
                     'account_analytic_id': sale.project_id.id or False,
                     #'note':'',
                 })
@@ -109,15 +116,15 @@ class sale_advance_payment_inv(osv.osv_memory):
                 if sale.order_policy == 'picking':
                     self.pool.get('sale.order.line').create(cr, uid, {
                         'order_id': sale.id,
-                        'name': val['value']['name'],
+                        'name': res.get('name'),
                         'price_unit': -sale_adv_obj.amount,
                         'product_uom_qty': sale_adv_obj.qtty,
                         'product_uos_qty': sale_adv_obj.qtty,
-                        'product_uos': val['value']['uos_id'],
-                        'product_uom': val['value']['uos_id'],
+                        'product_uos': res.get('uos_id'),
+                        'product_uom': res.get('uos_id'),
                         'product_id': sale_adv_obj.product_id.id,
                         'discount': False,
-                        'tax_id': [(6, 0, val['value']['invoice_line_tax_id'])],
+                        'tax_id': [(6, 0, res.get('invoice_line_tax_id'))],
                     }, context)
 
         context.update({'invoice_id':list_inv})

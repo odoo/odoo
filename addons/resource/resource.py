@@ -43,6 +43,18 @@ class resource_calendar(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', context=context)
     }
 
+    def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
+        """
+        @param resource_calendar_id: resource.calendar browse record
+        @param day: datetime object
+        @return: returns the working hours (as float) men should work on the given day if is in the attendance_ids of the resource_calendar_id (i.e if that day is a working day), returns 0.0 otherwise
+        """
+        res = 0.0
+        for working_day in resource_calendar_id.attendance_ids:
+            if (int(working_day.dayofweek) + 1) == day.isoweekday():
+                res += working_day.hour_to - working_day.hour_from
+        return res 
+
     def _get_leaves(self, cr, uid, id, resource):
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []
@@ -229,7 +241,7 @@ class resource_resource(osv.osv):
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working Period", help="Define the schedule of resource"),
+        'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
     _defaults = {
         'resource_type' : 'user',
@@ -253,28 +265,20 @@ class resource_resource(osv.osv):
         resource_objs = {}
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
+            resource_objs[user.id] = {
+                 'name' : user.name,
+                 'vacation': [],
+                 'efficiency': 1.0,
+            }
+
             resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)
-            #assert len(resource_ids) < 1, "User should not has more than one resources"
-            leaves = []
-            resource_eff = 1.0
             if resource_ids:
                 for resource in self.browse(cr, uid, resource_ids, context=context):
-                    resource_eff = resource.time_efficiency
+                    resource_objs[user.id]['efficiency'] = resource.time_efficiency
                     resource_cal = resource.calendar_id.id
                     if resource_cal:
                         leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
-                    temp = {
-                             'name' : resource.name,
-                             'vacation': tuple(leaves),
-                             'efficiency': resource_eff,
-                          }
-                    resource_objs[resource.id] = temp     
-#            resource_objs.append(classobj(str(user.name), (Resource,),{
-#                                             '__doc__': user.name,
-#                                             '__name__': user.name,
-#                                             'vacation': tuple(leaves),
-#                                             'efficiency': resource_eff,
-#                                          }))
+                        resource_objs[user.id]['vacation'] += list(leaves)
         return resource_objs
 
     def compute_vacation(self, cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
@@ -311,8 +315,8 @@ class resource_resource(osv.osv):
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
-            return [('fri', '1:0-12:0','12:0-24:0'), ('thu', '1:0-12:0','12:0-24:0'), ('wed', '1:0-12:0','12:0-24:0'), 
-                   ('mon', '1:0-12:0','12:0-24:0'), ('tue', '1:0-12:0','12:0-24:0'), ('sat', '1:0-12:0','12:0-24:0'), ('sun', '1:0-12:0','12:0-24:0')]
+            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'), 
+                   ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""

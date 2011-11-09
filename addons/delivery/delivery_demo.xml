@@ -6,6 +6,7 @@
 
         <record id="delivery_partner" model="res.partner">
             <field name="name">The Poste</field>
+            <field name="address" eval="[]"/>
         </record>
         <record id="delivery_partner_address" model="res.partner.address">
             <field name="type">default</field>
@@ -16,6 +17,7 @@
 
         <record id="delivery_product" model="product.product">
             <field name="name">Delivery by Poste</field>
+            <field name="default_code">Delivery</field>
             <field name="type">service</field>
             <field model="product.category" name="categ_id" search="[]"/>
         </record>

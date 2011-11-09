@@ -2,14 +2,15 @@
 <openerp><data>
 
     <record id="group_account_invoice" model="res.groups">
-        <field name="name">Accounting / Invoice</field>
+        <field name="name">Accounting / Invoicing &amp; Payments</field>
     </record>
-
     <record id="group_account_user" model="res.groups" context="{'noadmin':True}">
         <field name="name">Accounting / Accountant</field>
+        <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
     </record>
     <record id="group_account_manager" model="res.groups" context="{'noadmin':True}">
         <field name="name">Accounting / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
     </record>
 
     <record id="account_move_comp_rule" model="ir.rule">
@@ -93,6 +94,13 @@
     <record id="invoice_comp_rule" model="ir.rule">
         <field name="name">Invoice multi-company</field>
         <field model="ir.model" name="model_id" ref="model_account_invoice"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="invoice_analysis_comp_rule" model="ir.rule">
+        <field name="name">Invoice Analysis multi-company</field>
+        <field model="ir.model" name="model_id" ref="model_account_invoice_report"/>
         <field eval="True" name="global"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>

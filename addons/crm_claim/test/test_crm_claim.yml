@@ -1,10 +1,10 @@
 - |
-  Now I check claims which contain customer claim information about document
-  related problem, product related problem. 
+  I check claims which contain customer claim information about document
+  related problem, product related problem.
 - |
-  I start by creating new claims for Damaged product as Value Claims with priority High and specify 
+  I start by creating new claims for Damaged product as Value Claims with priority High and specify
   date of claim at which  claim is created.
-- 
+-
   !record {model: crm.claim, id: crm_claim_damagedproduct0}:
     categ_id: crm_claim.categ_claim2
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -21,13 +21,24 @@
   !assert {model: crm.claim, id: crm_claim_damagedproduct0}:
     - state == 'draft'
 - |
-  I can change that stage by next button right on it
+  I can change that stage by next button right on it.
 -
   !python {model: crm.claim}: |
-    self.stage_next(cr, uid, [ref('crm_claim_damagedproduct0')])      
+    self.stage_next(cr, uid, [ref('crm_claim_damagedproduct0')])
 - |
-  I make this claim as Open
+  I make this claim as Open.
 -
   !python {model: crm.claim}: |
-    self.case_open(cr, uid, [ref('crm_claim_damagedproduct0')])  
-  
+    self.case_open(cr, uid, [ref('crm_claim_damagedproduct0')])
+- |
+  I  am changing partner Assigned to the Claim.
+-
+  !python {model: crm.claim}: |
+    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], [])
+    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], ref('base.res_partner_10'))
+- |
+  I  am changing partner Address to the Claim.
+-
+  !python {model: crm.claim}: |
+    self.onchange_partner_address_id(cr, uid, [ref('crm_claim_damagedproduct0')], [], email = False)
+

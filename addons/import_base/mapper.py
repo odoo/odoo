@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import tools
 
 class mapper(object):
     """
@@ -50,14 +50,13 @@ class concat(mapper):
         Use : contact('field_name1', 'field_name2', delimiter='_')
         concat value of fields using the delimiter, delimiter is optional
         and by default is a space
-        
     """
     def __init__(self, *arg, **delimiter):
         self.arg = arg
         self.delimiter = delimiter and delimiter.get('delimiter', ' ') or ' '
         
     def __call__(self, external_values):
-        return self.delimiter.join(map(lambda x : external_values.get(x,''), self.arg))
+        return self.delimiter.join(map(lambda x : tools.ustr(external_values.get(x,'')), self.arg))
     
 class ppconcat(mapper):
     """
@@ -71,7 +70,7 @@ class ppconcat(mapper):
         self.delimiter = delimiter and delimiter.get('delimiter', ' ') or '\n\n'
         
     def __call__(self, external_values):
-        return self.delimiter.join(map(lambda x : x + ": " + external_values.get(x,''), self.arg))
+        return self.delimiter.join(map(lambda x : x + ": " + tools.ustr(external_values.get(x,'')), self.arg))
     
 class const(mapper):
     """
@@ -105,7 +104,6 @@ class value(mapper):
             val = external_values.get(self.fallback, self.default)
         return val 
     
-
     
 class map_val(mapper):
     """
@@ -169,5 +167,3 @@ class call(mapper):
             else:
                 args.append(arg)
         return self.fun(external_values, *args)
-    
-    

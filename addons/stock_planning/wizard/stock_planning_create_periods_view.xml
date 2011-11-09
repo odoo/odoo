@@ -8,8 +8,7 @@
             <field name="model">stock.period.createlines</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock and Sales Periods">
-                    <separator colspan="4" string="Create periods for Stock and Sales Planning"/>
+                <form string="Stock Periods">
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <separator colspan="4" string=""/>
@@ -24,16 +23,17 @@
         </record>
 
         <record id="action_stock_period_createlines_form" model="ir.actions.act_window">
-            <field name="name">Stock and Sales Planning Periods</field>
+            <field name="name">Stock Periods</field>
             <field name="res_model">stock.period.createlines</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_stock_period_createlines_form"/>
+           <field name="help">This wizard helps with the creation of stock planning periods. These periods are independent of financial periods. If you need periods other than day-, week- or month-based, you may also add then manually.</field>
             <field name="target">new</field>
         </record>
 
         <menuitem id="menu_stock_period_creatlines"
-                  name="Create Stock and Sales Periods"
+                  name="Create Stock Periods"
                   parent="menu_stock_period_main"
                   action="action_stock_period_createlines_form"
                   sequence = "5"/>

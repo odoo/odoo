@@ -23,6 +23,7 @@
 {
     "name" : "Share Calendar using CalDAV",
     "version" : "1.1",
+    'complexity': "normal",
     "depends" : [
                     "base",
                     "document_webdav",
@@ -48,7 +49,7 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
 """, 
-    'category': 'Tools', 
+    'category': 'Hidden', 
     "author" : "OpenERP SA",
     'website': 'http://www.openerp.com',
     "init_xml" : ["caldav_data.xml"],

@@ -23,6 +23,7 @@
     "name" : "Accounting Voucher Entries",
     "version" : "1.0",
     "author" : 'OpenERP SA',
+    'complexity': "normal",
     "description": """
 Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
 ====================================================================================================================================
@@ -31,7 +32,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
     * Voucher Receipt
     * Cheque Register
     """,
-    "category" : "Finance",
+    "category" : "Hidden",
     "website" : "http://tinyerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
@@ -58,7 +59,12 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/account_voucher.yml",
         "test/sales_receipt.yml",
         "test/sales_payment.yml",
-        "test/account_voucher_report.yml"
+        "test/account_voucher_report.yml",
+        "test/case1_usd_usd.yml",
+        "test/case2_usd_eur_debtor_in_eur.yml",
+        "test/case2_usd_eur_debtor_in_usd.yml",
+        "test/case3_eur_eur.yml",
+        "test/case4_cad_chf.yml",
     ],
     'certificate': '0037580727101',
     "active": False,

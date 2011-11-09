@@ -23,7 +23,8 @@
 {
     'name': 'Auction Management',
     'version': '1.0',
-    'category': 'General',
+    'category': 'Specific Industry Applications',
+    'complexity': "normal",
     'description': """
 This module manages the records of artists, auction articles, buyers and sellers.
 =================================================================================

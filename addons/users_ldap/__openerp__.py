@@ -24,6 +24,7 @@
     "depends" : ["base"],
     "images" : ["images/ldap_configuration.jpeg"],
     "author" : "OpenERP SA",
+    'complexity': "easy",
     "description": """
 Adds support for authentication by LDAP server.
 ===============================================
@@ -105,9 +106,10 @@ will disable LDAP authentication if installed at the same time.
 
 
     "website" : "http://www.openerp.com",
-    "category" : "Tools",
+    "category" : "Hidden",
     "data" : [
         "users_ldap_view.xml",
+        "user_ldap_installer.xml",
     ],
     "active": False,
     "installable": True,

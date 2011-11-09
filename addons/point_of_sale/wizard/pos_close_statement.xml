@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        
+    <data>
         <!--  Point of Sale Confirm -->
-        
-		<record id="view_pos_close_statement" model="ir.ui.view">
+
+        <record id="view_pos_close_statement" model="ir.ui.view">
             <field name="name">Close Statements</field>
             <field name="model">pos.close.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Close Statements">
-				    <label string="Are you sure you want to close the statements ?"/>
+                <form string="Close Cash Registers">
+                    <separator colspan="4" string="Do you want to close your cash registers ?"/>
+                    <label string="OpenERP will close all cash registers he can close automatically without validation. He will also open all cash registers for which you have to control the ending belance before closing manually."/>
                     <separator colspan="4"/>
                     <group col="4" colspan="4">
                         <group col="2" colspan="2"/>
@@ -22,15 +23,14 @@
             </field>
         </record>
 
-		<act_window name="Close Statements"
-				res_model="pos.close.statement"
-				src_model="account.bank.statement"
-				view_mode="form"
-				target="new"
-				key2="client_action_multi"    
-			id="act_pos_open_statement"/>
-   	
-   	
+        <act_window name="Close Statements"
+            res_model="pos.close.statement"
+            src_model="account.bank.statement"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            id="act_pos_open_statement"/>
+
         <record id="action_pos_close_statement" model="ir.actions.act_window">
             <field name="name">Close Cash Register</field>
             <field name="type">ir.actions.act_window</field>
@@ -38,6 +38,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>        
-	</data>
-</openerp>	        
+        </record>
+    </data>
+</openerp>

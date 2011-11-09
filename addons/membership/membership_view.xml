@@ -20,10 +20,6 @@
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of"/>
                    <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
-                   </group>
-                   <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
                        <separator orientation="vertical"/>

@@ -46,7 +46,6 @@
                         help="Auction during current month."/>
                     <filter icon="terp-go-week"
                          string="Month -1"
-                         separator="1"
                          domain="[('month','=',(datetime.date.today() - datetime.timedelta(365/12)).strftime('%%m'))]"
                          help="Auction during last month."/>
                     <separator orientation="vertical"/>
@@ -70,7 +69,7 @@
                     <field name="lot_type"/>
                 </group>
                 <newline/>
-                <group expand="1" string="Group By..." colspan="10" col="12">
+                <group expand="1" string="Group By...">
                     <filter string="User" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Buyer" icon="terp-personal" name="buyer" context="{'group_by':'buyer'}"/>
                     <filter string="Seller" icon="terp-personal" name="seller" context="{'group_by':'seller'}"/>

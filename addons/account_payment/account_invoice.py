@@ -42,7 +42,7 @@ class Invoice(osv.osv):
         return res
 
     _columns = {
-        'amount_to_pay': fields.function(_amount_to_pay, method=True,
+        'amount_to_pay': fields.function(_amount_to_pay,
             type='float', string='Amount to be paid',
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),

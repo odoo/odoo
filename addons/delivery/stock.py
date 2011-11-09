@@ -54,12 +54,12 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
-        'weight_net': fields.function(_cal_weight, method=True, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
                  'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
@@ -118,16 +118,20 @@ class stock_picking(osv.osv):
                 account_id = self.pool.get('account.fiscal.position').map_account(cursor, user, partner.property_account_position, account_id)
                 taxes_ids = self.pool.get('account.fiscal.position').map_tax(cursor, user, partner.property_account_position, taxes)
 
-            invoice_line_obj.create(cursor, user, {
-                'name': picking.carrier_id.name,
-                'invoice_id': invoice.id,
-                'uos_id': picking.carrier_id.product_id.uos_id.id,
-                'product_id': picking.carrier_id.product_id.id,
-                'account_id': account_id,
-                'price_unit': price,
-                'quantity': 1,
-                'invoice_line_tax_id': [(6, 0,taxes_ids)],
-            })
+            if any(inv_line.product_id.id == picking.carrier_id.product_id.id for inv_line in invoice.invoice_line):
+                continue
+            else:
+                invoice_line_obj.create(cursor, user, {
+                    'name': picking.carrier_id.name,
+                    'invoice_id': invoice.id,
+                    'uos_id': picking.carrier_id.product_id.uos_id.id,
+                    'product_id': picking.carrier_id.product_id.id,
+                    'account_id': account_id,
+                    'price_unit': price,
+                    'quantity': 1,
+                    'invoice_line_tax_id': [(6, 0,taxes_ids)],
+                })
+            invoice_obj.button_compute(cursor, user, [invoice.id], context=context)
         return result
 
 stock_picking()
@@ -158,11 +162,11 @@ class stock_move(osv.osv):
         return res
 
     _columns = {
-        'weight': fields.function(_cal_move_weight, method=True, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+        'weight': fields.function(_cal_move_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),
-        'weight_net': fields.function(_cal_move_weight, method=True, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
+        'weight_net': fields.function(_cal_move_weight, type='float', string='Net weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_move_weight',
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),

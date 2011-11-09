@@ -88,7 +88,7 @@
 {
     "name" : "Netherlands - Grootboek en BTW rekeningen",
     "version" : "1.5",
-    "category": "Finance",
+    "category": "Localization/Account Charts",
     "description": """
 This is the module to manage the accounting chart for Netherlands in OpenERP.
 =============================================================================

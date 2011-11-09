@@ -7,29 +7,29 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-10-30 09:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-10-11 18:22+0000\n"
+"Last-Translator: Aare Vesi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:56+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:00+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:1202
 #, python-format
 msgid "Create line failed !"
 msgstr "Rea loomine ebaõnnestus!"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:69
 #, python-format
 msgid "Invalid action !"
 msgstr "Vigane tegevus !"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:1210
 #, python-format
 msgid "Modify line failed !"
 msgstr "Rea muutmine ebaõnnestus!"
@@ -50,7 +50,8 @@ msgid "Point of Sale Confirm"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_button:pos.discount,init,apply_discount:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
+#: view:pos.discount:0
 msgid "Apply Discount"
 msgstr "Rakenda allahindlus"
 
@@ -72,10 +73,10 @@ msgstr "Kassa"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Today"
-msgstr ""
+msgstr "Täna"
 
 #. module: point_of_sale
-#: wizard_view:pos.add_product,init:0
+#: view:pos.add.product:0
 msgid "Add product :"
 msgstr "Lisa toode :"
 
@@ -97,6 +98,8 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Details of Sales"
 msgstr "Müügid Detailselt"
 
@@ -106,7 +109,9 @@ msgid "Are you sure you want to close the statements ?"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_view:pos.scan_product,init:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_scan_product
+#: model:ir.model,name:point_of_sale.model_pos_scan_product
+#: view:pos.scan.product:0
 msgid "Scan product"
 msgstr "Scanneeri toodet"
 
@@ -116,10 +121,10 @@ msgstr "Scanneeri toodet"
 #: view:report.pos.order:0
 #: field:report.pos.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Päev"
 
 #. module: point_of_sale
-#: wizard_view:pos.payment,ask_pay:0
+#: view:pos.make.payment:0
 msgid "Add payment :"
 msgstr "Lisa maksmine :"
 
@@ -127,7 +132,7 @@ msgstr "Lisa maksmine :"
 #: view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "My Sales"
-msgstr ""
+msgstr "Minu müügid"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
@@ -140,26 +145,28 @@ msgid "Today's Sales By Current User"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: field:pos.payment,amount:0
-#: wizard_field:pos.payment,ask_pay,amount:0
+#: report:account.statement:0
+#: field:pos.box.entries,amount:0
+#: field:pos.box.out,amount:0
+#: report:pos.invoice:0
+#: field:pos.make.payment,amount:0
+#: report:pos.user.product:0
 #: field:report.transaction.pos,amount:0
 msgid "Amount"
 msgstr "Kogus"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.lines:0
+#: report:pos.lines:0
 msgid "VAT"
 msgstr "Käibemaks"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "Päritolu"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Tax"
 msgstr "Maks"
 
@@ -174,13 +181,14 @@ msgid "Will put all the orders in waiting status till being accepted"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,partner_id:0
+#: report:account.statement:0
+#: field:report.pos.order,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Total of the day"
 msgstr "Päevasumma"
 
@@ -188,22 +196,28 @@ msgstr "Päevasumma"
 #: view:report.pos.order:0
 #: field:report.pos.order,average_price:0
 msgid "Average Price"
-msgstr ""
+msgstr "Keskmine hind"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
+#: report:pos.lines:0
 msgid "Disc. (%)"
 msgstr "Allahindl. (%)"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Total discount"
 msgstr "Kokku allahindlus"
 
 #. module: point_of_sale
+#: view:account.bank.statement:0
+#: view:pos.order:0
 #: field:pos.order,state:0
+#: report:pos.sales.user:0
+#: report:pos.sales.user.today:0
+#: report:pos.sales.user.today.current.user:0
+#: field:report.cash.register,state:0
+#: field:report.pos.order,state:0
 msgid "State"
 msgstr "Olek"
 
@@ -234,24 +248,24 @@ msgstr ""
 #: field:pos.box.entries,ref:0
 #: field:pos.box.out,ref:0
 msgid "Ref"
-msgstr ""
+msgstr "Viide"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Hind kokku"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "Mitmesugune"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr ""
+msgstr "Müügiaruanne"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_discount.py:52
@@ -262,18 +276,18 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "Muu info"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Product Type"
-msgstr ""
+msgstr "Toote tüüp"
 
 #. module: point_of_sale
 #: view:pos.order:0
 #: view:pos.payment.report.date:0
 msgid "Dates"
-msgstr ""
+msgstr "Kuupäevad"
 
 #. module: point_of_sale
 #: field:res.company,company_discount:0
@@ -286,7 +300,8 @@ msgid "Cash register management"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:1057
+#: code:addons/point_of_sale/point_of_sale.py:1076
 #, python-format
 msgid "No valid pricelist line found !"
 msgstr "Kehtiv hinnakirja rida ei ole leitud !"
@@ -299,13 +314,13 @@ msgstr "Kehtiv hinnakirja rida ei ole leitud !"
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
 #: field:report.sales.by.margin.pos.month,total:0
 msgid "Margin"
-msgstr ""
+msgstr "Kate"
 
 #. module: point_of_sale
 #: field:pos.order.line,discount:0
@@ -365,13 +380,13 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "June"
-msgstr ""
+msgstr "Juuni"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
@@ -379,7 +394,8 @@ msgid "Sales by User Monthly"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.payment,payment_date:0
+#: field:pos.order,date_payment:0
+#: field:report.pos.order,date_payment:0
 msgid "Payment Date"
 msgstr "Makse kuupäev"
 
@@ -393,7 +409,7 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktoober"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,am_out:0
@@ -401,15 +417,15 @@ msgid "To count"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Summary"
 msgstr "Üldistus"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Quotations"
-msgstr ""
+msgstr "Pakkumised"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_payment:0
@@ -417,10 +433,12 @@ msgid "Delay Payment"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_field:pos.add_product,init,quantity:0
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
+#: field:pos.add.product,quantity:0
+#: report:pos.invoice:0
+#: report:pos.lines:0
 #: field:pos.order.line,qty:0
+#: field:report.sales.by.user.pos,qty:0
+#: field:report.sales.by.user.pos.month,qty:0
 msgid "Quantity"
 msgstr "Kogus"
 
@@ -432,10 +450,11 @@ msgstr ""
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Period"
-msgstr ""
+msgstr "Periood"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
+#: report:pos.payment.report:0
 msgid "Net Total:"
 msgstr "Netosumma:"
 
@@ -447,7 +466,7 @@ msgstr "Rea kirjeldus"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Codes"
-msgstr ""
+msgstr "Koodid"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -464,12 +483,15 @@ msgstr ""
 #: view:pos.sales.user.today:0
 #: view:pos.sales.user.today.current_user:0
 msgid "Print Report"
-msgstr ""
+msgstr "Trüki aruanne"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
+#: report:pos.invoice:0
+#: report:pos.lines:0
 #: field:pos.order.line,price_unit:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
 msgid "Unit Price"
 msgstr "Ühiku hind"
 
@@ -487,7 +509,7 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_pos_add_product
 #, python-format
 msgid "Add Product"
-msgstr ""
+msgstr "Lisa toode"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
@@ -495,22 +517,28 @@ msgid "Invoice Amount"
 msgstr ""
 
 #. module: point_of_sale
+#: view:account.bank.statement:0
+#: field:account.bank.statement.line,journal_id:0
+#: report:account.statement:0
+#: report:all.closed.cashbox.of.the.day:0
+#: model:ir.model,name:point_of_sale.model_account_journal
 #: field:pos.config.journal,journal_id:0
 #: field:pos.order,sale_journal:0
-#: wizard_field:pos.payment,ask_pay,journal:0
-#: field:pos.payment,journal_id:0
-#: field:report.transaction.pos,journal_id:0
+#: view:report.cash.register:0
+#: field:report.cash.register,journal_id:0
+#: field:report.pos.order,journal_id:0
 msgid "Journal"
 msgstr "Päevik"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Tel. :"
 msgstr "Tel:"
 
 #. module: point_of_sale
-#: model:ir.actions.wizard,name:point_of_sale.pos_payment
 #: view:pos.order:0
+#: selection:pos.order,state:0
+#: selection:report.pos.order,state:0
 msgid "Payment"
 msgstr "Makse"
 
@@ -539,8 +567,8 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Mode of Taxes"
 msgstr "Maksude viisid"
 
@@ -553,7 +581,7 @@ msgstr ""
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Viga: vigane EAN kood"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -573,8 +601,8 @@ msgid "Sales total(Revenue)"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Total paid"
 msgstr "Kokku makstud"
 
@@ -584,8 +612,8 @@ msgid "Check Details"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Qty of product"
 msgstr "Toote kogus"
 
@@ -598,7 +626,7 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "March"
-msgstr ""
+msgstr "Märts"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
@@ -607,8 +635,8 @@ msgid "User's Product"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1042
-#: code:addons/point_of_sale/point_of_sale.py:1067
+#: code:addons/point_of_sale/point_of_sale.py:1043
+#: code:addons/point_of_sale/point_of_sale.py:1068
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -616,7 +644,8 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order.line,price_subtotal:0
+#: view:pos.order:0
+#: field:pos.order.line,price_subtotal_incl:0
 msgid "Subtotal"
 msgstr "Vahesumma"
 
@@ -671,8 +700,7 @@ msgid "St.Name"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details_summary:0
 msgid "Sales total"
 msgstr "Müük kokku"
 
@@ -682,7 +710,7 @@ msgid "Sum of subtotals"
 msgstr "Vahesummade summa"
 
 #. module: point_of_sale
-#: wizard_field:pos.payment,ask_pay,payment_date:0
+#: field:pos.make.payment,payment_date:0
 msgid "Payment date"
 msgstr "Makse kuupäev"
 
@@ -702,6 +730,10 @@ msgid "Today's Sales"
 msgstr ""
 
 #. module: point_of_sale
+#: view:report.sales.by.margin.pos:0
+#: view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0
+#: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
 msgstr "POS "
@@ -717,16 +749,17 @@ msgstr "Kokku :"
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Toote nimi"
 
 #. module: point_of_sale
+#: field:pos.make.payment,pricelist_id:0
 #: field:pos.order,pricelist_id:0
 msgid "Pricelist"
 msgstr "Hinnakiri"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.details_summary:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
 msgid "Total invoiced"
 msgstr "Kokku arves"
 
@@ -734,7 +767,7 @@ msgstr "Kokku arves"
 #: view:report.pos.order:0
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Kogus"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -753,7 +786,7 @@ msgstr ""
 #: field:report.sales.by.user.pos,date_order:0
 #: field:report.sales.by.user.pos.month,date_order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Tellimuse Kuupäev"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -761,7 +794,7 @@ msgid "Today's Closed Cashbox"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Draft Invoice"
 msgstr "Arve mustand"
 
@@ -774,7 +807,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
-msgid "Product for expenses"
+msgid "Product for Output"
 msgstr ""
 
 #. module: point_of_sale
@@ -792,7 +825,7 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -803,7 +836,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Maksud :"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -811,7 +844,7 @@ msgid "Disc."
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "VAT :"
 msgstr "KM :"
 
@@ -826,13 +859,12 @@ msgid "Receipt :"
 msgstr ""
 
 #. module: point_of_sale
-#: field:pos.order,amount_paid:0
 #: field:pos.order,amount_return:0
 msgid "unknown"
 msgstr "teadmata"
 
 #. module: point_of_sale
-#: rml:pos.details:0
+#: report:pos.details:0
 #: field:report.transaction.pos,date_create:0
 msgid "Date"
 msgstr "Kuupäev"
@@ -845,7 +877,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,num_sale:0
 msgid "Internal Note"
-msgstr ""
+msgstr "Sisemine märkus"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
@@ -869,7 +901,7 @@ msgid "Pos Box Entries"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/wizard_get_sale.py:0
+#: code:addons/point_of_sale/wizard/pos_get_sale.py:54
 #, python-format
 msgid "You can't modify this order. It has already been paid"
 msgstr "Sa ei saa seda orderit muuta. See on juba makstud"
@@ -883,7 +915,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Teie viide"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
@@ -891,15 +923,14 @@ msgid "Number of Transaction"
 msgstr "Tehingu number"
 
 #. module: point_of_sale
-#: wizard_button:pos.add_product,init,end:0
-#: wizard_button:pos.config.journal,init,end:0
-#: wizard_button:pos.discount,init,end:0
-#: view:pos.order:0
+#: view:pos.add.product:0
+#: view:pos.box.entries:0
+#: view:pos.box.out:0
+#: view:pos.get.sale:0
+#: view:pos.make.payment:0
 #: selection:pos.order,state:0
-#: wizard_button:pos.payment,ask_pay,end:0
-#: wizard_button:pos.refund_order,init,end:0
-#: wizard_button:pos.sale.get,init,end:0
-#: wizard_button:pos.scan_product,init,end:0
+#: view:pos.receipt:0
+#: selection:report.pos.order,state:0
 msgid "Cancel"
 msgstr "Tühista"
 
@@ -916,7 +947,7 @@ msgstr "Müük (üldistus)"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Information"
-msgstr ""
+msgstr "informatsioon"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
@@ -942,10 +973,10 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order,first_name:0
 msgid "First Name"
-msgstr ""
+msgstr "Eesnimi"
 
 #. module: point_of_sale
-#: view:pos.order:0
+#: view:res.company:0
 msgid "Other"
 msgstr "Muu"
 
@@ -970,22 +1001,25 @@ msgstr ""
 #: view:account.journal:0
 #: field:account.journal,journal_users:0
 msgid "Users"
-msgstr ""
+msgstr "Kasutajad"
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
-#: rml:pos.receipt:0
+#: report:pos.details:0
+#: report:pos.invoice:0
+#: report:pos.lines:0
 msgid "Price"
 msgstr "Hind"
 
 #. module: point_of_sale
-#: wizard_field:pos.scan_product,init,gencod:0
+#: field:pos.scan.product,gencod:0
 msgid "Barcode"
 msgstr "Ribakood"
 
 #. module: point_of_sale
+#: view:report.sales.by.margin.pos:0
+#: view:report.sales.by.margin.pos.month:0
+#: view:report.sales.by.user.pos:0
+#: view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
 msgstr "POS"
@@ -993,7 +1027,7 @@ msgstr "POS"
 #. module: point_of_sale
 #: field:report.cash.register,date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Loomise kuupäev"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
@@ -1012,7 +1046,7 @@ msgstr ""
 #: report:pos.sales.user.today:0
 #: report:pos.sales.user.today.current.user:0
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_open_statement
@@ -1027,7 +1061,7 @@ msgstr ""
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
@@ -1035,7 +1069,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Supplier Refund"
 msgstr "Tarnija tagasimakse"
 
@@ -1045,7 +1079,7 @@ msgstr "Tarnija tagasimakse"
 #: view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupeeri..."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1058,13 +1092,15 @@ msgid "All Closed CashBox"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:1042
+#: code:addons/point_of_sale/point_of_sale.py:1067
 #, python-format
 msgid "No Pricelist !"
 msgstr "Puudub hinnakiri !"
 
 #. module: point_of_sale
-#: wizard_view:pos.sale.get,init:0
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_get_sale
+#: view:pos.get.sale:0
 msgid "Select an Open Sale Order"
 msgstr "Vali Avatud Müügitellimus"
 
@@ -1074,14 +1110,14 @@ msgid "Order date"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Base"
 msgstr "Baas"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #. module: point_of_sale
 #: field:pos.order,sale_manager:0
@@ -1090,18 +1126,17 @@ msgstr ""
 
 #. module: point_of_sale
 #: view:pos.order:0
-#: field:pos.order,note:0
 msgid "Notes"
 msgstr "Märkused"
 
 #. module: point_of_sale
-#: wizard_field:pos.sale.get,init,picking_id:0
+#: field:pos.get.sale,picking_id:0
+#: view:pos.order:0
 msgid "Sale Order"
 msgstr "Müügiorder"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
+#: report:pos.invoice:0
 #: field:pos.order,amount_tax:0
 msgid "Taxes"
 msgstr "Maksud"
@@ -1109,12 +1144,13 @@ msgstr "Maksud"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
 msgstr "Müügi rida"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
-#: rml:pos.details:0
+#: report:pos.details:0
 msgid "Code"
 msgstr "Tootekood"
 
@@ -1124,7 +1160,7 @@ msgstr "Tootekood"
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 msgid "Products"
-msgstr ""
+msgstr "Tooted"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report
@@ -1147,7 +1183,7 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Fax :"
 msgstr "Faks :"
 
@@ -1188,8 +1224,14 @@ msgid "Picking List"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.details:0
-#: rml:pos.receipt:0
+#: report:pos.details:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
+#: report:pos.sales.user.today.current.user:0
+#: report:pos.user.product:0
+#: field:report.sales.by.margin.pos,qty:0
+#: field:report.sales.by.margin.pos.month,qty:0
 msgid "Qty"
 msgstr "kogus"
 
@@ -1207,8 +1249,15 @@ msgid "Sale by User"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
-#: code:addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/point_of_sale/point_of_sale.py:558
+#: code:addons/point_of_sale/point_of_sale.py:744
+#: code:addons/point_of_sale/point_of_sale.py:852
+#: code:addons/point_of_sale/report/pos_invoice.py:46
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:103
+#: code:addons/point_of_sale/wizard/pos_box_entries.py:107
+#: code:addons/point_of_sale/wizard/pos_box_out.py:97
+#: code:addons/point_of_sale/wizard/pos_box_out.py:101
+#: code:addons/point_of_sale/wizard/pos_box_out.py:103
 #, python-format
 msgid "Error !"
 msgstr "Viga !"
@@ -1232,10 +1281,10 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "Juuli"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:544
+#: code:addons/point_of_sale/point_of_sale.py:547
 #, python-format
 msgid "Please provide an account for the product: %s"
 msgstr ""
@@ -1288,7 +1337,7 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Kuu"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1336,7 +1385,7 @@ msgid "Customer Note"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:340
 #, python-format
 msgid "No order lines defined for this sale."
 msgstr ""
@@ -1347,7 +1396,10 @@ msgid "Opening Balance"
 msgstr ""
 
 #. module: point_of_sale
+#: field:pos.order,amount_paid:0
 #: selection:pos.order,state:0
+#: view:report.pos.order:0
+#: selection:report.pos.order,state:0
 msgid "Paid"
 msgstr "Tasutud"
 
@@ -1363,7 +1415,11 @@ msgid "Quotation"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:all.closed.cashbox.of.the.day:0
+#: report:pos.invoice:0
+#: report:pos.lines:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
 msgid "Total:"
 msgstr "Kokku:"
 
@@ -1395,7 +1451,7 @@ msgid "Nbr Invoice"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.actions.report.xml,name:point_of_sale.pos_receipt
+#: model:ir.actions.act_window,name:point_of_sale.action_report_pos_receipt
 msgid "Receipt"
 msgstr "Kviitung"
 
@@ -1406,15 +1462,15 @@ msgstr "Loo arve"
 
 #. module: point_of_sale
 #: selection:pos.order,state:0
+#: selection:report.pos.order,state:0
 msgid "Done"
 msgstr "Valmis"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_invoice_report
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
+#: field:pos.make.payment,invoice_wanted:0
 #: field:pos.order,invoice_id:0
-#: wizard_field:pos.payment,ask_pay,invoice_wanted:0
-#: field:report.transaction.pos,invoice_id:0
 msgid "Invoice"
 msgstr "Arve"
 
@@ -1431,7 +1487,6 @@ msgstr ""
 
 #. module: point_of_sale
 #: field:pos.order.line,order_id:0
-#: field:pos.payment,order_id:0
 msgid "Order Ref"
 msgstr "Orderi ref"
 
@@ -1465,7 +1520,7 @@ msgid "Sales by User Margin"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Taxes:"
 msgstr "Maksud:"
 
@@ -1475,9 +1530,17 @@ msgid "Point of Sale Orders Statistics"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_field:pos.add_product,init,product:0
-#: rml:pos.details:0
+#: model:ir.model,name:point_of_sale.model_product_product
+#: field:pos.add.product,product_id:0
+#: report:pos.details:0
 #: field:pos.order.line,product_id:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
+#: report:pos.user.product:0
+#: view:product.product:0
+#: view:report.pos.order:0
+#: field:report.pos.order,product_id:0
 msgid "Product"
 msgstr "Toode"
 
@@ -1531,7 +1594,7 @@ msgid "Yes"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:743
+#: code:addons/point_of_sale/point_of_sale.py:744
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
@@ -1558,8 +1621,13 @@ msgid "Date Start"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.lines:0
 #: field:pos.order,amount_total:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
+#: report:pos.sales.user.today.current.user:0
+#: field:report.sales.by.user.pos,amount:0
+#: field:report.sales.by.user.pos.month,amount:0
 msgid "Total"
 msgstr "Kokku"
 
@@ -1603,18 +1671,32 @@ msgid "Return lines"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.lines:0
+#: report:account.statement:0
+#: report:all.closed.cashbox.of.the.day:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
+#: report:pos.lines:0
+#: field:pos.order,company_id:0
+#: field:pos.order.line,company_id:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
+#: report:pos.sales.user:0
+#: report:pos.sales.user.today:0
+#: report:pos.sales.user.today.current.user:0
+#: report:pos.user.product:0
+#: field:report.pos.order,company_id:0
 msgid "Company"
 msgstr "Ettevõte"
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Invoice Date"
 msgstr "Arve Kuupäev"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1057
-#: code:addons/point_of_sale/point_of_sale.py:1076
+#: code:addons/point_of_sale/point_of_sale.py:1058
+#: code:addons/point_of_sale/point_of_sale.py:1077
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -1632,9 +1714,9 @@ msgid "Reprint"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:555
+#: code:addons/point_of_sale/point_of_sale.py:558
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:103
-#: code:addons/point_of_sale/wizard/pos_box_out.py:101
+#: code:addons/point_of_sale/wizard/pos_box_out.py:103
 #, python-format
 msgid "You have to open at least one cashbox"
 msgstr ""
@@ -1657,29 +1739,28 @@ msgid "Error!"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.lines:0
+#: report:pos.lines:0
 msgid "No. Of Articles"
 msgstr "Artiklite arv"
 
 #. module: point_of_sale
 #: field:pos.order,date_validity:0
-#: wizard_field:pos.refund_order,init,date_validity:0
 msgid "Validity Date"
 msgstr "Kehtivuse kuupäev"
 
 #. module: point_of_sale
-#: view:pos.order:0
 #: field:pos.order,pickings:0
 msgid "Picking"
 msgstr "Noppimine"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0
+#: field:report.pos.order,shop_id:0
 msgid "Shop"
 msgstr "Pood"
 
 #. module: point_of_sale
-#: field:pos.order,last_out_picking:0
+#: field:pos.order,picking_id:0
 msgid "Last Output Picking"
 msgstr ""
 
@@ -1721,7 +1802,7 @@ msgid "Refunded Quantity"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_view:pos.scan_product,init:0
+#: view:pos.scan.product:0
 msgid "Scan Barcode"
 msgstr "Skaneeri ribakood"
 
@@ -1752,8 +1833,9 @@ msgid "Cancelled Invoice"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.actions.wizard,name:point_of_sale.pos_confirm
-#: wizard_button:pos.sale.get,init,set:0
+#: view:account.bank.statement:0
+#: view:pos.get.sale:0
+#: view:report.cash.register:0
 msgid "Confirm"
 msgstr "Kinnita"
 
@@ -1773,12 +1855,12 @@ msgid "Discount "
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Tarnija arve"
 
 #. module: point_of_sale
-#: wizard_field:pos.payment,ask_pay,payment_name:0
+#: field:pos.make.payment,payment_name:0
 msgid "Payment name"
 msgstr "Makse nimetus"
 
@@ -1808,7 +1890,7 @@ msgid "The code of the journal must be unique per company !"
 msgstr ""
 
 #. module: point_of_sale
-#: model:ir.ui.menu,name:point_of_sale.menu_point_config
+#: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
 msgid "Configuration"
 msgstr "Seadistus"
 
@@ -1824,8 +1906,8 @@ msgid "Validation Date"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:504
-#: code:addons/point_of_sale/point_of_sale.py:506
+#: code:addons/point_of_sale/point_of_sale.py:507
+#: code:addons/point_of_sale/point_of_sale.py:509
 #, python-format
 msgid "You don't have enough access to validate this sale!"
 msgstr ""
@@ -1871,23 +1953,32 @@ msgid "Message"
 msgstr ""
 
 #. module: point_of_sale
+#: view:account.journal:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree2
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_tree3
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form_user
 #: model:ir.model,name:point_of_sale.model_pos_order
-#: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "Point of Sale"
 msgstr "Müügipunkt"
 
 #. module: point_of_sale
-#: field:pos.order,user_id:0
+#: view:pos.order:0
+#: field:pos.payment.report.date,user_id:0
+#: field:pos.payment.report.user,user_id:0
+#: field:pos.sale.user,user_id:0
+#: field:pos.sales.user.today,user_id:0
+#: view:report.pos.order:0
+#: field:report.pos.order,user_id:0
 msgid "Salesman"
 msgstr "Müügimees"
 
 #. module: point_of_sale
-#: rml:pos.details:0
+#: report:pos.details:0
 #: selection:pos.order,state:0
+#: view:report.pos.order:0
+#: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Arve esitatud"
 
@@ -1904,12 +1995,13 @@ msgid "Discount Notice"
 msgstr ""
 
 #. module: point_of_sale
-#: wizard_button:pos.scan_product,init,add:0
+#: view:pos.scan.product:0
 msgid "Add"
 msgstr "Lisa"
 
 #. module: point_of_sale
-#: selection:pos.order,state:0
+#: view:report.cash.register:0
+#: selection:report.pos.order,state:0
 msgid "Draft"
 msgstr "Mustand"
 
@@ -1929,18 +2021,18 @@ msgid "POS Payment Report according to date"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "PRO-FORMA"
 msgstr "Ettemaks"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:638
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Palun lisa müügipartnerit"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:852
+#: code:addons/point_of_sale/point_of_sale.py:853
 #, python-format
 msgid ""
 "There is no receivable account defined for this journal: \"%s\" (id:%d)"
@@ -1952,14 +2044,26 @@ msgid "Cashier"
 msgstr ""
 
 #. module: point_of_sale
+#: report:account.statement:0
+#: report:all.closed.cashbox.of.the.day:0
+#: view:pos.payment.report.date:0
+#: report:pos.sales.user:0
+#: report:pos.sales.user.today:0
+#: report:pos.sales.user.today.current.user:0
+#: report:pos.user.product:0
+#: view:report.cash.register:0
+#: field:report.cash.register,user_id:0
+#: field:report.sales.by.margin.pos,user_id:0
+#: field:report.sales.by.margin.pos.month,user_id:0
+#: field:report.sales.by.user.pos,user_id:0
+#: field:report.sales.by.user.pos.month,user_id:0
 #: field:report.transaction.pos,user_id:0
 msgid "User"
 msgstr "Kasutaja"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
-#: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
+#: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos
 msgid "Sales by user"
 msgstr "Müük kasutaja kohta"
 
@@ -1986,7 +2090,13 @@ msgid "POS Orders lines"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/pos.py:0
+#: code:addons/point_of_sale/point_of_sale.py:340
+#: code:addons/point_of_sale/point_of_sale.py:507
+#: code:addons/point_of_sale/point_of_sale.py:509
+#: code:addons/point_of_sale/point_of_sale.py:547
+#: code:addons/point_of_sale/point_of_sale.py:638
+#: code:addons/point_of_sale/point_of_sale.py:1202
+#: code:addons/point_of_sale/point_of_sale.py:1210
 #, python-format
 msgid "Error"
 msgstr "Viga"
@@ -1997,12 +2107,12 @@ msgid "Sales Journal"
 msgstr ""
 
 #. module: point_of_sale
-#: rml:pos.invoice:0
+#: report:pos.invoice:0
 msgid "Refund"
 msgstr "Tagasimaksmine"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/report/pos_invoice.py:0
+#: code:addons/point_of_sale/report/pos_invoice.py:46
 #, python-format
 msgid "Please create an invoice for this sale."
 msgstr "Palun loo arve sellele müügile."
@@ -2027,7 +2137,16 @@ msgid "Disc(%)"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
+#: view:all.closed.cashbox.of.the.day:0
+#: view:pos.details:0
+#: view:pos.discount:0
+#: view:pos.payment.report:0
+#: view:pos.payment.report.date:0
+#: view:pos.payment.report.user:0
+#: view:pos.sale.user:0
+#: view:pos.sales.user.today:0
+#: view:pos.sales.user.today.current_user:0
+#: view:pos.scan.product:0
 msgid "Close"
 msgstr "Sulge"
 
@@ -2073,17 +2192,17 @@ msgid "Please fill these fields for entries to the box:"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/wizard/pos_box_out.py:99
+#: code:addons/point_of_sale/wizard/pos_box_out.py:101
 #, python-format
 msgid "please check that account is set to %s"
 msgstr ""
 
 #. module: point_of_sale
+#: field:pos.box.entries,name:0
+#: field:pos.box.out,name:0
 #: field:pos.config.journal,name:0
-#: rml:pos.invoice:0
-#: rml:pos.lines:0
-#: field:pos.payment,name:0
-#: rml:pos.receipt:0
+#: report:pos.invoice:0
+#: report:pos.lines:0
 msgid "Description"
 msgstr "Kirjeldus"
 
@@ -2177,12 +2296,21 @@ msgid "April"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.order:0
+#: field:pos.order,statement_ids:0
 msgid "Payments"
 msgstr "Maksed"
 
 #. module: point_of_sale
-#: rml:pos.lines:0
+#: report:pos.details:0
+#: report:pos.details_summary:0
+#: report:pos.lines:0
+#: report:pos.payment.report:0
+#: report:pos.payment.report.date:0
+#: report:pos.payment.report.user:0
+#: report:pos.sales.user:0
+#: report:pos.sales.user.today:0
+#: report:pos.sales.user.today.current.user:0
+#: report:pos.user.product:0
 msgid "Print Date"
 msgstr "Trükkimise kuupäev"
 
@@ -2426,6 +2554,3 @@ msgstr ""
 
 #~ msgid "Net Total"
 #~ msgstr "Netosumma"
-
-#~ msgid "Tel : + 32 (0) 2 231 04 35"
-#~ msgstr "Tel : + 32 (0) 2 231 04 35"

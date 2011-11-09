@@ -20,9 +20,10 @@
 #
 ##############################################################################
 {
-    'name': 'Human Resource Payroll',
+    'name': 'Payroll',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "normal",
     'description': """
 Generic Payroll system.
 =======================
@@ -38,7 +39,7 @@ Generic Payroll system.
     """,
     'author':'OpenERP SA',
     'website':'http://www.openerp.com',
-    'images': ['images/hr_company_contributions.jpeg','images/hr_salary_heads.jpeg','images/hr_salary_structure.jpeg','images/hr_employee_payslip.jpeg','images/hr_payment_advice.jpeg','images/hr_payroll_register.jpeg'],
+    'images': ['images/hr_company_contributions.jpeg','images/hr_salary_heads.jpeg','images/hr_salary_structure.jpeg','images/hr_employee_payslip.jpeg'],
     'depends': [
         'hr',
         'hr_contract',
@@ -49,19 +50,19 @@ Generic Payroll system.
     ],
     'update_xml': [
         'security/hr_security.xml',
+        'wizard/hr_payroll_payslips_by_employees.xml',
         'hr_payroll_view.xml',
         'hr_payroll_workflow.xml',
         'hr_payroll_sequence.xml',
-        'hr_paroll_report.xml',
+        'hr_payroll_report.xml',
         'hr_payroll_data.xml',
         'security/ir.model.access.csv',
-        'wizard/hr_payroll_employees_detail.xml',
-        'wizard/hr_payroll_year_salary.xml',
+        'wizard/hr_payroll_contribution_register_report.xml',
     ],
     'test': [
          'test/payslip.yml',
-         'test/payment_advice.yml',
-         'test/payroll_register.yml',
+#         'test/payment_advice.yml',
+#         'test/payroll_register.yml',
         # 'test/hr_payroll_report.yml',
     ],
     'demo_xml': [

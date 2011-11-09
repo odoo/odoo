@@ -15,7 +15,7 @@
         <record id="board_hr_holidays_manager_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.manager.form</field>
             <field name="model">board.board</field>
-            <field name="inherit_id" ref="hr.board_hr_manager_form"/>              
+            <field name="inherit_id" ref="hr.board_hr_manager_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                   <xpath expr="/form/hpaned/child1" position="inside"> 
@@ -24,12 +24,5 @@
             </field>
         </record>
 
-        <menuitem
-            action="hr.open_board_hr_manager"
-            icon="terp-graph"
-            id="base.menu_hr_manager"
-            parent="base.menu_hr_dasboard"
-            groups = "base.group_hr_manager"
-            sequence="5"/> 
     </data>
 </openerp>

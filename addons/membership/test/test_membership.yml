@@ -1,19 +1,19 @@
 - |
   In Order to test the Membership in OpenERP, which allows us to manage all operations for managing memberships.
 - |
-  I'm creating "Golden Membership" which has Membership fee 80 EURO and It's started from 1st June to 31st Dec.
+  I'm creating "Gold Membership" which has Membership fee 80 EURO and It's started from 1st June to 31st Dec.
 -
   !record {model: product.product, id: product_product_membershipproduct0}:
     categ_id: product.cat1
     membership: 1
     membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
     membership_date_to: !eval "(datetime.now() + timedelta(6*31)).strftime('%Y-%m-%d')" 
-    name: Golden Membership
+    name: Gold Membership
     type: service
     list_price: 80.00
 
 - |
-  "Mark Johnson" want to join "Golden Membership".
+  "Mark Johnson" want to join "Gold Membership".
 - |
   I'm creating new member "Mark Johnson".
 -
@@ -32,7 +32,7 @@
   !assert {model: res.partner, id: res_partner_markjohnson0}:
       - membership_state == 'none', 'Member should be has "Current Membership State" in "Non Member".'
 - |
-  I'm doing to make membership invoice for "Mark Johnson" on joining "Golden Membership".
+  I'm doing to make membership invoice for "Mark Johnson" on joining "Gold Membership".
 -
   !python {model: res.partner}: |
     self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct0"), datas={"amount":80.00})
@@ -65,7 +65,7 @@
      - membership_state == 'invoiced', 'Member should be has "Current Membership State" in "Invoiced Member".'
 
 - |
-  I'm creating free member "Ms. Johnson" of "Golden Membership".
+  I'm creating free member "Ms. Johnson" of "Gold Membership".
 -
   !record {model: res.partner, id: res_partner_msjohnson0}:
     address:
@@ -97,18 +97,18 @@
      - membership_state == 'paid', 'Member should be has "Current Membership State" in "Paid Member".'
 
 - |
-  I'm creating new "Silver Membership" which has Membership fee 50 EURO and It's started from 1st June to 31st Dec.
+  I'm creating new "Regular Membership" which has Membership fee 50 EURO and It's started from 1st June to 31st Dec.
 -
   !record {model: product.product, id: product_product_membershipproduct1}:
     categ_id: product.cat1
     membership: 1
     membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
     membership_date_to: !eval "(datetime.now() + timedelta(6*31)).strftime('%Y-%m-%d')" 
-    name: Silver Membership
+    name: Regular Membership
     type: service
     list_price: 50.00
 - |
-  I'm making invoice of "Mark Johnson" member on joining new membership "Silver Membership".
+  I'm making invoice of "Mark Johnson" member on joining new membership "Regular Membership".
 -
   !python {model: res.partner}: |
     self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct1"), datas={"amount":50.00})

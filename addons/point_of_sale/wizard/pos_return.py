@@ -24,19 +24,6 @@ from osv import osv,fields
 from tools.translate import _
 import time
 
-class pos_return_memory(osv.osv_memory):
-    _name = "pos.return.memory"
-    _rec_name = 'product_id'
-    _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True),
-        'quantity' : fields.float("Quantity", required=True),
-        'pos_moves_id' : fields.many2one('pos.return', string="Move"),
-        'line_id': fields.integer('Line Id'),
-    }
-    
-pos_return_memory()
-
-
 class pos_return(osv.osv_memory):
     _name = 'pos.return'
     _description = 'Point of sale return'
@@ -290,7 +277,6 @@ class add_product(osv.osv_memory):
             res=cr.fetchone()
             location_id=res and res[0] or None
 
-            order_obj.write(cr,uid,[order_id.id],{'type_rec':'Exchange'})
             if order_id.invoice_id:
                 invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
             new_picking=picking_obj.create(cr, uid, {
@@ -305,7 +291,6 @@ class add_product(osv.osv_memory):
                     if data.has_key(key):
                         qty = data[key]
                         lines_obj.write(cr,uid,[line.id], {
-                                'qty_rfd':(line.qty or 0.0) + data[key],
                                 'qty':line.qty-(data[key] or 0.0)
                         })
                     else:

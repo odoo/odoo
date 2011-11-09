@@ -28,14 +28,15 @@ class account_pl_report(osv.osv_memory):
     _inherit = "account.common.account.report"
     _name = "account.pl.report"
     _description = "Account Profit And Loss Report"
+
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
+        'journal_ids': fields.many2many('account.journal', 'account_pl_report_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
 
     _defaults = {
         'display_type': False,
         'journal_ids': [],
-        'target_move': False
     }
 
     def _print_report(self, cr, uid, ids, data, context=None):

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- wizard action on res.partner -->
+        <act_window id="partner_wizard_action"
+            name="Add Portal Access"
+            src_model="res.partner"
+            res_model="res.portal.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            groups="group_portal_officer"/>
+
+        <!-- wizard action on res.partner.address -->
+        <act_window id="address_wizard_action"
+            name="Add Portal Access"
+            src_model="res.partner.address"
+            res_model="res.portal.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            groups="group_portal_officer"/>
+
+        <!-- wizard view -->
+        <record id="wizard_view" model="ir.ui.view">
+            <field name="name">Add Portal Access</field>
+            <field name="model">res.portal.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Add Portal Access">
+                    <field name="portal_id" widget="selection"/>
+                    <newline/>
+                    <notebook colspan="4">
+                        <page string="Users">
+                            <field name="user_ids" nolabel="1" colspan="4"/>
+                        </page>
+                        <page string="Invitation message">
+                            <label string="The following text will be included in the welcome email sent to users."/>
+                            <field name="message" nolabel="1" colspan="4"/>
+                        </page>
+                    </notebook>
+                    <label colspan="2"/>
+                    <button string="Cancel" special="cancel" icon="gtk-cancel"/>
+                    <button string="Send Invitations"
+                        name="action_create" type="object" icon="gtk-ok"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard user list view -->
+        <record id="wizard_user_tree_view" model="ir.ui.view">
+            <field name="name">Portal Users</field>
+            <field name="model">res.portal.wizard.user</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <!-- the attribute 'editable' is set below to make the elements
+                     editable in the web client 6.0 -->
+                <tree string="Portal Users" editable="bottom">
+                    <field name="name"/>
+                    <field name="user_email"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- wizard user form view -->
+        <record id="wizard_user_form_view" model="ir.ui.view">
+            <field name="name">Portal User</field>
+            <field name="model">res.portal.wizard.user</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Portal User">
+                    <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="user_email"/>
+                        <field name="lang"/>
+                        <field name="partner_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

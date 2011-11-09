@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1: -->
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="Login">
+        <t t-jquery=".oe_box2 tr:first td:nth-child(2)" t-operation="append">
+            <ul class="openid_providers">
+                <li><a href="#login,password" title="Password" data-url="" id="btn_password">Password</a></li>
+                <li><a href="#google" title="Google" data-url="https://www.google.com/accounts/o8/id">Google</a></li>
+                <li><a href="#googleapps" title="Google Apps" data-url="https://www.google.com/accounts/o8/site-xrds?hd={id}">Google</a></li>
+                <li><a href="#launchpad" title="Launchpad" data-url="https://launchpad.net/~{id}">Launchpad</a></li>
+                <li><a href="#openid_url" title="OpenID" data-url="{id}">OpenID</a></li>
+            </ul>
+        </t>
+    </t>
+
+    <t t-extend="Login">
+        <t t-jquery=".oe_box2 tr:first" t-operation="after">
+            <tr>
+                <td><label for="googleapps">Google Apps Domain:</label></td>
+                <td><input type="text" name="googleapps" /></td>
+            </tr>
+            <tr>
+                <td><label for="launchpad">Username:</label></td>
+                <td><input type="text" name="launchpad" /></td>
+            </tr>
+            <tr>
+                <td><label for="openid_url">OpenID URL:</label></td>
+                <td><input type="text" name="openid_url" /></td>
+            </tr>
+        </t>
+    </t>
+
+    <t t-extend="Login">
+        <t t-jquery=".oe_box2 tr:has(input[name!='db'])">
+            //this.addClass('auth_choice');     // XXX for some reason, not all tr tags are HTMLElement's and thus, jQuery decide to not change the class...
+            this.attr('class', 'auth_choice');
+            this.each(function() {
+                var $i = $(this);
+                $i.attr('data-provider', $i.find('input').attr('name'));
+            });
+        </t>
+    </t>
+
+</templates>

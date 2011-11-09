@@ -21,7 +21,7 @@
      meeting_ids = self.search(cr, uid, [('id', 'in', [ref('crm_meeting_testmeeting0')]),('date','>=','2011-03-13'), ('date_deadline', '<=', '2011-05-13')], context={'virtual_id': True})
      assert len(meeting_ids) == 5, 'Recurrent daily meetings are not created !'
 -
-  Now I create a weekly meeting till a particular end date.
+  I create a weekly meeting till a particular end date.
 -
   !record {model: crm.meeting, id: crm_meeting_reviewcodewithprogrammer0}:
     date: '2011-04-18 11:47:00'
@@ -95,4 +95,3 @@
      meeting_ids = self.search(cr, uid, [('recurrent_uid', '=', ref('crm_meeting_reviewcodewithprogrammer0')), ('recurrent_id','=','2011-04-25 12:47:00')], context)
      assert meeting_ids, 'Meeting is not edited !'
 
-     

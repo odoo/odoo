@@ -32,7 +32,6 @@ class res_partner(osv.osv):
             relation='product.pricelist', 
             domain=[('type','=','sale')],
             string="Sale Pricelist", 
-            method=True,
             view_load=True,
             help="This pricelist will be used, instead of the default one, for sales to the current partner"),
     }

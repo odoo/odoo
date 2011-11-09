@@ -26,41 +26,42 @@ import abstracted_fs
 import netsvc
 from tools import config
 
-HOST = config.get('ftp_server_host', '127.0.0.1')
-PORT = int(config.get('ftp_server_port', '8021'))
-PASSIVE_PORTS = None
-pps = config.get('ftp_server_passive_ports', '').split(':')
-if len(pps) == 2:
-    PASSIVE_PORTS = int(pps[0]), int(pps[1])
+def start_server():
+    HOST = config.get('ftp_server_host', '127.0.0.1')
+    PORT = int(config.get('ftp_server_port', '8021'))
+    PASSIVE_PORTS = None
+    pps = config.get('ftp_server_passive_ports', '').split(':')
+    if len(pps) == 2:
+        PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
-class ftp_server(threading.Thread):
-    def log(self, level, message):
-        logger = netsvc.Logger()
-        logger.notifyChannel('FTP', level, message)
+    class ftp_server(threading.Thread):
+        def log(self, level, message):
+            logger = netsvc.Logger()
+            logger.notifyChannel('FTP', level, message)
 
-    def run(self):
-        autho = authorizer.authorizer()
-        ftpserver.FTPHandler.authorizer = autho
-        ftpserver.max_cons = 300
-        ftpserver.max_cons_per_ip = 50
-        ftpserver.FTPHandler.abstracted_fs = abstracted_fs.abstracted_fs
-        if PASSIVE_PORTS:
-            ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
+        def run(self):
+            autho = authorizer.authorizer()
+            ftpserver.FTPHandler.authorizer = autho
+            ftpserver.max_cons = 300
+            ftpserver.max_cons_per_ip = 50
+            ftpserver.FTPHandler.abstracted_fs = abstracted_fs.abstracted_fs
+            if PASSIVE_PORTS:
+                ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
 
-        ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
-        ftpserver.logline = lambda msg: None
-        ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
+            ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
+            ftpserver.logline = lambda msg: None
+            ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
 
-        ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
-        ftpd.serve_forever()
+            ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
+            ftpd.serve_forever()
 
-if HOST.lower() == 'none':
-    netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Server FTP Not Started\n")
-else:
-    netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
-    ds = ftp_server()
-    ds.daemon = True
-    ds.start()
+    if HOST.lower() == 'none':
+        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Server FTP Not Started\n")
+    else:
+        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
+        ds = ftp_server()
+        ds.daemon = True
+        ds.start()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

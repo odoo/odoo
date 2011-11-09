@@ -163,7 +163,7 @@ class users(osv.osv):
         # an existing column cannot be downsized; thus we use the original
         # column size.
         'password': fields.function(get_pw, fnct_inv=set_pw, type='char',
-            method=True, size=64, string='Password', invisible=True,
+            size=64, string='Password', invisible=True,
             store=True),
     }
 

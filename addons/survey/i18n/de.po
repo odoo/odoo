@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-03 04:39+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-11-05 05:42+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: survey
 #: view:survey.print:0
@@ -778,8 +778,9 @@ msgstr ""
 "Antworten. Bitte geben Sie eine Zahl kleiner als %d ein."
 
 #. module: survey
+#: selection:survey.request,state:0
 #: view:survey.request:0
-msgid "Watting Answer"
+msgid "Waiting Answer"
 msgstr "Erwarte Antwort"
 
 #. module: survey
@@ -1128,12 +1129,6 @@ msgid "Validation"
 msgstr "Validierung"
 
 #. module: survey
-#: view:survey.request:0
-#: selection:survey.request,state:0
-msgid "Waiting Answer"
-msgstr "Erwarte Antwort"
-
-#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Decimal Number"
@@ -1379,7 +1374,7 @@ msgstr "Erfassen Sie '1' wenn Umfrage nur einmal beantwortet werden darf"
 #. module: survey
 #: selection:survey.response,state:0
 msgid "Finished "
-msgstr "Fertig "
+msgstr "Abgeschlossen "
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_column_heading
@@ -1917,102 +1912,8 @@ msgstr "Seitenposition"
 #~ msgid "'\" + que_rec[0]['question'] + \"' This question requires an answer."
 #~ msgstr "'\" + que_rec[0]['question'] + \"' Diese Frage bedarf einer Antwort"
 
-#, python-format
-#~ msgid ""
-#~ "You must enter one or more menu choices\\n                                 "
-#~ "in column heading"
-#~ msgstr ""
-#~ "Sie müssen eine oder mehrere Menübeschriftungen  \\n                         "
-#~ "        in der Spaltenüberschrift erfassen"
-
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
-#, python-format
-#~ msgid ""
-#~ "Maximum Required Answer you\\n                                     entered "
-#~ "for your maximum is greater than the number of answer.\\n                    "
-#~ "                  Please use a number that is smaller than %d."
-#~ msgstr ""
-#~ "Maximal erforderliche Antwortzahl die\\n                                     "
-#~ "    erfasst wurde ist größer oder gleich als die vorhandene Fragenzahl.\\n   "
-#~ "                                       Bitte benutzen Sie eine kleinere "
-#~ "Anzahl als %d."
-
-#~ msgid "Wating Answer"
+#~ msgid "Watting Answer"
 #~ msgstr "Erwarte Antwort"
-
-#, python-format
-#~ msgid "You can not give answer because of survey is not open for answer"
-#~ msgstr ""
-#~ "Sie können keine Antwort vornehmen, da Ihre Umfrage nicht für die "
-#~ "Beantwortung eröffnet wurde"
-
-#, python-format
-#~ msgid ""
-#~ "Maximum Required Answer you \\n                                    entered "
-#~ "for your maximum is greater than the number of answer.\\n                    "
-#~ "                 Please use a number that is smaller than %d."
-#~ msgstr ""
-#~ "Maximal erforderliche Antworten\\n                                    die "
-#~ "einzugeben sind, sind größer als die Anzahl an vorhandenen Antworten.        "
-#~ "                            Bitte benutzen Sie einen Wert, der kleiner ist "
-#~ "als %d."
-
-#, python-format
-#~ msgid ""
-#~ "#Required Answer you entered \\n                                    is "
-#~ "greater than the number of answer. \\n                                    "
-#~ "Please use a number that is smaller than %d."
-#~ msgstr ""
-#~ "#Erforderliche Antwort, die eingegeben wurde, \\n                            "
-#~ "        ist größer als die verfügbaren Antworten. \\n                        "
-#~ "            Bitte benutzen Sie eine Anzahl, die kleiner ist als dieser "
-#~ "Betrag %d."
-
-#, python-format
-#~ msgid "You can not give answer for this survey more than %s times"
-#~ msgstr "Sie können nicht häufiger als %s Mal diesen Fragebogen beantworten."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Fehler! Sie können keine rekursiven Menüs erzeugen."
-
-#, python-format
-#~ msgid ""
-#~ "Maximum Required Answer is greater \\n                                    "
-#~ "than Minimum Required Answer"
-#~ msgstr ""
-#~ "Maximale Antwortzeit ist größer als\\n                                als "
-#~ "die minimal erforderliche Antwortzahl"
-
-#, python-format
-#~ msgid ""
-#~ "Minimum Required Answer\\n                                     you entered "
-#~ "is greater than the number of answer.\\n                                    "
-#~ "Please use a number that is smaller than %d."
-#~ msgstr ""
-#~ "Minimal erforderliche Antworten\\n                                sind mehr "
-#~ "als die vorhandenen Antwort(en).\\n                              Bitte "
-#~ "benutzen Sie einen Wert der kleiner ist als %d."
-
-#, python-format
-#~ msgid ""
-#~ "'\" + que_rec['question'] + \"\n"
-#~ " you cannot select same answer more than one times'"
-#~ msgstr ""
-#~ "'\" + que_rec['question'] + \"\n"
-#~ "Du kannst dieselbe Antwort nicht mehr als einmal geben'"
-
-#, python-format
-#~ msgid ""
-#~ "You must enter one or more menu \\n                                choices "
-#~ "in column heading (white spaces not allowed)"
-#~ msgstr ""
-#~ "Sie müssen ein oder mehrere Menüs eingeben\\                               "
-#~ "als Auswahl für die Spaltenüberschrift (Leerschritte nicht erlaubt)"
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

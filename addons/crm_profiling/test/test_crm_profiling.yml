@@ -1,0 +1,77 @@
+- |
+  I check segmentation which allows users to perform segmentation within partners.
+-
+  I create a crm profiling question record.
+-
+  !record {model: crm_profiling.question, id: crm_profiling_question_openerppartner0}:
+    answers_ids:
+      - name: 'no'
+    name: OpenERP partner?
+-
+  I create a crm profiling answer record.
+-
+  !record {model: crm_profiling.answer, id: crm_profiling_answer_openerppartner0}:
+    name: 'yes'
+    question_id: crm_profiling_question_openerppartner0
+-
+  I create Partner category Customers.
+-
+  !record {model: res.partner.category, id: res_partner_category_customers0}:
+    name: Customers
+- |
+  I'm creating new partner "John" with his email "info@mycustomer.com".
+-
+  !record {model: res.partner, id: res_partner_john0}:
+    address:
+      - city: Bruxelles
+        country_id: base.be
+        street: Rue des Palais 51, bte 33
+        type: default
+        zip: '1000'
+        email: 'info@mycustomer.com'
+    name: John
+    category_id:
+      - res_partner_category_customers0
+    answers_ids:
+      - crm_profiling_answer_openerppartner0
+
+-
+  Define the answers and category to partner.
+-
+  !python {model: res.partner}: |
+    data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
+    self._questionnaire_compute(cr, uid, data, context)
+- |
+  I start by creating new Questionnaire.
+-
+  !record {model: crm_profiling.questionnaire, id: crm_profiling_questionnaire_basequestionnaire0}:
+    description: First questionnaire.
+    name: Base questionnaire
+    questions_ids:
+      - crm_profiling.activity_sector
+      - crm_profiling.nb_employees
+      - crm_profiling.partner_level
+- |
+  I create the form for the "Base questionnaire".
+-
+  !python {model: crm_profiling.questionnaire}: |
+    context.update({'active_id':ref('res_partner_john0')})
+    data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
+    self.build_form(cr, uid, data, context)
+-
+  I create a segmentation record.
+-
+  !record {model: crm.segmentation, id: crm_segmentation_test1}:
+    answer_yes:
+      - crm_profiling_answer_openerppartner0
+    categ_id: res_partner_category_customers0
+    name: test
+    parent_id: crm_profiling.crm_segmentation0
+    profiling_active: true
+    som_interval: 0.0
+- |
+  I continue the process of segmentation.
+-
+  !python {model: crm.segmentation}: |
+    self.process_continue(cr, uid, [ref('crm_segmentation_test1')], start=False)
+

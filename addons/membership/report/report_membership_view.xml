@@ -9,7 +9,7 @@
             <field name="model">report.membership</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:membership_state in ('draft');black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
+                <tree colors="blue:membership_state == 'draft';black:membership_state in ('open','free');gray:membership_state in ('done','cancel') " string="Membership">
                     <field name="partner_id"/>
                     <field name="membership_state"/>
                     <field name="associate_member_id" invisible="1"/>
@@ -35,21 +35,26 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Membership">
-                    <group col="8" colspan="4">
-                        <filter string="Last 365 Days" icon="terp-go-year"
-                            domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
-                        <filter string="Last 30 Days" icon="terp-go-month" name="month"
-                            domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_from','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                    <group>
+                        <filter string="  Year  " icon="terp-go-year"
+                        domain="[('date_from','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_from','&gt;=',time.strftime('%%Y-01-01'))]"
+                        help="Events created in current year"/>
+                        <filter string="   Month   " icon="terp-go-month" name="this_month"
+                        domain="[('date_from','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                        help="Events created in current month"/>
+                        <filter icon="terp-go-month" string="    Month-1    "
+                        domain="[('date_from','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_from','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                        help="Events created in last month"/>
                         <separator orientation="vertical"/>
                         <filter string="Forecast" icon="terp-gtk-jump-to-ltr" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
-                        <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                         <separator orientation="vertical"/>
+                        <filter string="Revenue Done" name="Revenue" icon="terp-dolar" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
                         <field name="partner_id"/>
                         <field name="membership_id"/>
                         <field name="user_id"/>
                     </group>
                     <newline/>
-                    <group expand="1" string="Group By..." colspan="4" col="12">
+                    <group expand="1" string="Group By...">
                         <filter string="Salesman" icon="terp-personal" name="salesman"
                             domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Associated Partner" icon="terp-partner" name="associate_member_id"
@@ -91,7 +96,7 @@
             <field name="res_model">report.membership</field>
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_report_membership_search"/>
-            <field name="context">{"search_default_member":1, 'search_default_Revenue':1, 'search_default_salesman':1, }</field>
+            <field name="context">{"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1, }</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_report_membership_tree_view1">

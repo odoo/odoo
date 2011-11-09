@@ -7,7 +7,7 @@
         <field name="model">hr.expense.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')" string="Expenses Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
                 <field name="date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
@@ -60,7 +60,7 @@
                       name="month"
                       domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                       help="Expenses during current month"/>
-                <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                <filter icon="terp-go-month" string="    Month-1    " 
                       domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                       help="Expenses during last month"/>
                   <separator orientation="vertical"/>

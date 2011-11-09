@@ -111,7 +111,7 @@ class account_move_line(osv.osv):
         return line2bank
 
     _columns = {
-        'amount_to_pay': fields.function(amount_to_pay, method=True,
+        'amount_to_pay': fields.function(amount_to_pay,
             type='float', string='Amount to pay', fnct_search=_to_pay_search),
     }
 

@@ -56,7 +56,7 @@
 - 
   !python {model: idea.post.vote}: |
     uid2 = ref('test_idea_user1')
-    new_id = self.create(cr, uid2, {'vote': 50}, {"active_ids": [ref("idea_idea_0")]})
+    new_id = self.create(cr, uid2, {'vote': "50"}, {"active_ids": [ref("idea_idea_0")]})
     self.do_vote(cr, uid2, [new_id], {"active_ids": [ref("idea_idea_0")]})
     
 - |
@@ -69,7 +69,7 @@
 -
   !python {model: idea.post.vote}: |
     uid2 = ref('test_idea_user2')
-    new_id = self.create(cr, uid2, {'vote': 100, 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
+    new_id = self.create(cr, uid2, {'vote': "100", 'note': 'We can learn many things from technical presentation'}, {"active_ids": [ref("idea_idea_0")]})
     self.do_vote(cr, uid2, [new_id], {'active_ids': [ref('idea_idea_0')]})  
         
 - |

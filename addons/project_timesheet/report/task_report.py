@@ -62,8 +62,8 @@ class report_timesheet_task_user(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
-        'timesheet_hrs': fields.function(get_hrs_timesheet, method=True, string="Timesheet Hours"),
-        'task_hrs': fields.function(_get_task_hours, method=True, string="Task Hours"),
+        'timesheet_hrs': fields.function(get_hrs_timesheet, string="Timesheet Hours"),
+        'task_hrs': fields.function(_get_task_hours, string="Task Hours"),
     }
 
     def init(self, cr):

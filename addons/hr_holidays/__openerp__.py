@@ -21,10 +21,11 @@
 
 
 {
-    "name": "Human Resources: Holidays management",
+    "name": "Leave Management",
     "version": "1.5",
     "author": ['OpenERP SA', 'Axelor'],
     "category": "Human Resources",
+    'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
 This module allows you to manage leaves and leaves' requests.

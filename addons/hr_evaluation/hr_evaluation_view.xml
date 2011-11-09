@@ -8,7 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation Plan">
-                   <group col='15' colspan='4'>
+                   <group>
                        <field name="name"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -170,7 +170,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Appraisal">
-                            <field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4" widget="one2many">
+                            <field name="survey_request_ids" nolabel="1" colspan="4" widget="one2many">
                                 <form string="Interview Evaluation">
                                     <group col="4" colspan="4">
                                         <field name="survey_id"/>
@@ -201,7 +201,7 @@
                     </notebook>
                     <newline/>
                     <group col="8" colspan="4">
-                        <field name="state"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                         <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"
                                 icon="gtk-cancel"/>
                         <button name="button_plan_in_progress" string="Start Evaluation" states="draft" type="object"
@@ -222,7 +222,7 @@
             <field name="model">hr_evaluation.evaluation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
+                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
@@ -251,9 +251,9 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                   <group col='10' colspan='4'>
-                    <filter icon="terp-check" string="Current" domain="[('state','=','wait')]" help="Evaluations that are in waiting state"/>
-                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in progress state"/>
+                   <group>
+                    <filter icon="terp-check" string="Pending" domain="[('state','=','wait')]" help="Evaluations that are in Plan In Progress state"/>
+                    <filter icon="terp-camera_test" string="In progress" domain="[('state','=','progress')]" help="Evaluations that are in waiting appreciation state"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-week" string="7 Days" help="Evaluations to close within the next 7 days"
                         domain="[('date', '&gt;=', (datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" />
@@ -306,6 +306,10 @@
                         <field name="response" readonly="1"/>
                         <field name="user_to_review_id"/>
                         <field name="user_id" string="Interviewer"/>
+                        <button string="Send Reminder Email"
+                        name="%(mail.action_email_compose_message_wizard)d"
+                        icon="terp-mail-message-new" type="action" colspan="2"
+                        states="waiting_answer"/>
                     </group>
                     <newline/>
                     <separator string="State" colspan="4"/>
@@ -329,6 +333,7 @@
                     <field name="response" readonly="1" invisible="True"/>
                     <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response, 'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
                     <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0}" attrs="{'readonly':[('response','=',False)]}" />
+                    <button name="%(mail.action_email_compose_message_wizard)d" string="Send Reminder Email" icon="terp-mail-message-new" type="action" colspan="2" states="waiting_answer"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -340,7 +345,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Evaluation">
-                   <group col='10' colspan='4'>
+                   <group>
                         <filter icon="terp-gtk-go-back-rtl" string="To Do" name="todo" domain="[('state','=','waiting_answer')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="[('date_deadline','&lt;',current_date)]"/>
@@ -403,8 +408,16 @@
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
             action="action_hr_evaluation_interview_tree"/>
-        <menuitem name="Evaluation Reminders" parent="menu_eval_hr" id="menu_eval_send_mail"
-           action="action_hr_evaluation_send_mail" sequence="45" groups="base.group_hr_manager"/>
+
+      <!-- Email Compose message Action-->
+      <act_window
+      id="evaluation_reminders" name="Evaluation Reminders"
+      res_model="mail.compose.message"
+      src_model="hr.evaluation.interview"
+      view_type="form" view_mode="form"
+      target="new" multi="True"
+      key2="client_action_multi"
+      context="{'mail.compose.message.mode':'mass_mail'}"/>
 
       <!-- Evaluation Interviews Button on Employee Form -->
       <act_window

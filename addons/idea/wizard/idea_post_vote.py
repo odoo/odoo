@@ -73,12 +73,14 @@ class idea_post_vote(osv.osv_memory):
         """
         idea_obj = self.pool.get('idea.idea')
         vote_obj = self.pool.get('idea.vote')
+        
+        ctx_key = 'idea_ids' if context.get('idea_ids') is not None else 'active_ids'
 
-        for idea in idea_obj.browse(cr, uid, context.get('active_ids', []), context=context):
+        for idea in idea_obj.browse(cr, uid, context.get(ctx_key, []), context=context):
 
-            for active_id in context.get('active_ids'):
+            for idea_id in context.get(ctx_key):
 
-                vote_ids = vote_obj.search(cr, uid, [('user_id', '=', uid), ('idea_id', '=', active_id)])
+                vote_ids = vote_obj.search(cr, uid, [('user_id', '=', uid), ('idea_id', '=', idea_id)])
                 vote_obj_id = vote_obj.browse(cr, uid, vote_ids)
                 count = 0
                 for vote in vote_obj_id:
@@ -101,9 +103,10 @@ class idea_post_vote(osv.osv_memory):
         @param ids: List of Idea Post vote’s IDs.
         @return: Dictionary {}
         """
+        
+        ctx_key = 'idea_ids' if context.get('idea_ids') is not None else 'active_ids'
 
-        vote_ids = context and context.get('active_ids', []) or []
-        vote_id = context['active_ids'][0]
+        idea_id = context[ctx_key][0]
         vote_pool = self.pool.get('idea.vote')
         idea_pool = self.pool.get('idea.idea')
         comment_pool = self.pool.get('idea.comment')
@@ -112,19 +115,19 @@ class idea_post_vote(osv.osv_memory):
             score = str(do_vote_obj['vote'])
             comment = do_vote_obj.get('note', False)
             vote = {
-                'idea_id': vote_id,
+                'idea_id': idea_id,
                 'user_id': uid,
                 'score': score
             }
             if comment:
                 comment = {
                     'user_id':uid,
-                    'idea_id':vote_id,
+                    'idea_id':idea_id,
                     'content': comment,
                 }
                 comment = comment_pool.create(cr, uid, comment)
 
-            idea_pool._vote_save(cr, uid, vote_id, None, score, context)
+            idea_pool._vote_save(cr, uid, idea_id, None, score, context)
             #vote = vote_pool.create(cr, uid, vote)
             return {'type': 'ir.actions.act_window_close'}
 
@@ -166,7 +169,7 @@ class idea_select(osv.osv_memory):
             'views': [(id2, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'active_ids': [idea_id]}
+            'context': {'idea_ids': [idea_id]}
        }
        return value
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+    
         <record id="seq_type_salary_slip" model="ir.sequence.type">
             <field name="name">Salary Slip</field>
             <field name="code">salary.slip</field>
@@ -11,27 +12,6 @@
             <field name="prefix">SLIP/</field>
             <field name="padding">3</field>
         </record>
-        
-        <record id="seq_type_salary_register" model="ir.sequence.type">
-            <field name="name">Salary Register</field>
-            <field name="code">salary.register</field>
-        </record>
-        <record id="seq_salary_register" model="ir.sequence">
-            <field name="name">Salary Register</field>
-            <field name="code">salary.register</field>
-            <field name="prefix">REG/</field>
-            <field name="padding">3</field>
-        </record>
-        
-        <record id="seq_type_payment_advice" model="ir.sequence.type">
-            <field name="name">Payment Advice</field>
-            <field name="code">payment.advice</field>
-        </record>
-        <record id="seq_payment_advice" model="ir.sequence">
-            <field name="name">Payment Advice</field>
-            <field name="code">payment.advice</field>
-            <field name="prefix">PAY/</field>
-            <field name="padding">3</field>
-        </record>
+      
     </data>
 </openerp>

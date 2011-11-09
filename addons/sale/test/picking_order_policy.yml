@@ -46,18 +46,11 @@
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       pick.force_assign(cr, uid)
-      partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-            'address_id': pick.address_id.id,
-            'delivery_date' : time.strftime('%Y-%m-%d'),
-           }
-      move = pick.move_lines[0]
-      partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id.id,
-          'product_qty': move.product_qty,
-          'product_uom': move.product_uom.id,
-      }
-      self.do_partial(cr, uid, [pick.id],partial_datas)
+      stock_partial_picking = self.pool.get('stock.partial.picking')
+      partial_id = stock_partial_picking.create(cr, uid, {},
+              context={'active_model': 'stock.picking',
+                       'active_ids': [pick.id]})
+      stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   Then I click on 'Create Invoices' button
 -
@@ -67,7 +60,7 @@
     sale_id=sale_obj.browse(cr, uid, ref("sale_order_so7"))
     ids = [x.id for x in sale_id.picking_ids]
     wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
-      {'active_ids': ids})
+      {'active_ids': ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
   I check that an invoice has been created.
@@ -197,7 +190,7 @@
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
 -
-  I verify that a picking related to purchase order has been generated.
+  I verify that a picking related to purchase order has been generated and I process it
 -
   !python {model: sale.order}: |
     modules = self.pool.get('ir.module.module')
@@ -209,29 +202,12 @@
         pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
         po = pur_obj.browse(cr, uid, pur_id)[0]
         assert(po.picking_ids),"Picking for purchase order has not been generated"
--
-  Then I click on the "Products Received" button of Incoming Shipments
--
-  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
--
-  I click on the "Validate" button
--
-  !python {model: stock.picking}: |
-    modules = self.pool.get('ir.module.module')
-    mod_pur = modules.search(cr, uid, [('name','=','purchase')])
-    mod_brw = modules.browse(cr,uid,mod_pur)[0]
-    if (mod_brw.state == 'installed'):
-        sale_order_obj = self.pool.get('sale.order')
-        pur_obj = self.pool.get('purchase.order')
-        so = sale_order_obj.browse(cr, uid, ref("sale_order_so7"))
-        pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
-        po = pur_obj.browse(cr, uid, pur_id)[0]
-        pick_ser_id = self.search(cr, uid, [('purchase_id', '=', po.id )])
-        import netsvc
-        wf_service = netsvc.LocalService("workflow")
-        for pick in pick_ser_id:
-          wf_service.trg_validate(uid, 'stock.picking',pick,'button_done', cr)
+        picking, = po.picking_ids
+        stock_partial_picking = self.pool.get('stock.partial.picking')
+        partial_id = stock_partial_picking.create(cr, uid, {},
+                context={'active_model': 'stock.picking',
+                         'active_ids': [picking.id]})
+        stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   I verify that picking for purchase order has been done.
 -
@@ -249,36 +225,20 @@
         ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
         assert ids, _('Picking is not in the done state!')
 -
-  I verify that delivery order has been generated for sale order
+  I verify that delivery order has been generated for sale order, and process it
 -
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so7"))
    picking_id = self.search(cr, uid, [('origin','=',so.name)])
    assert (picking_id),"Delivery order has not been generated"
--
-  I verify that delivery has been done
--
-  !python {model: stock.picking }: |
-   import time
-   sale_order_obj = self.pool.get('sale.order')
-   so = sale_order_obj.browse(cr, uid, ref("sale_order_so7"))
-   picking_id = self.search(cr, uid, [('origin','=',so.name)])
-   if picking_id:
-      pick=self.browse(cr,uid,picking_id[0])
-      pick.force_assign(cr, uid)
-      partial_datas = {
-           'partner_id':pick.address_id.partner_id.id,
-            'address_id': pick.address_id.id,
-            'delivery_date' : time.strftime('%Y-%m-%d'),
-           }
-      move = pick.move_lines[0]
-      partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id.id,
-          'product_qty': move.product_qty,
-          'product_uom': move.product_uom.id,
-      }
-      self.do_partial(cr, uid, [pick.id],partial_datas)
+   pick=self.browse(cr,uid,picking_id[0])
+   pick.force_assign(cr, uid)
+   stock_partial_picking = self.pool.get('stock.partial.picking')
+   partial_id = stock_partial_picking.create(cr, uid, {},
+           context={'active_model': 'stock.picking',
+                    'active_ids': [pick.id]})
+   stock_partial_picking.do_partial(cr, uid, [partial_id])
 -
   I verify that delivery state is done
 -
@@ -290,7 +250,7 @@
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state."
 -
-  I verify that a "Picked" has been set to true
+  I verify that the sale order is marked as delivered
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so7"))

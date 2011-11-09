@@ -1,0 +1,36 @@
+-
+  In order to test product,I start by creating a 20KG UOM for 'Sugar'  
+-
+ !record {model: product.uom, id: product_20k_uom_sugar}:
+    name: 20KG
+    uom_type: bigger
+    category_id: product.product_uom_categ_kgm
+    rounding: 0.010
+    factor_inv: 20
+-
+  I create a 10KG UOM for 'Sugar'  
+-
+ !record {model: product.uom, id: product_10k_uom_sugar}:
+    name: 10KG
+    uom_type: bigger
+    category_id: product.product_uom_categ_kgm
+    rounding: 0.010
+    factor_inv: 10
+-
+  I create a new product 'Sugar' in 20KG UOM.
+-
+ !record {model: product.product, id: product_sugar_id1}:
+    categ_id: 'product.product_category_rawmaterial0'
+    cost_method: standard
+    name: Sugar 20KG
+    procure_method: make_to_order
+    standard_price: 400.0
+    uom_id: product.product_20k_uom_sugar
+    uom_po_id: product.product_20k_uom_sugar
+-
+  I test onchanged on UOM, Create Duplicate Product and Delete original Product.
+-
+  !python {model: product.product}: |
+    self.onchange_uom(cr ,uid, [ref("product_sugar_id1")], ref("product.product_20k_uom_sugar"), ref("product.product_10k_uom_sugar"))
+    self.copy(cr, uid, ref("product_sugar_id1"))
+    self.unlink(cr, uid, [ref("product_sugar_id1")])

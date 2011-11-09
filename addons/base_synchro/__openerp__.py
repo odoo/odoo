@@ -23,7 +23,7 @@
         "name":"Server Object Synchronization",
         "version":"0.1",
         "author":"OpenERP SA",
-        "category":"Tools",
+        "category":"Hidden",
         "description": """
 Synchronization with all objects.
 =================================

@@ -6,10 +6,10 @@
             <field name="interval_number">5</field>
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
-            <field eval="'email.server'" name="model"/>
-            <field eval="'_fetch_mails'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field name="doall" eval="False"/>
+            <field name="model">fetchmail.server</field>
+            <field name="function">_fetch_mails</field>
+            <field name="args">()</field>
         </record>
     </data>
 </openerp>

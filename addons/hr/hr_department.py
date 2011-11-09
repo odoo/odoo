@@ -44,7 +44,7 @@ class hr_department(osv.osv):
     _name = "hr.department"
     _columns = {
         'name': fields.char('Department Name', size=64, required=True),
-        'complete_name': fields.function(_dept_name_get_fnc, method=True, type="char", string='Name'),
+        'complete_name': fields.function(_dept_name_get_fnc, type="char", string='Name'),
         'company_id': fields.many2one('res.company', 'Company', select=True, required=False),
         'parent_id': fields.many2one('hr.department', 'Parent Department', select=True),
         'child_ids': fields.one2many('hr.department', 'parent_id', 'Child Departments'),

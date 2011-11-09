@@ -2,105 +2,34 @@
 <openerp>
     <data>
 
-    <record model="project.gtd.context" id="context_office">
-        <field name="name">Office</field>
-        <field name="sequence">0</field>
-    </record>
-    <record model="project.gtd.context" id="context_travel">
-        <field name="name">Travel</field>
-        <field name="sequence">2</field>
+    <record model="project.gtd.context" id="context_home">
+        <field name="name">Home</field>
+        <field name="sequence">3</field>
     </record>
     <record model="project.gtd.context" id="context_car">
         <field name="name">Car</field>
         <field name="sequence">1</field>
     </record>
-    <record model="project.gtd.context" id="context_home">
-        <field name="name">Home</field>
-        <field name="sequence">3</field>
-    </record>
 
-    <record model="project.gtd.timebox" id="timebox_daily">
-        <field name="name">Today</field>
-        <field name="icon">terp-go-today</field>
-    </record>
-    <record model="project.gtd.timebox" id="timebox_weekly">
-        <field name="name">This Week</field>
-        <field name="icon">terp-go-week</field>
-    </record>
-    <record model="project.gtd.timebox" id="timebox_monthly">
-        <field name="name">This Month</field>
-        <field name="icon">terp-go-month</field>
-    </record>
-    <record model="project.gtd.timebox" id="timebox_lt">
-        <field name="name">Long Term</field>
-        <field name="icon">terp-project</field>
-    </record>
-
-    <record id="project.project_task_116" model="project.task">
-        <field name="planned_hours">38.0</field>
-        <field name="remaining_hours">38.0</field>
+    <record id="project.project_task_10" model="project.task">
         <field name="timebox_id" ref="timebox_daily"/>
         <field name="context_id" ref="context_office"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field name="name">Specific adaptation to MRP</field>
     </record>
 
-     <record id="project.project_task_201" model="project.task">
-        <field name="sequence">40</field>
-        <field name="planned_hours">32.0</field>
-        <field name="remaining_hours">32.0</field>
-        <field name="timebox_id" ref="timebox_monthly"/>
-        <field name="context_id" ref="context_home"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_23"/>
-        <field name="name">In house training</field>
-      </record>
-
-      <record id="project.project_task_202" model="project.task">
-        <field name="sequence">50</field>
-        <field name="planned_hours">24.0</field>
-        <field name="remaining_hours">24.0</field>
-        <field name="timebox_id" ref="timebox_weekly"/>
-        <field name="context_id" ref="context_office"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field name="name">Validation + latest modifications.</field>
-      </record>
-
-    <record id="project.project_task_116" model="project.task">
-        <field name="planned_hours">38.0</field>
-        <field name="remaining_hours">38.0</field>
+    <record id="project.project_task_11" model="project.task">
         <field name="timebox_id" ref="timebox_daily"/>
         <field name="context_id" ref="context_office"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field name="name">Specific adaptation to MRP</field>
     </record>
 
-     <record id="project.project_task_201" model="project.task">
-        <field name="sequence">40</field>
-        <field name="planned_hours">32.0</field>
-        <field name="remaining_hours">32.0</field>
-        <field name="timebox_id" ref="timebox_monthly"/>
-        <field name="context_id" ref="context_home"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_23"/>
-        <field name="name">In house training</field>
-      </record>
+    <record id="project.project_task_12" model="project.task">
+        <field name="timebox_id" ref="timebox_daily"/>
+        <field name="context_id" ref="context_car"/>
+    </record>
 
-      <record id="project.project_task_202" model="project.task">
-        <field name="sequence">50</field>
-        <field name="planned_hours">24.0</field>
-        <field name="remaining_hours">24.0</field>
-        <field name="timebox_id" ref="timebox_weekly"/>
-        <field name="context_id" ref="context_office"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field name="name">Validation + latest modifications.</field>
-      </record>
+    <record id="project.project_task_13" model="project.task">
+        <field name="timebox_id" ref="timebox_daily"/>
+        <field name="context_id" ref="context_car"/>
+    </record>
 
     </data>
 </openerp>

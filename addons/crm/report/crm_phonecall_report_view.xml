@@ -51,7 +51,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group col="16" colspan="8">
+                  <group>
                            <filter string="  Year  " icon="terp-go-year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                                help="Phone calls made in current year"/>
@@ -60,7 +60,7 @@
                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                            help="Phone calls made in current month"/>
 
-                       <filter icon="terp-go-month" string="    Month-1    " separator="1"
+                       <filter icon="terp-go-month" string="    Month-1    " 
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Phone calls made in last month"/>
                         <separator orientation="vertical" />
@@ -84,7 +84,7 @@
                                 domain="[('section_id.user_id','=',uid)]"
                                 help="My Sales Team(s)" />
                         </field>
-                        <field name="user_id" string="Salesman" select="1">
+                        <field name="user_id" string="Salesman">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
                     </group>

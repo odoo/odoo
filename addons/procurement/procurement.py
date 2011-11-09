@@ -165,6 +165,10 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
+    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined' 
+    def check_move(self, cr, uid, ids, context=None):
+        pass
+
     def check_move_done(self, cr, uid, ids, context=None):
         """ Checks if move is done or not.
         @return: True or False.
@@ -371,11 +375,10 @@ class procurement_order(osv.osv):
             id = procurement.move_id.id
             if not (procurement.move_id.state in ('done','assigned','cancel')):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
-                cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
-                res = cr.fetchone()[0]
-                if not res and not ok:
+                order_point_id = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [('product_id', '=', procurement.product_id.id)], context=context)
+                if not order_point_id and not ok:
                      message = _("Not enough stock and no minimum orderpoint rule defined.")
-                elif not res:
+                elif not order_point_id:
                     message = _("No minimum orderpoint rule defined.")
                 elif not ok:
                     message = _("Not enough stock.")
@@ -527,7 +530,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'procurement_draft_ids': fields.function(_get_draft_procurements, method=True, type='many2many', relation="procurement.order", \
+        'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
                                 string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {

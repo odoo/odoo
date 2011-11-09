@@ -160,7 +160,7 @@
                                 <separator string="Buyer Invoices" colspan="2"/>
                                 <field name="buyer_invoice_history" nolabel="1" widget="one2many_list"
                                         height="400">
-                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                    <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                                         <field name="date_invoice"/>
                                         <field name="number"/>
                                         <field name="partner_id" groups="base.group_user"/>
@@ -177,7 +177,7 @@
                                 <separator string="Seller Invoices" colspan="2"/>
                                 <field name="seller_invoice_history" nolabel="1" widget="one2many_list"
                                         height="400">
-                                    <tree colors="blue:state in ('draft');black:state in ('proforma','proforma2','open');gray:state in ('cancel')" string="Invoice">
+                                    <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
                                         <field name="date_invoice"/>
                                         <field name="number"/>
                                         <field name="partner_id" groups="base.group_user"/>
@@ -218,7 +218,7 @@
                 <field name="auction1" string="First Auction Date"/>
                 <field name="auction2" string="Last Auction Date"/>
                 <newline/>
-                <group expand="0" string="Group By..." colspan="16">
+                <group expand="0" string="Group By...">
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <separator orientation="vertical" />
                     <filter string="Auction Date"
@@ -272,7 +272,7 @@
         <field name="type">tree</field>
         <field name="priority" eval="1"/>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('unsold','draft');black:state in ('sold','taken_away');gray:state in ('paid') " string="Objects">
+            <tree colors="blue:state in ('unsold','draft');black:state in ('sold','taken_away');gray:state == 'paid' " string="Objects">
                 <field name="obj_num" string="Ref" select="1"/>
                 <field name="name" select="1"/>
                 <field name="ach_uid"/>
@@ -448,7 +448,7 @@
                  <field name="bord_vnd_id"/>
                  <field name="state"/>
                  <newline/>
-                 <group expand="0" string="Group By..." colspan="16">
+                 <group expand="0" string="Group By...">
                      <filter string="Buyer"
                          icon="terp-personal"
                          help="Buyer" domain="[]"
@@ -612,7 +612,7 @@
                  <field name="method"/>
                  <field name="date_dep"/>
                  <newline/>
-                 <group expand="0" string="Group By..." colspan="16">
+                 <group expand="0" string="Group By...">
                      <filter string="Seller"
                          icon="terp-personal"
                          help="Seller" domain="[]"
@@ -745,7 +745,7 @@
                  <field name="partner_id"/>
                  <field name="contact_tel"/>
                  <newline/>
-                 <group expand="0" string="Group By..." colspan="16">
+                 <group expand="0" string="Group By...">
                      <filter string="Buyer"
                          icon="terp-personal"
                          help="Buyer" domain="[]"

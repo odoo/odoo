@@ -37,7 +37,7 @@ def lengthmonth(year, month):
 def emp_create_xml(cr, id, som, eom, emp):
     # Computing the attendence by analytical account
     cr.execute(
-        "select line.date, (unit_amount * unit.factor) as amount "\
+        "select line.date, (unit_amount / unit.factor) as amount "\
         "from account_analytic_line as line, hr_analytic_timesheet as hr, "\
         "product_uom as unit "\
         "where hr.line_id=line.id "\

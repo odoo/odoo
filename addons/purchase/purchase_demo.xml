@@ -22,6 +22,33 @@
             <field name="partner_address_id" ref="base.res_partner_address_zen"/>
         </record>
 
+        <record id="order_purchase3" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
+            <field name="partner_address_id" ref="base.res_partner_address_3000"/>
+        </record>
+
+        <record id="order_purchase4" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="partner_address_id" ref="base.res_partner_address_7"/>
+        </record>
+
+        <record id="order_purchase5" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_maxtor"/>
+            <field name="partner_address_id" ref="base.res_partner_address_wong"/>
+        </record>
+
+        <record id="order_purchase6" model="purchase.order">
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
+            <field name="partner_id" ref="base.res_partner_vickingdirect0"/>
+            <field name="partner_address_id" ref="base.res_partner_address_brussels0"/>
+        </record>
         <!--Resource: purchase.order.line-->
 
         <record id="line1_purchase" model="purchase.order.line">
@@ -54,7 +81,118 @@
             <field name="product_qty">1</field>
         </record>
 
+        <record id="line4_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase3"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">Onsite Senior Intervention</field>
+            <field name="product_id" ref="product.product_product_0"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">900</field>
+            <field name="product_qty">10</field>
+        </record>
+
+        <record id="line5_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase3"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">Onsite Intervention</field>
+            <field name="product_id" ref="product.product_product_1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">100</field>
+            <field name="product_qty">5</field>
+        </record>
+
+        <record id="line6_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase4"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[PC2] Basic+ PC (assembly on order)</field>
+            <field name="product_id" ref="product.product_product_pc2"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">40</field>
+            <field name="product_qty">5</field>
+        </record>
+
+        <record id="line7_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase4"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
+            <field name="product_id" ref="product.product_product_mb1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">45</field>
+            <field name="product_qty">15</field>
+        </record>
+
+        <record id="line8_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase4"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[MB2] Mainboard ASUStek A7V8X-X</field>
+            <field name="product_id" ref="product.product_product_mb2"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">45</field>
+            <field name="product_qty">15</field>
+        </record>
+
+        <record id="line9_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase5"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[CPU1] Processor AMD Athlon XP 1800+</field>
+            <field name="product_id" ref="product.product_product_cpu1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">60</field>
+            <field name="product_qty">3</field>
+        </record>
+
+        <record id="line10_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase5"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[CPU3] Processor AMD Athlon XP 2200+</field>
+            <field name="product_id" ref="product.product_product_cpu3"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">50</field>
+            <field name="product_qty">13</field>
+        </record>
+
+        <record id="line11_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase5"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[HDD1] HDD Seagate 7200.8 80GB</field>
+            <field name="product_id" ref="product.product_product_hdd1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70</field>
+            <field name="product_qty">10</field>
+        </record>
+
+        <record id="line12_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase6"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[HDD2] HDD Seagate 7200.8 120GB</field>
+            <field name="product_id" ref="product.product_product_hdd2"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">70</field>
+            <field name="product_qty">10</field>
+        </record>
+
+        <record id="line12_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase6"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[RAM] DDR 256MB PC400</field>
+            <field name="product_id" ref="product.product_product_ram"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">700</field>
+            <field name="product_qty">10</field>
+        </record>
+
+        <record id="line13_purchase" model="purchase.order.line">
+            <field name="order_id" ref="order_purchase6"/>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
+            <field name="name">[RAM512] DDR 512MB PC400</field>
+            <field name="product_id" ref="product.product_product_ram512"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">1700</field>
+            <field name="product_qty">10</field>
+        </record>
         <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase2"/>
+        <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase4"/>
+        <workflow action="purchase_confirm" model="purchase.order" ref="order_purchase6"/>
 
         <record id="stock.res_company_tinyshop0" model="res.company">
             <field eval="1.0" name="po_lead"/>

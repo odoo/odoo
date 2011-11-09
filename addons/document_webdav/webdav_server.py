@@ -40,7 +40,7 @@ from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
 from service import http_server
-from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
+from service.websrv_lib import FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
@@ -174,11 +174,11 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             pass
         elif self.close_connection == 1: # close header already sent
             pass
-        else:
-            if headers is None:
-                headers = {}
-            if self.headers.get('Connection',False) == 'Keep-Alive':
-                headers['Connection'] = 'keep-alive'
+        elif headers and self.headers.get('Connection',False) == 'Keep-Alive':
+            headers['Connection'] = 'keep-alive'
+
+        if headers is None:
+            headers = {}
 
         DAVRequestHandler.send_body(self, DATA, code=code, msg=msg, desc=desc,
                     ctype=ctype, headers=headers)
@@ -572,7 +572,7 @@ try:
 
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
-        reg_http_service(HTTPDir(directory,DAVHandler,DAVAuthProvider()))
+        reg_http_service(directory, DAVHandler, DAVAuthProvider)
         logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
         
         if not (config.get_misc('webdav', 'no_root_hack', False)):
@@ -592,9 +592,7 @@ try:
                 # the StaticHttpHandler can find its dir_path.
                 config.misc.setdefault('static-http',{})['dir_path'] = dir_path
     
-            if reg_http_service(HTTPDir('/', DAVStaticHandler)):
-                logging.getLogger("web-services").info("WebDAV registered HTTP dir %s for /" % \
-                                (dir_path))
+            reg_http_service('/', DAVStaticHandler)
 
 except Exception, e:
     logging.getLogger('webdav').error('Cannot launch webdav: %s' % e)
@@ -613,8 +611,7 @@ def init_well_known():
         reps['/'+uri] = path
 
     if int(num_svcs):
-        if http_server.reg_http_service(HTTPDir('/.well-known', RedirectHTTPHandler)):
-            logging.getLogger("web-services").info("Registered HTTP redirect handler at /.well-known" )
+        reg_http_service('/.well-known', RedirectHTTPHandler)
 
 init_well_known()
 
@@ -641,7 +638,7 @@ def init_principals_redirect():
         dbname = config.get('db_name', False)
     if dbname:
         PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
-        reg_http_service(HTTPDir('/principals', PrincipalsRedirect))
+        reg_http_service('/principals', PrincipalsRedirect)
         logging.getLogger("web-services").info(
                 "Registered HTTP redirect handler for /principals to the %s db.",
                 dbname)

@@ -415,7 +415,7 @@ class report_creator(osv.osv):
         'model_ids': fields.many2many('ir.model', 'base_report_creator_report_model_rel', 'report_id', 'model_id', 'Reported Objects'),
         'field_ids': fields.one2many('base_report_creator.report.fields', 'report_id', 'Fields to Display'),
         'filter_ids': fields.one2many('base_report_creator.report.filter', 'report_id', 'Filters'),
-        'sql_query': fields.function(_sql_query_get, method=True, type="text", string='SQL Query', store=True),
+        'sql_query': fields.function(_sql_query_get, type="text", string='SQL Query', store=True),
         'group_ids': fields.many2many('res.groups', 'base_report_creator_group_rel', 'report_id', 'group_id', 'Authorized Groups'),
         'menu_id': fields.many2one('ir.ui.menu', "Menu", readonly=True),
     }
@@ -529,7 +529,7 @@ class report_creator(osv.osv):
 
 
     _constraints = [
-        (_function_field, 'You can not display field which are not stored in Database.', ['field_ids']),
+        (_function_field, 'You can not display field which are not stored in database.', ['field_ids']),
         (_aggregation_error, 'You can apply aggregate function to the non calculated field.', ['field_ids']),
         (_calander_view_error, "You must have to give calendar view's color,start date and delay.", ['field_ids']),
     ]

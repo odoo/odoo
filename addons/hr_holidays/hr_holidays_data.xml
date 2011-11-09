@@ -5,7 +5,6 @@
     <!-- Casual leave -->
     <record model="hr.holidays.status" id="holiday_status_cl">
       <field name="name">Legal Leaves</field>
-      <field name="limit">False</field>
       <field name="color_name">black</field>
     </record>
 
@@ -20,10 +19,16 @@
     <!-- Compensatory Days -->
     <record model="hr.holidays.status" id="holiday_status_comp">
       <field name="name">Compensatory Days</field>
-      <field name="limit">False</field>
+      <field name="limit">True</field>
       <field name="color_name">brown</field>
     </record>
 
+    <!--Unpaid Leave -->
+    <record model="hr.holidays.status" id="holiday_status_unpaid">
+      <field name="name">Unpaid</field>
+      <field name="limit">True</field>
+      <field name="color_name">brown</field>
+    </record>
 
   </data>
 </openerp>

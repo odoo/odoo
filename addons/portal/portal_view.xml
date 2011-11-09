@@ -2,7 +2,8 @@
 <openerp>
     <data>
         <!-- menu Administration/Portals -->
-        <menuitem name="Portals" id="portal_menu" parent="base.menu_administration" groups="group_portal_manager"/>
+        <menuitem name="Portals" id="portal_menu" parent="base.menu_administration"
+            groups="group_portal_manager"/>
 
         <!-- menu Administration/Portals/Portals -->
         <record id="portal_list_action" model="ir.actions.act_window">
@@ -10,83 +11,62 @@
             <field name="res_model">res.portal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <!-- a context is necessary to get the right portal form view -->
+            <field name="context">{'form_view_ref': 'portal.portal_form_view'}</field>
             <field name="help">
 A portal helps defining specific views and rules for a group of users (the
-portal group).  A portal is associated with a menu; when changed, the portal menu
-is assigned to the portal's users.  Groups can be added to or removed from the
-portal's users.
+portal group).  A portal menu, widgets and specific groups may be assigned to
+the portal's users.
             </field>
         </record>
         <menuitem name="Portals" id="portal_list_menu"
             parent="portal_menu" sequence="1" action="portal_list_action"/>
 
-
-        <!-- portal list view -->
-        <record id="portal_list" model="ir.ui.view">
+        <!-- portal tree view -->
+        <record id="portal_list_view" model="ir.ui.view">
             <field name="name">Portal List</field>
             <field name="model">res.portal</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Portal List">
-                    <field name="group_id"/>
-                    <field name="user_ids"/>
+                <tree string="Portals">
+                    <field name="name" string="Portal Name"/>
                 </tree>
             </field>
         </record>
 
-        <!-- portal search view -->
-        <record id="portal_search" model="ir.ui.view">
-            <field name="name">Portal Search</field>
-            <field name="model">res.portal</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Portal Search">
-                    <field name="group_id"/>
-                    <field name="user_ids"/>
-                    <field name="menu_action_id"/>
-                    <field name="parent_menu_id"/>
-                </search>
-            </field>
-        </record>
-
         <!-- portal form view -->
-        <record id="portal_form" model="ir.ui.view">
+        <record id="portal_form_view" model="ir.ui.view">
             <field name="name">Portal Form</field>
             <field name="model">res.portal</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
-                <form string="Portal Form">
-                    <field name="group_id" on_change="onchange_group(group_id)"/>
-                    <notebook>
-                        <page string="Users">
-                            <field name="user_ids" nolabel="1" colspan="3"
-                                context="{'menu_id': menu_action_id}"/>
-                            <group name="user_panel" colspan="1"/>
-                            <!-- wizards insert buttons inside the group 'user_panel' -->
-                        </page>
-                        <page string="Menu &amp; Widgets">
-                            <group colspan="2" col="2">
-                                <separator string="Portal Menu" colspan="2"/>
-                                <group colspan="2" col="2">
-                                    <field name="menu_action_id"/>
-                                    <field name="parent_menu_id"
-                                        context="{'ir.ui.menu.full_list': True}"/>
-                                </group>
-                                <button name="do_create_menu" type="object"
-                                    string="Create Parent Menu"/>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Portal Widgets" colspan="2"/>
-                                <field name="widget_ids" nolabel="1" rowspan="7">
-                                    <tree string="Widgets" editable="bottom">
-                                        <field name="sequence"/>
-                                        <field name="widget_id"/>
-                                    </tree>
-                                </field>
-                            </group>
-                        </page>
-                    </notebook>
-                </form>
+                <page string="Users" position="before">
+                    <page string="Portal">
+                        <group colspan="4" col="2">
+                            <separator string="Website" colspan="2"/>
+                            <field name="url" widget="url"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Widgets assigned to Users" colspan="2"/>
+                            <field name="widget_ids" nolabel="1" colspan="2">
+                                <tree string="Widgets" editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="widget_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group colspan="2" col="2">
+                            <separator string="Portal Menu" colspan="2"/>
+                            <field name="override_menu"/>
+                            <field name="parent_menu_id"
+                                context="{'ir.ui.menu.full_list': True}"/>
+                            <label colspan="1"/>
+                            <button name="do_create_menu" type="object"
+                                string="Create Parent Menu"/>
+                        </group>
+                    </page>
+                </page>
             </field>
         </record>
     </data>

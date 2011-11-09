@@ -21,9 +21,10 @@
 
 
 {
-    'category': 'Sales', 
-    'name': 'CRM Helpdesk',
+    'category': 'Customer Relationship Management', 
+    'name': 'Helpdesk',
     'version': '1.0',
+    'complexity': "easy",
     'description': """
 Helpdesk Management.
 ====================

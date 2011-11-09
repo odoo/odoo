@@ -64,7 +64,7 @@ class res_partner_contact(osv.osv):
                          relation='res.partner', string='Main Employer'),
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
-        'job_id': fields.function(_main_job, method=True, type='many2one',\
+        'job_id': fields.function(_main_job, type='many2one',\
                                  relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),
@@ -142,6 +142,17 @@ class res_partner_address(osv.osv):
                                     or '', r.get('city', '') or '')
                 res.append((r['id'], addr.strip() or '/'))
         return res
+
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
+        jobs = self.pool.get('res.partner.job')
+        if name:
+            job_ids = jobs.search(cr, user, [('contact_id', operator, name)] + args, limit=limit, context=context)
+            for job in jobs.browse(cr, user, job_ids):
+                ids += [job.address_id.id]
+        return self.name_get(cr, user, ids, context)
 
     _name = 'res.partner.address'
     _inherit = 'res.partner.address'

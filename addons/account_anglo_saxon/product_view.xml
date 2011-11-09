@@ -8,6 +8,7 @@
             <field name="inherit_id" ref="account.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/group/field[@name='property_account_expense']" position="after">
+                    <label string="" colspan="2"/>
                     <field name="property_account_creditor_price_difference" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     <newline/>
                 </xpath>
@@ -36,7 +37,7 @@
                 <form position="inside">
                     <group col="2" colspan="2">
                         <separator string=" Accounting Property" colspan="2"/>
-                            <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />                        
+                            <field name="property_account_creditor_price_difference_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
                     </group>
                 </form>
             </field>

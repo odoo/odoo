@@ -6,7 +6,7 @@
         <field name="model">account.entries.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:move_state in ('draft');black:move_state in ('posted')" string="Entries Analysis">
+            <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" string="Entries Analysis">
                 <field name="date" invisible="1"/>
                 <field name="date_created" invisible="1"/>
                 <field name="date_maturity" invisible="1"/>
@@ -67,7 +67,7 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Entries Analysis">
-                <group colspan="10" col="12">
+                <group>
                     <filter icon="terp-go-year" string="This F.Year"
                             name="thisyear"
                             context="{'year':'current_year'}"

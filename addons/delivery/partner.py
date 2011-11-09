@@ -29,7 +29,6 @@ class res_partner(osv.osv):
           type='many2one',
           relation='delivery.carrier',
           string="Delivery Method",
-          method=True,
           view_load=True,
           help="This delivery method will be used when invoicing from picking."),
     }
