@@ -55,7 +55,6 @@ Creates a dashboard for CRM that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [
-        'base',
         'base_action_rule',
         'base_setup',
         'process',
@@ -88,6 +87,7 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
+        'board_crm_view.xml',
         'crm_view.xml',
 
         'crm_action_rule_view.xml',
@@ -108,7 +108,6 @@ Creates a dashboard for CRM that includes:
         'crm_installer_view.xml',
 
         'res_partner_view.xml',
-        'board_crm_view.xml',
         'board_crm_statistical_view.xml',
 
     ],
