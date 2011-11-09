@@ -409,12 +409,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var arch = _.detect(one_object['arch'], function(element) {return element.view_id == view_id;});
         var obj = self.get_object_by_id(view_xml_id, one_object['main_object'], []);
          //for finding xpath tag from inherit view
-        if (($(arch.arch).filter("data")).length != 0 && view_xml_id != 0) {
+        var xml_arch = QWeb.load_xml(arch.arch);
+        if (xml_arch.childNodes[0].tagName == "data") {
             var check_list = _.flatten(obj[0].child_id[0].att_list);
-            arch.arch = _.detect($(arch.arch).children(), function(xml_child){
-                var temp_obj = self.convert_tag_to_obj(xml_child);
-                var main_list = _.flatten(temp_obj.att_list);
-                var insert = _.intersection(main_list,_.uniq(check_list));
+            arch.arch = _.detect(xml_arch.childNodes[0].children, function(xml_child){
+                var temp_obj = self.create_View_Node(xml_child);
+                var insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == check_list.length ) {return xml_child;}
             });
         }
@@ -435,6 +435,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         }
         return result;
     },
+
     save_arch: function(arch1, obj, id, child_list, level, view_id, arch, move_direct){
         var self = this;
         var children_list =  $(arch1).children();
@@ -467,7 +468,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
         }
-    },
+    }, 
     on_expand: function(expand_img){
         var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");
