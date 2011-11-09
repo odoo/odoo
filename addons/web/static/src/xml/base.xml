@@ -1334,7 +1334,14 @@
     <input type="text" t-att-id="widget.name" class="field_char" size="50"/>
 </t>
 <t t-name="vieweditor_selection">
-    <select t-att-id="widget.name"/>
+    <select t-att-id="widget.name" >
+        <t t-foreach="widget.value" t-as="option">
+            <option
+                t-att-value="typeof option === 'object' ? option[0] : option">
+                <t t-esc="typeof option === 'object' ? option[1] : option"/>
+            </option>
+        </t>
+    </select>
 </t>
 <t t-name="vieweditor_boolean">
     <input type="checkbox" t-att-id="widget.name"/>

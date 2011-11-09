@@ -557,14 +557,14 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 } else {
                     type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog,arch_val, id);
                 }
-                self.edit_widget.push(type_widget);
-                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
-                var view_val = _.detect(arch_val[0]['att_list'],function(res) {
+                var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, id);
                 });
-                var value = null;
-                id == 'groups'? type_widget.set_value(self.groups, view_val): type_widget.set_value(value, view_val);
+                if (id == 'groups') type_widget.value = self.groups;
+                self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
                 type_widget.start();
+                type_widget.set_value(value)
+                self.edit_widget.push(type_widget);
             });
         });
     },
@@ -593,7 +593,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 .read_slice([],{domain:[['res_id', 'in', group_ids],['model','=','res.groups']]})
                 .done(function(model_grp) {
                     _.each(model_grp,function(res_group){
-                        groups.push([res_group.name,group_names[res_group.res_id]]);
+                        groups.push([res_group.module + "." + res_group.name,group_names[res_group.res_id]]);
                     });
                     self.groups = groups;
                     def.resolve();
@@ -608,6 +608,7 @@ openerp.web.ViewEditor.Field = openerp.web.Class.extend({
         this.node = node;
         this.dirty = false;
         this.name = id;
+        this.value = undefined;
     },
     on_ui_change: function() {
         this.dirty = true;
@@ -624,9 +625,9 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
             self.on_ui_change();
         });
     },
-    set_value: function(value,view_val) {
-        if (view_val) {
-            this.$element.find("input[id=" + this.name+ "]").attr('checked', view_val[1]);
+    set_value: function(value) {
+        if (value) {
+            this.$element.find("input[id=" + this.name+ "]").attr('checked', value[1]);
         }
     },
     get_value: function() {
@@ -645,8 +646,8 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
             self.on_ui_change();
         });
     },
-    set_value: function(value,view_val) {
-        view_val ? this.$element.find("input[id=" + this.name + "]").val(view_val[1]): this.$element.find("tr[id=" + this.name + "] input").val();
+    set_value: function(value) {
+        value ? this.$element.find("input[id=" + this.name + "]").val(value[1]): this.$element.find("tr[id=" + this.name + "] input").val();
     },
     get_value: function() {
         if (!this.dirty) {
@@ -664,16 +665,14 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
             self.on_ui_change();
         });
     },
-    set_value: function(value, view_val) {
-        var self = this;
-        _.each(value, function(item) {
-            var select_val = view_val? (view_val[1] == ((typeof(item) == 'string')? item:item[0])?true: false): false;
-            self.$element.find("select[id=" + self.name + "]").append($("<option/>", {
-                    value: (typeof(item) == 'string') ? item: item[0],
-                    text: (typeof(item) == 'string')? item: item[1],
-                    selected:select_val
-            }));
-        });
+    set_value: function(value) {
+        value = value === null ? false : value;
+        value = value instanceof Array ? value[1] : value;
+        var index = 0;
+        for (var i = 0, ii = this.value.length; i < ii; i++) {
+            if ((this.value[i] instanceof Array && this.value[i][1] === value) || this.value[i] === value) index = i;
+        }
+        this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
     get_value: function() {
         if (!this.dirty) {
@@ -687,62 +686,65 @@ openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.exten
     init: function(view, node, id) {
         this._super(view, node, id);
         this.registry = openerp.web.form.widgets;
+        var values = _.keys(this.registry.map);
+        values.push('');
+        values.sort();
+        this.value = values;
     },
-    set_value: function(value, view_val) {
-        value = _.keys(this.registry.map);
-        value.push('');
-        value.sort();
-        this._super.apply(this,[value, view_val]);
-    }
 });
 openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        this._super.apply(this,[icons, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = icons;
+    },
 });
 openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        value = [['', ''], ['new', 'New Window']];
-        this._super.apply(this,[value, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = [['', ''], ['new', 'New Window']];
+    },
 });
 openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        value = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
-        this._super.apply(this,[value, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
+    },
 });
 openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        value = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
-        this._super.apply(this,[value, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
+    },
 });
 openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        value = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
-        this._super.apply(this,[value, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
+    },
 });
 openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
-        value = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
-        this._super.apply(this,[value, view_val]);
-    }
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.value = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
+    },
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    set_value: function(value, view_val) {
+    init: function(view, node, id) {
+        this._super(view, node, id);
+        this.multiple = true;
+    },
+    start: function () {
+        this._super();
+        this.$element.find("select[id=" + this.name + "]").css('height', '100px').attr("multiple",true);
+    },
+    set_value: function(value) {
         var self = this;
-        this.$element.find("select[id="+ this.name +"]").attr('multiple', true).css('height','100px');
-        var selected_val, sel_val;
-        view_val ? selected_val=view_val[1].split(',') : selected_val = null;
-        _.each(value, function(item) {
-            _.include(selected_val,item[0])?sel_val=true:sel_val=false;
-            self.$element.find("select[id="+self.name+"]").append($("<option/>", {
-                value : item[0],
-                text : item[1],
-                selected:sel_val
-            }));
+        self.$element.find("#groups option").attr("selected",false);
+        if (!value) return false;
+        _.each(this.value, function(item) {
+            if (_.include(value[1].split(','), item[0])) {
+                self.$element.find("select[id="+self.name+"] option[value='" + item[0] +"']").attr("selected",1)
+            }
          });
     }
 });
