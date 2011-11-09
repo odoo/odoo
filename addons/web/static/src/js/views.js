@@ -519,7 +519,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
     do_display_log: function (log_records) {
         var self = this,
             $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
-        _(log_records).each(function (record) {
+        _(log_records.reverse()).each(function (record) {
             $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
                 .appendTo($logs)
                 .delegate('a', 'click', function (e) {
