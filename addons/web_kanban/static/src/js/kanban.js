@@ -2,7 +2,6 @@ openerp.web_kanban = function (openerp) {
 
 var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_kanban/static/src/xml/web_kanban.xml');
 openerp.web.views.add('kanban', 'openerp.web_kanban.KanbanView');
 
 openerp.web_kanban.KanbanView = openerp.web.View.extend({
@@ -25,7 +24,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.form_dialog.on_form_dialog_saved.add_last(this.do_reload);
         this.aggregates = {};
         this.qweb = new QWeb2.Engine();
-        this.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
+        this.qweb.debug = openerp.connection.debug;
         this.qweb.default_dict = {
             '_' : _,
             '_t' : _t
@@ -53,17 +52,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.has_been_loaded.resolve();
     },
     add_qweb_template: function() {
-        var group_operator = ['avg', 'max', 'min', 'sum', 'count']
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
-            if (child.tag === "field") {
-                for(j=0, jj=group_operator.length; j < jj;  j++) {
-                    if (child.attrs[group_operator[j]]) {
-                        this.aggregates[child.attrs.name] = child.attrs[group_operator[j]];
-                        break;
-                    }
-                }
-            }
             if (child.tag === "templates") {
                 this.transform_qweb_template(child);
                 this.qweb.add_template(openerp.web.json_node_to_xml(child));
@@ -72,18 +62,25 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     transform_qweb_template: function(node) {
-        var qweb_prefix = QWeb.prefix;
+        var qweb_prefix = QWeb.prefix,
+            group_operator = ['avg', 'max', 'min', 'sum', 'count'];
         switch (node.tag) {
             case 'field':
-                node.tag = 't';
-                node.attrs['t-esc'] = 'record.' + node.attrs['name'] + '.value';
+                node.tag = qweb_prefix;
+                node.attrs[qweb_prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
+                for (var j = 0, jj = group_operator.length; j < jj;  j++) {
+                    if (node.attrs[group_operator[j]]) {
+                        this.aggregates[node.attrs.name] = node.attrs[group_operator[j]];
+                        break;
+                    }
+                }
                 break
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        if (_.indexOf('icon,type,name,string,context,states'.split(','), k) != -1) {
+                        if (_.indexOf('icon,type,name,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
                             delete(node.attrs[k]);
                         }
@@ -92,7 +89,13 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
                             return "record.state.raw_value == '" + _.trim(state) + "'";
                         });
-                        node.attrs['t-if'] = states.join(' or ');
+                        node.attrs[qweb_prefix + '-if'] = states.join(' or ');
+                    }
+                    if (node.attrs['data-kanban_states']) {
+                        var states = _.map(node.attrs['data-kanban_states'].split(','), function(state) {
+                            return "record.kanban_state.raw_value == '" + _.trim(state) + "'";
+                        });
+                        node.attrs[qweb_prefix + '-if'] = states.join(' or ');
                     }
                     if (node.attrs['data-string']) {
                         node.attrs.title = node.attrs['data-string'];

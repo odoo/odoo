@@ -5,7 +5,6 @@
 openerp.web_calendar = function(openerp) {
 var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
 // Dhtmlx scheduler ?
