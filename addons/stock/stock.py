@@ -661,6 +661,9 @@ class stock_picking(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name,company_id)', 'Order Reference must be unique per Company!'),
+    ]
 
     def action_process(self, cr, uid, ids, context=None):
         if context is None: context = {}
@@ -1774,7 +1777,7 @@ class stock_move(osv.osv):
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
-        @param date_expected: Scheduled Date 
+        @param date_expected: Scheduled Date
         @param date: Move Date
         @return: Move Date
         """
@@ -2237,7 +2240,7 @@ class stock_move(osv.osv):
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
 
-    # _create_lot function is not used anywhere 
+    # _create_lot function is not used anywhere
     def _create_lot(self, cr, uid, ids, product_id, prefix=False):
         """ Creates production lot
         @return: Production lot id
@@ -2283,7 +2286,7 @@ class stock_move(osv.osv):
         self.action_done(cr, uid, res)
         return res
 
-    # action_split function is not used anywhere 
+    # action_split function is not used anywhere
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
         """ Split Stock Move lines into production lot which specified split by quantity.
         @param cr: the database cursor
