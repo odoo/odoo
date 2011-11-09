@@ -1080,11 +1080,14 @@ label.error {
 }
 .openerp .oe-view-manager-logs {
     clear: both;
-    font-size: 85%;
-    margin: 0.25em 0;
     background: #fff;
-    padding: 0 10px;
+    margin: 0.25em 0;
+    font-size: 85%;
     color: #4C4C4C;
+}
+.openerp .oe-view-manager-logs ul {
+    margin: 0;
+    padding: 0 10px;
     list-style: none;
 }
 .openerp .oe-view-manager-logs li:before {
@@ -1093,6 +1096,18 @@ label.error {
 .openerp .oe-view-manager-logs a {
     text-decoration: none;
     color: inherit;
+}
+/* only display first three log items of a folded logs list */
+.openerp .oe-view-manager-logs.oe-folded li:nth-child(n+4) {
+    display: none;
+}
+/* display link to more logs if there are more logs to view and the logview is
+   currently folded */
+.openerp .oe-view-manager-logs a.oe-more-logs {
+    display: none;
+}
+.openerp .oe-view-manager-logs.oe-folded.oe-has-more a.oe-more-logs {
+    display: block;
 }
 
 .openerp .view-manager-main-sidebar {

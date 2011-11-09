@@ -457,7 +457,10 @@
         </button>
     </t>
     <t t-jquery=".oe-view-manager-header" t-operation="after">
-        <ul class="oe-view-manager-logs"></ul>
+        <div class="oe-view-manager-logs oe-folded">
+            <ul></ul>
+            <a class="oe-more-logs" href="#">More…</a>
+        </div>
     </t>
 </t>
 
