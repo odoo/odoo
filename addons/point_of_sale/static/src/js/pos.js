@@ -584,30 +584,25 @@ openerp.point_of_sale = function(db) {
             }, this));
             return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
         },
-        display: function() {
+        render_element: function() {
             this.$element.empty();
             return (this.shop.get('cashRegisters')).each(__bind( function(cashRegister) {
-                return this.$element.append((new PaymentButtonView({
-                        model: cashRegister
-                    })).render());
+                var button = new PaymentButtonWidget();
+                button.model = cashRegister;
+                button.appendTo(this.$element);
             }, this));
         }
     });
-    PaymentButtonView = (function() {
-        __extends(PaymentButtonView, Backbone.View);
-        function PaymentButtonView() {
-            PaymentButtonView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaymentButtonView.prototype.template = qweb_template('pos-payment-button-template');
-        PaymentButtonView.prototype.render = function() {
-            return $(this.el).html(this.template({
+    PaymentButtonWidget = db.web.Widget.extend({
+        template_fct: qweb_template('pos-payment-button-template'),
+        render_element: function() {
+            this.$element.html(this.template_fct({
                 id: this.model.get('id'),
                 name: (this.model.get('journal_id'))[1]
             }));
-        };
-        return PaymentButtonView;
-    })();
+            return this;
+        }
+    });
     /*
      There are 3 steps in a POS workflow:
      1. prepare the order (i.e. chose products, quantities etc.)
@@ -1083,7 +1078,7 @@ openerp.point_of_sale = function(db) {
             this.paypadView = new PaypadWidget(null, 'paypad', {
                 shop: this.shop
             });
-            this.paypadView.display();
+            this.paypadView.render_element();
             this.paypadView.start();
             this.orderView = new OrderView({
                 shop: this.shop,
