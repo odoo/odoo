@@ -5,7 +5,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this._super(parent);
         this.element_id = element_id
         this.parent = parent
-        this.dataset = dataset;
+        this.dataset = new openerp.web.DataSetSearch(this, 'ir.ui.view', null, null);
         this.model = dataset.model;
         this.xml_element_id = 0;
         this.property = openerp.web.ViewEditor.property_widget;
@@ -18,7 +18,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var action = {
             name: _.sprintf("Manage Views (%s)", this.model),
             context: this.session.user_context,
-            domain: [["model", "=", this.dataset.model]],
+            domain: [["model", "=", this.model]],
             res_model: 'ir.ui.view',
             views: [[false, 'list']],
             type: 'ir.actions.act_window',
@@ -67,85 +67,86 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             });
         });
     },
-    convert_tag_to_obj: function(xml, level) {
-        var obj = {
-            'child_id': [],
-            'id': this.xml_element_id++,
-            'level': level + 1,
-            'att_list': [],
-            'name': ''
-        };
-        var tag = xml.tagName.toLowerCase();
-        obj.att_list.push(tag);
-        obj.name = "<" + tag;
-        $(xml).each(function() {
-            _.each(this.attributes, function(attrs) {
-                if (tag != 'button' && tag != 'field') {
-                    if (attrs.nodeName == "string" ) {
-                        obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
-                    }
-                } else {
-                    if (attrs.nodeName == "name") {
-                        obj.name += ' ' + attrs.nodeName + '=' + '"' + attrs.nodeValue + '"';
-                    }
-                }
-                obj.att_list.push([attrs.nodeName, attrs.nodeValue]);
-            });
-            obj.name += ">";
-        });
-        return obj;
+    add_node_name : function(node) {
+        if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
+            return (node.getAttribute('name'))?
+                _.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
+                _.sprintf( "<%s>",node.tagName.toLowerCase());
+        }else if(node.tagName.toLowerCase() == "group"){
+            return (node.getAttribute('string'))?
+                _.sprintf( "<%s>",node.getAttribute('string')):
+                _.sprintf( "<%s>",node.tagName.toLowerCase());
+        }else{
+            return (node.getAttribute('string'))?
+                _.sprintf( "<%s string='%s'>",node.tagName.toLowerCase(), node.getAttribute('string')):
+                _.sprintf( "<%s>",node.tagName.toLowerCase());
+        }
     },
-    append_child_object: function(val, parent_list, child_obj_list) {
+
+    create_View_Node: function(node){
         var self = this;
-        if (val.child_id.length != 0) {
-            _.each(val.child_id, function(val) {
-                (val.id == parent_list[0])?
-                    self.append_child_object( val, parent_list.slice(1), child_obj_list) : false;
-            });
-        } else { val.child_id = child_obj_list; }
+        ViewNode = {
+            'level': ($(node).parents()).length + 1,
+            'id': self.xml_element_id += 1,
+            'att_list': [],
+            'name': self.add_node_name(node),
+            'child_id': []
+        }
+        ViewNode.att_list.push(node.tagName.toLowerCase());
+        _.each(node.attributes ,function(att){
+           ViewNode.att_list.push([att.nodeName,att.nodeValue]);
+       });
+        return ViewNode;
     },
-    convert_arch_to_obj: function(xml, parent_list, parent_id, main_object){
+
+    append_child_object: function(main_object, parent_id, child_obj_list) {
+        var self = this;
+            if(main_object.id == parent_id){
+                var pare
+                main_object.child_id = child_obj_list;
+                return main_object;
+            }else{
+                _.each(main_object.child_id ,function(child_object){
+                    self.append_child_object(child_object, parent_id, child_obj_list);
+                });
+            }
+    },
+
+    convert_arch_to_obj: function(xml_Node, main_object, parent_id){
         var self = this;
         var child_obj_list = [];
-        var children_list = $(xml).children();
-        var parents = $(children_list[0]).parents().get();
-        _.each(children_list, function(child_node) {
-            child_obj_list.push(self.convert_tag_to_obj(child_node, parents.length));
+        _.each(xml_Node,function(element){
+           child_obj_list.push(self.create_View_Node(element)) ;
         });
-        if (children_list.length != 0) {
-            if (parents.length <= parent_list.length) { parent_list.splice(parents.length - 1);}
-            parent_list.push(parent_id);
-            self.append_child_object(main_object[0], parent_list.slice(1), child_obj_list);
-        }
-        for (var i = 0; i < children_list.length; i++) {
-            self.convert_arch_to_obj(children_list[i], parent_list, child_obj_list[i].id, main_object);
-        }
+        this.append_child_object(main_object, parent_id, child_obj_list);
+        var obj_xml_list = _.zip(xml_Node,child_obj_list);
+        _.each(obj_xml_list, function(node){
+            if(node[0].children.length != 0){
+            self.convert_arch_to_obj(node[0].children, main_object, node[1].id);}
+        });
         return main_object;
     },
+
     parse_xml: function(arch, view_id) {
-        var root = $(arch).filter(":first")[0];
-        var tag = root.tagName.toLowerCase();
-        var view_obj = {
-            'child_id': [],
-            'id': this.xml_element_id++,
+        main_object = {
             'level': 0,
+            'id': this.xml_element_id +=1,
             'att_list': [],
-            'name': _.sprintf("<view view_id='%d'>", view_id),
+            'name': _.sprintf("<view view_id = %s>", view_id),
+            'child_id': []
         };
-        var root_object = this.convert_tag_to_obj(root, 0);
-        view_obj.child_id = this.convert_arch_to_obj(arch, [], this.xml_element_id, [root_object], []);
-        return [view_obj];
+        var xml_arch = QWeb.load_xml(arch);
+        return [this.convert_arch_to_obj(xml_arch.childNodes, main_object, this.xml_element_id)];
     },
+
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        var view_dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-        view_dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type'], function(arch) {
             var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
             self.main_view_type = arch[0].type
             view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch});
-            dataset = new openerp.web.DataSetSearch(self, 'ir.ui.view', null, null);
-            dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
+            self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}, function(result) {
                 _.each(result, function(res) {
                     view_arch_list.push({"view_id": res.id, "arch": res.arch});
                     self.inherit_view(arch_object, res);
@@ -166,20 +167,23 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         return parent_list;
     },
+
     inherit_view : function(arch_object, result) {
         var self = this;
-        var root = $(result.arch).filter('*');
         var xml_list = [];
-        root[0].tagName.toLowerCase() == "data"? xml_list = $(root[0]).children() : xml_list.push(root[0]);
+        var xml_arch = QWeb.load_xml(result.arch);
+        (xml_arch.childNodes[0].tagName == "data")
+            ? xml_list = xml_arch.childNodes[0].children 
+                : xml_list.push(xml_arch.childNodes[0]);
         _.each(xml_list, function(xml) {
             var expr_to_list = [];
-            var xpath_arch_object = self.parse_xml(xml,result.id);
-            if (xml.tagName.toLowerCase() == "xpath" ) {
-                var part_expr = _.without($(xml).attr('expr').split("/"), "");
+            var xpath_arch_object = self.parse_xml(QWeb.tools.xml_node_to_string(xml), result.id);
+            if(xml.tagName == "xpath"){
+                var part_expr = _.without(xml.getAttribute('expr').split("/"), "");
                 _.each(part_expr, function(part) {
                     expr_to_list.push(_.without($.trim(part.replace(/[^a-zA-Z 0-9 _]+/g,'!')).split("!"), ""));
                 });
-            } else {
+            }else{
                 var temp = _.reject(xpath_arch_object[0].child_id[0].att_list, function(list) {
                     return _.include(list, "position")
                 });
@@ -311,13 +315,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             var view_id;
             var view_xml_id;
             var view_find = side;
+            var min_level = clicked_tr_level;
             while (1) {
                 view_find = view_find.prev();
                 if ((self.edit_xml_dialog.$element.find(view_find).find('a').text()).search("view_id") != -1
-                        && parseInt(view_find.attr('level')) < clicked_tr_level) {
+                        && parseInt(view_find.attr('level')) < min_level ) {
                     view_id = parseInt(($(view_find).find('a').text()).replace(/[^0-9]+/g, ''));
                     view_xml_id = (view_find.attr('id')).split('-')[1];
                     break;
+                }
+                if(view_find.attr('level') < min_level){
+                    min_level = parseInt(view_find.attr('level'));
                 }
             }
             switch (this.id) {
@@ -411,12 +419,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var arch = _.detect(one_object['arch'], function(element) {return element.view_id == view_id;});
         var obj = self.get_object_by_id(view_xml_id, one_object['main_object'], []);
          //for finding xpath tag from inherit view
-        if (($(arch.arch).filter("data")).length != 0 && view_xml_id != 0) {
+        var xml_arch = QWeb.load_xml(arch.arch);
+        if (xml_arch.childNodes[0].tagName == "data") {
             var check_list = _.flatten(obj[0].child_id[0].att_list);
-            arch.arch = _.detect($(arch.arch).children(), function(xml_child){
-                var temp_obj = self.convert_tag_to_obj(xml_child);
-                var main_list = _.flatten(temp_obj.att_list);
-                var insert = _.intersection(main_list,_.uniq(check_list));
+            arch.arch = _.detect(xml_arch.childNodes[0].children, function(xml_child){
+                var temp_obj = self.create_View_Node(xml_child);
+                var insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == check_list.length ) {return xml_child;}
             });
         }
@@ -439,11 +447,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     do_save_xml: function(arch1, obj, id, child_list, level, view_id, arch, move_direct, update_values){
         var self = this;
         var children_list =  $(arch1).children();
-        var list_obj_xml = _.zip(children_list,obj.child_id);
+        var list_obj_xml = _.zip(children_list, obj.child_id);
         if (id) {
             if (obj.id == id) {
                 var id;
-                var parent = $(arch1).parents();
                 var index = _.indexOf(child_list, obj);
                 if (move_direct == "down") {
                     var next = $(arch1).next();
@@ -459,22 +466,18 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     _.each(update_values, function(val){
                         $(arch1).attr(val[0],val[1]);
                     });
-                    var new_obj = self.convert_tag_to_obj(arch1, obj.level - 1);
-                    new_obj.id = obj.id;
-                    new_obj.child_id = obj.child_id;
+                    var new_obj = self.create_View_Node(arch1);
+                    new_obj.id = obj.id,new_obj.child_id = obj.child_id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
                 }
-                parent = parent[parent.length - 1];
-                var convert_to_utf = self.xml2Str(parent);
-                if (convert_to_utf) {
-                    convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
-                    convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
-                    arch.arch = convert_to_utf;
-                    dataset = new openerp.web.DataSet(this, 'ir.ui.view');
-                        dataset.write(parseInt(view_id),{"arch": convert_to_utf}, function(result) {
-                    });
-                }
+                var parent = $(arch1).parents();
+                var convert_to_utf = QWeb.tools.xml_node_to_string(parent[parent.length-1]);
+                convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
+                convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
+                arch.arch = convert_to_utf;
+                this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
+                });
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
@@ -482,20 +485,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
         }
-    },
-    xml2Str: function(xmlNode) {
-       try {
-          return (new XMLSerializer()).serializeToString(xmlNode);
-      }
-      catch (exception) {
-         try {
-            return xmlNode.xml;
-         }
-         catch (exception) {
-            return false;
-         }
-       }
-    },
+    }, 
     on_expand: function(expand_img){
         var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");
