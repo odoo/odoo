@@ -108,9 +108,9 @@ class pos_details(report_sxw.rml_parse):
     def _get_sum_dis_2(self,form):
         res4=[]
         user_ids = form['user_ids'] or self._get_all_users()
-        self.cr.execute ("select sum(pol.qty)" \
+        self.cr.execute ("select sum(pol.discount)" \
                          "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, res_users as ru,res_company as rc " \
-                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('paid')  " \
+                         "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and po.state  IN ('paid','done','invoiced')  " \
                          "and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s " \
                          "and po.user_id = ru.id and rc.id = po.company_id and ru.id IN %s " \
                     ,(form['date_start'],form['date_end'],tuple(user_ids)))
