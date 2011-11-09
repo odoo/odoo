@@ -206,6 +206,7 @@ class audittrail_objects_proxy(object_proxy):
         model_pool = pool.get('ir.model')
         field_pool = pool.get('ir.model.fields')
         log_line_pool = pool.get('audittrail.log.line')
+        line_id = False
         for line in lines:
             field_obj = obj_pool._all_columns.get(line['name'])
             assert field_obj, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
@@ -233,6 +234,8 @@ class audittrail_objects_proxy(object_proxy):
                     "field_description": field_obj.string
                     }
             line_id = log_line_pool.create(cr, uid, vals)
+        if not line_id:  
+            pool.get('audittrail.log').unlink(cr, uid, log_id)
         return True
    
     def start_log_process(self, cr, user_id, model, method, resource_data, pool, resource_pool):
