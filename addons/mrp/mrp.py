@@ -689,7 +689,7 @@ class mrp_production(osv.osv):
             context = {}
             
         production_obj = self.pool.get('mrp.production')
-        production_browse = production_obj.browse(cr, uid, production_id, context)
+        production_browse = production_obj.browse(cr, uid, production_id, context=context)
         if context.get('product_qty',False):
             product_qty = context['product_qty']
             sub_qty = context['sub_qty']
@@ -770,7 +770,7 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                get_qty = self._get_quantity_to_produce(cr, uid, production.id, produce_product.id, context)
+                get_qty = self._get_quantity_to_produce(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = get_qty['product_qty'] - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty

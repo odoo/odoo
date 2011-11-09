@@ -111,9 +111,9 @@ class mrp_production(osv.osv):
         production_browse = production_obj.browse(cr, uid, production_id, context)
         move_browse = move_obj.browse(cr, uid, move_id, context)
         sub_qty = 1
-        sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_browse.product_id.id),('bom_id', '=', production_browse.bom_id.id)] )
+        sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_browse.product_id.id),('bom_id', '=', production_browse.bom_id.id)], context=context )
         if sub_id:
-            sub_qty = sub_obj.browse(cr ,uid, sub_id[0], context).product_qty
+            sub_qty = sub_obj.browse(cr ,uid, sub_id[0], context=context).product_qty
         context ['product_qty'] = production_browse.product_qty * sub_qty
         context ['sub_qty'] = sub_qty
         return super(mrp_production, self)._get_quantity_to_produce(cr, uid, production_id, move_id, context=context)
