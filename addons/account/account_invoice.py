@@ -306,9 +306,9 @@ class account_invoice(osv.osv):
             view_id = view_id[0]
         res = super(account_invoice,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
-        type = context.get('journal_type', 'sale')
+        type = context.get('journal_type', False)
         for field in res['fields']:
-            if field == 'journal_id':
+            if field == 'journal_id' and type:
                 journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
 
