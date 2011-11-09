@@ -1,0 +1,11 @@
+-
+  In order to test the 'Make Invoices' of sale oreder line wizard in the Open-ERP,
+  I take a Sale order line and create invoice.
+-
+  I click on the "Make Invoices" button.
+-
+  !python {model: sale.order.line.make.invoice}: |
+    context = {"lang": 'en_US', "search_default_user_id":1, "tz": False, "active_model": 'sale.order.line', "active_ids": [ref("order6_line1")], "active_id":ref("order6_line1")}
+    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref('order6_line1'))
+    if order_line.invoiced == False:
+      self.make_invoices(cr, uid, [ref("order6_line1")], context)
