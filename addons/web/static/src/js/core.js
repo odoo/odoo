@@ -874,8 +874,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }, target);
     },
     _render_and_insert: function(insertion, target) {
-        var rendered = this.render();
-        this.$element = $(rendered);
+        this.render_element();
         if (target instanceof openerp.web.Widget)
             target = target.$element;
         insertion(target);
@@ -884,13 +883,23 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     },
     on_inserted: function(element, widget) {},
     /**
+     * Renders the element and insert the result of the render() method in this.$element.
+     */
+    render_element: function() {
+        var rendered = this.render();
+        this.$element = $(rendered);
+        return this;
+    },
+    /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
      *
      * @param {Object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return $("<div></div>").append(document.createElement(this.tagName)).html();
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
