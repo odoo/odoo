@@ -698,10 +698,6 @@ class mrp_production(osv.osv):
             sub_qty = 1
         res = {'product_qty': product_qty, 'sub_qty': sub_qty}
         return res
-    
-    
-    
-    
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
