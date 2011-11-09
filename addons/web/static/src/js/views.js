@@ -441,6 +441,16 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             }
         }
 
+        var $res_logs = this.$element.find('.oe-view-manager-logs:first');
+        $res_logs.delegate('a.oe-more-logs', 'click', function () {
+            $res_logs.removeClass('oe-folded');
+            return false;
+        }).delegate('a.oe-remove-everything', 'click', function () {
+            $res_logs.removeClass('oe-has-more')
+                     .find('ul').empty();
+            return false;
+        });
+
         return manager_ready;
     },
     on_mode_switch: function (view_type) {
@@ -518,10 +528,14 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
      */
     do_display_log: function (log_records) {
         var self = this,
-            $logs = this.$element.find('ul.oe-view-manager-logs:first').empty();
-        _(log_records).each(function (record) {
+            cutoff = 3,
+            $logs = this.$element.find('.oe-view-manager-logs:first')
+                    .addClass('oe-folded'),
+            $logs_list = $logs.find('ul').empty();
+        $logs.toggleClass('oe-has-more', log_records.length > cutoff);
+        _(log_records.reverse()).each(function (record) {
             $(_.sprintf('<li><a href="#">%s</a></li>', record.name))
-                .appendTo($logs)
+                .appendTo($logs_list)
                 .delegate('a', 'click', function (e) {
                     self.do_action({
                         type: 'ir.actions.act_window',
