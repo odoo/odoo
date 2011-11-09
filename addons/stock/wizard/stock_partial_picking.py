@@ -121,7 +121,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'location_dest_id' : move.location_dest_id.id,
                                                     'picking_id': partial.picking_id.id
                                                     },context=context)
-                #stock_move.action_done(cr, uid, [move_id], context)
+                stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {
                 'product_id': move.product_id.id,
                 'product_qty': move.quantity,
