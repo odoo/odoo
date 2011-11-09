@@ -65,6 +65,17 @@
 
        <menuitem action="open_module_tree_department" id="menu_hr_department_tree" parent="hr.menu_hr_management" sequence="6" />
 
+       <record id="open_view_dept_tree" model="ir.actions.act_window">
+            <field name="name">Department structure</field>
+            <field name="res_model">hr.department</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_department_tree"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+        </record>
+
+       <menuitem action="open_view_dept_tree"
+            id="menu_view_employee_department_tree" parent="hr.menu_hr_management" sequence="7"/>
+            
        <record model="ir.ui.view" id="view_users_form_inherit">
             <field name="name">res.users.form</field>
             <field name="type">form</field>
