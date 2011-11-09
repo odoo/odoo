@@ -121,10 +121,10 @@ def str2mailto(emailstr, multi=False):
     for mas in mailz:
         m = mege.match(mas.strip())
         if not m:
-            # one of the rare non-matching strings is "sad" :(
-            # retz.append({ 'name': mas.strip() })
-            # continue
-            raise ValueError("Invalid email address %r" % mas)
+            #one of the rare non-matching strings is "sad" :(
+            retz.append({ 'name': mas.strip() })
+            continue
+            # raise ValueError("Invalid email address %r" % mas)
         rd = {  'name': m.group(1).strip(),
                 'email': m.group(5), }
         if m.group(2):
@@ -189,6 +189,9 @@ def map_data(cr, uid, obj, context=None):
         field = obj.ical_get(map_dict, 'field')
         field_type = obj.ical_get(map_dict, 'type')
         if field:
+            #ignore write date, this field is resered for the orm
+            if field == 'write_date':
+                continue
             if field_type == 'selection':
                 if not map_val:
                     continue
@@ -299,7 +302,6 @@ class CalDAV(object):
         att_data = []
         exdates = []
         _server_tzinfo = pytz.timezone(tools.get_server_timezone())
-
         for cal_data in child.getChildren():
             if cal_data.name.lower() == 'organizer':
                 dmail = { 'name': cal_data.params.get('CN', ['',])[0],
@@ -552,7 +554,7 @@ class CalDAV(object):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-
+        
         ical_data = content
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         parsedCal = vobject.readOne(ical_data)

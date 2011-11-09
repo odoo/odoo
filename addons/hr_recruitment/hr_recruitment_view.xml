@@ -286,24 +286,21 @@
         <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
+                <field name="color"/>
+                <field name="state"/>
+                <field name="priority"/>
+                <field name="survey"/>
                 <templates>
                     <t t-name="kanban-box">
                         <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                    <table class="oe_kanban_table">
-                                        <tr>
-                                            <td class="oe_kanban_title1" align="left" valign="middle">
-                                                <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
-                                                <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
-                                                <field name="partner_name"/>
-                                            </td>
-                                            <td valign="top" width="22">
-                                                <img t-att-src="kanban_gravatar(record.user_id.value, 22)" class="oe_kanban_gravatar"/>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                    <div class="oe_kanban_title1">
+                                        <a t-if="record.priority.raw_value == 1" icon="star-on" type="object" name="set_normal_priority" />
+                                        <a t-if="record.priority.raw_value != 1" icon="star-off" type="object" name="set_high_priority" style="opacity:0.6; filter:alpha(opacity=60);"/>
+                                        <field name="partner_name"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
                                     <table class="oe_kanban_table">

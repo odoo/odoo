@@ -155,12 +155,12 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_michael0"), ref('bank_journal_EUR'), 240.0, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_michael0"), ref('bank_journal_EUR'), 240.0, False, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 200.0,
         'company_id': ref('base.main_company'),
-        'currency_id': ref('base.EUR'),
+        'currency_id': False,
         'journal_id': ref('bank_journal_EUR'),
         'partner_id': ref('res_partner_michael0'),
         'period_id': ref('account.period_3'),
@@ -220,8 +220,9 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    print move_line.amount_residual, move_line.amount_residual_currency
     assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice"
--    toto
+-
   I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
 -
    !python {model: account.invoice}: |
@@ -247,13 +248,14 @@
         'partner_id': ref('res_partner_michael0'),
         'period_id': ref('account.period_3'),
         'type': 'receipt',
-        'date': time.strftime("%Y-04-01"),
+        'date': time.strftime("%Y-%m-%d"),
         'payment_option': 'with_writeoff',
         'writeoff_acc_id': ref('account.a_expense'),
         'exchange_acc_id': ref('account.o_expense'),
         'comment': 'Write Off',
         'name': 'Second payment',
     }
+    vals.update(self.onchange_date(cr, uid, [], time.strftime('%Y-04-01'), ref('base.USD'), 80.0)['value'])
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     for item in res['value']['line_cr_ids']:

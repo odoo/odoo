@@ -484,10 +484,13 @@ class crm_case(crm_base):
                 case_email = case.user_id.user_email
 
             src = case_email
-            dest = case.user_id
+            dest = case.user_id.user_email or ""
             body = case.description or ""
-            if case.message_ids:
-                body = case.message_ids[0].description or ""
+            for message in case.message_ids:
+                if message.email_from:
+                    body = message.description
+                    break
+
             if not destination:
                 src, dest = dest, case.email_from
                 if body and case.user_id.signature:

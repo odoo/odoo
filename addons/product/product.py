@@ -93,6 +93,7 @@ class product_uom(osv.osv):
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
 
+    _order = "name"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'UoM Category', required=True, ondelete='cascade',

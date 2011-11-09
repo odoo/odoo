@@ -60,7 +60,7 @@ class import_framework(Thread):
         self.context = context or {}
         self.email = email_to_notify
         self.table_list = []
-        self.logger = logging.getLogger('import_framework')
+        self.logger = logging.getLogger(module_name)
         self.initialize()
 
     """
@@ -165,6 +165,7 @@ class import_framework(Thread):
                 data_i is a map external field_name => value
                 and each data_i have a external id => in data_id['id']
         """
+        self.logger.info(' Importing %s into %s' % (table, model))
         if not datas:
             return (0, 'No data found')
         mapping['id'] = 'id_new'
@@ -187,8 +188,7 @@ class import_framework(Thread):
         model_obj = self.obj.pool.get(model)
         if not model_obj:
             raise ValueError(_("%s is not a valid model name") % model)
-        self.logger.debug(_("fields imported : "))
-        self.logger.debug(fields)
+        self.logger.debug(_(" fields imported : ") + str(fields))
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for (field, field_name) in self_dependencies:
             self._import_self_dependencies(model_obj, field, datas)
@@ -330,7 +330,6 @@ class import_framework(Thread):
         xml_ref = self.mapped_id_if_exist(model, domain_search, table, name)
         fields.append('id')
         data.append(xml_id)
-
         obj.import_data(self.cr, self.uid, fields, [data], mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         return xml_ref or xml_id
     
@@ -385,7 +384,6 @@ class import_framework(Thread):
                     res = self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
                     result.extend(res)
                     if to_import:
-                        self.logger.debug(_("import : ") + table )
                         (position, warning) = self._import_table(table)
                         result.append((table, position, warning))
                     imported.add(table)
@@ -396,11 +394,12 @@ class import_framework(Thread):
             traceback.print_exc(file=sh)
             error = sh.getvalue()
             print error
-        finally:
-            self.cr.close()
+            
            
         self.date_ended = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self._send_notification_email(result, error)
+        
+        self.cr.close()
         
     def _resolve_dependencies(self, dep, imported):
         """ 
@@ -414,7 +413,6 @@ class import_framework(Thread):
                 res = self._resolve_dependencies(self.get_mapping()[dependency].get('dependencies', []), imported)
                 result.extend(res)
                 if to_import:
-                    self.logger.debug("import dependency : " + dependency)
                     r = self._import_table(dependency)
                     (position, warning) = r
                     result.append((dependency, position, warning))
@@ -422,15 +420,16 @@ class import_framework(Thread):
         return result
                 
     def _send_notification_email(self, result, error):
-        if not self.email or not self.email[0]:
+        if not self.email:
             return False	 
-
-        tools.email_send(
-                'import@module.openerp',
-                self.email,
-                self.get_email_subject(result, error),
-                self.get_email_body(result, error),
-            )
+        email_obj = self.obj.pool.get('mail.message')
+        email_id = email_obj.create(self.cr, self.uid, {
+            'email_from' : 'import@module.openerp', 
+            'email_to' : self.email,
+            'body_text' : self.get_email_body(result, error),
+            'subject' : self.get_email_subject(result, error),
+            'auto_delete' : True})
+        email_obj.send(self.cr, self.uid, [email_id])
         if error:
             self.logger.error(_("Import failed due to an unexpected error"))
         else:

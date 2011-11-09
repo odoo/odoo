@@ -324,7 +324,6 @@ class node_calendar(nodes.node_class):
         uid = self.context.uid
 
         res = self.set_data(cr, data)
-
         if res and len(res):
             # We arbitrarily construct only the first node of the data
             # that have been imported. ICS may have had more elements,
@@ -332,6 +331,7 @@ class node_calendar(nodes.node_class):
             assert isinstance(res[0], (int, long))
             fnodes = fil_obj.get_calendar_objects(cr, uid, [self.calendar_id], self,
                     domain=[('id','=',res[0])], context=ctx)
+            
             if self.context.get('DAV-client','') in ('iPhone', 'iCalendar',):
                 # For those buggy clients, register the alias
                 bca_obj = fil_obj.pool.get('basic.calendar.alias')

@@ -153,7 +153,7 @@
             </field>
         </record>
 
-        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="1" />
+        <menuitem name="Daily Operations" id="menu_point_of_sale" parent="menu_point_root" sequence="10" />
         <menuitem name="New Sale Order" parent="menu_point_of_sale" id="menu_point_ofsale" action="action_pos_pos_form" sequence="1" groups="group_pos_manager,group_pos_user"/>
         <menuitem name="Products" id="menu_point_of_sale_product" parent="menu_point_root" sequence="15" />
 
@@ -791,6 +791,16 @@
         <menuitem icon="STOCK_PRINT" action="action_report_pos_details"
                 id="menu_pos_details" parent="menu_point_rep" sequence="6" />
 
+        <record model="ir.actions.client" id="action_pos_pos">
+          <field name="name">Start Point of Sale</field>
+          <field name="tag">pos.ui</field>
+        </record>
 
+        <record id="menu_pos_pos" model="ir.ui.menu">
+          <field name="name">Start Point of Sale</field>
+          <field name="sequence" eval="5"/>
+          <field name="parent_id" ref="menu_point_root"/>
+          <field name="action" ref="action_pos_pos"/>
+        </record>
     </data>
 </openerp>
