@@ -55,8 +55,10 @@
             <search string="Purchase Orders">
             <group>
                 <filter icon="terp-go-year" string="  Year  "
+                name="year"
                 domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                 help="Order in current year"/>
+                <separator orientation="vertical"/>
                 <filter icon="terp-go-month" string="   Month   "
                         name="month"
                         domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
@@ -149,7 +151,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="view_id" ref="view_purchase_order_tree"></field>
-        <field name="context">{'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your suppliers, etc.</field>
     </record>
 
@@ -180,7 +182,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  ref="stock.view_stock_search"/>
-        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,'search_default_year':1,}</field>
         <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
