@@ -77,12 +77,12 @@ Dashboard for Sales Manager that includes:
         'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_data.xml',
-        'board_sale_view.xml',
         'sale_view.xml',
         'report/sale_report_view.xml',
         'sale_report.xml',
         'stock_view.xml',
         'process/sale_process.xml',
+        'board_sale_view.xml',
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
