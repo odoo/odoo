@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-08-18 12:40+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"PO-Revision-Date: 2011-11-09 03:02+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-05 04:59+0000\n"
-"X-Generator: Launchpad (build 14085)\n"
+"X-Launchpad-Export-Date: 2011-11-09 05:13+0000\n"
+"X-Generator: Launchpad (build 14263)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -482,6 +482,10 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
+"Схема налогов - древовидная структура, отражающая виды налогов (или их "
+"коды), и показывающая текущую ситуацию по налогам. Схема налогов "
+"представляет размер каждого диапазона декларирования налогов для вашей "
+"страны. Она представлена иерархически и может быть изменена под ваши нужды."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -651,7 +655,7 @@ msgstr "Основная нумерация должна отличаться о
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
 msgid "Tax Code Amount"
-msgstr ""
+msgstr "Объем по коду налога"
 
 #. module: account
 #: code:addons/account/account.py:2779
@@ -930,7 +934,7 @@ msgstr "Расширенные фильтры..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr ""
+msgstr "Централизующий журнал"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1638,7 +1642,7 @@ msgstr "Выставление счетов"
 #. module: account
 #: field:account.chart.template,tax_code_root_id:0
 msgid "Root Tax Code"
-msgstr ""
+msgstr "Корневой код налога"
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -1757,7 +1761,7 @@ msgstr "Черновик документа"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Credit Notes"
-msgstr ""
+msgstr "Налоговая декларация: заметки по кредиту"
 
 #. module: account
 #: code:addons/account/account.py:499
@@ -2333,6 +2337,13 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Это меню печатает декларацию НДС на основе счетов и платежей. Выберите один "
+"или несколько периодов учётного года. Требуемая информация для налоговой "
+"декларации будет автоматически сгенерирована OpenERP на основе счетов или "
+"платежей (в зависимости от страны). Эти данные обновляются в реальном "
+"времени. Это полезно, потому что позволяет в любой момент получить "
+"представление об объёме налога к выплате в начале и в конце месяца, квартала "
+"и т.д."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -2522,7 +2533,7 @@ msgstr "Ссылка"
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
-msgstr ""
+msgstr "Счёт может быть неналогооблагаемым или налогооблагаемым."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -3505,6 +3516,7 @@ msgid ""
 "If not applicable (computed through a Python code), the tax won't appear on "
 "the invoice."
 msgstr ""
+"Если неприменим (вычисляется кодом Python), налог не будет отражён в счёте."
 
 #. module: account
 #: view:account.tax:0
@@ -3899,7 +3911,7 @@ msgstr "Тип счета"
 #: code:addons/account/invoice.py:714
 #, python-format
 msgid "Global taxes defined, but are not in invoice lines !"
-msgstr ""
+msgstr "Глобальные налоги определены, но не отражены в строках счёта!"
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -3915,7 +3927,7 @@ msgstr "Месяц"
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Базовая единица измерения"
 
 #. module: account
 #: field:account.account,note:0

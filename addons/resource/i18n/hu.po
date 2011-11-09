@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"PO-Revision-Date: 2011-11-08 13:54+0000\n"
+"Last-Translator: Sándor Csaba <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-05 05:45+0000\n"
-"X-Generator: Launchpad (build 14085)\n"
+"X-Launchpad-Export-Date: 2011-11-09 05:14+0000\n"
+"X-Generator: Launchpad (build 14263)\n"
 
 #. module: resource
 #: model:ir.module.module,description:resource.module_meta_information
@@ -28,6 +28,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Erőforrások kezelésére szolgáló modul. \n"
+"     Az erőforrás olyan tényezőt képvisel a rendszerben, amely ütemezhető \n"
+"     (egy alkalmazott egy feladat kapcsán vagy egy munkaállomás egy gyártási "
+"rendelés kapcsán).\n"
+"     Ez a modul kezeli az erőforrás naptárat minden erőforrással "
+"összefüggésben.\n"
+"     Az erőforrások fogyását úgyszintén kezeli.\n"
+"\n"
+"    "
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -40,17 +50,20 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
+"Amennyiben üresen hagyja ezt a mezőt, akkor ez egy munkaszüneti nap lesz az "
+"egész vállalat számára. Ha az erőforrás be van állítva, a munkaszüneti "
+"nap/erőforrás-szabadság csak erre az erőforrásra vonatkozik."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_leaves
 #: view:resource.calendar.leaves:0
 msgid "Leave Detail"
-msgstr ""
+msgstr "Erőforrás-szabadság részletei"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_resources_leaves
 msgid "Resources Leaves"
-msgstr ""
+msgstr "Erőforrások szabadsága"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
@@ -90,7 +103,7 @@ msgstr "Típus"
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
 #: view:resource.resource:0
 msgid "Resources"
-msgstr "Források"
+msgstr "Erőforrások"
 
 #. module: resource
 #: field:resource.calendar,manager:0
@@ -100,24 +113,26 @@ msgstr "Munkacsoport menedzser"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Working time will start from"
-msgstr ""
+msgstr "A munkaidő kezdete"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "Hiba! A szabadság kezdő időpontjának előbb kell lenni mint a zárónak"
+msgstr ""
+"Hiba! Az erőforrás-szabadság kezdő időpontjának előbb kell lennie, mint a "
+"záró időpontjának."
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar
 msgid "Resource Calendar"
-msgstr ""
+msgstr "Erőforrás naptár"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Period"
-msgstr "Munkaidő"
+msgstr "Munkaidőszak"
 
 #. module: resource
 #: field:resource.calendar,company_id:0
@@ -131,7 +146,7 @@ msgstr "Vállalat"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr ""
+msgstr "Anyag"
 
 #. module: resource
 #: field:resource.calendar.attendance,dayofweek:0
@@ -141,7 +156,7 @@ msgstr "A hét napja"
 #. module: resource
 #: help:resource.calendar.attendance,hour_to:0
 msgid "Working time will end at"
-msgstr ""
+msgstr "A munkaidő befejezése"
 
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
@@ -172,17 +187,17 @@ msgstr "Dátum"
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
-msgstr ""
+msgstr "Munkaidőszaki erőforrás-szabadság keresése"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
 msgid "End Date"
-msgstr "Befejezés dátuma"
+msgstr "Befejezési dátum"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.resource_calendar_closing_days
 msgid "Closing Days"
-msgstr ""
+msgstr "Closing Days"
 
 #. module: resource
 #: model:ir.module.module,shortdesc:resource.module_meta_information
@@ -210,12 +225,12 @@ msgstr "Szerda"
 #. module: resource
 #: field:resource.resource,resource_type:0
 msgid "Resource Type"
-msgstr "Erőforrás típusa"
+msgstr "Erőforrás típus"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
 msgid "Resource Detail"
-msgstr "Forrás részletei"
+msgstr "Erőforrás részletei"
 
 #. module: resource
 #: field:resource.resource,active:0
@@ -228,26 +243,30 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Ha az aktív mező hamisra van állítva, akkor elrejtheti az erőforrást, "
+"anélkül, hogy törölné azt."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
 msgid "Resource's Calendar"
-msgstr ""
+msgstr "Erőforrás naptára"
 
 #. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
 msgstr ""
+"Az erőforráshoz kapcsolódó felhasználó neve, aki kezeli a hozzáférést az "
+"erőforráshoz."
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Az erőforrás ütemezésének a meghatározása."
 
 #. module: resource
 #: field:resource.calendar.attendance,hour_from:0
 msgid "Work from"
-msgstr ""
+msgstr "Dolgozik"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -262,7 +281,7 @@ msgstr "Hétfő"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Dolgozik"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -272,6 +291,11 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficency of "
 "200%, then his load will only be 50%."
 msgstr ""
+"Ez a mező leírja az erőforrás hatékonyságát a feladatok befejezéséig. "
+"Például ha egy erőforrást egyedül hozzáadunk egy 5 napos fázishoz, 5 "
+"elvégzendő feladattal, akkor ez az erőforrás alapértelmezésben 100%-os "
+"terheltséget fog mutatni erre a fázisra. De ha a hatékonysági fokot 200%-ra "
+"állítjuk, akkor az erőforrás terheltsége csak 50%-os lesz."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -281,18 +305,18 @@ msgstr "Kedd"
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
 msgid "Working time"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Erőforrás-szabadság"
 
 #. module: resource
 #: view:resource.resource:0
 msgid "General Information"
-msgstr "Általános információk"
+msgstr "Általános információ"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -301,6 +325,10 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Az erőforrások modul lehetővé teszi Önnek, hogy létrehozza és kezelje azokat "
+"az erőforrásokat, amelyeket be szeretne vonni egy speciális projekt "
+"fázisaiba. Beállíthatja az erőforrások hatékonysági fokát és "
+"munkaterheltségét azok heti munkaórái alapján."
 
 #. module: resource
 #: view:resource.resource:0
@@ -311,7 +339,7 @@ msgstr "Inaktív"
 #: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
-msgstr ""
+msgstr "(szabadság)"
 
 #. module: resource
 #: field:resource.resource,time_efficiency:0
@@ -321,7 +349,7 @@ msgstr "Hatékonysági tényező"
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr "Emberi"
+msgstr "Ember"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -331,7 +359,7 @@ msgstr "Munka részletei"
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
-msgstr "Kezdődátum"
+msgstr "Kezdő dátum"
 
 #. module: resource
 #: code:addons/resource/resource.py:246
