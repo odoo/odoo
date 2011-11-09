@@ -611,27 +611,22 @@ openerp.point_of_sale = function(db) {
      It should be possible to go back to any step as long as step 3 hasn't been completed.
      Modifying an order after validation shouldn't be allowed.
      */
-    StepsView = (function() {
-        __extends(StepsView, Backbone.View);
-        function StepsView() {
-            StepsView.__super__.constructor.apply(this, arguments);
-        }
-
-        StepsView.prototype.initialize = function(options) {
-            return this.step = "products";
-        };
-        StepsView.prototype.events = {
-            'click input.step-button': 'clickChangeStep'
-        };
-        StepsView.prototype.clickChangeStep = function(event) {
+    StepsWidget = db.web.Widget.extend({
+        init: function(parent, element_id) {
+            this._super(parent, element_id);
+            this.step = "products";
+        },
+        start: function() {
+            this.$element.find('input.step-button').click(_.bind(this.clickChangeStep, this));
+        },
+        clickChangeStep: function(event) {
             var newStep;
             newStep = event.currentTarget.attributes['data-step'].nodeValue;
             $('.step-screen').hide();
             $('#' + newStep + '-screen').show();
             return this.step = newStep;
-        };
-        return StepsView;
-    })();
+        }
+    });
     /*
      Shopping carts.
      */
@@ -1097,9 +1092,8 @@ openerp.point_of_sale = function(db) {
                 state: this.numpadState
             });
             this.numpadView.start();
-            return this.stepsView = new StepsView({
-                el: $('#steps')
-            });
+            this.stepsView = new StepsWidget(null, 'steps');
+            this.stepsView.start();
         };
         ShopView.prototype.events = {
             'click button#neworder-button': 'createNewOrder'
