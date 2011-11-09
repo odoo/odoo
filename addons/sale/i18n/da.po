@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-09-22 19:39+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-11-05 12:32+0000\n"
+"Last-Translator: OpenERP Danmark / Mikhael Saxtorph <Unknown>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-10-19 05:13+0000\n"
-"X-Generator: Launchpad (build 14157)\n"
+"X-Launchpad-Export-Date: 2011-11-06 05:23+0000\n"
+"X-Generator: Launchpad (build 14231)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -27,6 +27,7 @@ msgstr "Salg pr. sælger de sidste 90 dage"
 #: help:sale.installer,delivery:0
 msgid "Allows you to compute delivery costs on your quotations."
 msgstr ""
+"Gir dig mulighed for at beregne leveringsomkostninger på dine tilbud."
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -34,17 +35,19 @@ msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
 "accept partial shipments or not?"
 msgstr ""
+"Hvis du ikke har nok på lager til at levere alt på en gang, vil du så lave "
+"dellevering?"
 
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Leveringsaddresse for den aktuelle salgsordre"
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
 msgid "Quantity"
-msgstr ""
+msgstr "Antal"
 
 #. module: sale
 #: view:sale.report:0
@@ -56,23 +59,23 @@ msgstr "Dag"
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Annuler ordre"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sales Order Logistics"
-msgstr ""
+msgstr "Konfigurer kundeordrelogistik"
 
 #. module: sale
 #: code:addons/sale/sale.py:603
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr ""
+msgstr "Tilbuddets '%s' er konverteret til salgsordre."
 
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Payment Before Delivery"
-msgstr ""
+msgstr "Forudbetaling"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
@@ -93,7 +96,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
 msgid "All at Once"
-msgstr ""
+msgstr "Alt på en gang"
 
 #. module: sale
 #: field:sale.order,project_id:0
@@ -120,12 +123,12 @@ msgstr "Indkøbsordre"
 #: view:sale.report:0
 #: field:sale.report,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Kontakt"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Order Line"
-msgstr "Ordre linie"
+msgstr "Ordrelinie"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_form
@@ -138,6 +141,8 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Salgsordre hjælper dig med at håndtere tilbud og ordre til dine kunder. Vi "
+"foreslår at du begynder med et tilbud....."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -152,7 +157,7 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,payment_default_id:0
 msgid "Default Payment Term"
-msgstr ""
+msgstr "Standard betalingsbetinelser"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
@@ -165,12 +170,12 @@ msgstr ""
 #: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
-msgstr ""
+msgstr "Tilstand"
 
 #. module: sale
 #: report:sale.order:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Rabat (%)."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_forceassignation0
@@ -185,7 +190,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
 msgid "Ordered Quantities"
-msgstr ""
+msgstr "Ordret antal"
 
 #. module: sale
 #: view:sale.report:0
@@ -206,7 +211,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "Anden information"
 
 #. module: sale
 #: view:sale.order:0
@@ -246,7 +251,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Manager Dashboard"
-msgstr "Salgschefs oversigt"
+msgstr "Salgsstyring, overblik"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -261,13 +266,13 @@ msgstr ""
 #. module: sale
 #: field:sale.shop,name:0
 msgid "Shop Name"
-msgstr ""
+msgstr "Butiksnavn"
 
 #. module: sale
 #: code:addons/sale/sale.py:1014
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Kunde mangler!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
@@ -332,12 +337,12 @@ msgstr "Juni"
 #: code:addons/sale/sale.py:584
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Denne ordre kunne ikke annulléres"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr ""
+msgstr "Salgsordre statistik"
 
 #. module: sale
 #: help:sale.order,project_id:0
@@ -355,7 +360,7 @@ msgstr "Oktober"
 #: view:sale.order:0
 #: view:sale.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Tilbud"
 
 #. module: sale
 #: help:sale.order,pricelist_id:0

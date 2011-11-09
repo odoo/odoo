@@ -53,7 +53,7 @@ class procurement_order(osv.osv):
 
             procurement_obj = self.pool.get('procurement.order')
             if not ids:
-                ids = procurement_obj.search(cr, uid, [], order="date_planned")
+                ids = procurement_obj.search(cr, uid, [('state', '=', 'exception')], order="date_planned")
             for id in ids:
                 wf_service.trg_validate(uid, 'procurement.order', id, 'button_restart', cr)
             if use_new_cursor:
@@ -74,7 +74,7 @@ class procurement_order(osv.osv):
                     else:
                         offset += 1
                         report_later += 1
-                for proc in procurement_obj.browse(cr, uid, ids, context=context):
+
                     if proc.state == 'exception':
                         report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
@@ -97,12 +97,13 @@ class procurement_order(osv.osv):
                     else:
                         report_later += 1
                     report_total += 1
-                for proc in procurement_obj.browse(cr, uid, report_ids, context=context):
+
                     if proc.state == 'exception':
                         report.append(_('PROC %d: from stock - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name,))
                         report_except += 1
+
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)

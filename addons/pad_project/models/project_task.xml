@@ -1,0 +1,17 @@
+<openerp>
+    <data>
+        <record id="view_task_kanban_with_pad" model="ir.ui.view">
+            <field name="name">project.task.kanban.pad</field>
+            <field name="model">project.task</field>
+            <field name="type">kanban</field>
+            <field name="inherit_id" ref="project.view_task_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//a[@type='color']" position="after">
+                    <a name="pad_get" string="Pad" type="object">
+                        <img src="/pad/static/src/img/pad-icon.png" border="0" width="16" height="16"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
