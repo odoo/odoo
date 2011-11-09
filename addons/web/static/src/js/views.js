@@ -441,9 +441,13 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
             }
         }
 
-        var log_view = this.$element.find('.oe-view-manager-logs:first');
-        log_view.delegate('a.oe-more-logs', 'click', function () {
-            log_view.removeClass('oe-folded');
+        var $res_logs = this.$element.find('.oe-view-manager-logs:first');
+        $res_logs.delegate('a.oe-more-logs', 'click', function () {
+            $res_logs.removeClass('oe-folded');
+            return false;
+        }).delegate('a.oe-remove-everything', 'click', function () {
+            $res_logs.removeClass('oe-has-more')
+                     .find('ul').empty();
             return false;
         });
 

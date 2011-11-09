@@ -1084,6 +1084,8 @@ label.error {
     margin: 0.25em 0;
     font-size: 85%;
     color: #4C4C4C;
+    position: relative;
+    overflow: hidden;
 }
 .openerp .oe-view-manager-logs ul {
     margin: 0;
@@ -1108,6 +1110,12 @@ label.error {
 }
 .openerp .oe-view-manager-logs.oe-folded.oe-has-more a.oe-more-logs {
     display: block;
+}
+.openerp .oe-view-manager-logs a.oe-remove-everything {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
 }
 
 .openerp .view-manager-main-sidebar {
