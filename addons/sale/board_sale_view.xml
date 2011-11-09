@@ -103,19 +103,19 @@
                     <hpaned position="100">
                         <child1>
                             <action
-                name="%(action_quotation_for_sale)d"
-                string="My Quotations"
-                height="150"
-                width="510"
-                groups="base.group_sale_salesman,base.group_sale_manager,account.group_account_user,stock.group_stock_user"/>
+                                name="%(action_quotation_for_sale)d"
+                                string="My Quotations"
+                                height="150"
+                                width="510"
+                                groups="base.group_sale_salesman,base.group_sale_manager,account.group_account_user,stock.group_stock_user"/>
                         </child1>
-            <child2>
-                <action
-                string="Monthly Turnover"
-                name="%(action_turnover_by_month)d"
-                groups="base.group_sale_salesman,account.group_account_manager"
-                colspan="4"/>
-            </child2>
+                        <child2>
+                            <action
+                                string="Monthly Turnover"
+                                name="%(action_turnover_by_month)d"
+                                groups="base.group_sale_salesman,account.group_account_manager"
+                                colspan="4"/>
+                        </child2>
                     </hpaned>
                 </form>
             </field>
@@ -128,7 +128,6 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_form"/>
         </record>
-        <menuitem action="open_board_sales" icon="terp-graph" id="menu_board_sales" parent="board.menu_dasboard" sequence="0" groups="base.group_sale_manager"/>
 
     </data>
 </openerp>
