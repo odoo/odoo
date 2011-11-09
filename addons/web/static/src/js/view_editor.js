@@ -679,7 +679,7 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         if (!this.dirty) {
             return false;
         }
-        var value = this.$element.find("select[id=" + this.name + "]").find("option:selected").val();
+        var value = this.$element.find("select[id=" + this.name + "]").val();
         return  value ? [this.name, value] : [this.name, ""];
     }
 });
@@ -732,8 +732,18 @@ openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.ext
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
     set_value: function(value, view_val) {
+        var self = this;
         this.$element.find("select[id="+ this.name +"]").attr('multiple', true).css('height','100px');
-        this._super.apply(this,[value, view_val]);
+        var selected_val, sel_val;
+        view_val ? selected_val=view_val[1].split(',') : selected_val = null;
+        _.each(value, function(item) {
+            _.include(selected_val,item[0])?sel_val=true:sel_val=false;
+            self.$element.find("select[id="+self.name+"]").append($("<option/>", {
+                value : item[0],
+                text : item[1],
+                selected:sel_val
+            }));
+         });
     }
 });
 var _PROPERTIES = {
