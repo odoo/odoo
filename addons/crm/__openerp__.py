@@ -87,7 +87,6 @@ Creates a dashboard for CRM that includes:
         'wizard/crm_add_note_view.xml',
         'wizard/crm_merge_opportunities_view.xml',
 
-        'board_crm_view.xml',
         'crm_view.xml',
 
         'crm_action_rule_view.xml',
@@ -109,6 +108,7 @@ Creates a dashboard for CRM that includes:
 
         'res_partner_view.xml',
         'board_crm_statistical_view.xml',
+        'board_crm_view.xml',
 
     ],
     'demo_xml': [
