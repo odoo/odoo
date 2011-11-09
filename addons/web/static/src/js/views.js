@@ -742,11 +742,6 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         this._super();
         $.when(this.languages_loaded).then(function() {
             self.$element.html(session.web.qweb.render('TranslateDialog', { widget: self }));
-            self.$element.tabs();
-            if (!(self.view.translatable_fields && self.view.translatable_fields.length)) {
-                self.hide_tabs('fields');
-                self.select_tab('view');
-            }
             self.$fields_form = self.$element.find('.oe_translation_form');
             self.$fields_form.find('.oe_trad_field').change(function() {
                 $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
@@ -789,21 +784,6 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         });
         $.when.apply(null, deffered).then(callback);
     },
-    show_tabs: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().show();
-        }
-    },
-    hide_tabs: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().hide();
-        }
-    },
-    select_tab: function(name) {
-        this.show_tabs(name);
-        var index = this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().index() - 1;
-        this.$element.tabs('select', index);
-    },
     open: function(field) {
         var self = this,
             sup = this._super;
@@ -812,7 +792,9 @@ session.web.TranslateDialog = session.web.Dialog.extend({
                 self.do_load_fields_values(function() {
                     sup.call(self);
                     if (field) {
-                        // TODO: focus and scroll to field
+                        var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
+                        self.$element.scrollTo($field_input);
+                        $field_input.focus();
                     }
                 });
             } else {
