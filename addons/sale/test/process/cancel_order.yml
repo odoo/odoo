@@ -14,6 +14,14 @@
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref("order"))
     self.pool.get('stock.picking').action_cancel(cr, uid, [picking.id for picking in  order.picking_ids])
+    self.action_ship_end(cr, uid, [ref('order')]) 
+-
+  I try to cancel the invoice.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("order4"))
+    self.action_invoice_cancel(cr, uid, [ref("order4")], context)
+    self.action_invoice_end(cr, uid, [ref('order4')], context)
 -
   I check order status in "Shipping Exception" and related picking is in cancel state.
 -
@@ -58,3 +66,10 @@
 -
   !python {model: sale.order}: |
     self.action_cancel_draft(cr, uid, [ref("order")]) 
+
+-
+  I cancel sale order line.
+-
+  !python {model: sale.order.line}: |
+    self.button_done(cr, uid, [ref('line')])
+    self.button_cancel(cr, uid, [ref('line')])

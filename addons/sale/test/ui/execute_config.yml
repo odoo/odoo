@@ -1,0 +1,16 @@
+-
+  In order to test the configuration Methods.
+-
+  !record {model: sale.config.picking_policy, id: sale.config.picking_policy_0}:
+    sale_orders: True 
+    deli_orders: True
+    task_work: True
+    timesheet: True
+    order_policy: 'manual'
+    charge_delivery: False
+-
+  I Execute that wizard of configuration.
+-
+  !python {model: sale.config.picking_policy}: |
+    self.execute(cr, uid, [ref("sale.config.picking_policy_0")])    
+        
