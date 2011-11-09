@@ -116,7 +116,7 @@
 </div>
 </t>
 <t t-name="Edi.sale.order.sidebar">
-    <t t-if="!doc.order_policy || doc.order_policy == 'prepaid'">
+    <t t-if="doc.order_policy &amp;&amp; (doc.order_policy == 'prepaid' || doc.order_policy == 'manual')">
         <t t-if="doc.company_address.paypal_account || doc.company_address.bank_ids">
             <p class="oe_edi_sidebar_title">Pay Online</p>
             <t t-if="doc.company_address.paypal_account">

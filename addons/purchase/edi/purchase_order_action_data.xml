@@ -46,7 +46,7 @@
 
     <p>Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},</p>
     
-    <p>An order from ${object.company_id.name} for ${object.partner_id.name} has just been validated: </p>
+    <p>Here is a purchase order confirmation from ${object.company_id.name}: </p>
     
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
@@ -109,7 +109,7 @@
             <field name="body_text"><![CDATA[
 Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},
 
-An order from ${object.company_id.name} for ${object.partner_id.name} has just been validated:
+Here is a purchase order confirmation from ${object.company_id.name}:
        | Order number: *${object.name}*
        | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
        | Order date: ${object.date_order}
