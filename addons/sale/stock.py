@@ -136,10 +136,13 @@ class stock_picking(osv.osv):
 
         for picking in picking_obj.browse(cursor, user, picking_ids,
                 context=context):
-            if not picking.sale_id:
-                continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
+            if not picking.sale_id:
+                continue
+            else:
+                invoice_obj.write(cursor, user, [invoice_created.id], {'user_id': picking.sale_id and picking.sale_id.user_id and picking.sale_id.user_id.id or False}, context=context)
+
             for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
                 if not inv.fiscal_position:
                     invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
