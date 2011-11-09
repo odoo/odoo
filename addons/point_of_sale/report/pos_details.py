@@ -69,11 +69,13 @@ class pos_details(report_sxw.rml_parse):
         return qty[0] or 0.00
 
     def _get_sales_total_2(self, form):
+        user_ids = form['user_ids'] or self._get_all_users()
         self.cr.execute("select sum((pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0))) as Total " \
                         "from  pos_order_line as pol, pos_order po, product_product as pp,product_template as pt " \
-                        " where po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= '%s' " \
-                        " and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= '%s' and po.state IN ('paid','invoiced','done') " \
-                        " and pt.id=pp.product_tmpl_id and pol.product_id=pp.id"% (form['date_start'],form['date_end']))
+                        " where po.id=pol.order_id and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  >= %s " \
+                        " and  to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date  <= %s and po.state IN ('paid','invoiced','done') " \
+                        " and pt.id=pp.product_tmpl_id and pol.product_id=pp.id and po.user_id in %s"\
+                        , (form['date_start'], form['date_end'], tuple(user_ids)))
         res2=self.cr.fetchone()
         return res2 and res2[0] or 0.0
 
