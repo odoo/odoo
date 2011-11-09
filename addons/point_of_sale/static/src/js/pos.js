@@ -163,7 +163,7 @@ openerp.point_of_sale = function(db) {
     var pos;
 
     var App, CashRegister, CashRegisterCollection, Category, CategoryCollection, CategoryView,
-    NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderView, Orderline,
+    NumpadState, NumpadWidget, Order, OrderButtonView, OrderCollection, OrderWidget, Orderline,
     OrderlineCollection, OrderlineWidget, PaymentButtonWidget, PaymentView, Paymentline,
     PaymentlineCollection, PaymentlineView, PaypadWidget, Product, ProductCollection,
     ProductListView, ProductView, ReceiptLineView, ReceiptView, Shop, ShopView, StepsWidget;
@@ -665,51 +665,47 @@ openerp.point_of_sale = function(db) {
             return this.order.selected = this.model;
         },
     });
-    OrderView = (function() {
-        __extends(OrderView, Backbone.View);
-        function OrderView() {
-            OrderView.__super__.constructor.apply(this, arguments);
-        }
-
-        OrderView.prototype.initialize = function(options) {
+    OrderWidget = db.web.Widget.extend({
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
             this.shop = options.shop;
             this.numpadState = options.numpadState;
             this.shop.bind('change:selectedOrder', this.changeSelectedOrder, this);
-            return this.bindOrderLineEvents();
-        };
-        OrderView.prototype.changeSelectedOrder = function() {
+            this.bindOrderLineEvents();
+        },
+        changeSelectedOrder: function() {
             this.currentOrderLines.unbind();
             this.bindOrderLineEvents();
-            return this.render();
-        };
-        OrderView.prototype.bindOrderLineEvents = function() {
+            return this.render_element();
+        },
+        bindOrderLineEvents: function() {
             this.currentOrderLines = (this.shop.get('selectedOrder')).get('orderLines');
             this.currentOrderLines.bind('add', this.addLine, this);
-            this.currentOrderLines.bind('change', this.render, this);
+            this.currentOrderLines.bind('change', this.render_element, this);
             return this.currentOrderLines.bind('remove', this.render, this);
-        };
-        OrderView.prototype.addLine = function(newLine) {
+        },
+        addLine: function(newLine) {
             var line = new OrderlineWidget(null, null, {
                     model: newLine,
                     order: this.shop.get('selectedOrder'),
                     numpadState: this.numpadState
             });
-            line.appendTo($(this.el));
+            line.appendTo(this.$element);
             return this.updateSummary();
-        };
-        OrderView.prototype.render = function() {
-            $(this.el).empty();
+        },
+        render_element: function() {
+            this.$element.empty();
             this.currentOrderLines.each(__bind( function(orderLine) {
                 var line = new OrderlineWidget(null, null, {
                         model: orderLine,
                         order: this.shop.get('selectedOrder'),
                         numpadState: this.numpadState
                 });
-                line.appendTo($(this.el));
+                line.appendTo(this.$element);
             }, this));
             return this.updateSummary();
-        };
-        OrderView.prototype.updateSummary = function() {
+        },
+        updateSummary: function() {
             var currentOrder, tax, total, totalTaxExcluded;
             currentOrder = this.shop.get('selectedOrder');
             total = currentOrder.getTotal();
@@ -718,9 +714,8 @@ openerp.point_of_sale = function(db) {
             $('#subtotal').html(totalTaxExcluded.toFixed(2)).hide().fadeIn();
             $('#tax').html(tax.toFixed(2)).hide().fadeIn();
             return $('#total').html(total.toFixed(2)).hide().fadeIn();
-        };
-        return OrderView;
-    })();
+        },
+    });
     /*
      "Products" step.
      */
@@ -1073,11 +1068,11 @@ openerp.point_of_sale = function(db) {
             });
             this.paypadView.render_element();
             this.paypadView.start();
-            this.orderView = new OrderView({
+            this.orderView = new OrderWidget(null, 'current-order-content', {
                 shop: this.shop,
-                numpadState: this.numpadState,
-                el: $('#current-order-content')
+                numpadState: this.numpadState
             });
+            this.orderView.start();
             this.paymentView = new PaymentView({
                 shop: this.shop,
                 el: $('#payment-screen')
