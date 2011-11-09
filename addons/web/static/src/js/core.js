@@ -793,6 +793,11 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     identifier_prefix: 'generic-identifier-',
     /**
+     * Tag name when creating a default $element.
+     * @type string
+     */
+    tag_name: 'div',
+    /**
      * Construct the widget and set its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
@@ -814,7 +819,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : undefined;
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
 
         this.widget_parent = parent;
         this.widget_children = [];
