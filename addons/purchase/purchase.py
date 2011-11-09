@@ -436,6 +436,7 @@ class purchase_order(osv.osv):
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
                 'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
+                'date': order.date_order,
                 'type': 'in',
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
