@@ -349,7 +349,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     init: function(server) {
         this._super();
         var hostname = _('%s//%s').sprintf(location.protocol, location.host);
-        this.server = (server == undefined) ? hostname : server;
+        this.server = _.rtrim((server == undefined) ? hostname : server, '/');
         this.rpc_mode = (this.server == hostname) ? "oe-json" : "oe-jsonp";
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
         this.session_id = false;
@@ -370,6 +370,29 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     start: function() {
         this.session_restore();
     },
+
+    get_absolute_url: function(path) {
+        var r_has_protocol = /^https?:\/\//,
+            r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
+
+        
+        if (r_has_protocol.test(path)) {
+            if (!_(path).startsWith(this.server + '/')) {
+                $.error('can only contact openerp.server');
+            }
+            absolute_url = path;
+        } else if (r_absolute_internal.test(path)) {
+            absolute_url = this.server + path;
+        } else {    // relative url
+            // XXX is it correct to mix document.location and this.server ??
+            var parts = document.location.pathname.split('/');
+            parts.pop();
+            parts.push(path);
+            absolute_url = this.server + parts.join('/');
+        }
+        return absolute_url
+    },
+
     /**
      * Executes an RPC call, registering the provided callbacks.
      *
@@ -574,11 +597,11 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                     self.user_context.lang.replace("_", "-") + ".js"
                 ];
 
+                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
                 self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
                 self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
                     self.do_load_js(file_list.concat(files));
                 });
-                self.rpc('/web/webclient/qweblist', {"mods": modules}, self.do_load_qweb);
                 openerp._modules_loaded = true;
             });
         });
@@ -587,7 +610,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file,
+                'href': self.get_absolute_url(file),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -599,7 +622,7 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file;
+            tag.src = self.get_absolute_url(file);
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
@@ -615,7 +638,23 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
     do_load_qweb: function(files) {
         var self = this;
         _.each(files, function(file) {
-            openerp.web.qweb.add_template(file);
+            self.rpc({
+                //url: self.get_absolute_url(file),
+                url: '/web/jsonp/static_proxy',
+                async: false,
+                //dataType: 'text',
+
+            },
+            {
+                path: file,
+            }, 
+            function(xml) {
+            //function(result) {
+            //    console.log('do_load_qweb', result);
+            //    var xml = result.result;
+            //}).then(function(xml) {
+                openerp.web.qweb.add_template(_(xml).trim());
+            });
         });
     },
     on_modules_loaded: function() {

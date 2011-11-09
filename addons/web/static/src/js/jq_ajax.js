@@ -9,16 +9,11 @@
 
         // common preconditions checks
         $.ajaxPrefilter("oe-json oe-jsonp", function(options, originalOptions, jqXHR) {
-            console.log('use', options.dataType);
             if (!$.isPlainObject(options.openerp)) {
                 console.error(options.openerp);
                 $.error('"openerp" option is required.');
             }
             
-            if (_(options.openerp.server).endsWith('/')) {
-                options.openerp.server = options.openerp.server.substr(0, options.openerp.server.length-1);
-            }
-
             if (!$.isPlainObject(options.data)) {
                 $.error('data must not be serialized');
             }
@@ -49,9 +44,10 @@
             }
 
 
+            
                 var max_url_length = options.max_url_length || 1000,
                     absolute_url, full_url;
-                 
+            /*     
                 var r_has_protocol = /^https?:\/\//,
                     r_absolute_internal = /^\/[^\/]/;   // starts with / (but not //)
 
@@ -69,7 +65,9 @@
                     parts.push(options.url);
                     absolute_url = options.openerp.server + parts.join('/');
                 }
-                
+            // */
+
+            var absolute_url = options.openerp.get_absolute_url(options.url);
 
                 /// now, made the same url changes that jQuery will do...
 	            var rquery = /\?/,
@@ -89,9 +87,6 @@
                     // if nothing was replaced, add timestamp to the end
                     full_url = ret + ((ret === full_url) ? (rquery.test(full_url) ? "&" : "?") + "_=" + ts : "");
                 }
-
-                console.log('absolute_url', absolute_url);
-                console.log('full_url', full_url);
                 
                 options.url = absolute_url;
 
@@ -105,7 +100,6 @@
 
         $.ajaxTransport("oe-jsonp", function(options, originalOptions, jqXHR) {
 
-            console.log('real oe-jsonp', options);
                 var $iframe = null;
                 var $form = $('<form>')
                                 .attr('method', 'POST')
@@ -115,8 +109,6 @@
                                 .appendTo($('body'))
                                 ;
 
-                console.log($form);
-                
                 function cleanUp() {
                     if ($iframe) {
                         $iframe.unbind("load").attr("src", "javascript:false;").remove();
@@ -142,11 +134,8 @@
 
                         // the first bind is fired up when the iframe is added to the DOM
                         $iframe.bind('load', function() {
-                            //console.log('bind1', this);
                             // the second bind is fired up when the result of the form submission is received
                             $iframe.unbind('load').bind('load', function() {
-                                //console.log('bind2', this);
-                                
                                 // we cannot access the content of remote iframe.
                                 // but we don't care, we try to get the result in any cases
 

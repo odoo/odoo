@@ -9,6 +9,7 @@ import logging
 import urllib
 import os
 import pprint
+import re
 import sys
 import traceback
 import uuid
@@ -436,6 +437,19 @@ class JSONP(Controller):
         response = werkzeug.wrappers.Response(request_id, headers=headers)
         return response
 
+    @jsonrequest
+    def static_proxy(self, req, path):
+        #req.config.socket_port
+        
+
+        #if not re.match('^/[^/]+/static/.*', path):
+        #    return werkzeug.exceptions.BadRequest()
+
+        env = req.httprequest.environ
+        port = env['SERVER_PORT']
+
+        o = urllib.urlopen('http://127.0.0.1:%s%s' % (port, path))
+        return o.read()
 
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
