@@ -887,7 +887,8 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     render_element: function() {
         var rendered = this.render();
-        this.$element = $(rendered);
+        if (rendered || rendered === "")
+            this.$element = $(rendered);
         return this;
     },
     /**
@@ -899,7 +900,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     render: function (additional) {
         if (this.template)
             return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return $("<div></div>").append(document.createElement(this.tagName)).html();
+        return false;
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
