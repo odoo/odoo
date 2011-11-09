@@ -29,11 +29,11 @@ class mrp_subproduct(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Qty', required=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
-        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True),
+        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True, help="Production Type of Product"),
         'bom_id': fields.many2one('mrp.bom', 'BoM'),
     }
     _defaults={
-        'subproduct_type': lambda *args: 'fixed'
+        'subproduct_type': lambda *args: 'variable'
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
