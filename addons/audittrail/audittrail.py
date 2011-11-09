@@ -206,21 +206,16 @@ class audittrail_objects_proxy(object_proxy):
         model_pool = pool.get('ir.model')
         field_pool = pool.get('ir.model.fields')
         log_line_pool = pool.get('audittrail.log.line')
-        line_id = False
         for line in lines:
             field_obj = obj_pool._all_columns.get(line['name'])
             assert field_obj, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
             field_obj = field_obj.column
             old_value = line.get('old_value', '')
             new_value = line.get('new_value', '')
-            old_value_text = line.get('old_value_text', '')
-            new_value_text = line.get('new_value_text', '')
             search_models = [model.id]
             if obj_pool._inherits:
                 search_models += model_pool.search(cr, uid, [('model', 'in', obj_pool._inherits.keys())])
             field_id = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', search_models)])
-            if old_value_text == new_value_text:
-                continue
             if field_obj._type == 'many2one':
                 old_value = old_value and old_value[0] or old_value
                 new_value = new_value and new_value[0] or new_value
@@ -229,13 +224,11 @@ class audittrail_objects_proxy(object_proxy):
                     "field_id": field_id and field_id[0] or False,
                     "old_value": old_value,
                     "new_value": new_value,
-                    "old_value_text": old_value_text,
-                    "new_value_text": new_value_text,
+                    "old_value_text": line.get('old_value_text', ''),
+                    "new_value_text": line.get('new_value_text', ''),
                     "field_description": field_obj.string
                     }
             line_id = log_line_pool.create(cr, uid, vals)
-        if not line_id:  
-            pool.get('audittrail.log').unlink(cr, uid, log_id)
         return True
    
     def start_log_process(self, cr, user_id, model, method, resource_data, pool, resource_pool):
@@ -358,7 +351,8 @@ class audittrail_objects_proxy(object_proxy):
                     for resource in resource_data:
                         resource_id = resource['id']
                         vals.update({'res_id': resource_id})
-                        log_id = log_pool.create(cr, uid, vals)
+                        if resource_id not in dict_to_use:
+                            vals.update({'method': 'create'})
                         lines = []
                         for field in resource.keys():
                             if field in ('__last_update', 'id'):continue
@@ -378,8 +372,11 @@ class audittrail_objects_proxy(object_proxy):
                                   'new_value_text': ret_val and ret_val or resource[field],
                                   'old_value_text': resource_id in dict_to_use and dict_to_use[resource_id]['text'].get(field)
                                   }
-                            lines.append(line)
-                        self.create_log_line(cr, uid, log_id, model, lines)
+                            if line.get('new_value_text') != line.get('old_value_text'):
+                                lines.append(line)
+                        if lines:
+                            log_id = log_pool.create(cr, uid, vals)
+                            self.create_log_line(cr, uid, log_id, model, lines)
                     return True
                 inline_process_new_data(res_ids, model, old_values)
             return res
