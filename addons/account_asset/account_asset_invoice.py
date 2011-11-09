@@ -51,6 +51,8 @@ class account_invoice_line(osv.osv):
                     'company_id': line.invoice_id.company_id.id,
                     'currency_id': line.invoice_id.currency_id.id,
                 }
+                changed_vals = asset_obj.onchange_category_id(cr, uid, [], vals['category_id'], context=context)
+                vals.update(changed_vals['value'])
                 asset_id = asset_obj.create(cr, uid, vals, context=context)
                 if line.asset_category_id.open_asset:
                     asset_obj.validate(cr, uid, [asset_id], context=context)
