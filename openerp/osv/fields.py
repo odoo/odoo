@@ -1385,6 +1385,9 @@ def field_to_dict(model, cr, user, field, context=None):
         res['domain'] = field._domain
         res['context'] = field._context
 
+    if isinstance(field, one2many):
+        res['relation_field'] = field._fields_id
+
     return res
 
 
