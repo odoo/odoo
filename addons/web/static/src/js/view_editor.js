@@ -625,9 +625,8 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         });
     },
     set_value: function(value,view_val) {
-        console.log("self.edit_widget.push(type_widget);:::::::",view_val, view);
         if (view_val) {
-            this.$element.find("input[id=" + self.name+ "]").attr('checked', view_val[1]);
+            this.$element.find("input[id=" + this.name+ "]").attr('checked', view_val[1]);
         }
     },
     get_value: function() {
