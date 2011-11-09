@@ -625,8 +625,8 @@ session.web.Sidebar = session.web.Widget.extend({
         var $section = this.sections[code];
 
         if(!$section) {
-            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
-            var $section = $(session.web.qweb.render("Sidebar.section", {
+            var section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
+            $section = $(session.web.qweb.render("Sidebar.section", {
                 section_id: section_id,
                 name: name,
                 classname: 'oe_sidebar_' + code
