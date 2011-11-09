@@ -86,10 +86,10 @@ Dashboard for Sales Manager that includes:
     ],
     'demo_xml': ['sale_demo.xml'],
     'test': [
-        'test/ui/configuration_method.yml',
+        'test/ui/execute_config.yml',
         'test/process/order_policy.yml',
+        'test/process/get_picking_details.yml',
         'test/process/cancel_order.yml',
-        #'test/so_make_line_invoice.yml',
         #'test/sale_procurement.yml',
         'test/ui/onchage_events.yml',
         'test/ui/sale_make_invoice.yml',
