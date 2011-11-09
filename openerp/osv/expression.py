@@ -69,7 +69,7 @@ and you would be tempted to believe something like this would be possible:
   ['!', ['=', 'company_id.name', ['&', ..., ...]]]
 
 That is, a domain could be a valid operand. But this is not the case. A domain
-is really limited to a two-level nature, and can not takes a recursive form: a
+is really limited to a two-level nature, and can not take a recursive form: a
 domain is not a valid second-level operand.
 
 Unaccent - Accent-insensitive search
