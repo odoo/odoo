@@ -65,6 +65,11 @@ openerp.web = function(instance) {
             openerp.web[files[i]](instance);
         }
     }
+    instance.log = function() {
+        if (instance.connection.debug && window.console) {
+            console.log.apply(console, arguments);
+        }
+    }
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
