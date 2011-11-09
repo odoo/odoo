@@ -417,9 +417,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     do_save_update_arch: function(one_object, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, move_direct, update_values) {
         var self = this;
         var arch = _.detect(one_object['arch'], function(element) {return element.view_id == view_id;});
-        console.log(arch);
         var obj = self.get_object_by_id(view_xml_id, one_object['main_object'], []);
-        console.log(obj);
          //for finding xpath tag from inherit view
         var xml_arch = QWeb.load_xml(arch.arch);
         if (xml_arch.childNodes[0].tagName == "data") {
