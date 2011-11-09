@@ -536,10 +536,10 @@ openerp.point_of_sale = function(db) {
             this.state = options.state;
         },
         start: function() {
-            this.$element.find('button#numpad-backspace').click(__bind(this.clickDeleteLastChar, this));
-            this.$element.find('button#numpad-minus').click(__bind(this.clickSwitchSign, this));
-            this.$element.find('button.number-char').click(__bind(this.clickAppendNewChar, this));
-            this.$element.find('button.mode-button').click(__bind(this.clickChangeMode, this));
+            this.$element.find('button#numpad-backspace').click(_.bind(this.clickDeleteLastChar, this));
+            this.$element.find('button#numpad-minus').click(_.bind(this.clickSwitchSign, this));
+            this.$element.find('button.number-char').click(_.bind(this.clickAppendNewChar, this));
+            this.$element.find('button.mode-button').click(_.bind(this.clickChangeMode, this));
         },
         clickDeleteLastChar: function() {
             return this.state.deleteLastChar();
@@ -563,19 +563,15 @@ openerp.point_of_sale = function(db) {
     /*
      Gives access to the payment methods (aka. 'cash registers')
      */
-    PaypadView = (function() {
-        __extends(PaypadView, Backbone.View);
-        function PaypadView() {
-            PaypadView.__super__.constructor.apply(this, arguments);
-        }
-
-        PaypadView.prototype.initialize = function(options) {
-            return this.shop = options.shop;
-        };
-        PaypadView.prototype.events = {
-            'click button': 'performPayment'
-        };
-        PaypadView.prototype.performPayment = function(event) {
+    PaypadWidget = db.web.Widget.extend({
+        init: function(parent, element_id, options) {
+            this._super(parent, element_id);
+            this.shop = options.shop;
+        },
+        start: function() {
+            this.$element.find('button').click(_.bind(this.performPayment, this));
+        },
+        performPayment: function(event) {
             var cashRegister, cashRegisterCollection, cashRegisterId;
             /* set correct view */
             $('.step-screen').hide();
@@ -587,17 +583,16 @@ openerp.point_of_sale = function(db) {
                 return (item.get('id')) === parseInt(cashRegisterId, 10);
             }, this));
             return (this.shop.get('selectedOrder')).addPaymentLine(cashRegister);
-        };
-        PaypadView.prototype.render = function() {
-            $(this.el).empty();
+        },
+        display: function() {
+            this.$element.empty();
             return (this.shop.get('cashRegisters')).each(__bind( function(cashRegister) {
-                return $(this.el).append((new PaymentButtonView({
+                return this.$element.append((new PaymentButtonView({
                         model: cashRegister
                     })).render());
             }, this));
-        };
-        return PaypadView;
-    })();
+        }
+    });
     PaymentButtonView = (function() {
         __extends(PaymentButtonView, Backbone.View);
         function PaymentButtonView() {
@@ -1085,11 +1080,11 @@ openerp.point_of_sale = function(db) {
             this.productListView = new ProductListView({
                 shop: this.shop
             });
-            this.paypadView = new PaypadView({
-                shop: this.shop,
-                el: $('#paypad')
+            this.paypadView = new PaypadWidget(null, 'paypad', {
+                shop: this.shop
             });
-            this.paypadView.render();
+            this.paypadView.display();
+            this.paypadView.start();
             this.orderView = new OrderView({
                 shop: this.shop,
                 numpadState: this.numpadState,
