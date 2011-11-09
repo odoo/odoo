@@ -564,36 +564,38 @@ session.web.Sidebar = session.web.Widget.extend({
     },
 
     add_default_sections: function() {
-        this.add_section(_t('Customize'), 'customize');
-        this.add_items('customize', [
-            {
-                label: _t("Manage Views"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object")
-            }, {
-                label: _t("Edit Workflow"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object"),
-                classname: 'oe_hide oe_sidebar_edit_workflow'
-            }, {
-                label: _t("Customize Object"),
-                callback: this.call_default_on_sidebar,
-                title: _t("Manage views of the current object")
-            }
-        ]);
+        if (this.session.uid === 1) {
+            this.add_section(_t('Customize'), 'customize');
+            this.add_items('customize', [
+                {
+                    label: _t("Manage Views"),
+                    callback: this.call_default_on_sidebar,
+                    title: _t("Manage views of the current object")
+                }, {
+                    label: _t("Edit Workflow"),
+                    callback: this.call_default_on_sidebar,
+                    title: _t("Manage views of the current object"),
+                    classname: 'oe_hide oe_sidebar_edit_workflow'
+                }, {
+                    label: _t("Customize Object"),
+                    callback: this.call_default_on_sidebar,
+                    title: _t("Manage views of the current object")
+                }, {
+                    label: _t("Translate"),
+                    callback: this.call_default_on_sidebar,
+                    title: _t("Technical translation")
+                }
+            ]);
+        }
 
         this.add_section(_t('Other Options'), 'other');
-        this.add_items('other', [ 
+        this.add_items('other', [
             {
                 label: _t("Import"),
                 callback: this.call_default_on_sidebar
             }, {
                 label: _t("Export"),
                 callback: this.call_default_on_sidebar
-            }, {
-                label: _t("Translate"),
-                callback: this.call_default_on_sidebar,
-                classname: 'oe_sidebar_translate oe_hide'
             }, {
                 label: _t("View Log"),
                 callback: this.call_default_on_sidebar,
@@ -619,7 +621,7 @@ session.web.Sidebar = session.web.Widget.extend({
             }
         });
     },
-    
+
     add_section: function(name, code) {
         if(!code) code = _.underscored(name);
         var $section = this.sections[code];
@@ -963,7 +965,15 @@ session.web.View = session.web.Widget.extend(/** @lends session.web.View# */{
         export_view.start();
     },
     on_sidebar_translate: function() {
-        this.open_translate_dialog();
+        return this.do_action({
+            res_model : 'ir.translation',
+            domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
+            views: [[false, 'list'], [false, 'form']],
+            type : 'ir.actions.act_window',
+            auto_search : true,
+            view_type : "list",
+            view_mode : "list"
+        });
     },
     on_sidebar_view_log: function() {
     }
