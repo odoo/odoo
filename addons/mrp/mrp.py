@@ -679,11 +679,29 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 res = False
         return res
-    
-    def rest_qty_compute(self, cr, uid, production_id, move_id=None, context=None):
+
+    def _get_quantity_to_produce(self, cr, uid, production_id, move_id=None, context=None):       
+
+        """ Compute Production Qty of product.This method will be overwritten by mrp_subproduct.
+        @return: Dictionary of values.
+        """
+        if context is None:
+            context = {}
+            
         production_obj = self.pool.get('mrp.production')
-        production_browse = prod_obj.browse(cr, uid, production_id, context)
-        return {'product_qty': production_browse.product_qty, 'sub_qty': 1}
+        production_browse = production_obj.browse(cr, uid, production_id, context)
+        if context.get('product_qty',False):
+            product_qty = context['product_qty']
+            sub_qty = context['sub_qty']
+        else:
+            product_qty = production_browse.product_qty 
+            sub_qty = 1
+        res = {'product_qty': product_qty, 'sub_qty': sub_qty}
+        return res
+    
+    
+    
+    
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
@@ -752,7 +770,7 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                get_qty = self.rest_qty_compute(cr, uid, production.id, produce_product.id)
+                get_qty = self._get_quantity_to_produce(cr, uid, production.id, produce_product.id, context)
                 rest_qty = get_qty['product_qty'] - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty

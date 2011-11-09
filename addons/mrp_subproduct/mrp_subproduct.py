@@ -97,7 +97,14 @@ class mrp_production(osv.osv):
                 self.pool.get('stock.move').create(cr, uid, data)
         return picking_id
 
-    def rest_qty_compute(self, cr, uid, production_id, move_id=None, context=None):
+    def _get_quantity_to_produce(self, cr, uid, production_id, move_id=None, context=None):
+        
+        """ Compute Production Qty of product.This method is overwrite of mrp_production.
+        @return: Dictionary of values.
+        """
+        if context is None:
+            context = {}       
+        
         sub_obj = self.pool.get('mrp.subproduct')
         move_obj = self.pool.get('stock.move')
         production_obj = self.pool.get('mrp.production')
@@ -106,8 +113,11 @@ class mrp_production(osv.osv):
         sub_qty = 1
         sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_browse.product_id.id),('bom_id', '=', production_browse.bom_id.id)] )
         if sub_id:
-            sub_qty = sub_obj.browse(cr ,uid, sub_id[0]).product_qty
-        return {'product_qty': production_browse.product_qty * sub_qty, 'sub_qty': sub_qty}
+            sub_qty = sub_obj.browse(cr ,uid, sub_id[0], context).product_qty
+        context ['product_qty'] = production_browse.product_qty * sub_qty
+        context ['sub_qty'] = sub_qty
+        return super(mrp_production, self)._get_quantity_to_produce(cr, uid, production_id, move_id, context=context)
+
 
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
