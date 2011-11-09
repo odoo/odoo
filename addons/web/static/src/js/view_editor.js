@@ -121,8 +121,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.append_child_object(main_object, parent_id, child_obj_list);
         var obj_xml_list = _.zip(xml_Node,child_obj_list);
         _.each(obj_xml_list, function(node){
-            if(node[0].children.length != 0){
-            self.convert_arch_to_obj(node[0].children, main_object, node[1].id);}
+            var children = _.filter(node[0].childNodes, function (child) {
+                return child.nodeType == 1;
+            });
+            if(children){
+            self.convert_arch_to_obj(children, main_object, node[1].id);}
         });
         return main_object;
     },
@@ -172,9 +175,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var self = this;
         var xml_list = [];
         var xml_arch = QWeb.load_xml(result.arch);
-        (xml_arch.childNodes[0].tagName == "data")
-            ? xml_list = xml_arch.childNodes[0].children 
-                : xml_list.push(xml_arch.childNodes[0]);
+        if(xml_arch.childNodes[0].tagName == "data"){
+            xml_list = _.filter(xml_arch.childNodes[0].childNodes, function (child) {
+                            return child.nodeType == 1;
+                        });
+        }else{ xml_list.push( xml_arch.childNodes[0] ); }
+
         _.each(xml_list, function(xml) {
             var expr_to_list = [];
             var xpath_arch_object = self.parse_xml(QWeb.tools.xml_node_to_string(xml), result.id);
@@ -422,7 +428,10 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var xml_arch = QWeb.load_xml(arch.arch);
         if (xml_arch.childNodes[0].tagName == "data") {
             var check_list = _.flatten(obj[0].child_id[0].att_list);
-            arch.arch = _.detect(xml_arch.childNodes[0].children, function(xml_child){
+            var children = _.filter(xml_arch.childNodes[0].childNodes, function (child) {
+                return child.nodeType == 1;
+            });
+            arch.arch = _.detect(children, function(xml_child){
                 var temp_obj = self.create_View_Node(xml_child);
                 var insert = _.intersection(_.flatten(temp_obj.att_list),_.uniq(check_list));
                 if (insert.length == check_list.length ) {return xml_child;}
