@@ -264,7 +264,7 @@
     <form class="oe_forms">
         <fieldset>
             <legend style="">
-                <img src="/web/static/src/img/stock_person.png" alt="" />
+                <img t-att-src='widget.session.server + "/web/static/src/img/stock_person.png"' alt="" />
             </legend>
             <div class="oe_box2">
                 <table align="center" cellspacing="2px" cellpadding="0">
@@ -304,7 +304,7 @@
             <tbody>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/product.png"/>
+                    <img t-att-src='widget.session.server + "/web/static/src/img/product.png"'/>
                 </td>
                 <td>
                     <strong>Full featured</strong><br />
@@ -313,7 +313,7 @@
             </tr>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/accessories-archiver.png"/>
+                    <img t-att-src='widget.session.server + "/web/static/src/img/accessories-archiver.png"'/>
                 </td>
                 <td>
                     <strong>Open Source</strong><br />
@@ -322,7 +322,7 @@
             </tr>
             <tr>
                 <td>
-                    <img src="/web/static/src/img/partner.png" />
+                    <img t-att-src='widget.session.server + "/web/static/src/img/partner.png"' />
                 </td>
                 <td>
                     <strong>User Friendly</strong><br />
@@ -350,13 +350,13 @@
     <div class="header_corner">
         <ul class="block">
             <li>
-                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img src="/web/static/src/img/header-home.png" width="16" height="16" border="0"/></a>
+                <a t-att-href="'/' + widget.qs" title="Home" class="home"><img t-att-src='widget.session.server + "/web/static/src/img/header-home.png"' width="16" height="16" border="0"/></a>
             </li>
             <li class="preferences">
-                <a href="javascript:void(0)" title="Preferences" class="preferences"><img src="/web/static/src/img/header-preferences.png" width="16" height="16" border="0"/></a>
+                <a href="javascript:void(0)" title="Preferences" class="preferences"><img t-att-src='widget.session.server + "/web/static/src/img/header-preferences.png"' width="16" height="16" border="0"/></a>
             </li>
             <li>
-                <a href="javascript:void(0)" title="About" class="about"><img src="/web/static/src/img/header-about.png" width="16" height="16" border="0"/></a>
+                <a href="javascript:void(0)" title="About" class="about"><img t-att-src='widget.session.server + "/web/static/src/img/header-about.png"' width="16" height="16" border="0"/></a>
             </li>
         </ul>
         <div class="block">
@@ -694,7 +694,7 @@
                 <input type="hidden" name="model" t-att-value="view.dataset.model"/>
                 <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
                 <button class="button" type="button">
-                    <img src="/web/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
+                    <img t-att-src='session.server + "/web/static/src/img/throbber.gif"' width="16" height="16" style="display: none"/>
                     <span>Add</span>
                 </button>
                 <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
@@ -706,14 +706,14 @@
     <br style="clear: both"/>
     <ul class="oe-sidebar-attachments-items">
         <li t-foreach="attachments" t-as="attachment">
-            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="'/web/binary/saveas?session_id='
+            <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="session.server + '/web/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
                 + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
             <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
-                <img src="/web/static/src/img/attachments-close.png" width="15" height="15" border="0"/>
+                <img t-att-src='session.server + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
             </a>
         </li>
     </ul>
@@ -779,7 +779,7 @@
         t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
-    <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+    <img class="oe_field_translate" t-if="widget.field.translate" t-att-src='widget.session.server + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
 </t>
 <t t-name="FieldChar.readonly">
     <div
@@ -799,7 +799,7 @@
         </td>
         <td width="16">
             <button type="button" class="button" title="Send an e-mail with your default e-mail client">
-                <img src="/web/static/src/img/icons/terp-mail-message-new.png"/>
+                <img t-att-src='widget.session.server + "/web/static/src/img/icons/terp-mail-message-new.png"'/>
             </button>
         </td>
     </tr>
@@ -813,7 +813,7 @@
         </td>
         <td width="16">
             <button type="button" class="button" title="Open this resource">
-                <img src="/web/static/src/img/icons/gtk-ok.png"/>
+                <img t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-ok.png"'/>
             </button>
         </td>
     </tr>
@@ -826,12 +826,12 @@
         t-attf-class="field_#{widget.type}"
         t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     ></textarea>
-    <img class="oe_field_translate" t-if="widget.field.translate" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
+    <img class="oe_field_translate" t-if="widget.field.translate" t-att-src='widget.session.server + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
 </t>
 <t t-name="web.datetimepicker">
     <div class="oe_datepicker_root">
         <input type="text" size="1" style="width: 100%"/>
-        <img class="oe_input_icon oe_datepicker_trigger" src="/web/static/src/img/ui/field_calendar.png"
+        <img class="oe_input_icon oe_datepicker_trigger" t-att-src='widget.session.server + "/web/static/src/img/ui/field_calendar.png"'
              title="Select date" width="16" height="16" border="0"/>
         <div class="oe_datepicker ui-widget-content ui-corner-all" style="display: none; position: absolute; z-index: 1;">
             <div class="oe_datepicker_container"/>
@@ -855,9 +855,9 @@
         <input type="text" size="1" style="width: 100%;"
                 t-att-id="widget.element_id"/>
         <span class="oe-m2o-drop-down-button">
-            <img src="/web/static/src/img/down-arrow.png" /></span>
+            <img t-att-src='widget.session.server + "/web/static/src/img/down-arrow.png"' /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
-            <img src="/web/static/src/img/icons/gtk-index.png"/></span>
+            <img t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-index.png"'/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
         </div>
     </div>
@@ -908,7 +908,7 @@
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
-            <img src="/web/static/src/img/placeholder.png" class="oe-binary-image"
+            <img t-att-src='widget.session.server + "/web/static/src/img/placeholder.png"' class="oe-binary-image"
                 t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
@@ -930,7 +930,7 @@
                                 <input type="hidden" name="session_id" value=""/>
                                 <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                                 <button class="button" type="button" title="Set Image">
-                                    <img src="/web/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                    <img t-att-src='widget.session.server + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 </button>
                                 <input type="file" class="oe-binary-file" name="ufile"/>
                             </form>
@@ -938,14 +938,14 @@
                     </td>
                     <td>
                         <button class="button oe-binary-file-clear" type="button" title="Clear">
-                            <img src="/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                            <img t-att-src='widget.session.server + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         </button>
                     </td>
                 </tr>
                 </table>
             </div>
             <div class="oe-binary-progress" style="display: none">
-                <img src="/web/static/src/img/throbber.gif" width="16" height="16"/>
+                <img t-att-src='widget.session.server + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
                 <b>Uploading ...</b>
             </div>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
@@ -973,7 +973,7 @@
                             <input type="hidden" name="session_id" value=""/>
                             <input type="hidden" name="callback" t-att-value="widget.iframe"/>
                             <button class="button" type="button" title="Set Image">
-                                <img src="/web/static/src/img/icons/STOCK_DIRECTORY.png"/>
+                                <img t-att-src='widget.session.server + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
                             </button>
                             <input type="file" class="oe-binary-file" name="ufile"/>
@@ -982,13 +982,13 @@
                 </td>
                 <td>
                     <button class="button oe-binary-file-save" type="button" title="Save As">
-                        <img src="/web/static/src/img/icons/gtk-save.png"/>
+                        <img t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-save.png"'/>
                         <span>Save As</span>
                     </button>
                 </td>
                 <td>
                     <button class="button oe-binary-file-clear" type="button" title="Clear">
-                        <img src="/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"/>
+                        <img t-att-src='widget.session.server + "/web/static/src/img/icons/STOCK_MISSING_IMAGE.png"'/>
                         <span>Clear</span>
                     </button>
                 </td>
@@ -996,7 +996,7 @@
             </table>
         </td>
         <td class="oe-binary-progress" style="display: none" nowrap="true">
-            <img src="/web/static/src/img/throbber.gif" width="16" height="16"/>
+            <img t-att-src='widget.session.server + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
             <b>Uploading ...</b>
             <iframe t-att-id="widget.iframe" t-att-name="widget.iframe" style="display: none"> </iframe>
         </td>
@@ -1007,7 +1007,7 @@
     <button type="button"
         t-att-title="widget.help"
         style="width: 100%" class="button">
-        <img t-if="widget.node.attrs.icon" t-att-src="'/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
+        <img t-if="widget.node.attrs.icon" t-att-src="widget.session.server + '/web/static/src/img/icons/' + widget.node.attrs.icon + '.png'" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
 </t>
@@ -1057,7 +1057,7 @@
         t-att-title="attrs.help"
         t-att-class="classes.join(' ')"
         t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined">
-    <img t-if="attrs.icon" t-att-src="'/web/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
+    <img t-if="attrs.icon" t-att-src="widget.session.server + '/web/static/src/img/icons/' + attrs.icon + '.png'" width="16" height="16"/>
     <br t-if="attrs.icon and attrs.string"/>
     <t t-esc="attrs.string"/>
 </button>
@@ -1204,7 +1204,7 @@
 <t t-name="DialogWarning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
     <tr>
-        <td><img src="/web/static/src/img/warning.png" class="oe-dialog-icon"/></td>
+        <td><img t-att-src='widget.session.server + "/web/static/src/img/warning.png"' class="oe-dialog-icon"/></td>
         <td>
             <p>
                 <t t-js="d">
@@ -1292,7 +1292,7 @@
             <tr>
                 <td width="16px" t-att-style="'background-position: ' + 20*rec.level + 'px; padding-left: ' + 20*rec.level + 'px'">
                     <img t-if="rec.child_id.length" t-att-id="'parentimg-' + rec.id"
-                        src="/web/static/src/img/collapse.gif" width="16" height="16" border="0"/>
+                        t-att-src='widget.session.server + "/web/static/src/img/collapse.gif"' width="16" height="16" border="0"/>
                 </td>
                 <td style="cursor: pointer;">
                     <a style="text-decoration:none" href="javascript:void(0);"> <t t-esc="rec.name"/> </a>
@@ -1305,22 +1305,22 @@
             <tr>
                 <td width="20%">
                     <img t-if="rec.att_list.length"
-                        id="side-add" src="/web/static/src/img/icons/gtk-add.png" style="cursor: pointer;"/>
+                        id="side-add" t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-add.png"' style="cursor: pointer;"/>
                 </td>
                 <td width="20%">
-                    <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
-                </td>
-                <td width="20%">
-                    <img t-if="rec.att_list.length"
-                        id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
+                    <img  id="side-remove" t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-remove.png"' style="cursor: pointer;"/>
                 </td>
                 <td width="20%">
                     <img t-if="rec.att_list.length"
-                        id="side-up" src="/web/static/src/img/icons/gtk-go-up.png" style="cursor: pointer;"/>
+                        id="side-edit" t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-edit.png"' style="cursor: pointer;"/>
                 </td>
                 <td width="20%">
                     <img t-if="rec.att_list.length"
-                        id="side-down" src="/web/static/src/img/icons/gtk-go-down.png" style="cursor: pointer;"/>
+                        id="side-up" t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-go-up.png"' style="cursor: pointer;"/>
+                </td>
+                <td width="20%">
+                    <img t-if="rec.att_list.length"
+                        id="side-down" t-att-src='widget.session.server + "/web/static/src/img/icons/gtk-go-down.png"' style="cursor: pointer;"/>
                 </td>
             </tr>
         </table>
@@ -1402,7 +1402,7 @@
                 <td valign="top" align="left" style="cursor: pointer;" width="18">
                     <t t-if="field.children">
                         <t t-if="(field.id).split('/').length != 3">
-                            <img t-att-id="'parentimg-' + field.id" src="/web/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                            <img t-att-id="'parentimg-' + field.id" t-att-src='widget.session.server + "/web/static/src/img/expand.gif"' width="16" height="16" border="0"/>
                         </t>
                     </t>
                 </td>
@@ -1518,7 +1518,7 @@
         <tr>
             <td t-foreach="records[0]" t-as="column">
                 <input class="sel_fields" placeholder="--- Don't Import ---"/><span class="oe-m2o-drop-down-button">
-                        <img src="/web/static/src/img/down-arrow.png" /></span>
+                        <img t-att-src='widget.session.server + "/web/static/src/img/down-arrow.png"' /></span>
             </td>
         </tr>
         <tr t-foreach="records" t-as="record" class="oe_import_grid-row">
