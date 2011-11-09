@@ -102,7 +102,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             self.on_pager_action(action);
         });
 
-        this.$form_header.find('button.oe_form_button_save').click(this.do_save_then_readonly);
+        this.$form_header.find('button.oe_form_button_save').click(this.on_button_save);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
         this.$form_header.find('button.oe_form_button_duplicate').click(this.on_button_duplicate);
         this.$form_header.find('button.oe_form_button_delete').click(this.on_button_delete);
@@ -294,7 +294,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         return self.on_processed_onchange(response, processed);
                     });
                 } else {
-                    console.log("Wrong on_change format", on_change);
+                    console.warn("Wrong on_change format", on_change);
                 }
             }
             } catch(e) {
@@ -344,6 +344,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             console.error(e);
             return $.Deferred().reject();
         }
+    },
+    on_button_save: function() {
+        return this.do_save().then(this.do_set_readonly);
     },
     on_button_new: function() {
         var self = this;
@@ -403,9 +406,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      * @param {Function} success callback on save success
      * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
      */
-    do_save_then_readonly: function(success, prepend_on_create) {
-        return this.do_save(success, prepend_on_create).then(this.do_set_readonly);
-    },
     do_save: function(success, prepend_on_create) {
         var self = this;
         var action = function() {
@@ -434,12 +434,18 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 self.on_invalid();
                 return $.Deferred().reject();
             } else {
-                console.log("About to save", values);
                 if (!self.datarecord.id) {
+                    openerp.log("FormView(", self, ") : About to create", values);
                     return self.dataset.create(values).pipe(function(r) {
                         return self.on_created(r, undefined, prepend_on_create);
                     }).then(success);
+                } else if (_.isEmpty(values)) {
+                    openerp.log("FormView(", self, ") : Nothing to save");
+                    if (success) {
+                        success();
+                    }
                 } else {
+                    openerp.log("FormView(", self, ") : About to save", values);
                     return self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
                     }).then(success);
@@ -502,7 +508,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            console.debug("The record has been created with id #" + this.datarecord.id);
+            openerp.log("The record has been created with id #" + this.datarecord.id);
             this.reload();
             return $.when(_.extend(r, {created: true})).then(success);
         }
@@ -696,7 +702,7 @@ openerp.web.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field_value));
                 break;
             default:
-                console.log("Unsupported operator in modifiers :", op);
+                console.warn("Unsupported operator in modifiers :", op);
         }
     }
     return _.all(stack, _.identity);
@@ -1096,7 +1102,7 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
         var self = this;
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
-            console.log(widget.element_class , widget);
+            openerp.log(widget.element_class , widget);
             window.w = widget;
         });
     }
