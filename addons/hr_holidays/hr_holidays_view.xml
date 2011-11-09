@@ -200,6 +200,7 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
                     <field name="employee_id"/>
+                    <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
                     <field name="type"/>
                     <field name="name"/>
@@ -453,9 +454,9 @@
 
     <!--  Shortcuts -->
         <act_window name="Leaves" domain="[('type','=','remove')]" context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}" res_model="hr.holidays" src_model="hr.employee" view_id="view_holiday" id="act_hr_employee_holiday_request"/>
-            
+
        <!--  Assing leave       -->
-        
+
         <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
             <field name="name">hr.employee.leave.tree</field>
             <field name="model">hr.employee</field>
@@ -466,7 +467,7 @@
                     <field name="remaining_leaves" string="Remaining Legal Leaves"/>
                 </tree>
             </field>
-        </record>  
+        </record>
 
         <record model="ir.actions.act_window" id="hr_holidays_leaves_assign_legal">
            <field name="name">Allocate Leaves for Employees</field>
@@ -484,7 +485,7 @@
        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
-    
+
         <record id="view_employee_form_leave_inherit" model="ir.ui.view">
             <field name="name">hr.employee.leave.form.inherit</field>
             <field name="model">hr.employee</field>
