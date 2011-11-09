@@ -86,8 +86,9 @@ class report_auction(osv.osv):
                 auction_lots al,
                 auction_dates ad,
                 auction_deposit ade
+                left join res_partner rp on (ade.partner_id=rp.id)
             where
-                ad.id=al.auction_id and ade.id=al.bord_vnd_id
+                ad.id=al.auction_id and ade.id=al.bord_vnd_id and rp.active='true'
             group by
                ad.auction1,
                 al.ach_uid,

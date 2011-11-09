@@ -100,6 +100,11 @@ class report_event_registration(osv.osv):
                     event_registration c ON (e.id=c.event_id)
                 LEFT JOIN
                     event_type t ON (e.type=t.id)
+                LEFT JOIN
+                    product_product p ON (e.product_id=p.id)
+                LEFT JOIN
+                    res_partner rp ON (e.main_speaker_id=rp.id)
+                WHERE c.active = 'true' and p.active='true' and rp.active='true'
                GROUP BY
                     to_char(e.date_begin, 'YYYY'),
                     to_char(e.date_begin, 'MM'),

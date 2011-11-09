@@ -149,7 +149,9 @@ class account_entries_report(osv.osv):
                 left join account_account a on (l.account_id = a.id)
                 left join account_move am on (am.id=l.move_id)
                 left join account_period p on (am.period_id=p.id)
-                where l.state != 'draft'
+                left join product_product pr on (l.product_id=pr.id)
+                left join res_partner rp on (l.partner_id=rp.id)
+                where l.state != 'draft' and a.active='true' and rp.active='true' and pr.active='true' 
             )
         """)
 account_entries_report()

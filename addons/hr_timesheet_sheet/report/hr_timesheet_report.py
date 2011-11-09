@@ -68,6 +68,10 @@ class hr_timesheet_report(osv.osv):
                 from
                     hr_analytic_timesheet as t
                     left join account_analytic_line as l ON (t.line_id=l.id)
+                    left join product_product as pp on (l.product_id=pp.id)
+                    left join account_account as aa on (l.general_account_id=aa.id)
+                    left join res_users as u on (l.user_id= u.id)
+                where pp.active='true' and aa.active='true' and u.active='true'
                 group by
                     l.date,
                     l.account_id,
