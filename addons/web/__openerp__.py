@@ -53,4 +53,7 @@
         "static/src/css/data_export.css",
         "static/src/css/data_import.css",
     ],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
 }
