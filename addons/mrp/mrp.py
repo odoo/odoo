@@ -680,24 +680,16 @@ class mrp_production(osv.osv):
                 res = False
         return res
 
-    def _get_quantity_to_produce(self, cr, uid, production_id, move_id=None, context=None):       
-
-        """ Compute Production Qty of product.This method will be overwritten by mrp_subproduct.
-        @return: Dictionary of values.
+    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
+        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
+            it's always equal to the quantity encoded in the production order or the production wizard, but if the 
+            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce 
+            and its quantity.
+        :param production_id: ID of the mrp.order
+        :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
+        :return: The factor to apply to the quantity that we should produce for the given production order.
         """
-        if context is None:
-            context = {}
-            
-        production_obj = self.pool.get('mrp.production')
-        production_browse = production_obj.browse(cr, uid, production_id, context=context)
-        if context.get('product_qty',False):
-            product_qty = context['product_qty']
-            sub_qty = context['sub_qty']
-        else:
-            product_qty = production_browse.product_qty 
-            sub_qty = 1
-        res = {'product_qty': product_qty, 'sub_qty': sub_qty}
-        return res
+        return 1
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
@@ -766,12 +758,12 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                get_qty = self._get_quantity_to_produce(cr, uid, production.id, produce_product.id, context=context)
-                rest_qty = get_qty['product_qty'] - produced_qty
+                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
+                rest_qty = (subproduct_factor * production.product_qty) - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty * get_qty['sub_qty'], context=context)
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
