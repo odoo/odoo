@@ -2041,7 +2041,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                     once.resolve();
                 });
                 controller.on_pager_action.add_first(function() {
-                    self.save_form_view();
+                    self.save_any_view();
                 });
                 controller.$element.find(".oe_form_button_save").hide();
             } else if (view_type == "graph") {
@@ -2050,7 +2050,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             def.resolve();
         });
         this.viewmanager.on_mode_switch.add_first(function(n_mode, b, c, d, e) {
-            $.when(self.save_form_view()).then(function() {
+            $.when(self.save_any_view()).then(function() {
                 if(n_mode === "list")
                     setTimeout(function() {self.reload_current_view();}, 0);
             });
@@ -2160,7 +2160,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
-    save_form_view: function() {
+    save_any_view: function() {
         if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
             this.viewmanager.views[this.viewmanager.active_view] &&
             this.viewmanager.views[this.viewmanager.active_view].controller) {
@@ -2170,6 +2170,13 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 // it seems line there are some cases when this happens
                 /*if (!res.isResolved() && !res.isRejected()) {
                     console.warn("Asynchronous get_value() is not supported in form view.");
+                }*/
+                return res;
+            } else if (this.viewmanager.active_view === "list") {
+                var res = $.when(view.ensure_saved());
+                // it seems line there are some cases when this happens
+                /*if (!res.isResolved() && !res.isRejected()) {
+                    console.warn("Asynchronous get_value() is not supported in list view.");
                 }*/
                 return res;
             }
@@ -2196,7 +2203,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         }
     },
     is_dirty: function() {
-        this.save_form_view();
+        this.save_any_view();
         return this._super();
     },
     update_dom: function() {
