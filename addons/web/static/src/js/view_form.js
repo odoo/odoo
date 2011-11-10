@@ -3062,6 +3062,15 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldURIReadonly.exten
         } else {
             setTimeout(function() {real_set_value(value);}, 0);
         }
+    },
+    get_value: function() {
+        if (!this.value) {
+            return false;
+        } else if (this.value instanceof Array) {
+            return this.value[0];
+        } else {
+            return this.value;
+        }
     }
 });
 
