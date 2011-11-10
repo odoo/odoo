@@ -336,6 +336,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
             switch (this.id) {
                 case "side-add":
+                     var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
+                    var tag = _.detect(_.keys(_CHILDREN),function(res){
+                        return _.includes(tr, res);
+                    });
+                    var properties = _CHILDREN[tag];
                     break;
                 case "side-remove":
                     break;
@@ -473,7 +478,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     child_list.splice(index-1, 0, re_insert_obj[0]);
                 } else if (move_direct == "update_node") {
                     _.each(update_values, function(val){
-                        $(arch1).attr(val[0],val[1]);
+                        if(val[0] == "required"){
+                                $(arch1).attr("required", "true");
+                                console.log(arch1);
+                        }else{
+                            $(arch1).attr(val[0],val[1]);
+                        }
                     });
                     var new_obj = self.create_View_Node(arch1);
                     new_obj.id = obj.id,new_obj.child_id = obj.child_id;
@@ -548,7 +558,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         this.edit_node_dialog.$element.append('<table id="rec_table"  style="width:400px" class="oe_forms"></table>');
         this.edit_widget = [];
         _.each(properties, function(record) {
-            var id = record,
+            var id = record, 
             type_widget;
             self.ready  = $.when(self.on_groups(id)).then(function () {
                 if (_.include(widget,id)){
@@ -562,7 +572,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 if (id == 'groups') type_widget.value = self.groups;
                 self.edit_node_dialog.$element.find('table[id=rec_table]').append('<tr><td align="right">'+id+':</td><td>'+type_widget.render()+'</td></tr>');
                 type_widget.start();
-                type_widget.set_value(value)
+                type_widget.set_value(value);
                 self.edit_widget.push(type_widget);
             });
         });
@@ -768,6 +778,26 @@ var _PROPERTIES = {
     'graph' : ['string', 'type'],
     'calendar' : ['string', 'date_start', 'date_stop', 'date_delay', 'day_length', 'color', 'mode'],
     'view' : [],
+};
+_CHILDREN = {
+    'form': ['notebook', 'group', 'field', 'label', 'button', 'image', 'newline', 'separator'],
+    'tree': ['field'],
+    'graph': ['field'],
+    'calendar': ['field'],
+    'notebook': ['page'],
+    'page': ['notebook', 'group', 'field', 'label', 'button', 'image', 'newline', 'separator'],
+    'group': ['field', 'label', 'button', 'separator', 'newline'],
+    'hpaned': ['child1', 'child2'],
+    'vpaned': ['child1', 'child2'],
+    'child1': ['action'],
+    'child2': ['action'],
+    'action': [],
+    'field': ['form', 'tree', 'graph'],
+    'label': [],
+    'button' : [],
+    'image': [],
+    'newline': [],
+    'separator': [],
 };
 var icons = ['','STOCK_ABOUT', 'STOCK_ADD', 'STOCK_APPLY', 'STOCK_BOLD',
             'STOCK_CANCEL', 'STOCK_CDROM', 'STOCK_CLEAR', 'STOCK_CLOSE', 'STOCK_COLOR_PICKER',
