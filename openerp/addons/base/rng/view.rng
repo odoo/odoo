@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
-              datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+             xmlns:a="http://relaxng.org/ns/annotation/1.0"
+             datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <!-- Handling of element overloading when inheriting from a base
          template
     -->
@@ -44,8 +45,75 @@
         </rng:optional>
     </rng:define>
 
+    <rng:define name="dashboard-column">
+        <rng:element name="column">
+            <rng:zeroOrMore>
+                <rng:element name="action">
+                    <!-- Action identifier, used by clients to get the
+                         actual action from db -->
+                    <rng:attribute name="name"/>
+                    <!-- Displayed name of dashboard item (above idem) -->
+                    <rng:optional><rng:attribute name="string"/></rng:optional>
+                    <!-- Merged into the action descriptor's own
+                         context before executing the action -->
+                    <rng:optional><rng:attribute name="context"/></rng:optional>
+                    <!-- Added to the action descriptor's own domain
+                         before executing the action -->
+                    <rng:optional><rng:attribute name="domain"/></rng:optional>
+                    <!-- In case the action is an act_window,
+                         overrides its own @views. -->
+                    <rng:optional><rng:attribute name="view_mode"/></rng:optional>
+                </rng:element>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
     <rng:define name="dashboard">
         <rng:choice>
+            <rng:element name="board">
+                <a:documentation>
+                  New-style (6.1) dashboard definition
+                </a:documentation>
+                <rng:choice>
+                    <rng:group>
+                        <a:documentation>
+                          Single-column dashboard style
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three different 2-column dashboard styles:
+                          50|50, 33|66 and 66|33.
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:choice>
+                                <rng:value>1-1</rng:value>
+                                <rng:value>1-2</rng:value>
+                                <rng:value>2-1</rng:value>
+                            </rng:choice>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                    <rng:group>
+                        <a:documentation>
+                          Three-column dashboard style: 33|33|33
+                        </a:documentation>
+                        <rng:attribute name="style">
+                            <rng:value>1-1-1</rng:value>
+                        </rng:attribute>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                        <rng:ref name="dashboard-column"/>
+                    </rng:group>
+                </rng:choice>
+            </rng:element>
+            <!--
+                DEPRECATED old-style dashboards
+            -->
             <rng:element>
                 <rng:choice>
                     <rng:name>hpaned</rng:name>
