@@ -11,11 +11,10 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group>
-                       <field name="name"/>
-                       <separator orientation="vertical"/>
-                       <field name="user_id" string="User"/>
-                       <separator orientation="vertical"/>
                        <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                       <separator orientation="vertical"/>
+                       <field name="name"/>
+                       <field name="user_id" string="User"/>
                        <field name="resource_type" invisible="1"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
@@ -172,11 +171,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource">
-                   <group colspan="4" col="6">
+                   <group colspan="4" col="8">
                     <field name="name" colspan="4"/>
+                    <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                     <field name="active"/>
                     <field name="resource_type" invisible="1"/>
-                    <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <group colspan="4">
