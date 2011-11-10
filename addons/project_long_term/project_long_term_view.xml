@@ -352,12 +352,11 @@
         />
 
     <act_window
-        context="{'search_default_project_id': [active_id]}"
+        context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
         id="act_project_phases"
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
-        domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
         view_type="form" 
         />
