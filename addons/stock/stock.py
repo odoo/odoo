@@ -1168,7 +1168,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_few = [], []
-            move_product_qty,prodlot_ids, product_uoms, product_avail, partial_qty = {}, {}, {}, {}, {}
+            move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {},{}, {},{},{}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
@@ -1221,8 +1221,6 @@ class stock_picking(osv.osv):
 
 
             for move in too_few:
-                if move.product_qty < partial_qty[move.id]:
-                    raise osv.except_osv(_('Error !'), _('You cannot select Quantity %s  more then Picking Quantity %s.') % (partial_qty[move.id],move.product_qty,))
                 product_qty = move_product_qty[move.id]
                 if not new_picking:
                     new_picking = self.copy(cr, uid, pick.id,
@@ -1239,7 +1237,7 @@ class stock_picking(osv.osv):
                             'state': 'assigned',
                             'move_dest_id': False,
                             'price_unit': move.price_unit,
-                            'product_uom':product_uoms[move.id],
+                            'product_uom':product_uoms[move.id]
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
@@ -1254,11 +1252,10 @@ class stock_picking(osv.osv):
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
-                product_qty = move_product_qty[move.id]
-                defaults = {'product_uom': product_uoms[move.id],'product_qty': product_qty}
+                defaults = {'product_uom': product_uoms[move.id],'product_qty': move_product_qty[move.id]}
                 if prodlot_ids.get(move.id):
                     defaults.update({'prodlot_id': prodlot_ids[move.id]})
-                move_obj.write(cr, uid, move.id, defaults)
+                move_obj.write(cr, uid, [move.id], defaults)
 
             # At first we confirm the new picking (if necessary)
             if new_picking:

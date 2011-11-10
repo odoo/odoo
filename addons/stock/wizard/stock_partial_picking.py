@@ -22,12 +22,25 @@
 import time
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from tools.translate import _
 
 class stock_partial_picking_line(osv.TransientModel):
+
+    def _tracking(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for tracklot in self.browse(cursor, user, ids, context=context):
+            tracking = False
+            if (tracklot.move_id.picking_id.type == 'in' and tracklot.product_id.track_incoming == True) or \
+                (tracklot.move_id.picking_id.type == 'out' and tracklot.product_id.track_outgoing == True):
+                tracking = True
+            res[tracklot.id] = tracking
+        return res
+
+
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
+        'product_id' : fields.many2one('product.product', string="Product", required=True, readonly=True, ondelete='CASCADE'),
         'quantity' : fields.float("Quantity", required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
@@ -38,6 +51,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'update_cost': fields.boolean('Need cost update'),
         'cost' : fields.float("Cost", help="Unit Cost for this product line"),
         'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
+        'tracking': fields.function(_tracking, method=True, string='Tracking', type='boolean'), 
     }
 
 class stock_partial_picking(osv.osv_memory):
@@ -103,13 +117,29 @@ class stock_partial_picking(osv.osv_memory):
         assert len(ids) == 1, 'Partial picking processing may only be done one at a time'
         stock_picking = self.pool.get('stock.picking')
         stock_move = self.pool.get('stock.move')
+        uom_obj = self.pool.get('product.uom')
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_data = {
             'delivery_date' : partial.date
         }
         picking_type = partial.picking_id.type
         for move in partial.move_ids:
+            move_uom = move.move_id.product_uom
+            process_uom = move.product_uom
             move_id = move.move_id.id
+
+            #Quantiny must be Positive
+            if move.quantity <= 0:
+                raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            #Pikcing move product UOM factor must be bigger with respective wizard move product uom factor
+            if move_uom.factor < process_uom.factor:
+                raise osv.except_osv(_('Warning'), _('You can not process in UOM "%s" which is smaller than UOM "%s" of the current move.') % (process_uom.name, move_uom.name))
+            #Compute the wizard Quantity for respective move. 
+            toprocess = uom_obj._compute_qty(cr, uid, process_uom.id, move.quantity, move_uom.id)
+            #Compare wizard Quantity with respective picking move quantity if wizard move quantity bigger then it's giving warning.
+            if toprocess > move.move_id.product_qty:
+                raise osv.except_osv(_('Warning'), _('You can not process "%s %s" as the qty is more than "%s %s" of respective move.') % (move.quantity, process_uom.name, move.move_id.product_qty, move_uom.name))
+
             if not move_id:
                 seq_obj_name =  'stock.picking.' + picking_type
                 move_id = stock_move.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
