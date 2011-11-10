@@ -93,17 +93,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
                                 var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
                                 var notebook=fields[get_fields[i].attrs.name].views.form.arch;
-                                if(notebook){
-                                    var til = notebook.attrs.string;
-                                }
                             }
                         }
                     }
-                }
-
-                if(notebook){
-                    $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord,'til': til }));
-                }else{
                     $(this).find('div#page_content').html(self.render({'get_fields': get_fields,'fields' : result.fields, 'values' : self.datarecord}));
                 }
                 self.formatdata(get_fields, fields, result, self.datarecord,'page_content','element');
@@ -186,6 +178,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 }
                                 if(!$('[id^="oe_form_'+listid+result.fields[relational].relation+'"]').html()){
                                     $('<div id="oe_form_'+listid+result.fields[relational].relation+'" data-role="page" data-url="oe_form_'+listid+result.fields[relational].relation+'"> </div>').appendTo('#moe');
+
                                     for (var k = 0; k < notebooks.children.length; k++) {
                                         if (notebooks.children[k].attrs.string == lastid) {
                                             get_fields = self.get_fields(notebooks.children[k].children);
@@ -240,7 +233,11 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             }
                                         }
                                     });
-                                    self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    if(notebook){
+                                        self.formatdata(get_fields_test, fields_test, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    }else{
+                                        self.formatdata(get_fields_test, fields, result, data_relational,'oe_form_'+listid+result.fields[relational].relation,'element');
+                                    }
                                     $.mobile.changePage('#oe_form_'+listid+result.fields[relational].relation, "slide", false, true);
                                     self.formatdata('', '', '', '','oe_form_'+listid+result.fields[relational].relation,'slider');
                                 }else{
@@ -269,6 +266,9 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                 this.get_fields(view_fields[i].children, this.fields);
             }
             if (view_fields[i].tag == 'level') {
+                this.get_fields(view_fields[i].children, this.fields);
+            }
+            if (view_fields[i].tag == 'page') {
                 this.get_fields(view_fields[i].children, this.fields);
             }
         }
