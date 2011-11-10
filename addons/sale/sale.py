@@ -472,13 +472,13 @@ class sale_order(osv.osv):
             #
             # Update the sale order lines state (and invoiced flag).
             #
-            invoiced = False
             for line in order.order_line:
                 vals = {}
                 #
                 # Check if the line is invoiced (has asociated invoice
                 # lines from non-cancelled invoices).
                 #
+                invoiced = False
                 for iline in line.invoice_lines:
                     if iline.invoice_id and iline.invoice_id.state != 'cancel':
                         invoiced = True
