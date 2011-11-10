@@ -109,7 +109,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
     },
     start: function () {
-        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.dialog_options);
+        this.$dialog = $(this.$element).dialog(this.dialog_options);
         this._super();
         return this;
     },

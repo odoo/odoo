@@ -793,6 +793,11 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
      */
     identifier_prefix: 'generic-identifier-',
     /**
+     * Tag name when creating a default $element.
+     * @type string
+     */
+    tag_name: 'div',
+    /**
      * Construct the widget and set its parent if a parent is given.
      *
      * @constructs openerp.web.Widget
@@ -814,7 +819,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
         var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : undefined;
+        this.$element = tmp ? $(tmp) : $(document.createElement(this.tag_name));
 
         this.widget_parent = parent;
         this.widget_children = [];
@@ -869,8 +874,7 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
         }, target);
     },
     _render_and_insert: function(insertion, target) {
-        var rendered = this.render();
-        this.$element = $(rendered);
+        this.render_element();
         if (target instanceof openerp.web.Widget)
             target = target.$element;
         insertion(target);
@@ -879,13 +883,24 @@ openerp.web.Widget = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.W
     },
     on_inserted: function(element, widget) {},
     /**
+     * Renders the element and insert the result of the render() method in this.$element.
+     */
+    render_element: function() {
+        var rendered = this.render();
+        if (rendered || rendered === "")
+            this.$element = $(rendered);
+        return this;
+    },
+    /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
      *
      * @param {Object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        if (this.template)
+            return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
+        return false;
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
