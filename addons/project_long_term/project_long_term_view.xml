@@ -342,13 +342,12 @@
         </record>
 
     <act_window
+        context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id, 'default_project_id' : active_id}"
         id="project_phase_task_list"
         name="Related Tasks"
         res_model="project.task"
         src_model="project.phase"
         view_mode="tree,form"
-        context="{'search_default_phase_id': [active_id]}"
-        domain="[('phase_id', '=', active_id),('project_id','=',project_id)]"
         />
 
     <act_window
