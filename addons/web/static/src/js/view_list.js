@@ -1145,9 +1145,12 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                $group_column.html(openerp.web.format_cell(
-                    row_data, group_column, _t("Undefined")
-                ));
+                try {
+                    $group_column.html(openerp.web.format_cell(
+                        row_data, group_column, _t("Undefined")));
+                } catch (e) {
+                    $group_column.html(row_data[group_column.id].value);
+                }
                 if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
                     $group_column
