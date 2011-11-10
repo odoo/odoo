@@ -494,7 +494,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 });
             }
         }
-    }, 
+    },
     on_expand: function(expand_img){
         var level = parseInt($(expand_img).closest("tr[id^='viewedit-']").attr('level'));
         var cur_tr = $(expand_img).closest("tr[id^='viewedit-']");
@@ -529,9 +529,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                     "Update": function(){
                         var update_values = [];
                         _.each(self.edit_widget, function(widget) {
-                            var value = widget.get_value();
-                            if (value) {
-                                update_values.push(value);
+                            if (widget.dirty) {
+                                update_values.push(widget.get_value());
                             }
                         });
                         self.do_save_update_arch(obj, view_id, view_xml_id, clicked_tr_id, clicked_tr_level, "update_node", update_values);
@@ -630,9 +629,6 @@ openerp.web.ViewEditor.FieldBoolean = openerp.web.ViewEditor.Field.extend({
         }
     },
     get_value: function() {
-        if (!this.dirty) {
-            return false;
-        }
         var value = this.$element.find("input[id=" + this.name + "]").is(':checked');
         return value ? [this.name, value] : [this.name, null];
     }
@@ -649,9 +645,6 @@ openerp.web.ViewEditor.FieldChar = openerp.web.ViewEditor.Field.extend({
         value ? this.$element.find("input[id=" + this.name + "]").val(value[1]): this.$element.find("tr[id=" + this.name + "] input").val();
     },
     get_value: function() {
-        if (!this.dirty) {
-            return false;
-        }
         var value= this.$element.find("input[id=" + this.name + "]").val();
         return value ? [this.name, value] : [this.name, ""];
     }
@@ -674,9 +667,6 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         this.$element.find("select[id=" + this.name + "]")[0].selectedIndex = index;
     },
     get_value: function() {
-        if (!this.dirty) {
-            return false;
-        }
         var value = this.$element.find("select[id=" + this.name + "]").val();
         return  value ? [this.name, value] : [this.name, ""];
     }
