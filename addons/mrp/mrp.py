@@ -465,7 +465,6 @@ class mrp_production(osv.osv):
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
-
         'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
@@ -480,6 +479,7 @@ class mrp_production(osv.osv):
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
+        'user_id':fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
     _defaults = {
@@ -680,6 +680,17 @@ class mrp_production(osv.osv):
                 res = False
         return res
 
+    def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
+        """ Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
+            it's always equal to the quantity encoded in the production order or the production wizard, but if the 
+            module mrp_subproduct is installed, then we must use the move_id to identify the product to produce 
+            and its quantity.
+        :param production_id: ID of the mrp.order
+        :param move_id: ID of the stock move that needs to be produced. Will be used in mrp_subproduct.
+        :return: The factor to apply to the quantity that we should produce for the given production order.
+        """
+        return 1
+
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
         If Production mode is consume, all stock move lines of raw materials will be done/consumed.
@@ -692,7 +703,6 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -748,11 +758,12 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                rest_qty = production.product_qty - produced_qty
+                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
+                rest_qty = (subproduct_factor * production.product_qty) - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
         for raw_product in production.move_lines2:
             new_parent_ids = []

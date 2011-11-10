@@ -295,6 +295,40 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
+         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+           <field name="name">Unrealized Gain or Loss</field>
+            <field name="model">account.account</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Unrealized Gains and losses">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="currency_id"/>
+                    <field name="exchange_rate"/>
+                    <field name="foreign_balance"/>
+                    <field name="adjusted_balance"/>
+                    <field name="balance"/>
+                    <field name="unrealized_gain_loss"/>
+                </tree>
+            </field>
+        </record>
+
+          <record id="action_account_gain_loss" model="ir.actions.act_window">
+            <field name="name">Unrealized Gain or Loss</field>
+            <field name="res_model">account.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_account_gain_loss_tree"/>
+            <field name="domain">[('currency_id','!=',False)]</field>
+            <field name="help">When doing multi-currency transactions, you may loose or gain some amount due to changes of exchange rate. This menu gives you a forecast of the Gain or Loss you'd realized if those transactions were ended today. Only for accounts having a secondary currency set.</field>
+        </record>
+
+        <menuitem
+            name="Unrealized Gain or Loss"
+            action="action_account_gain_loss"
+            id="menu_unrealized_gains_losses"
+            parent="account.menu_multi_currency"/>
+
         <!--
         Journal
 

@@ -1,55 +1,9 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-<!--
-This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
--->
-        <!-- Human Resources -->
-        <record id="resource_analyst" model="resource.resource">
-            <field name="user_id" ref="project.res_users_analyst"/>
-            <field name="name">Analyst</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-        <record id="resource_project_manager" model="resource.resource">
-            <field name="user_id" ref="project.res_users_project_manager"/>
-            <field name="name">Project Manager</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-         <record id="resource_technical_leader" model="resource.resource">
-            <field name="user_id" ref="project.res_users_technical_leader"/>
-            <field name="name">Technical Leader</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-        <record id="resource_developer" model="resource.resource">
-            <field name="user_id" ref="project.res_users_developer"/>
-            <field name="name">Developer</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-        <record id="resource_designer" model="resource.resource">
-            <field name="user_id" ref="project.res_users_designer"/>
-            <field name="name">Designer</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-        <record id="resource_tester" model="resource.resource">
-            <field name="user_id" ref="project.res_users_tester"/>
-            <field name="name">Tester</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-        <record id="resource_finacial_manager" model="resource.resource">
-            <field name="user_id" ref="project.res_users_finacial_manager"/>
-            <field name="name">Project Finacial Manager</field>
-            <field name="calendar_id" ref="resource.timesheet_group1"/>
-        </record>
-
-
-
-        
+        <!--
+        This Demo data file Human Resources, Phases and Resources,Tasks allocation and  also run scheduling of phase and tasks.
+        -->
 
         <!-- Project Phases -->
         <record id="project_phase_1" model="project.phase">
@@ -58,7 +12,6 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="1" name="sequence"/>
             <field name="duration">30</field>
-            <field name="responsible_id" ref="project.res_users_analyst"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -68,7 +21,6 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="2" name="sequence"/>
             <field name="duration">20</field>
-            <field name="responsible_id" ref="project.res_users_project_manager"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -78,7 +30,6 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="3" name="sequence"/>
             <field name="duration">20</field>
-            <field name="responsible_id" ref="project.res_users_project_manager"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -88,7 +39,6 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="4" name="sequence"/>
             <field name="duration">90</field>
-            <field name="responsible_id" ref="project.res_users_technical_leader"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -98,7 +48,6 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="5" name="sequence"/>
             <field name="duration">30</field>
-            <field name="responsible_id" ref="project.res_users_project_manager"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
         </record>
 
@@ -108,54 +57,7 @@ This Demo data file Human Resources, Phases and Resources,Tasks allocation and  
             <field name="product_uom" ref="product.uom_day"/>
             <field eval="5" name="sequence"/>
             <field name="duration">10</field>
-            <field name="responsible_id" ref="project.res_users_analyst"/>
             <field name="project_id" ref="project.project_integrate_openerp"/>
-        </record>
-
-        <!--  Project Resource Allocation -->
-        <record id="resource_allocation_1" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_analyst"/>
-            <field name="phase_id" ref="project_phase_1"/>
-        </record>
-
-        <record id="resource_allocation_2" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_project_manager"/>
-            <field name="phase_id" ref="project_phase_2"/>
-        </record>
-
-        <record id="resource_allocation_3" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_project_manager"/>
-            <field name="phase_id" ref="project_phase_3"/>
-        </record>
-
-        <record id="resource_allocation_4" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_technical_leader"/>
-            <field name="phase_id" ref="project_phase_4"/>
-        </record>
-
-        <record id="resource_allocation_5" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_developer"/>
-            <field name="phase_id" ref="project_phase_4"/>
-        </record>
-
-        <record id="resource_allocation_6" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_designer"/>
-            <field name="phase_id" ref="project_phase_4"/>
-        </record>
-
-        <record id="resource_allocation_7" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_tester"/>
-            <field name="phase_id" ref="project_phase_4"/>
-        </record>
-
-        <record id="resource_allocation_8" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_project_manager"/>
-            <field name="phase_id" ref="project_phase_5"/>
-        </record>
-
-        <record id="resource_allocation_9" model="project.resource.allocation">
-            <field name="resource_id" ref="resource_analyst"/>
-            <field name="phase_id" ref="project_phase_6"/>
         </record>
 
         <!-- Tasks -->

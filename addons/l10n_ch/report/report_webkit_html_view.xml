@@ -5,55 +5,57 @@
             <field name="orientation">Portrait</field>
             <field name="format">A4</field>
             <field name="html"><![CDATA[<html>
-                    <head>
-                        <script>
-                            function subst() {
-                            var vars={};
-                            var x=document.location.search.substring(1).split('&');
-                            for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
-                            var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
-                            for(var i in x) {
-                            var y = document.getElementsByClassName(x[i]);
-                            for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
-                                }
-                                }
-                                </script>
-                                <style type="text/css">
-                                    ${css}
-                                </style>
-                    </head>
-                    <body style="border:0; margin: 0;" onload="subst()">
-                        <table class="header" style="border-bottom: 0px solid black; width: 100%;padding-left:20mm">
-                            <tr style="vertical-align:top" >
-                                <td>${helper.embed_logo_by_name('camptocamp_logo', width=64)}</td>
-                                <td style="text-align:right">
-                                <table style="border-top: 0px solid black; width: 100%;height:100%">
-                                    <tr style="vertical-align:top">
-                                        <td style="text-align:right;font-size:12" width="80%"><span class="page"/></td><td style="text-align:left;font-size:12;"> / <span class="topage"/></td>
-                                    </tr>
-                                </table> </td>
-                            </tr>
-                            <tr>
-                                <td><br/></td>
-                                <td style="text-align:right"> </td>
-                            </tr>
-                            <tr>
-                                <td>${company.partner_id.name |entity}</td>
-                                <td/>
-                            </tr>
-                            <tr>
-                                <td >${company.partner_id.address and company.partner_id.address[0].street or ''|entity}</td>
-                                <td/>
-                            </tr>
-                            <tr>
-                                <td>Phone: ${company.partner_id.address and company.partner_id.address[0].phone or ''|entity} </td>
-                                <td/>
-                            </tr>
-                            <tr>
-                                <td>Mail: <a href="mailto:${company.partner_id.address and company.partner_id.address[0].email or ''|entity}">${company.partner_id.address and company.partner_id.address[0].email or ''|entity}</a><br/></td>
-                            </tr>
-                        </table> ${_debug or ''} <br/></body>
-                    </html>]]>
+    <head>
+        <script>
+            function subst() {
+            var vars={};
+            var x=document.location.search.substring(1).split('&');
+            for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+            var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+            for(var i in x) {
+            var y = document.getElementsByClassName(x[i]);
+            for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+                }
+                }
+       </script>
+       <style type="text/css">
+            ${css}
+       </style>
+    </head>
+    <!-- <tr style="vertical-align:top">
+        <td style="text-align:right;font-size:12" ><span class="page"/></td><td style="text-align:left;font-size:12;"> / <span class="topage"/></td>
+        </tr> style="text-align:right"-->
+    <body style="border:0; margin: 0;" onload="subst()">
+        <table style="border-bottom: 1px solid black; width: 90%;padding-left:0mm;margin-left:5%">
+            <tr style="vertical-align:top" >
+                <td>${helper.embed_logo_by_name('camptocamp_logo', width=128)}</td>
+                <td >
+                    
+                    <table style="border-top: 0px solid black; width: 100%;height:100%;;padding-left:4mm; margin-left:2%" class="dest_address">
+                        <tr>
+                            <td><b>${company.partner_id.name |entity}</b></td><td></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>${company.partner_id.address and company.partner_id.address[0].street or ''|entity}</td><td>${_("phone")}:</td><td>${company.partner_id.address and company.partner_id.address[0].phone or ''|entity} </td><td></td>
+                        </tr>
+                        <tr>
+                            <td>${company.partner_id.address and company.partner_id.address[0].street2 or ''|entity}</td><td>${_('Fax')}:</td><td>${company.partner_id.address and company.partner_id.address[0].fax or ''|entity} </td><td></td>
+                        </tr>
+                        <tr>
+                            <td>${company.partner_id.address and company.partner_id.address[0].zip or ''|entity} ${company.partner_id.address and company.partner_id.address[0].city or ''|entity}</td><td>${_('e-mail')}:</td><td><a href="mailto:${company.partner_id.address and company.partner_id.address[0].email or ''|entity}">${company.partner_id.address and company.partner_id.address[0].email or ''|entity}</a></td><td></td>
+                        </tr>
+                        <tr>
+                            <td>${company.partner_id.address and company.partner_id.address[0].country_id.name or ''|entity}</td><td></td><td style="text-align:right;font-size:12" ><span class="page"/></td><td style="text-align:left;font-size:12;"> / <span class="topage"/></td>
+                        </tr>
+                    </table> 
+                </td>
+            </tr>
+        </table>
+        <br/>
+        ${_debug or ''} 
+        <br/>
+    </body>
+</html>]]>
             </field>
             <field eval="45" name="margin_top"/>
             <field eval="0.01" name="margin_bottom"/>

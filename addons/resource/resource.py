@@ -265,28 +265,20 @@ class resource_resource(osv.osv):
         resource_objs = {}
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
+            resource_objs[user.id] = {
+                 'name' : user.name,
+                 'vacation': [],
+                 'efficiency': 1.0,
+            }
+
             resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)
-            #assert len(resource_ids) < 1, "User should not has more than one resources"
-            leaves = []
-            resource_eff = 1.0
             if resource_ids:
                 for resource in self.browse(cr, uid, resource_ids, context=context):
-                    resource_eff = resource.time_efficiency
+                    resource_objs[user.id]['efficiency'] = resource.time_efficiency
                     resource_cal = resource.calendar_id.id
                     if resource_cal:
                         leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
-                    temp = {
-                             'name' : resource.name,
-                             'vacation': tuple(leaves),
-                             'efficiency': resource_eff,
-                          }
-                    resource_objs[resource.id] = temp     
-#            resource_objs.append(classobj(str(user.name), (Resource,),{
-#                                             '__doc__': user.name,
-#                                             '__name__': user.name,
-#                                             'vacation': tuple(leaves),
-#                                             'efficiency': resource_eff,
-#                                          }))
+                        resource_objs[user.id]['vacation'] += list(leaves)
         return resource_objs
 
     def compute_vacation(self, cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
@@ -323,8 +315,8 @@ class resource_resource(osv.osv):
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
-            return [('fri', '1:0-12:0','12:0-24:0'), ('thu', '1:0-12:0','12:0-24:0'), ('wed', '1:0-12:0','12:0-24:0'), 
-                   ('mon', '1:0-12:0','12:0-24:0'), ('tue', '1:0-12:0','12:0-24:0'), ('sat', '1:0-12:0','12:0-24:0'), ('sun', '1:0-12:0','12:0-24:0')]
+            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'), 
+                   ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""

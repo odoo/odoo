@@ -30,7 +30,7 @@ class project_compute_tasks(osv.osv_memory):
 
     def compute_date(self, cr, uid, ids, context=None):
         """
-        Schedule the tasks according to resource available and priority.
+        Schedule the tasks according to users and priority.
         """
         project_pool = self.pool.get('project.project')
         task_pool = self.pool.get('project.task')

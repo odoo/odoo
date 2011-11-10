@@ -6,31 +6,26 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name='company_id' />
-                    <newline />
-                    <field name="name"/>
-                    <field name="type"/>
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name='company_id' />
+                    </group>
                     <field name="img" widget="image" colspan="4"/>
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="header_webkit">
             <field name="name">res.company.header.html</field>
             <field name="model">ir.header_webkit</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form>
-                    <field name="name"/>
-                    <newline/>
-                    <notebook>
-                        <page string="Content and styling" >
-                            <field name='company_id' />
-                            <field name="css" colspan="4"/>
-                            <field name="html" colspan="4"/>
-                            <field name="footer_html" colspan="4" />
-                        </page>
-                        <page string="page setup" >
+                    <field name="name" colspan="4"/>
+                    <notebook colspan="4">
+                        <page string="Company and Page Setup" >
+                            <field name='company_id' colspan="4"/>
                             <field name="orientation" />
                             <field name="format" />
                             <field name="margin_top" />
@@ -38,27 +33,35 @@
                             <field name="margin_left" />
                             <field name="margin_right" />
                         </page>
+                        <page string="CSS Style" >
+                            <field name="css" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Header" >
+                            <field name="html" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Footer" >
+                            <field name="footer_html" colspan="4" nolabel="1"/>
+                        </page>
                     </notebook>
                 </form>
             </field>
         </record>
-        
+
         <record id="action_header_img" model="ir.actions.act_window">
-            <field name="name">Header IMG</field>
+            <field name="name">Webkit Logos</field>
             <field name="res_model">ir.header_img</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_header_img" id="menu_header_img" parent="base.menu_res_company_global" sequence="14"/>
-        
+
         <record id="action_header_webkit" model="ir.actions.act_window">
-            <field name="name">Header HTML</field>
+            <field name="name">Webkit Headers/Footers</field>
             <field name="res_model">ir.header_webkit</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
         <menuitem action="action_header_webkit" id="menu_header_webkit" parent="base.menu_res_company_global" sequence="14"/>
-        
-        
+
     </data>
 </openerp>

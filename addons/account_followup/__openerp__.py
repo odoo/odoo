@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Followups Management',
+    'name': 'Followup Management',
     'version': '1.0',
     'category': 'Accounting & Finance',
     'complexity': "normal",
