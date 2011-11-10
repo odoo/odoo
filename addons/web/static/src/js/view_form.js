@@ -926,8 +926,8 @@ openerp.web.form.WidgetNotebook = openerp.web.form.Widget.extend({
     }
 });
 
-openerp.web.form.WidgetGroupFrame = openerp.web.form.WidgetFrame.extend({
-    template: 'WidgetGroupFrame',
+openerp.web.form.WidgetGroup = openerp.web.form.WidgetFrame.extend({
+    template: 'WidgetGroup',
 }),
 
 openerp.web.form.WidgetNotebookPage = openerp.web.form.WidgetFrame.extend({
@@ -3006,7 +3006,7 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.exte
  */
 openerp.web.form.widgets = new openerp.web.Registry({
     'frame' : 'openerp.web.form.WidgetFrame',
-    'group' : 'openerp.web.form.WidgetGroupFrame',
+    'group' : 'openerp.web.form.WidgetGroup',
     'notebook' : 'openerp.web.form.WidgetNotebook',
     'notebookpage' : 'openerp.web.form.WidgetNotebookPage',
     'separator' : 'openerp.web.form.WidgetSeparator',
