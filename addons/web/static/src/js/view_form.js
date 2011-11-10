@@ -2331,6 +2331,10 @@ openerp.web.form.FieldMany2Many = openerp.web.form.Field.extend({
                     'deletable': self.is_readonly() ? false : true,
                     'selectable': self.multi_selection
             });
+        var embedded = (this.field.views || {}).tree;
+        if (embedded) {
+            this.list_view.set_embedded_view(embedded);
+        }
         this.list_view.m2m_field = this;
         var loaded = $.Deferred();
         this.list_view.on_loaded.add_last(function() {
