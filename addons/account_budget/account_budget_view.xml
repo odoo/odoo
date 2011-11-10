@@ -204,12 +204,13 @@
             <field name="arch" type="xml">
                 <tree string="Budget Lines">
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="crossovered_budget_id" invisible="1"/>
                     <field name="general_budget_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="paid_date"/>
                     <field name="planned_amount"/>
-                    <field name="practical_amount" select="1"/>
+                    <field name="practical_amount"/>
                     <field name="theoritical_amount"/>
                     <field name="percentage"/>
                 </tree>

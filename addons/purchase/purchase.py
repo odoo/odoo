@@ -188,11 +188,10 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Based on purchase order lines'),('order','Draft invoices pre-generated'),('picking','Based on receptions')], 'Invoicing Control', required=True,
-            help="Based on orders: a draft invoice will be generated based on the purchase order. The accountant " \
-                "will just have to validate this invoice for control.\n" \
-                "Based on receptions: a draft invoice will be generated based on validated receptions.\n" \
-                "Pre-generate Invoice: allows you to generate draft suppliers invoices on validation of the PO."
+        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated invoice'),('picking','Based on receptions')], 'Invoicing Control', required=True,
+            help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' frow where you can selectively create an invoice.\n" \
+                "Based on generated invoice: create a draft invoice you can validate later.\n" \
+                "Based on receptions: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
@@ -436,6 +435,7 @@ class purchase_order(osv.osv):
             picking_id = self.pool.get('stock.picking').create(cr, uid, {
                 'name': pick_name,
                 'origin': order.name+((order.origin and (':'+order.origin)) or ''),
+                'date': order.date_order,
                 'type': 'in',
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
