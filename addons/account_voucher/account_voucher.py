@@ -862,6 +862,25 @@ class account_voucher_line(osv.osv):
     _defaults = {
         'name': ''
     }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(account_voucher_line, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        doc = etree.XML(res['arch'])
+        nodes = doc.xpath("//field[@name='account_id']")
+        for node in nodes:
+            if context.get('default_type') == 'dr':
+                if context.get('type') == 'payment':
+                    node.set('domain', "[('type','=','payable')]")
+                elif context.get('type') == 'purchase':
+                    node.set('domain', "[('user_type.report_type','=','expense'), ('type','!=','view')]")
+            elif context.get('default_type') == 'cr':
+                if context.get('type') == 'sale':
+                    node.set('domain', "[('user_type.report_type','=','income'),('type','!=','view')]")
+                elif context.get('type') == 'receipt':
+                    node.set('domain', "[('type','=','receivable')]")
+        res['arch'] = etree.tostring(doc)
+        return res
+
 
     def onchange_move_line_id(self, cr, user, ids, move_line_id, context=None):
         """
