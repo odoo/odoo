@@ -171,15 +171,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource">
-                   <group colspan="4" col="8">
+                   <group colspan="4" col="10">
                     <field name="name" colspan="4"/>
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                     <field name="active"/>
                     <field name="resource_type" invisible="1"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
-                   <group colspan="4">
-                    <field name="calendar_id" string="Working Period"/>
+                   <group colspan="2" col="6">
+                    <field name="calendar_id" string="Working Period" colspan="3"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
                    </group>
                 </form>
