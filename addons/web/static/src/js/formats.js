@@ -93,7 +93,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             } while(tmp !== value);
             tmp = Number(value);
             if (isNaN(tmp))
-                throw value + " is not a correct integer";
+                throw new Error(value + " is not a correct integer");
             return tmp;
         case 'float':
             var tmp = Number(value);
@@ -107,42 +107,42 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
             } while(tmp !== tmp2);
             tmp = Number(tmp);
             if (isNaN(tmp))
-                throw value + " is not a correct float";
+                throw new Error(value + " is not a correct float");
             return tmp;
         case 'float_time':
-            var tmp = value.split(":");
-            if (tmp.length != 2)
-                throw value + " is not a correct float_time";
-            var tmp1 = openerp.web.parse_value(tmp[0], {type: "integer"});
-            var tmp2 = openerp.web.parse_value(tmp[1], {type: "integer"});
-            return tmp1 + (tmp2 / 60);
+            var float_time_pair = value.split(":");
+            if (float_time_pair.length != 2)
+                throw new Error(value + " is not a correct float_time");
+            var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
+            var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
+            return hours + (minutes / 60);
         case 'progressbar':
             return openerp.web.parse_value(value, {type: "float"});
         case 'datetime':
-            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
-                    Date.CultureInfo.formatPatterns.longTime));
-            if (tmp !== null)
-                return openerp.web.datetime_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.datetime_to_str(tmp);
-            throw value + " is not a valid datetime";
+            var datetime = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
+                                                                     Date.CultureInfo.formatPatterns.longTime));
+            if (datetime !== null)
+                return openerp.web.datetime_to_str(datetime);
+            datetime = Date.parse(value);
+            if (datetime !== null)
+                return openerp.web.datetime_to_str(datetime);
+            throw new Error(value + " is not a valid datetime");
         case 'date':
-            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
-            if (tmp !== null)
-                return openerp.web.date_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.date_to_str(tmp);
-            throw value + " is not a valid date";
+            var date = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
+            if (date !== null)
+                return openerp.web.date_to_str(date);
+            date = Date.parse(value);
+            if (date !== null)
+                return openerp.web.date_to_str(date);
+            throw new Error(value + " is not a valid date");
         case 'time':
-            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
-            if (tmp !== null)
-                return openerp.web.time_to_str(tmp);
-            tmp = Date.parse(value);
-            if (tmp !== null)
-                return openerp.web.time_to_str(tmp);
-            throw value + " is not a valid time";
+            var time = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
+            if (time !== null)
+                return openerp.web.time_to_str(time);
+            time = Date.parse(value);
+            if (time !== null)
+                return openerp.web.time_to_str(time);
+            throw new Error(value + " is not a valid time");
     }
     return value;
 };
