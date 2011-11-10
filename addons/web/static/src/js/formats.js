@@ -112,7 +112,7 @@ openerp.web.parse_value = function (value, descriptor, value_if_empty) {
         case 'float_time':
             var float_time_pair = value.split(":");
             if (float_time_pair.length != 2)
-                throw new Error(value + " is not a correct float_time");
+                return openerp.web.parse_value(value, {type: "float"});
             var hours = openerp.web.parse_value(float_time_pair[0], {type: "integer"});
             var minutes = openerp.web.parse_value(float_time_pair[1], {type: "integer"});
             return hours + (minutes / 60);
