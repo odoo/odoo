@@ -163,12 +163,9 @@ class account_invoice_report(osv.osv):
                 left join product_product pr on (pr.id=ail.product_id)
                 left join product_template pt on (pt.id=pr.product_tmpl_id)
                 left join product_uom u on (u.id=ail.uos_id)
-                left join res_partner rp on (ai.partner_id=rp.id)
-                left join account_account aa on (ail.account_id=aa.id),
                 res_currency_rate cr
                 where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
                 and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) limit 1)
-                and rp.active='true' and pr.active='true' and aa.active='true'
                 group by ail.product_id,
                     ai.date_invoice,
                     ai.id,

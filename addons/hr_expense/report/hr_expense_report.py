@@ -100,8 +100,6 @@ class hr_expense_report(osv.osv):
                  from hr_expense_line l
                  left join hr_expense_expense s on (s.id=l.expense_id)
                  left join product_uom u on (u.id=l.uom_id)
-                 left join product_product pp on (pp.id=l.product_id)
-                 where pp.active='true'
                  group by
                      date_trunc('day',s.date),
                      to_char(date_trunc('day',s.create_date), 'YYYY'),

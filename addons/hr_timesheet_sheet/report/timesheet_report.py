@@ -98,9 +98,6 @@ class timesheet_report(osv.osv):
                     from account_analytic_line as aal
                     left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
-                    left join account_account as aa on (aal.general_account_id=aa.id)
-                    left join product_product as pp on (aal.product_id=pp.id)
-                    where aa.active='true' and pp.active='true'
                     group by
                         to_char(htss.date_current,'YYYY'),
                         to_char(htss.date_current,'MM'),

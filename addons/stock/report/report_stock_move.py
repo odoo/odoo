@@ -128,9 +128,6 @@ class report_stock_move(osv.osv):
                         LEFT JOIN product_uom pu ON (sm.product_uom=pu.id)
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                        LEFT JOIN stock_location sl ON (sm.location_id = sl.id)
-                        LEFT JOIN res_partner rp on(sm.partner_id = rp.id)
-                    where pp.active = 'true' and rp.active='true' and sl.active='true'
                     GROUP BY
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
@@ -189,7 +186,6 @@ CREATE OR REPLACE view report_stock_inventory AS (
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_id=l.id)
-    WHERE pp.active = 'true' and l.active='true'
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id,  m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
@@ -211,7 +207,6 @@ CREATE OR REPLACE view report_stock_inventory AS (
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
-    WHERE pp.active = 'true' and l.active='true'
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id

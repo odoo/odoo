@@ -99,8 +99,6 @@ class hr_recruitment_report(osv.osv):
                      extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
                      count(*) as nbr
                  from hr_applicant s
-                 left join res_partner rp on (s.partner_id=rp.id)
-                 where rp.active='true'
                  group by
                      to_char(s.create_date, 'YYYY'),
                      to_char(s.create_date, 'MM'),

@@ -77,9 +77,6 @@ class pos_order_report(osv.osv):
                     left join pos_order s on (s.id=l.order_id)
                     left join product_template pt on (pt.id=l.product_id)
                     left join product_uom u on (u.id=pt.uom_id)
-                    left join res_partner rp on (s.partner_id=rp.id)
-                    left join product_product pp on (pp.id=l.product_id)
-                where rp.active='true' and pp.active='true'
                 group by
                     to_char(s.date_order, 'dd-MM-YYYY'),to_char(s.date_order, 'YYYY'),to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'), s.partner_id,s.state,
