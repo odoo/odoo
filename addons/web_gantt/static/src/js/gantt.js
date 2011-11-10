@@ -4,8 +4,6 @@
 openerp.web_gantt = function (openerp) {
 var _t = openerp.web._t;
 var QWeb = openerp.web.qweb;
-
-QWeb.add_template('/web_gantt/static/src/xml/web_gantt.xml');
 openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
 openerp.web_gantt.GanttView = openerp.web.View.extend({
 

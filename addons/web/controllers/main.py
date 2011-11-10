@@ -24,19 +24,51 @@ openerpweb = web.common.http
 # OpenERP Web web Controllers
 #----------------------------------------------------------
 
-def concat_files(file_list):
-    """ Concatenate file content
+
+def concat_xml(file_list):
+    """Concatenate xml files
     return (concat,timestamp)
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
+    root = None
+    files_timestamp = 0
+    for fname in file_list:
+        ftime = os.path.getmtime(fname)
+        if ftime > files_timestamp:
+            files_timestamp = ftime
+
+        xml = ElementTree.parse(fname).getroot()
+
+        if root is None:
+            root = ElementTree.Element(xml.tag)
+        #elif root.tag != xml.tag:
+        #    raise ValueError("Root tags missmatch: %r != %r" % (root.tag, xml.tag))
+
+        for child in xml.getchildren():
+            root.append(child)
+    return ElementTree.tostring(root, 'utf-8'), files_timestamp
+
+
+def concat_files(file_list, reader=None):
+    """ Concatenate file content
+    return (concat,timestamp)
+    concat: concatenation of file content, read by `reader`
+    timestamp: max(os.path.getmtime of file_list)
+    """
+    if reader is None:
+        def reader(f):
+            with open(f) as fp:
+                return fp.read()
+
     files_content = []
     files_timestamp = 0
     for fname in file_list:
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
-        files_content.append(open(fname).read())
+
+        files_content.append(reader(fname))
     files_concat = "".join(files_content)
     return files_concat,files_timestamp
 
@@ -98,10 +130,42 @@ class WebClient(openerpweb.Controller):
     def jslist(self, req, mods=None):
         return self.manifest_list(req, mods, 'js')
 
+    @openerpweb.jsonrequest
+    def qweblist(self, req, mods=None):
+        return self.manifest_list(req, mods, 'qweb')
+
     @openerpweb.httprequest
     def css(self, req, mods=None):
-        files = [f[0] for f in self.manifest_glob(req, mods, 'css')]
-        content,timestamp = concat_files(files)
+
+        files = list(self.manifest_glob(req, mods, 'css'))
+        file_map = dict(files)
+
+        rx_import = re.compile(r"""@import\s+('|")(?!'|"|/|https?://)""", re.U)
+        rx_url = re.compile(r"""url\s*\(\s*('|"|)(?!'|"|/|https?://)""", re.U)
+
+
+        def reader(f):
+            """read the a css file and absolutify all relative uris"""
+            with open(f) as fp:
+                data = fp.read()
+
+            web_path = file_map[f]
+            web_dir = os.path.dirname(web_path)
+
+            data = re.sub(
+                rx_import,
+                r"""@import \1%s/""" % (web_dir,),
+                data,
+            )
+
+            data = re.sub(
+                rx_url,
+                r"""url(\1%s/""" % (web_dir,),
+                data,
+            )
+            return data
+
+        content,timestamp = concat_files((f[0] for f in files), reader)
         # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
@@ -111,6 +175,14 @@ class WebClient(openerpweb.Controller):
         content,timestamp = concat_files(files)
         # TODO use timestamp to set Last mofified date and E-tag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
+
+    @openerpweb.httprequest
+    def qweb(self, req, mods=None):
+        files = [f[0] for f in self.manifest_glob(req, mods, 'qweb')]
+        content,timestamp = concat_xml(files)
+        # TODO use timestamp to set Last mofified date and E-tag
+        return req.make_response(content, [('Content-Type', 'text/xml')])
+
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
@@ -451,7 +523,7 @@ def clean_action(req, action, do_not_eval=False):
         # values come from the server, we can just eval them
         if isinstance(action.get('context'), basestring):
             action['context'] = eval( action['context'], eval_ctx ) or {}
-    
+
         if isinstance(action.get('domain'), basestring):
             action['domain'] = eval( action['domain'], eval_ctx ) or []
     else:
@@ -1121,19 +1193,26 @@ class Export(View):
 
     @openerpweb.jsonrequest
     def get_fields(self, req, model, prefix='', parent_name= '',
-                   import_compat=True, parent_field_type=None):
+                   import_compat=True, parent_field_type=None,
+                   exclude=None):
 
         if import_compat and parent_field_type == "many2one":
             fields = {}
         else:
             fields = self.fields_get(req, model)
-        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
+
+        if import_compat:
+            fields.pop('id', None)
+        else:
+            fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
             key=lambda field: field[1].get('string', ''))
 
         records = []
         for field_name, field in fields_sequence:
+            if import_compat and (exclude and field_name in exclude):
+                continue
             if import_compat and field.get('readonly'):
                 # If none of the field's states unsets readonly, skip the field
                 if all(dict(attrs).get('readonly', True)
@@ -1145,7 +1224,8 @@ class Export(View):
             record = {'id': id, 'string': name,
                       'value': id, 'children': False,
                       'field_type': field.get('type'),
-                      'required': field.get('required')}
+                      'required': field.get('required'),
+                      'relation_field': field.get('relation_field')}
             records.append(record)
 
             if len(name.split('/')) < 3 and 'relation' in field:
@@ -1177,7 +1257,6 @@ class Export(View):
     def fields_info(self, req, model, export_fields):
         info = {}
         fields = self.fields_get(req, model)
-        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is

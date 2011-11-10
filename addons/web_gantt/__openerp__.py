@@ -9,5 +9,8 @@
         'static/src/js/gantt.js'
     ],
     "css": ['static/lib/dhtmlxGantt/codebase/dhtmlxgantt.css'],
+    'qweb' : [
+        "static/src/xml/*.xml",
+    ],
     'active': True
 }
