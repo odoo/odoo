@@ -2419,7 +2419,8 @@ openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends ope
         }, read_function: null});
         this.initial_ids = this.options.initial_ids;
         this.created_elements = [];
-        openerp.web.form.dialog(this.render(), {close:function() {
+        this.render_element();
+        openerp.web.form.dialog(this.$element, {close:function() {
             self.check_exit();
         }});
         this.start();
@@ -2607,7 +2608,8 @@ openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp
         this.row_id = row_id;
         this.context = context || {};
         this.options = _.defaults(options || {}, {"auto_write": true});
-        jQuery(this.render()).dialog({title: '',
+        this.render_element();
+        this.$element.dialog({title: '',
                     modal: true,
                     width: 960,
                     height: 600});
