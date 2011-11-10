@@ -425,17 +425,13 @@ class purchase_order(osv.osv):
         return True
 
     def _prepare_order_picking(self, cr, uid, order, *args):
-        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in')
-        istate = 'none'
-        if order.invoice_method=='picking':
-            istate = '2binvoiced'
         return {
-            'name': pick_name,
-            'origin': order.name+((order.origin and (':'+order.origin)) or ''),
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
+            'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': order.date_order,
             'type': 'in',
             'address_id': order.dest_address_id.id or order.partner_address_id.id,
-            'invoice_state': istate,
+            'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
@@ -443,7 +439,7 @@ class purchase_order(osv.osv):
          
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, *args):
         return {
-            'name': order.name + ': ' +(order_line.name or ''),
+            'name': order.name + ': ' + (order_line.name or ''),
             'product_id': order_line.product_id.id,
             'product_qty': order_line.product_qty,
             'product_uos_qty': order_line.product_qty,
@@ -463,8 +459,8 @@ class purchase_order(osv.osv):
         }
 
     def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, *args):
-        """
-        Creates pickings and appropriate stock moves for given order lines.
+        """Creates pickings and appropriate stock moves for given order lines, then
+        confirms the moves, makes them available, and confirms the picking.
 
         If ``picking_id`` is provided, the stock moves will be added to it, otherwise
         a standard outgoing picking will be created to wrap the stock moves, as returned
@@ -475,33 +471,35 @@ class purchase_order(osv.osv):
         different subsets of ``order_lines`` and/or preset ``picking_id`` values.
 
         :param browse_record order: purchase order to which the order lines belong
-        :param list(browse_record) order_lines: sale order line records to procure
+        :param list(browse_record) order_lines: purchase order line records for which picking
+                                                and moves should be created.
         :param int picking_id: optional ID of a stock picking to which the created stock moves
-                               will be added. A new picking will be created if ommitted.
-        :return: True
+                               will be added. A new picking will be created if omitted.
+        :return: list of IDs of pickings used/created for the given order lines (usually just one)
         """
         if not picking_id: 
-            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, args))
+            picking_id = self.pool.get('stock.picking').create(cr, uid, self._prepare_order_picking(cr, uid, order, *args))
         todo_moves = []
+        stock_move = self.pool.get('stock.move')
+        wf_service = netsvc.LocalService("workflow")
         for order_line in order_lines:
             if not order_line.product_id:
                 continue
-            if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
-                move = self.pool.get('stock.move').create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, args))
+            if order_line.product_id.type in ('product', 'consu'):
+                move = stock_move.create(cr, uid, self._prepare_order_line_move(cr, uid, order, order_line, picking_id, *args))
                 if order_line.move_dest_id:
-                    self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id': order.location_id.id})
+                    order_line.move_dest_id.write({'location_id': order.location_id.id})
                 todo_moves.append(move)
-                self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
-                self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
-            
-        return picking_id
-    
+        stock_move.action_confirm(cr, uid, todo_moves)
+        stock_move.force_assign(cr, uid, todo_moves)
+        wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+        return [picking_id]
+
     def action_picking_create(self,cr, uid, ids, *args):
+        picking_ids = []
         for order in self.browse(cr, uid, ids):
-            picking_id = self._create_pickings(cr, uid, order, [order_line for order_line in order.order_line], None, args)
-        return picking_id #FIXME this is brittle to assume there is only 1 picking_id, but has been kept for API compatibility
+            picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, *args))
+        return picking_ids
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
