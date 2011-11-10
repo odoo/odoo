@@ -1,7 +1,5 @@
 
 openerp.share = function(instance) {
-var QWeb = instance.web.qweb;
-QWeb.add_template('/share/static/src/xml/share.xml');
 
 function launch_wizard(self, view) {
         var action = view.widget_parent.action;
@@ -30,10 +28,9 @@ function if_has_share(yes, no) {
     if (!_has_share) {
         _has_share = $.Deferred(function() {
             var self = this;
-            var session = instance.webclient.session;
-            session.on_session_invalid.add_last(function() { _has_share = null; });
-            var func = new instance.web.Model(session, "share.wizard").get_func("has_share");
-            func(session.uid).pipe(function(res) {
+            instance.connection.on_session_invalid.add_last(function() { _has_share = null; });
+            var func = new instance.web.Model(null, "share.wizard").get_func("has_share");
+            func(instance.connection.uid).pipe(function(res) {
                 if(res) {
                     self.resolve();
                 } else {

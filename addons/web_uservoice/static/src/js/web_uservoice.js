@@ -1,15 +1,6 @@
 
 openerp.web_uservoice = function(instance) {
 
-var QWeb = instance.web.qweb;
-QWeb.add_template('/web_uservoice/static/src/xml/web_uservoice.xml');
-
-$(function() {
-    var src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
-    $.getScript(src);
-});
-
-
 instance.web_uservoice.UserVoice = instance.web.Widget.extend({
     template: 'Header-UserVoice',
     default_forum: '77459',
@@ -73,8 +64,15 @@ instance.web_uservoice.UserVoice = instance.web.Widget.extend({
 });
 
 
-instance.webclient.uservoice = new instance.web_uservoice.UserVoice(instance.webclient);
-instance.webclient.uservoice.prependTo('div.header_corner');
+if (instance.webclient) {
+    $(function() {
+        var src = ("https:" == document.location.protocol ? "https://" : "http://") + "cdn.uservoice.com/javascripts/widgets/tab.js";
+        $.getScript(src);
+    });
+
+    instance.webclient.uservoice = new instance.web_uservoice.UserVoice(instance.webclient);
+    instance.webclient.uservoice.prependTo('div.header_corner');
+}
 
 };
 
