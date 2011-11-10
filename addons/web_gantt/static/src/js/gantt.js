@@ -88,6 +88,7 @@ init: function(parent, dataset, view_id) {
         
         this.GroupProject = _.map(this.group_by, function(grp) {
                 return _.groupBy(projects, function(prj) {
+                    if(!prj[grp]) prj[grp] = 'Undefined';
                     return prj[grp];
                 })
             });
@@ -100,16 +101,12 @@ init: function(parent, dataset, view_id) {
         
         this.GanttTasks = [];
         if(this.group_by.length) {
-            _.each(this.GroupProject, function(GrpProject, index) {
-                self.GanttTasks.push([]);
-                var counter = 0;
-                _.each(GrpProject, function(grp, grpindex) {
-                    var name = grpindex.split(',');
-                    self.GanttTasks[index]
-                        .push(new GanttTaskInfo(index + '_' + counter , name[name.length - 1], self.project_start_date, self.total_duration, 100, ""));
-                    counter += 1;
-                });
-            })
+            _.each(this.GroupProject, function(grp, index) {
+                var name = _.keys(grp)[0];
+                name = name.split(',');
+//                index > 0 ? "" + (index - 1)
+                self.GanttTasks.push(new GanttTaskInfo(index, name[name.length - 1], self.project_start_date, self.total_duration, 100, index > 0 ? (index - 1) : ""));
+            });
         } else {
             this.GanttTasks.push(new GanttTaskInfo(0, self.name, self.project_start_date, self.total_duration, 100, ""));
         }
@@ -121,19 +118,10 @@ init: function(parent, dataset, view_id) {
         var self = this,
             tasks = this.database_projects;
         if (this.group_by.length) {
-            _.each(this.GroupProject, function(grpproject, index) {
-                var counter = 0;
-                _.each(grpproject, function(prj, gindex) {
-                    _.each(prj, function(task, tindex) {
-                        var name = task[self.text];
-                        if (task[self.text] instanceof Array) {
-                            name = task[self.text][1];
-                        }
-                        self.GanttTasks[index][counter]
-                            .addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""))
-                    });
-                    counter += 1;
-                })
+            _.each(_.values(_.last(this.GroupProject))[0], function(task, index) {
+                var name = task[self.text];
+                _.last(self.GanttTasks)
+                    .addChildTask(new GanttTaskInfo(task.id, name, self.format_date(task[self.date_start]), self.project_duration[index], 100, ""))
             });
         }
         else {
@@ -220,9 +208,7 @@ init: function(parent, dataset, view_id) {
         
         if (this.group_by.length) {
             _.each(self.GanttTasks, function(tasks, index) {
-                _.each(tasks, function(task, tindex) {
-                    self.GanttProjects.addTask(task);
-                });
+                self.GanttProjects.addTask(tasks);
             });
         }
         else {
