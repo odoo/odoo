@@ -387,10 +387,16 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             if (self.can_be_discarded() && self.datarecord.id) {
-                self.dataset.unlink([self.datarecord.id]).then(function() {
-                    self.on_pager_action('next');
-                    def.resolve();
-                });
+                if (confirm(_t("Do you really want to delete this record?"))) {
+                    self.dataset.unlink([self.datarecord.id]).then(function() {
+                        self.on_pager_action('next');
+                        def.resolve();
+                    });
+                } else {
+                    setTimeout(function () {
+                        def.reject();
+                    }, 0)
+                }
             }
         });
         return def.promise();
