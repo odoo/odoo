@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
               datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
-  <!-- Handling of element overloading when inheriting from a base
-       template
-  -->
-  <rng:define name="overload">
-    <rng:optional>
-      <!--
-          Alter matched element with content
-      -->
-      <rng:choice>
-        <rng:attribute name="position">
-          <rng:choice>
-            <!-- Insert content before first child -->
-            <rng:value>before</rng:value>
-            <!-- Insert content after last child -->
-            <rng:value>after</rng:value>
-            <!-- Replace all children with content -->
-            <rng:value>inside</rng:value>
-            <!-- Replace matched element itself with content -->
-            <rng:value>replace</rng:value>
-          </rng:choice>
-        </rng:attribute>
-        <rng:group>
-          <rng:attribute name="position">
-            <!-- Edit element attributes -->
-            <rng:value>attributes</rng:value>
-          </rng:attribute>
-          <rng:oneOrMore>
-            <rng:element name="attribute">
-              <rng:attribute name="name"><rng:text/></rng:attribute>
-              <rng:text />
-            </rng:element>
-          </rng:oneOrMore>
-        </rng:group>
-      </rng:choice>
-    </rng:optional>
-  </rng:define>
+    <!-- Handling of element overloading when inheriting from a base
+         template
+    -->
+    <rng:define name="overload">
+        <rng:optional>
+            <!--
+                Alter matched element with content
+            -->
+            <rng:choice>
+                <rng:attribute name="position">
+                    <rng:choice>
+                        <!-- Insert content before first child -->
+                        <rng:value>before</rng:value>
+                        <!-- Insert content after last child -->
+                        <rng:value>after</rng:value>
+                        <!-- Replace all children with content -->
+                        <rng:value>inside</rng:value>
+                        <!-- Replace matched element itself with content -->
+                        <rng:value>replace</rng:value>
+                    </rng:choice>
+                </rng:attribute>
+                <rng:group>
+                    <rng:attribute name="position">
+                        <!-- Edit element attributes -->
+                        <rng:value>attributes</rng:value>
+                    </rng:attribute>
+                    <rng:oneOrMore>
+                        <rng:element name="attribute">
+                            <rng:attribute name="name"><rng:text/></rng:attribute>
+                            <rng:text />
+                        </rng:element>
+                    </rng:oneOrMore>
+                </rng:group>
+            </rng:choice>
+        </rng:optional>
+    </rng:define>
 
     <rng:define name="access_rights">
         <rng:optional>
@@ -44,29 +44,27 @@
         </rng:optional>
     </rng:define>
 
-
-
-  <rng:define name="container">
-    <rng:optional><rng:attribute name="col"/></rng:optional>
-    <rng:zeroOrMore>
-      <rng:choice>
-        <rng:ref name="notebook"/>
-        <rng:ref name="field"/>
-        <rng:ref name="group"/>
-        <rng:ref name="button"/>
-        <rng:ref name="hpaned" />
-        <rng:ref name="label" />
-        <rng:ref name="separator"/>
-        <rng:ref name="image"/>
-        <rng:ref name="form"/>
-        <rng:ref name="vpaned"/>
-        <rng:ref name="filter"/>
-        <rng:ref name="html"/>
-        <rng:element name="newline"><rng:empty/></rng:element>
-        <rng:element name="properties"><rng:empty/></rng:element>
-      </rng:choice>
-    </rng:zeroOrMore>
-  </rng:define>
+    <rng:define name="container">
+        <rng:optional><rng:attribute name="col"/></rng:optional>
+        <rng:zeroOrMore>
+            <rng:choice>
+                <rng:ref name="notebook"/>
+                <rng:ref name="field"/>
+                <rng:ref name="group"/>
+                <rng:ref name="button"/>
+                <rng:ref name="hpaned" />
+                <rng:ref name="label" />
+                <rng:ref name="separator"/>
+                <rng:ref name="image"/>
+                <rng:ref name="form"/>
+                <rng:ref name="vpaned"/>
+                <rng:ref name="filter"/>
+                <rng:ref name="html"/>
+                <rng:element name="newline"><rng:empty/></rng:element>
+                <rng:element name="properties"><rng:empty/></rng:element>
+            </rng:choice>
+        </rng:zeroOrMore>
+    </rng:define>
 
     <rng:define name="form">
         <rng:element name="form">
