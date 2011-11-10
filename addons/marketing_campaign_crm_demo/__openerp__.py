@@ -40,6 +40,9 @@ Creates demo data like leads, campaigns and segments for the module marketing_ca
     'demo_xml': [
         'marketing_campaign_demo.xml',
     ],
+    'test': [
+            'test/process/marketing_campaign.yml',
+             ],
     'installable': True,
     'active': False,
     'certificate' : '001005497972871352957',

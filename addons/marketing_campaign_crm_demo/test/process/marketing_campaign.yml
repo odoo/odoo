@@ -1,0 +1,27 @@
+-
+  I created marketing campaing "OpenERP OnDemand Free Trial" to reach our partners leads 
+  with specific activity(offers) and communication via email and take action according 
+  to campaing activity.
+  Now I start this compaign.
+-
+  !workflow {model: marketing.campaign, action: state_running_set, ref: marketing_campaign_openerpondemandfreetrial0}
+-
+  I check the campaign on Running mode.
+-
+  !assert {model: marketing.campaign, id: marketing_campaign_openerpondemandfreetrial0}:
+    - state == 'running'
+-
+  This campaign is only for Belgium partner of leads, so I assinged this Campaign 
+  to right segment(Only for Belgium Leads), after that I start this segment. 
+-
+  !workflow {model: marketing.campaign.segment, action: state_running_set, ref: marketing_campaign_segment_bosslistusassociationslist0}
+-
+  I check the Segment on Running mode.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment_bosslistusassociationslist0}:
+    - state == 'running'
+-
+  I synchronized this segment manually to see all step of activity covered on this campaign.
+-
+  !python {model: marketing.campaign.segment}: |
+    self.synchroniz(cr, uid, [ref("marketing_campaign_segment_bosslistusassociationslist0")])
