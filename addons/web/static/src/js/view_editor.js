@@ -54,6 +54,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             },
         }).start().open();
+        this.main_view_id = this.parent.fields_view.view_id;
         var action_manager = new openerp.web.ActionManager(this);
         action_manager.appendTo(this.view_edit_dialog);
         $.when(action_manager.do_action(action)).then(function() {
