@@ -551,9 +551,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             type_widget;
             self.ready  = $.when(self.on_groups(id)).then(function () {
                 if (_.include(widget,id)){
-                    type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, arch_val, id);
+                    type_widget =  new (self.property.get_any(['undefined' , id, arch_val[0]['att_list'][0]])) (self.edit_node_dialog, id);
                 } else {
-                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog,arch_val, id);
+                    type_widget = new openerp.web.ViewEditor.FieldChar (self.edit_node_dialog, id);
                 }
                 var value = _.detect(arch_val[0]['att_list'],function(res) {
                     return _.include(res, id);
@@ -601,9 +601,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
-    init: function(view, node, id) {
+    init: function(view, id) {
         this.$element = view.$element;
-        this.node = node;
         this.dirty = false;
         this.name = id;
         this.value = undefined;
@@ -672,8 +671,8 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
     }
 });
 openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.registry = openerp.web.form.widgets;
         var values = _.keys(this.registry.map);
         values.push('');
@@ -682,44 +681,44 @@ openerp.web.ViewEditor.WidgetProperty = openerp.web.ViewEditor.FieldSelect.exten
     },
 });
 openerp.web.ViewEditor.IconProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = icons;
     },
 });
 openerp.web.ViewEditor.ButtonTargetProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = [['', ''], ['new', 'New Window']];
     },
 });
 openerp.web.ViewEditor.ButtonTypeProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = [['', ''], ['action', 'Action'], ['object', 'Object'], ['workflow', 'Workflow'], ['server_action', 'Server Action']];
     },
 });
 openerp.web.ViewEditor.AlignProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = [['', ''], ['0.0', 'Left'], ['0.5', 'Center'], ['1.0', 'Right']];
     },
 });
 openerp.web.ViewEditor.ButtonSpecialProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = [['',''],['save', 'Save Button'], ['cancel', 'Cancel Button'], ['open', 'Open Button']];
     },
 });
 openerp.web.ViewEditor.PositionProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.value = [['',''],['after', 'After'],['before', 'Before'],['inside', 'Inside'],['replace', 'Replace']];
     },
 });
 openerp.web.ViewEditor.GroupsProperty = openerp.web.ViewEditor.FieldSelect.extend({
-    init: function(view, node, id) {
-        this._super(view, node, id);
+    init: function(view, id) {
+        this._super(view, id);
         this.multiple = true;
     },
     start: function () {
