@@ -1808,7 +1808,7 @@ class BaseModel(object):
         """
         _rec_name = self._rec_name
         if _rec_name not in self._columns:
-            _rec_name = self._columns.keys()[0]
+            _rec_name = self._columns.keys()[0] if len(self._columns.keys()) > 0 else "id"
 
         view = etree.Element('tree', string=self._description)
         etree.SubElement(view, 'field', name=_rec_name)
