@@ -157,7 +157,7 @@ openerp.web.auto_str_to_date = function(value, type) {
     try {
         return openerp.web.str_to_time(value);
     } catch(e) {}
-    throw "'" + value + "' is not a valid date, datetime nor time"
+    throw new Error("'" + value + "' is not a valid date, datetime nor time");
 };
 
 openerp.web.auto_date_to_str = function(value, type) {
@@ -169,7 +169,7 @@ openerp.web.auto_date_to_str = function(value, type) {
         case 'time':
             return openerp.web.time_to_str(value);
         default:
-            throw type + " is not convertible to date, datetime nor time"
+            throw new Error(type + " is not convertible to date, datetime nor time");
     }
 };
 
