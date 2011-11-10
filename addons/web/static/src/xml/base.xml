@@ -625,7 +625,7 @@
     </t>
     <t t-if="options.radio">
         <th t-if="options.selectable" class="oe-record-selector" width="1">
-            <input type="radio" name ="radiogroup"/>
+            <input type="radio" name ="radiogroup" t-att-checked="options.select_view_id == record.get('id')? true: null"/>
         </th>
     </t>
     <t t-if="!options.radio">

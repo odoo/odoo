@@ -32,7 +32,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 action_buttons: false,
                 search_view: false,
                 pager: false,
-                radio: true
+                radio: true,
+                select_view_id: self.parent.fields_view.view_id
             },
         };
         this.view_edit_dialog = new openerp.web.Dialog(this, {
