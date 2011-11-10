@@ -165,7 +165,11 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
         }
         var model = record['params']['model'],
             prefix = record['params']['prefix'],
-            name = record['params']['name'];
+            name = record['params']['name'],
+            exclude_fields = [];
+        if (record['relation_field']) {
+            exclude_fields.push(record['relation_field']);
+        }
 
         if (!record.loaded) {
             var import_comp = self.$element.find("#import_compat").val();
@@ -174,7 +178,8 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                 prefix: prefix,
                 parent_name: name,
                 import_compat: Boolean(import_comp),
-                parent_field_type : record['field_type']
+                parent_field_type : record['field_type'],
+                exclude: exclude_fields
             }, function(results) {
                 record.loaded = true;
                 self.on_show_data(results, record.id);

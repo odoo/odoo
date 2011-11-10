@@ -109,7 +109,7 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
         }
     },
     start: function () {
-        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.dialog_options);
+        this.$dialog = $(this.$element).dialog(this.dialog_options);
         this._super();
         return this;
     },
@@ -136,10 +136,10 @@ openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog#
     }
 });
 
-openerp.web.CrashManager = openerp.web.SessionAware.extend({
-    init: function(parent) {
-        this._super((parent || {}).session);
-        this.session.on_rpc_error.add(this.on_rpc_error);
+openerp.web.CrashManager = openerp.web.CallbackEnabled.extend({
+    init: function() {
+        this._super();
+        openerp.connection.on_rpc_error.add(this.on_rpc_error);
     },
     on_rpc_error: function(error) {
         this.error = error;
@@ -959,17 +959,15 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this._super(null, element_id);
         openerp.webclient = this;
 
-        QWeb.add_template("/web/static/src/xml/base.xml");
         var params = {};
         if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
         }
         this.$element.html(QWeb.render("Interface", params));
 
-        this.notification = new openerp.web.Notification();
-        this.session = new openerp.web.Session();
+        this.notification = new openerp.web.Notification(this);
         this.loading = new openerp.web.Loading(this,"oe_loading");
-        this.crashmanager =  new openerp.web.CrashManager(this);
+        this.crashmanager =  new openerp.web.CrashManager();
 
         this.header = new openerp.web.Header(this);
         this.login = new openerp.web.Login(this);
