@@ -82,7 +82,7 @@ class auction_pay_buy(osv.osv_memory):
             lots = lot_obj.browse(cr, uid, context.get('active_ids', []), context=context)
             for lot in lots:
                 if datas['buyer_id']:
-                    if isinstance(datas['buyer_id'], tuple):
+                    if isinstance(datas['buyer_id'], (tuple, list)):
                         datas['buyer_id'] = datas['buyer_id'][0]
                     lot_obj.write(cr, uid, [lot.id], {'ach_uid': datas['buyer_id']})
                 if not lot.auction_id:
