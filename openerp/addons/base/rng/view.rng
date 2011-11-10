@@ -44,6 +44,26 @@
         </rng:optional>
     </rng:define>
 
+    <rng:define name="dashboard">
+        <rng:choice>
+            <rng:element>
+                <rng:choice>
+                    <rng:name>hpaned</rng:name>
+                    <rng:name>vpaned</rng:name>
+                </rng:choice>
+                <rng:optional>
+                    <rng:attribute name="position">
+                        <rng:data type="int"/>
+                    </rng:attribute>
+                </rng:optional>
+                <rng:zeroOrMore>
+                    <rng:optional><rng:ref name="any"/></rng:optional>
+                    <rng:optional><rng:ref name="html"/></rng:optional>
+                </rng:zeroOrMore>
+            </rng:element>
+        </rng:choice>
+    </rng:define>
+
     <rng:define name="container">
         <rng:optional><rng:attribute name="col"/></rng:optional>
         <rng:zeroOrMore>
@@ -52,12 +72,11 @@
                 <rng:ref name="field"/>
                 <rng:ref name="group"/>
                 <rng:ref name="button"/>
-                <rng:ref name="hpaned" />
                 <rng:ref name="label" />
                 <rng:ref name="separator"/>
                 <rng:ref name="image"/>
                 <rng:ref name="form"/>
-                <rng:ref name="vpaned"/>
+                <rng:ref name="dashboard"/>
                 <rng:ref name="filter"/>
                 <rng:ref name="html"/>
                 <rng:element name="newline"><rng:empty/></rng:element>
@@ -217,12 +236,11 @@
                     <rng:ref name="field"/>
                     <rng:ref name="group"/>
                     <rng:ref name="button"/>
-                    <rng:ref name="hpaned" />
                     <rng:ref name="label" />
                     <rng:ref name="separator"/>
                     <rng:ref name="image"/>
                     <rng:ref name="form"/>
-                    <rng:ref name="vpaned"/>
+                    <rng:ref name="dashboard"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="html"/>
                     <rng:element name="newline"><rng:empty/></rng:element>
@@ -276,34 +294,6 @@
         </rng:element>
     </rng:define>
 
-    <rng:define name="hpaned">
-        <rng:element name="hpaned">
-            <rng:optional>
-              <rng:attribute name="position">
-                <rng:data type="int"/>
-              </rng:attribute>
-            </rng:optional>
-            <rng:zeroOrMore>
-                <rng:ref name="any" />
-                <rng:optional><rng:ref name="html"/></rng:optional>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="vpaned">
-        <rng:element name="vpaned">
-            <rng:optional>
-              <rng:attribute name="position">
-                <rng:data type="int"/>
-              </rng:attribute>
-            </rng:optional>
-            <rng:zeroOrMore>
-                <rng:optional><rng:ref name="any"/></rng:optional>
-                <rng:optional><rng:ref name="html"/></rng:optional>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
     <rng:define name="any">
         <rng:element>
             <rng:anyName/>
@@ -339,8 +329,7 @@
                     <rng:ref name="form" />
                     <rng:ref name="page" />
                     <rng:ref name="notebook"/>
-                    <rng:ref name="hpaned"/>
-                    <rng:ref name="vpaned"/>
+                    <rng:ref name="dashboard"/>
                     <rng:ref name="filter"/>
                     <rng:ref name="html"/>
                 </rng:choice>
