@@ -11,11 +11,12 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group>
-                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
-                       <separator orientation="vertical"/>
                        <field name="name"/>
+                       <separator orientation="vertical"/>
                        <field name="user_id" string="User"/>
-                       <field name="resource_type"/>
+                       <separator orientation="vertical"/>
+                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                       <field name="resource_type" invisible="1"/>
                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
                    <newline/>
@@ -106,6 +107,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_resource_calendar_search"/>
+            <field name="help">Define working hours and time table that could be scheduled to your project members</field>
         </record>
 
         <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
@@ -173,16 +175,14 @@
                    <group colspan="4" col="6">
                     <field name="name" colspan="4"/>
                     <field name="active"/>
-                    <field name="resource_type" />
+                    <field name="resource_type" invisible="1"/>
                     <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                    </group>
-                   <notebook colspan="4">
-                     <page string="General Information">
-                       <field name="calendar_id" string="Working Period"/>
-                       <field name="time_efficiency" groups="base.group_extended"/>
-                     </page>
-	           </notebook>
+                   <group colspan="4">
+                    <field name="calendar_id" string="Working Period"/>
+                    <field name="time_efficiency" groups="base.group_extended"/>
+                   </group>
                 </form>
             </field>
         </record>
@@ -196,7 +196,7 @@
                     <field name="name" />
                     <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="resource_type" />
+                    <field name="resource_type" invisible="1"/>
                     <field name="calendar_id" string="Working Period"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
                 </tree>
@@ -204,12 +204,12 @@
         </record>
 
         <record id="action_resource_resource_tree" model="ir.actions.act_window">
-            <field name="name">Resources</field>
+            <field name="name">User Planning</field>
             <field name="res_model">resource.resource</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
-            <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
+            <field name="help">Specify the efficiency level and workload based on the weekly working hours to your project's members.</field>
         </record>
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">
@@ -251,12 +251,12 @@
             </field>
         </record>
         <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
-            <field name="name">Resource Leaves</field>
+            <field name="name">Users Leaves</field>
             <field name="res_model">resource.calendar.leaves</field>
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
-       <menuitem id="menu_resource_config" name="Resource" parent="base.menu_base_config" sequence="5" groups="base.group_extended"/>
-       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="1"/>
+       <menuitem id="menu_resource_config" name="Users Planning" parent="base.menu_base_config" sequence="1" groups="base.group_extended"/>
+       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="3"/>
     </data>
 </openerp>
