@@ -1193,19 +1193,26 @@ class Export(View):
 
     @openerpweb.jsonrequest
     def get_fields(self, req, model, prefix='', parent_name= '',
-                   import_compat=True, parent_field_type=None):
+                   import_compat=True, parent_field_type=None,
+                   exclude=None):
 
         if import_compat and parent_field_type == "many2one":
             fields = {}
         else:
             fields = self.fields_get(req, model)
-        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
+
+        if import_compat:
+            fields.pop('id', None)
+        else:
+            fields['.id'] = fields.pop('id', {'string': 'ID'})
 
         fields_sequence = sorted(fields.iteritems(),
             key=lambda field: field[1].get('string', ''))
 
         records = []
         for field_name, field in fields_sequence:
+            if import_compat and (exclude and field_name in exclude):
+                continue
             if import_compat and field.get('readonly'):
                 # If none of the field's states unsets readonly, skip the field
                 if all(dict(attrs).get('readonly', True)
@@ -1217,7 +1224,8 @@ class Export(View):
             record = {'id': id, 'string': name,
                       'value': id, 'children': False,
                       'field_type': field.get('type'),
-                      'required': field.get('required')}
+                      'required': field.get('required'),
+                      'relation_field': field.get('relation_field')}
             records.append(record)
 
             if len(name.split('/')) < 3 and 'relation' in field:
@@ -1249,7 +1257,6 @@ class Export(View):
     def fields_info(self, req, model, export_fields):
         info = {}
         fields = self.fields_get(req, model)
-        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
 
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is

@@ -23,6 +23,7 @@
         "static/lib/jquery.ui/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
         "static/lib/jquery.deferred-queue/jquery.deferred-queue.js",
+        "static/lib/jquery.scrollTo/jquery.scrollTo-min.js",
         "static/lib/json/json2.js",
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
