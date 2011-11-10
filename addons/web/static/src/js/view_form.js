@@ -3015,7 +3015,7 @@ openerp.web.form.FieldSelectionReadonly = openerp.web.form.FieldReadonly.extend(
         this.$element.find('div').text(option ? option[1] : this.values[0][1]);
     }
 });
-openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.extend({
+openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldURIReadonly.extend({
     set_value: function (value) {
         value = value || null;
         this.invalid = false;
@@ -3025,21 +3025,27 @@ openerp.web.form.FieldMany2OneReadonly = openerp.web.form.FieldCharReadonly.exte
         self.on_value_changed();
         var real_set_value = function(rval) {
             self.value = rval;
-            var div = $(self.$element.find('div'));
-            div.html('<a href="javascript:void(0)"></a>');
-            var a = $(div.find("a"));
-            a.text(rval ? rval[1] : '');
-            a.click(function() {
-                var pop = new openerp.web.form.FormOpenPopup(self.view);
-                pop.show_element(self.field.relation, self.value[0],self.build_context(), {readonly:true});
-            });
+            self.$element.find('a')
+                 .unbind('click')
+                 .text(rval ? rval[1] : '')
+                 .click(function () {
+                    self.do_action({
+                        type: 'ir.actions.act_window',
+                        res_model: self.field.relation,
+                        res_id: self.value[0],
+                        context: self.build_context(),
+                        views: [[false, 'form']],
+                        target: 'current'
+                    });
+                    return false;
+                 });
         };
         if (value && !(value instanceof Array)) {
-            var dataset = new openerp.web.DataSetStatic(
-                    this, this.field.relation, self.build_context());
-            dataset.name_get([value], function(data) {
-                real_set_value(data[0]);
-            }).fail(function() {self.tmp_value = undefined;});
+            new openerp.web.DataSetStatic(
+                    this, this.field.relation, self.build_context())
+                .name_get([value], function(data) {
+                    real_set_value(data[0]);
+            });
         } else {
             setTimeout(function() {real_set_value(value);}, 0);
         }
