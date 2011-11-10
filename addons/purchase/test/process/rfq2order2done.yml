@@ -6,7 +6,7 @@
 -
   I check the total untaxed amount of the RFQ is correctly computed
 -
-  !assert {model: purchase.order, id: order_purchase1, string: The amount of Test purchase is correctly computed}:
+  !assert {model: purchase.order, id: order_purchase1, string: The amount of RFQ is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 -
   I confirm the RFQ.
