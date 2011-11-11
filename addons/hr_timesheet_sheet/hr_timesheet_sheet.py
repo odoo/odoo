@@ -313,7 +313,7 @@ class hr_timesheet_sheet(osv.osv):
     def _default_employee(self, cr, uid, context=None):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         return emp_ids and emp_ids[0] or False
-    
+
     _defaults = {
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
@@ -329,7 +329,7 @@ class hr_timesheet_sheet(osv.osv):
             if new_user_id:
                 cr.execute('SELECT id \
                     FROM hr_timesheet_sheet_sheet \
-                    WHERE (date_from < %s and %s < date_to) \
+                    WHERE (date_from <= %s and %s <= date_to) \
                         AND user_id=%s \
                         AND id <> %s',(sheet.date_to, sheet.date_from, new_user_id, sheet.id))
                 if cr.fetchall():

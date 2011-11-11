@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-
-import tools
+from osv import fields, osv
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
@@ -30,11 +28,25 @@ class procurement_order(osv.osv):
         'task_id': fields.many2one('project.task', 'Task'),
         'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
     }
+
     def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
+        project_obj = self.pool.get('project.project')
         for procurement in self.browse(cr, uid, ids, context=context):
+            # project_id = the product's associated project if it exists,
+            #              the sales order's associated project otherwise
+            project_id = False
+            if procurement.product_id.project_id:
+                project_id = procurement.product_id.project_id.id
+            elif procurement.sale_line_id:
+                account_id = procurement.sale_line_id.order_id.project_id.id
+                if account_id:
+                    project_ids = project_obj.search(cr, uid, [('analytic_account_id', '=', account_id)])
+                    project_id = project_ids and project_ids[0] or False
+            
+            # create task under the project
             self.write(cr, uid, [procurement.id], {'state': 'running'})
             planned_hours = procurement.product_qty
             task_id = self.pool.get('project.task').create(cr, uid, {
@@ -47,7 +59,7 @@ class procurement_order(osv.osv):
                 'procurement_id': procurement.id,
                 'description': procurement.note,
                 'date_deadline': procurement.date_planned,
-                'project_id': procurement.product_id.project_id and procurement.product_id.project_id.id or False,
+                'project_id':  project_id,
                 'state': 'draft',
                 'company_id': procurement.company_id.id,
             },context=context)

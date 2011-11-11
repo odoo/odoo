@@ -1,8 +1,5 @@
 openerp.pad = function(instance) {
 
-var QWeb = instance.web.qweb;
-QWeb.add_template('/pad/static/src/xml/pad.xml');
-
 instance.web.form.SidebarAttachments = instance.web.form.SidebarAttachments.extend({
     on_attachments_loaded: function(attachments) {
         this._super(attachments);
