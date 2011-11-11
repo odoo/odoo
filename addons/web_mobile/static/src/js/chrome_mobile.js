@@ -20,13 +20,10 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
         openerp.web.qweb.add_template("xml/web_mobile.xml");
         var params = {};
         this.$element.html(this.render());
-        this.session = new openerp.web.Session("oe_errors");
         this.crashmanager =  new openerp.web.CrashManager(this);
         this.login = new openerp.web_mobile.Login(this, "oe_login");
-//        this.session.on_session_invalid.add(this.login.do_ask_login);
     },
     start: function() {
-        this.session.start();
         this.login.start();
     }
 });

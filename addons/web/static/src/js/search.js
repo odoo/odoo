@@ -963,10 +963,7 @@ openerp.web.search.ExtendedSearch = openerp.web.OldWidget.extend({
         this.check_last_element();
     },
     start: function () {
-        this._super();
-        if (!this.$element) {
-            return; // not a logical state but sometimes it happens
-        }
+        this.$element = $("#" + this.element_id);
         this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
         this.rpc("/web/searchview/fields_get",
@@ -1028,7 +1025,7 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
         prop.start();
     },
     start: function () {
-        this._super();
+        this.$element = $("#" + this.element_id);
         var _this = this;
         this.add_prop();
         this.$element.find('.searchview_extended_add_proposition').click(function () {
@@ -1080,7 +1077,7 @@ openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** 
         this.value = null;
     },
     start: function () {
-        this._super();
+        this.$element = $("#" + this.element_id);
         this.select_field(this.fields.length > 0 ? this.fields[0] : null);
         var _this = this;
         this.$element.find(".searchview_extended_prop_field").change(function() {
@@ -1188,7 +1185,7 @@ openerp.web.search.ExtendedSearchProposition.DateTime = openerp.web.OldWidget.ex
         return this.datewidget.get_value();
     },
     start: function() {
-        this._super();
+        this.$element = $("#" + this.element_id);
         this.datewidget = new openerp.web.DateTimeWidget(this);
         this.datewidget.prependTo(this.$element);
     }
@@ -1208,7 +1205,7 @@ openerp.web.search.ExtendedSearchProposition.Date = openerp.web.OldWidget.extend
         return this.datewidget.get_value();
     },
     start: function() {
-        this._super();
+        this.$element = $("#" + this.element_id);
         this.datewidget = new openerp.web.DateWidget(this);
         this.datewidget.prependTo(this.$element);
     }
