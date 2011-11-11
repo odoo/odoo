@@ -70,6 +70,7 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
     },
     add_node_name : function(node) {
+        console.log("node",node);
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
             return (node.getAttribute('name'))?
                 _.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
@@ -347,7 +348,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                                                 return _.includes(element, res);
                                             }));
                                     });
-                                self.on_add_node(property_to_check, fields);
+                                self.on_add_node(property_to_check, fields ,
+                                    clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level);
                             });
                     break;
                 case "side-remove":
@@ -491,19 +493,35 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                         }else{
                             $(arch1).attr(val[0],val[1]);
                         }
+                        console.log("typeof",typeof arch1,arch1);
                     });
                     var new_obj = self.create_View_Node(arch1);
                     new_obj.id = obj.id,new_obj.child_id = obj.child_id;
                     self.edit_xml_dialog.$element.find("tr[id='viewedit-"+id+"']").find('a').text(new_obj.name);
                     child_list.splice(index, 1, new_obj);
+                }else if(move_direct == "add_node"){
+                    console.log(arch1,obj, update_values);
+                    $(arch1).add(update_values[0]);
+                    //self.create_View_Node(arch1); object not created here
+                     switch (update_values[1]) {
+                        case "After":
+                            $(arch1).after(update_values[0]);
+                            break;
+                        case "Before":
+                            $(arch1).before(update_values[0]);
+                            break;
+                        case "Inside":
+                            $(arch1).append(update_values[0]);
+                            break;
+                    }
                 }
                 var parent = $(arch1).parents();
                 var convert_to_utf = QWeb.tools.xml_node_to_string(parent[parent.length-1]);
                 convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                 convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                 arch.arch = convert_to_utf;
-                this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
-                });
+                /*this.dataset.write(parseInt(view_id),{"arch":convert_to_utf}, function(r) {
+                });*/
             }
             if (obj.level <= level) {
                 _.each(list_obj_xml, function(child_node) {
@@ -616,8 +634,9 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             })
         return def.promise();
     },
-    on_add_node: function(properties,fields){
+    on_add_node: function(properties,fields,clicked_tr_id, one_object, view_id, view_xml_id, clicked_tr_level){
         var self = this;
+        console.log()
         var  positions = ['After','Before','Inside'];
         var  render_list = [];
         render_list.push(["node_type",(_.keys(_CHILDREN)).sort()]);
@@ -631,21 +650,25 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 300,
             buttons: {
                     "Update": function(){
-                        var node_type,position,fields;
+                        var node_type,position,field_value;
                         var check_add_node = true;
                         _.each(self.edit_widget, function(widget) {
                             (widget.name == "node_type")?node_type = widget.get_value()[1]:false;
                             (widget.name == "position")?position = widget.get_value()[1]:false;
-                            (widget.name == "Fields")?fields = widget.get_value()[1]:false;
+                            (widget.name == "Fields")?field_value = widget.get_value()[1]:false;
                         });
                        (position == "Inside")?
                         check_add_node =(_.include(_CHILDREN[properties[0]],node_type))?true:false:
                         check_add_node =(_.include(_CHILDREN[properties[1]],node_type))?true:false;
                         if(node_type == "field" &&  check_add_node )
-                            {check_add_node = (fields != " ")?true:false;
+                            {check_add_node = (field_value != " ")?true:false;
                         }
                         if(check_add_node){
-                            var tag = _.sprintf("<%s></%s>",node_type,node_type);
+                            var tag = (node_type == "field")?
+                                _.sprintf("<%s name='%s'> ",node_type,field_value,node_type):
+                                    _.sprintf("<%s>",node_type,node_type);
+                            self.do_save_update_arch(one_object, view_id, view_xml_id, 
+                                clicked_tr_id, clicked_tr_level, "add_node", [tag, position]);
                         }else{alert("Can't Update View");}
                     },
                     "Cancel": function(){
