@@ -61,21 +61,6 @@
             </field>
         </field>
     </record>    
-    
-    
-    <record model="ir.ui.view" id="view_picking_margin_out_form">
-        <field name="name">picking.margin.view.form</field>
-        <field name="type">form</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.view_picking_out_form" />
-        <field name="arch" type="xml">
-        <xpath expr="/form/notebook/page[@string='Additional info']" position="after">
-            <page string="Customer Invoices">
-               <field colspan="4" name="invoice_ids" nolabel="1"/>
-            </page>    
-        </xpath>
-        </field>
-    </record>
-    
+
 </data>
 </openerp>
