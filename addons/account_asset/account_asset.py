@@ -143,8 +143,12 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             
             amount_to_depr = residual_amount = asset.value_residual
-
-            depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
+            if asset.prorata:
+                depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
+            else:
+                # depreciation_date = 1st January of purchase year
+                purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
+                depreciation_date = datetime(purchase_date.year, 1, 1)
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year

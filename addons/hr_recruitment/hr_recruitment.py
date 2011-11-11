@@ -473,7 +473,7 @@ class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
     _columns = {
-        'survey_id': fields.many2one('survey', 'Survey', help="Select survey for the current job"),
+        'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
     }
 hr_job()
 

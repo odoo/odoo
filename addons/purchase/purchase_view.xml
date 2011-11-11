@@ -21,7 +21,7 @@
             parent="menu_purchase_config_pricelist" sequence="20"/>
 
         <menuitem
-            action="product.product_pricelist_action2" id="menu_product_pricelist_action2_purchase"
+            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="10"/>
 
         <!--<menuitem
@@ -112,7 +112,7 @@
             <field name="help">Use this menu to control the invoices to be received from your supplier. OpenERP pregenerates draft invoices from your purchase orders or receptions, according to your settings. Once you receive a supplier invoice, you can match it with the draft invoice and validate it.</field>
     </record>
 
-     <menuitem name="Supplier Invoices to Receive"
+     <menuitem name="Based on generated invoice"
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
@@ -495,14 +495,14 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">On Purchase Order Lines</field>
+            <field name="name">Based on Purchase Order lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>
-            <field name="help">If you set the invoicing control on a purchase order as "Based on Purchase Order Lines", you can track here all the purchase order lines for which you have not received the supplier invoice yet. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
+            <field name="help">If you set the Invoicing Control on a purchase order as "Based on Purchase Order lines", you can track here all the purchase order lines for which you have not yet received the supplier invoice. Once you are ready to receive a supplier invoice, you can generate a draft supplier invoice based on the lines from this menu.</field>
         </record>
         <record id="purchase_line_form_action_tree2" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

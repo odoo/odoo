@@ -78,21 +78,16 @@ class crm_lead2partner(osv.osv_memory):
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
             email = map(lambda x: "'" + x + "'", email)
             if email:
-                cr.execute("""select id from res_partner_address
+                cr.execute("""select partner_id from res_partner_address
                                 where
                                 substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
-                address_ids = map(lambda x: x[0], cr.fetchall())
-                if address_ids:
-                    partner_ids = partner_obj.search(cr, uid, [('address', 'in', address_ids)], context=context)
-                    
+                partner_ids = map(lambda x: x[0], cr.fetchall())
+
             # Find partner name that matches the name of the lead
             if not partner_ids and lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
-                
-            partner_id = partner_ids and partner_ids[0] or False
-            
-            
+                partner_ids = partner_obj.search(cr, uid, [('name', '=ilike', lead.partner_name)], context=context)
 
+            partner_id = partner_ids and partner_ids[0] or False
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
             if 'action' in fields:

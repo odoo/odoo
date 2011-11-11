@@ -211,15 +211,21 @@ resource_calendar()
 class resource_calendar_attendance(osv.osv):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
+    
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week'),
+        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week', required=True),
         'date_from' : fields.date('Starting date'),
         'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from"),
         'hour_to' : fields.float("Work to", size=8, required=True, help="Working time will end at"),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
+    
     _order = 'dayofweek, hour_from'
+    
+    _defaults = {
+        'dayofweek' : '0'
+    }
 resource_calendar_attendance()
 
 def convert_timeformat(time_string):

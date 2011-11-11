@@ -38,7 +38,9 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
-        ids = modules.search(cr, uid, [('name', 'like', 'l10n_')], context=context)
+        # Looking for the module with the 'Account Charts' category
+        category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
+        ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
         charts = list(
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
@@ -59,11 +61,16 @@ class account_installer(osv.osv_memory):
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
+        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
     }
 
     def _default_company(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id and user.company_id.id or False
+
+    def _default_has_default_company(self, cr, uid, context=None):
+        count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
+        return bool(count == 1)
 
     _defaults = {
         'date_start': lambda *a: time.strftime('%Y-01-01'),
@@ -72,6 +79,7 @@ class account_installer(osv.osv_memory):
         'sale_tax': 0.0,
         'purchase_tax': 0.0,
         'company_id': _default_company,
+        'has_default_company': _default_has_default_company,
         'charts': 'configurable'
     }
 

@@ -49,7 +49,10 @@ Thanks to the double entry management, the inventory controlling is powerful and
     "depends" : ["product", "account"],
     "category" : "Warehouse Management",
     "init_xml" : [],
-    "demo_xml" : ["stock_demo.xml"],
+    "demo_xml" : [
+        "stock_demo.xml",
+        "stock_demo_picking.yml",
+    ],
     "update_xml" : [
         "security/stock_security.xml",
         "security/ir.model.access.csv",
@@ -78,10 +81,12 @@ Thanks to the double entry management, the inventory controlling is powerful and
         "report/report_stock_view.xml",
         "board_warehouse_view.xml"
     ],
-    'test': ['test/stock_test.yml',
-             'test/stock_report.yml',
-             'test/stock_test_wizard.yml',
-             ],
+    'test': [
+        'test/stock_test.yml',
+        'test/stock_report.yml',
+        'test/stock_test_wizard.yml',
+        'test/stock_demo_backorder.yml'
+    ],
     'installable': True,
     'active': False,
     'certificate': '0055421559965',
