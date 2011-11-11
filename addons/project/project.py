@@ -624,37 +624,39 @@ class task(osv.osv):
         Close Task
         """
         request = self.pool.get('res.request')
-        for task in self.browse(cr, uid, ids, context=context):
-            vals = {}
-            project = task.project_id
-            if project:
-                # Send request to project manager
-                if project.warn_manager and project.user_id and (project.user_id.id != uid):
-                    request.create(cr, uid, {
-                        'name': _("Task '%s' closed") % task.name,
-                        'state': 'waiting',
-                        'act_from': uid,
-                        'act_to': project.user_id.id,
-                        'ref_partner_id': task.partner_id.id,
-                        'ref_doc1': 'project.task,%d'% (task.id,),
-                        'ref_doc2': 'project.project,%d'% (project.id,),
-                    }, context=context)
+        # calling do_close from demo data it returns id in string therefor need to convert in list 
+        if not isinstance(ids,list): ids = [ids]
+        task = self.browse(cr, uid, ids, context=context)[0]
+        vals = {}
+        project = task.project_id
+        if project:
+            # Send request to project manager
+            if project.warn_manager and project.user_id and (project.user_id.id != uid):
+                request.create(cr, uid, {
+                    'name': _("Task '%s' closed") % task.name,
+                    'state': 'waiting',
+                    'act_from': uid,
+                    'act_to': project.user_id.id,
+                    'ref_partner_id': task.partner_id.id,
+                    'ref_doc1': 'project.task,%d'% (task.id,),
+                    'ref_doc2': 'project.project,%d'% (project.id,),
+                }, context=context)
 
-            for parent_id in task.parent_ids:
-                if parent_id.state in ('pending','draft'):
-                    reopen = True
-                    for child in parent_id.child_ids:
-                        if child.id != task.id and child.state not in ('done','cancelled'):
-                            reopen = False
-                    if reopen:
-                        self.do_reopen(cr, uid, [parent_id.id], context=context)
-            vals.update({'state': 'done'})
-            vals.update({'remaining_hours': 0.0})
-            if not task.date_end:
-                vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, [task.id],vals, context=context)
-            message = _("The task '%s' is done") % (task.name,)
-            self.log(cr, uid, task.id, message)
+        for parent_id in task.parent_ids:
+            if parent_id.state in ('pending','draft'):
+                reopen = True
+                for child in parent_id.child_ids:
+                    if child.id != task.id and child.state not in ('done','cancelled'):
+                        reopen = False
+                if reopen:
+                    self.do_reopen(cr, uid, [parent_id.id], context=context)
+        vals.update({'state': 'done'})
+        vals.update({'remaining_hours': 0.0})
+        if not task.date_end:
+            vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.write(cr, uid, [task.id],vals, context=context)
+        message = _("The task '%s' is done") % (task.name,)
+        self.log(cr, uid, task.id, message)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
@@ -698,14 +700,12 @@ class task(osv.osv):
         return True
 
     def do_open(self, cr, uid, ids, context={}):
-        tasks= self.browse(cr, uid, ids, context=context)
-        for t in tasks:
-            data = {'state': 'open'}
-            if not t.date_start:
-                data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            self.write(cr, uid, [t.id], data, context=context)
-            message = _("The task '%s' is opened.") % (t.name,)
-            self.log(cr, uid, t.id, message)
+        # calling do_open from demo data it returns id in string therefor need to convert in list 
+        if not isinstance(ids,list): ids = [ids]
+        task = self.browse(cr, uid, ids, context=context)[0]
+        self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
+        message = _("The task '%s' is opened.") % (task.name)
+        self.log(cr, uid, task.id, message)
         return True
 
     def do_draft(self, cr, uid, ids, context={}):
