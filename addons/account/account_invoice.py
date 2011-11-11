@@ -926,7 +926,7 @@ class account_invoice(osv.osv):
             period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
                 period_ids = period_obj.find(cr, uid, inv.date_invoice)
-                period_id = period_ids[0]
+                period_id = period_ids and period_ids[0] or False
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
