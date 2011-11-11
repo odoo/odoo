@@ -1317,7 +1317,7 @@
 </t>
 <t t-name="vieweditor_selection">
     <select t-att-id="widget.name" >
-        <t t-foreach="widget.value" t-as="option">
+        <t t-if="widget.selection" t-foreach="widget.selection" t-as="option">
             <option
                 t-att-value="typeof option === 'object' ? option[0] : option">
                 <t t-esc="typeof option === 'object' ? option[1] : option"/>
