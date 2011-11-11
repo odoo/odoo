@@ -1,0 +1,12 @@
+-
+  I call onchange event to change campaing for segment.
+-
+  !python {model: marketing.campaign.segment}: |
+    self.onchange_campaign_id(cr, uid, [ref("marketing_campaign_segment_bosslistusassociationslist0")], ref("marketing_campaign_openerpondemandfreetrial0"))
+-
+  I can see preview report of workitem.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('res_id', '=', ref('crm.crm_case_ericdubois4')), ('segment_id', '=', ref('marketing_campaign_segment_bosslistusassociationslist0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerpondemandfreetrial0')), ('activity_id', '=', ref('marketing_campaign_activity_2'))])
+    self.preview(cr, uid, ids)
