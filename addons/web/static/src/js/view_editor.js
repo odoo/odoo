@@ -619,7 +619,8 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         var  render_list = [];
         render_list.push(["node_type",(_.keys(_CHILDREN)).sort()]);
         render_list.push(["position",positions]);
-        render_list.push([" ",fields]);
+        render_list.push(["Fields",fields]);
+        this.edit_widget = [];
         this.add_node_dialog = new openerp.web.Dialog(this,{
             modal: true,
             title: 'Properties',
@@ -627,6 +628,12 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 300,
             buttons: {
                     "Update": function(){
+                        var update_values = [];
+                        _.each(self.edit_widget, function(widget) {
+                            if (widget.dirty) {
+                                update_values.push(widget.get_value());
+                            }
+                        });
                     },
                     "Cancel": function(){
                         self.add_node_dialog.close();
@@ -639,53 +646,17 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         _.each(render_list,function(node){
             type_widget = new openerp.web.ViewEditor.FieldSelect (self.add_node_dialog, node[0]);
             type_widget.value = node[1];
+            if(node[0]=="Fields"){ node[0] = "";}
             table_selector.append('<tr><td align="right">'+node[0]+'</td><td>'+type_widget.render()+'</td></tr>');
             type_widget.start();
+            self.edit_widget.push(type_widget);
         });
         table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
-        self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1)
+        self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1);
+        
         self.add_node_dialog.$element.find('#new_field').click(function() {
             //to do
-            self.Add_new_field();
         });
-    },
-    Add_new_field : function(){
-        var self = this;
-        var action = {
-            name: _.sprintf("Manage Views (%s)", this.model),
-            res_model: 'ir.model.fields',
-            views: [['form']],
-            type: 'ir.actions.act_window',
-            target: "new",
-            limit: this.dataset.limit || 80,
-            auto_search: true,
-            flags: {
-                sidebar: false,
-                deletable: false,
-                views_switcher: false,
-                action_buttons: false,
-                search_view: false,
-                pager: false,
-                radio: true
-            },
-        };
-        this.add_new_field = new openerp.web.Dialog(this, {
-            modal: true,
-            title: 'ViewEditor',
-            width: 750,
-            height: 500,
-            buttons: {
-                "Save": function(){
-                    //to do
-                },
-                "Close": function(){
-                    self.add_new_field.close();
-                }
-            },
-        }).start().open();
-        var action_manager = new openerp.web.ActionManager(this);
-        action_manager.appendTo(this.add_new_field);
-        action_manager.do_action(action);
     }
 });
 openerp.web.ViewEditor.Field = openerp.web.Class.extend({
@@ -742,6 +713,10 @@ openerp.web.ViewEditor.FieldSelect = openerp.web.ViewEditor.Field.extend({
         var self = this;
         this.$element.find("select[id=" + this.name + "]").css('width', '100%').change(function() {
             self.on_ui_change();
+            add_node = self.get_value();
+            if(add_node[0] == "node_type" && add_node[1] == "field" ){
+                self.$element.find("select[id=Fields]").show();
+            }else{self.$element.find("select[id=Fields]").hide();}
         });
     },
     set_value: function(value) {
