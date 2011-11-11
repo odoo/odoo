@@ -795,6 +795,7 @@ class account_invoice(osv.osv):
         """Creates invoice related analytics and financial move lines"""
         ait_obj = self.pool.get('account.invoice.tax')
         cur_obj = self.pool.get('res.currency')
+        period_obj = self.pool.get('account.period')
         context = {}
         for inv in self.browse(cr, uid, ids):
             if not inv.journal_id.sequence_id:
@@ -924,12 +925,8 @@ class account_invoice(osv.osv):
             }
             period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
-                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d')), ('company_id', '=', inv.company_id.id)])
-                if period_ids:
-                    period_id = period_ids[0]
-                else:
-                    raise osv.except_osv(_('No Period Defined !'),_('You must define a period for Company: %s') % \
-                                         (inv.company_id.name,))
+                period_ids = period_obj.find(cr, uid, inv.date_invoice)
+                period_id = period_ids[0]
             if period_id:
                 move['period_id'] = period_id
                 for i in line:
