@@ -15,12 +15,43 @@
 -
   !workflow {model: marketing.campaign.segment, action: state_running_set, ref: marketing_campaign_segment_bosslistusassociationslist0}
 -
-  I check the Segment on Running mode.
+  I check the segment on Running mode.
 -
   !assert {model: marketing.campaign.segment, id: marketing_campaign_segment_bosslistusassociationslist0}:
     - state == 'running'
 -
-  I synchronized this segment manually to see all step of activity covered on this campaign.
+  I synchronized this segment manually to see all step of activity and process covered on this campaign.
 -
   !python {model: marketing.campaign.segment}: |
     self.synchroniz(cr, uid, [ref("marketing_campaign_segment_bosslistusassociationslist0")])
+-
+  I process the event of belgium partner which is particiapated with our campaing activity, 
+  after processing the event, automatic email send to that partner with specific message and check
+  the status of event.
+-
+  !python {model: marketing.campaign.workitem}: |
+    ids = self.search(cr, uid, [('res_id', '=', ref('crm.crm_case_ericdubois4')), ('segment_id', '=', ref('marketing_campaign_segment_bosslistusassociationslist0')),
+    ('campaign_id', '=', ref('marketing_campaign_openerpondemandfreetrial0')), ('activity_id', '=', ref('marketing_campaign_activity_1'))])
+    assert ids, 'Activity items not created'
+    self.process(cr, uid, ids)
+    record = self.browse(cr, uid, ids)[0]
+    assert record.state == "done", "Activity item not in done state"
+-
+  After completion of all activity i close segmentation first.
+-
+  !workflow {model: marketing.campaign.segment, action: state_done_set, ref: marketing_campaign_segment_bosslistusassociationslist0}
+-
+  I check the segmentation is done.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_segment_bosslistusassociationslist0}:
+    - state == 'done'
+-
+  I close this campaing.
+-
+  !workflow {model: marketing.campaign.segment, action: state_done_set, ref: marketing_campaign_openerpondemandfreetrial0}
+-
+  I check the campaing is done.
+-
+  !assert {model: marketing.campaign.segment, id: marketing_campaign_openerpondemandfreetrial0}:
+    - state == 'done'
+    
