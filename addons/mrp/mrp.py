@@ -705,42 +705,49 @@ class mrp_production(osv.osv):
         production = self.browse(cr, uid, production_id, context=context)
 
         produced_qty = 0
-        if production_mode == 'consume_produce':
-            produced_qty = production_qty
-
         for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id<>production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id <> production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
 
         if production_mode in ['consume','consume_produce']:
-            consumed_products = {}
-            check = {}
-            scrapped = map(lambda x:x.scrapped,production.move_lines2).count(True)
+            consumed_data = {}
 
-            for consumed_product in production.move_lines2:
-                consumed = consumed_product.product_qty
-                if consumed_product.scrapped:
+            # Calculate already consumed qtys
+            for consumed in production.move_lines2:
+                if consumed.scrapped:
                     continue
-                if not consumed_products.get(consumed_product.product_id.id, False):
-                    consumed_products[consumed_product.product_id.id] = consumed_product.product_qty
-                    check[consumed_product.product_id.id] = 0
-                for f in production.product_lines:
-                    if f.product_id.id == consumed_product.product_id.id:
-                        if (len(production.move_lines2) - scrapped) > len(production.product_lines):
-                            check[consumed_product.product_id.id] += consumed_product.product_qty
-                            consumed = check[consumed_product.product_id.id]
-                        rest_consumed = produced_qty * f.product_qty / production.product_qty - consumed
-                        consumed_products[consumed_product.product_id.id] = rest_consumed
+                if not consumed_data.get(consumed.product_id.id, False):
+                    consumed_data[consumed.product_id.id] = 0
+                consumed_data[consumed.product_id.id] += consumed.product_qty
 
-            for raw_product in production.move_lines:
-                for f in production.product_lines:
-                    if f.product_id.id == raw_product.product_id.id:
-                        consumed_qty = consumed_products.get(raw_product.product_id.id, 0)
-                        if consumed_qty == 0:
-                            consumed_qty = production_qty * f.product_qty / production.product_qty
-                        if consumed_qty > 0:
-                            stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, raw_product.location_id.id, context=context)
+            # Find product qty to be consumed and consume it
+            for scheduled in production.product_lines:
+
+                # total qty of consumed product we need after this consumption
+                total_consume = ((production_qty + produced_qty) * scheduled.product_qty / production.product_qty)
+
+                # qty available for consume and produce
+                qty_avail = scheduled.product_qty - consumed_data.get(scheduled.product_id.id, 0.0)
+
+                if qty_avail <= 0.0:
+                    # there will be nothing to consume for this raw material
+                    continue
+
+                raw_product = [move for move in production.move_lines if move.product_id.id==scheduled.product_id.id]
+                if raw_product:
+                    # qtys we have to consume
+                    qty = total_consume - consumed_data.get(scheduled.product_id.id, 0.0)
+
+                    if qty > qty_avail:
+                        # if qtys we have to consume is more than qtys available to consume
+                        prod_name = scheduled.product_id.name_get()[0][1]
+                        raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can consume upto total %s quantities.' % (qty, prod_name, qty_avail)))
+                    if qty < 0.0:
+                        # we already have more qtys consumed than we need 
+                        continue
+
+                    raw_product[0].action_consume(qty, raw_product[0].location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
@@ -760,8 +767,10 @@ class mrp_production(osv.osv):
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
                 subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
                 rest_qty = (subproduct_factor * production.product_qty) - produced_qty
-                if rest_qty <= production_qty:
-                    production_qty = rest_qty
+
+                if rest_qty < production_qty:
+                    prod_name = produce_product.product_id.name_get()[0][1]
+                    raise osv.except_osv(_('Warning!'), _('You are going to produce total %s quantities of "%s".\nBut you can produce upto total %s quantities.' % (production_qty, prod_name, rest_qty)))
                 if rest_qty > 0 :
                     stock_mov_obj.action_consume(cr, uid, [produce_product.id], (subproduct_factor * production_qty), context=context)
 
