@@ -92,10 +92,10 @@
       <menuitem id="menu_procurement_management_inventory" name="Receive Products"
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
-            name="Incoming Shipments" sequence="9"
-            groups="base.group_extended"/>
+            name="Incoming Shipments" sequence="9"/>
       <menuitem action="stock.action_reception_picking_move" id="menu_action_picking_tree_in_move"
-            parent="menu_procurement_management_inventory" sequence="11"/>
+            parent="menu_procurement_management_inventory" sequence="11"
+            groups="base.group_extended"/>
 
      <!--Invoice control-->
      <menuitem id="menu_procurement_management_invoice" name="Invoice Control"
