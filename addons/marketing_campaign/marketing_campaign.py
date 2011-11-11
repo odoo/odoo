@@ -784,11 +784,7 @@ class marketing_campaign_workitem(osv.osv):
         res = {}
         wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
-            data_obj = self.pool.get('ir.model.data')
-            data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_preview_form')
-            view_id = 0
-            if data_id:
-                view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'email_template', 'email_template_preview_form')
             res = {
                 'name': _('Email Preview'),
                 'view_type': 'form',
@@ -796,7 +792,7 @@ class marketing_campaign_workitem(osv.osv):
                 'res_model': 'email_template.preview',
                 'view_id': False,
                 'context': context,
-                'views': [(view_id, 'form')],
+                'views': [(view_id and view_id[1] or 0, 'form')],
                 'type': 'ir.actions.act_window',
                 'target': 'new',
                 'nodestroy':True,
