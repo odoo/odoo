@@ -471,7 +471,7 @@ session.web.ViewManagerAction = session.web.ViewManager.extend(/** @lends oepner
                     $search_prefix = $title.find('span');
                 if (controller.searchable !== false) {
                     if (!$search_prefix.length) {
-                        $title.prepend('<span>' + _t("Search:") + '</span>');
+                        $title.prepend('<span>' + _t("Search: ") + '</span>');
                     }
                 } else {
                     $search_prefix.remove();

@@ -18,11 +18,11 @@ openerp.web.str_to_datetime = function(str) {
     var regex = /^(\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d)(?:\.\d+)?$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw "'" + str + "' is not a valid datetime";
+        throw new Error("'" + str + "' is not a valid datetime");
     }
     var obj = Date.parse(res[1] + " GMT");
     if (! obj) {
-        throw "'" + str + "' is not a valid datetime";
+        throw new Error("'" + str + "' is not a valid datetime");
     }
     return obj;
 };
@@ -41,11 +41,11 @@ openerp.web.str_to_date = function(str) {
     var regex = /^\d\d\d\d-\d\d-\d\d$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw "'" + str + "' is not a valid date";
+        throw new Error("'" + str + "' is not a valid date");
     }
     var obj = Date.parse(str);
     if (! obj) {
-        throw "'" + str + "' is not a valid date";
+        throw new Error("'" + str + "' is not a valid date");
     }
     return obj;
 };
@@ -64,11 +64,11 @@ openerp.web.str_to_time = function(str) {
     var regex = /^(\d\d:\d\d:\d\d)(?:\.\d+)?$/;
     var res = regex.exec(str);
     if ( !res ) {
-        throw "'" + str + "' is not a valid time";
+        throw new Error("'" + str + "' is not a valid time");
     }
     var obj = Date.parse(res[1]);
     if (! obj) {
-        throw "'" + str + "' is not a valid time";
+        throw new Error("'" + str + "' is not a valid time");
     }
     return obj;
 };
