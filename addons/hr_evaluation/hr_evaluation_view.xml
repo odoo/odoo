@@ -286,7 +286,7 @@
         </record>
 
         <menuitem name="Appraisal" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
-            action="open_view_hr_evaluation_tree"/>
+            action="open_view_hr_evaluation_tree" groups="base.group_hr_user"/>
 
         <record model="ir.ui.view" id="view_hr_evaluation_interview_form">
             <field name="name">hr_evaluation.interview.form</field>
@@ -406,7 +406,7 @@
         </record>
 
         <menuitem name="Interview Requests" parent="menu_eval_hr" id="menu_open_hr_evaluation_interview_requests"
-            action="action_hr_evaluation_interview_tree"/>
+            action="action_hr_evaluation_interview_tree" groups="base.group_user"/>
 
       <!-- Email Compose message Action-->
       <act_window
