@@ -33,12 +33,12 @@
             <search string="Campaign Analysis">
                    <group>
                     <filter icon="terp-go-year" name="year"
-                            string="This Year"
+                            string="Year"
                             domain="[('year','=',time.strftime('%%Y'))]"/>
                     <separator orientation="vertical"/>
 
                     <filter icon="terp-go-month"
-                            string="This Month" name="This Month"
+                            string="Month" name="This Month"
                             domain="[('month','=',time.strftime('%%m'))]"/>
                     <filter icon="terp-go-month" string="    Month-1    "
                             domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"/>
