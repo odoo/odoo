@@ -74,10 +74,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             return (node.getAttribute('name'))?
                 _.sprintf( "<%s name='%s'>",node.tagName.toLowerCase(), node.getAttribute('name')):
                 _.sprintf( "<%s>",node.tagName.toLowerCase());
-        }else if(node.tagName.toLowerCase() == "group"){
-            return (node.getAttribute('string'))?
-                _.sprintf( "<%s>",node.getAttribute('string')):
-                _.sprintf( "<%s>",node.tagName.toLowerCase());
         }else{
             return (node.getAttribute('string'))?
                 _.sprintf( "<%s string='%s'>",node.tagName.toLowerCase(), node.getAttribute('string')):
@@ -338,15 +334,20 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             }
             switch (this.id) {
                 case "side-add":
-                    var tr = $(this).closest("tr[id^='viewedit-']").find('a').text();
-                    var tag = _.detect(_.keys(_CHILDREN),function(res){
-                        return _.includes(tr, res);
-                    });
+                    var tr = $(side).find('a').text();
+                    var parent_tr = ($(side).prevAll("tr[level="+String(clicked_tr_level - 1)+"]"))[0];
+                    parent_tr = $(parent_tr).find('a').text();
                     self.rpc("/web/searchview/fields_get", {model:self.model}, function(result) {
                                 var fields = _.keys(result.fields);
-                                fields.push(" ");
-                                fields.sort();
-                                self.on_add_node(_CHILDREN[tag],fields);
+                                fields.push(" "),fields.sort();
+                                var property_to_check = [];
+                                _.each([tr,parent_tr],function(element){
+                                    property_to_check.push(
+                                        _.detect(_.keys(_CHILDREN),function(res){
+                                                return _.includes(element, res);
+                                            }));
+                                    });
+                                self.on_add_node(property_to_check, fields);
                             });
                     break;
                 case "side-remove":
@@ -630,10 +631,22 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
             height: 300,
             buttons: {
                     "Update": function(){
-                        var update_values = [];
+                        var node_type,position,fields;
+                        var check_add_node = true;
                         _.each(self.edit_widget, function(widget) {
-                            update_values.push(widget.get_value());
+                            (widget.name == "node_type")?node_type = widget.get_value()[1]:false;
+                            (widget.name == "position")?position = widget.get_value()[1]:false;
+                            (widget.name == "Fields")?fields = widget.get_value()[1]:false;
                         });
+                       (position == "Inside")?
+                        check_add_node =(_.include(_CHILDREN[properties[0]],node_type))?true:false:
+                        check_add_node =(_.include(_CHILDREN[properties[1]],node_type))?true:false;
+                        if(node_type == "field" &&  check_add_node )
+                            {check_add_node = (fields != " ")?true:false;
+                        }
+                        if(check_add_node){
+                            var tag = _.sprintf("<%s></%s>",node_type,node_type);
+                        }else{alert("Can't Update View");}
                     },
                     "Cancel": function(){
                         self.add_node_dialog.close();
@@ -653,7 +666,6 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
         });
         table_selector.append('<tr><td align="right"> <button id="new_field">New Field</button></td></tr>');
         self.add_node_dialog.$element.find("select[id=node_type] option[value=field]").attr("selected",1);
-        
         self.add_node_dialog.$element.find('#new_field').click(function() {
             //to do
         });
