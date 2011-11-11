@@ -373,9 +373,8 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
     },
     open_list_view : function (id){
         var self = this;
-        if($(".dhx_tooltip").is(":visible")) {
-            $(".dhx_tooltip").remove('div');
-        }
+        // unconditionally nuke tooltips before switching view
+        $(".dhx_tooltip").remove('div');
         id = id[this.abscissa];
         if (typeof id == 'object'){
             id = id[0];

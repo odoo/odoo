@@ -1417,6 +1417,7 @@ class ExcelExport(Export):
             for cell_index, cell_value in enumerate(row):
                 if isinstance(cell_value, basestring):
                     cell_value = re.sub("\r", " ", cell_value)
+                if cell_value is False: cell_value = None
                 worksheet.write(row_index + 1, cell_index, cell_value, style)
 
         fp = StringIO()
