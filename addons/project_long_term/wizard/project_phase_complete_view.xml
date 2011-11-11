@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_complete" model="ir.ui.view">
+            <field name="name">Project Phases</field>
+            <field name="model">project.phase.complete</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                  <form string="Project Phases">
+                    <group colspan="4" col="4">
+                        <separator colspan="4" string="Project Phases" />
+                        <field name="name" colspan="4"/>
+                        <field name="project_id" colspan="4" attrs="{'invisible':[('target_project','=','all')], 'required':[('target_project','!=','all')]}"/>
+                        <field name="duration"/>
+                        <field name="product_uom" nolabel="1"/>
+                        <separator colspan="4" string="Constraints"/>
+                        <group colspan="2" col="2"> 
+                            <field name="constraint_date_start"/>
+                            <field name="constraint_date_end"/>
+                        </group>
+                    </group>
+                  </form>
+            </field>
+        </record>
+
+        <record id="action_project_complete_phases" model="ir.actions.act_window">
+               <field name="name">Project Phases</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">project.phase.complete</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="view_id" ref="view_project_complete"/>
+               <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

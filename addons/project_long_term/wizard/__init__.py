@@ -21,5 +21,6 @@
 
 import project_compute_phases
 import project_compute_tasks
+import project_phase_complete
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

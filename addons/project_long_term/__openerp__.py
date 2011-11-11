@@ -58,6 +58,7 @@ Features
         "project_long_term_workflow.xml",
         "wizard/project_compute_phases_view.xml",
         "wizard/project_compute_tasks_view.xml",
+        "wizard/project_phase_complete_view.xml",
     ],
     'installable': True,
     'active': False,
