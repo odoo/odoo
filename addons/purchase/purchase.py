@@ -500,7 +500,12 @@ class purchase_order(osv.osv):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
             picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, *args))
-        return picking_ids
+
+        # Must return one unique picking ID: the one to connect in the subflow of the purchase order.
+        # In case of multiple (split) pickings, we should return the ID of the critical one, i.e. the
+        # one that should trigger the advancement of the purchase workflow.
+        # By default we will consider the first one as most important, but this behavior can be overridden.
+        return picking_ids[0] if picking_ids else False
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
