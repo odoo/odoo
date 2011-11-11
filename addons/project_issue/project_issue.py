@@ -216,7 +216,7 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
+        'type_id': fields.many2one ('project.task.type', 'Stages', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),

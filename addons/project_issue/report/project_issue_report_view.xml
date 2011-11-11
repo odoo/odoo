@@ -79,18 +79,8 @@
                             domain="[('state','=','done')]"/>
 
                            <separator orientation="vertical" />
-                           <field name="section_id"
-                               string="Sale Team    "
-                               widget="selection"
-                               context="{'invisible_section': False}">
 
-                               <filter icon="terp-crm"
-                                   context="{'invisible_section': False}"
-                                   domain="[('section_id.user_id','=',uid)]"
-                                   help="My Sale Team" />
-
-                           </field>
-                              <field name="project_id"/>
+                          <field name="project_id"/>
                           <field name="user_id"  select="1" widget="selection" filter_domain="[('user_id','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
