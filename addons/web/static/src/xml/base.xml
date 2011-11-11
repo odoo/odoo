@@ -1293,7 +1293,8 @@
                     <img  id="side-remove" src="/web/static/src/img/icons/gtk-remove.png" style="cursor: pointer;"/>
                 </td>
                 <td width="20%">
-                    <img t-if="rec.att_list.length"
+
+                    <img t-if="rec.att_list.length and !_.include(no_properties, rec.att_list[0])"
                         id="side-edit" src="/web/static/src/img/icons/gtk-edit.png" style="cursor: pointer;"/>
                 </td>
                 <td width="20%">

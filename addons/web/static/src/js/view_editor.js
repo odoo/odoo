@@ -295,7 +295,11 @@ openerp.web.ViewEditor =   openerp.web.Widget.extend({
                 }
             }
         }).start().open();
-        this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {'data': one_object['main_object']}));
+        var no_property_att = [];
+        _.each(_PROPERTIES, function(val, key) {
+            if (! val.length) no_property_att.push(key);
+        });
+        this.edit_xml_dialog.$element.html(QWeb.render('view_editor', {'data': one_object['main_object'], 'no_properties': no_property_att}));
         this.edit_xml_dialog.$element.find("tr[id^='viewedit-']").click(function() {
             self.edit_xml_dialog.$element.find("tr[id^='viewedit-']").removeClass('ui-selected');
             $(this).addClass('ui-selected');
