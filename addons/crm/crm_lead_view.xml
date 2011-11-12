@@ -306,7 +306,7 @@
                 <field name="user_email"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="color" t-value="kanban_color(record.color.raw_value || record.state.raw_value)"/>
+                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
                         <div t-att-class="color + (record.priority.raw_value == 1 ? ' oe_kanban_color_alert' : '')">
                             <div class="oe_kanban_box oe_kanban_color_border">
                                 <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
