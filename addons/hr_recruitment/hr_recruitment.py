@@ -194,7 +194,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         'state': lambda *a: 'draft',
         'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
-        'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
     }
 
