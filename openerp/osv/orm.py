@@ -2495,7 +2495,7 @@ class BaseModel(object):
                 val.update({
                     groupby: stages[pos],
                     '__domain': [(groupby, '=', stages[pos][0])]+domain,
-                    groupby+'_count': 1L,  # Should be 0L but the web client crashes
+                    groupby+'_count': 0L,
                     '__context': {'group_by': groupby_list[1:]}
                 })
                 data.insert(pos, val)
