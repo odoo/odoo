@@ -470,14 +470,6 @@ class procurement_order(osv.osv):
             wf_service.trg_trigger(uid, 'procurement.order', id, cr)
         return res
 
-    def run_scheduler(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
-        ''' Runs through scheduler.
-        @param use_new_cursor: False or the dbname
-        '''
-        self._procure_confirm(cr, uid, use_new_cursor=use_new_cursor, context=context)
-        self._procure_orderpoint_confirm(cr, uid, automatic=automatic,\
-                use_new_cursor=use_new_cursor, context=context)
-
 procurement_order()
 
 class StockPicking(osv.osv):
