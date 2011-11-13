@@ -330,7 +330,7 @@ class task(osv.osv):
         context = context or {}
         if type(context.get('project_id', None)) not in (int, long):
             return None
-        proj = self.browse(cr, uid, context['project_id'], context=context)
+        proj = self.pool.get('project.project').browse(cr, uid, context['project_id'], context=context)
         ids += map(lambda x: x.id, proj.members)
         stage_obj = self.pool.get('res.users')
         stage_ids = stage_obj.search(cr, uid, [('id','in',ids)], context=context)
