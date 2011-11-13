@@ -347,10 +347,14 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields, view=None, parent={}):
         allfields = model.fields_get(self.cr, 1, context=self.context)
-        defaults = model.default_get(self.cr, 1, allfields, context=self.context)
+        if view is not None:
+            defaults = model.default_get(self.cr, 1, allfields, context=self.context)
+            fg = model.fields_get(self.cr, 1, context=self.context)
+        else:
+            default = {}
+            fg = {}
         record_dict = {}
         fields = fields or {}
-        fg = model.fields_get(self.cr, 1, context=self.context)
 
         # Process all on_change calls
         nodes = view and [view] or []
@@ -361,7 +365,7 @@ class YamlInterpreter(object):
                 if field_name in fields:
                     view2 = None
                     # if the form view is not inline, we call fields_view_get
-                    if (fg[field_name]['type']=='one2many') and view:
+                    if view and (fg[field_name]['type']=='one2many'):
                         view2 = view.find("field[@name='%s']/form"%(field_name,))
                         if not view2:
                             view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, 1, False, 'form', self.context)
