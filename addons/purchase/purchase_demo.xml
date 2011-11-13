@@ -56,7 +56,7 @@
             <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">New server config + material</field>
             <field model="product.product" name="product_id" search="[]"/>
-            <field model="product.uom" name="product_uom" search="[]"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">150</field>
             <field name="product_qty">5</field>
         </record>
