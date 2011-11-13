@@ -664,6 +664,10 @@ class BaseModel(object):
     _sequence = None
     _description = None
 
+    # dict of {field:method}, with method returning the name_get of records
+    # to include in the _read_group, if grouped on this field
+    _group_by_full = {}
+
     # Transience
     _transient = False # True in a TransientModel
     _transient_max_count = None
@@ -2477,6 +2481,24 @@ class BaseModel(object):
                 del alldata[d['id']][groupby]
             d.update(alldata[d['id']])
             del d['id']
+
+        if groupby and groupby in self._group_by_full:
+            gids = map(lambda x: x[groupby][0], data)
+            stages = self._group_by_full[groupby](self, cr, uid, gids, domain, context)
+            # as both lists are sorted in the same way, we can merge in one pass
+            pos = 0
+            while stages and ((pos<len(data)) or (pos<len(stages))):
+                if (pos<len(data)) and (data[pos][groupby][0] == stages[pos][0]):
+                    pos+=1
+                    continue
+                val = dict(map(lambda x: (x, False), fields))
+                val.update({
+                    groupby: stages[pos],
+                    '__domain': [(groupby, '=', stages[pos][0])]+domain,
+                    groupby+'_count': 1L,  # Should be 0L but the web client crashes
+                    '__context': {'group_by': groupby_list[1:]}
+                })
+                data.insert(pos, val)
         return data
 
     def _inherits_join_add(self, current_table, parent_model_name, query):
