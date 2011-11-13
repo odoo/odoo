@@ -9,7 +9,7 @@
     except Exception,e:
         pass
 -
-  I delete draft order.
+  I delete a draft order.
 -
   !python {model: purchase.order}: |
     self.unlink(cr, uid, [ref("order_purchase5")])

@@ -52,8 +52,3 @@
 -
   !assert {model: purchase.order, id: order_purchase4}:
     - state == 'cancel'
--
-  Now again set cancelled order to draft.
--
-  !python {model: purchase.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order_purchase4")])
