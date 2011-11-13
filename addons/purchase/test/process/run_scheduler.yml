@@ -1,7 +1,7 @@
 -
   In order to test the scheduler to generate RFQ.
 -
-  I create  procurement order.
+  I create a procurement order.
 -
   !record {model: procurement.order, id: procurement_order_testcase0}:
     company_id: base.main_company
@@ -21,7 +21,6 @@
 -
   !python {model: procurement.order}: |
     self.run_scheduler(cr, uid)
-     
 -
   I check Generated RFQ.
 -

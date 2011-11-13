@@ -1,8 +1,5 @@
 -
-  In order to test the purchase order flow, I compute the total of the listed products.
-  "Basic PC" product price is 450.20 and ordered 2 'PCE'
-  "New server config + material" product price is 150.50 and ordered 5 'PCE'
-  So, Total should be [(450.20*2)+(150.50*5)] = 1652.90
+  In order to test the purchase order flow I compute the total of the listed products
 -
   I check the total untaxed amount of the RFQ is correctly computed
 -
@@ -40,17 +37,17 @@
 -
   !python {model: purchase.order}: |
     purchase_order = self.browse(cr, uid, ref("order_purchase1"))
-    assert len(purchase_order.picking_ids) >= 1, "Reception should be one"
+    assert len(purchase_order.picking_ids) >= 1, "You should have only one reception order"
     for picking in purchase_order.picking_ids:
       assert picking.state == "assigned", "Reception state should be in assigned state"
-      assert picking.address_id.id == purchase_order.dest_address_id.id, "Delivery Address of Reception is not correspond"
+      assert picking.address_id.id == purchase_order.partner_address_id.id, "Delivery address of reception id is different from order"
       assert picking.company_id.id == purchase_order.company_id.id, "Company is not correspond with purchase order"
 -
   Reception is ready for process so now done the reception.
 -
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("order_purchase1")).picking_ids
-    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[1].id]})
+    partial_id = self.create(cr, uid, {},context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 -
   I check that purchase order is shipped.
