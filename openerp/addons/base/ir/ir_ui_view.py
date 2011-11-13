@@ -27,22 +27,6 @@ import tools
 import os
 import logging
 
-def _check_xml(self, cr, uid, ids, context=None):
-    logger = logging.getLogger('init')
-    for view in self.browse(cr, uid, ids, context):
-        eview = etree.fromstring(view.arch.encode('utf8'))
-        frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        try:
-            relaxng_doc = etree.parse(frng)
-            relaxng = etree.RelaxNG(relaxng_doc)
-            if not relaxng.validate(eview):
-                for error in relaxng.error_log:
-                    logger.error(tools.ustr(error))
-                return False
-        finally:
-            frng.close()
-    return True
-
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
@@ -86,6 +70,23 @@ class view(osv.osv):
         'priority': 16
     }
     _order = "priority,name"
+
+    def _check_xml(self, cr, uid, ids, context=None):
+        logger = logging.getLogger('init')
+        for view in self.browse(cr, uid, ids, context):
+            eview = etree.fromstring(view.arch.encode('utf8'))
+            frng = tools.file_open(os.path.join('base','rng','view.rng'))
+            try:
+                relaxng_doc = etree.parse(frng)
+                relaxng = etree.RelaxNG(relaxng_doc)
+                if not relaxng.validate(eview):
+                    for error in relaxng.error_log:
+                        logger.error(tools.ustr(error))
+                    return False
+            finally:
+                frng.close()
+        return True
+
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
