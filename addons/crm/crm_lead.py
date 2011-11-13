@@ -45,7 +45,7 @@ class crm_lead(crm_case, osv.osv):
     def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
         context = context or {}
         stage_obj = self.pool.get('crm.case.stage')
-        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids)] + [('case_default','=',1)], context=context)
+        stage_ids = stage_obj.search(cr, uid, ['|', ('id','in',ids), ('case_default','=',1)], context=context)
         return stage_obj.name_get(cr, uid, stage_ids, context=context)
 
     _group_by_full = {

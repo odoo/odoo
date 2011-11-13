@@ -68,7 +68,7 @@ class hr_recruitment_stage(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
-        'department_id':fields.many2one('hr.department', 'Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
+        'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep tempy this field."),
         'requirements': fields.text('Requirements')
     }
     _defaults = {
@@ -197,6 +197,17 @@ class hr_applicant(crm.crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
     }
+
+    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
+        context = context or {}
+        stage_obj = self.pool.get('hr.recruitment.stage')
+        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids), ('department_id','=',False)], context=context)
+        return stage_obj.name_get(cr, uid, stage_ids, context=context)
+
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
+
 
     def onchange_job(self,cr, uid, ids, job, context=None):
         result = {}
