@@ -66,11 +66,11 @@ Dashboard for purchase management that includes:
         'test/process/run_scheduler.yml', 
         'test/process/merge_order.yml', 
         'test/ui/print_report.yml',
-        'test/ui/onchange_events.yml',
         'test/ui/duplicate_order.yml', 
         'test/ui/delete_order.yml',
     ],
     'demo': [
+        'purchase_order_demo.yml',
         'purchase_demo.xml',
     ],
     'installable': True,
