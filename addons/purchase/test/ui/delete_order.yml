@@ -7,14 +7,14 @@
     try:
         self.unlink(cr, uid, [ref("order_purchase1")])
     except Exception,e:
-        print e
+        pass
 -
   I delete draft order.
 -
   !python {model: purchase.order}: |
     self.unlink(cr, uid, [ref("order_purchase5")])
 -
-  I delete cancelled order.
+  I delete a cancelled order.
 -
   !python {model: purchase.order}: |
     self.unlink(cr, uid, [ref("order_purchase7")])
