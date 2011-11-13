@@ -646,6 +646,7 @@ class task(osv.osv):
         Close Task
         """
         request = self.pool.get('res.request')
+        if not isinstance(ids,list): ids = [ids]
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
             project = task.project_id
@@ -720,6 +721,7 @@ class task(osv.osv):
         return True
 
     def do_open(self, cr, uid, ids, context={}):
+        if not isinstance(ids,list): ids = [ids]
         tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
