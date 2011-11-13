@@ -35,36 +35,6 @@ CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class read_group_full(object):
-    def __init__(self, field, obj, domain):
-        self.field = field
-        self.obj = obj
-        self.domain = domain
-    def __call__(self, method):
-        def lookup(self2, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-            result = method(self2, cr, uid, domain, fields, groupby, offset, limit, context, orderby)
-            if groupby and groupby[0]==self.field:
-                stage_obj = self2.pool.get(self.obj)
-                stage_ids = map(lambda x: x[self.field][0], result)
-                stage_ids = stage_obj.search(cr, uid, ['|',('id','in',stage_ids)] + self.domain, context=context)
-                stages = stage_obj.name_get(cr, uid, stage_ids, context=context)
-                # as both lists are sorted in the same way, we can merge in one pass
-                pos = 0
-                while (pos<len(result)) or (pos<len(stages)):
-                    if (pos<len(result)) and (result[pos][self.field][0] == stages[pos][0]):
-                        pos+=1
-                        continue
-                    val = dict(map(lambda x: (x, False), fields))
-                    val.update({
-                        self.field: stages[pos],
-                        '__domain': [(self.field, '=', stages[pos][0])]+domain,
-                        self.field+'_count': 1L,  # Should be 0L but the web client crashes
-                        '__context': {'group_by': groupby[1:]}
-                    })
-                    result.insert(pos, val)
-            return result
-        return lookup
-
 class crm_lead(crm_case, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
@@ -72,32 +42,15 @@ class crm_lead(crm_case, osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = ['mail.thread','res.partner.address']
 
-    @read_group_full('stage_id', 'crm.case.stage', [('case_default','=',1)])
-    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        return super(crm_lead, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+    def _read_group_stage_ids(self, cr, uid, ids, domain, context=None):
+        context = context or {}
+        stage_obj = self.pool.get('crm.case.stage')
+        stage_ids = stage_obj.search(cr, uid, ['|',('id','in',ids)] + [('case_default','=',1)], context=context)
+        return stage_obj.name_get(cr, uid, stage_ids, context=context)
 
-    def read_group_complete(cr, uid, domain, fields, groupby, context, result):
-        if groupby and groupby[0]=='stage_id':
-            stage_obj = self.pool.get('crm.case.stage')
-            stage_ids = map(lambda x: x['stage_id'][0], result)
-            stage_ids = stage_obj.search(cr, uid, ['|',('id','in',stage_ids),('case_default','=',True)], context=context)
-            stages = stage_obj.name_get(cr, uid, stage_ids, context=context)
-
-            # as both lists are sorted in the same way, we can merge in one pass
-            pos = 0
-            while (pos<len(result)) or (pos<len(stages)):
-                if (pos<len(result)) and (result[pos]['stage_id'][0] == stages[pos][0]):
-                    pos+=1
-                    continue
-                val = dict(map(lambda x: (x, False), fields))
-                val.update({
-                    'stage_id': stages[pos],
-                    '__domain': [('stage_id', '=', stages[pos][0])]+domain,
-                    'stage_id_count': 1L,  # Should be 0L but the web client crashes
-                    '__context': {'group_by': groupby[1:]}
-                })
-                result.insert(pos, val)
-        return result
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
+    }
 
     # overridden because res.partner.address has an inconvenient name_get,
     # especially if base_contact is installed.

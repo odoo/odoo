@@ -481,7 +481,7 @@
                         <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
-                        <field name="project_id">
+                        <field name="project_id" context="{'project_id':self}">
                              <filter domain="[('project_id.user_id','=',uid)]" help="My Projects" icon="terp-personal"/>
                         </field>
                         <field name="user_id">
