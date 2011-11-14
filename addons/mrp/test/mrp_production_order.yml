@@ -19,17 +19,6 @@
   !python {model: mrp.production}: |
     self.action_compute(cr, uid, [ref("mrp_production_mo1")])
 -
-  I confirm the manufacturing order for 5 PC1.
--
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
--
-  I check there is an internal picking for this MO to bring components in Raw Materials Location.
--
-  !python {model: mrp.production}: |
-    from tools.translate import _
-    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
-    assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
--
   I remembered that we have to produce 6.0 PC1 instead of 5.0, so I create record for wizard 'Change Qty'.
 -
   !record {model: change.production.qty, id: mrp_production_qty, context: "{'active_id': ref('mrp_production_mo1')}"}:
@@ -44,6 +33,17 @@
   !python {model: change.production.qty}: |
     context = {"lang": 'en_US', "active_model":"mrp.production", "active_ids": [ref("mrp_production_mo1")], "tz": False, "active_id":ref('mrp_production_mo1')}
     self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
+-
+  I confirm the manufacturing order for 5 PC1.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
+-
+  I check there is an internal picking for this MO to bring components in Raw Materials Location.
+-
+  !python {model: mrp.production}: |
+    from tools.translate import _
+    pick_ids = self.browse(cr, uid, ref("mrp_production_mo1"))
+    assert pick_ids.picking_id.id, _('No Internal Picking created for this manufacturing order!')
 -
   I compute the scheduler to procure the components based on their supply method.
 -
