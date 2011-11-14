@@ -19,6 +19,15 @@
       - res_company_openERP
 
 -
+  I assign this company to Demo user
+-
+  !record {model: res.users, id: base.user_demo}:
+    company_id: res_company_openERP
+    company_ids:
+      - base.main_company
+      - res_company_openERP
+
+-
   I  create a new employee “Mark Johnson”.
 -
   !record {model: hr.employee, id: hr_employee_employee0}:
@@ -62,11 +71,11 @@
 
 -
   I create my current timesheet for "Mark Johnson".
-- 
+-
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     date_current: !eval time.strftime('%Y-%m-%d')
     date_from: !eval time.strftime('%Y-%m-01')
-    name: !eval time.strftime('%U') 
+    name: !eval time.strftime('%U')
     state: new
     user_id: base.user_demo
     employee_id: 'hr_employee_employee0'
@@ -111,7 +120,7 @@
       - account_id: account.analytic_sednacom
         date: !eval time.strftime('%Y-%m-%d')
         name: 'Develop yaml for hr module'
-        unit_amount: 3.00
+        unit_amount: 1.00
         amount: -90.00
         product_id: product_consultant
         general_account_id: account.a_expense
