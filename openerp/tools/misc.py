@@ -1200,4 +1200,81 @@ class UnquoteEvalContext(defaultdict):
     def __missing__(self, key):
         return unquote(key)
 
+def _float_check_precision(precision_digits=None, precision_rounding=None):
+    assert (precision_digits is not None or precision_rounding is not None) and \
+        not (precision_digits and precision_rounding),\
+         "exactly one of precision_digits and precision_rounding must be specified"
+    if precision_digits is not None:
+        return 10 ** -precision_digits
+    return precision_rounding
+
+def float_round(amount, precision_digits=None, precision_rounding=None):
+    """Return ``amount`` rounded to ``precision_digits``
+       decimal digits, minimizing IEEE-754 floating point representation
+       errors.
+       Precision must be given by ``precision_digits`` or ``precision_rounding``,
+       not both!
+       Example on Python 2.7.2::
+
+          >>> round_float(2.675)
+          2.68
+          >>> round(2.675,2)
+          2.67
+
+       :param float amount: the amount to round
+       :param int precision_digits: number of decimal digits to round to.
+       :param float precision_rounding: decimal number representing the minimum
+           non-zero value at the desired precision (for example, 0.01 for a 
+           2-digit precision).
+       :return: rounded float
+    """
+    rounding_factor = _float_check_precision(precision_digits=precision_digits,
+                                             precision_rounding=precision_rounding)
+    if rounding_factor == 0: return 0.0
+    # /!\ First member below must be rounded to full unit!
+    # Do not pass rounding digits to round()!
+    return round(amount / rounding_factor) * rounding_factor
+
+def float_is_zero(amount, precision_digits=None, precision_rounding=None):
+    """Returns true if ``amount`` is small enough to be treated as
+       zero at the given precision.
+       Precision must be given by ``precision_digits`` or ``precision_rounding``,
+       not both!
+
+       :param int precision_digits: number of decimal digits to round to.
+       :param float precision_rounding: decimal number representing the minimum
+           non-zero value at the desired precision (for example, 0.01 for a 
+           2-digit precision).
+       :param float amount: amount to compare with currency's zero
+       :return: True if ``amount`` is considered 0
+    """
+    rounding_factor = _float_check_precision(precision_digits=precision_digits,
+                                             precision_rounding=precision_rounding)
+    return abs(float_round(amount, precision_rounding=rounding_factor)) < rounding_factor
+
+def float_compare(amount1, amount2, precision_digits=None, precision_rounding=None):
+    """Compare ``amount1`` and ``amount2`` according
+       to the given precision.
+       Precision must be given by ``precision_digits`` or ``precision_rounding``,
+       not both!
+
+       For example 1.432 and 1.431 are equal at 2 digits precision,
+       so this method would return 0
+
+       :param int precision_digits: number of decimal digits to round to.
+       :param float precision_rounding: decimal number representing the minimum
+           non-zero value at the desired precision (for example, 0.01 for a 
+           2-digit precision).
+       :param float amount1: first amount to compare
+       :param float amount2: second amount to compare
+       :return: (resp.) -1, 0 or 1, if ``amount1`` is (resp.) lower than,
+           equal to, or greater than ``amount2``, at the given precision.
+    """
+    rounding_factor = _float_check_precision(precision_digits=precision_digits,
+                                             precision_rounding=precision_rounding)
+    delta = amount1 - amount2
+    if float_is_zero(delta, precision_rounding=rounding_factor): return 0
+    delta = float_round(delta, precision_rounding=rounding_factor)
+    return -1 if delta < 0 else 1
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
