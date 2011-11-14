@@ -26,7 +26,7 @@ from render import render
 #.apidoc title: Report Rendering
 
 try:
-    import Image
+    from PIL import Image
 except ImportError:
     import logging
     logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
