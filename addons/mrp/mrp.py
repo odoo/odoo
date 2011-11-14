@@ -731,7 +731,7 @@ class mrp_production(osv.osv):
                         # if qtys we have to consume is more than qtys available to consume
                         prod_name = scheduled.product_id.name_get()[0][1]
                         raise osv.except_osv(_('Warning!'), _('You are going to consume total %s quantities of "%s".\nBut you can consume upto total %s quantities.' % (qty, prod_name, qty_avail)))
-                    if qty < 0.0:
+                    if qty <= 0.0:
                         # we already have more qtys consumed than we need 
                         continue
 
