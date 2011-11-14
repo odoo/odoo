@@ -55,6 +55,7 @@ Note that:
     ],
     'demo_xml': ['event_demo.xml'],
     'test': ['test/process/event_confirm2done.yml',
+             'test/process/event_draft2cancel.yml',
              'test/process/partner_register2invoice.yml'],
     'installable': True,
     'active': False,

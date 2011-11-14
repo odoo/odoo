@@ -76,9 +76,9 @@
 		<field name="unit_price">24.00</field>
 		<field name="type" ref="event_type_1"/>
 		<field name="user_id" ref="base.user_root"/>
+		<field name="register_min">50</field>
 		<field name="register_max">350</field>
 	</record>
-    <function model="event.event" name="button_confirm" eval="[ref('event_1')]"/>
 	<record id="event_2" model="event.event">
 		<field name="name">Conference on ERP Buisness</field>
         <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
