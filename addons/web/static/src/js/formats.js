@@ -1,6 +1,53 @@
 
 openerp.web.formats = function(openerp) {
 var _t = openerp.web._t;
+
+/**
+ * Intersperses ``separator`` in ``str`` at the positions indicated by
+ * ``indices``.
+ *
+ * ``indices`` is an array of relative offsets (from the previous insertion
+ * position, starting from the end of the string) at which to insert
+ * ``separator``.
+ *
+ * There are two special values:
+ *
+ * ``-1``
+ *   indicates the insertion should end now
+ * ``0``
+ *   indicates that the previous section pattern should be repeated (until all
+ *   of ``str`` is consumed)
+ *
+ * @param {String} str
+ * @param {Array<Number>} indices
+ * @param {String} separator
+ * @returns {String}
+ */
+openerp.web.intersperse = function (str, indices, separator) {
+    separator = separator || '';
+    var result = [], last = str.length;
+
+    for(var i=0; i<indices.length; ++i) {
+        var section = indices[i];
+        if (section === -1 || last <= 0) {
+            // Done with string, or -1 (stops formatting string)
+            break;
+        } else if(section === 0 && i === 0) {
+            // repeats previous section, which there is none => stop
+            break;
+        } else if (section === 0) {
+            // repeat previous section forever
+            //noinspection AssignmentToForLoopParameterJS
+            section = indices[--i];
+        }
+        result.push(str.substring(last-section, last));
+        last -= section;
+    }
+
+    var s = str.substring(0, last);
+    if (s) { result.push(s); }
+    return result.reverse().join(separator);
+};
 /**
  * Formats a single atomic value based on a field descriptor
  *
